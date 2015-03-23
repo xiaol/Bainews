@@ -1,0 +1,1 @@
+include ':app', ':umeng_social_sdk_library'
