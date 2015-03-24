@@ -4,5 +4,7 @@
     <string name="app_name">BaiNews</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="mNewsDetailTitle">北京\"单独二孩\"申请3万,41岁以上人群41岁以上人群</string>
+    <string name="mNewsDetailTvExpand">点击展开全文</string>
 
 </resources>
