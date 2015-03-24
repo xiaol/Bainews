@@ -1,6 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="transparent">#00000000</color>
-    <color name="white_light">#bbffffff</color>
+    <color name="news_list_table_channelname">#ff7f66</color>
+    <color name="news_list_table_devider">#e1e1e1</color>
+    <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="news_list_cell_sourcesitename">#a5a5a5</color>
+    <color name="news_list_bg">#f3f3fa</color>
+    <color name="common_theme_color">#ff7f66</color>
+    <color name="news_detail_item_relate_bg">#e1e1e1</color>
+    <color name="news_detail_item_relate_divider">#919191</color>
+    <color name="news_detail_relate_read">#EBEAF1</color>
+    <color name="border_text">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="gray_black">#8f000000</color>
+    <color name="white_light">#bbffffff</color>
+
+    <color name="transparency">#00ffffff</color>
+    <!-- 透明颜色 -->
+    <color name="all_bg">#1e2324</color>
+    <!-- 背景颜色 -->
+    <color name="title_bg">#474747</color>
+    <color name="all_light_bg">#38a41b</color>
+    <color name="TitleBackColor">#89b405</color>
+    <color name="PopupWindowColor">#effce9e9</color>
+    <color name="PopupWindowbgColor">#e0ffffff</color>
+    <color name="DarkGray">#3D454A</color>
+    <color name="AlphaGray">#40848484</color>
+    <color name="Gray">#848484</color>
+    <color name="LightGray">#CCCCCC</color>
+    <color name="Bg">#F0F0F0</color>
+    <color name="dark_black">#80000000</color>
+    <color name="BgBlue">#3EADE1</color>
+    <color name="BgBlueTransparent">#963EADE1</color>
+    <color name="DarkBlue">#044664</color>
+    <color name="blue">#3eade1</color>
+    <color name="Aboutbg">#e8f2f7</color>
+    <color name="AboutPandabg">#1693d4</color>
+    <color name="AboutButtonbg">#f2f6f8</color>
+    <color name="titleBg">#2f2f2f</color>
+    <color name="half_black">#30000000</color>
+    <color name="pure_red">#ff4c3d</color>
+    <color name="red">#FF0096</color>
+    <color name="he">#8b4513</color>
+    <color name="fen">#e75b87</color>
+    <color name="qing">#163246</color>
+    <color name="wall_info_color">#7a7a7a</color>
+    <color name="wall_follow_color">#989898</color>
+    <color name="more_wall_color">#808080</color>
+    <color name="wall_num_color">#ffa200</color>
+    <color name="like_num_color">#b8b8b8</color>
+    <!-- 系统设置相关颜色 -->
+    <color name="shape_line">#ffcccccc</color>
+    <!-- 系统设置中间线颜色 -->
+    <color name="window_bg">#fff0f3f6</color>
+    <color name="button_selected">#38a41b</color>
+    <color name="brown">#8d5d00</color>
+    <color name="title_line_bg">#c2c2c2</color>
+    <color name="new_dark_gray">#1b1b1b</color>
+    <color name="new_gray">#2f2f2f</color>
+    <color name="prompt_button_bg">#BDC5C9</color>
+    <color name="prompt_text_bg">#9AA3A6</color>
+    <color name="text_bg">#444444</color>
+    <color name="edit_head_color">#e2e2e2</color>
+    <color name="new_text_dark_gray">#272727</color>
+    <color name="new_text_middle_gray">#3c3c3c</color>
+    <color name="new_light_gray">#646464</color>
+    <color name="text_light_gray">#dadada</color>
+    <color name="notification_title">#d68400</color>
+    <color name="text_message">#999999</color>
+    <color name="text_prompt">#333333</color>
+    <color name="text_send">#ffd600</color>
+    <color name="new_transparent_black">#80000000</color>
+    <color name="bg_gray">#dfe6e9</color>
+    <color name="line_gray">#dddfe0</color>
+    <color name="message_line">#3d3d3d</color>
+    <color name="wall_group_color">#6e6e6e</color>
+    <color name="new_green_transparent">#3326c496</color>
+    <color name="new_text_gray">#bde9d9</color>
+    <color name="new_green_color">#26c496</color>
+    <color name="new_boy_color">#26c496</color>
+    <color name="new_light_yellow">#fded63</color>
+    <color name="new_yellow">#ffd600</color>
+    <color name="dark_yellow">#ffa200</color>
+    <color name="new_red">#ff6053</color>
+    <color name="new_red_text">#fca2a2</color>
+    <color name="new_girl_color">#fd3987</color>
+    <color name="new_encounter_cell_bg">#ececec</color>
+    <color name="new_encounter_dot_dark">#676767</color>
+    <color name="new_encounter_line_dark">#9d9d9d</color>
+    <color name="new_encounter_image_border_gray">#c6c6c6</color>
+    <color name="new_white_transparent">#5affffff</color>
+    <color name="new_concern_light_gray">#e7e7e7</color>
+    <color name="new_concern_text_gray">#b2b2b2</color>
+    <color name="new_create_wall_gray_text">#6a6a6a</color>
+    <color name="new_frame_boarder_gray">#afafaf</color>
+    <color name="new_create_wall_radius_gray">#d0d0d0</color>
+    <color name="new_tip_bg">#ceefff</color>
+    <color name="new_tip_text">#8b9093</color>
+
+    <color name="radio_button_selected_color">#d6b400</color>
+    <color name="radio_button_unselected_color">@android:color/transparent</color>
+
+    <color name="wall_selection_title_color">#282828</color>
 </resources>

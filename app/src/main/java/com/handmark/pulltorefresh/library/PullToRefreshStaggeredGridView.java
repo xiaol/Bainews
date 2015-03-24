@@ -7,8 +7,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.BaseAdapter;
 
-import com.handmark.pulltorefresh.StaggeredGridView.StaggeredGridView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.widget.StaggeredGridView;
 
 
 public class PullToRefreshStaggeredGridView extends PullToRefreshBase<StaggeredGridView> {
