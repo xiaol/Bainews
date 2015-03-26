@@ -47,9 +47,6 @@
         <attr name="ptrAdapterViewBackground" format="reference|color"/> <attr name="ptrDrawableTop" format="reference"/> <attr name="ptrDrawableBottom" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="TextViewPlus">
-        <attr name="customFont" format="string"/>
-    </declare-styleable>
     <declare-styleable name="RoundProgressBar">
         <attr name="max" format="integer"/>
         <attr name="fill" format="boolean"/>			<!-- 是否填充圆形区域 -->

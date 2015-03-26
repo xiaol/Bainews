@@ -1,12 +1,9 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
-
-import com.news.yazhidao.R;
 
 import java.util.Hashtable;
 
@@ -28,10 +25,7 @@ public class TextViewExtend extends TextView {
     }
 
     private void setCustomFont(Context ctx, AttributeSet attrs) {
-        TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.TextViewPlus);
-        String customFont = a.getString(R.styleable.TextViewPlus_customFont);
-        setCustomFont(ctx, customFont);
-        a.recycle();
+        setCustomFont(ctx, "fonts/hwzs.ttf");
     }
 
     public boolean setCustomFont(Context ctx, String asset) {
