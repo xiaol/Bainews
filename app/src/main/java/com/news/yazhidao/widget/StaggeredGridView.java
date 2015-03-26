@@ -47,6 +47,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListAdapter;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -968,7 +969,6 @@ public class StaggeredGridView extends ViewGroup {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
         if (widthMode != MeasureSpec.EXACTLY) {
             widthMode = MeasureSpec.EXACTLY;
         }
@@ -976,8 +976,16 @@ public class StaggeredGridView extends ViewGroup {
             heightMode = MeasureSpec.EXACTLY;
         }
 
-        setMeasuredDimension(widthSize, heightSize);
+        int _ChildCount=        getAdapter().getCount();
+        Logger.e("aaa",_ChildCount+"");
 
+        for(int i=0;i<_ChildCount;i++){
+//            Logger.e("xxx",()getAdapter().getItem(i).getHeight()+"");
+//            heightSize+=getChildAt(i).getHeight();
+        }
+//        Logger.e("yyy",widthSize+",,,,"+heightSize/2);
+        setMeasuredDimension(widthSize, heightSize);
+Logger.e("aa",getMeasuredHeight()+"");
         if (mColCountSetting == COLUMN_COUNT_AUTO) {
             final int colCount = widthSize / mMinColWidth;
             if (colCount != mColCount) {
@@ -996,6 +1004,14 @@ public class StaggeredGridView extends ViewGroup {
         final int height = b - t;
         mTopEdge.setSize(width, height);
         mBottomEdge.setSize(width, height);
+        int _ChildCount=getChildCount();
+        Logger.e("222",_ChildCount+"");
+        int  heightSize =0;
+        for(int i=0;i<_ChildCount;i++){
+            Logger.e("333",getChildAt(i).getHeight()+"");
+             heightSize+=getChildAt(i).getHeight();
+        }
+        Logger.e("444","widthSize"+",,,,"+heightSize/2);
     }
 
     private void populate(boolean clearData) {

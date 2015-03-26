@@ -14,57 +14,52 @@ import com.news.yazhidao.R;
 /**
  * Created by h.yuan on 2015/3/23.
  */
-public class SinaView extends FrameLayout {
+public class BaiDuBaiKeView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private RoundedImageView mHeadPortrait;
-    private TextView mtvName,mtvContent;
+    private TextView mtvTitle;
+    private TextView mtvContent;
     private ImageView mivPicture;
+    int i =3;
 
 
-    public SinaView(Context context, AttributeSet attrs) {
+    public BaiDuBaiKeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRootView = inflater.inflate(R.layout.aty_news_detail_layout_sina, null);
+        mRootView = inflater.inflate(R.layout.aty_news_detail_layout_baidubaike, null);
         addView(mRootView);
         initVars();
         findViews();
     }
 
-    public SinaView(Context context) {
+    public BaiDuBaiKeView(Context context) {
         super(context);
         mContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRootView = inflater.inflate(R.layout.aty_news_detail_layout_sina, null);
+        mRootView = inflater.inflate(R.layout.aty_news_detail_layout_baidubaike, null);
         addView(mRootView);
         initVars();
         findViews();
     }
 
-
-
     private void initVars() {
+        
     }
 
     private void findViews() {
-        mHeadPortrait = (RoundedImageView) mRootView.findViewById(R.id.head_portrait_imageView);
-        mHeadPortrait.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        mtvName = (TextView) mRootView.findViewById(R.id.name_textView);
-        mtvContent= (TextView) mRootView.findViewById(R.id.content_textView);
+        mtvTitle = (TextView) mRootView.findViewById(R.id.title_textView);
+        mtvContent = (TextView) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
-        mHeadPortrait.setBackgroundResource(R.drawable.indicator_arrow);
-        mtvName.setText("哈哈哈");
-        mtvContent.setText("sdfljsakljflasjdflaskdjflkaldkfj");
-        mivPicture.setBackgroundResource(R.drawable.abc_btn_check_material);
+
+        mtvTitle.setText("北京站-百度百科");
+        mtvContent.setText("dfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadf");
     }
 
-    public void setData(){
-
+    public void setZhiHuData(){
     }
-
 
 }
