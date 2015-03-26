@@ -1,1 +1,3 @@
-include ':app', ':umeng_social_sdk_library', ':library'
+include ':app'
+include ':umeng_social_sdk_library'
+include ':library'
