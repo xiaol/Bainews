@@ -46,7 +46,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
         mNewsDetailLsv = (NewsDetailListView) findViewById(R.id.mNewsDetailLsv);
         View mImageViewHeader = View.inflate(this, R.layout.aty_news_detail_content_header, null);
         ImageView mImageView = (ImageView) mImageViewHeader.findViewById(R.id.mNewsDetailHeaderImg);
-//        mNewsDetailLsv.setParallaxImageView(mImageView);
+        mNewsDetailLsv.setParallaxImageView(mImageView);
         mNewsDetailLsv.addHeaderView(mImageViewHeader);
         mNewsDetailAdapter = new NewsDetailAdapter();
         mNewsDetailLsv.setAdapter(mNewsDetailAdapter);
@@ -175,7 +175,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-//            mNewsDetailLsv.setViewsBounds(NewsDetailListView.ZOOM_X2);
+            mNewsDetailLsv.setViewsBounds(NewsDetailListView.ZOOM_X2);
         }
     }
 }
