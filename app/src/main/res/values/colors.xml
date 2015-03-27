@@ -102,4 +102,6 @@
     <color name="radio_button_unselected_color">@android:color/transparent</color>
 
     <color name="wall_selection_title_color">#282828</color>
+    <color name="news_detail_time_and_temperature">#7f7f7f</color>
+    <color name="news_detail_sourcename_and_location">#818181</color>
 </resources>

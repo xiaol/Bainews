@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" useUTFGuessing="false" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/app/src/main/assets/hwzs.ttf" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/TextViewExtend.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/bg_news_detail_describe.9.png" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/btn_news_detail_left_back.png" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/ic_news_detail_temperature.png" charset="UTF-8" />
   </component>
 </project>
 

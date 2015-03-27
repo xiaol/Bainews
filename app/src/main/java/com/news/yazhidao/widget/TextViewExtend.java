@@ -5,53 +5,45 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+import com.news.yazhidao.utils.Logger;
+
 import java.util.Hashtable;
 
 public class TextViewExtend extends TextView {
     private static final String TAG = "TextViewExtend";
     private static Hashtable<String, Typeface> fontCache = new Hashtable<String, Typeface>();
     public TextViewExtend(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public TextViewExtend(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setCustomFont(context, attrs);
+        this(context, attrs,0);
     }
 
     public TextViewExtend(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setCustomFont(context, attrs);
+        setCustomFont(context);
     }
 
-    private void setCustomFont(Context ctx, AttributeSet attrs) {
-        setCustomFont(ctx, "fonts/hwzs.ttf");
-    }
-
-    public boolean setCustomFont(Context ctx, String asset) {
-
-        Typeface tf = get(asset,ctx);
-
-        if(tf==null)
-        {
-            return false;
-        }
-
-        setTypeface(tf);
-        return true;
-    }
-
-    public static Typeface get(String name, Context context) {
-        Typeface tf = fontCache.get(name);
+    private void setCustomFont(Context ctx) {
+        String _KeyFontName="fonts/hwzs.ttf";
+        Typeface tf = fontCache.get(_KeyFontName);
         if(tf == null) {
             try {
-                tf = Typeface.createFromAsset(context.getAssets(), name);
+                tf = Typeface.createFromAsset(ctx.getAssets(), _KeyFontName);
             }
             catch (Exception e) {
-                return null;
+                Logger.e(TAG,e.getMessage());
             }
-            fontCache.put(name, tf);
+            fontCache.put(_KeyFontName, tf);
         }
-        return tf;
+        setTypeface(tf);
+    }
+
+    @Override
+    public void setTypeface(Typeface tf, int style) {
+        if(style==Typeface.BOLD){
+            getPaint().setFakeBoldText(true);
+        }
     }
 }
