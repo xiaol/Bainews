@@ -5,6 +5,9 @@
     android:background="@color/bg_gray"
     android:orientation="vertical">
 
+    <!--新闻详情展示-->
+  <include layout="@layout/aty_news_detail_header_news_display"/>
+
     <LinearLayout
         android:id="@+id/baike_linerLayout"
         android:layout_width="match_parent"
