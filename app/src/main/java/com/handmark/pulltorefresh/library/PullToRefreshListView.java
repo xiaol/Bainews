@@ -230,7 +230,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 		if (mListViewExtrasEnabled) {
 			final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-					FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+					FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
 
 			// Create Loading Views ready for use later
 			FrameLayout frame = new FrameLayout(getContext());

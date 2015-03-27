@@ -48,6 +48,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	static final Interpolator ANIMATION_INTERPOLATOR = new LinearInterpolator();
 
 	private FrameLayout mInnerLayout;
+	private FrameLayout fl_title_img;
 
 	protected final ImageView mHeaderImage;
 	protected final ProgressBar mHeaderProgress;
@@ -80,6 +81,11 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		}
 
 		mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
+        fl_title_img = (FrameLayout) findViewById(R.id.fl_title_img);
+        FrameLayout.LayoutParams lp_img = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
+        lp_img.setMargins(200,0,0,0);
+        fl_title_img.setLayoutParams(lp_img);
 		mHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_text);
 		mHeaderProgress = (ProgressBar) mInnerLayout.findViewById(R.id.pull_to_refresh_progress);
 		mSubHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_sub_text);
@@ -95,9 +101,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 //                mPullLabel = context.getString(R.string.pull_to_refresh_from_bottom_pull_label);
 //                mRefreshingLabel = context.getString(R.string.pull_to_refresh_from_bottom_refreshing_label);
 //                mReleaseLabel = context.getString(R.string.pull_to_refresh_from_bottom_release_label);
-                mPullLabel = "";
-                mRefreshingLabel = "";
-                mReleaseLabel = "";
+                mPullLabel = "加载更多...";
+                mRefreshingLabel = "加载中...";
+                mReleaseLabel = "加载更多...";
 				break;
 
 			case PULL_FROM_START:
@@ -108,9 +114,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 //                mPullLabel = context.getString(R.string.pull_to_refresh_pull_label);
 //                mRefreshingLabel = context.getString(R.string.pull_to_refresh_refreshing_label);
 //                mReleaseLabel = context.getString(R.string.pull_to_refresh_release_label);
-                mPullLabel = "";
-                mRefreshingLabel = "";
-                mReleaseLabel = "";
+                mPullLabel = "下拉刷新";
+                mRefreshingLabel = "正在刷新中.....";
+                mReleaseLabel = "释放以刷新....";
 				break;
 		}
 
