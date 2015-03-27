@@ -34,6 +34,9 @@
     <color name="BgBlueTransparent">#963EADE1</color>
     <color name="DarkBlue">#044664</color>
     <color name="blue">#3eade1</color>
+    <color name="douban_item_blue">#4DB3EA</color>
+    <color name="sina_item_gray">#D6D6D6</color>
+    <color name="sina_item_content_gray">#7F7F7F</color>
     <color name="Aboutbg">#e8f2f7</color>
     <color name="AboutPandabg">#1693d4</color>
     <color name="AboutButtonbg">#f2f6f8</color>

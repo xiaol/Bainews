@@ -41,4 +41,9 @@
     <dimen name="textsize_thirteen">13sp</dimen>
     <dimen name="textsize_twelve">12sp</dimen>
     <dimen name="textsize_ten">10sp</dimen>
+
+    <dimen name="news_detail_layout_margin_top">32dp</dimen>
+    <dimen name="news_detail_item_margin_top">12dp</dimen>
+    <dimen name="news_detail_item_margin_left">16dp</dimen>
+
 </resources>

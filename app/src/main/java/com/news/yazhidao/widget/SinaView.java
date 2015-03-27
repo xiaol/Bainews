@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 
@@ -19,7 +18,7 @@ public class SinaView extends FrameLayout {
     private View mRootView;
     private Context mContext;
     private RoundedImageView mHeadPortrait;
-    private TextView mtvName,mtvContent;
+    private TextViewExtend mtvName,mtvContent;
     private ImageView mivPicture;
 
 
@@ -53,13 +52,11 @@ public class SinaView extends FrameLayout {
     private void findViews() {
         mHeadPortrait = (RoundedImageView) mRootView.findViewById(R.id.head_portrait_imageView);
         mHeadPortrait.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        mtvName = (TextView) mRootView.findViewById(R.id.name_textView);
-        mtvContent= (TextView) mRootView.findViewById(R.id.content_textView);
+        mtvName = (TextViewExtend) mRootView.findViewById(R.id.name_textView);
+        mtvContent= (TextViewExtend) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
-        mHeadPortrait.setBackgroundResource(R.drawable.indicator_arrow);
         mtvName.setText("哈哈哈");
-        mtvContent.setText("sdfljsakljflasjdflaskdjflkaldkfj");
-        mivPicture.setBackgroundResource(R.drawable.abc_btn_check_material);
+        mtvContent.setText("哈市的开发将开始多了几分；拉萨京东方；流口水的减肥；了开始就");
     }
 
     public void setData(){
