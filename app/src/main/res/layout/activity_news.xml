@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:background="#4fb5ea"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="头条百家"
+            android:textColor="#ffffff"
+            android:layout_gravity="center_vertical"
+            android:textSize="22sp"
+            />
+
+        </LinearLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/lv_news"
+        android:layout_below="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
+        android:background="#f3f3fa"
+        android:scrollbars="none"
+        android:dividerHeight="20dp"
+        android:divider="#f3f3fa"
+        android:clipToPadding="false"
+        ptr:ptrDrawable="@drawable/default_ptr_flip"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrHeaderBackground="#f3f3fa"
+        ptr:ptrHeaderTextColor="#000000"
+        ptr:ptrScrollingWhileRefreshingEnabled="false"
+        ptr:ptrListViewExtrasEnabled="true"
+        />
+
+</RelativeLayout>

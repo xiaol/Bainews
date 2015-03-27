@@ -2,7 +2,10 @@
 <project version="4">
   <component name="Encoding" useUTFGuessing="false" native2AsciiForPropertiesFiles="false">
     <file url="file://$PROJECT_DIR$/app/src/main/assets/hwzs.ttf" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/common/HttpConstant.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/TextViewExtend.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_feedback_contact_way.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_feedstream_list_table.xml" charset="UTF-8" />
   </component>
 </project>
 
