@@ -43,6 +43,8 @@ public class DetailAty extends Activity {
         mgvMore = (StaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mgvMore.setHeaderView(headerView);
         mgvMore.setAdapter(mMoreAdapter);
+        mgvMore.setPadding(10, 0, 10, 0);
+        mgvMore.setItemMargin(10);
         mMoreAdapter.notifyDataSetChanged();
     }
 
@@ -50,7 +52,9 @@ public class DetailAty extends Activity {
         mgvMore.setOnLoadmoreListener(new StaggeredGridView.OnLoadmoreListener() {
             @Override
             public void onLoadmore() {
-
+                s = new String[] {"dddd","ddd","ddd","ddd","ddd","ddd","ddd","ddd"};
+                mMoreAdapter.setData(s);
+                mMoreAdapter.notifyDataSetChanged();
             }
         });
     }

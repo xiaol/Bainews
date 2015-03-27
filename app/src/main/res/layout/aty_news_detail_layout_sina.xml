@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_yellow"
-    android:orientation="horizontal">
+    android:background="@color/dark_yellow">
 
     <com.news.yazhidao.widget.RoundedImageView
         android:layout_marginTop="10dp"
