@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:text="1234" />
+                android:text="34" />
         </LinearLayout>
 
         <ImageView

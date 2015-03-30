@@ -1,13 +1,16 @@
 package com.news.yazhidao.pages;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 
 /**
@@ -24,8 +27,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private View mNewsSourcesiteFooterShare;
     private TextView mNewsSourcesiteBlameNum;
     private TextView mNewsSourcesitePraiseNum;
-    private boolean isRedirected=false;
-
+    private ProgressDialog mProgressDialog;
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
@@ -46,15 +48,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mNewsSourcesiteLeftBack:
-//                ToastUtil.toastShort("点击了leftback");
                 this.finish();
                 break;
             case R.id.mNewsSourcesiteFooterPraise:
-                ToastUtil.toastShort("点击了点赞");
+                mNewsSourcesitePraiseNum.setText(Integer.valueOf(mNewsSourcesitePraiseNum.getText().toString())+1+"");
                 break;
             case R.id.mNewsSourcesiteFooterBlame:
-                ToastUtil.toastShort("点击了鄙视");
-                break;
+                mNewsSourcesiteBlameNum.setText(Integer.valueOf(mNewsSourcesiteBlameNum.getText().toString()) - 1 + "");                break;
             case R.id.mNewsSourcesiteFooterShare:
                 ToastUtil.toastShort("点击了分享");
                 break;
@@ -67,30 +67,39 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         mNewsUrl=getIntent().getStringExtra("url");
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
-        mNewsSourcesiteWebview.loadUrl(mNewsUrl);
+        mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                Logger.e(TAG,"xxx  "+newProgress);
+            }
+        });
         mNewsSourcesiteWebview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                isRedirected=true;
+                Logger.e(TAG,"xxxx shouldOverrideUrlLoading");
                 return true;
             }
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-//                ToastUtil.toastShort("xxxx onPageStarted");
-                isRedirected=false;
+                mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
+                mProgressDialog.setCancelable(true);
+                Logger.e(TAG, "xxxx onPageStarted");
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (isRedirected){
-//                    ToastUtil.toastShort("xxxx onPageFinished");
+                    Logger.e(TAG, "xxxx onPageFinished");
+                if(mProgressDialog!=null&&mProgressDialog.isShowing()){
+                    mProgressDialog.dismiss();
                 }
             }
         });
+        mNewsSourcesiteWebview.loadUrl(mNewsUrl);
     }
 
     @Override
