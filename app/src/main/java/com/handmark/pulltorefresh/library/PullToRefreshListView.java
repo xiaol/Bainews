@@ -40,6 +40,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 	private FrameLayout mLvFooterLoadingFrame;
 
+
 	private boolean mListViewExtrasEnabled;
 
 	public PullToRefreshListView(Context context) {
