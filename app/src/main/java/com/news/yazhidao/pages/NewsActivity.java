@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +27,7 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
+import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -37,13 +39,162 @@ public class NewsActivity extends Activity {
 
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
+    private LinearLayout ll_title;
     private ArrayList<NewsFeed> feedList = new ArrayList<NewsFeed>();
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
     private int i = 0;
     private boolean flag = false;
+    private boolean top_flag = false;
+    private boolean visible_flag = true;
     private String opinion;
     private ViewHolder holder = null;
+    private int mMostRecentY;
+    private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+            switch (scrollState){
+                case SCROLL_STATE_IDLE:
+                    if(view.getFirstVisiblePosition() == 0 && !visible_flag){
+
+                        ll_title.setVisibility(View.VISIBLE);
+                        visible_flag = true;
+
+                    }
+
+                    break;
+
+                case SCROLL_STATE_FLING:
+
+                    if(view != null){
+                        int firstPos = ((ListView)view).getFirstVisiblePosition();
+
+                        if(firstPos == 0) {
+                            ll_title.setVisibility(View.VISIBLE);
+                            visible_flag = true;
+                        }else if(firstPos == 1) {
+
+                            View v = ((ListView) view).getChildAt(firstPos);
+
+                            if (v != null) {
+                                int top = v.getTop();
+
+                                if (top > 200 && visible_flag) {
+
+                                    ll_title.setVisibility(View.GONE);
+                                    visible_flag = false;
+
+                                } else {
+                                    if (top < 50 && !visible_flag) {
+                                        ll_title.setVisibility(View.VISIBLE);
+                                        visible_flag = true;
+                                    }
+                                }
+
+                            }
+                        }else if(firstPos > 1){
+
+                            if(visible_flag){
+
+                                ll_title.setVisibility(View.GONE);
+                                visible_flag = false;
+
+                            }
+
+                        }
+                    }
+
+
+                    break;
+
+                case SCROLL_STATE_TOUCH_SCROLL:
+                    if(view != null){
+                        int firstPos = ((ListView)view).getFirstVisiblePosition();
+
+                        if(firstPos == 0) {
+                            ll_title.setVisibility(View.VISIBLE);
+                            visible_flag = true;
+                        }else if(firstPos == 1) {
+
+                            View v = ((ListView) view).getChildAt(firstPos);
+
+                            if (v != null) {
+                                int top = v.getTop();
+
+                                if (top > 200 && visible_flag) {
+
+                                    ll_title.setVisibility(View.GONE);
+                                    visible_flag = false;
+
+                                } else {
+                                    if (top < 50 && !visible_flag) {
+                                        ll_title.setVisibility(View.VISIBLE);
+                                        visible_flag = true;
+                                    }
+                                }
+
+                            }
+                        }else if(firstPos > 1){
+
+                            if(visible_flag){
+
+                                ll_title.setVisibility(View.GONE);
+                                visible_flag = false;
+
+                            }
+
+                        }
+                    }
+                    break;
+            }
+
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+//            int firstPos = ((ListView)view).getFirstVisiblePosition();
+//
+//            if(firstPos == 0) {
+//                ll_title.setVisibility(View.VISIBLE);
+//                visible_flag = true;
+//            }else if(firstPos == 1) {
+//
+//                View v = ((ListView) view).getChildAt(firstPos);
+//
+//                if (v != null) {
+//                    int top = v.getTop();
+//
+//                    if (top > 200 && visible_flag) {
+//
+//                        ll_title.setVisibility(View.GONE);
+//                        visible_flag = false;
+//
+//                    } else {
+//                        if (top < 50 && !visible_flag) {
+//                            ll_title.setVisibility(View.VISIBLE);
+//                            visible_flag = true;
+//                        }
+//                    }
+//
+//                }
+//            }else if(firstPos > 1){
+//
+//                if(visible_flag){
+//
+//                    ll_title.setVisibility(View.GONE);
+//                    visible_flag = false;
+//
+//                }
+//
+//            }
+
+            if (firstVisibleItem + visibleItemCount == totalItemCount && !top_flag) {
+                top_flag = true;
+            } else
+                top_flag = false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +202,8 @@ public class NewsActivity extends Activity {
         setContentView(R.layout.activity_news);
 
         loadNewsData();
+
+        ll_title = (LinearLayout) findViewById(R.id.ll_title);
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
         lv_news.setMode(PullToRefreshBase.Mode.BOTH);
@@ -70,6 +223,7 @@ public class NewsActivity extends Activity {
             }
         });
 
+        lv_news.setOnScrollListener(scrollListener);
 
     }
 
@@ -105,6 +259,7 @@ public class NewsActivity extends Activity {
                 holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                 holder.tv_interests = (TextView) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -114,17 +269,23 @@ public class NewsActivity extends Activity {
             NewsFeed feed = feedList.get(position);
             holder.tv_title.setText(feed.getTitle());
             holder.tv_interests.setText(feed.getOtherNum() + "家观点");
+
+            if(feed != null && feed.getOtherNum() != null){
+                if(Integer.parseInt(feed.getOtherNum()) == 0){
+                    holder.ll_source_interest.setVisibility(View.GONE);
+                }
+            }
+
             if(feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                 ImageLoaderHelper.loadImage(getApplicationContext(),feed.getImgUrl(),new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
                         holder.iv_title_img.setImageBitmap(loadedImage);
+                        applyBlur(holder.iv_title_img, holder.tv_title);
                     }
                 });
-            }else{
-                holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
             }
-            applyBlur(holder.iv_title_img, holder.tv_title);
 
             sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
@@ -140,21 +301,13 @@ public class NewsActivity extends Activity {
 
                     NewsFeed.Source source = sourceList.get(i);
                     if(source != null){
-                        if(source.getUrl() != null && !("".equals(source.getUrl()))) {
-                            ImageLoaderHelper.loadImage(getApplicationContext(),source.getUrl(),new SimpleImageLoadingListener() {
-                                @Override
-                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                    holder.iv_title_img.setImageBitmap(loadedImage);
-                                }
-                            });
-                        }else{
-                            iv_source.setBackgroundResource(R.drawable.weibo);
-                        }
+
                         iv_source.setBackgroundResource(R.drawable.weibo);
+
                         if(source.getSourceSitename() != null) {
-                            tv_news_source.setText(source.getSourceSitename());
+                            tv_news_source.setText(source.getSourceSitename() + ":");
                         }else{
-                            tv_news_source.setText("");
+                            tv_news_source.setText("匿名报道:");
                         }
 
                         if(source.getTitle() != null) {
@@ -179,6 +332,7 @@ public class NewsActivity extends Activity {
         ImageView iv_title_img;
         TextView tv_title;
         LinearLayout ll_source_content;
+        LinearLayout ll_source_interest;
         TextView tv_interests;
 
     }
@@ -189,7 +343,7 @@ public class NewsActivity extends Activity {
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-                Logger.i(">>>" + "aaaa", result.toString());
+                //Logger.i(">>>" + "aaaa", result.toString());
                 if (result != null) {
                     if(!flag) {
                         feedList = result;
@@ -239,10 +393,11 @@ public class NewsActivity extends Activity {
 //        canvas.translate(-view.getLeft()/scaleFactor, -view.getTop()/scaleFactor);
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
         canvas.drawBitmap(bkg, 0, 0, paint);
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
+        overlay = ImageUtils.getRoundCornerBitmap(overlay, 3.0f);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
