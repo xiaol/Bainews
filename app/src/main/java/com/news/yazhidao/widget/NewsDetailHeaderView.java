@@ -18,10 +18,8 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private int iScreenWidth, m_piCount;
     private LinearLayout mllBaiKe, mllZhiHu, mllZhiHuItem, mllSina,mllSinaItem, mllDouBan ;
-    WordWrapView mllDouBanItem;
-    private HorizontalListView mlvSina;
+    private WordWrapView mvDouBanItem;
     private HorizontalScrollView mSinaScrollView;
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
@@ -55,7 +53,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         mllZhiHu = (LinearLayout) mRootView.findViewById(R.id.zhihu_linerLayout);
         mllZhiHuItem = (LinearLayout) mRootView.findViewById(R.id.zhihu_item_linerLayout);
         mllDouBan = (LinearLayout) mRootView.findViewById(R.id.douban_linerLayout);
-        mllDouBanItem = (WordWrapView) mRootView.findViewById(R.id.douban_item_tabLayout);
+        mvDouBanItem = (WordWrapView) mRootView.findViewById(R.id.douban_item_tabLayout);
         mllSina = (LinearLayout) mRootView.findViewById(R.id.sina_linearLayout);
         mllSinaItem = (LinearLayout) mRootView.findViewById(R.id.sina_item_layout);
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
@@ -77,7 +75,7 @@ public class NewsDetailHeaderView extends FrameLayout {
             textview.setTextColor(getResources().getColor(R.color.douban_item_blue));
             textview.setTextSize(19);
             textview.setText(strs[i]);
-            mllDouBanItem.addView(textview);
+            mvDouBanItem.addView(textview);
         }
         for (int i = 0; i < 3; i++) {
 

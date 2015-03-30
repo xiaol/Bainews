@@ -37,6 +37,7 @@
     <color name="douban_item_blue">#4DB3EA</color>
     <color name="sina_item_gray">#D6D6D6</color>
     <color name="sina_item_content_gray">#7F7F7F</color>
+    <color name="staggered_item_source">#f7f7f7</color>
     <color name="Aboutbg">#e8f2f7</color>
     <color name="AboutPandabg">#1693d4</color>
     <color name="AboutButtonbg">#f2f6f8</color>

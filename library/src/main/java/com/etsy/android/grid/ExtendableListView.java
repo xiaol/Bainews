@@ -61,7 +61,7 @@ public abstract class ExtendableListView extends AbsListView {
 
     private static final String TAG = "ExtendableListView";
 
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
 
     private static final int TOUCH_MODE_IDLE = 0;
     private static final int TOUCH_MODE_SCROLLING = 1;
