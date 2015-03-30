@@ -46,7 +46,8 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mNewsSourcesiteLeftBack:
-                ToastUtil.toastShort("点击了leftback");
+//                ToastUtil.toastShort("点击了leftback");
+                this.finish();
                 break;
             case R.id.mNewsSourcesiteFooterPraise:
                 ToastUtil.toastShort("点击了点赞");
@@ -63,7 +64,8 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
     @Override
     protected void initializeViews() {
-
+        mNewsUrl=getIntent().getStringExtra("url");
+        mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
         mNewsSourcesiteWebview.setWebViewClient(new WebViewClient() {
@@ -77,7 +79,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                ToastUtil.toastShort("xxxx onPageStarted");
+//                ToastUtil.toastShort("xxxx onPageStarted");
                 isRedirected=false;
             }
 
@@ -85,7 +87,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 if (isRedirected){
-                    ToastUtil.toastShort("xxxx onPageFinished");
+//                    ToastUtil.toastShort("xxxx onPageFinished");
                 }
             }
         });

@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,7 +37,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import java.util.ArrayList;
 
 
-public class NewsActivity extends Activity {
+public class HomeAty extends Activity {
 
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
@@ -48,6 +50,7 @@ public class NewsActivity extends Activity {
     private boolean visible_flag = true;
     private String opinion;
     private ViewHolder holder = null;
+    private int a = 0;
     private int mMostRecentY;
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
@@ -223,7 +226,7 @@ public class NewsActivity extends Activity {
             }
         });
 
-        lv_news.setOnScrollListener(scrollListener);
+//        lv_news.setOnScrollListener(scrollListener);
 
     }
 
@@ -255,6 +258,7 @@ public class NewsActivity extends Activity {
             if (convertView == null) {
                 holder=new ViewHolder();
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
+                holder.fl_title_content = (FrameLayout) convertView.findViewById(R.id.fl_title_content);
                 holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                 holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                 holder.tv_interests = (TextView) convertView.findViewById(R.id.tv_interests);
@@ -266,9 +270,29 @@ public class NewsActivity extends Activity {
                 holder.ll_source_content.removeAllViews();
             }
 
-            NewsFeed feed = feedList.get(position);
+
+
+            final NewsFeed feed = feedList.get(position);
             holder.tv_title.setText(feed.getTitle());
             holder.tv_interests.setText(feed.getOtherNum() + "家观点");
+
+            holder.fl_title_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeAty.this,DetailAty.class);
+                    intent.putExtra("url",feed.getSourceUrl());
+                    startActivity(intent);
+                }
+            });
+
+//            holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(HomeAty.this,DetailAty.class);
+//                    intent.putExtra("url",feed.getSourceUrl());
+//                    startActivity(intent);
+//                }
+//            });
 
             if(feed != null && feed.getOtherNum() != null){
                 if(Integer.parseInt(feed.getOtherNum()) == 0){
@@ -292,14 +316,24 @@ public class NewsActivity extends Activity {
             //解析新闻来源观点数据
             if(sourceList != null && sourceList.size() > 0){
 
-                for(int i = 0;i < sourceList.size();i ++) {
+                for(int a = 0;a < sourceList.size();a ++) {
+
+                    final NewsFeed.Source source = sourceList.get(a);
 
                     LinearLayout ll_souce_view = (LinearLayout) View.inflate(getApplicationContext(), R.layout.lv_source_item, null);
+                    ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(HomeAty.this,NewsDetailWebviewAty.class);
+                            intent.putExtra("url",source.getUrl());
+                            startActivity(intent);
+                        }
+                    });
                     ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                     TextView tv_news_source = (TextView) ll_souce_view.findViewById(R.id.tv_news_source);
                     TextView tv_news_des = (TextView) ll_souce_view.findViewById(R.id.tv_news_des);
 
-                    NewsFeed.Source source = sourceList.get(i);
                     if(source != null){
 
                         iv_source.setBackgroundResource(R.drawable.weibo);
@@ -333,6 +367,7 @@ public class NewsActivity extends Activity {
         TextView tv_title;
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
+        FrameLayout fl_title_content;
         TextView tv_interests;
 
     }
