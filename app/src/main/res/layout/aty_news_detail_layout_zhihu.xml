@@ -3,9 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-  <TextView
+  <com.news.yazhidao.widget.TextViewExtend
       android:id="@+id/content_textView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:padding="@dimen/common_padding_five"/>
+      android:textColor="@color/black"
+      android:textSize="18sp"/>
 </RelativeLayout>

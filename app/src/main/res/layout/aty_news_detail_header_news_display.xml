@@ -12,13 +12,6 @@
         android:layout_height="300dp"
         android:background="@drawable/bg_news_detail_listview_header" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="23dp"
-        android:background="@drawable/btn_news_detail_left_back" />
-
     <RelativeLayout
         android:id="@+id/mNewsDetailHeaderContentWrapper"
         android:layout_width="match_parent"

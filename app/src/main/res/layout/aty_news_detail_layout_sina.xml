@@ -2,33 +2,47 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_yellow">
+    android:background="@drawable/bg_sina_item">
 
     <com.news.yazhidao.widget.RoundedImageView
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
         android:id="@+id/head_portrait_imageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
-    <TextView
+        android:background="@drawable/aaa"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/name_textView"
-        android:layout_alignTop="@+id/head_portrait_imageView"
+        android:layout_marginTop="6dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/black"
         android:layout_toRightOf="@+id/head_portrait_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <TextView
+
+    <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/content_textView"
-        android:layout_toRightOf="@+id/head_portrait_imageView"
+        android:layout_alignLeft="@+id/name_textView"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="8dp"
+        android:textSize="12sp"
+        android:lines="2"
+        android:ellipsize="end"
+        android:textColor="@color/sina_item_content_gray"
         android:layout_below="@+id/name_textView"
-        android:layout_alignParentBottom="@+id/head_portrait_imageView"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content" />
 
     <ImageView
         android:id="@+id/picture_imageView"
         android:layout_alignLeft="@+id/name_textView"
         android:layout_below="@+id/content_textView"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
         android:scaleType="centerCrop"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:background="@drawable/asd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

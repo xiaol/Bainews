@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 
@@ -18,8 +17,7 @@ public class BaiDuBaiKeView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private TextView mtvTitle;
-    private TextView mtvContent;
+    private TextViewExtend mtvTitle,mtvContent;
     private ImageView mivPicture;
     int i =3;
 
@@ -51,12 +49,12 @@ public class BaiDuBaiKeView extends FrameLayout {
     }
 
     private void findViews() {
-        mtvTitle = (TextView) mRootView.findViewById(R.id.title_textView);
-        mtvContent = (TextView) mRootView.findViewById(R.id.content_textView);
+        mtvTitle = (TextViewExtend) mRootView.findViewById(R.id.title_textView);
+        mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
 
-        mtvTitle.setText("北京站-百度百科");
-        mtvContent.setText("dfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadfdfasdfsadfsadf");
+        mtvTitle.setText("李光耀");
+        mtvContent.setText("李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀");
     }
 
     public void setZhiHuData(){
