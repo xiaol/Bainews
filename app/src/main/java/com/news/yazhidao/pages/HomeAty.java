@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -48,10 +49,12 @@ public class HomeAty extends Activity {
     private boolean flag = false;
     private boolean top_flag = false;
     private boolean visible_flag = true;
+    private boolean requestMore = false;
     private String opinion;
     private ViewHolder holder = null;
     private int a = 0;
     private int mMostRecentY;
+    private int currentSize = 0;
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -215,14 +218,15 @@ public class HomeAty extends Activity {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                requestMore = false;
                 loadNewsData();
-                flag = false;
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                requestMore = true;
                 loadNewsData();
-                flag = true;
+
             }
         });
 
@@ -235,10 +239,9 @@ public class HomeAty extends Activity {
 
         @Override
         public int getCount() {
-            if(feedList != null && feedList.size() > 0){
-                return feedList.size();
-            }
-            return 0;
+
+
+            return currentSize;
 
         }
 
@@ -271,19 +274,19 @@ public class HomeAty extends Activity {
             }
 
 
+            if(position <= currentSize) {
+                final NewsFeed feed = feedList.get(position);
+                holder.tv_title.setText(feed.getTitle());
+                holder.tv_interests.setText(feed.getOtherNum() + "家观点");
 
-            final NewsFeed feed = feedList.get(position);
-            holder.tv_title.setText(feed.getTitle());
-            holder.tv_interests.setText(feed.getOtherNum() + "家观点");
-
-            holder.fl_title_content.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(HomeAty.this,DetailAty.class);
-                    intent.putExtra("url",feed.getSourceUrl());
-                    startActivity(intent);
-                }
-            });
+                holder.fl_title_content.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, DetailAty.class);
+                        intent.putExtra("url", feed.getSourceUrl());
+                        startActivity(intent);
+                    }
+                });
 
 //            holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -294,65 +297,66 @@ public class HomeAty extends Activity {
 //                }
 //            });
 
-            if(feed != null && feed.getOtherNum() != null){
-                if(Integer.parseInt(feed.getOtherNum()) == 0){
-                    holder.ll_source_interest.setVisibility(View.GONE);
-                }
-            }
-
-            if(feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                ImageLoaderHelper.loadImage(getApplicationContext(),feed.getImgUrl(),new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
-                        holder.iv_title_img.setImageBitmap(loadedImage);
-                        applyBlur(holder.iv_title_img, holder.tv_title);
+                if (feed != null && feed.getOtherNum() != null) {
+                    if (Integer.parseInt(feed.getOtherNum()) == 0) {
+                        holder.ll_source_interest.setVisibility(View.GONE);
                     }
-                });
-            }
+                }
 
-            sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
-
-            //解析新闻来源观点数据
-            if(sourceList != null && sourceList.size() > 0){
-
-                for(int a = 0;a < sourceList.size();a ++) {
-
-                    final NewsFeed.Source source = sourceList.get(a);
-
-                    LinearLayout ll_souce_view = (LinearLayout) View.inflate(getApplicationContext(), R.layout.lv_source_item, null);
-                    ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
+                    ImageLoaderHelper.loadImage(getApplicationContext(), feed.getImgUrl(), new SimpleImageLoadingListener() {
                         @Override
-                        public void onClick(View v) {
-
-                            Intent intent = new Intent(HomeAty.this,NewsDetailWebviewAty.class);
-                            intent.putExtra("url",source.getUrl());
-                            startActivity(intent);
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
+                            holder.iv_title_img.setImageBitmap(loadedImage);
+                            applyBlur(holder.iv_title_img, holder.tv_title);
                         }
                     });
-                    ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
-                    TextView tv_news_source = (TextView) ll_souce_view.findViewById(R.id.tv_news_source);
-                    TextView tv_news_des = (TextView) ll_souce_view.findViewById(R.id.tv_news_des);
+                }
 
-                    if(source != null){
+                sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
-                        iv_source.setBackgroundResource(R.drawable.weibo);
+                //解析新闻来源观点数据
+                if (sourceList != null && sourceList.size() > 0) {
 
-                        if(source.getSourceSitename() != null) {
-                            tv_news_source.setText(source.getSourceSitename() + ":");
-                        }else{
-                            tv_news_source.setText("匿名报道:");
+                    for (int a = 0; a < sourceList.size(); a++) {
+
+                        final NewsFeed.Source source = sourceList.get(a);
+
+                        LinearLayout ll_souce_view = (LinearLayout) View.inflate(getApplicationContext(), R.layout.lv_source_item, null);
+                        ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(HomeAty.this, NewsDetailWebviewAty.class);
+                                intent.putExtra("url", source.getUrl());
+                                startActivity(intent);
+                            }
+                        });
+                        ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
+                        TextView tv_news_source = (TextView) ll_souce_view.findViewById(R.id.tv_news_source);
+                        TextView tv_news_des = (TextView) ll_souce_view.findViewById(R.id.tv_news_des);
+
+                        if (source != null) {
+
+                            iv_source.setBackgroundResource(R.drawable.weibo);
+
+                            if (source.getSourceSitename() != null) {
+                                tv_news_source.setText(source.getSourceSitename() + ":");
+                            } else {
+                                tv_news_source.setText("匿名报道:");
+                            }
+
+                            if (source.getTitle() != null) {
+                                tv_news_des.setText(source.getTitle());
+                            } else {
+                                tv_news_des.setText("");
+                            }
+
                         }
 
-                        if(source.getTitle() != null) {
-                            tv_news_des.setText(source.getTitle());
-                        }else{
-                            tv_news_des.setText("");
-                        }
-
+                        holder.ll_source_content.addView(ll_souce_view);
                     }
-
-                    holder.ll_source_content.addView(ll_souce_view);
                 }
             }
 
@@ -378,17 +382,26 @@ public class HomeAty extends Activity {
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-                //Logger.i(">>>" + "aaaa", result.toString());
                 if (result != null) {
-                    if(!flag) {
-                        feedList = result;
+                    feedList = result;
+                    if(!requestMore) {
+                        if (feedList != null && feedList.size() > 0 && feedList.size() < 3) {
+                            currentSize = feedList.size();
+                        } else if (feedList != null && feedList.size() >= 3) {
+                            currentSize = 3;
+                        }
 
                         list_adapter = new MyAdapter();
                         lv_news.setAdapter(list_adapter);
+
+                    }else{
+                        currentSize = feedList.size();
+                        list_adapter.notifyDataSetChanged();
                     }
 
-                } else {
 
+                } else {
+                    Toast.makeText(HomeAty.this,"网络出现异常，请检查网络...",Toast.LENGTH_LONG).show();
                 }
                 lv_news.onRefreshComplete();
             }
