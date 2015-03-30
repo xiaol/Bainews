@@ -1,7 +1,25 @@
-<com.news.yazhidao.widget.StaggeredGridView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/news_detail_staggeredGridView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:numColumns="2" />
+    android:layout_height="match_parent">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView
+        android:id="@+id/news_detail_staggeredGridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:column_count="2"
+        app:item_margin="16dp" />
+
+    <ImageView
+        android:id="@+id/back_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/btn_news_detail_left_back" />
+</RelativeLayout>

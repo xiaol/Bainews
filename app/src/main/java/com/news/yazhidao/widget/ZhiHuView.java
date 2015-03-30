@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 
@@ -17,7 +16,7 @@ public class ZhiHuView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private TextView mtvContent;
+    private TextViewExtend mtvContent;
 
     public ZhiHuView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -45,8 +44,8 @@ public class ZhiHuView extends FrameLayout {
     }
 
     private void findViews() {
-        mtvContent = (TextView) mRootView.findViewById(R.id.content_textView);
-        mtvContent.setText("dfasdfsadfsadfdfasdfsadfsadfd");
+        mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
+        mtvContent.setText("如何评价李光耀开创的新加坡是国家管理模式？");
     }
 
     public void setZhiHuData(){

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/mNewsSourcesiteHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/mNewsSourcesiteLeftBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/btn_news_sourcesite_left_back" />
+
+        <TextView
+            android:id="@+id/mNewsSourcesiteUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:lines="1"
+            android:text="https://github.com/xiaol/Bainews/commits/master" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/mNewsSourcesiteTopDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/mNewsSourcesiteHeader"
+        android:background="@color/news_sourcesite_divider" />
+
+
+    <WebView
+        android:id="@+id/mNewsSourcesiteWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mNewsSourcesiteTopDivider"
+        >
+
+    </WebView>
+
+    <ImageView
+        android:layout_alignTop="@+id/mNewsSourcesiteFooter"
+        android:id="@+id/mNewsSourcesiteBottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="-1px"
+        android:layout_below="@id/mNewsSourcesiteWebview"
+        android:background="@color/news_sourcesite_divider" />
+
+    <LinearLayout
+        android:id="@+id/mNewsSourcesiteFooter"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_news_sourcesite_bottom"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/mNewsSourcesiteFooterPraise"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_news_sourcesite_praise" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mNewsSourcesitePraiseNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="1234" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="40dp"
+            android:src="@color/news_sourcesite_bottom_divider" />
+
+        <LinearLayout
+            android:id="@+id/mNewsSourcesiteFooterBlame"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_news_sourcesite_blame" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mNewsSourcesiteBlameNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="1234" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="1px"
+            android:layout_height="40dp"
+            android:src="@color/news_sourcesite_bottom_divider" />
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/mNewsSourcesiteFooterShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:src="@drawable/btn_news_sourcesite_share" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>
