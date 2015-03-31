@@ -30,6 +30,7 @@ public class DetailAty extends Activity{
     private boolean mHasRequestedMore;
     private StaggeredNewsDetailAdapter mMoreAdapter;
     private ImageView mivBack;
+    private NewsDetailHeaderView headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class DetailAty extends Activity{
     }
 
     private void findViews() {
-        NewsDetailHeaderView headerView = new NewsDetailHeaderView(this);
+        headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView)findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -113,7 +114,6 @@ public class DetailAty extends Activity{
         });
 
     }
-    private int stop_position;
     private void setListener(){
         mivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,22 +126,15 @@ public class DetailAty extends Activity{
     @Override
     protected void onResume() {
         super.onResume();
-        msgvNewsDetail.smoothScrollBy(1000,2000);
-        msgvNewsDetail.post(new Runnable() {
+        msgvNewsDetail.startFlingRunnable(300);
+        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void run() {
-//                msgvNewsDetail.scrollTo(0,500);
-//                msgvNewsDetail.setSelection(2);
-//                msgvNewsDetail.smoothScrollToPositionFromTop(2,1);
-
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Logger.i("down", bottom+ "bottom=00000");
+                msgvNewsDetail.mFlingRunnable.startScroll(bottom,9000);
             }
         });
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                msgvNewsDetail.smoothScrollToPosition(500);
-//            }
-//        },1000);
+
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
