@@ -14,8 +14,7 @@
 
     <application
         android:name=".application.YaZhiDaoApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <!-- ################## Umeng分享 ####################### -->
@@ -68,21 +67,21 @@
         <activity
             android:name=".pages.DetailAty"
             android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            >
 
         </activity>
 
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
-            android:label="@string/app_name">
+            >
 
         </activity>
-
+        <activity android:name=".pages.HomeAty" android:screenOrientation="portrait"/>
         <activity
-            android:name=".pages.HomeAty"
+            android:name=".pages.SplashAty"
             android:screenOrientation="portrait"
-            android:label="bainews">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

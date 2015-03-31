@@ -55,6 +55,7 @@ public class HomeAty extends Activity {
     private int a = 0;
     private int mMostRecentY;
     private int currentSize = 0;
+    private int contentSize = 0;
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -240,7 +241,6 @@ public class HomeAty extends Activity {
         @Override
         public int getCount() {
 
-
             return currentSize;
 
         }
@@ -257,6 +257,8 @@ public class HomeAty extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
+            contentSize = 0;
 
             if (convertView == null) {
                 holder=new ViewHolder();
@@ -308,6 +310,9 @@ public class HomeAty extends Activity {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 //                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
+
+                            Logger.i(">>>>>xxxx","yes" + loadedImage.toString());
+
                             holder.iv_title_img.setImageBitmap(loadedImage);
                             applyBlur(holder.iv_title_img, holder.tv_title);
                         }
@@ -339,11 +344,19 @@ public class HomeAty extends Activity {
 
                         if (source != null) {
 
-                            iv_source.setBackgroundResource(R.drawable.weibo);
+                            String source_name = source.getSourceSitename();
 
-                            if (source.getSourceSitename() != null) {
-                                tv_news_source.setText(source.getSourceSitename() + ":");
+                            if (source_name != null) {
+                                if(source.getUser() != null && !"".equals(source.getUser())){
+                                    tv_news_source.setText(source.getUser() + ":");
+                                }else{
+                                    tv_news_source.setText(source_name + ":");
+                                }
+
+                                setImageSource(iv_source,source_name);
+
                             } else {
+
                                 tv_news_source.setText("匿名报道:");
                             }
 
@@ -354,14 +367,85 @@ public class HomeAty extends Activity {
                             }
 
                         }
-
-                        holder.ll_source_content.addView(ll_souce_view);
+                        if(contentSize < 3) {
+                            holder.ll_source_content.addView(ll_souce_view);
+                            contentSize ++;
+                        }
                     }
                 }
             }
 
             return convertView;
         }
+    }
+
+    private void setImageSource(ImageView iv_source,String source_name) {
+
+
+            if("凤凰网".equals(source_name)) {
+                iv_source.setBackgroundResource(R.drawable.fenghuangwang);
+            }else if("网易".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.yi);
+            }else if("zhihu".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhihu);
+            }else if("微博".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.weibo);
+            }else if("国际在线".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.guojizaixian);
+            }else if("新浪网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.xinlang);
+            }else if("搜狐".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.souhu);
+            }else if("腾讯".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.tengxun);
+            }else if("中国经济报".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhongguojingjibao);
+            }else if("中国经济网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhongguojingjiwang);
+            }else if("人民网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.renminwang);
+            }else if("经济参考报".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.jingjicankaobao);
+            }else if("南方网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.nanfang);
+            }else if("中工网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhonggongwang);
+            }else if("央视网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.yangshiwang);
+            }else if("金融街".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.jinrongjie);
+            }else if("南海网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.nanhaiwang);
+            }else if("36氪".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.thirty_six_ke);
+            }else if("环球网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.huanqiuwang);
+            }else if("解放牛网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.jiefangniuwang);
+            }else if("21CN".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.twenty_one_cn);
+            }else if("中金在线".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhongjinzaixian);
+            }else if("证券之星".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhengquanzhixing);
+            }else if("太平洋电脑网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.taipingyangdiannaowang);
+            }else if("中关村在线".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhongguancunzaixian);
+            }else if("红网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.hongwang);
+            }else if("北青网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.beiqingwang);
+            }else if("sports.cn".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.sportscn);
+            }else if("新民网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.xinmin);
+            }else if("中国山东网".equals(source_name)){
+                iv_source.setBackgroundResource(R.drawable.zhongguoshandongwang);
+            }else{
+                iv_source.setBackgroundResource(R.drawable.other);
+            }
+
     }
 
 
@@ -407,7 +491,8 @@ public class HomeAty extends Activity {
             }
 
             public void failed(MyAppException exception) {
-                Logger.i(">>>" + "aaa", exception.getMessage());
+//                Logger.i(">>>" + "aaa", exception.getMessage());
+                Toast.makeText(HomeAty.this,"网络出现异常，请检查网络...",Toast.LENGTH_LONG).show();
                 lv_news.onRefreshComplete();
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
@@ -432,8 +517,8 @@ public class HomeAty extends Activity {
 
     private void blur(Bitmap bkg, View view) {
         long startMs = System.currentTimeMillis();
-        float scaleFactor = 8;
-        float radius = 2;
+        float scaleFactor = 3;
+        float radius = 1;
 
         Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
                 (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_8888);

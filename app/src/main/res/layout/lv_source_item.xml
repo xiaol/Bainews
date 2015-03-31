@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/iv_source"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
@@ -23,7 +23,7 @@
         android:layout_height="17dp"
         android:layout_marginBottom="5dp"
         android:layout_gravity="center_vertical"
-        android:gravity="center|center_vertical"
+        android:gravity="left|center_vertical"
         android:layout_marginLeft="4dp"
         android:textColor="#666666"
         android:text="Fay苏"
