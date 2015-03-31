@@ -36,6 +36,7 @@ public class NewsDetailAty extends BaseActivity {
     private boolean mHasRequestedMore;
     private StaggeredNewsDetailAdapter mMoreAdapter;
     private ImageView mivBack;
+    private NewsDetailHeaderView headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,10 +157,18 @@ public class NewsDetailAty extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
+        msgvNewsDetail.startFlingRunnable(300);
+        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Logger.i("down", bottom+ "bottom=00000");
+                msgvNewsDetail.mFlingRunnable.startScroll(bottom,9000);
+            }
+        });
+
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
