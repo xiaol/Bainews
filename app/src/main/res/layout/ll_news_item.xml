@@ -13,7 +13,8 @@
             android:id="@+id/iv_title_img"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:background="@drawable/title_beijing" />
+            android:scaleType="centerCrop"
+            />
 
         <TextView
             android:id="@+id/tv_title"
@@ -21,6 +22,7 @@
             android:layout_height="61dp"
             android:layout_gravity="left|top"
             android:textSize="20sp"
+            android:background="@drawable/bg_image_title"
             android:textColor="#ffffff" />
 
     </FrameLayout>
@@ -34,6 +36,7 @@
         android:paddingTop="16dp"/>
 
     <LinearLayout
+        android:id="@+id/ll_source_interest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_feedback_contact_way"

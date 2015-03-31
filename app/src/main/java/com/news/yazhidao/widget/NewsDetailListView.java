@@ -93,11 +93,7 @@ public class NewsDetailListView extends ListView implements OnScrollListener {
 //        }
 //    }
 //
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        touchListener.onTouchEvent(ev);
-//        return super.onTouchEvent(ev);
-//    }
+//
 //
 //    public void setParallaxImageView(ImageView iv) {
 //        mImageView = iv;

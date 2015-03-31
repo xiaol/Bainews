@@ -108,4 +108,7 @@
     <color name="wall_selection_title_color">#282828</color>
     <color name="news_detail_time_and_temperature">#7f7f7f</color>
     <color name="news_detail_sourcename_and_location">#818181</color>
+    <color name="bg_news_sourcesite_bottom">#fafafa</color>
+    <color name="news_sourcesite_bottom_divider">#dddddd</color>
+    <color name="news_sourcesite_divider">#d6d6d6</color>
 </resources>
