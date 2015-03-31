@@ -279,7 +279,7 @@ public class HomeAty extends Activity {
             holder.fl_title_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(HomeAty.this,DetailAty.class);
+                    Intent intent = new Intent(HomeAty.this,NewsDetailAty.class);
                     intent.putExtra("url",feed.getSourceUrl());
                     startActivity(intent);
                 }
@@ -394,7 +394,7 @@ public class HomeAty extends Activity {
             }
 
             public void failed(MyAppException exception) {
-                Logger.i(">>>" + "aaa", exception.getMessage());
+                Logger.i(">>>","load data failed");
                 lv_news.onRefreshComplete();
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {

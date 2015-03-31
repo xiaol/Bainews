@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,15 +13,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 
 
-public class DetailAty extends Activity {
+public class NewsDetailAty extends BaseActivity {
 
+    private static final String TAG = "NewsDetailAty";
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
     private StaggeredGridView msgvNewsDetail;
     private String[] s;
@@ -34,19 +41,16 @@ public class DetailAty extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void setContentView() {
         setContentView(R.layout.aty_detail);
+    }
+
+    @Override
+    protected void initializeViews() {
         initVars();
-        findViews();
-        setListener();
-    }
-
-    private void initVars() {
-        s = new String[]{"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
-        mMoreAdapter = new StaggeredNewsDetailAdapter(this);
-        mMoreAdapter.setData(s);
-    }
-
-    private void findViews() {
         headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
@@ -115,6 +119,36 @@ public class DetailAty extends Activity {
 
     }
 
+    @Override
+    protected void loadData() {
+        //TODO 注意 这里的URL 是测试的
+        setListener();
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL, NetworkRequest.RequestMethod.GET);
+        _Request.setCallback(new JsonCallback<NewsDetail>() {
+
+            @Override
+            public void success(NewsDetail result) {
+                Logger.e(TAG, result.toString());
+
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                Logger.e(TAG, exception.getMessage());
+            }
+        }.setReturnType(new TypeToken<NewsDetail>() {
+        }.getType()));
+        _Request.execute();
+    }
+
+    private void initVars() {
+        s = new String[]{"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
+        mMoreAdapter = new StaggeredNewsDetailAdapter(this);
+        mMoreAdapter.setData(s);
+    }
+
+private int stop_position;
+
     private void setListener() {
         mivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,71 +172,71 @@ public class DetailAty extends Activity {
 
     }
 
-    class StaggeredNewsDetailAdapter extends BaseAdapter {
+class StaggeredNewsDetailAdapter extends BaseAdapter {
 
-        Context mContext;
-        String[] mStrings;
+    Context mContext;
+    String[] mStrings;
 
-        StaggeredNewsDetailAdapter(Context context) {
-            mContext = context;
+    StaggeredNewsDetailAdapter(Context context) {
+        mContext = context;
+    }
+
+
+    public void setData(String[] strings) {
+        mStrings = strings;
+    }
+
+    @Override
+    public int getCount() {
+        return mStrings.length;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mStrings[position];
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final Holder holder;
+        if (convertView == null) {
+            holder = new Holder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_staggered_gridview_news_detail, null, false);
+            holder.ivPicture = (ImageView) convertView.findViewById(R.id.picture_imageView);
+            holder.tvContent = (TextView) convertView.findViewById(R.id.content_textView);
+            holder.ivSource = (ImageView) convertView.findViewById(R.id.source_imageView);
+            holder.tvSource = (TextView) convertView.findViewById(R.id.source_textView);
+            convertView.setTag(holder);
+        } else {
+            holder = (Holder) convertView.getTag();
         }
-
-
-        public void setData(String[] strings) {
-            mStrings = strings;
-        }
-
-        @Override
-        public int getCount() {
-            return mStrings.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mStrings[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            final Holder holder;
-            if (convertView == null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_staggered_gridview_news_detail, null, false);
-                holder.ivPicture = (ImageView) convertView.findViewById(R.id.picture_imageView);
-                holder.tvContent = (TextView) convertView.findViewById(R.id.content_textView);
-                holder.ivSource = (ImageView) convertView.findViewById(R.id.source_imageView);
-                holder.tvSource = (TextView) convertView.findViewById(R.id.source_textView);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
+        holder.tvContent.setText(mStrings[position]);
+        if (position > 2)
+            holder.ivPicture.setVisibility(View.GONE);
+        else
+            holder.ivPicture.setVisibility(View.VISIBLE);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(NewsDetailAty.this, "+" + position, Toast.LENGTH_SHORT).show();
             }
-            holder.tvContent.setText(mStrings[position]);
-            if (position > 2)
-                holder.ivPicture.setVisibility(View.GONE);
-            else
-                holder.ivPicture.setVisibility(View.VISIBLE);
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(DetailAty.this, "+" + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            return convertView;
-        }
+        });
+        return convertView;
     }
+}
 
 
-    class Holder {
-        ImageView ivPicture;
-        TextView tvContent;
-        ImageView ivSource;
-        TextView tvSource;
-    }
+class Holder {
+    ImageView ivPicture;
+    TextView tvContent;
+    ImageView ivSource;
+    TextView tvSource;
+}
 
 
 }

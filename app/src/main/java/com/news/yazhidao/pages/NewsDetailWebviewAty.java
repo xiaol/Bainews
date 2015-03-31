@@ -19,7 +19,7 @@ import com.news.yazhidao.utils.ToastUtil;
 public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "NewsDetailWebviewAty";
     private WebView mNewsSourcesiteWebview;
-    private String mNewsUrl="http://www.hinews.cn/news/system/2015/03/27/017433273.shtml";
+    private String mNewsUrl;
     private View mNewsSourcesiteLeftBack;
     private TextView mNewsSourcesiteUrl;
     private View mNewsSourcesiteFooterPraise;
@@ -85,8 +85,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
-                mProgressDialog.setCancelable(true);
+                if(mProgressDialog==null){
+                    mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
+                    mProgressDialog.setCancelable(true);
+                }
                 Logger.e(TAG, "xxxx onPageStarted");
             }
 

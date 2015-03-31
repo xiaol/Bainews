@@ -44,6 +44,7 @@
             android:text="2015年05月25日" />
 
         <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/mNewsDetailHeaderTemperature"
             android:layout_below="@id/mNewsDetailHeaderTitle"
             android:layout_toRightOf="@id/mNewsDetailHeaderTime"
             android:drawableLeft="@drawable/ic_news_detail_temperature"
