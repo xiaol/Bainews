@@ -21,8 +21,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 
 
-
-public class DetailAty extends Activity{
+public class DetailAty extends Activity {
 
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
     private StaggeredGridView msgvNewsDetail;
@@ -42,17 +41,17 @@ public class DetailAty extends Activity{
     }
 
     private void initVars() {
-        s = new String[] {"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会","打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
+        s = new String[]{"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
         mMoreAdapter = new StaggeredNewsDetailAdapter(this);
         mMoreAdapter.setData(s);
     }
 
     private void findViews() {
         headerView = new NewsDetailHeaderView(this);
-        mivBack = (ImageView)findViewById(R.id.back_imageView);
+        mivBack = (ImageView) findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        msgvNewsDetail=mPullToRefreshStaggeredGridView.getRefreshableView();
+        msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
         msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
         msgvNewsDetail.setAdapter(mMoreAdapter);
@@ -71,40 +70,41 @@ public class DetailAty extends Activity{
         });
         mMoreAdapter.notifyDataSetChanged();
         msgvNewsDetail.setOnTouchListener(new View.OnTouchListener() {
-            float _StartY=0;
-            float _DeltaY=0;
-            RelativeLayout.LayoutParams _MivBackLayout= (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
-            int _MivBackTopMargin=_MivBackLayout.topMargin;
-            int _MivBackSelfHeigh=mivBack.getHeight();
+            float _StartY = 0;
+            float _DeltaY = 0;
+            RelativeLayout.LayoutParams _MivBackLayout = (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
+            int _MivBackTopMargin = _MivBackLayout.topMargin;
+            int _MivBackSelfHeigh = mivBack.getHeight();
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        _StartY=event.getY();
-                        Logger.i("down",v.getScrollY()+"");
+                        _StartY = event.getY();
+                        Logger.i("down", v.getScrollY() + "");
                         break;
                     case MotionEvent.ACTION_UP:
-                    _DeltaY=event.getY()-_StartY;
-                        if(_DeltaY<0){
+                        _DeltaY = event.getY() - _StartY;
+                        if (_DeltaY < 0) {
                             //往上滑动
-                            if(mivBack.getVisibility()==View.GONE){
+                            if (mivBack.getVisibility() == View.GONE) {
                                 return false;
                             }
-                           if(Math.abs(_DeltaY)>_MivBackTopMargin+_MivBackSelfHeigh){
-                               mivBack.setVisibility(View.GONE);
-                           }
+                            if (Math.abs(_DeltaY) > _MivBackTopMargin + _MivBackSelfHeigh) {
+                                mivBack.setVisibility(View.GONE);
+                            }
 
-                        }else{
+                        } else {
                             //往下滑动
-                            if(mivBack.getVisibility()==View.VISIBLE){
+                            if (mivBack.getVisibility() == View.VISIBLE) {
                                 return false;
                             }
-                            if(Math.abs(_DeltaY)>_MivBackTopMargin+_MivBackSelfHeigh){
+                            if (Math.abs(_DeltaY) > _MivBackTopMargin + _MivBackSelfHeigh) {
                                 mivBack.setVisibility(View.VISIBLE);
                             }
                         }
-                        Logger.i("xxx",_DeltaY+"");
+                        Logger.i("xxx", _DeltaY + "");
                         break;
                     default:
                         break;
@@ -114,7 +114,8 @@ public class DetailAty extends Activity{
         });
 
     }
-    private void setListener(){
+
+    private void setListener() {
         mivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,14 +127,14 @@ public class DetailAty extends Activity{
     @Override
     protected void onResume() {
         super.onResume();
-        msgvNewsDetail.startFlingRunnable(300);
-        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Logger.i("down", bottom+ "bottom=00000");
-                msgvNewsDetail.mFlingRunnable.startScroll(bottom,9000);
-            }
-        });
+//        msgvNewsDetail.startFlingRunnable(300);
+//        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                Logger.i("down", bottom + "bottom=00000");
+//                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
+//            }
+//        });
 
     }
 
@@ -172,16 +173,23 @@ public class DetailAty extends Activity{
             if (convertView == null) {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_staggered_gridview_news_detail, null, false);
+                holder.ivPicture = (ImageView) convertView.findViewById(R.id.picture_imageView);
                 holder.tvContent = (TextView) convertView.findViewById(R.id.content_textView);
+                holder.ivSource = (ImageView) convertView.findViewById(R.id.source_imageView);
+                holder.tvSource = (TextView) convertView.findViewById(R.id.source_textView);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
             holder.tvContent.setText(mStrings[position]);
+            if (position > 2)
+                holder.ivPicture.setVisibility(View.GONE);
+            else
+                holder.ivPicture.setVisibility(View.VISIBLE);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(DetailAty.this,"+"+position,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DetailAty.this, "+" + position, Toast.LENGTH_SHORT).show();
                 }
             });
             return convertView;
@@ -190,7 +198,10 @@ public class DetailAty extends Activity{
 
 
     class Holder {
+        ImageView ivPicture;
         TextView tvContent;
+        ImageView ivSource;
+        TextView tvSource;
     }
 
 
