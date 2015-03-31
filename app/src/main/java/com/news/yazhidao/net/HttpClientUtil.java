@@ -113,11 +113,11 @@ public class HttpClientUtil {
                                     + "AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1");
             // 超时设置
 /* 从连接池中取连接的超时时间 */
-            ConnManagerParams.setTimeout(params, 10000);
+            ConnManagerParams.setTimeout(params, 15000);
             /* 连接超时 */
-            HttpConnectionParams.setConnectionTimeout(params, 10000);
+            HttpConnectionParams.setConnectionTimeout(params, 15000);
             /* 请求超时 */
-            HttpConnectionParams.setSoTimeout(params, 10000);
+            HttpConnectionParams.setSoTimeout(params, 15000);
 
             // 设置我们的HttpClient支持HTTP和HTTPS两种模式
             SchemeRegistry schReg = new SchemeRegistry();

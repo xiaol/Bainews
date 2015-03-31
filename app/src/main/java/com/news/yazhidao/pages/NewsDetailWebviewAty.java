@@ -85,8 +85,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
-                mProgressDialog.setCancelable(true);
+                if(mProgressDialog==null){
+                    mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
+                    mProgressDialog.setCancelable(true);
+                }
                 Logger.e(TAG, "xxxx onPageStarted");
             }
 

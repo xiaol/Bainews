@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,16 +13,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 
 
+public class NewsDetailAty extends BaseActivity {
 
-public class DetailAty extends Activity{
-
+    private static final String TAG = "NewsDetailAty";
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
     private StaggeredGridView msgvNewsDetail;
     private String[] s;
@@ -34,24 +40,21 @@ public class DetailAty extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void setContentView() {
         setContentView(R.layout.aty_detail);
+    }
+
+    @Override
+    protected void initializeViews() {
         initVars();
-        findViews();
-        setListener();
-    }
-
-    private void initVars() {
-        s = new String[] {"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会","打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
-        mMoreAdapter = new StaggeredNewsDetailAdapter(this);
-        mMoreAdapter.setData(s);
-    }
-
-    private void findViews() {
         NewsDetailHeaderView headerView = new NewsDetailHeaderView(this);
-        mivBack = (ImageView)findViewById(R.id.back_imageView);
+        mivBack = (ImageView) findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        msgvNewsDetail=mPullToRefreshStaggeredGridView.getRefreshableView();
+        msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
         msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
         msgvNewsDetail.setAdapter(mMoreAdapter);
@@ -70,40 +73,41 @@ public class DetailAty extends Activity{
         });
         mMoreAdapter.notifyDataSetChanged();
         msgvNewsDetail.setOnTouchListener(new View.OnTouchListener() {
-            float _StartY=0;
-            float _DeltaY=0;
-            RelativeLayout.LayoutParams _MivBackLayout= (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
-            int _MivBackTopMargin=_MivBackLayout.topMargin;
-            int _MivBackSelfHeigh=mivBack.getHeight();
+            float _StartY = 0;
+            float _DeltaY = 0;
+            RelativeLayout.LayoutParams _MivBackLayout = (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
+            int _MivBackTopMargin = _MivBackLayout.topMargin;
+            int _MivBackSelfHeigh = mivBack.getHeight();
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        _StartY=event.getY();
-                        Logger.i("down",v.getScrollY()+"");
+                        _StartY = event.getY();
+                        Logger.i("down", v.getScrollY() + "");
                         break;
                     case MotionEvent.ACTION_UP:
-                    _DeltaY=event.getY()-_StartY;
-                        if(_DeltaY<0){
+                        _DeltaY = event.getY() - _StartY;
+                        if (_DeltaY < 0) {
                             //往上滑动
-                            if(mivBack.getVisibility()==View.GONE){
+                            if (mivBack.getVisibility() == View.GONE) {
                                 return false;
                             }
-                           if(Math.abs(_DeltaY)>_MivBackTopMargin+_MivBackSelfHeigh){
-                               mivBack.setVisibility(View.GONE);
-                           }
+                            if (Math.abs(_DeltaY) > _MivBackTopMargin + _MivBackSelfHeigh) {
+                                mivBack.setVisibility(View.GONE);
+                            }
 
-                        }else{
+                        } else {
                             //往下滑动
-                            if(mivBack.getVisibility()==View.VISIBLE){
+                            if (mivBack.getVisibility() == View.VISIBLE) {
                                 return false;
                             }
-                            if(Math.abs(_DeltaY)>_MivBackTopMargin+_MivBackSelfHeigh){
+                            if (Math.abs(_DeltaY) > _MivBackTopMargin + _MivBackSelfHeigh) {
                                 mivBack.setVisibility(View.VISIBLE);
                             }
                         }
-                        Logger.i("xxx",_DeltaY+"");
+                        Logger.i("xxx", _DeltaY + "");
                         break;
                     default:
                         break;
@@ -113,8 +117,38 @@ public class DetailAty extends Activity{
         });
 
     }
+
+    @Override
+    protected void loadData() {
+        //TODO 注意 这里的URL 是测试的
+        setListener();
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL, NetworkRequest.RequestMethod.GET);
+        _Request.setCallback(new JsonCallback<NewsDetail>() {
+
+            @Override
+            public void success(NewsDetail result) {
+                Logger.e(TAG, result.toString());
+
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                Logger.e(TAG, exception.getMessage());
+            }
+        }.setReturnType(new TypeToken<NewsDetail>() {
+        }.getType()));
+        _Request.execute();
+    }
+
+    private void initVars() {
+        s = new String[]{"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
+        mMoreAdapter = new StaggeredNewsDetailAdapter(this);
+        mMoreAdapter.setData(s);
+    }
+
     private int stop_position;
-    private void setListener(){
+
+    private void setListener() {
         mivBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,22 +160,6 @@ public class DetailAty extends Activity{
     @Override
     protected void onResume() {
         super.onResume();
-        msgvNewsDetail.smoothScrollBy(1000,2000);
-        msgvNewsDetail.post(new Runnable() {
-            @Override
-            public void run() {
-//                msgvNewsDetail.scrollTo(0,500);
-//                msgvNewsDetail.setSelection(2);
-//                msgvNewsDetail.smoothScrollToPositionFromTop(2,1);
-
-            }
-        });
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                msgvNewsDetail.smoothScrollToPosition(500);
-//            }
-//        },1000);
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
@@ -188,7 +206,7 @@ public class DetailAty extends Activity{
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(DetailAty.this,"+"+position,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewsDetailAty.this, "+" + position, Toast.LENGTH_SHORT).show();
                 }
             });
             return convertView;

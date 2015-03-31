@@ -65,7 +65,7 @@
             android:name="com.renn.rennsdk.oauth.OAuthActivity"
             android:configChanges="orientation|navigation|keyboardHidden" />
         <activity
-            android:name=".pages.DetailAty"
+            android:name=".pages.NewsDetailAty"
             android:screenOrientation="portrait"
             >
 
