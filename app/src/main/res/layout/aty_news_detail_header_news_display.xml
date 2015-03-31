@@ -24,7 +24,7 @@
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailHeaderTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingMultiplier="1.5"
             android:text="在大多数情况下,这个方法还不赖,并且有一些优点"

@@ -80,7 +80,7 @@ public class NewsDetailAty extends BaseActivity {
     @Override
     protected void loadData() {
         //TODO 注意 这里的URL 是测试的
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL, NetworkRequest.RequestMethod.GET);
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL+getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 
             @Override
