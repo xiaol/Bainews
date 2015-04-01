@@ -5,6 +5,8 @@ import android.os.Handler;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by fengjigang on 15/3/30.
@@ -17,7 +19,8 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-
+        //add umeng statistic access app
+        MobclickAgent.onEvent(this, CommonConstant.US_BAINEWS_USER_ASSESS_APP);
     }
 
     @Override

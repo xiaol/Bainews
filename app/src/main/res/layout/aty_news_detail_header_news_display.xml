@@ -10,7 +10,7 @@
         android:id="@+id/mNewsDetailHeaderImg"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/bg_news_detail_listview_header" />
+         />
 
     <RelativeLayout
         android:id="@+id/mNewsDetailHeaderContentWrapper"
