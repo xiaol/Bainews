@@ -1,7 +1,9 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.google.gson.reflect.TypeToken;
@@ -24,7 +25,11 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
+
+import java.util.ArrayList;
 
 
 public class NewsDetailAty extends BaseActivity {
@@ -32,7 +37,6 @@ public class NewsDetailAty extends BaseActivity {
     private static final String TAG = "NewsDetailAty";
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
     private StaggeredGridView msgvNewsDetail;
-    private String[] s;
     private boolean mHasRequestedMore;
     private StaggeredNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
@@ -50,9 +54,7 @@ public class NewsDetailAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        s = new String[]{"2"};
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
-        mNewsDetailAdapter.setData(s);
         headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
@@ -66,8 +68,7 @@ public class NewsDetailAty extends BaseActivity {
             @Override
             public void onRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
                 if (!mHasRequestedMore) {
-                    s = new String[]{"打算福克斯的减肥了会计师的反的发生的飞洒发斯蒂芬", "打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
-                    mNewsDetailAdapter.setData(s);
+                    //TODO load more
                     mNewsDetailAdapter.notifyDataSetChanged();
                     mPullToRefreshStaggeredGridView.onRefreshComplete();
                     mHasRequestedMore = false;
@@ -79,7 +80,6 @@ public class NewsDetailAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        //TODO 注意 这里的URL 是测试的
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL+getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 
@@ -87,6 +87,7 @@ public class NewsDetailAty extends BaseActivity {
             public void success(NewsDetail result) {
                 Logger.e(TAG, result.toString());
                 headerView.setDetailData(result);
+                mNewsDetailAdapter.setData(result.relate);
                 mNewsDetailAdapter.notifyDataSetChanged();
             }
 
@@ -169,25 +170,24 @@ public class NewsDetailAty extends BaseActivity {
     class StaggeredNewsDetailAdapter extends BaseAdapter {
 
         Context mContext;
-        String[] mStrings;
-
+        ArrayList<NewsDetail.Relate> mArrData;
         StaggeredNewsDetailAdapter(Context context) {
             mContext = context;
         }
 
 
-        public void setData(String[] strings) {
-            mStrings = strings;
+        public void setData(ArrayList<NewsDetail.Relate> pArrData) {
+            mArrData = pArrData;
         }
 
         @Override
         public int getCount() {
-            return mStrings.length;
+            return mArrData==null?0:mArrData.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mStrings[position];
+            return mArrData.get(position);
         }
 
         @Override
@@ -209,15 +209,22 @@ public class NewsDetailAty extends BaseActivity {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            holder.tvContent.setText(mStrings[position]);
-            if (position > 2)
+            final NewsDetail.Relate _Relate = mArrData.get(position);
+            holder.tvContent.setText(_Relate.title);
+            if (TextUtils.isEmpty(_Relate.img))
                 holder.ivPicture.setVisibility(View.GONE);
-            else
+            else {
                 holder.ivPicture.setVisibility(View.VISIBLE);
+                ImageLoaderHelper.dispalyImage(mContext, _Relate.img, holder.ivPicture);
+            }
+            TextUtil.setResourceSiteIcon(holder.ivSource,_Relate.sourceSitename);
+            holder.tvSource.setText(_Relate.sourceSitename);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(NewsDetailAty.this, "+" + position, Toast.LENGTH_SHORT).show();
+                    Intent _Intent=new Intent(NewsDetailAty.this,NewsDetailWebviewAty.class);
+                    _Intent.putExtra("url",_Relate.url);
+                    startActivity(_Intent);
                 }
             });
             return convertView;
