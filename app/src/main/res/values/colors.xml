@@ -111,4 +111,5 @@
     <color name="bg_news_sourcesite_bottom">#fafafa</color>
     <color name="news_sourcesite_bottom_divider">#dddddd</color>
     <color name="news_sourcesite_divider">#d6d6d6</color>
+    <color name="bg_ews_detail_relate_item">#f7f7f7</color>
 </resources>

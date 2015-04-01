@@ -35,6 +35,7 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.utils.NetUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -471,7 +472,7 @@ public class HomeAty extends BaseActivity {
                                 tv_news_source.setText(source_name + ":");
                             }
 
-                            setImageSource(iv_source, source_name);
+                            TextUtil.setResourceSiteIcon(iv_source, source_name);
 
                         } else {
 
@@ -513,74 +514,7 @@ public class HomeAty extends BaseActivity {
         super.onResume();
     }
 
-    private void setImageSource(ImageView iv_source, String source_name) {
 
-
-        if ("凤凰网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.fenghuangwang);
-        } else if ("网易".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.yi);
-        } else if ("zhihu".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhihu);
-        } else if ("微博".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.weibo);
-        } else if ("国际在线".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.guojizaixian);
-        } else if ("新浪网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.xinlang);
-        } else if ("搜狐".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.souhu);
-        } else if ("腾讯".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.tengxun);
-        } else if ("中国经济报".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhongguojingjibao);
-        } else if ("中国经济网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhongguojingjiwang);
-        } else if ("人民网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.renminwang);
-        } else if ("经济参考报".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.jingjicankaobao);
-        } else if ("南方网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.nanfang);
-        } else if ("中工网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhonggongwang);
-        } else if ("央视网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.yangshiwang);
-        } else if ("金融街".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.jinrongjie);
-        } else if ("南海网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.nanhaiwang);
-        } else if ("36氪".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.thirty_six_ke);
-        } else if ("环球网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.huanqiuwang);
-        } else if ("解放牛网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.jiefangniuwang);
-        } else if ("21CN".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.twenty_one_cn);
-        } else if ("中金在线".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhongjinzaixian);
-        } else if ("证券之星".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhengquanzhixing);
-        } else if ("太平洋电脑网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.taipingyangdiannaowang);
-        } else if ("中关村在线".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhongguancunzaixian);
-        } else if ("红网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.hongwang);
-        } else if ("北青网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.beiqingwang);
-        } else if ("sports.cn".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.sportscn);
-        } else if ("新民网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.xinmin);
-        } else if ("中国山东网".equals(source_name)) {
-            iv_source.setBackgroundResource(R.drawable.zhongguoshandongwang);
-        } else {
-            iv_source.setBackgroundResource(R.drawable.other);
-        }
-
-    }
 
 
     class ViewHolder {

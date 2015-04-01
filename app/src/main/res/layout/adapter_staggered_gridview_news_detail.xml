@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/bg_gray">
+    >
 
     <LinearLayout
         android:background="@drawable/bg_grag_line_top_bottom"
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/staggered_item_source">
+        android:background="@drawable/bg_newsdetail_list_relate">
 
         <ImageView
             android:id="@+id/source_imageView"

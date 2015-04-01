@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/baike_linerLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:background="@color/white"
         android:layout_marginTop="@dimen/news_detail_layout_margin_top"
         android:orientation="vertical" />
@@ -102,7 +102,7 @@
     </LinearLayout>
 
     <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/point_textView"
+        android:id="@+id/mNewsDetailRelate"
         android:layout_marginTop="@dimen/news_detail_layout_margin_top"
         android:background="@drawable/bg_grag_line_top_bottom"
         android:paddingLeft="16dp"
