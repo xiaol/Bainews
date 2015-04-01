@@ -52,14 +52,12 @@
 -libraryjars ../umeng_social_sdk_library/libs/umeng_social_sdk.jar
 
 -dontwarn android.**
--dontwarn android.**
--dontwarn android.support.**
 -dontwarn com.google.gson.**
+-dontwarn android.support.**
 -dontwarn com.etsy.android.grid.**
--dontwarn com.umeng.analytics.**
 -dontwarn com.j256.ormlite.**
 -dontwarn org.apache.http.**
--dontwarn com.umeng.**
+-dontwarn com.umeng.socialize.**
 -dontwarn com.tencent.**
 -dontwarn com.renn.**
 -dontwarn com.sina.**
@@ -108,16 +106,18 @@ java.lang.Object readResolve();
 -keep class **.R$* {
     *;
 }
-
+-keepattributes Signature
+-keep class org.json.** {*;}
+-keep class com.google.gson.** {*;}
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.examples.android.model.** { *; }
 -keep class com.nostra13.**{*;}
 -keep class com.sina.**{*;}
 -keep class com.renn.**{*;}
 -keep class com.tencent.**{*;}
 -keep class org.apache.http.**{*;}
--keep class com.google.gson.**{*;}
 -keep class com.etsy.android.grid.**{*;}
--keep class com.umeng.**{*;}
--keep class com.umeng.analytics.**{*;}
+-keep class com.umeng.socialize.**{*;}
 -keep class com.j256.ormlite.**  {*;}
 -keep class android.webkit.**{*;}
 -keep class android.**{*;}
