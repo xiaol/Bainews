@@ -294,6 +294,7 @@ public class HomeAty extends BaseActivity {
 
                     loadNewsData(1);
                     page = 1;
+                    adapterFlag = false;
                 }else{
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
@@ -550,6 +551,7 @@ public class HomeAty extends BaseActivity {
                         if(!adapterFlag) {
                             list_adapter = new MyAdapter();
                             lv_news.setAdapter(list_adapter);
+                            adapterFlag = true;
                         }else{
                             list_adapter.notifyDataSetChanged();
                         }
