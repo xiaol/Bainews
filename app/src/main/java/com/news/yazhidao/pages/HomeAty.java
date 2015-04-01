@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -39,7 +38,8 @@ import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 
@@ -289,8 +289,6 @@ public class HomeAty extends BaseActivity {
 
             }
 
-
-
             final NewsFeed feed = feedList.get(position);
 
             holder.tv_title.setText(feed.getTitle());
@@ -317,10 +315,20 @@ public class HomeAty extends BaseActivity {
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.title_beijing);
-                holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
+//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.title_beijing);
+//                holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
 
-                ImageLoaderHelper.loadImage(getApplicationContext(), feed.getImgUrl(), new SimpleImageLoadingListener() {
+                ImageLoaderHelper.loadImage(getApplicationContext(), feed.getImgUrl(), new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 //                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
@@ -330,10 +338,17 @@ public class HomeAty extends BaseActivity {
                         applyBlur(holder.iv_title_img, holder.tv_title);
 
                     }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
                 });
 
-//                ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder.iv_title_img);
+//                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img);
 //                applyBlur(holder.iv_title_img, holder.tv_title);
+
+//                ImageLoader.getInstance().displayImage(feed.getImgUrl(),holder.iv_title_img);
             }
 
             long start = System.currentTimeMillis();
