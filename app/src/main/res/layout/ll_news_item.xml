@@ -16,11 +16,11 @@
             android:scaleType="centerCrop"
             />
 
-        <TextView
+        <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_title"
             android:layout_width="249dp"
             android:layout_height="61dp"
-            android:layout_gravity="left|top"
+            android:layout_gravity="left"
             android:textSize="20sp"
             android:background="@drawable/bg_image_title"
             android:textColor="#ffffff" />
@@ -47,7 +47,7 @@
         android:layout_alignParentRight="true"
         android:orientation="horizontal">
 
-        <TextView
+        <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_interests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

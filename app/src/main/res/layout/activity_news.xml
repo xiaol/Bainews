@@ -12,7 +12,8 @@
         android:background="#4fb5ea"
         >
 
-        <TextView
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头条百家"
@@ -29,7 +30,6 @@
         android:layout_below="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="8dp"
         android:background="#f3f3fa"
         android:scrollbars="none"
         android:dividerHeight="20dp"
