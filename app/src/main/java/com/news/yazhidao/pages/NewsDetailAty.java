@@ -1,7 +1,11 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -163,7 +167,17 @@ public class NewsDetailAty extends BaseActivity {
 //                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
 //            }
 //        });
+        Log.i("tag", getMacAddressAndDeviceid(this)+"aaaaaa");
 
+    }
+
+    public String getMacAddressAndDeviceid(Context c) {
+        WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInf = wifiMan.getConnectionInfo();
+        String macAddr = wifiInf.getMacAddress();
+
+        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getDeviceId()+macAddr;
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
