@@ -81,7 +81,7 @@ public abstract class ExtendableListView extends AbsListView {
 
     private int mLayoutMode;
 
-    private int mTouchMode;
+    public int mTouchMode;
     private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
 
     // Rectangle used for hit testing children
@@ -135,7 +135,7 @@ public abstract class ExtendableListView extends AbsListView {
 
     private AdapterDataSetObserver mObserver;
     private int mWidthMeasureSpec;
-    private FlingRunnable mFlingRunnable;
+    public FlingRunnable mFlingRunnable;
 
     protected boolean mClipToPadding;
     private PerformClick mPerformClick;
@@ -1977,7 +1977,7 @@ public abstract class ExtendableListView extends AbsListView {
         }
     }
 
-    private void startFlingRunnable(final float velocity) {
+    public void startFlingRunnable(final float velocity) {
         if (mFlingRunnable == null) {
             mFlingRunnable = new FlingRunnable();
         }
@@ -1999,7 +1999,7 @@ public abstract class ExtendableListView extends AbsListView {
      * initiate a fling. Each frame of the fling is handled in {@link #run()}.
      * A FlingRunnable will keep re-posting itself until the fling is done.
      */
-    private class FlingRunnable implements Runnable {
+    public class FlingRunnable implements Runnable {
         /**
          * Tracks the decay of a fling scroll
          */
@@ -2023,7 +2023,7 @@ public abstract class ExtendableListView extends AbsListView {
             postOnAnimate(this);
         }
 
-        void startScroll(int distance, int duration) {
+       public void startScroll(int distance, int duration) {
             int initialY = distance < 0 ? Integer.MAX_VALUE : 0;
             mLastFlingY = initialY;
             mScroller.startScroll(0, initialY, 0, distance, duration);

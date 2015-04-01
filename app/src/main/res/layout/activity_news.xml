@@ -12,7 +12,8 @@
         android:background="#4fb5ea"
         >
 
-        <TextView
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头条百家"
