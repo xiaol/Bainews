@@ -22,7 +22,7 @@
             android:textSize="22sp"
             />
 
-        </LinearLayout>
+    </LinearLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
