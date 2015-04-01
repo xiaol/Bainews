@@ -7,9 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,6 +26,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.net.JsonCallback;
@@ -43,8 +41,10 @@ import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class HomeAty extends BaseActivity {
@@ -361,7 +361,6 @@ public class HomeAty extends BaseActivity {
             }
 
 
-
             final NewsFeed feed = feedList.get(position);
 
             holder.tv_title.setText(feed.getTitle());
@@ -374,13 +373,23 @@ public class HomeAty extends BaseActivity {
                     Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
                     intent.putExtra("url", feed.getSourceUrl());
                     startActivity(intent);
+                    //uemng statistic view the head news
+                    MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                 }
             });
-
-
+            //点击其他观点的点击事件
+            holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   //uemng statistic click other viewpoint
+                    MobclickAgent.onEvent(HomeAty.this,CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                }
+            });
             if (feed != null && feed.getOtherNum() != null) {
                 if (Integer.parseInt(feed.getOtherNum()) == 0) {
                     holder.ll_source_interest.setVisibility(View.GONE);
+                } else {
+                    holder.ll_source_interest.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -443,6 +452,10 @@ public class HomeAty extends BaseActivity {
                             Intent intent = new Intent(HomeAty.this, NewsDetailWebviewAty.class);
                             intent.putExtra("url", source.getUrl());
                             startActivity(intent);
+                            //umeng statistic onclick url below the head news
+                            HashMap<String, String> _MobMap = new HashMap<>();
+                            _MobMap.put("resource_site_name", source.getSourceSitename());
+                            MobclickAgent.onEvent(HomeAty.this,CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                         }
                     });
                     ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
@@ -482,7 +495,7 @@ public class HomeAty extends BaseActivity {
                 }
             }
             Long delta = System.currentTimeMillis() - start;
-            Logger.i("aaaaaa" , delta + "");
+            Logger.i("aaaaaa", delta + "");
 
             return convertView;
         }
@@ -650,14 +663,6 @@ public class HomeAty extends BaseActivity {
         });
     }
 
-    public String getMacAddressAndDeviceid(Context c) {
-        WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInf = wifiMan.getConnectionInfo();
-        String macAddr = wifiInf.getMacAddress();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId()+ macAddr;
-    }
 
     private void blur(Bitmap bkg, View view) {
         long startMs = System.currentTimeMillis();
