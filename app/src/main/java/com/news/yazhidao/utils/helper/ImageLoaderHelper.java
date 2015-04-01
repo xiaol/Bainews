@@ -26,20 +26,34 @@ import java.io.File;
  */
 public class ImageLoaderHelper {
     private static ImageLoader imageLoader = ImageLoader.getInstance();
+    private ImageLoaderHelper helper;
+    private static ImageLoaderConfiguration config;
+
+    public ImageLoaderHelper(Context context) {
+        config = generateConfig(context);
+        imageLoader.init(config);
+    }
 
     public static ImageLoader getImageLoader(Context context) {
-        imageLoader.init(generateConfig(context));
         return imageLoader;
     }
-    public static void dispalyImage(Context context,String url,ImageView imageView){
-        getImageLoader(context).displayImage(url,imageView,getOption());
+
+    public static void dispalyImage(Context context, String url, ImageView imageView) {
+        imageLoader.displayImage(url, imageView, getOption());
     }
-public static void loadImage(Context context,String url,ImageLoadingListener listener){
-    getImageLoader(context).loadImage(url,getOption(),listener);
-}
-    public static void dispalyImage(Context context,String url,ImageView imageView,SimpleImageLoadingListener listener){
-        getImageLoader(context).displayImage(url,imageView,getOption(),listener);
+
+    public static void dispalyImage(Context context, String url, ImageView imageView,ImageLoadingListener listener) {
+        imageLoader.displayImage(url, imageView, getOption(),listener);
     }
+
+    public static void loadImage(Context context, String url, ImageLoadingListener listener) {
+        imageLoader.loadImage(url, getOption(), listener);
+    }
+
+    public static void dispalyImage(Context context, String url, ImageView imageView, SimpleImageLoadingListener listener) {
+        imageLoader.displayImage(url, imageView, getOption(), listener);
+    }
+
     private static ImageLoaderConfiguration generateConfig(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(context)
@@ -48,7 +62,7 @@ public static void loadImage(Context context,String url,ImageLoadingListener lis
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .memoryCache(new WeakMemoryCache()) // You can pass your own memory cache implementation/你可以通过自己的内存缓存实现
-                .memoryCacheSize((int) (Runtime.getRuntime().maxMemory()/8))
+                .memoryCacheSize((int) (Runtime.getRuntime().maxMemory() / 8))
                 .discCacheSize(50 * 1024 * 1024)
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())//将保存的时候的URI名称用MD5 加密
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
@@ -71,24 +85,25 @@ public static void loadImage(Context context,String url,ImageLoadingListener lis
         }
         return new File(cachePath + File.separator + uniqueName);
     }
-    public static DisplayImageOptions getOption(){
+
+    public static DisplayImageOptions getOption() {
         DisplayImageOptions options;
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.bg_news_detail_listview_header) //设置图片在下载期间显示的图片
-                .showImageForEmptyUri(R.drawable.bg_news_detail_listview_header)//设置图片Uri为空或是错误的时候显示的图片
-                .showImageOnFail(R.drawable.bg_news_detail_listview_header)  //设置图片加载/解码过程中错误时候显示的图片
+                .showImageOnLoading(R.drawable.image_back) //设置图片在下载期间显示的图片
+                .showImageForEmptyUri(R.drawable.image_back)//设置图片Uri为空或是错误的时候显示的图片
+                .showImageOnFail(R.drawable.image_back)  //设置图片加载/解码过程中错误时候显示的图片
                 .cacheInMemory(true)//设置下载的图片是否缓存在内存中
                 .cacheOnDisc(true)//设置下载的图片是否缓存在SD卡中
                 .considerExifParams(true)  //是否考虑JPEG图像EXIF参数（旋转，翻转）
                 .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//设置图片以如何的编码方式显示
                 .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型//
-//                .decodingOptions(android.graphics.BitmapFactory.Options decodingOptions)//设置图片的解码配置
-//.delayBeforeLoading(int delayInMillis)//int delayInMillis为你设置的下载前的延迟时间
-//设置图片加入缓存前，对bitmap进行设置
-//.preProcessor(BitmapProcessor preProcessor)
+                //.decodingOptions(android.graphics.BitmapFactory.Options decodingOptions)//设置图片的解码配置
+                //.delayBeforeLoading(int delayInMillis)//int delayInMillis为你设置的下载前的延迟时间
+                //设置图片加入缓存前，对bitmap进行设置
+                //.preProcessor(BitmapProcessor preProcessor)
                 .resetViewBeforeLoading(true)//设置图片在下载前是否重置，复位
-//                .displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
-//                .displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
+                //.displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
+                //.displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
                 .build();//构建完成
         return options;
     }

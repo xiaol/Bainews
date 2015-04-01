@@ -34,7 +34,6 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -72,6 +71,31 @@ public class HomeAty extends BaseActivity {
     private int mMostRecentY;
     private int currentSize = 0;
     private int contentSize = 0;
+    private ImageLoaderHelper imageLoader;
+
+    private ImageLoadingListener loadingListener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            //holder.iv_title_img.setImageBitmap(loadedImage);
+            applyBlur(holder.iv_title_img, holder.tv_title);
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+
+        }
+    };
+
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -228,6 +252,8 @@ public class HomeAty extends BaseActivity {
         height = wm.getDefaultDisplay().getHeight();
 
         setContentView(R.layout.activity_news);
+
+        imageLoader = new ImageLoaderHelper(HomeAty.this);
     }
 
     @Override
@@ -267,6 +293,8 @@ public class HomeAty extends BaseActivity {
                     ll_no_network.setVisibility(View.GONE);
 
                     loadNewsData(1);
+                    page = 1;
+                    adapterFlag = false;
                 }else{
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
@@ -294,7 +322,7 @@ public class HomeAty extends BaseActivity {
             }
         });
 
-//        lv_news.setOnScrollListener(scrollListener);
+        lv_news.setOnScrollListener(scrollListener);
     }
 
     @Override
@@ -382,7 +410,7 @@ public class HomeAty extends BaseActivity {
             holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   //uemng statistic click other viewpoint
+                    //uemng statistic click other viewpoint
                     MobclickAgent.onEvent(HomeAty.this,CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
                 }
             });
@@ -394,44 +422,15 @@ public class HomeAty extends BaseActivity {
                 }
             }
 
-            long start = System.currentTimeMillis();
+            final long start = System.currentTimeMillis();
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
-//                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.title_beijing);
-//                holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
+//                imageLoader.loadImage(getApplicationContext(), feed.getImgUrl(), loadingListener);
 
-                ImageLoaderHelper.loadImage(getApplicationContext(), feed.getImgUrl(), new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                    }
-
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                        holder.iv_title_img.setBackgroundResource(R.drawable.title_beijing);
-
-                        Logger.i(">>>>>xxxx", "yes" + loadedImage.toString());
-                        holder.iv_title_img.setImageBitmap(loadedImage);
-                        applyBlur(holder.iv_title_img, holder.tv_title);
-
-                    }
-
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-
-                    }
-                });
-
-//                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img);
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,loadingListener);
 //                applyBlur(holder.iv_title_img, holder.tv_title);
 
-//                ImageLoader.getInstance().displayImage(feed.getImgUrl(),holder.iv_title_img);
             }
 
 
@@ -495,8 +494,6 @@ public class HomeAty extends BaseActivity {
                     }
                 }
             }
-            Long delta = System.currentTimeMillis() - start;
-            Logger.i("aaaaaa", delta + "");
 
             return convertView;
         }
@@ -554,6 +551,7 @@ public class HomeAty extends BaseActivity {
                         if(!adapterFlag) {
                             list_adapter = new MyAdapter();
                             lv_news.setAdapter(list_adapter);
+                            adapterFlag = true;
                         }else{
                             list_adapter.notifyDataSetChanged();
                         }
