@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.entity.NewsDetail;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 /**
@@ -55,12 +57,12 @@ public class SinaView extends FrameLayout {
         mtvName = (TextViewExtend) mRootView.findViewById(R.id.name_textView);
         mtvContent= (TextViewExtend) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
-        mtvName.setText("哈哈哈");
-        mtvContent.setText("哈市的开发将开始多了几分；拉萨京东方；流口水的减肥；了开始就");
     }
 
-    public void setData(){
-
+    public void setSinaData(NewsDetail.Weibo weiboData){
+        mtvName.setText(weiboData.title);
+        mtvContent.setText(weiboData.content);
+        ImageLoader.getInstance().displayImage(weiboData.url,mHeadPortrait);
     }
 
 

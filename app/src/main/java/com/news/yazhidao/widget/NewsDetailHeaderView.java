@@ -18,6 +18,8 @@ import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by h.yuan on 2015/3/23.
@@ -26,7 +28,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private LinearLayout mllBaiKe, mllZhiHu, mllZhiHuItem, mllSina,mllSinaItem, mllDouBan ;
+    private LinearLayout mllBaiKe, mllZhiHu, mllZhiHuItem, mllSina, mllSinaItem, mllDouBan;
     private WordWrapView mvDouBanItem;
     private HorizontalScrollView mSinaScrollView;
     private ImageView mNewsDetailHeaderImg;
@@ -58,7 +60,6 @@ public class NewsDetailHeaderView extends FrameLayout {
         addView(mRootView);
         initVars();
         findViews();
-        setData();
     }
 
     private void initVars() {
@@ -73,27 +74,27 @@ public class NewsDetailHeaderView extends FrameLayout {
         mllSina = (LinearLayout) mRootView.findViewById(R.id.sina_linearLayout);
         mllSinaItem = (LinearLayout) mRootView.findViewById(R.id.sina_item_layout);
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
-//        mSinaScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        //find NewsHeader views
-        mNewsDetailHeaderImg=(ImageView)mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
-        mNewsDetailHeaderTitle=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
-        mNewsDetailHeaderTime=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
-        mNewsDetailHeaderTemperature=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
-        mNewsDetailHeaderDesc=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
-        mNewsDetailHeaderContent=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderContent);//新闻内容
-        mNewsDetailHeaderSourceName=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
-        mNewsDetailHeaderLocation=(TextView)mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
+        mNewsDetailHeaderImg = (ImageView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
+        mNewsDetailHeaderTitle = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
+        mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
+        mNewsDetailHeaderTemperature = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
+        mNewsDetailHeaderDesc = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
+        mNewsDetailHeaderContent = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderContent);//新闻内容
+        mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
+        mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
     }
+
     /**
      * 获取新闻详情后，填充数据到
+     *
      * @param pNewsDetail
      */
-    private void inflateDataToNewsheader(NewsDetail pNewsDetail){
-        if(pNewsDetail!=null){
-            if(TextUtils.isValidate(pNewsDetail.imgUrl)){
-                mNewsDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (600*1.0/1280* DeviceInfoUtil.getScreenHeight())));
-                ImageLoaderHelper.dispalyImage(mContext,pNewsDetail.imgUrl,mNewsDetailHeaderImg);
-            }else {
+    private void inflateDataToNewsheader(NewsDetail pNewsDetail) {
+        if (pNewsDetail != null) {
+            if (TextUtils.isValidate(pNewsDetail.imgUrl)) {
+                mNewsDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (600 * 1.0 / 1280 * DeviceInfoUtil.getScreenHeight())));
+                ImageLoaderHelper.dispalyImage(mContext, pNewsDetail.imgUrl, mNewsDetailHeaderImg);
+            } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
@@ -102,37 +103,79 @@ public class NewsDetailHeaderView extends FrameLayout {
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
             mNewsDetailHeaderContent.setText(pNewsDetail.content);
             mNewsDetailHeaderSourceName.setText(pNewsDetail.originsourceSiteName);
-            mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size()>0?pNewsDetail.ne.gpe.get(0):"");
+            mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? pNewsDetail.ne.gpe.get(0) : "");
         }
 
     }
-    public void setData() {
-        String[] strs = new String[] { "哲学系", "新疆维吾尔族自治区", "新闻学", "心理学",
-                "犯罪心理学", "明明白白", "西方文学史", "计算机", "掌声", "心太软", "生命",
-                "程序开发" };
-        BaiDuBaiKeView mvBaiDuBaiKe = new BaiDuBaiKeView(mContext);
 
-        mllBaiKe.addView(mvBaiDuBaiKe);
-        ZhiHuView zhiHuView = new ZhiHuView(mContext);
-        mllZhiHuItem.addView(zhiHuView);
-        for (int i = 0; i < 12; i++) {
-            TextViewExtend textview = new TextViewExtend(mContext);
-            textview.setTextColor(getResources().getColor(R.color.douban_item_blue));
-            textview.setTextSize(19);
-            textview.setText(strs[i]);
-            mvDouBanItem.addView(textview);
-        }
-        for (int i = 0; i < 3; i++) {
+    public void setDetailData(NewsDetail pNewsDetail) {
+        inflateDataToNewsheader(pNewsDetail);
+        ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.arrBaiDuBaiKe;
+        if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
+            for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
+                BaiDuBaiKeView baiDuBaiKeView = new BaiDuBaiKeView(mContext);
+                baiDuBaiKeView.setBaiDuBaiKeData(pArrBaiDuBaiKe.get(i));
+                mllBaiKe.addView(baiDuBaiKeView);
+                baiDuBaiKeView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-
-
-            SinaView sinaView = new SinaView(mContext);
-            mllSinaItem.addView(sinaView);
-            LinearLayout.LayoutParams layoutParams= (LinearLayout.LayoutParams) sinaView.getLayoutParams();
-            layoutParams.rightMargin=30;
-            sinaView.setLayoutParams(layoutParams);
+                    }
+                });
+            }
+        }else {
+            mllBaiKe.setVisibility(GONE);
         }
 
+        ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.arrZhihu;
+        if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
+            for (int i = 0; i < pArrZhiHu.size(); i++) {
+                ZhiHuView zhiHuView = new ZhiHuView(mContext);
+                zhiHuView.setZhiHuData(pArrZhiHu.get(i));
+                mllZhiHuItem.addView(zhiHuView);
+            }
+        }else {
+            mllZhiHu.setVisibility(GONE);
+        }
+
+        ArrayList<NewsDetail.DouBan> pArrDouBan = pNewsDetail.arrDouBan;
+        if (pArrDouBan != null && pArrDouBan.size() > 0) {
+            for (int i = 0; i < pArrDouBan.size(); i++) {
+                TextViewExtend textView = new TextViewExtend(mContext);
+                textView.setTextColor(getResources().getColor(R.color.douban_item_blue));
+                textView.setTextSize(19);
+                textView.setText(pArrDouBan.get(i).title);
+                textView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                mvDouBanItem.addView(textView);
+            }
+        }else {
+            mllDouBan.setVisibility(GONE);
+        }
+
+        ArrayList<NewsDetail.Weibo> pArrWeibo = pNewsDetail.arrWeibo;
+        if (pArrWeibo != null && pArrWeibo.size() > 0) {
+            for (int i = 0; i < pArrWeibo.size(); i++) {
+                SinaView sinaView = new SinaView(mContext);
+                sinaView.setSinaData(pArrWeibo.get(i));
+                mllSinaItem.addView(sinaView);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) sinaView.getLayoutParams();
+                layoutParams.rightMargin = 30;
+                sinaView.setLayoutParams(layoutParams);
+                sinaView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+        }else {
+            mSinaScrollView.setVisibility(GONE);
+        }
     }
 
 

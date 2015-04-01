@@ -34,7 +34,7 @@ public class NewsDetailAty extends BaseActivity {
     private StaggeredGridView msgvNewsDetail;
     private String[] s;
     private boolean mHasRequestedMore;
-    private StaggeredNewsDetailAdapter mMoreAdapter;
+    private StaggeredNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
     private NewsDetailHeaderView headerView;
 
@@ -50,29 +50,63 @@ public class NewsDetailAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        initVars();
-        NewsDetailHeaderView headerView = new NewsDetailHeaderView(this);
+        s = new String[]{"2"};
+        mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
+        mNewsDetailAdapter.setData(s);
+        headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
         msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
-        msgvNewsDetail.setAdapter(mMoreAdapter);
+        msgvNewsDetail.setAdapter(mNewsDetailAdapter);
         mPullToRefreshStaggeredGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<StaggeredGridView>() {
 
             @Override
             public void onRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
                 if (!mHasRequestedMore) {
                     s = new String[]{"打算福克斯的减肥了会计师的反的发生的飞洒发斯蒂芬", "打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
-                    mMoreAdapter.setData(s);
-                    mMoreAdapter.notifyDataSetChanged();
+                    mNewsDetailAdapter.setData(s);
+                    mNewsDetailAdapter.notifyDataSetChanged();
                     mPullToRefreshStaggeredGridView.onRefreshComplete();
                     mHasRequestedMore = false;
                 }
             }
         });
-        mMoreAdapter.notifyDataSetChanged();
+        setListener();
+    }
+
+    @Override
+    protected void loadData() {
+        //TODO 注意 这里的URL 是测试的
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL+getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
+        _Request.setCallback(new JsonCallback<NewsDetail>() {
+
+            @Override
+            public void success(NewsDetail result) {
+                Logger.e(TAG, result.toString());
+                headerView.setDetailData(result);
+                mNewsDetailAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                Logger.e(TAG, exception.getMessage());
+            }
+        }.setReturnType(new TypeToken<NewsDetail>() {
+        }.getType()));
+        _Request.execute();
+    }
+
+
+    private void setListener() {
+        mivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         msgvNewsDetail.setOnTouchListener(new View.OnTouchListener() {
             float _StartY = 0;
             float _DeltaY = 0;
@@ -116,58 +150,19 @@ public class NewsDetailAty extends BaseActivity {
                 return false;
             }
         });
-
     }
 
-    @Override
-    protected void loadData() {
-        //TODO 注意 这里的URL 是测试的
-        setListener();
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL, NetworkRequest.RequestMethod.GET);
-        _Request.setCallback(new JsonCallback<NewsDetail>() {
-
-            @Override
-            public void success(NewsDetail result) {
-                Logger.e(TAG, result.toString());
-
-            }
-
-            @Override
-            public void failed(MyAppException exception) {
-                Logger.e(TAG, exception.getMessage());
-            }
-        }.setReturnType(new TypeToken<NewsDetail>() {
-        }.getType()));
-        _Request.execute();
-    }
-
-    private void initVars() {
-        s = new String[]{"打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会", "打算福克斯的减肥了会打算福克斯的减肥了会打算福克斯的减肥了会"};
-        mMoreAdapter = new StaggeredNewsDetailAdapter(this);
-        mMoreAdapter.setData(s);
-    }
-
-    private int stop_position;
-
-    private void setListener() {
-        mivBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
     @Override
     protected void onResume() {
         super.onResume();
-        msgvNewsDetail.startFlingRunnable(300);
-        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-            @Override
-            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Logger.i("down", bottom+ "bottom=00000");
-                msgvNewsDetail.mFlingRunnable.startScroll(bottom,9000);
-            }
-        });
+//        msgvNewsDetail.startFlingRunnable(300);
+//        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//            @Override
+//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                Logger.i("down", bottom + "bottom=00000");
+//                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
+//            }
+//        });
 
     }
 
@@ -206,12 +201,19 @@ public class NewsDetailAty extends BaseActivity {
             if (convertView == null) {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_staggered_gridview_news_detail, null, false);
+                holder.ivPicture = (ImageView) convertView.findViewById(R.id.picture_imageView);
                 holder.tvContent = (TextView) convertView.findViewById(R.id.content_textView);
+                holder.ivSource = (ImageView) convertView.findViewById(R.id.source_imageView);
+                holder.tvSource = (TextView) convertView.findViewById(R.id.source_textView);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
             holder.tvContent.setText(mStrings[position]);
+            if (position > 2)
+                holder.ivPicture.setVisibility(View.GONE);
+            else
+                holder.ivPicture.setVisibility(View.VISIBLE);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -224,7 +226,10 @@ public class NewsDetailAty extends BaseActivity {
 
 
     class Holder {
+        ImageView ivPicture;
         TextView tvContent;
+        ImageView ivSource;
+        TextView tvSource;
     }
 
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.entity.NewsDetail;
 
 
 /**
@@ -45,9 +46,10 @@ public class ZhiHuView extends FrameLayout {
 
     private void findViews() {
         mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
-        mtvContent.setText("如何评价李光耀开创的新加坡是国家管理模式？");
+
     }
 
-    public void setZhiHuData(){
+    public void setZhiHuData(NewsDetail.ZhiHu zhiHuData){
+        mtvContent.setText(zhiHuData.title);
     }
 }

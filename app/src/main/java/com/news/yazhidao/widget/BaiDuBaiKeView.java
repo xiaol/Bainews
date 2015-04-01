@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.entity.NewsDetail;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 /**
@@ -17,9 +19,9 @@ public class BaiDuBaiKeView extends FrameLayout {
 
     private View mRootView;
     private Context mContext;
-    private TextViewExtend mtvTitle,mtvContent;
+    private TextViewExtend mtvTitle, mtvContent;
     private ImageView mivPicture;
-    int i =3;
+    int i = 3;
 
 
     public BaiDuBaiKeView(Context context, AttributeSet attrs) {
@@ -45,7 +47,7 @@ public class BaiDuBaiKeView extends FrameLayout {
     }
 
     private void initVars() {
-        
+
     }
 
     private void findViews() {
@@ -57,7 +59,14 @@ public class BaiDuBaiKeView extends FrameLayout {
         mtvContent.setText("李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀");
     }
 
-    public void setZhiHuData(){
+    public void setBaiDuBaiKeData(NewsDetail.BaiDuBaiKe baiDuBaiKeData) {
+        mtvTitle.setText(baiDuBaiKeData.title);
+        mtvContent.setText(baiDuBaiKeData.content);
+        if (baiDuBaiKeData.imgUrl != null && !"".equals(baiDuBaiKeData.imgUrl)) {
+            ImageLoader.getInstance().displayImage(baiDuBaiKeData.imgUrl, mivPicture);
+        } else {
+            mivPicture.setVisibility(GONE);
+        }
     }
 
 }

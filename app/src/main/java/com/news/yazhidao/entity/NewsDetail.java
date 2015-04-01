@@ -21,12 +21,15 @@ public class NewsDetail {
     public String updateTime;
     //温度
     public String root_class;
-    public class Weibo {
-        public String sourceName;
-        public String url;
-        public String user;
-        public String title;
-    }
+
+    public ArrayList<BaiDuBaiKe> arrBaiDuBaiKe;
+
+    public ArrayList<ZhiHu> arrZhihu;
+
+    public ArrayList<DouBan> arrDouBan;
+
+    public ArrayList<Weibo> arrWeibo;
+
     //相关新闻
     public ArrayList<Relate> relate;
 
@@ -37,8 +40,6 @@ public class NewsDetail {
         public String title;
     }
 
-    public ArrayList<ArrayList<String>> douban;
-    public Zhihu zhihu;
     //name entity
     public Ne ne;
 
@@ -50,7 +51,26 @@ public class NewsDetail {
         public ArrayList<String> org;
     }
 
-    public class Zhihu {
+    public class BaiDuBaiKe {
+        public String imgUrl;
+        public String title;
+        public String url;
+        public String content;
+    }
+
+    public class ZhiHu {
+        public String url;
+        public String user;
+        public String title;
+    }
+
+    public class DouBan {
+        public String url;
+        public String title;
+    }
+
+    public class Weibo {
+        public String content;
         public String url;
         public String user;
         public String title;
