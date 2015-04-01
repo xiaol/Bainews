@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.ZipperUtil;
 
 import java.util.Hashtable;
 
@@ -26,11 +27,11 @@ public class TextViewExtend extends TextView {
     }
 
     private void setCustomFont(Context ctx) {
-        String _KeyFontName="fonts/hwzs.ttf";
+        String _KeyFontName=ZipperUtil.getSaveFontPath(ctx).toString();
         Typeface tf = fontCache.get(_KeyFontName);
         if(tf == null) {
             try {
-                tf = Typeface.createFromAsset(ctx.getAssets(), _KeyFontName);
+                tf = Typeface.createFromFile(_KeyFontName);
             }
             catch (Exception e) {
                 Logger.e(TAG,e.getMessage());
