@@ -20,7 +20,7 @@
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_news_source"
         android:layout_width="60dp"
-        android:layout_height="17dp"
+        android:layout_height="19dp"
         android:layout_marginBottom="5dp"
         android:layout_gravity="center_vertical"
         android:gravity="left"

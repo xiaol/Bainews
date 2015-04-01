@@ -43,4 +43,14 @@
         ptr:ptrListViewExtrasEnabled="true"
         />
 
+    <LinearLayout
+        android:id="@+id/ll_no_network"
+        android:orientation="horizontal"
+        android:layout_below="@+id/ll_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/nonetwork"
+        android:visibility="gone"
+        />
+
 </RelativeLayout>

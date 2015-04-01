@@ -11,9 +11,11 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -21,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -36,6 +37,8 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -49,17 +52,22 @@ public class HomeAty extends BaseActivity {
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
     private LinearLayout ll_title;
+    private LinearLayout ll_no_network;
+    private long mLastPressedBackKeyTime;
     private ArrayList<NewsFeed> feedList = new ArrayList<NewsFeed>();
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
     private int i = 0;
     private boolean flag = false;
     private boolean top_flag = false;
     private boolean visible_flag = true;
+    private boolean adapterFlag = false;
     private boolean requestMore = false;
     private String opinion;
     private ViewHolder holder = null;
     private TextViewExtend tv_title;
     private int page = 1;
+    private int height = 0;
+    private int width = 0;
     private int mMostRecentY;
     private int currentSize = 0;
     private int contentSize = 0;
@@ -212,13 +220,37 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void setContentView() {
+
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+
+        width = wm.getDefaultDisplay().getWidth();
+        height = wm.getDefaultDisplay().getHeight();
+
         setContentView(R.layout.activity_news);
     }
 
     @Override
     protected void initializeViews() {
+
+
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
+        ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
+        ll_no_network.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NetUtil.checkNetWork(HomeAty.this)) {
+
+                    lv_news.setVisibility(View.VISIBLE);
+                    ll_no_network.setVisibility(View.GONE);
+
+                    loadNewsData(1);
+                }else{
+                    lv_news.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
         lv_news.setMode(PullToRefreshBase.Mode.BOTH);
@@ -227,13 +259,36 @@ public class HomeAty extends BaseActivity {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                loadNewsData(1);
+
+                if(NetUtil.checkNetWork(HomeAty.this)) {
+
+                    lv_news.setVisibility(View.VISIBLE);
+                    ll_no_network.setVisibility(View.GONE);
+
+                    loadNewsData(1);
+                }else{
+                    lv_news.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                loadNewsData(page);
-                page++;
+
+                if(NetUtil.checkNetWork(HomeAty.this)) {
+
+                    lv_news.setVisibility(View.VISIBLE);
+                    ll_no_network.setVisibility(View.GONE);
+
+                    loadNewsData(page);
+                    page++;
+                }else{
+                    lv_news.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+                }
+
+
 
             }
         });
@@ -243,8 +298,17 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        loadNewsData(1);
-        page ++;
+        if(NetUtil.checkNetWork(HomeAty.this)) {
+
+            lv_news.setVisibility(View.VISIBLE);
+            ll_no_network.setVisibility(View.GONE);
+
+            loadNewsData(1);
+            page++;
+        }else{
+            lv_news.setVisibility(View.GONE);
+            ll_no_network.setVisibility(View.VISIBLE);
+        }
     }
 
     private class MyAdapter extends BaseAdapter {
@@ -253,8 +317,10 @@ public class HomeAty extends BaseActivity {
         @Override
         public int getCount() {
 
-            return feedList.size();
+            if(feedList!= null && feedList.size() > 0)
+                return feedList.size();
 
+            return 0;
         }
 
         @Override
@@ -278,6 +344,11 @@ public class HomeAty extends BaseActivity {
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
                 holder.fl_title_content = (FrameLayout) convertView.findViewById(R.id.fl_title_content);
                 holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                ViewGroup.LayoutParams params = holder.fl_title_content.getLayoutParams();
+                params.height = (int)(height * 0.27);
+
+                holder.fl_title_content.setLayoutParams(params);
+
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
@@ -288,6 +359,8 @@ public class HomeAty extends BaseActivity {
                 holder.ll_source_content.removeAllViews();
 
             }
+
+
 
             final NewsFeed feed = feedList.get(position);
 
@@ -311,7 +384,7 @@ public class HomeAty extends BaseActivity {
                 }
             }
 
-
+            long start = System.currentTimeMillis();
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
@@ -351,7 +424,7 @@ public class HomeAty extends BaseActivity {
 //                ImageLoader.getInstance().displayImage(feed.getImgUrl(),holder.iv_title_img);
             }
 
-            long start = System.currentTimeMillis();
+
 
             sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
@@ -413,6 +486,22 @@ public class HomeAty extends BaseActivity {
 
             return convertView;
         }
+    }
+
+    @Override
+    protected void onResume() {
+
+        if(NetUtil.checkNetWork(HomeAty.this)) {
+
+            lv_news.setVisibility(View.VISIBLE);
+            ll_no_network.setVisibility(View.GONE);
+
+        }else{
+            lv_news.setVisibility(View.GONE);
+            ll_no_network.setVisibility(View.VISIBLE);
+        }
+
+        super.onResume();
     }
 
     private void setImageSource(ImageView iv_source, String source_name) {
@@ -507,17 +596,20 @@ public class HomeAty extends BaseActivity {
             public void success(ArrayList<NewsFeed> result) {
                 if (result != null) {
                     if (page == 1) {
-                        //清空原有list
-                        for (int i = 0; i < feedList.size(); i++) {
-                            feedList.remove(i);
-                        }
+
+                        feedList.clear();
+
                         //添加list
                         for (int j = 0; j < result.size(); j++) {
                             feedList.add(result.get(j));
                         }
 
-                        list_adapter = new MyAdapter();
-                        lv_news.setAdapter(list_adapter);
+                        if(!adapterFlag) {
+                            list_adapter = new MyAdapter();
+                            lv_news.setAdapter(list_adapter);
+                        }else{
+                            list_adapter.notifyDataSetChanged();
+                        }
 
                     } else {
                         //添加list
@@ -531,13 +623,11 @@ public class HomeAty extends BaseActivity {
 
 
                 } else {
-                    Toast.makeText(HomeAty.this, "网络出现异常，请检查网络...", Toast.LENGTH_LONG).show();
                 }
                 lv_news.onRefreshComplete();
             }
 
             public void failed(MyAppException exception) {
-                Toast.makeText(HomeAty.this, "网络出现异常，请检查网络...", Toast.LENGTH_LONG).show();
                 lv_news.onRefreshComplete();
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
@@ -587,6 +677,22 @@ public class HomeAty extends BaseActivity {
         overlay = ImageUtils.getRoundCornerBitmap(overlay, 3.0f);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        long pressedBackKeyTime = System.currentTimeMillis();
+        if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
+            finish();
+        } else {
+            ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+            //ToastUtil.toastLong(R.string.press_back_again_exit);
+        }
+        mLastPressedBackKeyTime = pressedBackKeyTime;
+
+
+        return true;
     }
 
 

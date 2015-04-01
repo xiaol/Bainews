@@ -4,7 +4,14 @@
     <string name="app_name">头条百家</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="mNewsDetailTitle">北京\"单独二孩\"申请3万,41岁以上人群41岁以上人群</string>
+    <string name="mNewsDetailTitle">在大多数情况下,这个方法还不赖,并且有一些优点</string>
     <string name="mNewsDetailTvExpand">点击展开全文</string>
+    <string name="mNewsDetailHeaderTime">2015年05月25日</string>
+    <string name="mNewsDetailHeaderTemperature">38℃</string>
+    <string name="mNewsDetailHeaderDesc">这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描述这里是新闻描</string>
+    <string name="mNewsDetailHeaderContent">这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容\\n这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容这里是新闻内容</string>
+    <string name="mNewsDetailHeaderSourceName">摘至：%1$s</string>
+    <string name="mNewsDetailHeaderLocation">发生地点：%1$s</string>
+    <string name="press_back_again_exit">再按一次退出应用</string>
 
 </resources>

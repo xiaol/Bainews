@@ -72,6 +72,9 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 Logger.e(TAG,"xxx  "+newProgress);
+                if(newProgress>=89&&mProgressDialog!=null&&mProgressDialog.isShowing()){
+                    mProgressDialog.dismiss();
+                }
             }
         });
         mNewsSourcesiteWebview.setWebViewClient(new WebViewClient() {

@@ -16,6 +16,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 
 import java.util.ArrayList;
@@ -99,11 +100,11 @@ public class NewsDetailHeaderView extends FrameLayout {
             }
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
             mNewsDetailHeaderTime.setText(pNewsDetail.updateTime);
-            mNewsDetailHeaderTemperature.setText(pNewsDetail.root_class);
+            mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
             mNewsDetailHeaderContent.setText(pNewsDetail.content);
-            mNewsDetailHeaderSourceName.setText(pNewsDetail.originsourceSiteName);
-            mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? pNewsDetail.ne.gpe.get(0) : "");
+            mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName),pNewsDetail.originsourceSiteName));
+            mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation),pNewsDetail.ne.gpe.get(0)) : "");
         }
 
     }
