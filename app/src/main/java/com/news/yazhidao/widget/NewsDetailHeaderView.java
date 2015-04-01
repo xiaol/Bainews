@@ -14,12 +14,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -128,6 +130,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                         Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
                         _Intent.putExtra("url",pBaiKe.url);
                         mContext.startActivity(_Intent);
+                        //add umeng statistic baidubaike
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_BAIDUBAIKU);
                     }
                 });
             }
@@ -138,8 +142,19 @@ public class NewsDetailHeaderView extends FrameLayout {
         ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.arrZhihu;
         if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
             for (int i = 0; i < pArrZhiHu.size(); i++) {
+                final NewsDetail.ZhiHu pZhihu=pArrZhiHu.get(i);
                 ZhiHuView zhiHuView = new ZhiHuView(mContext);
                 zhiHuView.setZhiHuData(pArrZhiHu.get(i));
+                zhiHuView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
+                        _Intent.putExtra("url",pZhihu.url);
+                        mContext.startActivity(_Intent);
+                        //add umeng statistic zhihu
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
+                    }
+                });
                 mllZhiHuItem.addView(zhiHuView);
             }
         }else {
@@ -160,6 +175,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                         Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
                         _Intent.putExtra("url",pDouBan.url);
                         mContext.startActivity(_Intent);
+                        //add umeng statistic douban
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_DOUBAI);
                     }
                 });
                 mvDouBanItem.addView(textView);
@@ -184,6 +201,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                         Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
                         _Intent.putExtra("url",pWeiBo.url);
                         mContext.startActivity(_Intent);
+                        //add umeng statistic weibo
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
                     }
                 });
             }

@@ -19,6 +19,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.JsonCallback;
@@ -28,8 +29,10 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class NewsDetailAty extends BaseActivity {
@@ -225,6 +228,10 @@ public class NewsDetailAty extends BaseActivity {
                     Intent _Intent=new Intent(NewsDetailAty.this,NewsDetailWebviewAty.class);
                     _Intent.putExtra("url",_Relate.url);
                     startActivity(_Intent);
+                   // add umeng statistic
+                    HashMap<String,String> _MobParam=new HashMap<>();
+                    _MobParam.put("resource_site_name",_Relate.sourceSitename);
+                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_RELATE_ITEM_CLICK,_MobParam);
                 }
             });
             return convertView;
