@@ -10,13 +10,17 @@
             <solid android:color="#28000000"/>
         </shape>
     </item>
-    <item android:bottom="1.5dp" android:left="1dp" android:right="1dp">
+    <item android:bottom="5dp" android:left="1dp" android:right="1dp">
         <shape
             android:dither="true"
             android:shape="rectangle" >
             <corners  android:bottomLeftRadius="2dp" android:bottomRightRadius="2dp" />
             <solid android:color="@color/bg_ews_detail_relate_item" />
+
+            
+
         </shape>
+
     </item>
 
 </layer-list>

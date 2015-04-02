@@ -24,7 +24,7 @@
             android:value="551a6a28fd98c5b574000788" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="developer" />
+            android:value="${UMENG_CHANNEL_VALUE}" />
         <!-- 分享内容编辑页 -->
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"

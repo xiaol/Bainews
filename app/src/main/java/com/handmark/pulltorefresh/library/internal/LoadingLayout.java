@@ -83,13 +83,16 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
         fl_title_img = (FrameLayout) findViewById(R.id.fl_title_img);
         FrameLayout.LayoutParams lp_img = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
+                LayoutParams.WRAP_CONTENT, Gravity.LEFT);
         lp_img.setMargins(200,0,0,0);
         fl_title_img.setLayoutParams(lp_img);
 		mHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_text);
 		mHeaderProgress = (ProgressBar) mInnerLayout.findViewById(R.id.pull_to_refresh_progress);
 		mSubHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_sub_text);
 		mHeaderImage = (ImageView) mInnerLayout.findViewById(R.id.pull_to_refresh_image);
+//        ViewGroup.LayoutParams params_image = mHeaderImage.getLayoutParams();
+//        params_image.height = 60;
+//        mHeaderImage.setLayoutParams(params_image);
 
 		LayoutParams lp = (LayoutParams) mInnerLayout.getLayoutParams();
 

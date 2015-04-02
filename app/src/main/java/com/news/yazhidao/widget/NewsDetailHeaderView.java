@@ -80,7 +80,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         mllSina = (LinearLayout) mRootView.findViewById(R.id.sina_linearLayout);
         mllSinaItem = (LinearLayout) mRootView.findViewById(R.id.sina_item_layout);
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
-        mNewsDetailRelate=(TextView)mRootView.findViewById(R.id.mNewsDetailRelate);
+        mNewsDetailRelate = (TextView) mRootView.findViewById(R.id.mNewsDetailRelate);
         mNewsDetailHeaderImg = (ImageView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
         mNewsDetailHeaderTitle = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
         mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
@@ -109,8 +109,9 @@ public class NewsDetailHeaderView extends FrameLayout {
             mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
             mNewsDetailHeaderContent.setText(pNewsDetail.content);
-            mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName),pNewsDetail.originsourceSiteName));
-            mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
+            mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName), pNewsDetail.originsourceSiteName));
+            if (pNewsDetail.ne != null)
+                mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
         }
 
     }
@@ -120,36 +121,36 @@ public class NewsDetailHeaderView extends FrameLayout {
         ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.arrBaiDuBaiKe;
         if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
             for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
-                final NewsDetail.BaiDuBaiKe pBaiKe=pArrBaiDuBaiKe.get(i);
+                final NewsDetail.BaiDuBaiKe pBaiKe = pArrBaiDuBaiKe.get(i);
                 BaiDuBaiKeView baiDuBaiKeView = new BaiDuBaiKeView(mContext);
                 baiDuBaiKeView.setBaiDuBaiKeData(pArrBaiDuBaiKe.get(i));
                 mllBaiKe.addView(baiDuBaiKeView);
                 baiDuBaiKeView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
-                        _Intent.putExtra("url",pBaiKe.url);
+                        Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                        _Intent.putExtra("url", pBaiKe.url);
                         mContext.startActivity(_Intent);
                         //add umeng statistic baidubaike
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_BAIDUBAIKU);
                     }
                 });
             }
-        }else {
+        } else {
             mllBaiKe.setVisibility(GONE);
         }
 
         ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.arrZhihu;
         if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
             for (int i = 0; i < pArrZhiHu.size(); i++) {
-                final NewsDetail.ZhiHu pZhihu=pArrZhiHu.get(i);
+                final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
                 ZhiHuView zhiHuView = new ZhiHuView(mContext);
                 zhiHuView.setZhiHuData(pArrZhiHu.get(i));
                 zhiHuView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
-                        _Intent.putExtra("url",pZhihu.url);
+                        Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                        _Intent.putExtra("url", pZhihu.url);
                         mContext.startActivity(_Intent);
                         //add umeng statistic zhihu
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
@@ -157,14 +158,14 @@ public class NewsDetailHeaderView extends FrameLayout {
                 });
                 mllZhiHuItem.addView(zhiHuView);
             }
-        }else {
+        } else {
             mllZhiHu.setVisibility(GONE);
         }
 
         final ArrayList<NewsDetail.DouBan> pArrDouBan = pNewsDetail.arrDouBan;
         if (pArrDouBan != null && pArrDouBan.size() > 0) {
             for (int i = 0; i < pArrDouBan.size(); i++) {
-                final NewsDetail.DouBan  pDouBan=pArrDouBan.get(i);
+                final NewsDetail.DouBan pDouBan = pArrDouBan.get(i);
                 TextViewExtend textView = new TextViewExtend(mContext);
                 textView.setTextColor(getResources().getColor(R.color.douban_item_blue));
                 textView.setTextSize(19);
@@ -172,8 +173,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                 textView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
-                        _Intent.putExtra("url",pDouBan.url);
+                        Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                        _Intent.putExtra("url", pDouBan.url);
                         mContext.startActivity(_Intent);
                         //add umeng statistic douban
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_DOUBAI);
@@ -181,14 +182,14 @@ public class NewsDetailHeaderView extends FrameLayout {
                 });
                 mvDouBanItem.addView(textView);
             }
-        }else {
+        } else {
             mllDouBan.setVisibility(GONE);
         }
 
         ArrayList<NewsDetail.Weibo> pArrWeibo = pNewsDetail.arrWeibo;
         if (pArrWeibo != null && pArrWeibo.size() > 0) {
             for (int i = 0; i < pArrWeibo.size(); i++) {
-                final NewsDetail.Weibo pWeiBo=pArrWeibo.get(i);
+                final NewsDetail.Weibo pWeiBo = pArrWeibo.get(i);
                 SinaView sinaView = new SinaView(mContext);
                 sinaView.setSinaData(pArrWeibo.get(i));
                 mllSinaItem.addView(sinaView);
@@ -198,20 +199,20 @@ public class NewsDetailHeaderView extends FrameLayout {
                 sinaView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent _Intent=new Intent(mContext,NewsDetailWebviewAty.class);
-                        _Intent.putExtra("url",pWeiBo.url);
+                        Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                        _Intent.putExtra("url", pWeiBo.url);
                         mContext.startActivity(_Intent);
                         //add umeng statistic weibo
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
                     }
                 });
             }
-        }else {
+        } else {
             mllSina.setVisibility(GONE);
         }
-        if(pNewsDetail!=null&&pNewsDetail.relate!=null&&pNewsDetail.relate.size()>0){
+        if (pNewsDetail != null && pNewsDetail.relate != null && pNewsDetail.relate.size() > 0) {
 
-        }else{
+        } else {
             mNewsDetailRelate.setVisibility(GONE);
         }
     }
