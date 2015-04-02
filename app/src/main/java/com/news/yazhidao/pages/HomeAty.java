@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +35,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -71,6 +73,8 @@ public class HomeAty extends BaseActivity {
     private int mMostRecentY;
     private int currentSize = 0;
     private int contentSize = 0;
+    private ImageView mRefreshLoadingImg;
+    private AnimationDrawable mAnirefreshLoading;
     private ImageLoaderHelper imageLoader;
 
     private ImageLoadingListener loadingListener = new ImageLoadingListener() {
@@ -87,6 +91,7 @@ public class HomeAty extends BaseActivity {
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             //holder.iv_title_img.setImageBitmap(loadedImage);
+            holder.tv_title.setBackgroundDrawable(null);
             applyBlur(holder.iv_title_img, holder.tv_title);
         }
 
@@ -103,9 +108,8 @@ public class HomeAty extends BaseActivity {
             switch (scrollState) {
                 case SCROLL_STATE_IDLE:
                     if (view.getFirstVisiblePosition() == 0 && !visible_flag) {
-
-                        ll_title.setVisibility(View.VISIBLE);
-                        visible_flag = true;
+                            ll_title.setVisibility(View.VISIBLE);
+                            visible_flag = true;
 
                     }
 
@@ -200,42 +204,6 @@ public class HomeAty extends BaseActivity {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-//            int firstPos = ((ListView)view).getFirstVisiblePosition();
-//
-//            if(firstPos == 0) {
-//                ll_title.setVisibility(View.VISIBLE);
-//                visible_flag = true;
-//            }else if(firstPos == 1) {
-//
-//                View v = ((ListView) view).getChildAt(firstPos);
-//
-//                if (v != null) {
-//                    int top = v.getTop();
-//
-//                    if (top > 200 && visible_flag) {
-//
-//                        ll_title.setVisibility(View.GONE);
-//                        visible_flag = false;
-//
-//                    } else {
-//                        if (top < 50 && !visible_flag) {
-//                            ll_title.setVisibility(View.VISIBLE);
-//                            visible_flag = true;
-//                        }
-//                    }
-//
-//                }
-//            }else if(firstPos > 1){
-//
-//                if(visible_flag){
-//
-//                    ll_title.setVisibility(View.GONE);
-//                    visible_flag = false;
-//
-//                }
-//
-//            }
-
             if (firstVisibleItem + visibleItemCount == totalItemCount && !top_flag) {
                 top_flag = true;
             } else
@@ -281,6 +249,14 @@ public class HomeAty extends BaseActivity {
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
         lv_news.setMode(PullToRefreshBase.Mode.BOTH);
+//        BitmapDrawable drawable = new BitmapDrawable(BitmapFactory.decodeResource(getResources(),R.drawable.news_customer_loading1));
+
+//        mRefreshLoadingImg = (ImageView) lv_news.findViewById(R.id.pull_to_refresh_image);
+//        mRefreshLoadingImg.setImageResource(R.drawable.list_refresh_animation);
+//        mAnirefreshLoading = (AnimationDrawable) mRefreshLoadingImg.getDrawable();
+//
+//        lv_news.setLoadingDrawable(mAnirefreshLoading);
+//        mAnirefreshLoading.start();
         lv_news.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
 
@@ -379,6 +355,7 @@ public class HomeAty extends BaseActivity {
                 holder.fl_title_content.setLayoutParams(params);
 
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
+                holder.tv_title.setBackgroundDrawable(null);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                 holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
@@ -422,18 +399,18 @@ public class HomeAty extends BaseActivity {
                 }
             }
 
-            final long start = System.currentTimeMillis();
+
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
 //                imageLoader.loadImage(getApplicationContext(), feed.getImgUrl(), loadingListener);
-
+                holder.tv_title.setBackgroundDrawable(null);
                 ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,loadingListener);
 //                applyBlur(holder.iv_title_img, holder.tv_title);
 
             }
 
-
+            final long start = System.currentTimeMillis();
 
             sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
@@ -494,6 +471,9 @@ public class HomeAty extends BaseActivity {
                     }
                 }
             }
+
+            long deata = System.currentTimeMillis() - start;
+            Logger.i("aaaaaa",deata + "");
 
             return convertView;
         }
@@ -590,6 +570,11 @@ public class HomeAty extends BaseActivity {
 
                 Bitmap bmp = mImageView.getDrawingCache();
                 blur(bmp, mTextview);
+
+                if(bmp != null){
+                    bmp = null;
+                }
+
                 return true;
             }
         });
@@ -613,6 +598,11 @@ public class HomeAty extends BaseActivity {
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
         overlay = ImageUtils.getRoundCornerBitmap(overlay, 3.0f);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
+
+        if(overlay != null){
+            overlay = null;
+        }
+
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
 
