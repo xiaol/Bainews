@@ -60,8 +60,8 @@ public class SinaView extends FrameLayout {
     }
 
     public void setSinaData(NewsDetail.Weibo weiboData){
-        mtvName.setText(weiboData.title);
-        mtvContent.setText(weiboData.content);
+        mtvName.setText(weiboData.sourceSitename);
+        mtvContent.setText(weiboData.title);
         ImageLoader.getInstance().displayImage(weiboData.url,mHeadPortrait);
     }
 

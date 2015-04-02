@@ -118,7 +118,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     public void setDetailData(NewsDetail pNewsDetail) {
         inflateDataToNewsheader(pNewsDetail);
-        ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.arrBaiDuBaiKe;
+        ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.baike;
         if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
             for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
                 final NewsDetail.BaiDuBaiKe pBaiKe = pArrBaiDuBaiKe.get(i);
@@ -140,7 +140,7 @@ public class NewsDetailHeaderView extends FrameLayout {
             mllBaiKe.setVisibility(GONE);
         }
 
-        ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.arrZhihu;
+        ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
         if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
             for (int i = 0; i < pArrZhiHu.size(); i++) {
                 final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
@@ -162,7 +162,7 @@ public class NewsDetailHeaderView extends FrameLayout {
             mllZhiHu.setVisibility(GONE);
         }
 
-        final ArrayList<NewsDetail.DouBan> pArrDouBan = pNewsDetail.arrDouBan;
+        final ArrayList<NewsDetail.DouBan> pArrDouBan = pNewsDetail.douban;
         if (pArrDouBan != null && pArrDouBan.size() > 0) {
             for (int i = 0; i < pArrDouBan.size(); i++) {
                 final NewsDetail.DouBan pDouBan = pArrDouBan.get(i);
@@ -186,7 +186,7 @@ public class NewsDetailHeaderView extends FrameLayout {
             mllDouBan.setVisibility(GONE);
         }
 
-        ArrayList<NewsDetail.Weibo> pArrWeibo = pNewsDetail.arrWeibo;
+        ArrayList<NewsDetail.Weibo> pArrWeibo = pNewsDetail.weibo;
         if (pArrWeibo != null && pArrWeibo.size() > 0) {
             for (int i = 0; i < pArrWeibo.size(); i++) {
                 final NewsDetail.Weibo pWeiBo = pArrWeibo.get(i);

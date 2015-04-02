@@ -61,7 +61,7 @@ public class BaiDuBaiKeView extends FrameLayout {
 
     public void setBaiDuBaiKeData(NewsDetail.BaiDuBaiKe baiDuBaiKeData) {
         mtvTitle.setText(baiDuBaiKeData.title);
-        mtvContent.setText(baiDuBaiKeData.content);
+        mtvContent.setText(baiDuBaiKeData.title);
         if (baiDuBaiKeData.imgUrl != null && !"".equals(baiDuBaiKeData.imgUrl)) {
             ImageLoader.getInstance().displayImage(baiDuBaiKeData.imgUrl, mivPicture);
         } else {

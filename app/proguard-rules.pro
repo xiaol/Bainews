@@ -106,11 +106,12 @@ java.lang.Object readResolve();
 -keep class **.R$* {
     *;
 }
+
 -keepattributes Signature
+-keep class sun.misc.Unsafe { *; }
+-keep class com.news.yazhidao.entity.** { *; }
 -keep class org.json.** {*;}
 -keep class com.google.gson.** {*;}
--keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.examples.android.model.** { *; }
 -keep class com.nostra13.**{*;}
 -keep class com.sina.**{*;}
 -keep class com.renn.**{*;}

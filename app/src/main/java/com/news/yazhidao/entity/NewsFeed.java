@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * Created by Ariesymark on 2015/3/25.
  */
-public class NewsFeed {
+public class NewsFeed implements Serializable{
 
     private String originsourceSiteName; //来源网站
     private String updateTime;//更新时间
