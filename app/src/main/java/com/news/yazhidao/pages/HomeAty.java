@@ -34,6 +34,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -199,42 +200,6 @@ public class HomeAty extends BaseActivity {
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-//            int firstPos = ((ListView)view).getFirstVisiblePosition();
-//
-//            if(firstPos == 0) {
-//                ll_title.setVisibility(View.VISIBLE);
-//                visible_flag = true;
-//            }else if(firstPos == 1) {
-//
-//                View v = ((ListView) view).getChildAt(firstPos);
-//
-//                if (v != null) {
-//                    int top = v.getTop();
-//
-//                    if (top > 200 && visible_flag) {
-//
-//                        ll_title.setVisibility(View.GONE);
-//                        visible_flag = false;
-//
-//                    } else {
-//                        if (top < 50 && !visible_flag) {
-//                            ll_title.setVisibility(View.VISIBLE);
-//                            visible_flag = true;
-//                        }
-//                    }
-//
-//                }
-//            }else if(firstPos > 1){
-//
-//                if(visible_flag){
-//
-//                    ll_title.setVisibility(View.GONE);
-//                    visible_flag = false;
-//
-//                }
-//
-//            }
 
             if (firstVisibleItem + visibleItemCount == totalItemCount && !top_flag) {
                 top_flag = true;
@@ -422,7 +387,7 @@ public class HomeAty extends BaseActivity {
                 }
             }
 
-            final long start = System.currentTimeMillis();
+
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
@@ -433,7 +398,7 @@ public class HomeAty extends BaseActivity {
 
             }
 
-
+            final long start = System.currentTimeMillis();
 
             sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
@@ -494,6 +459,9 @@ public class HomeAty extends BaseActivity {
                     }
                 }
             }
+
+            long deata = System.currentTimeMillis() - start;
+            Logger.i("aaaaaa",deata + "");
 
             return convertView;
         }
