@@ -1,12 +1,13 @@
 package com.news.yazhidao.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * 新闻详情entity
  * Created by fengjigang on 15/1/21.
  */
-public class NewsDetail {
+public class NewsDetail implements Serializable{
     //新闻来源
     public String originsourceSiteName;
     //新闻描述
@@ -22,13 +23,13 @@ public class NewsDetail {
     //温度
     public String root_class;
 
-    public ArrayList<BaiDuBaiKe> arrBaiDuBaiKe;
+    public ArrayList<BaiDuBaiKe> baike;
 
-    public ArrayList<ZhiHu> arrZhihu;
+    public ArrayList<ZhiHu> zhihu;
 
-    public ArrayList<DouBan> arrDouBan;
+    public ArrayList<ArrayList<String>> douban;  //get(0)  title  get(1) url
 
-    public ArrayList<Weibo> arrWeibo;
+    public ArrayList<Weibo> weibo;
 
     //相关新闻
     public ArrayList<Relate> relate;
@@ -55,7 +56,7 @@ public class NewsDetail {
         public String imgUrl;
         public String title;
         public String url;
-        public String content;
+        public String abs;
     }
 
     public class ZhiHu {
@@ -64,14 +65,11 @@ public class NewsDetail {
         public String title;
     }
 
-    public class DouBan {
-        public String url;
-        public String title;
-    }
 
     public class Weibo {
-        public String content;
+        public String sourceSitename;
         public String url;
+        public String profileImageUrl;
         public String user;
         public String title;
     }

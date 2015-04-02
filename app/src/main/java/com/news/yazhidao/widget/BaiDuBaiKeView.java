@@ -21,7 +21,6 @@ public class BaiDuBaiKeView extends FrameLayout {
     private Context mContext;
     private TextViewExtend mtvTitle, mtvContent;
     private ImageView mivPicture;
-    int i = 3;
 
 
     public BaiDuBaiKeView(Context context, AttributeSet attrs) {
@@ -54,14 +53,11 @@ public class BaiDuBaiKeView extends FrameLayout {
         mtvTitle = (TextViewExtend) mRootView.findViewById(R.id.title_textView);
         mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
-
-        mtvTitle.setText("李光耀");
-        mtvContent.setText("李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀李光耀");
     }
 
     public void setBaiDuBaiKeData(NewsDetail.BaiDuBaiKe baiDuBaiKeData) {
         mtvTitle.setText(baiDuBaiKeData.title);
-        mtvContent.setText(baiDuBaiKeData.content);
+        mtvContent.setText(baiDuBaiKeData.abs);
         if (baiDuBaiKeData.imgUrl != null && !"".equals(baiDuBaiKeData.imgUrl)) {
             ImageLoader.getInstance().displayImage(baiDuBaiKeData.imgUrl, mivPicture);
         } else {
