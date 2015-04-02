@@ -13,5 +13,6 @@
     <string name="mNewsDetailHeaderSourceName">摘至：%1$s</string>
     <string name="mNewsDetailHeaderLocation">发生地点：%1$s</string>
     <string name="press_back_again_exit">再按一次退出应用</string>
+    <string name="mNewsDetailHeaderOnclickMore">点击展开全文</string>
 
 </resources>

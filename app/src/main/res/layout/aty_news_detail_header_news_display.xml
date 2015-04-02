@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:scaleType="centerCrop"
+        android:visibility="gone"
          />
 
     <RelativeLayout
@@ -79,7 +80,17 @@
             android:layout_marginTop="32dp"
             android:textSize="18sp"
             android:textColor="@color/black" />
-
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/mNewsDetailHeaderPulldown"
+            android:layout_below="@id/mNewsDetailHeaderContent"
+            android:layout_centerHorizontal="true"
+            android:drawableLeft="@drawable/ic_news_detail_listview_pulldown"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mNewsDetailHeaderOnclickMore"
+            />
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailHeaderSourceName"
             android:layout_width="wrap_content"
