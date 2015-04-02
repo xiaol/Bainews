@@ -125,6 +125,8 @@ public class NewsDetailHeaderView extends FrameLayout {
             mNewsDetailHeaderPulldown.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //umeng statistic onclick pulldown
+                    MobclickAgent.onEvent(mContext,CommonConstant.US_BAINEWS_NEWSDETAIL_CLICK_PULLDOWN);
                     mNewsDetailHeaderContent.setText(pNewsDetail.content);
                     mNewsDetailHeaderPulldown.setVisibility(GONE);
                 }

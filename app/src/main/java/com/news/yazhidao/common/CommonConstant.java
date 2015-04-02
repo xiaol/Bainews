@@ -23,4 +23,6 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NEWSDETAIL_ZHIHU="bainews_newsdetail_zhihu";
     //用户点击详情中得豆瓣
     public static final String US_BAINEWS_NEWSDETAIL_DOUBAI="bainews_newsdetail_doubai";
+    //用户在详情页中点击展开全文
+    public static final String US_BAINEWS_NEWSDETAIL_CLICK_PULLDOWN="bainews_newsdetail_click_pulldown";
 }
