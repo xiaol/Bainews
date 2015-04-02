@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,4 +23,26 @@
         android:layout_marginLeft="26dp"
         android:layout_marginTop="23dp"
         android:background="@drawable/btn_news_detail_left_back" />
+    <FrameLayout
+        android:id="@+id/mNewsDetailProgressWheelWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray"
+        >
+    <com.news.yazhidao.widget.ProgressWheel
+        android:id="@+id/mNewsDetailProgressWheel"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        ProgressWheel:text="加载中..."
+        ProgressWheel:textColor="#222"
+        ProgressWheel:textSize="14sp"
+        ProgressWheel:rimColor="#330097D6"
+        ProgressWheel:barLength="60dp"
+        ProgressWheel:barColor="#0097D6"
+        ProgressWheel:barWidth="6dp"
+        ProgressWheel:rimWidth="3dp" />
+
+        </FrameLayout>
+
 </RelativeLayout>

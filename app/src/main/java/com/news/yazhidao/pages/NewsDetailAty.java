@@ -1,13 +1,12 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,6 +32,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
+import com.news.yazhidao.widget.ProgressWheel;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -48,11 +48,8 @@ public class NewsDetailAty extends BaseActivity {
     private StaggeredNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
     private NewsDetailHeaderView headerView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private ProgressWheel mNewsDetailProgressWheel;
+    private View mNewsDetailProgressWheelWrapper;
 
     @Override
     protected void setContentView() {
@@ -64,6 +61,9 @@ public class NewsDetailAty extends BaseActivity {
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
+        mNewsDetailProgressWheel=(ProgressWheel)findViewById(R.id.mNewsDetailProgressWheel);
+        mNewsDetailProgressWheelWrapper=findViewById(R.id.mNewsDetailProgressWheelWrapper);
+        mNewsDetailProgressWheel.spin();
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
@@ -96,11 +96,17 @@ public class NewsDetailAty extends BaseActivity {
                 headerView.setDetailData(result);
                 mNewsDetailAdapter.setData(result.relate);
                 mNewsDetailAdapter.notifyDataSetChanged();
+                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsDetailProgressWheel.stopSpinning();
+                mNewsDetailProgressWheel.setVisibility(View.GONE);
             }
 
             @Override
             public void failed(MyAppException exception) {
                 Logger.e(TAG, exception.getMessage());
+                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsDetailProgressWheel.stopSpinning();
+                mNewsDetailProgressWheel.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<NewsDetail>() {
         }.getType()));

@@ -10,6 +10,8 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.news.yazhidao.R;
+
 
 /**
  * An indicator of progress, similar to Android's ProgressBar.
