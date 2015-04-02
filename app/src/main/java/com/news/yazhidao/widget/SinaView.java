@@ -20,7 +20,7 @@ public class SinaView extends FrameLayout {
     private View mRootView;
     private Context mContext;
     private RoundedImageView mHeadPortrait;
-    private TextViewExtend mtvName,mtvContent;
+    private TextViewExtend mtvName, mtvContent;
     private ImageView mivPicture;
 
 
@@ -47,7 +47,6 @@ public class SinaView extends FrameLayout {
     }
 
 
-
     private void initVars() {
     }
 
@@ -55,14 +54,23 @@ public class SinaView extends FrameLayout {
         mHeadPortrait = (RoundedImageView) mRootView.findViewById(R.id.head_portrait_imageView);
         mHeadPortrait.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mtvName = (TextViewExtend) mRootView.findViewById(R.id.name_textView);
-        mtvContent= (TextViewExtend) mRootView.findViewById(R.id.content_textView);
+        mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
         mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
     }
 
-    public void setSinaData(NewsDetail.Weibo weiboData){
+    public void setSinaData(NewsDetail.Weibo weiboData) {
         mtvName.setText(weiboData.sourceSitename);
+        mtvName.setVisibility(GONE);
         mtvContent.setText(weiboData.title);
-        ImageLoader.getInstance().displayImage(weiboData.url,mHeadPortrait);
+        if (weiboData.url != null && !"".equals(weiboData.url.toString())) {
+            mHeadPortrait.setVisibility(VISIBLE);
+            ImageLoader.getInstance().displayImage(weiboData.url, mHeadPortrait);
+            mtvContent.setLines(2);
+        } else {
+            mHeadPortrait.setVisibility(GONE);
+            mtvContent.setLines(5);
+        }
+
     }
 
 

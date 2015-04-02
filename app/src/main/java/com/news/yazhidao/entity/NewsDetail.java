@@ -27,7 +27,7 @@ public class NewsDetail implements Serializable{
 
     public ArrayList<ZhiHu> zhihu;
 
-    public ArrayList<DouBan> douban;
+    public ArrayList<ArrayList<String>> douban;  //get(0)  title  get(1) url
 
     public ArrayList<Weibo> weibo;
 
@@ -56,7 +56,7 @@ public class NewsDetail implements Serializable{
         public String imgUrl;
         public String title;
         public String url;
-//        public String content;
+        public String abs;
     }
 
     public class ZhiHu {
@@ -65,10 +65,6 @@ public class NewsDetail implements Serializable{
         public String title;
     }
 
-    public class DouBan {
-        public String url;
-        public String title;
-    }
 
     public class Weibo {
         public String sourceSitename;

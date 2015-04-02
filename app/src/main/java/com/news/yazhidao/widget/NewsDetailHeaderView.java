@@ -182,19 +182,19 @@ public class NewsDetailHeaderView extends FrameLayout {
             mllZhiHu.setVisibility(GONE);
         }
 
-        final ArrayList<NewsDetail.DouBan> pArrDouBan = pNewsDetail.douban;
+        final ArrayList<ArrayList<String>> pArrDouBan = pNewsDetail.douban;
         if (pArrDouBan != null && pArrDouBan.size() > 0) {
             for (int i = 0; i < pArrDouBan.size(); i++) {
-                final NewsDetail.DouBan pDouBan = pArrDouBan.get(i);
+                final ArrayList<String> pDouBan = pArrDouBan.get(i);
                 TextViewExtend textView = new TextViewExtend(mContext);
                 textView.setTextColor(getResources().getColor(R.color.douban_item_blue));
                 textView.setTextSize(19);
-                textView.setText(pDouBan.title);
+                textView.setText(pDouBan.get(0));
                 textView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                        _Intent.putExtra("url", pDouBan.url);
+                        _Intent.putExtra("url", pDouBan.get(1));
                         mContext.startActivity(_Intent);
                         //add umeng statistic douban
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_DOUBAI);

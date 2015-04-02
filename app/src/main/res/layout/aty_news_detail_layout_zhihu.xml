@@ -3,10 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-  <com.news.yazhidao.widget.TextViewExtend
-      android:id="@+id/content_textView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:textColor="@color/black"
-      android:textSize="18sp"/>
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/content_textView"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/news_detail_item_margin_left"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_below="@+id/content_textView"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/bg_gray" />
 </RelativeLayout>
