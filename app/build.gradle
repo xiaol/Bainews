@@ -47,7 +47,7 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("/Users/fiocca/develop/Bainews/toutiaobaoke.keystore")
+            storeFile file("/Users/fengjigang/AndroidStudioProjects/BaiNews/toutiaobaoke.keystore")
             storePassword "yazhidao"
             keyAlias "yazhidao"
             keyPassword "yazhidao"

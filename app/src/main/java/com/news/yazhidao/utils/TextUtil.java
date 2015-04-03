@@ -93,4 +93,16 @@ public class TextUtil {
         }
 
     }
+
+    public static String trimEnterInContent(String[] split) {
+        StringBuilder _StringB=new StringBuilder();
+        for(int i=0;i<split.length;i++){
+            if(i!=split.length-1){
+                _StringB.append(split[i]+"\n");
+            }else{
+                _StringB.append(split[i]);
+            }
+        }
+        return _StringB.toString();
+    }
 }

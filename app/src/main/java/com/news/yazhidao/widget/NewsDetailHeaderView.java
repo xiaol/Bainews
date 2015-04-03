@@ -119,7 +119,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                         mNewsDetailHeaderContent.setText(split[0] + "\n" + split[1] + "\n" + split[2]);
                     }
                 } else {
-                    mNewsDetailHeaderContent.setText(pNewsDetail.content);
+                    mNewsDetailHeaderContent.setText(TextUtil.trimEnterInContent(split).toString());
                 }
             }
             mNewsDetailHeaderPulldown.setOnClickListener(new OnClickListener() {
@@ -127,7 +127,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                 public void onClick(View v) {
                     //umeng statistic onclick pulldown
                     MobclickAgent.onEvent(mContext,CommonConstant.US_BAINEWS_NEWSDETAIL_CLICK_PULLDOWN);
-                    mNewsDetailHeaderContent.setText(pNewsDetail.content);
+                    String[] split=pNewsDetail.content.split("\n");
+                    mNewsDetailHeaderContent.setText(TextUtil.trimEnterInContent(split).toString());
                     mNewsDetailHeaderPulldown.setVisibility(GONE);
                 }
             });
