@@ -87,6 +87,7 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="-15dp"
             android:layout_marginTop="15dp"
             android:text="@string/mNewsDetailHeaderOnclickMore"
             />
@@ -94,7 +95,7 @@
             android:id="@+id/mNewsDetailHeaderSourceName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mNewsDetailHeaderContent"
+            android:layout_below="@id/mNewsDetailHeaderPulldown"
             android:layout_marginTop="32dp"
             android:paddingBottom="32dp"
             android:textColor="@color/news_detail_sourcename_and_location"
@@ -106,9 +107,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/mNewsDetailHeaderContent"
+            android:layout_below="@id/mNewsDetailHeaderPulldown"
             android:textColor="@color/news_detail_sourcename_and_location"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="32dp"
             android:paddingBottom="32dp"
             android:textSize="14sp"
              />
