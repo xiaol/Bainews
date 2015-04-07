@@ -55,7 +55,7 @@ public class SinaView extends FrameLayout {
         mHeadPortrait.setScaleType(ImageView.ScaleType.CENTER_CROP);
         mtvName = (TextViewExtend) mRootView.findViewById(R.id.name_textView);
         mtvContent = (TextViewExtend) mRootView.findViewById(R.id.content_textView);
-        mivPicture = (ImageView) mRootView.findViewById(R.id.picture_imageView);
+        mivPicture = (ImageView ) mRootView.findViewById(R.id.picture_imageView);
     }
 
     public void setSinaData(NewsDetail.Weibo weiboData) {
