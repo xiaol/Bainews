@@ -12,7 +12,7 @@ public final class CommonConstant {
     //用户点击其他观点
     public static final String US_BAINEWS_ONCLICK_OTHER_VIEWPOINT="bainews_onclick_other_viewpoint";
     //用户点击头图下面的url
-    public static final String US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS="bainews_click_url_below_head_vews";
+    public static final String US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS = "bainews_click_url_below_head_vews";
     //用户在详情页里面点击相关的item
     public static final String US_BAINEWS_NEWSDETAIL_RELATE_ITEM_CLICK="bainews_newsdetail_relate_item_click";
     //用户点击详情中的百度百科

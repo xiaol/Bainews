@@ -76,28 +76,27 @@ public class HomeAty extends BaseActivity {
     private ImageView mRefreshLoadingImg;
     private AnimationDrawable mAnirefreshLoading;
     private ImageLoaderHelper imageLoader;
+    private LinearLayout ll_souce_view;
+    private ImageView iv_source;
+    TextViewExtend tv_news_source;
 
     private ImageLoadingListener loadingListener = new ImageLoadingListener() {
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
         }
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
             //holder.iv_title_img.setImageBitmap(loadedImage);
-            holder.tv_title.setBackgroundDrawable(null);
             applyBlur(holder.iv_title_img, holder.tv_title);
         }
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-
         }
     };
 
@@ -298,7 +297,7 @@ public class HomeAty extends BaseActivity {
             }
         });
 
-        lv_news.setOnScrollListener(scrollListener);
+//        lv_news.setOnScrollListener(scrollListener);
     }
 
     @Override
@@ -355,7 +354,6 @@ public class HomeAty extends BaseActivity {
                 holder.fl_title_content.setLayoutParams(params);
 
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-                holder.tv_title.setBackgroundDrawable(null);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                 holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
@@ -363,13 +361,18 @@ public class HomeAty extends BaseActivity {
             } else {
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
-
             }
 
 
             final NewsFeed feed = feedList.get(position);
 
-            holder.tv_title.setText(feed.getTitle());
+            String title = feed.getTitle();
+
+//            if(title.length() > 20){
+//                title = title.substring(0,20);
+//            }
+
+            holder.tv_title.setText(title);
             holder.tv_title.setShadowLayer(6f, 1, 2, new Color().parseColor("#000000"));
             holder.tv_interests.setText(feed.getOtherNum() + "家观点");
 
@@ -403,9 +406,28 @@ public class HomeAty extends BaseActivity {
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
-//                imageLoader.loadImage(getApplicationContext(), feed.getImgUrl(), loadingListener);
-                holder.tv_title.setBackgroundDrawable(null);
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,loadingListener);
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+                        applyBlur(holder.iv_title_img,holder.tv_title);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+
+                    }
+                });
 //                applyBlur(holder.iv_title_img, holder.tv_title);
 
             }
@@ -418,6 +440,7 @@ public class HomeAty extends BaseActivity {
             if (sourceList != null && sourceList.size() > 0) {
 
                 for (int a = 0; a < sourceList.size(); a++) {
+
 
                     final NewsFeed.Source source = sourceList.get(a);
 
@@ -437,7 +460,9 @@ public class HomeAty extends BaseActivity {
                     });
                     ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                     TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
-                    TextViewExtend tv_news_des = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_des);
+//                    TextViewExtend tv_news_des = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_des);
+
+
 
                     if (source != null) {
 
@@ -445,9 +470,9 @@ public class HomeAty extends BaseActivity {
 
                         if (source_name != null) {
                             if (source.getUser() != null && !"".equals(source.getUser())) {
-                                tv_news_source.setText(source.getUser() + ":");
+                                tv_news_source.setText(source.getUser() + ": " + source.getTitle());
                             } else {
-                                tv_news_source.setText(source_name + ":");
+                                tv_news_source.setText(source_name + ": " + source.getTitle());
                             }
 
                             TextUtil.setResourceSiteIcon(iv_source, source_name);
@@ -457,11 +482,11 @@ public class HomeAty extends BaseActivity {
                             tv_news_source.setText("匿名报道:");
                         }
 
-                        if (source.getTitle() != null) {
-                            tv_news_des.setText(source.getTitle());
-                        } else {
-                            tv_news_des.setText("");
-                        }
+//                        if (source.getTitle() != null) {
+//                            tv_news_des.setText(source.getTitle());
+//                        } else {
+//                            tv_news_des.setText("");
+//                        }
 
                     }
 
@@ -473,7 +498,7 @@ public class HomeAty extends BaseActivity {
             }
 
             long deata = System.currentTimeMillis() - start;
-            Logger.i("aaaaaa",deata + "");
+            Logger.i("aaaaaa", deata + "");
 
             return convertView;
         }
@@ -571,9 +596,9 @@ public class HomeAty extends BaseActivity {
                 Bitmap bmp = mImageView.getDrawingCache();
                 blur(bmp, mTextview);
 
-                if(bmp != null){
-                    bmp = null;
-                }
+//                if(bmp != null){
+//                    bmp = null;
+//                }
 
                 return true;
             }
@@ -583,25 +608,26 @@ public class HomeAty extends BaseActivity {
 
     private void blur(Bitmap bkg, View view) {
         long startMs = System.currentTimeMillis();
-        float scaleFactor = 4;
+        float scaleFactor = 5;
         float radius = 1;
 
         Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
                 (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(overlay);
-//        canvas.translate(-view.getLeft()/scaleFactor, -view.getTop()/scaleFactor);
+        canvas.translate(-2 / scaleFactor, 0);
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
         canvas.drawBitmap(bkg, 0, 0, paint);
+        canvas.drawColor(new Color().parseColor("#66FFFFFF"));
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
         overlay = ImageUtils.getRoundCornerBitmap(overlay, 3.0f);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
 
-        if(overlay != null){
-            overlay = null;
-        }
+//        if(overlay != null){
+//            overlay = null;
+//        }
 
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
