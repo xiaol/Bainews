@@ -69,15 +69,18 @@ public class WordWrapView extends ViewGroup {
             int height = view.getMeasuredHeight();
             x += width + TEXT_MARGIN;
             if (x > autualWidth) {
-                x = width + SIDE_MARGIN;
+                x = width + SIDE_MARGIN + TEXT_MARGIN;
                 rows++;
             }
             y = rows * (height + TEXT_MARGIN);
-            if (i == 0) {
-                view.layout(x - width - TEXT_MARGIN, y - height, x - TEXT_MARGIN, y);
-            } else {
-                view.layout(x - width, y - height, x, y);
-            }
+//            if (i == 0) {
+            view.layout(x - width - TEXT_MARGIN, y - height, x - TEXT_MARGIN, y);
+//            }
+//            else if(i==1){
+//                view.layout(x - width- TEXT_MARGIN, y - height, x- TEXT_MARGIN, y);
+//            }else {
+//                view.layout(x - width, y - height, x, y);
+//            }
         }
     }
 
