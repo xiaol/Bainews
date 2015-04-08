@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="17dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
         android:layout_below="@id/mNewsDetailHeaderImg">
 
         <com.news.yazhidao.widget.TextViewExtend
@@ -69,26 +69,25 @@
             android:lineSpacingMultiplier="1.3"
             android:textSize="18sp" />
 
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/mNewsDetailHeaderContent"
+        <LinearLayout
+            android:id="@+id/mNewsDetailHeaderContentParent"
+            android:layout_below="@id/mNewsDetailHeaderDesc"
+            android:layout_marginTop="32dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mNewsDetailHeaderDesc"
-            android:lineSpacingMultiplier="1.3"
-            android:layout_marginTop="32dp"
-            android:textSize="18sp"
-            android:textColor="@color/black" />
+            android:orientation="vertical"
+            />
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailHeaderPulldown"
-            android:layout_below="@id/mNewsDetailHeaderContent"
+            android:layout_below="@id/mNewsDetailHeaderContentParent"
             android:layout_centerHorizontal="true"
             android:drawableLeft="@drawable/ic_news_detail_listview_pulldown"
             android:drawablePadding="5dp"
             android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="-15dp"
-            android:layout_marginTop="15dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="-20dp"
+            android:layout_marginTop="-8dp"
             android:text="@string/mNewsDetailHeaderOnclickMore"
             />
         <com.news.yazhidao.widget.TextViewExtend

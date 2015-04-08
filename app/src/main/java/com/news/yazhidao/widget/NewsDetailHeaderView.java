@@ -2,7 +2,9 @@ package com.news.yazhidao.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
@@ -31,6 +34,11 @@ import java.util.ArrayList;
  */
 public class NewsDetailHeaderView extends FrameLayout {
 
+    public static interface HeaderVeiwPullUpListener {
+        void onclickPullUp(int height);
+    }
+    //当前新闻内容的高度
+    private int mContentHeight;
     private View mRootView;
     private Context mContext;
     private LinearLayout mllBaiKe, mllZhiHu, mllZhiHuItem, mllSina, mllSinaItem, mllDouBan;
@@ -41,11 +49,16 @@ public class NewsDetailHeaderView extends FrameLayout {
     private TextView mNewsDetailHeaderTime;
     private TextView mNewsDetailHeaderTemperature;
     private TextView mNewsDetailHeaderDesc;
-    private TextView mNewsDetailHeaderContent;
+    private LinearLayout mNewsDetailHeaderContentParent;
     private TextView mNewsDetailHeaderSourceName;
     private TextView mNewsDetailHeaderLocation;
     private TextView mNewsDetailRelate;
     private TextView mNewsDetailHeaderPulldown;
+    //是否点击了展开全文
+    private boolean isClickedPullDown=false;
+    //当前文章隐藏的位置
+    private int _CurrentPos=0;
+
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -87,18 +100,28 @@ public class NewsDetailHeaderView extends FrameLayout {
         mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
         mNewsDetailHeaderTemperature = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
         mNewsDetailHeaderDesc = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
-        mNewsDetailHeaderContent = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderContent);//新闻内容
+        mNewsDetailHeaderContentParent = (LinearLayout) mRootView.findViewById(R.id.mNewsDetailHeaderContentParent);//新闻内容
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
     }
 
+    public void setContentViewHeight(int pHeight){
+        this.mContentHeight=pHeight;
+    }
+    /**
+     * 获取新闻内容展示的view
+     * @return
+     */
+    public View getContentView(){
+        return mNewsDetailHeaderContentParent;
+    }
     /**
      * 获取新闻详情后，填充数据到
      *
      * @param pNewsDetail
      */
-    private void inflateDataToNewsheader(final NewsDetail pNewsDetail) {
+    private void inflateDataToNewsheader(final NewsDetail pNewsDetail, final HeaderVeiwPullUpListener listener) {
         if (pNewsDetail != null) {
             if (TextUtils.isValidate(pNewsDetail.imgUrl)) {
                 mNewsDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (600 * 1.0 / 1280 * DeviceInfoUtil.getScreenHeight())));
@@ -111,15 +134,24 @@ public class NewsDetailHeaderView extends FrameLayout {
             mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
             if (!android.text.TextUtils.isEmpty(pNewsDetail.content)) {
-                String[] split = pNewsDetail.content.split("\n");
-                if (split.length > 3) {
-                    if ((split[0] + "\n" + split[1]).length() > 160) {
-                        mNewsDetailHeaderContent.setText(split[0] + "\n" + split[1]);
-                    } else {
-                        mNewsDetailHeaderContent.setText(split[0] + "\n" + split[1] + "\n" + split[2]);
+                String[] _Split = pNewsDetail.content.split("\n");
+                StringBuilder _StringBuilder=new StringBuilder();
+                for(int i=0;i<_Split.length;i++){
+                    TextViewExtend _TextVE=new TextViewExtend(mContext);
+                    _TextVE.setLineSpacing(DensityUtil.dip2px(mContext,32),0);
+                    _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    _TextVE.setTextColor(getResources().getColor(R.color.black));
+                    _TextVE.setText(_Split[i]);
+                    LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    _LayoutParams.setMargins(0,0,0, DensityUtil.dip2px(mContext,22));
+                    _TextVE.setLayoutParams(_LayoutParams);
+                    if(_StringBuilder.append(_Split[i]).length()>200){
+                        _TextVE.setVisibility(GONE);
+                        if(_CurrentPos==0){
+                            _CurrentPos=i;
+                        }
                     }
-                } else {
-                    mNewsDetailHeaderContent.setText(TextUtil.trimEnterInContent(split).toString());
+                    mNewsDetailHeaderContentParent.addView(_TextVE);
                 }
             }
             mNewsDetailHeaderPulldown.setOnClickListener(new OnClickListener() {
@@ -127,9 +159,30 @@ public class NewsDetailHeaderView extends FrameLayout {
                 public void onClick(View v) {
                     //umeng statistic onclick pulldown
                     MobclickAgent.onEvent(mContext,CommonConstant.US_BAINEWS_NEWSDETAIL_CLICK_PULLDOWN);
-                    String[] split=pNewsDetail.content.split("\n");
-                    mNewsDetailHeaderContent.setText(TextUtil.trimEnterInContent(split).toString());
-                    mNewsDetailHeaderPulldown.setVisibility(GONE);
+                    if(!isClickedPullDown){
+                        isClickedPullDown=true;
+                        for(int i=0;i<mNewsDetailHeaderContentParent.getChildCount();i++){
+                            mNewsDetailHeaderContentParent.getChildAt(i).setVisibility(VISIBLE);
+                        }
+                        mNewsDetailHeaderPulldown.setText(R.string.mNewsDetailHeaderOnclickLess);
+                        Drawable _DrawableLeft = mContext.getResources().getDrawable(R.drawable.ic_news_detail_listview_pullup);
+                        _DrawableLeft.setBounds(0, 0, _DrawableLeft.getMinimumWidth(), _DrawableLeft.getMinimumHeight());
+                        mNewsDetailHeaderPulldown.setCompoundDrawables(_DrawableLeft,null,null,null);
+                    }else{
+                        isClickedPullDown=false;
+                        if(listener!=null){
+                            listener.onclickPullUp(mContentHeight);
+                        }
+                        for(int i=0;i<mNewsDetailHeaderContentParent.getChildCount();i++){
+                            if(i>=_CurrentPos){
+                                mNewsDetailHeaderContentParent.getChildAt(i).setVisibility(GONE);
+                            }
+                        }
+                        mNewsDetailHeaderPulldown.setText(R.string.mNewsDetailHeaderOnclickMore);
+                        Drawable _DrawableLeft = mContext.getResources().getDrawable(R.drawable.ic_news_detail_listview_pulldown);
+                        _DrawableLeft.setBounds(0, 0, _DrawableLeft.getMinimumWidth(), _DrawableLeft.getMinimumHeight());
+                        mNewsDetailHeaderPulldown.setCompoundDrawables(_DrawableLeft,null,null,null);
+                    }
                 }
             });
             mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName), pNewsDetail.originsourceSiteName));
@@ -139,8 +192,8 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     }
 
-    public void setDetailData(NewsDetail pNewsDetail) {
-        inflateDataToNewsheader(pNewsDetail);
+    public void setDetailData(NewsDetail pNewsDetail,HeaderVeiwPullUpListener listener) {
+        inflateDataToNewsheader(pNewsDetail,listener);
         ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.baike;
         if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
             for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
