@@ -21,7 +21,9 @@
             android:layout_width="249dp"
             android:layout_height="61dp"
             android:layout_gravity="left"
-            android:layout_marginLeft="6dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingLeft="6dp"
             android:textSize="20sp"
             android:background="@drawable/bg_image_title"
             android:textColor="#ffffff" />
@@ -34,7 +36,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"/>
+        android:paddingTop="8dp"/>
 
     <LinearLayout
         android:id="@+id/ll_source_interest"

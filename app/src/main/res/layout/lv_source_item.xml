@@ -19,7 +19,7 @@
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_news_source"
-        android:layout_width="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="19dp"
         android:layout_marginBottom="5dp"
         android:layout_gravity="center_vertical"
@@ -30,19 +30,19 @@
         android:textSize="12sp"
         />
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_news_des"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="4dp"
-        android:gravity="center_vertical"
-        android:textColor="#000000"
-        android:singleLine="true"
-        android:layout_marginRight="16dp"
-        android:text="Fay苏:京广铁路通行，k185/186居然要停运了?..."
-        android:textSize="13sp"
-        />
+    <!--<com.news.yazhidao.widget.TextViewExtend-->
+        <!--android:id="@+id/tv_news_des"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="left"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:textColor="#000000"-->
+        <!--android:singleLine="true"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:text="Fay苏:京广铁路通行，k185/186居然要停运了?..."-->
+        <!--android:textSize="13sp"-->
+        <!--/>-->
 
 </LinearLayout>
