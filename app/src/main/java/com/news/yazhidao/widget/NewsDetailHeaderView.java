@@ -2,6 +2,7 @@ package com.news.yazhidao.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -12,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
@@ -22,8 +22,10 @@ import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -124,8 +126,12 @@ public class NewsDetailHeaderView extends FrameLayout {
     private void inflateDataToNewsheader(final NewsDetail pNewsDetail, final HeaderVeiwPullUpListener listener) {
         if (pNewsDetail != null) {
             if (TextUtils.isValidate(pNewsDetail.imgUrl)) {
-                mNewsDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (600 * 1.0 / 1280 * DeviceInfoUtil.getScreenHeight())));
-                ImageLoaderHelper.dispalyImage(mContext, pNewsDetail.imgUrl, mNewsDetailHeaderImg);
+                ImageLoaderHelper.dispalyImage(mContext, pNewsDetail.imgUrl, mNewsDetailHeaderImg,new SimpleImageLoadingListener(){
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        mNewsDetailHeaderImg.setImageBitmap(ImageUtils.zoomBitmap(loadedImage, DeviceInfoUtil.getScreenWidth()));
+                    }
+                });
             } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
