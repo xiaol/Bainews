@@ -80,26 +80,6 @@ public class HomeAty extends BaseActivity {
     private ImageView iv_source;
     TextViewExtend tv_news_source;
 
-    private ImageLoadingListener loadingListener = new ImageLoadingListener() {
-        @Override
-        public void onLoadingStarted(String imageUri, View view) {
-        }
-
-        @Override
-        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-        }
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            //holder.iv_title_img.setImageBitmap(loadedImage);
-            applyBlur(holder.iv_title_img, holder.tv_title);
-        }
-
-        @Override
-        public void onLoadingCancelled(String imageUri, View view) {
-        }
-    };
-
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -107,8 +87,8 @@ public class HomeAty extends BaseActivity {
             switch (scrollState) {
                 case SCROLL_STATE_IDLE:
                     if (view.getFirstVisiblePosition() == 0 && !visible_flag) {
-                            ll_title.setVisibility(View.VISIBLE);
-                            visible_flag = true;
+                        ll_title.setVisibility(View.VISIBLE);
+                        visible_flag = true;
 
                     }
 
@@ -262,7 +242,7 @@ public class HomeAty extends BaseActivity {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
-                if(NetUtil.checkNetWork(HomeAty.this)) {
+                if (NetUtil.checkNetWork(HomeAty.this)) {
 
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
@@ -270,7 +250,7 @@ public class HomeAty extends BaseActivity {
                     loadNewsData(1);
                     page = 1;
                     adapterFlag = false;
-                }else{
+                } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
@@ -280,18 +260,17 @@ public class HomeAty extends BaseActivity {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 
-                if(NetUtil.checkNetWork(HomeAty.this)) {
+                if (NetUtil.checkNetWork(HomeAty.this)) {
 
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
 
                     loadNewsData(page);
                     page++;
-                }else{
+                } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
-
 
 
             }
@@ -302,14 +281,14 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        if(NetUtil.checkNetWork(HomeAty.this)) {
+        if (NetUtil.checkNetWork(HomeAty.this)) {
 
             lv_news.setVisibility(View.VISIBLE);
             ll_no_network.setVisibility(View.GONE);
 
             loadNewsData(1);
             page++;
-        }else{
+        } else {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
@@ -321,7 +300,7 @@ public class HomeAty extends BaseActivity {
         @Override
         public int getCount() {
 
-            if(feedList!= null && feedList.size() > 0)
+            if (feedList != null && feedList.size() > 0)
                 return feedList.size();
 
             return 0;
@@ -348,17 +327,22 @@ public class HomeAty extends BaseActivity {
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
                 holder.fl_title_content = (FrameLayout) convertView.findViewById(R.id.fl_title_content);
                 holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                holder.iv_title_img.setBackgroundColor(new Color().parseColor("#55ffffff"));
                 ViewGroup.LayoutParams params = holder.fl_title_content.getLayoutParams();
-                params.height = (int)(height * 0.27);
+                params.height = (int) (height * 0.27);
 
                 holder.fl_title_content.setLayoutParams(params);
 
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
+                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                applyBlur(holder.iv_title_img,holder.tv_title);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                 holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                 convertView.setTag(holder);
             } else {
+                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                applyBlur(holder.iv_title_img,holder.tv_title);
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
             }
@@ -391,7 +375,7 @@ public class HomeAty extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     //uemng statistic click other viewpoint
-                    MobclickAgent.onEvent(HomeAty.this,CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                    MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
                 }
             });
             if (feed != null && feed.getOtherNum() != null) {
@@ -403,33 +387,41 @@ public class HomeAty extends BaseActivity {
             }
 
 
-
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,new ImageLoadingListener() {
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, new ImageLoadingListener() {
                     @Override
                     public void onLoadingStarted(String imageUri, View view) {
-
+                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
                     }
 
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
+                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                        applyBlur(holder.iv_title_img, holder.tv_title);
                     }
 
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        ViewGroup.LayoutParams params = holder.iv_title_img.getLayoutParams();
+                        params.width = width;
+                        params.height = width * loadedImage.getHeight() / loadedImage.getWidth();
+                        holder.iv_title_img.setLayoutParams(params);
 
-                        applyBlur(holder.iv_title_img,holder.tv_title);
+//                        holder.tv_title.setBackgroundDrawable(new BitmapDrawable(loadedImage));
+                        applyBlur(holder.iv_title_img, holder.tv_title);
                     }
 
                     @Override
                     public void onLoadingCancelled(String imageUri, View view) {
-
+                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                        applyBlur(holder.iv_title_img, holder.tv_title);
                     }
                 });
-//                applyBlur(holder.iv_title_img, holder.tv_title);
 
+            }else{
+                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                applyBlur(holder.iv_title_img,holder.tv_title);
             }
 
             final long start = System.currentTimeMillis();
@@ -455,13 +447,12 @@ public class HomeAty extends BaseActivity {
                             //umeng statistic onclick url below the head news
                             HashMap<String, String> _MobMap = new HashMap<>();
                             _MobMap.put("resource_site_name", source.getSourceSitename());
-                            MobclickAgent.onEvent(HomeAty.this,CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
+                            MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                         }
                     });
                     ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                     TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
 //                    TextViewExtend tv_news_des = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_des);
-
 
 
                     if (source != null) {
@@ -507,20 +498,18 @@ public class HomeAty extends BaseActivity {
     @Override
     protected void onResume() {
 
-        if(NetUtil.checkNetWork(HomeAty.this)) {
+        if (NetUtil.checkNetWork(HomeAty.this)) {
 
             lv_news.setVisibility(View.VISIBLE);
             ll_no_network.setVisibility(View.GONE);
 
-        }else{
+        } else {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
 
         super.onResume();
     }
-
-
 
 
     class ViewHolder {
@@ -550,14 +539,15 @@ public class HomeAty extends BaseActivity {
 
                         //添加list
                         for (int j = 0; j < result.size(); j++) {
+                            if(result.get(j).getSourceUrl().startsWith(""))
                             feedList.add(result.get(j));
                         }
 
-                        if(!adapterFlag) {
+                        if (!adapterFlag) {
                             list_adapter = new MyAdapter();
                             lv_news.setAdapter(list_adapter);
                             adapterFlag = true;
-                        }else{
+                        } else {
                             list_adapter.notifyDataSetChanged();
                         }
 
@@ -596,9 +586,9 @@ public class HomeAty extends BaseActivity {
                 Bitmap bmp = mImageView.getDrawingCache();
                 blur(bmp, mTextview);
 
-//                if(bmp != null){
-//                    bmp = null;
-//                }
+                if (bmp != null) {
+                    bmp = null;
+                }
 
                 return true;
             }
@@ -618,16 +608,18 @@ public class HomeAty extends BaseActivity {
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
-        canvas.drawBitmap(bkg, 0, 0, paint);
-        canvas.drawColor(new Color().parseColor("#66FFFFFF"));
+        if(canvas != null && bkg != null && paint != null) {
+            canvas.drawBitmap(bkg, 0, 0, paint);
+            canvas.drawColor(new Color().parseColor("#66FFFFFF"));
+        }
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
-        overlay = ImageUtils.getRoundCornerBitmap(overlay, 3.0f);
+        overlay = ImageUtils.getRoundedCornerBitmap(HomeAty.this,overlay,1,false,false,false,true);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
 
-//        if(overlay != null){
-//            overlay = null;
-//        }
+        if (overlay != null) {
+            overlay = null;
+        }
 
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
