@@ -372,7 +372,7 @@ public class HomeAty extends BaseActivity {
                 convertView.setTag(holder);
             } else {
                 holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                holder.iv_title_img.setBackgroundDrawable(null);
+                holder.iv_title_img.setBackgroundColor(new Color().parseColor("#55ffffff"));
                 applyBlur(holder.iv_title_img, holder.tv_title);
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
