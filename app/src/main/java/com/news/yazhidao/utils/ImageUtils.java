@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -13,6 +14,8 @@ import android.graphics.RectF;
  * Created by Berkeley on 3/30/15.
  */
 public class ImageUtils {
+
+    private static final String TAG = "ImageUtils";
 
     public static Bitmap getRoundCornerBitmap(Bitmap bitmap, float roundPX){
         int width = bitmap.getWidth();
@@ -77,6 +80,49 @@ public class ImageUtils {
         canvas.drawBitmap(input, 0,0, paint);
 
         return output;
+    }
+
+    /**
+     * 高和宽等比例缩放
+     *
+     * @param bm
+     * @param newWidth
+     * @return
+     */
+    public static Bitmap zoomBitmap(Bitmap bm, int newWidth) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleWidth = ((float) newWidth) / width;
+        Logger.e(TAG, ">>>>>>>scaleWidth>>" + scaleWidth);
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleWidth);//横竖都按照水平方向来缩放
+        // 得到新的图片bitmap
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
+    }
+
+    /**
+     * 高和宽等比例缩放
+     *
+     * @param bm
+     * @param screenWidth
+     * @return
+     */
+    public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth,int screenHeight) {
+        Bitmap bitmap_big = zoomBitmap(bm,screenWidth);
+
+        int newHeight = bitmap_big.getHeight();
+
+        if(newHeight > screenHeight * 0.27){
+            newHeight = (int)(screenHeight * 0.27);
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(bitmap_big,0,0,screenWidth,newHeight);
+
+        return bitmap;
     }
 
 }

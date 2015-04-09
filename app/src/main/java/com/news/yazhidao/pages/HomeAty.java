@@ -65,6 +65,7 @@ public class HomeAty extends BaseActivity {
     private boolean adapterFlag = false;
     private boolean requestMore = false;
     private String opinion;
+    private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private TextViewExtend tv_title;
     private int page = 1;
@@ -83,30 +84,26 @@ public class HomeAty extends BaseActivity {
     private ImageLoadingListener listener = new ImageLoadingListener() {
         @Override
         public void onLoadingStarted(String imageUri, View view) {
-            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+            holder.tv_title.setBackgroundColor(color);
         }
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-            applyBlur(holder.iv_title_img, holder.tv_title);
+            holder.tv_title.setBackgroundColor(color);
         }
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            ViewGroup.LayoutParams params = holder.iv_title_img.getLayoutParams();
-            params.width = width;
-            params.height = width * loadedImage.getHeight() / loadedImage.getWidth();
-            holder.iv_title_img.setLayoutParams(params);
-            holder.iv_title_img.setImageBitmap(loadedImage);
-//                        holder.tv_title.setBackgroundDrawable(new BitmapDrawable(loadedImage));
+
+            Bitmap bitmap = ImageUtils.zoomBitmap2(loadedImage, width, height);
+            holder.tv_title.setBackgroundColor(color);
+            holder.iv_title_img.setImageBitmap(bitmap);
             applyBlur(holder.iv_title_img, holder.tv_title);
         }
 
         @Override
         public void onLoadingCancelled(String imageUri, View view) {
-            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-            applyBlur(holder.iv_title_img, holder.tv_title);
+            holder.tv_title.setBackgroundColor(color);
         }
     };
 
@@ -357,23 +354,21 @@ public class HomeAty extends BaseActivity {
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
                 holder.fl_title_content = (FrameLayout) convertView.findViewById(R.id.fl_title_content);
                 holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
-                holder.iv_title_img.setBackgroundColor(new Color().parseColor("#55ffffff"));
+                holder.iv_title_img.setBackgroundDrawable(null);
                 ViewGroup.LayoutParams params = holder.fl_title_content.getLayoutParams();
                 params.height = (int) (height * 0.27);
 
                 holder.fl_title_content.setLayoutParams(params);
 
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                applyBlur(holder.iv_title_img,holder.tv_title);
+                holder.tv_title.setBackgroundColor(color);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                 holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                 convertView.setTag(holder);
             } else {
-                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                holder.iv_title_img.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                applyBlur(holder.iv_title_img, holder.tv_title);
+                holder.tv_title.setBackgroundColor(color);
+                holder.iv_title_img.setBackgroundDrawable(null);
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
             }
@@ -419,12 +414,11 @@ public class HomeAty extends BaseActivity {
 
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-
                 ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, listener);
 
-            }else{
-                holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                applyBlur(holder.iv_title_img,holder.tv_title);
+            } else {
+                holder.tv_title.setBackgroundColor(color);
+                applyBlur(holder.iv_title_img, holder.tv_title);
             }
 
             final long start = System.currentTimeMillis();
@@ -530,11 +524,16 @@ public class HomeAty extends BaseActivity {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?page=" + page;
 
+        final long start = System.currentTimeMillis();
 
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
+
+                long delta = System.currentTimeMillis() - start;
+                Logger.i("ariesy", delta + "");
+
                 if (result != null) {
                     if (page == 1) {
 
@@ -542,8 +541,8 @@ public class HomeAty extends BaseActivity {
 
                         //添加list
                         for (int j = 0; j < result.size(); j++) {
-                            if(result.get(j).getSourceUrl().startsWith(""))
-                            feedList.add(result.get(j));
+                            if (result.get(j).getSourceUrl().startsWith(""))
+                                feedList.add(result.get(j));
                         }
 
                         if (!adapterFlag) {
@@ -611,13 +610,13 @@ public class HomeAty extends BaseActivity {
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
-        if(canvas != null && bkg != null && paint != null) {
+        if (canvas != null && bkg != null && paint != null) {
             canvas.drawBitmap(bkg, 0, 0, paint);
             canvas.drawColor(new Color().parseColor("#66FFFFFF"));
         }
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
-        overlay = ImageUtils.getRoundedCornerBitmap(HomeAty.this,overlay,1,false,false,false,true);
+        overlay = ImageUtils.getRoundedCornerBitmap(HomeAty.this, overlay, 1, false, false, false, true);
         view.setBackgroundDrawable(new BitmapDrawable(getResources(), overlay));
 
         if (overlay != null) {
