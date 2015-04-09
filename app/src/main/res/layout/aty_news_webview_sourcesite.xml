@@ -61,43 +61,58 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bg_news_sourcesite_bottom"
         android:gravity="center"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/mNewsSourcesiteFooterPraise"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <ImageView
+                android:id="@+id/mNewsSourcesitePraiseImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_news_sourcesite_praise" />
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/mNewsSourcesitePraiseNum"
+                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="1234" />
-        </LinearLayout>
+            <TextView
+                android:id="@+id/mNewsSourcesitePraiseNumIncrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
+                android:text="+1"
+                android:textColor="@color/red"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="1px"
             android:layout_height="40dp"
             android:src="@color/news_sourcesite_bottom_divider" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/mNewsSourcesiteFooterBlame"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/mNewsSourcesiteBlameNumImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_news_sourcesite_blame" />
@@ -106,9 +121,20 @@
                 android:id="@+id/mNewsSourcesiteBlameNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
                 android:layout_marginLeft="5dp"
-                android:text="34" />
-        </LinearLayout>
+                android:text="304" />
+            <TextView
+                android:id="@+id/mNewsSourcesiteBlameNumReduce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
+                android:text="-1"
+                android:textColor="@color/red"
+                android:layout_marginLeft="5dp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
         <ImageView
             android:layout_width="1px"
@@ -116,12 +142,13 @@
             android:src="@color/news_sourcesite_bottom_divider" />
 
         <FrameLayout
+            android:id="@+id/mNewsSourcesiteFooterShare"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/mNewsSourcesiteFooterShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

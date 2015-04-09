@@ -1,5 +1,9 @@
 package com.news.yazhidao.pages;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -28,6 +32,9 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private TextView mNewsSourcesiteBlameNum;
     private TextView mNewsSourcesitePraiseNum;
     private ProgressDialog mProgressDialog;
+    private TextView mNewsSourcesiteBlameNumReduce;
+    private TextView mNewsSourcesitePraiseNumIncrease;
+    private int mClickNum=0;
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
@@ -43,6 +50,8 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         mNewsSourcesiteFooterShare.setOnClickListener(this);
         mNewsSourcesitePraiseNum= (TextView) findViewById(R.id.mNewsSourcesitePraiseNum);
         mNewsSourcesiteBlameNum=(TextView)findViewById(R.id.mNewsSourcesiteBlameNum);
+        mNewsSourcesitePraiseNumIncrease= (TextView) findViewById(R.id.mNewsSourcesitePraiseNumIncrease);
+        mNewsSourcesiteBlameNumReduce= (TextView) findViewById(R.id.mNewsSourcesiteBlameNumReduce);
     }
     @Override
     public void onClick(View v) {
@@ -51,10 +60,27 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
                 this.finish();
                 break;
             case R.id.mNewsSourcesiteFooterPraise:
-                mNewsSourcesitePraiseNum.setText(Integer.valueOf(mNewsSourcesitePraiseNum.getText().toString())+1+"");
+                if(mClickNum==0){
+                    mClickNum++;
+                    performAnimator(mNewsSourcesitePraiseNumIncrease);
+                    mNewsSourcesitePraiseNum.setText(Integer.valueOf(mNewsSourcesitePraiseNum.getText().toString())+1+"");
+                }else if(mClickNum==1){
+                    ToastUtil.toastShort("您已经赞过");
+                }else if(mClickNum==-1){
+                    ToastUtil.toastShort("您已经踩过");
+                }
                 break;
             case R.id.mNewsSourcesiteFooterBlame:
-                mNewsSourcesiteBlameNum.setText(Integer.valueOf(mNewsSourcesiteBlameNum.getText().toString()) - 1 + "");                break;
+                if(mClickNum==0){
+                    mClickNum--;
+                    performAnimator(mNewsSourcesiteBlameNumReduce);
+                    mNewsSourcesiteBlameNum.setText(Integer.valueOf(mNewsSourcesiteBlameNum.getText().toString()) - 1 + "");                break;
+                }else if(mClickNum==1){
+                    ToastUtil.toastShort("您已经赞过");
+                }else if(mClickNum==-1){
+                    ToastUtil.toastShort("您已经踩过");
+                }
+                break;
             case R.id.mNewsSourcesiteFooterShare:
                 ToastUtil.toastShort("点击了分享");
                 break;
@@ -62,6 +88,31 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
                 break;
         }
     }
+
+    /**
+     * 执行动画
+     * @param pView
+     */
+    private void performAnimator(final View pView) {
+        pView.setVisibility(View.VISIBLE);
+        AnimatorSet _AnimatorSet=new AnimatorSet();
+        _AnimatorSet.playTogether(
+                ObjectAnimator.ofFloat(pView, "translationY", -50),
+                ObjectAnimator.ofFloat(pView, "alpha", 1f,0f),
+                ObjectAnimator.ofFloat(pView, "scaleX", 1f,.5f),
+                ObjectAnimator.ofFloat(pView, "scaleY", 1f,.5f)
+
+        );
+        _AnimatorSet.setDuration(800);
+        _AnimatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                pView.setVisibility(View.GONE);
+            }
+        });
+        _AnimatorSet.start();
+    }
+
     @Override
     protected void initializeViews() {
         mNewsUrl=getIntent().getStringExtra("url");

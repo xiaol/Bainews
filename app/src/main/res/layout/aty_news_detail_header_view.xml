@@ -102,7 +102,7 @@
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/mNewsDetailRelate"
         android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:background="@drawable/bg_grag_line_top_bottom"
+        android:background="@drawable/bg_detail_relate"
         android:paddingLeft="16dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

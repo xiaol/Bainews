@@ -93,7 +93,12 @@ public class NewsDetailAty extends BaseActivity {
             @Override
             public void success(NewsDetail result) {
                 Logger.e(TAG, result.toString());
-                headerView.setDetailData(result);
+                headerView.setDetailData(result,new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                    @Override
+                    public void onclickPullUp(int height) {
+                        msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                    }
+                });
                 mNewsDetailAdapter.setData(result.relate);
                 mNewsDetailAdapter.notifyDataSetChanged();
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
@@ -169,14 +174,15 @@ public class NewsDetailAty extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        msgvNewsDetail.startFlingRunnable(300);
-//        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//            @Override
-//            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                Logger.i("down", bottom + "bottom=00000");
+        msgvNewsDetail.startFlingRunnable(300);
+        headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Logger.i("down", bottom + "bottom=00000");
 //                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
-//            }
-//        });
+                headerView.setContentViewHeight(headerView.getContentView().getHeight());
+            }
+        });
         Log.i("tag", getMacAddressAndDeviceid(this)+"aaaaaa");
 
     }

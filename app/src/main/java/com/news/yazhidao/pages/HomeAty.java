@@ -80,6 +80,36 @@ public class HomeAty extends BaseActivity {
     private ImageView iv_source;
     TextViewExtend tv_news_source;
 
+    private ImageLoadingListener listener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+            applyBlur(holder.iv_title_img, holder.tv_title);
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+            ViewGroup.LayoutParams params = holder.iv_title_img.getLayoutParams();
+            params.width = width;
+            params.height = width * loadedImage.getHeight() / loadedImage.getWidth();
+            holder.iv_title_img.setLayoutParams(params);
+            holder.iv_title_img.setImageBitmap(loadedImage);
+//                        holder.tv_title.setBackgroundDrawable(new BitmapDrawable(loadedImage));
+            applyBlur(holder.iv_title_img, holder.tv_title);
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+            holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
+            applyBlur(holder.iv_title_img, holder.tv_title);
+        }
+    };
+
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -342,7 +372,8 @@ public class HomeAty extends BaseActivity {
                 convertView.setTag(holder);
             } else {
                 holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                applyBlur(holder.iv_title_img,holder.tv_title);
+                holder.iv_title_img.setBackgroundDrawable(null);
+                applyBlur(holder.iv_title_img, holder.tv_title);
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
             }
@@ -389,35 +420,7 @@ public class HomeAty extends BaseActivity {
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
 
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                        applyBlur(holder.iv_title_img, holder.tv_title);
-                    }
-
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        ViewGroup.LayoutParams params = holder.iv_title_img.getLayoutParams();
-                        params.width = width;
-                        params.height = width * loadedImage.getHeight() / loadedImage.getWidth();
-                        holder.iv_title_img.setLayoutParams(params);
-
-//                        holder.tv_title.setBackgroundDrawable(new BitmapDrawable(loadedImage));
-                        applyBlur(holder.iv_title_img, holder.tv_title);
-                    }
-
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-                        holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
-                        applyBlur(holder.iv_title_img, holder.tv_title);
-                    }
-                });
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, listener);
 
             }else{
                 holder.tv_title.setBackgroundColor(new Color().parseColor("#55ffffff"));
