@@ -47,10 +47,10 @@ public class NewsDetailHeaderView extends FrameLayout {
     private WordWrapView mvDouBanItem;
     private HorizontalScrollView mSinaScrollView;
     private ImageView mNewsDetailHeaderImg;
-    private TextView mNewsDetailHeaderTitle;
+    private LetterSpacingTextView mNewsDetailHeaderTitle;
     private TextView mNewsDetailHeaderTime;
     private TextView mNewsDetailHeaderTemperature;
-    private TextView mNewsDetailHeaderDesc;
+    private LetterSpacingTextView mNewsDetailHeaderDesc;
     private LinearLayout mNewsDetailHeaderContentParent;
     private TextView mNewsDetailHeaderSourceName;
     private TextView mNewsDetailHeaderLocation;
@@ -98,10 +98,10 @@ public class NewsDetailHeaderView extends FrameLayout {
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
         mNewsDetailRelate = (TextView) mRootView.findViewById(R.id.mNewsDetailRelate);
         mNewsDetailHeaderImg = (ImageView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
-        mNewsDetailHeaderTitle = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
+        mNewsDetailHeaderTitle = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
         mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
         mNewsDetailHeaderTemperature = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
-        mNewsDetailHeaderDesc = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
+        mNewsDetailHeaderDesc = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
         mNewsDetailHeaderContentParent = (LinearLayout) mRootView.findViewById(R.id.mNewsDetailHeaderContentParent);//新闻内容
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
@@ -135,15 +135,18 @@ public class NewsDetailHeaderView extends FrameLayout {
             } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
+            mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
             mNewsDetailHeaderTime.setText(pNewsDetail.updateTime);
             mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
+            mNewsDetailHeaderDesc.setFontSpacing(LetterSpacingTextView.BIG);
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
             if (!android.text.TextUtils.isEmpty(pNewsDetail.content)) {
                 String[] _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder=new StringBuilder();
                 for(int i=0;i<_Split.length;i++){
-                    TextViewExtend _TextVE=new TextViewExtend(mContext);
+                    LetterSpacingTextView _TextVE=new LetterSpacingTextView(mContext);
+                    _TextVE.setFontSpacing(LetterSpacingTextView.NORMALBIG);
                     _TextVE.setLineSpacing(DensityUtil.dip2px(mContext,32),0);
                     _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                     _TextVE.setTextColor(getResources().getColor(R.color.black));
@@ -158,6 +161,9 @@ public class NewsDetailHeaderView extends FrameLayout {
                         }
                     }
                     mNewsDetailHeaderContentParent.addView(_TextVE);
+                }
+                if(_CurrentPos<2){
+                    mNewsDetailHeaderPulldown.setVisibility(GONE);
                 }
             }
             mNewsDetailHeaderPulldown.setOnClickListener(new OnClickListener() {
@@ -276,7 +282,10 @@ public class NewsDetailHeaderView extends FrameLayout {
                 sinaView.setSinaData(pArrWeibo.get(i));
                 mllSinaItem.addView(sinaView);
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) sinaView.getLayoutParams();
-                layoutParams.rightMargin = 30;
+                if(i==pArrWeibo.size()-1){
+                    layoutParams.rightMargin = DensityUtil.dip2px(mContext,16);
+                }
+                layoutParams.leftMargin = DensityUtil.dip2px(mContext,16);
                 sinaView.setLayoutParams(layoutParams);
                 sinaView.setOnClickListener(new OnClickListener() {
                     @Override

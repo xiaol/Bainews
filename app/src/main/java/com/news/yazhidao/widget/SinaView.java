@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 
 /**
@@ -62,14 +61,6 @@ public class SinaView extends FrameLayout {
         mtvName.setText(weiboData.sourceSitename);
         mtvName.setVisibility(GONE);
         mtvContent.setText(weiboData.title);
-        if (weiboData.url != null && !"".equals(weiboData.url.toString())) {
-            mHeadPortrait.setVisibility(VISIBLE);
-            ImageLoader.getInstance().displayImage(weiboData.url, mHeadPortrait);
-            mtvContent.setLines(2);
-        } else {
-            mHeadPortrait.setVisibility(GONE);
-            mtvContent.setLines(5);
-        }
 
     }
 

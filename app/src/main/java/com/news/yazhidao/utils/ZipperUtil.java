@@ -19,7 +19,7 @@ public class ZipperUtil {
     }
     public static boolean PASSED;
     public static File path;
-    public static String name = "hwzs.ttf";
+    public static String name = "wryh.ttf";
     private static final int buffer = 1024 * 1024;
 
     public static void unzip(final Context mContext, final ZipCompleteListener listener) {
@@ -36,7 +36,7 @@ public class ZipperUtil {
                     }
                     InputStream is;
 
-                    is = mContext.getApplicationContext().getAssets().open("fonts/hwzs.ttf.zip");
+                    is = mContext.getApplicationContext().getAssets().open("fonts/wryh.ttf.zip");
 
                     ZipInputStream zipInputStream = new ZipInputStream(is);
 

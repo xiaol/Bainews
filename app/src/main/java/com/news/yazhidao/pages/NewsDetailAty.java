@@ -92,7 +92,6 @@ public class NewsDetailAty extends BaseActivity {
 
             @Override
             public void success(NewsDetail result) {
-                Logger.e(TAG, result.toString());
                 headerView.setDetailData(result,new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                     @Override
                     public void onclickPullUp(int height) {
