@@ -16,6 +16,8 @@
 package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
+
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
@@ -44,6 +46,7 @@ final class DisplayBitmapTask implements Runnable {
 	private final ImageLoadingListener listener;
 	private final ImageLoaderEngine engine;
 	private final LoadedFrom loadedFrom;
+    private TextViewExtend tv_title;
 
 	public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
 			LoadedFrom loadedFrom) {
@@ -57,6 +60,19 @@ final class DisplayBitmapTask implements Runnable {
 		this.loadedFrom = loadedFrom;
 	}
 
+    public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
+                             LoadedFrom loadedFrom,TextViewExtend tv_title) {
+        this.bitmap = bitmap;
+        imageUri = imageLoadingInfo.uri;
+        imageAware = imageLoadingInfo.imageAware;
+        memoryCacheKey = imageLoadingInfo.memoryCacheKey;
+        displayer = imageLoadingInfo.options.getDisplayer();
+        listener = imageLoadingInfo.listener;
+        this.engine = engine;
+        this.loadedFrom = loadedFrom;
+        this.tv_title = tv_title;
+    }
+
 	@Override
 	public void run() {
 		if (imageAware.isCollected()) {
@@ -67,7 +83,7 @@ final class DisplayBitmapTask implements Runnable {
 			listener.onLoadingCancelled(imageUri, imageAware.getWrappedView());
 		} else {
 			L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
-			displayer.display(bitmap, imageAware, loadedFrom);
+			displayer.display(bitmap, imageAware, loadedFrom,tv_title);
 			engine.cancelDisplayTaskFor(imageAware);
 			listener.onLoadingComplete(imageUri, imageAware.getWrappedView(), bitmap);
 		}

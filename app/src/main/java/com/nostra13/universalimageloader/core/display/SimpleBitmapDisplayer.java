@@ -16,6 +16,16 @@
 package com.nostra13.universalimageloader.core.display;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
+import android.view.View;
+
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.FastBlur;
+import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
@@ -30,4 +40,42 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 	public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
 		imageAware.setImageBitmap(bitmap);
 	}
+
+    @Override
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom,TextViewExtend tv_title) {
+        imageAware.setImageBitmap(bitmap);
+        if(tv_title != null) {
+            blur(bitmap, tv_title);
+        }
+    }
+
+    private void blur(Bitmap bkg, View view) {
+        long startMs = System.currentTimeMillis();
+        float scaleFactor = 50;
+        float radius = 1;
+
+        Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
+                (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(overlay);
+        canvas.translate(-2 / scaleFactor, 0);
+        canvas.scale(1 / scaleFactor, 1 / scaleFactor);
+        Paint paint = new Paint();
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+        if (canvas != null && bkg != null && paint != null) {
+            canvas.drawBitmap(bkg, 0, 0, paint);
+//            canvas.drawColor(new Color().parseColor("#99FFFFFF"));
+        }
+
+        overlay = FastBlur.doBlur(overlay, (int) radius, true);
+        overlay = ImageUtils.getRoundedCornerBitmap(GlobalParams.context, overlay, 1, false, false, false, true);
+        view.setBackgroundDrawable(new BitmapDrawable(overlay));
+
+        if (overlay != null) {
+            overlay = null;
+        }
+
+        Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
+    }
+
+
 }

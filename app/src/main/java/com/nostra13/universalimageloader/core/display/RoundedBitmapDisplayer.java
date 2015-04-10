@@ -18,6 +18,7 @@ package com.nostra13.universalimageloader.core.display;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -61,7 +62,12 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 		imageAware.setImageDrawable(new RoundedDrawable(bitmap, cornerRadius, margin));
 	}
 
-	public static class RoundedDrawable extends Drawable {
+    @Override
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, TextViewExtend tv_title) {
+
+    }
+
+    public static class RoundedDrawable extends Drawable {
 
 		protected final float cornerRadius;
 		protected final int margin;

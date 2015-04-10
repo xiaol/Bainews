@@ -17,7 +17,8 @@ package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.widget.ImageView;
+
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 import com.nostra13.universalimageloader.utils.L;
@@ -37,6 +38,7 @@ final class ProcessAndDisplayImageTask implements Runnable {
 	private final Bitmap bitmap;
 	private final ImageLoadingInfo imageLoadingInfo;
 	private final Handler handler;
+    private TextViewExtend tv_title;
 
 	public ProcessAndDisplayImageTask(ImageLoaderEngine engine, Bitmap bitmap, ImageLoadingInfo imageLoadingInfo,
 			Handler handler) {
@@ -46,14 +48,31 @@ final class ProcessAndDisplayImageTask implements Runnable {
 		this.handler = handler;
 	}
 
+    public ProcessAndDisplayImageTask(ImageLoaderEngine engine, Bitmap bitmap, ImageLoadingInfo imageLoadingInfo,
+                                      Handler handler,TextViewExtend tv_title) {
+        this.engine = engine;
+        this.bitmap = bitmap;
+        this.imageLoadingInfo = imageLoadingInfo;
+        this.handler = handler;
+        this.tv_title = tv_title;
+    }
+
 	@Override
 	public void run() {
 		L.d(LOG_POSTPROCESS_IMAGE, imageLoadingInfo.memoryCacheKey);
 
 		BitmapProcessor processor = imageLoadingInfo.options.getPostProcessor();
 		Bitmap processedBitmap = processor.process(bitmap);
-		DisplayBitmapTask displayBitmapTask = new DisplayBitmapTask(processedBitmap, imageLoadingInfo, engine,
-				LoadedFrom.MEMORY_CACHE);
+
+        DisplayBitmapTask displayBitmapTask = null;
+
+        if(tv_title == null){
+             displayBitmapTask = new DisplayBitmapTask(processedBitmap, imageLoadingInfo, engine,
+                    LoadedFrom.MEMORY_CACHE);
+        }else {
+             displayBitmapTask = new DisplayBitmapTask(processedBitmap, imageLoadingInfo, engine,
+                    LoadedFrom.MEMORY_CACHE, tv_title);
+        }
 		LoadAndDisplayImageTask.runTask(displayBitmapTask, imageLoadingInfo.options.isSyncLoading(), handler, engine);
 	}
 }

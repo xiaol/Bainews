@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.memory.MemoryCache;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -269,6 +270,83 @@ public class ImageLoader {
 			}
 		}
 	}
+
+    public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
+                             ImageLoadingListener listener, ImageLoadingProgressListener progressListener,TextViewExtend tv_title) {
+        checkConfiguration();
+        if (imageAware == null) {
+            throw new IllegalArgumentException(ERROR_WRONG_ARGUMENTS);
+        }
+        if (listener == null) {
+            listener = defaultListener;
+        }
+        if (options == null) {
+            options = configuration.defaultDisplayImageOptions;
+        }
+
+        if (TextUtils.isEmpty(uri)) {
+            engine.cancelDisplayTaskFor(imageAware);
+            listener.onLoadingStarted(uri, imageAware.getWrappedView());
+            if (options.shouldShowImageForEmptyUri()) {
+                imageAware.setImageDrawable(options.getImageForEmptyUri(configuration.resources));
+            } else {
+                imageAware.setImageDrawable(null);
+            }
+            listener.onLoadingComplete(uri, imageAware.getWrappedView(), null);
+            return;
+        }
+
+        ImageSize targetSize = ImageSizeUtils.defineTargetSizeForView(imageAware, configuration.getMaxImageSize());
+        String memoryCacheKey = MemoryCacheUtils.generateKey(uri, targetSize);
+        engine.prepareDisplayTaskFor(imageAware, memoryCacheKey);
+
+        listener.onLoadingStarted(uri, imageAware.getWrappedView());
+
+        Bitmap bmp = configuration.memoryCache.get(memoryCacheKey);
+        if (bmp != null && !bmp.isRecycled()) {
+            L.d(LOG_LOAD_IMAGE_FROM_MEMORY_CACHE, memoryCacheKey);
+
+            if (options.shouldPostProcess()) {
+                ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri, imageAware, targetSize, memoryCacheKey,
+                        options, listener, progressListener, engine.getLockForUri(uri));
+                ProcessAndDisplayImageTask displayTask = new ProcessAndDisplayImageTask(engine, bmp, imageLoadingInfo,
+                        defineHandler(options));
+                if (options.isSyncLoading()) {
+                    displayTask.run();
+                } else {
+                    engine.submit(displayTask);
+                }
+            } else {
+                options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE,tv_title);
+                listener.onLoadingComplete(uri, imageAware.getWrappedView(), bmp);
+            }
+        } else {
+            if (options.shouldShowImageOnLoading()) {
+                imageAware.setImageDrawable(options.getImageOnLoading(configuration.resources));
+            } else if (options.isResetViewBeforeLoading()) {
+                imageAware.setImageDrawable(null);
+            }
+
+            ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri, imageAware, targetSize, memoryCacheKey,
+                    options, listener, progressListener, engine.getLockForUri(uri));
+
+            LoadAndDisplayImageTask displayTask = null;
+
+            if(tv_title == null){
+                 displayTask = new LoadAndDisplayImageTask(engine, imageLoadingInfo,
+                        defineHandler(options));
+            }else{
+                 displayTask = new LoadAndDisplayImageTask(engine, imageLoadingInfo,
+                        defineHandler(options),tv_title);
+            }
+
+            if (options.isSyncLoading()) {
+                displayTask.run();
+            } else {
+                engine.submit(displayTask);
+            }
+        }
+    }
 
 	/**
 	 * Adds display image task to execution pool. Image will be set to ImageView when it's turn. <br/>

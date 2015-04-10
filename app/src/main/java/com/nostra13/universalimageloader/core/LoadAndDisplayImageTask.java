@@ -20,6 +20,7 @@ import android.os.Handler;
 
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.FailReason.FailType;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -94,29 +95,51 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 	final ImageLoadingListener listener;
 	final ImageLoadingProgressListener progressListener;
 	private final boolean syncLoading;
+    private TextViewExtend tv_title;
 
 	// State vars
 	private LoadedFrom loadedFrom = LoadedFrom.NETWORK;
 
 	public LoadAndDisplayImageTask(ImageLoaderEngine engine, ImageLoadingInfo imageLoadingInfo, Handler handler) {
-		this.engine = engine;
-		this.imageLoadingInfo = imageLoadingInfo;
-		this.handler = handler;
+        this.engine = engine;
+        this.imageLoadingInfo = imageLoadingInfo;
+        this.handler = handler;
 
-		configuration = engine.configuration;
-		downloader = configuration.downloader;
-		networkDeniedDownloader = configuration.networkDeniedDownloader;
-		slowNetworkDownloader = configuration.slowNetworkDownloader;
-		decoder = configuration.decoder;
-		uri = imageLoadingInfo.uri;
-		memoryCacheKey = imageLoadingInfo.memoryCacheKey;
-		imageAware = imageLoadingInfo.imageAware;
-		targetSize = imageLoadingInfo.targetSize;
-		options = imageLoadingInfo.options;
-		listener = imageLoadingInfo.listener;
-		progressListener = imageLoadingInfo.progressListener;
-		syncLoading = options.isSyncLoading();
-	}
+        configuration = engine.configuration;
+        downloader = configuration.downloader;
+        networkDeniedDownloader = configuration.networkDeniedDownloader;
+        slowNetworkDownloader = configuration.slowNetworkDownloader;
+        decoder = configuration.decoder;
+        uri = imageLoadingInfo.uri;
+        memoryCacheKey = imageLoadingInfo.memoryCacheKey;
+        imageAware = imageLoadingInfo.imageAware;
+        targetSize = imageLoadingInfo.targetSize;
+        options = imageLoadingInfo.options;
+        listener = imageLoadingInfo.listener;
+        progressListener = imageLoadingInfo.progressListener;
+        syncLoading = options.isSyncLoading();
+    }
+
+    public LoadAndDisplayImageTask(ImageLoaderEngine engine, ImageLoadingInfo imageLoadingInfo, Handler handler,TextViewExtend tv_title) {
+        this.engine = engine;
+        this.imageLoadingInfo = imageLoadingInfo;
+        this.handler = handler;
+
+        configuration = engine.configuration;
+        downloader = configuration.downloader;
+        networkDeniedDownloader = configuration.networkDeniedDownloader;
+        slowNetworkDownloader = configuration.slowNetworkDownloader;
+        decoder = configuration.decoder;
+        uri = imageLoadingInfo.uri;
+        memoryCacheKey = imageLoadingInfo.memoryCacheKey;
+        imageAware = imageLoadingInfo.imageAware;
+        targetSize = imageLoadingInfo.targetSize;
+        options = imageLoadingInfo.options;
+        listener = imageLoadingInfo.listener;
+        progressListener = imageLoadingInfo.progressListener;
+        syncLoading = options.isSyncLoading();
+        this.tv_title = tv_title;
+    }
 
 	@Override
 	public void run() {
@@ -178,7 +201,13 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 			loadFromUriLock.unlock();
 		}
 
-		DisplayBitmapTask displayBitmapTask = new DisplayBitmapTask(bmp, imageLoadingInfo, engine, loadedFrom);
+        DisplayBitmapTask displayBitmapTask = null;
+
+        if(tv_title == null) {
+            displayBitmapTask = new DisplayBitmapTask(bmp, imageLoadingInfo, engine, loadedFrom);
+        }else{
+            displayBitmapTask = new DisplayBitmapTask(bmp, imageLoadingInfo, engine, loadedFrom,tv_title);
+        }
 		runTask(displayBitmapTask, syncLoading, handler, engine);
 	}
 

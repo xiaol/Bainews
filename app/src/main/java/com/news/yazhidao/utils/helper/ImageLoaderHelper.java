@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -15,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -40,6 +42,10 @@ public class ImageLoaderHelper {
 
     public static void dispalyImage(Context context, String url, ImageView imageView) {
         imageLoader.displayImage(url, imageView, getOption());
+    }
+
+    public static void dispalyImage(Context context, String url, ImageView imageView,TextViewExtend tv_title) {
+        imageLoader.displayImage(url, new ImageViewAware(imageView), getOption(),null,null,tv_title);
     }
 
     public static void dispalyImage(Context context, String url, ImageView imageView,ImageLoadingListener listener) {
@@ -105,6 +111,7 @@ public class ImageLoaderHelper {
                 //.displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
                 //.displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
                 .build();//构建完成
+
         return options;
     }
 }

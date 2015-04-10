@@ -42,8 +42,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -75,39 +73,13 @@ public class HomeAty extends BaseActivity {
     private int mMostRecentY;
     private int currentSize = 0;
     private int contentSize = 0;
+
     private ImageView mRefreshLoadingImg;
     private AnimationDrawable mAnirefreshLoading;
     private ImageLoaderHelper imageLoader;
     private LinearLayout ll_souce_view;
     private ImageView iv_source;
     TextViewExtend tv_news_source;
-
-    private ImageLoadingListener listener = new ImageLoadingListener() {
-        @Override
-        public void onLoadingStarted(String imageUri, View view) {
-            holder.tv_title.setBackgroundColor(color);
-        }
-
-        @Override
-        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-            holder.tv_title.setBackgroundColor(color);
-        }
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            holder.iv_title_img.setImageBitmap(null);
-            Bitmap bitmap = ImageUtils.zoomBitmap2(loadedImage, width, height);
-
-            holder.tv_title.setBackgroundColor(color);
-            holder.iv_title_img.setImageBitmap(bitmap);
-            applyBlur(holder.iv_title_img, holder.tv_title);
-        }
-
-        @Override
-        public void onLoadingCancelled(String imageUri, View view) {
-            holder.tv_title.setBackgroundColor(color);
-        }
-    };
 
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
@@ -233,6 +205,8 @@ public class HomeAty extends BaseActivity {
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
 
+        GlobalParams.context = HomeAty.this;
+
         setContentView(R.layout.activity_news);
 
         imageLoader = new ImageLoaderHelper(HomeAty.this);
@@ -282,7 +256,8 @@ public class HomeAty extends BaseActivity {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
 
-                    loadNewsData(1);
+                    loadNewsData2(1);
+
                     page = 1;
                     adapterFlag = false;
                 } else {
@@ -425,31 +400,7 @@ public class HomeAty extends BaseActivity {
 
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, new ImageLoadingListener() {
-                    @Override
-                    public void onLoadingStarted(String imageUri, View view) {
-                        holder.tv_title.setBackgroundColor(color);
-                    }
-
-                    @Override
-                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                        holder.tv_title.setBackgroundColor(color);
-                    }
-
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        holder.iv_title_img.setImageBitmap(null);
-                        Bitmap bitmap = ImageUtils.zoomBitmap2(loadedImage, width, height);
-                        holder.tv_title.setBackgroundColor(color);
-                        holder.iv_title_img.setImageBitmap(bitmap);
-                        applyBlur(holder.iv_title_img, holder.tv_title);
-                    }
-
-                    @Override
-                    public void onLoadingCancelled(String imageUri, View view) {
-                        holder.tv_title.setBackgroundColor(color);
-                    }
-                });
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,holder.tv_title);
 
             } else {
                 holder.tv_title.setBackgroundColor(color);
@@ -611,6 +562,61 @@ public class HomeAty extends BaseActivity {
         }.getType()));
         request.execute();
     }
+
+    private void loadNewsData2(final int page) {
+
+        String url = HttpConstant.URL_GET_NEWS_LIST + "?page=" + page;
+
+        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
+
+            public void success(ArrayList<NewsFeed> result) {
+
+                if(feedList.size() == 0) {
+                    if (result != null) {
+                        if (page == 1) {
+
+                            feedList.clear();
+
+                            //添加list
+                            for (int j = 0; j < result.size(); j++) {
+                                if (result.get(j).getSourceUrl().startsWith(""))
+                                    feedList.add(result.get(j));
+                            }
+
+                            if (!adapterFlag) {
+                                list_adapter = new MyAdapter();
+                                lv_news.setAdapter(list_adapter);
+                                adapterFlag = true;
+                            } else {
+                                list_adapter.notifyDataSetChanged();
+                            }
+
+                        } else {
+                            //添加list
+                            for (int a = 0; a < result.size(); a++) {
+                                feedList.add(result.get(a));
+                            }
+
+                            list_adapter.notifyDataSetChanged();
+
+                        }
+
+
+                    } else {
+                    }
+                }
+                lv_news.onRefreshComplete();
+            }
+
+            public void failed(MyAppException exception) {
+                lv_news.onRefreshComplete();
+            }
+        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType()));
+        request.execute();
+    }
+
 
 
     private void applyBlur(final ImageView mImageView, final TextView mTextview) {
