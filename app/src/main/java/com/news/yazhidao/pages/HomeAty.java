@@ -28,6 +28,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.net.JsonCallback;
@@ -94,8 +95,9 @@ public class HomeAty extends BaseActivity {
 
         @Override
         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
+            holder.iv_title_img.setImageBitmap(null);
             Bitmap bitmap = ImageUtils.zoomBitmap2(loadedImage, width, height);
+
             holder.tv_title.setBackgroundColor(color);
             holder.iv_title_img.setImageBitmap(bitmap);
             applyBlur(holder.iv_title_img, holder.tv_title);
@@ -224,6 +226,12 @@ public class HomeAty extends BaseActivity {
 
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
+
+        GlobalParams.maxWidth = width;
+        GlobalParams.maxHeight = (int) (height * 0.27);
+
+        GlobalParams.screenWidth = width;
+        GlobalParams.screenHeight = height;
 
         setContentView(R.layout.activity_news);
 
@@ -354,33 +362,36 @@ public class HomeAty extends BaseActivity {
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
                 holder.fl_title_content = (FrameLayout) convertView.findViewById(R.id.fl_title_content);
                 holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
-                holder.iv_title_img.setBackgroundDrawable(null);
+//                holder.iv_title_img.setBackgroundDrawable(null);
                 ViewGroup.LayoutParams params = holder.fl_title_content.getLayoutParams();
                 params.height = (int) (height * 0.27);
 
                 holder.fl_title_content.setLayoutParams(params);
 
                 holder.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-                holder.tv_title.setBackgroundColor(color);
+//                holder.tv_title.setBackgroundColor(color);
                 holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                 holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                 holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+//                holder.listener = new ImageLoadingListener();
                 convertView.setTag(holder);
             } else {
-                holder.tv_title.setBackgroundColor(color);
-                holder.iv_title_img.setBackgroundDrawable(null);
+//                holder.tv_title.setBackgroundColor(color);
+//                holder.iv_title_img.setBackgroundDrawable(null);
                 holder = (ViewHolder) convertView.getTag();
                 holder.ll_source_content.removeAllViews();
             }
-
 
             final NewsFeed feed = feedList.get(position);
 
             String title = feed.getTitle();
 
-//            if(title.length() > 20){
-//                title = title.substring(0,20);
-//            }
+            ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) holder.iv_title_img.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = (int) (height * 0.27);
+            holder.iv_title_img.setLayoutParams(layoutParams);
+//            holder.iv_title_img.setBackgroundResource(R.color.red);
+
 
             holder.tv_title.setText(title);
             holder.tv_title.setShadowLayer(6f, 1, 2, new Color().parseColor("#000000"));
@@ -414,7 +425,31 @@ public class HomeAty extends BaseActivity {
 
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, listener);
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, new ImageLoadingListener() {
+                    @Override
+                    public void onLoadingStarted(String imageUri, View view) {
+                        holder.tv_title.setBackgroundColor(color);
+                    }
+
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        holder.tv_title.setBackgroundColor(color);
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        holder.iv_title_img.setImageBitmap(null);
+                        Bitmap bitmap = ImageUtils.zoomBitmap2(loadedImage, width, height);
+                        holder.tv_title.setBackgroundColor(color);
+                        holder.iv_title_img.setImageBitmap(bitmap);
+                        applyBlur(holder.iv_title_img, holder.tv_title);
+                    }
+
+                    @Override
+                    public void onLoadingCancelled(String imageUri, View view) {
+                        holder.tv_title.setBackgroundColor(color);
+                    }
+                });
 
             } else {
                 holder.tv_title.setBackgroundColor(color);

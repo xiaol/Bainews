@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.news.yazhidao.common.GlobalParams;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -57,7 +57,7 @@ public class ImageLoaderHelper {
     private static ImageLoaderConfiguration generateConfig(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(context)
-                .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
+                .memoryCacheExtraOptions(GlobalParams.maxWidth,GlobalParams.maxHeight) // max width, max height，即保存的每个缓存文件的最大长宽
                 .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -67,7 +67,7 @@ public class ImageLoaderHelper {
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())//将保存的时候的URI名称用MD5 加密
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .discCacheFileCount(300) //缓存的文件数量
-                .discCache(new UnlimitedDiscCache(getDiskCacheDir(context, "UpNewsCache")))//自定义缓存路径
+//                .discCache(new UnlimitedDiscCache(getDiskCacheDir(context, "UpNewsCache")))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(context, 15 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
