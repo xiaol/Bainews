@@ -6,7 +6,8 @@ import android.os.Environment;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -15,6 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -42,6 +44,10 @@ public class ImageLoaderHelper {
         imageLoader.displayImage(url, imageView, getOption());
     }
 
+    public static void dispalyImage(Context context, String url, ImageView imageView,TextViewExtend tv_title) {
+        imageLoader.displayImage(url, new ImageViewAware(imageView), getOption(),null,null,tv_title);
+    }
+
     public static void dispalyImage(Context context, String url, ImageView imageView,ImageLoadingListener listener) {
         imageLoader.displayImage(url, imageView, getOption(),listener);
     }
@@ -57,7 +63,7 @@ public class ImageLoaderHelper {
     private static ImageLoaderConfiguration generateConfig(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(context)
-                .memoryCacheExtraOptions(480, 800) // max width, max height，即保存的每个缓存文件的最大长宽
+                .memoryCacheExtraOptions(GlobalParams.maxWidth,GlobalParams.maxHeight) // max width, max height，即保存的每个缓存文件的最大长宽
                 .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
@@ -67,7 +73,7 @@ public class ImageLoaderHelper {
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())//将保存的时候的URI名称用MD5 加密
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
                 .discCacheFileCount(300) //缓存的文件数量
-                .discCache(new UnlimitedDiscCache(getDiskCacheDir(context, "UpNewsCache")))//自定义缓存路径
+//                .discCache(new UnlimitedDiscCache(getDiskCacheDir(context, "UpNewsCache")))//自定义缓存路径
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(context, 15 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
                 .writeDebugLogs() // Remove for release app
@@ -105,6 +111,7 @@ public class ImageLoaderHelper {
                 //.displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少
                 //.displayer(new FadeInBitmapDisplayer(100))//是否图片加载好后渐入的动画时间
                 .build();//构建完成
+
         return options;
     }
 }
