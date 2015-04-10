@@ -18,8 +18,6 @@ package com.nostra13.universalimageloader.core;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
-import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.FailReason.FailType;
@@ -175,8 +173,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
 				if (bmp != null && options.isCacheInMemory()) {
 
-                    bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth,GlobalParams.screenHeight);
-
+//                    bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth,GlobalParams.screenHeight);
 					L.d(LOG_CACHE_IMAGE_IN_MEMORY, memoryCacheKey);
 					configuration.memoryCache.put(memoryCacheKey, bmp);
 				}

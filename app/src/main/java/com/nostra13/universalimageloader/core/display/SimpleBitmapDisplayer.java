@@ -43,6 +43,9 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 
     @Override
     public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom,TextViewExtend tv_title) {
+
+        bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth,GlobalParams.screenHeight);
+
         imageAware.setImageBitmap(bitmap);
         if(tv_title != null) {
             blur(bitmap, tv_title);
