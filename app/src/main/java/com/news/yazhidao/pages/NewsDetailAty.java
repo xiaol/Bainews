@@ -107,7 +107,7 @@ public class NewsDetailAty extends BaseActivity {
 
             @Override
             public void failed(MyAppException exception) {
-                Logger.e(TAG, exception.getMessage());
+//                Logger.e(TAG, exception.getMessage());
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
