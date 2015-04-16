@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -80,7 +81,12 @@ public class HomeAty extends BaseActivity {
     private LinearLayout ll_souce_view;
     private ImageView iv_source;
     TextViewExtend tv_news_source;
-
+    //将在下拉显示的新闻数据
+    private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
+    //将在当前显示的新闻数据
+    private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
+    //将在上拉显示的新闻数据
+    private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -236,6 +242,8 @@ public class HomeAty extends BaseActivity {
         });
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
+        list_adapter = new MyAdapter();
+        lv_news.setAdapter(list_adapter);
         lv_news.setMode(PullToRefreshBase.Mode.BOTH);
 //        BitmapDrawable drawable = new BitmapDrawable(BitmapFactory.decodeResource(getResources(),R.drawable.news_customer_loading1));
 
@@ -256,8 +264,9 @@ public class HomeAty extends BaseActivity {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
 
-                    loadNewsData2(1);
-
+//                    loadNewsData2(1);
+//                    loadNewsData(1);
+                    showNextUpNews();
                     page = 1;
                     adapterFlag = false;
                 } else {
@@ -275,7 +284,8 @@ public class HomeAty extends BaseActivity {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
 
-                    loadNewsData(page);
+//                    loadNewsData(page);
+                    showNextDownNews();
                     page++;
                 } else {
                     lv_news.setVisibility(View.GONE);
@@ -289,13 +299,45 @@ public class HomeAty extends BaseActivity {
 //        lv_news.setOnScrollListener(scrollListener);
     }
 
+    /**
+     * 上拉加载时显示一条数据
+     */
+    private void showNextDownNews() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+           lv_news.onRefreshComplete();
+            }
+        });
+        if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
+            NewsFeed _NewsFeed = mDownNewsArr.remove(mDownNewsArr.size() - 1);
+            mMiddleNewsArr.add(_NewsFeed);
+            list_adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    /**
+     * 下拉刷新时显示一条数据
+     */
+    private void showNextUpNews() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                lv_news.onRefreshComplete();
+            }
+        });
+        if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
+            NewsFeed _NewsFeed = mUpNewsArr.remove(0);
+            mMiddleNewsArr.add(0, _NewsFeed);
+            list_adapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     protected void loadData() {
         if (NetUtil.checkNetWork(HomeAty.this)) {
-
-            lv_news.setVisibility(View.VISIBLE);
             ll_no_network.setVisibility(View.GONE);
-
             loadNewsData(1);
             page++;
         } else {
@@ -306,32 +348,26 @@ public class HomeAty extends BaseActivity {
 
     private class MyAdapter extends BaseAdapter {
 
-
         @Override
         public int getCount() {
-
-            if (feedList != null && feedList.size() > 0)
-                return feedList.size();
-
+            if (mMiddleNewsArr != null && mMiddleNewsArr.size() > 0)
+                return mMiddleNewsArr.size();
             return 0;
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return mMiddleNewsArr.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             contentSize = 0;
-
-
             if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
@@ -357,7 +393,7 @@ public class HomeAty extends BaseActivity {
                 holder.ll_source_content.removeAllViews();
             }
 
-            final NewsFeed feed = feedList.get(position);
+            final NewsFeed feed = mMiddleNewsArr.get(position);
 
             String title = feed.getTitle();
 
@@ -400,7 +436,7 @@ public class HomeAty extends BaseActivity {
 
 
             if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,holder.tv_title);
+                ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, holder.tv_title);
 
             } else {
                 holder.tv_title.setBackgroundColor(color);
@@ -509,48 +545,41 @@ public class HomeAty extends BaseActivity {
     private void loadNewsData(final int page) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?page=" + page;
-
         final long start = System.currentTimeMillis();
-
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", delta + "");
-
                 if (result != null) {
-                    if (page == 1) {
-
-                        feedList.clear();
-
-                        //添加list
-                        for (int j = 0; j < result.size(); j++) {
-                            if (result.get(j).getSourceUrl().startsWith(""))
-                                feedList.add(result.get(j));
-                        }
-
-                        if (!adapterFlag) {
-                            list_adapter = new MyAdapter();
-                            lv_news.setAdapter(list_adapter);
-                            adapterFlag = true;
-                        } else {
-                            list_adapter.notifyDataSetChanged();
-                        }
-
-                    } else {
-                        //添加list
-                        for (int a = 0; a < result.size(); a++) {
-                            feedList.add(result.get(a));
-                        }
-
-                        list_adapter.notifyDataSetChanged();
-
-                    }
-
-
-                } else {
+                    //分别填充3个数据源
+                    inflateDataInArrs(result);
+                    list_adapter.notifyDataSetChanged();
+//                    if (page == 1) {
+//                        feedList.clear();
+//                        //添加list
+//                        for (int j = 0; j < result.size(); j++) {
+//                            if (result.get(j).getSourceUrl().startsWith(""))
+//                                feedList.add(result.get(j));
+//                        }
+//
+//                        if (!adapterFlag) {
+//                            list_adapter = new MyAdapter();
+//                            lv_news.setAdapter(list_adapter);
+//                            adapterFlag = true;
+//                        } else {
+//                            list_adapter.notifyDataSetChanged();
+//                        }
+//
+//                    } else {
+//                        //添加list
+//                        for (int a = 0; a < result.size(); a++) {
+//                            feedList.add(result.get(a));
+//                        }
+//                        list_adapter.notifyDataSetChanged();
+//                    }
+//                } else {
                 }
                 lv_news.onRefreshComplete();
             }
@@ -563,60 +592,21 @@ public class HomeAty extends BaseActivity {
         request.execute();
     }
 
-    private void loadNewsData2(final int page) {
-
-        String url = HttpConstant.URL_GET_NEWS_LIST + "?page=" + page;
-
-        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
-        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
-
-            public void success(ArrayList<NewsFeed> result) {
-
-                if(feedList.size() == 0) {
-                    if (result != null) {
-                        if (page == 1) {
-
-                            feedList.clear();
-
-                            //添加list
-                            for (int j = 0; j < result.size(); j++) {
-                                if (result.get(j).getSourceUrl().startsWith(""))
-                                    feedList.add(result.get(j));
-                            }
-
-                            if (!adapterFlag) {
-                                list_adapter = new MyAdapter();
-                                lv_news.setAdapter(list_adapter);
-                                adapterFlag = true;
-                            } else {
-                                list_adapter.notifyDataSetChanged();
-                            }
-
-                        } else {
-                            //添加list
-                            for (int a = 0; a < result.size(); a++) {
-                                feedList.add(result.get(a));
-                            }
-
-                            list_adapter.notifyDataSetChanged();
-
-                        }
-
-
-                    } else {
-                    }
-                }
-                lv_news.onRefreshComplete();
+    private void inflateDataInArrs(ArrayList<NewsFeed> result) {
+        int _SplitStartIndex;
+        //TODO 将数据分成对应的3部分
+        if (result != null && result.size() > 1) {
+            if (result.size() % 2 == 0) {
+                _SplitStartIndex = result.size() / 2 - 1;
+            } else {
+                _SplitStartIndex = result.size() / 2;
             }
-
-            public void failed(MyAppException exception) {
-                lv_news.onRefreshComplete();
-            }
-        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType()));
-        request.execute();
+            mDownNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex));
+            mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex, _SplitStartIndex + 2));
+            mUpNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
+            Logger.e("jigang", "------");
+        }
     }
-
 
 
     private void applyBlur(final ImageView mImageView, final TextView mTextview) {
