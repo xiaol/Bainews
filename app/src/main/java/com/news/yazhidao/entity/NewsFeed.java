@@ -22,6 +22,15 @@ public class NewsFeed implements Serializable{
     private String channel;
     private String root_class;
     private String category;
+    private String special;
+
+    public String getSpecial() {
+        return special;
+    }
+
+    public void setSpecial(String special) {
+        this.special = special;
+    }
 
     public String getCategory() {
         return category;
