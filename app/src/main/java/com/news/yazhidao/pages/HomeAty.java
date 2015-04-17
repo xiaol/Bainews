@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -606,6 +608,17 @@ public class HomeAty extends BaseActivity {
                     }
                 });
                 return convertView;
+            }
+            if(position==mMiddleNewsArr.size()-1){
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                Log.i("jigang","execute animation----measure height="+convertView.getMeasuredHeight()+"----convertView height--"+convertView.getHeight()+" --measure height---"+convertView.getMeasuredHeight());
+                int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
+                ViewPropertyAnimator animator = convertView.animate()
+                        .setDuration(300)
+                        .setInterpolator(new AccelerateDecelerateInterpolator());
+                convertView.setTranslationY(height/ 2);
+                animator.translationYBy(-height / 2);
+                animator.start();
             }
             return convertView;
         }
