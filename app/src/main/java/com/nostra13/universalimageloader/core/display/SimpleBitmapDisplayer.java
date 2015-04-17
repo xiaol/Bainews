@@ -56,7 +56,9 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
         long startMs = System.currentTimeMillis();
         float scaleFactor = 50;
         float radius = 1;
-
+        if(view.getMeasuredHeight()<=0||view.getMeasuredWidth()<=0){
+            return;
+        }
         Bitmap overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
                 (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(overlay);

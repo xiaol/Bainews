@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
@@ -306,7 +309,7 @@ public class HomeAty extends BaseActivity {
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-           lv_news.onRefreshComplete();
+                lv_news.onRefreshComplete();
             }
         });
         if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
@@ -508,8 +511,42 @@ public class HomeAty extends BaseActivity {
             }
 
             long deata = System.currentTimeMillis() - start;
-            Logger.i("aaaaaa", deata + "");
+            Logger.i("aaaaaa", convertView.getHeight() + "");
+            //给item添加动画
+            if (position == 0) {
+            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, 100, convertView.getHeight());
+            localTranslateAnimation.setDuration(300L);
+            lv_news.clearAnimation();
+            lv_news.startAnimation(localTranslateAnimation);
+                final View finalConvertView = convertView;
+                localTranslateAnimation.setAnimationListener(new Animation.AnimationListener() {
 
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            synchronized (this) {
+                                lv_news.clearAnimation();
+                                finalConvertView.clearAnimation();
+                                finalConvertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            }
             return convertView;
         }
     }
