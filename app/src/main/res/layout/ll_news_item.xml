@@ -7,25 +7,50 @@
     <FrameLayout
         android:id="@+id/fl_title_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
 
         <ImageView
             android:id="@+id/iv_title_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/image_back"
             />
 
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/tv_title"
-            android:layout_width="249dp"
-            android:layout_height="61dp"
-            android:layout_gravity="left"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:paddingLeft="6dp"
-            android:textSize="20sp"
-            android:background="@drawable/bg_image_title"
-            android:textColor="#ffffff" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/tv_news_category"
+                android:layout_width="23dp"
+                android:layout_height="17dp"
+                android:gravity="center"
+                android:layout_marginLeft="5dp"
+                android:textSize="10sp"
+                android:textColor="#ffffff"
+                android:background="@drawable/bg_category_shehui"
+                />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/tv_title"
+                android:layout_below="@id/tv_news_category"
+                android:layout_marginTop="10dp"
+                android:layout_width="249dp"
+                android:layout_height="61dp"
+                android:layout_gravity="left"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:paddingLeft="6dp"
+                android:textSize="20sp"
+                android:background="@drawable/bg_image_title"
+                android:textColor="#ffffff" />
+
+        </RelativeLayout>
+
+
 
     </FrameLayout>
 

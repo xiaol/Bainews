@@ -12,6 +12,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -33,10 +34,13 @@ public class TextViewVertical extends View {
     private String text = "";//待显示的文字
     private Handler mHandler = null;
     private Matrix matrix;
+    private TextPaint mTextPaint;
     private Align textStartAlign = Align.RIGHT;//draw start left or right.//default right
     BitmapDrawable drawable = (BitmapDrawable) getBackground();
 
     public TextViewVertical(Context context, AttributeSet attrs, int defStyle) {
+
+
         super(context, attrs, defStyle);
     }
 
@@ -209,6 +213,15 @@ public class TextViewVertical extends View {
             oldwidth = getWidth();
             if (mHandler != null) mHandler.sendEmptyMessage(LAYOUT_CHANGED);
         }
+    }
+
+    public void setShadowLayer(float radius, float dx, float dy, int color) {
+        Paint p = new Paint();
+        mTextPaint = new TextPaint(p);
+        mTextPaint.setShadowLayer(radius, dx, dy, color);
+
+        // Will change text clip region
+        invalidate();
     }
 
     private int measureHeight(int measureSpec) {

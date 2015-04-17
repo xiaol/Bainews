@@ -21,6 +21,15 @@ public class NewsFeed implements Serializable{
     private String sourceSiteName;
     private String channel;
     private String root_class;
+    private String category;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public Collection<Source> getSublist() {
         return sublist;

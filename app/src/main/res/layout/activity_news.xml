@@ -14,12 +14,10 @@
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="头条百家"
-            android:textColor="#ffffff"
+            android:layout_width="98dp"
+            android:layout_height="22dp"
             android:layout_gravity="center_vertical"
-            android:textSize="22sp"
+            android:background="@drawable/app_titie"
             />
 
     </LinearLayout>

@@ -50,7 +50,6 @@ public class NewsDetailAty extends BaseActivity {
     private NewsDetailHeaderView headerView;
     private ProgressWheel mNewsDetailProgressWheel;
     private View mNewsDetailProgressWheelWrapper;
-
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_detail);

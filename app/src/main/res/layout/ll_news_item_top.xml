@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_news_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#324566"
+    >
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/iv_title_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        />
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="30dp">
+
+
+        <com.news.yazhidao.widget.TextViewVertical
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:padding="2dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_news_category"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/tv_title"
+            android:paddingLeft="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="18dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_category_shehui" />
+    </RelativeLayout>
+
+</FrameLayout>
