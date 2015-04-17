@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
                 android:text="+1"
-                android:textColor="@color/red"
+                android:textColor="#ff0000"
                 android:layout_marginLeft="5dp"
                 android:visibility="gone"
                 />
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
                 android:text="-1"
-                android:textColor="@color/red"
+                android:textColor="#ff0000"
                 android:layout_marginLeft="5dp"
                 android:visibility="gone"
                 />

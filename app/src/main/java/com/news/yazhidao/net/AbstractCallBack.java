@@ -1,5 +1,8 @@
 package com.news.yazhidao.net;
 
+import com.news.yazhidao.utils.TextUtil;
+
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -8,6 +11,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Created by fengjigang on 15/1/6.
@@ -43,6 +47,7 @@ public abstract class AbstractCallBack<T> implements com.news.yazhidao.net.ICall
             switch (response.getStatusLine().getStatusCode()) {
                 case HttpStatus.SC_OK:
                     HttpEntity entity = response.getEntity();
+                    Header header = entity.getContentEncoding();
                     if (TextUtils.isValidate(path)) {
                         InputStream is = entity.getContent();
                         FileOutputStream fos = new FileOutputStream(path);
@@ -62,7 +67,13 @@ public abstract class AbstractCallBack<T> implements com.news.yazhidao.net.ICall
                         fos.close();
                         return bindData(path);
                     } else {
-                        return bindData(EntityUtils.toString(entity));
+                        //判断返回内容是否为gzip压缩格式
+                        if(header != null && header.getValue().equalsIgnoreCase("gzip")){
+                            GZIPInputStream gzipStream = new GZIPInputStream(entity.getContent());
+                            return bindData(TextUtil.getResponseContent(gzipStream));
+                        }else{
+                            return bindData(EntityUtils.toString(entity, "UTF-8"));
+                        }
                     }
                 default:
                     break;

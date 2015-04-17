@@ -35,7 +35,7 @@ import com.news.yazhidao.R;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
-	private LoadingLayout mHeaderLoadingView;
+	protected LoadingLayout mHeaderLoadingView;
 	private LoadingLayout mFooterLoadingView;
 
 	private FrameLayout mLvFooterLoadingFrame;

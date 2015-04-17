@@ -5,6 +5,11 @@ import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Created by fengjigang on 15/1/27.
  */
@@ -104,5 +109,31 @@ public class TextUtil {
             }
         }
         return _StringB.toString();
+    }
+
+    /**
+     * 获取inputStream中的数据
+     * @param in
+     * @return
+     */
+    public static String getResponseContent(InputStream in) {
+        StringBuffer sb = new StringBuffer();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        try {
+            String line = null;
+            while((line=br.readLine())!=null){
+                sb.append(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally{
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
     }
 }

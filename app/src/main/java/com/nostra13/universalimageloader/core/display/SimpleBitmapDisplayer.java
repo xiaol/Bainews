@@ -36,18 +36,18 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
  * @since 1.5.6
  */
 public final class SimpleBitmapDisplayer implements BitmapDisplayer {
-	@Override
-	public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
-		imageAware.setImageBitmap(bitmap);
-	}
+    @Override
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom) {
+        imageAware.setImageBitmap(bitmap);
+    }
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom,TextViewExtend tv_title) {
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, TextViewExtend tv_title) {
 
-        bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth,GlobalParams.screenHeight);
+        bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight);
 
         imageAware.setImageBitmap(bitmap);
-        if(tv_title != null) {
+        if (tv_title != null) {
             blur(bitmap, tv_title);
         }
     }
@@ -58,10 +58,10 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
         float radius = 1;
 
         Bitmap overlay = null;
-        if(view.getMeasuredHeight() == 0|| view.getMeasuredHeight() == 0){
-            overlay = Bitmap.createBitmap(200,
-                    200, Bitmap.Config.ARGB_8888);
-        }else{
+
+        if (view.getMeasuredHeight() == 0 || view.getMeasuredHeight() == 0) {
+            overlay = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
+        } else {
             overlay = Bitmap.createBitmap((int) (view.getMeasuredWidth() / scaleFactor),
                     (int) (view.getMeasuredHeight() / scaleFactor), Bitmap.Config.ARGB_8888);
         }
@@ -73,7 +73,6 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
         if (canvas != null && bkg != null && paint != null) {
             canvas.drawBitmap(bkg, 0, 0, paint);
-//            canvas.drawColor(new Color().parseColor("#99FFFFFF"));
         }
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
