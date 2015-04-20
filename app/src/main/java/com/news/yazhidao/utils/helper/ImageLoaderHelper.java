@@ -3,11 +3,11 @@ package com.news.yazhidao.utils.helper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -44,7 +44,7 @@ public class ImageLoaderHelper {
         imageLoader.displayImage(url, imageView, getOption());
     }
 
-    public static void dispalyImage(Context context, String url, ImageView imageView,TextViewExtend tv_title) {
+    public static void dispalyImage(Context context, String url, ImageView imageView,View tv_title) {
         imageLoader.displayImage(url, new ImageViewAware(imageView), getOption(),null,null,tv_title);
     }
 

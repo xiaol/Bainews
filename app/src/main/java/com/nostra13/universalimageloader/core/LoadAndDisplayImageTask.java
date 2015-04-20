@@ -17,6 +17,7 @@ package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.view.View;
 
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -93,7 +94,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 	final ImageLoadingListener listener;
 	final ImageLoadingProgressListener progressListener;
 	private final boolean syncLoading;
-    private TextViewExtend tv_title;
+    private View tv_title;
 
 	// State vars
 	private LoadedFrom loadedFrom = LoadedFrom.NETWORK;
@@ -118,7 +119,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
         syncLoading = options.isSyncLoading();
     }
 
-    public LoadAndDisplayImageTask(ImageLoaderEngine engine, ImageLoadingInfo imageLoadingInfo, Handler handler,TextViewExtend tv_title) {
+    public LoadAndDisplayImageTask(ImageLoaderEngine engine, ImageLoadingInfo imageLoadingInfo, Handler handler,View tv_title) {
         this.engine = engine;
         this.imageLoadingInfo = imageLoadingInfo;
         this.handler = handler;

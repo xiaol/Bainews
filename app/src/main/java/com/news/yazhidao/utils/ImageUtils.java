@@ -111,13 +111,24 @@ public class ImageUtils {
      * @param screenWidth
      * @return
      */
-    public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth,int screenHeight) {
+    public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth,int screenHeight,int type) {
+
+
+
         Bitmap bitmap_big = zoomBitmap(bm,screenWidth);
 
         int newHeight = bitmap_big.getHeight();
+        if(type == 1) {
+            //textviewextend
+            if (newHeight > screenHeight * 0.27) {
+                newHeight = (int) (screenHeight * 0.27);
+            }
+        }else if(type == 2){
+            //textviewvertical
+            if (newHeight > screenHeight * 0.4) {
+                newHeight = (int) (screenHeight * 0.4);
+            }
 
-        if(newHeight > screenHeight * 0.27){
-            newHeight = (int)(screenHeight * 0.27);
         }
 
         Bitmap bitmap = Bitmap.createBitmap(bitmap_big,0,0,screenWidth,newHeight);

@@ -16,6 +16,7 @@
 package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
+import android.view.View;
 
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
@@ -46,7 +47,7 @@ final class DisplayBitmapTask implements Runnable {
 	private final ImageLoadingListener listener;
 	private final ImageLoaderEngine engine;
 	private final LoadedFrom loadedFrom;
-    private TextViewExtend tv_title;
+    private View tv_title;
 
 	public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
 			LoadedFrom loadedFrom) {
@@ -61,7 +62,7 @@ final class DisplayBitmapTask implements Runnable {
 	}
 
     public DisplayBitmapTask(Bitmap bitmap, ImageLoadingInfo imageLoadingInfo, ImageLoaderEngine engine,
-                             LoadedFrom loadedFrom,TextViewExtend tv_title) {
+                             LoadedFrom loadedFrom,View tv_title) {
         this.bitmap = bitmap;
         imageUri = imageLoadingInfo.uri;
         imageAware = imageLoadingInfo.imageAware;

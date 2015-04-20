@@ -48,9 +48,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="18dp"
                 android:layout_height="36dp"
+                android:textColor="#ffffff"
                 android:background="@drawable/bg_category_shehui" />
-
-
 
         </RelativeLayout>
 

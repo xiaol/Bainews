@@ -39,8 +39,6 @@ public class TextViewVertical extends View {
     BitmapDrawable drawable = (BitmapDrawable) getBackground();
 
     public TextViewVertical(Context context, AttributeSet attrs, int defStyle) {
-
-
         super(context, attrs, defStyle);
     }
 

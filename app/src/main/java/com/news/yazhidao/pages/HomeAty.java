@@ -602,7 +602,7 @@ public class HomeAty extends BaseActivity {
                 }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder2.iv_title_img);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder2.iv_title_img,holder2.tv_title);
 
                 } else {
                     holder.tv_title.setBackgroundColor(color);
@@ -624,37 +624,6 @@ public class HomeAty extends BaseActivity {
             if (position == 0) {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
-//                TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, 100, convertView.getHeight());
-//                localTranslateAnimation.setDuration(300L);
-//                lv_news.clearAnimation();
-//                lv_news.startAnimation(localTranslateAnimation);
-//                final View finalConvertView = convertView;
-//                localTranslateAnimation.setAnimationListener(new Animation.AnimationListener() {
-//
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        new Handler().post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                synchronized (this) {
-//                                    lv_news.clearAnimation();
-//                                    finalConvertView.clearAnimation();
-//                                    finalConvertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
-//                                }
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
                 return convertView;
             }
             if(position==mMiddleNewsArr.size()-1){
