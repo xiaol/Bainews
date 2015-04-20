@@ -25,10 +25,10 @@
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/tv_news_category"
-                android:layout_width="23dp"
-                android:layout_height="17dp"
+                android:layout_width="30dp"
+                android:layout_height="18dp"
                 android:gravity="center"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="2dp"
                 android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:background="@drawable/bg_category_shehui"

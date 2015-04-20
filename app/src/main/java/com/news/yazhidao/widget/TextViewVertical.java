@@ -66,6 +66,8 @@ public class TextViewVertical extends View {
     	intVal = (int)Math.ceil(Float.parseFloat(tempText.replaceAll("px","")));
 		return intVal;
     }*/
+
+
     //设置文字
     public final void setText(String text) {
         this.text = text;
@@ -180,7 +182,7 @@ public class TextViewVertical extends View {
         for (int i = 0; i < this.TextLength; i++) {
             ch = this.text.charAt(i);
             if (ch == '\n') {
-                mRealLine++;// 真实的行数加一
+//                mRealLine++;// 真实的行数加一
                 h = 0;
             } else {
                 h += mFontHeight;
@@ -213,10 +215,9 @@ public class TextViewVertical extends View {
         }
     }
 
+    //设置文字阴影
     public void setShadowLayer(float radius, float dx, float dy, int color) {
-        Paint p = new Paint();
-        mTextPaint = new TextPaint(p);
-        mTextPaint.setShadowLayer(radius, dx, dy, color);
+        paint.setShadowLayer(radius, dx, dy, color);
 
         // Will change text clip region
         invalidate();
@@ -225,12 +226,12 @@ public class TextViewVertical extends View {
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-        int result = 500;
-        if (specMode == MeasureSpec.AT_MOST) {
-            result = specSize;
-        } else if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
-        }
+        int result = 400;
+//        if (specMode == MeasureSpec.AT_MOST) {
+//            result = specSize;
+//        } else if (specMode == MeasureSpec.EXACTLY) {
+//            result = specSize;
+//        }
         mTextHeight = result;//设置文本高度
         return result;
     }

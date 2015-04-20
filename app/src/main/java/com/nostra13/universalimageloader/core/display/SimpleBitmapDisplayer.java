@@ -58,7 +58,15 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
             }
 
         }else if(tv_title instanceof TextViewVertical){
+
             bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+
+            if(bitmap.getHeight() < GlobalParams.screenHeight * 0.4){
+                float scaleHeight = (float)(GlobalParams.screenHeight * 0.4 / bitmap.getHeight());
+
+                bitmap = ImageUtils.zoomBitmap3(bitmap,GlobalParams.screenWidth,GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+            }
+
         }
 
         imageAware.setImageBitmap(bitmap);

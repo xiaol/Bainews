@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.Log;
@@ -65,13 +64,6 @@ public class HomeAty extends BaseActivity {
     private long mLastPressedBackKeyTime;
     private ArrayList<NewsFeed> feedList = new ArrayList<NewsFeed>();
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
-    private int i = 0;
-    private boolean flag = false;
-    private boolean top_flag = false;
-    private boolean visible_flag = true;
-    private boolean adapterFlag = false;
-    private boolean requestMore = false;
-    private String opinion;
     private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
@@ -83,127 +75,13 @@ public class HomeAty extends BaseActivity {
     private int currentSize = 0;
     private int contentSize = 0;
 
-    private ImageView mRefreshLoadingImg;
-    private AnimationDrawable mAnirefreshLoading;
     private ImageLoaderHelper imageLoader;
-    private LinearLayout ll_souce_view;
-    private ImageView iv_source;
-    TextViewExtend tv_news_source;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
     private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
-    private AbsListView.OnScrollListener scrollListener = new AbsListView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            switch (scrollState) {
-                case SCROLL_STATE_IDLE:
-                    if (view.getFirstVisiblePosition() == 0 && !visible_flag) {
-                        ll_title.setVisibility(View.VISIBLE);
-                        visible_flag = true;
-
-                    }
-
-                    break;
-
-                case SCROLL_STATE_FLING:
-
-                    if (view != null) {
-                        int firstPos = ((ListView) view).getFirstVisiblePosition();
-
-                        if (firstPos == 0) {
-                            ll_title.setVisibility(View.VISIBLE);
-                            visible_flag = true;
-                        } else if (firstPos == 1) {
-
-                            View v = ((ListView) view).getChildAt(firstPos);
-
-                            if (v != null) {
-                                int top = v.getTop();
-
-                                if (top > 200 && visible_flag) {
-
-                                    ll_title.setVisibility(View.GONE);
-                                    visible_flag = false;
-
-                                } else {
-                                    if (top < 50 && !visible_flag) {
-                                        ll_title.setVisibility(View.VISIBLE);
-                                        visible_flag = true;
-                                    }
-                                }
-
-                            }
-                        } else if (firstPos > 1) {
-
-                            if (visible_flag) {
-
-                                ll_title.setVisibility(View.GONE);
-                                visible_flag = false;
-
-                            }
-
-                        }
-                    }
-
-
-                    break;
-
-                case SCROLL_STATE_TOUCH_SCROLL:
-                    if (view != null) {
-                        int firstPos = ((ListView) view).getFirstVisiblePosition();
-
-                        if (firstPos == 0) {
-                            ll_title.setVisibility(View.VISIBLE);
-                            visible_flag = true;
-                        } else if (firstPos == 1) {
-
-                            View v = ((ListView) view).getChildAt(firstPos);
-
-                            if (v != null) {
-                                int top = v.getTop();
-
-                                if (top > 200 && visible_flag) {
-
-                                    ll_title.setVisibility(View.GONE);
-                                    visible_flag = false;
-
-                                } else {
-                                    if (top < 50 && !visible_flag) {
-                                        ll_title.setVisibility(View.VISIBLE);
-                                        visible_flag = true;
-                                    }
-                                }
-
-                            }
-                        } else if (firstPos > 1) {
-
-                            if (visible_flag) {
-
-                                ll_title.setVisibility(View.GONE);
-                                visible_flag = false;
-
-                            }
-
-                        }
-                    }
-                    break;
-            }
-
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            if (firstVisibleItem + visibleItemCount == totalItemCount && !top_flag) {
-                top_flag = true;
-            } else
-                top_flag = false;
-        }
-    };
 
     @Override
     protected void setContentView() {
@@ -265,7 +143,6 @@ public class HomeAty extends BaseActivity {
                     ll_no_network.setVisibility(View.GONE);
                     showNextUpNews();
                     page = 1;
-                    adapterFlag = false;
                 } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
@@ -592,7 +469,8 @@ public class HomeAty extends BaseActivity {
                 holder2.tv_title.setText(title);
                 holder2.tv_title.setTextSize(37);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
-                holder2.tv_title.setShadowLayer(6f, 1, 2, new Color().parseColor("#000000"));
+                holder2.tv_title.setLineWidth(40);
+                holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
 
                 setTextBackGround(holder2.tv_news_category, feed.getCategory());
