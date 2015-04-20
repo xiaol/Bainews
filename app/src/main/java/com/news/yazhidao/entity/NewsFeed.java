@@ -23,6 +23,15 @@ public class NewsFeed implements Serializable{
     private String root_class;
     private String category;
     private String special;
+    private boolean flag;
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
 
     public String getSpecial() {
         return special;

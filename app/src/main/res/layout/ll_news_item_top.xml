@@ -1,44 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fl_news_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#324566"
-    >
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_title_img"
+    <FrameLayout
+        android:id="@+id/fl_news_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        />
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="30dp">
+        <ImageView
+            android:id="@+id/iv_title_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <RelativeLayout
+            android:layout_width="300dp"
+            android:layout_height="260dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp">
+
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_top_line"-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_marginLeft="30dp"-->
+                <!--android:background="@drawable/top_line"-->
+                <!--/>-->
 
 
-        <com.news.yazhidao.widget.TextViewVertical
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:padding="2dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical" />
+            <com.news.yazhidao.widget.TextViewVertical
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:padding="2dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/tv_news_category"
+                android:layout_toRightOf="@+id/tv_title"
+                android:layout_marginTop="70dp"
+                android:paddingLeft="2dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="18dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_category_shehui" />
+
+
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_item"
+        android:layout_below="@+id/fl_news_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/image_compass"
+            />
 
         <TextView
-            android:id="@+id/tv_news_category"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tv_title"
-            android:paddingLeft="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#bbbbbb"
+            android:text="今天"
             android:layout_marginLeft="10dp"
-            android:layout_width="18dp"
-            android:layout_height="36dp"
-            android:background="@drawable/bg_category_shehui" />
-    </RelativeLayout>
+            />
 
-</FrameLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e2e2e2"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            />
+
+
+        </LinearLayout>
+
+</RelativeLayout>
