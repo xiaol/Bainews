@@ -627,6 +627,7 @@ public class HomeAty extends BaseActivity {
                 return convertView;
             }
             if(position==mMiddleNewsArr.size()-1){
+                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 Log.i("jigang","execute animation----measure height="+convertView.getMeasuredHeight()+"----convertView height--"+convertView.getHeight()+" --measure height---"+convertView.getMeasuredHeight());
                 int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
