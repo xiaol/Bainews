@@ -17,12 +17,14 @@ package com.nostra13.universalimageloader.core.display;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.View;
 
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -75,7 +77,7 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 
     private void blur(Bitmap bkg, View view) {
         long startMs = System.currentTimeMillis();
-        float scaleFactor = 50;
+        float scaleFactor = 3;
         float radius = 1;
 
         Bitmap overlay = null;
@@ -88,16 +90,21 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
         }
 
         Canvas canvas = new Canvas(overlay);
-        canvas.translate(-2 / scaleFactor, 0);
+//        canvas.translate(-2 / scaleFactor, 0);
         canvas.scale(1 / scaleFactor, 1 / scaleFactor);
         Paint paint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);//消除锯齿
+
         if (canvas != null && bkg != null && paint != null) {
-            canvas.drawBitmap(bkg, 0, 0, paint);
+
+            int px = DensityUtil.dip2px(GlobalParams.context,61);
+
+            canvas.drawBitmap(bkg, 0, px, paint);
+            canvas.drawColor(new Color().parseColor("#66000000"));
         }
 
         overlay = FastBlur.doBlur(overlay, (int) radius, true);
-        overlay = ImageUtils.getRoundedCornerBitmap(GlobalParams.context, overlay, 1, false, false, false, true);
+        overlay = ImageUtils.getRoundedCornerBitmap(GlobalParams.context, overlay, 1, false, true, false, true);
         view.setBackgroundDrawable(new BitmapDrawable(overlay));
 
         if (overlay != null) {
