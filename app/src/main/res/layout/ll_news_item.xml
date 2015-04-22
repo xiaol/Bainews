@@ -2,10 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_feedstream_list_table">
+    android:background="@drawable/bg_feedstream_list_table"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rl_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="#f3f3fa"
+        />
 
     <LinearLayout
         android:id="@+id/ll_top_line"
+        android:layout_below="@+id/rl_divider"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_marginLeft="10dp"
@@ -34,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <com.news.yazhidao.widget.TextViewExtend
+            <com.news.yazhidao.widget.LetterSpacingTextView
                 android:id="@+id/tv_news_category"
                 android:layout_width="36dp"
                 android:layout_height="20dp"
@@ -45,7 +54,7 @@
                 android:background="@drawable/bg_category_shehui"
                 />
 
-            <com.news.yazhidao.widget.TextViewExtend
+            <com.news.yazhidao.widget.LetterSpacingTextView
                 android:id="@+id/tv_title"
                 android:layout_below="@id/tv_news_category"
                 android:layout_marginTop="10dp"
@@ -112,6 +121,7 @@
     <RelativeLayout
         android:id="@+id/rl_bottom_mark"
         android:layout_width="match_parent"
+        android:layout_marginTop="6dp"
         android:layout_height="70dp"
         android:layout_below="@+id/ll_source_interest"
         android:visibility="gone"
@@ -133,5 +143,7 @@
             android:background="@drawable/top_arrow" />
 
     </RelativeLayout>
+
+
 
 </RelativeLayout>

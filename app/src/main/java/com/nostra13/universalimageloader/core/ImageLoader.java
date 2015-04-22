@@ -22,7 +22,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.cache.memory.MemoryCache;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
@@ -317,7 +316,11 @@ public class ImageLoader {
                     engine.submit(displayTask);
                 }
             } else {
-                options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE,tv_title);
+                if(tv_title == null){
+                    options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE);
+                }else {
+                    options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE, tv_title);
+                }
                 listener.onLoadingComplete(uri, imageAware.getWrappedView(), bmp);
             }
         } else {

@@ -9,11 +9,6 @@
             <corners android:radius="2dp" />
             <solid android:color="#28000000"/>
 
-            <gradient
-                android:startColor="#28000000"
-                android:endColor="#000000"
-                android:angle="90"/>
-
         </shape>
     </item>
     <item android:bottom="5dp">
@@ -21,7 +16,7 @@
             android:dither="true"
             android:shape="rectangle" >
             <corners android:radius="2dp" />
-            <solid android:color="@android:color/white" />
+            <solid android:color="#f3f3faå" />
         </shape>
     </item>
 

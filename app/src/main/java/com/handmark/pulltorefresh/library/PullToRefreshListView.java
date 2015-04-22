@@ -236,7 +236,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 			// Create Loading Views ready for use later
 			FrameLayout frame = new FrameLayout(getContext());
 			mHeaderLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_START, a);
-			mHeaderLoadingView.setVisibility(View.GONE);
+
+            mHeaderLoadingView.setVisibility(View.GONE);
 			frame.addView(mHeaderLoadingView, lp);
 			mRefreshableView.addHeaderView(frame, null, false);
 
