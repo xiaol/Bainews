@@ -50,6 +50,7 @@ public class NewsDetailAty extends BaseActivity {
     private NewsDetailHeaderView headerView;
     private ProgressWheel mNewsDetailProgressWheel;
     private View mNewsDetailProgressWheelWrapper;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_detail);
@@ -102,6 +103,8 @@ public class NewsDetailAty extends BaseActivity {
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
+                msgvNewsDetail.setSelection(1);
+
             }
 
             @Override
@@ -176,8 +179,6 @@ public class NewsDetailAty extends BaseActivity {
         headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Logger.i("down", bottom + "bottom=00000");
-//                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
                 headerView.setContentViewHeight(headerView.getContentView().getHeight());
             }
         });

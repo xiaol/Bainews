@@ -29,7 +29,7 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
-        
+
         <!-- 分享内容编辑页 -->
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
@@ -69,11 +69,20 @@
         <activity
             android:name="com.renn.rennsdk.oauth.OAuthActivity"
             android:configChanges="orientation|navigation|keyboardHidden" />
+
+        <!-- ################## Umeng 更新 ####################### -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
         <activity
             android:name=".pages.NewsDetailAty"
             android:screenOrientation="portrait"
             >
-
         </activity>
 
         <activity
@@ -94,15 +103,6 @@
             </intent-filter>
 
         </activity>
-<service
-    android:name="com.umeng.update.net.DownloadingService"
-    android:process=":DownloadingService" >
-</service>
-<activity 
-    android:name="com.umeng.update.UpdateDialogActivity"
-    android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-</activity>
-        
     </application>
 
 </manifest>

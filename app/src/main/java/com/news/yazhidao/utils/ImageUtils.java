@@ -96,7 +96,6 @@ public class ImageUtils {
         // 计算缩放比例
         float scaleWidth = ((float) newWidth) / width;
 
-        Logger.e(TAG, ">>>>>>>scaleWidth>>" + scaleWidth);
         // 取得想要缩放的matrix参数
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleWidth);//横竖都按照水平方向来缩放
@@ -129,9 +128,7 @@ public class ImageUtils {
             }
 
         }
-
         Bitmap bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
-
         return bitmap;
     }
 

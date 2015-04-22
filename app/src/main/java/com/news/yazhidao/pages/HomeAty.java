@@ -1,10 +1,10 @@
 package com.news.yazhidao.pages;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
@@ -45,6 +46,7 @@ import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,41 +59,38 @@ public class HomeAty extends BaseActivity {
     private LinearLayout ll_title;
     private LinearLayout ll_no_network;
     private long mLastPressedBackKeyTime;
-    private ArrayList<NewsFeed> feedList = new ArrayList<NewsFeed>();
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
     private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
-    private TextViewExtend tv_title;
-    private int page = 1;
     private int height = 0;
     private int width = 0;
-    private int mMostRecentY;
-    private int currentSize = 0;
     private int contentSize = 0;
-
+    private TextViewExtend tv_title;
     private ImageLoaderHelper imageLoader;
+
+    //listview重新布局刷新界面的时候是否需要动画
+    private boolean mIsNeedAnim=true;
+    //是否第一次执行隐藏banner动画
+    private boolean mIsFistAnim=true;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
     private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
-
+    private Handler mHandler=new Handler();
     @Override
     protected void setContentView() {
 
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
 
         GlobalParams.maxWidth = width;
         GlobalParams.maxHeight = (int) (height * 0.27);
-
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
-
         GlobalParams.context = HomeAty.this;
 
         setContentView(R.layout.activity_news);
@@ -101,7 +100,13 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-
+        //添加umeng更新
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UmengUpdateAgent.update(HomeAty.this);
+            }
+        }, 2000);
 
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
@@ -140,11 +145,9 @@ public class HomeAty extends BaseActivity {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
                 if (NetUtil.checkNetWork(HomeAty.this)) {
-
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
                     showNextUpNews();
-                    page = 1;
                 } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
@@ -156,22 +159,51 @@ public class HomeAty extends BaseActivity {
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
 
                 if (NetUtil.checkNetWork(HomeAty.this)) {
-
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
-
-//                    loadNewsData(page);
                     showNextDownNews();
-                    page++;
                 } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
 
-
             }
         });
+        final int _HeaderHeight=DensityUtil.dip2px(this,55);
+        //设置listview 上拉时的监听器
+        lv_news.setmPullToRefreshSlidingUpListener(new PullToRefreshBase.PullToRefreshSlidingUpListener() {
+            int _Start=0;
+            @Override
+            public void slidingUp(int slideDistance) {
+              //更具滑动的距离来设置listview的高度
+                final RelativeLayout.LayoutParams _Params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                if((_Start+slideDistance)<=_HeaderHeight){
+                    mIsNeedAnim=false;
+                    if(mIsFistAnim){
+                        mIsFistAnim=false;
+                        Animation _AnimForListView = new Animation() {
 
+                            @Override
+                            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                ObjectAnimator.ofFloat(ll_title, "translationY", -_Start, -_HeaderHeight * interpolatedTime).start();
+                                _Start+=_HeaderHeight*interpolatedTime;
+                                _Params.topMargin= (int)(_HeaderHeight-15-_HeaderHeight * interpolatedTime);
+                                lv_news.setLayoutParams(_Params);
+                            }
+                        };
+                        _AnimForListView.setDuration(500); // in ms
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                //隐藏banner后，下拉或者上来都要有动画效果
+                                mIsNeedAnim = true;
+                            }
+                        }, 1000);
+                        lv_news.startAnimation(_AnimForListView);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -222,9 +254,6 @@ public class HomeAty extends BaseActivity {
         });
         if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
             ListView listView = lv_news.getRefreshableView();
-//            int y = lv_news.getScrollY();
-//            lv_news.setScrollY(lv_news.getHeaderScroll()-DensityUtil.dip2px(HomeAty.this,20));
-//            Log.i("tag", listView.getScrollY() + "===" + lv_news.getHeaderScroll() + "lv_news.getHeaderScroll()==" + lv_news.getScrollY());
             TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f + DensityUtil.dip2px(HomeAty.this, 20));
             localTranslateAnimation.setDuration(300);
             listView.setScrollY(0);
@@ -243,25 +272,24 @@ public class HomeAty extends BaseActivity {
                         @Override
                         public void run() {
                             synchronized (this) {
-//                                lv_news.onRefreshComplete();
                                 NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
-                                if(mUpNewsArr.size() == 1) {
+                                if (mUpNewsArr.size() == 1) {
                                     _NewsFeed.setTop_flag(true);
-                                    if(mDownNewsArr.size() > 0) {
+                                    if (mDownNewsArr.size() > 0) {
                                         lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                                    }else{
+                                    } else {
                                         lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                                     }
                                 }
                                 mMiddleNewsArr.add(0, _NewsFeed);
                                 mUpNewsArr.remove(mUpNewsArr.size() - 1);
-                                GlobalParams.split_index_bottom ++;
+                                GlobalParams.split_index_bottom++;
                                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setRefreshingLabel("还有"+ mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                                lv_news.setRefreshingLabel("还有"+ mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setReleaseLabel("还有"+ mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setReleaseLabel("还有"+ mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
                                 list_adapter.notifyDataSetChanged();
 
@@ -283,7 +311,6 @@ public class HomeAty extends BaseActivity {
         if (NetUtil.checkNetWork(HomeAty.this)) {
             ll_no_network.setVisibility(View.GONE);
             loadNewsData(1);
-            page++;
         } else {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
@@ -369,11 +396,24 @@ public class HomeAty extends BaseActivity {
                 holder.tv_title.setFontSpacing(3);
                 holder.tv_title.setShadowLayer(6f, 1, 2, new Color().parseColor("#000000"));
 
+                holder.tv_interests.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
+                        intent.putExtra("url", feed.getSourceUrl());
+                        startActivity(intent);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
+
                 if (feed.getCategory() != null) {
                     holder.tv_news_category.setText(feed.getCategory());
                     holder.tv_news_category.setFontSpacing(5);
-                    setNewsBackGround(holder.tv_news_category, feed.getCategory());
-                    setTopLineBackground(feed.getCategory(),holder.ll_top_line);
+                    TextUtil.setNewsBackGround(holder.tv_news_category, feed.getCategory());
+                    TextUtil.setTopLineBackground(feed.getCategory(), holder.ll_top_line);
+                    TextUtil.setNewsBackGround(holder.tv_news_category, feed.getCategory());
+                    TextUtil.setTopLineBackground(feed.getCategory(), holder.ll_top_line);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -528,7 +568,7 @@ public class HomeAty extends BaseActivity {
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
 
-                setTextBackGround(holder2.tv_news_category, feed.getCategory());
+                TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
                 if(feed.isTime_flag()){
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
@@ -564,16 +604,16 @@ public class HomeAty extends BaseActivity {
                 });
             }
 
-            //给item添加动画
-            if (position == 0) {
+            //下拉时给显示的item添加动画
+            if (position == 0&&mIsNeedAnim) {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
                 return convertView;
             }
-            if(position==mMiddleNewsArr.size()-1){
+            //上拉时给显示的item添加动画
+            if(position==mMiddleNewsArr.size()-1&&mIsNeedAnim){
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                Log.i("jigang","execute animation----measure height="+convertView.getMeasuredHeight()+"----convertView height--"+convertView.getHeight()+" --measure height---"+convertView.getMeasuredHeight());
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
@@ -587,90 +627,13 @@ public class HomeAty extends BaseActivity {
 
     }
 
-    private void setTopLineBackground(String category,LinearLayout ll_top_line) {
-
-        if ("焦点".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#ff4341"));
-        } else if ("国际".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
-        } else if ("港台".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
-        } else if ("内地".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#18a68b"));
-        } else if ("财经".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#32bfcd"));
-        } else if ("科技".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
-        } else if ("体育".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#df8145"));
-        } else if ("社会".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#00b285"));
-        } else if ("国内".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
-        } else if ("娱乐".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#ff7272"));
-        }
-
-    }
-
-    private void setNewsBackGround(TextViewExtend tv_news_category, String category) {
-        if ("焦点".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_jiaodian);
-        } else if ("国际".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guoji);
-        } else if ("港台".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_gangtai);
-        } else if ("内地".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_neidi);
-        } else if ("财经".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_caijing);
-        } else if ("科技".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_keji);
-        } else if ("体育".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_tiyu);
-        } else if ("社会".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_shehui);
-        } else if ("国内".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guonei);
-        } else if ("娱乐".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_yule);
-        }
-    }
-
-    private void setTextBackGround(TextView tv_news_category, String category) {
-
-        if ("焦点".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_jiaodian);
-        } else if ("国际".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_guoji);
-        } else if ("港台".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_gangtai);
-        } else if ("内地".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_neidi);
-        } else if ("财经".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_caijing);
-        } else if ("科技".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_keji);
-        } else if ("体育".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_tiyu);
-        } else if ("社会".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_shehui);
-        } else if ("国内".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_guonei);
-        }else if ("娱乐".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_yule);
-        }
-
-    }
 
     @Override
     protected void onResume() {
 
         if (NetUtil.checkNetWork(HomeAty.this)) {
-
             lv_news.setVisibility(View.VISIBLE);
             ll_no_network.setVisibility(View.GONE);
-
         } else {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
@@ -733,7 +696,6 @@ public class HomeAty extends BaseActivity {
 
     private void inflateDataInArrs(ArrayList<NewsFeed> result) {
         int _SplitStartIndex = 0;
-        //TODO 将数据分成对应的3部分
         if (result != null && result.size() > 1) {
             for (int i = 0; i < result.size(); i++) {
                 if (!"1".equals(result.get(i).getSpecial())) {
