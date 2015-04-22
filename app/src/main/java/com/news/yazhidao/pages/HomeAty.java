@@ -411,6 +411,7 @@ public class HomeAty extends BaseActivity {
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, holder.tv_title);
+//                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder.iv_title_img);
                 }
 
                 final long start = System.currentTimeMillis();
@@ -527,7 +528,7 @@ public class HomeAty extends BaseActivity {
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder2.iv_title_img,holder2.tv_title);
-
+//                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder2.iv_title_img);
                 } else {
                     holder2.tv_title.setBackgroundColor(color);
                 }

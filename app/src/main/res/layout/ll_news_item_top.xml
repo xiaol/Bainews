@@ -39,7 +39,7 @@
             android:id="@+id/iv_title_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+             />
 
         <RelativeLayout
             android:layout_width="300dp"
