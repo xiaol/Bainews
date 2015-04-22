@@ -319,6 +319,11 @@ public class ImageLoader {
                 }
             } else {
                 options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE, tv_title);
+                if(tv_title == null){
+                    options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE);
+                }else {
+                    options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE, tv_title);
+                }
                 listener.onLoadingComplete(uri, imageAware.getWrappedView(), bmp);
             }
         } else {

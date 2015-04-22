@@ -597,6 +597,7 @@ int mStartY;
 	 * pass-through to the Refreshable View
 	 */
 	protected final void addViewInternal(View child, int index, ViewGroup.LayoutParams params) {
+
 		super.addView(child, index, params);
 	}
 
@@ -1352,7 +1353,8 @@ int mStartY;
 				default:
 					return new RotateLoadingLayout(context, mode, scrollDirection, attrs);
 				case FLIP:
-					return new FlipLoadingLayout(context, mode, scrollDirection, attrs);
+                    FlipLoadingLayout layout = new FlipLoadingLayout(context, mode, scrollDirection, attrs);
+					return layout;
 			}
 		}
 	}

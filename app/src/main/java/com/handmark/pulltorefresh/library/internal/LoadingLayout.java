@@ -64,6 +64,8 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	private CharSequence mPullLabel;
 	private CharSequence mRefreshingLabel;
 	private CharSequence mReleaseLabel;
+    public static int number_left_top = 0;
+    public static int number_left_bottom = 0;
 
 	public LoadingLayout(Context context, final Mode mode, final Orientation scrollDirection, TypedArray attrs) {
 		super(context);
@@ -83,8 +85,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
         fl_title_img = (FrameLayout) findViewById(R.id.fl_title_img);
         FrameLayout.LayoutParams lp_img = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT, Gravity.LEFT);
-        lp_img.setMargins(200,0,0,0);
+                LayoutParams.WRAP_CONTENT,Gravity.CENTER_HORIZONTAL);
+        lp_img.setMargins(0,60,0,20);
+
         fl_title_img.setLayoutParams(lp_img);
 		mHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_text);
 		mHeaderProgress = (ProgressBar) mInnerLayout.findViewById(R.id.pull_to_refresh_progress);
@@ -104,9 +107,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 //                mPullLabel = context.getString(R.string.pull_to_refresh_from_bottom_pull_label);
 //                mRefreshingLabel = context.getString(R.string.pull_to_refresh_from_bottom_refreshing_label);
 //                mReleaseLabel = context.getString(R.string.pull_to_refresh_from_bottom_release_label);
-                mPullLabel = "加载更多...";
-                mRefreshingLabel = "加载中...";
-                mReleaseLabel = "加载更多...";
+                mPullLabel = "还有"+ number_left_bottom + "条新鲜新闻...";
+                mRefreshingLabel = "还有"+ number_left_bottom + "条新鲜新闻...";
+                mReleaseLabel = "还有"+ number_left_bottom + "条新鲜新闻...";
 				break;
 
 			case PULL_FROM_START:
@@ -117,9 +120,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 //                mPullLabel = context.getString(R.string.pull_to_refresh_pull_label);
 //                mRefreshingLabel = context.getString(R.string.pull_to_refresh_refreshing_label);
 //                mReleaseLabel = context.getString(R.string.pull_to_refresh_release_label);
-                mPullLabel = "下拉刷新";
-                mRefreshingLabel = "正在刷新中.....";
-                mReleaseLabel = "释放以刷新....";
+                mPullLabel = "还有"+ number_left_top + "条新鲜新闻...";
+                mRefreshingLabel = "还有"+ number_left_top + "条新鲜新闻...";
+                mReleaseLabel = "还有"+ number_left_top + "条新鲜新闻...";
 				break;
 		}
 
@@ -222,7 +225,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 			mHeaderText.setVisibility(View.INVISIBLE);
 		}
 		if (View.VISIBLE == mHeaderProgress.getVisibility()) {
-			mHeaderProgress.setVisibility(View.INVISIBLE);
+//			mHeaderProgress.setVisibility(View.INVISIBLE);
 		}
 		if (View.VISIBLE == mHeaderImage.getVisibility()) {
 			mHeaderImage.setVisibility(View.INVISIBLE);
@@ -331,7 +334,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 			mHeaderText.setVisibility(View.VISIBLE);
 		}
 		if (View.INVISIBLE == mHeaderProgress.getVisibility()) {
-			mHeaderProgress.setVisibility(View.VISIBLE);
+//			mHeaderProgress.setVisibility(View.VISIBLE);
 		}
 		if (View.INVISIBLE == mHeaderImage.getVisibility()) {
 			mHeaderImage.setVisibility(View.VISIBLE);
