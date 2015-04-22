@@ -27,7 +27,6 @@ public class ZipperUtil {
             @Override
             public void run() {
                 long _Start = System.currentTimeMillis();
-                Logger.i("xxxx", "start  " + _Start);
                 try {
                     path = getSaveFontPath(mContext);
                     if (path != null && path.exists()) {

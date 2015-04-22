@@ -1,9 +1,13 @@
 package com.news.yazhidao.utils;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,6 +33,82 @@ public class TextUtil {
         return before+"  "+after;
         }
         return data;
+    }
+
+    public static void setTopLineBackground(String category,LinearLayout ll_top_line) {
+
+        if ("焦点".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#ff4341"));
+        } else if ("国际".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
+        } else if ("港台".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
+        } else if ("内地".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#18a68b"));
+        } else if ("财经".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#32bfcd"));
+        } else if ("科技".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
+        } else if ("体育".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#df8145"));
+        } else if ("社会".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#00b285"));
+        } else if ("国内".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
+        } else if ("娱乐".equals(category)) {
+            ll_top_line.setBackgroundColor(new Color().parseColor("#ff7272"));
+        }
+
+    }
+
+    public static void setNewsBackGround(TextViewExtend tv_news_category, String category) {
+        if ("焦点".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_jiaodian);
+        } else if ("国际".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guoji);
+        } else if ("港台".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_gangtai);
+        } else if ("内地".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_neidi);
+        } else if ("财经".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_caijing);
+        } else if ("科技".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_keji);
+        } else if ("体育".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_tiyu);
+        } else if ("社会".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_shehui);
+        } else if ("国内".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guonei);
+        } else if ("娱乐".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_yule);
+        }
+    }
+
+    public static void setTextBackGround(TextView tv_news_category, String category) {
+
+        if ("焦点".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_jiaodian);
+        } else if ("国际".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_guoji);
+        } else if ("港台".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_gangtai);
+        } else if ("内地".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_neidi);
+        } else if ("财经".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_caijing);
+        } else if ("科技".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_keji);
+        } else if ("体育".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_tiyu);
+        } else if ("社会".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_shehui);
+        } else if ("国内".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_guonei);
+        }else if ("娱乐".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_yule);
+        }
+
     }
     public static void setResourceSiteIcon(ImageView iv_source, String source_name) {
 

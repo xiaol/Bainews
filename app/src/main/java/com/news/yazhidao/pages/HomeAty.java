@@ -78,7 +78,7 @@ public class HomeAty extends BaseActivity {
     private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
-
+    private Handler mHandler=new Handler();
     @Override
     protected void setContentView() {
 
@@ -100,7 +100,12 @@ public class HomeAty extends BaseActivity {
     @Override
     protected void initializeViews() {
         //添加umeng更新
-        UmengUpdateAgent.update(this);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UmengUpdateAgent.update(HomeAty.this);
+            }
+        }, 2000);
 
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
@@ -179,13 +184,13 @@ public class HomeAty extends BaseActivity {
                             }
                         };
                         _AnimForListView.setDuration(500); // in ms
-                        new Handler().postDelayed(new Runnable() {
+                        mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 //隐藏banner后，下拉或者上来都要有动画效果
-                                mIsNeedAnim=true;
+                                mIsNeedAnim = true;
                             }
-                        },1000);
+                        }, 1000);
                         lv_news.startAnimation(_AnimForListView);
                     }
                 }
@@ -360,8 +365,8 @@ public class HomeAty extends BaseActivity {
 
                 if (feed.getCategory() != null) {
                     holder.tv_news_category.setText(feed.getCategory());
-                    setNewsBackGround(holder.tv_news_category, feed.getCategory());
-                    setTopLineBackground(feed.getCategory(),holder.ll_top_line);
+                    TextUtil.setNewsBackGround(holder.tv_news_category, feed.getCategory());
+                    TextUtil.setTopLineBackground(feed.getCategory(), holder.ll_top_line);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -514,7 +519,7 @@ public class HomeAty extends BaseActivity {
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
 
-                setTextBackGround(holder2.tv_news_category, feed.getCategory());
+                TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
                 if(feed.isTime_flag()){
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
@@ -558,7 +563,7 @@ public class HomeAty extends BaseActivity {
             //上拉时给显示的item添加动画
             if(position==mMiddleNewsArr.size()-1&&mIsNeedAnim){
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
@@ -572,81 +577,6 @@ public class HomeAty extends BaseActivity {
 
     }
 
-    private void setTopLineBackground(String category,LinearLayout ll_top_line) {
-
-        if ("焦点".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#ff4341"));
-        } else if ("国际".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
-        } else if ("港台".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
-        } else if ("内地".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#18a68b"));
-        } else if ("财经".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#32bfcd"));
-        } else if ("科技".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#007fff"));
-        } else if ("体育".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#df8145"));
-        } else if ("社会".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#00b285"));
-        } else if ("国内".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#726bf8"));
-        } else if ("娱乐".equals(category)) {
-            ll_top_line.setBackgroundColor(new Color().parseColor("#ff7272"));
-        }
-
-    }
-
-    private void setNewsBackGround(TextViewExtend tv_news_category, String category) {
-        if ("焦点".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_jiaodian);
-        } else if ("国际".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guoji);
-        } else if ("港台".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_gangtai);
-        } else if ("内地".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_neidi);
-        } else if ("财经".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_caijing);
-        } else if ("科技".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_keji);
-        } else if ("体育".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_tiyu);
-        } else if ("社会".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_shehui);
-        } else if ("国内".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guonei);
-        } else if ("娱乐".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_yule);
-        }
-    }
-
-    private void setTextBackGround(TextView tv_news_category, String category) {
-
-        if ("焦点".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_jiaodian);
-        } else if ("国际".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_guoji);
-        } else if ("港台".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_gangtai);
-        } else if ("内地".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_neidi);
-        } else if ("财经".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_caijing);
-        } else if ("科技".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_keji);
-        } else if ("体育".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_tiyu);
-        } else if ("社会".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_shehui);
-        } else if ("国内".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_guonei);
-        }else if ("娱乐".equals(category)) {
-            tv_news_category.setBackgroundResource(R.drawable.bg_category_yule);
-        }
-
-    }
 
     @Override
     protected void onResume() {
