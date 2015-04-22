@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
@@ -26,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
@@ -51,6 +54,7 @@ import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,6 +93,10 @@ public class HomeAty extends BaseActivity {
     private LinearLayout ll_souce_view;
     private ImageView iv_source;
     TextViewExtend tv_news_source;
+    //listview重新布局刷新界面的时候是否需要动画
+    private boolean mIsNeedAnim=true;
+    //是否第一次执行隐藏banner动画
+    private boolean mIsFistAnim=true;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
@@ -228,8 +236,7 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-
-
+        UmengUpdateAgent.update(this);
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
         ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
@@ -292,8 +299,40 @@ public class HomeAty extends BaseActivity {
 
             }
         });
+        final int _HeaderHeight=DensityUtil.dip2px(this,55);
+        //设置listview 上拉时的监听器
+        lv_news.setmPullToRefreshSlidingUpListener(new PullToRefreshBase.PullToRefreshSlidingUpListener() {
+            int _Start=0;
+            @Override
+            public void slidingUp(int slideDistance) {
+              //更具滑动的距离来设置listview的高度
+                final RelativeLayout.LayoutParams _Params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                if((_Start+slideDistance)<=_HeaderHeight){
+                    mIsNeedAnim=false;
+                    if(mIsFistAnim){
+                        mIsFistAnim=false;
+                        Animation _AnimForListView = new Animation() {
 
-//        lv_news.setOnScrollListener(scrollListener);
+                            @Override
+                            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                ObjectAnimator.ofFloat(ll_title, "translationY", -_Start, -_HeaderHeight * interpolatedTime).start();
+                                _Start+=_HeaderHeight*interpolatedTime;
+                                _Params.topMargin= (int)(_HeaderHeight-15-_HeaderHeight * interpolatedTime);
+                                lv_news.setLayoutParams(_Params);
+                            }
+                        };
+                        _AnimForListView.setDuration(500); // in ms
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mIsNeedAnim=true;
+                            }
+                        },1000);
+                        lv_news.startAnimation(_AnimForListView);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -621,7 +660,7 @@ public class HomeAty extends BaseActivity {
             }
 
             //给item添加动画
-            if (position == 0) {
+            if (position == 0&&mIsNeedAnim) {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
 //                TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, 100, convertView.getHeight());
@@ -657,7 +696,7 @@ public class HomeAty extends BaseActivity {
 //                });
                 return convertView;
             }
-            if(position==mMiddleNewsArr.size()-1){
+            if(position==mMiddleNewsArr.size()-1&&mIsNeedAnim){
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 Log.i("jigang","execute animation----measure height="+convertView.getMeasuredHeight()+"----convertView height--"+convertView.getHeight()+" --measure height---"+convertView.getMeasuredHeight());
