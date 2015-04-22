@@ -23,14 +23,32 @@ public class NewsFeed implements Serializable{
     private String root_class;
     private String category;
     private String special;
-    private boolean flag;
+    private boolean time_flag;
+    private boolean top_flag;
+    private boolean bottom_flag;
 
-    public boolean isFlag() {
-        return flag;
+    public boolean isTime_flag() {
+        return time_flag;
     }
 
-    public void setFlag(boolean flag) {
-        this.flag = flag;
+    public void setTime_flag(boolean time_flag) {
+        this.time_flag = time_flag;
+    }
+
+    public boolean isTop_flag() {
+        return top_flag;
+    }
+
+    public void setTop_flag(boolean top_flag) {
+        this.top_flag = top_flag;
+    }
+
+    public boolean isBottom_flag() {
+        return bottom_flag;
+    }
+
+    public void setBottom_flag(boolean bottom_flag) {
+        this.bottom_flag = bottom_flag;
     }
 
     public String getSpecial() {

@@ -39,8 +39,6 @@ public class TextViewVertical extends View {
     BitmapDrawable drawable = (BitmapDrawable) getBackground();
 
     public TextViewVertical(Context context, AttributeSet attrs, int defStyle) {
-
-
         super(context, attrs, defStyle);
     }
 
@@ -68,6 +66,8 @@ public class TextViewVertical extends View {
     	intVal = (int)Math.ceil(Float.parseFloat(tempText.replaceAll("px","")));
 		return intVal;
     }*/
+
+
     //设置文字
     public final void setText(String text) {
         this.text = text;
@@ -175,6 +175,8 @@ public class TextViewVertical extends View {
         }
 
         FontMetrics fm = paint.getFontMetrics();
+
+
         mFontHeight = (int) (Math.ceil(fm.descent - fm.top) * 0.9);// 获得字体高度
 
         //计算文字行数
@@ -215,10 +217,9 @@ public class TextViewVertical extends View {
         }
     }
 
+    //设置文字阴影
     public void setShadowLayer(float radius, float dx, float dy, int color) {
-        Paint p = new Paint();
-        mTextPaint = new TextPaint(p);
-        mTextPaint.setShadowLayer(radius, dx, dy, color);
+        paint.setShadowLayer(radius, dx, dy, color);
 
         // Will change text clip region
         invalidate();
@@ -227,12 +228,12 @@ public class TextViewVertical extends View {
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-        int result = 500;
-        if (specMode == MeasureSpec.AT_MOST) {
-            result = specSize;
-        } else if (specMode == MeasureSpec.EXACTLY) {
-            result = specSize;
-        }
+        int result = 400;
+//        if (specMode == MeasureSpec.AT_MOST) {
+//            result = specSize;
+//        } else if (specMode == MeasureSpec.EXACTLY) {
+//            result = specSize;
+//        }
         mTextHeight = result;//设置文本高度
         return result;
     }

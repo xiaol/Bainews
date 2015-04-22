@@ -16,8 +16,8 @@
 package com.nostra13.universalimageloader.core.display;
 
 import android.graphics.Bitmap;
+import android.view.View;
 
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
@@ -52,5 +52,5 @@ public interface BitmapDisplayer {
      *                   display Bitmap
      * @param loadedFrom Source of loaded image
      */
-    void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom,TextViewExtend tv_title);
+    void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom,View tv_title);
 }

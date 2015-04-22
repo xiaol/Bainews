@@ -8,7 +8,7 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 2
+        versionCode 1
         versionName "0.0.2"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }

@@ -272,7 +272,7 @@ public class ImageLoader {
 	}
 
     public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-                             ImageLoadingListener listener, ImageLoadingProgressListener progressListener,TextViewExtend tv_title) {
+                             ImageLoadingListener listener, ImageLoadingProgressListener progressListener,View tv_title) {
         checkConfiguration();
         if (imageAware == null) {
             throw new IllegalArgumentException(ERROR_WRONG_ARGUMENTS);

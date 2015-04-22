@@ -39,7 +39,6 @@ import com.handmark.pulltorefresh.library.internal.RotateLoadingLayout;
 import com.handmark.pulltorefresh.library.internal.Utils;
 import com.handmark.pulltorefresh.library.internal.ViewCompat;
 import com.news.yazhidao.R;
-import com.news.yazhidao.utils.Logger;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 
@@ -233,23 +232,20 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 int mStartY;
 	@Override
 	public final boolean onInterceptTouchEvent(MotionEvent event) {
+        //监听用户滑动手势隐藏banner
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 mStartY= (int) event.getY();
-                Logger.i("jigang","ACTION_DOWN");
                 break;
             case MotionEvent.ACTION_MOVE:
                 int _Delta= (int) (event.getY()-mStartY);
-                Logger.i("jigang","_Delta---）"+_Delta+"-----mStartY---"+mStartY+"----mTouchSlop="+mTouchSlop);
                 if(_Delta<0&&Math.abs(_Delta)>=15){
                     if(mPullToRefreshSlidingUpListener!=null){
                         mPullToRefreshSlidingUpListener.slidingUp(Math.abs(_Delta));
                     }
                 }
-                Logger.i("jigang","ACTION_MOVE");
                 break;
             case MotionEvent.ACTION_UP:
-                Logger.i("jigang","ACTION_UP");
                 break;
         }
 		if (!isPullToRefreshEnabled()) {

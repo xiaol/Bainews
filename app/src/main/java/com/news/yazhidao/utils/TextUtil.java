@@ -39,7 +39,7 @@ public class TextUtil {
             iv_source.setBackgroundResource(R.drawable.yi);
         } else if ("zhihu".equals(source_name)) {
             iv_source.setBackgroundResource(R.drawable.zhihu);
-        } else if ("微博".equals(source_name)) {
+        } else if ("weibo".equals(source_name)) {
             iv_source.setBackgroundResource(R.drawable.weibo);
         } else if ("国际在线".equals(source_name)) {
             iv_source.setBackgroundResource(R.drawable.guojizaixian);

@@ -15,10 +15,19 @@
  *******************************************************************************/
 package com.nostra13.universalimageloader.core.display;
 
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
@@ -63,7 +72,7 @@ public class RoundedBitmapDisplayer implements BitmapDisplayer {
 	}
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, TextViewExtend tv_title) {
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, View tv_title) {
 
     }
 

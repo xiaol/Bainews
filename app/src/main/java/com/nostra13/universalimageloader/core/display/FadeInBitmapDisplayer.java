@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.DecelerateInterpolator;
 
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
@@ -71,12 +70,12 @@ public class FadeInBitmapDisplayer implements BitmapDisplayer {
 	}
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, TextViewExtend tv_title) {
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, View tv_title) {
         
     }
 
     /**
-	 * Animates {@link android.widget.ImageView} with "fade-in" effect
+	 * Anims {@link android.widget.ImageView} with "fade-in" effect
 	 *
 	 * @param imageView      {@link android.widget.ImageView} which display image in
 	 * @param durationMillis The length of the animation in milliseconds

@@ -4,10 +4,21 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_feedstream_list_table">
 
+    <LinearLayout
+        android:id="@+id/ll_top_line"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="2dp"
+        android:background="#ffffff"
+        />
+
     <FrameLayout
         android:id="@+id/fl_title_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_top_line"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         >
@@ -25,11 +36,11 @@
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/tv_news_category"
-                android:layout_width="23dp"
-                android:layout_height="17dp"
+                android:layout_width="36dp"
+                android:layout_height="20dp"
                 android:gravity="center"
-                android:layout_marginLeft="5dp"
-                android:textSize="10sp"
+                android:layout_marginLeft="2dp"
+                android:textSize="12sp"
                 android:textColor="#ffffff"
                 android:background="@drawable/bg_category_shehui"
                 />
@@ -41,9 +52,11 @@
                 android:layout_width="249dp"
                 android:layout_height="61dp"
                 android:layout_gravity="left"
+                android:gravity="center_vertical"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:paddingLeft="6dp"
+                android:paddingRight="6dp"
                 android:textSize="20sp"
                 android:background="@drawable/bg_image_title"
                 android:textColor="#ffffff" />
@@ -58,7 +71,10 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"/>
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="10dp"
+        android:paddingBottom="6dp"
+        android:layout_marginBottom="3dp"/>
 
     <LinearLayout
         android:id="@+id/ll_source_interest"
@@ -92,5 +108,30 @@
             android:layout_gravity="center_vertical"
             android:background="@drawable/jiantou" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom_mark"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/ll_source_interest"
+        android:visibility="gone"
+        android:background="#2f393d">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="继续阅读"
+            android:layout_centerInParent="true"
+            android:textSize="23sp"
+            android:textColor="#ffffff" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/top_arrow" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
