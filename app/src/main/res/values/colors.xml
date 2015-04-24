@@ -76,6 +76,8 @@
     <color name="text_send">#ffd600</color>
     <color name="new_transparent_black">#80000000</color>
     <color name="bg_gray">#dfe6e9</color>
+    <color name="bg_date_progress">#403C9DFB</color>
+    <color name="date_progress">#66DBFB</color>
     <color name="line_gray">#dddfe0</color>
     <color name="message_line">#3d3d3d</color>
     <color name="wall_group_color">#6e6e6e</color>

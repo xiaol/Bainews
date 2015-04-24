@@ -1,15 +1,18 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,7 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
@@ -50,6 +54,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
+import com.news.yazhidao.widget.TimePopupWindow;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -228,8 +233,17 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-
-
+        ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
+        ivTimeBg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap blurBitmap = takeScreenShot(HomeAty.this);
+                TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap);
+                m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
+                m_ppopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+            }
+        });
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
         ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
@@ -260,7 +274,6 @@ public class HomeAty extends BaseActivity {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
                 if (NetUtil.checkNetWork(HomeAty.this)) {
-
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
                     showNextUpNews();
@@ -314,10 +327,14 @@ public class HomeAty extends BaseActivity {
 
     }
 
+    int postion = 0;
+
     /**
      * 下拉刷新时显示一条数据
      */
     private void showNextUpNews() {
+        LoadingLayout.currentTextNum = postion;
+        postion++;
         new Handler().post(new Runnable() {
             @Override
             public void run() {
@@ -597,7 +614,7 @@ public class HomeAty extends BaseActivity {
 
                 setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
-                if(feed.isFlag()){
+                if (feed.isFlag()) {
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                 }
 
@@ -657,15 +674,15 @@ public class HomeAty extends BaseActivity {
 //                });
                 return convertView;
             }
-            if(position==mMiddleNewsArr.size()-1){
+            if (position == mMiddleNewsArr.size() - 1) {
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                Log.i("jigang","execute animation----measure height="+convertView.getMeasuredHeight()+"----convertView height--"+convertView.getHeight()+" --measure height---"+convertView.getMeasuredHeight());
-                int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                Log.i("jigang", "execute animation----measure height=" + convertView.getMeasuredHeight() + "----convertView height--" + convertView.getHeight() + " --measure height---" + convertView.getMeasuredHeight());
+                int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
                         .setInterpolator(new AccelerateDecelerateInterpolator());
-                convertView.setTranslationY(height/ 2);
+                convertView.setTranslationY(height / 2);
                 animator.translationYBy(-height / 2);
                 animator.start();
             }
@@ -718,7 +735,7 @@ public class HomeAty extends BaseActivity {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_shehui);
         } else if ("国内".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_guonei);
-        }else if ("娱乐".equals(category)) {
+        } else if ("娱乐".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_yule);
         }
 
@@ -800,8 +817,8 @@ public class HomeAty extends BaseActivity {
                 }
             }
 
-            if(_SplitStartIndex > 1){
-                NewsFeed feed = result.get(_SplitStartIndex -1);
+            if (_SplitStartIndex > 1) {
+                NewsFeed feed = result.get(_SplitStartIndex - 1);
                 feed.setFlag(true);
             }
 
@@ -811,6 +828,28 @@ public class HomeAty extends BaseActivity {
         }
     }
 
+    private Bitmap takeScreenShot(Activity activity) {
+        // View是你需要截图的View
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap b1 = view.getDrawingCache();
+
+        // 获取状态栏高度
+        Rect frame = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+
+        // 获取屏幕长和高
+        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
+        int height = activity.getWindowManager().getDefaultDisplay()
+                .getHeight();
+        // 去掉标题栏
+        // Bitmap b = Bitmap.createBitmap(b1, 0, 25, 320, 455);
+        Bitmap b = Bitmap.createBitmap(b1, 0, 0, width, height);
+        view.destroyDrawingCache();
+        return b;
+    }
 
     private void applyBlur(final ImageView mImageView, final TextView mTextview) {
         mImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
