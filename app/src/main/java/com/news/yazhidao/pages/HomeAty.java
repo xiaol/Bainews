@@ -48,7 +48,10 @@ import com.news.yazhidao.widget.TextViewVertical;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -70,16 +73,18 @@ public class HomeAty extends BaseActivity {
     private ImageLoaderHelper imageLoader;
 
     //listview重新布局刷新界面的时候是否需要动画
-    private boolean mIsNeedAnim=true;
+    private boolean mIsNeedAnim = true;
     //是否第一次执行隐藏banner动画
-    private boolean mIsFistAnim=true;
+    private boolean mIsFistAnim = true;
+    private boolean refresh_flag = false;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
     private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
-    private Handler mHandler=new Handler();
+    private Handler mHandler = new Handler();
+
     @Override
     protected void setContentView() {
 
@@ -137,7 +142,7 @@ public class HomeAty extends BaseActivity {
         lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
         lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
         lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-        lv_news.setReleaseLabel("还有"+ mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
         lv_news.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
 
@@ -169,25 +174,26 @@ public class HomeAty extends BaseActivity {
 
             }
         });
-        final int _HeaderHeight=DensityUtil.dip2px(this,55);
+        final int _HeaderHeight = DensityUtil.dip2px(this, 55);
         //设置listview 上拉时的监听器
         lv_news.setmPullToRefreshSlidingUpListener(new PullToRefreshBase.PullToRefreshSlidingUpListener() {
-            int _Start=0;
+            int _Start = 0;
+
             @Override
             public void slidingUp(int slideDistance) {
-              //更具滑动的距离来设置listview的高度
-                final RelativeLayout.LayoutParams _Params=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                if((_Start+slideDistance)<=_HeaderHeight){
-                    mIsNeedAnim=false;
-                    if(mIsFistAnim){
-                        mIsFistAnim=false;
+                //更具滑动的距离来设置listview的高度
+                final RelativeLayout.LayoutParams _Params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                if ((_Start + slideDistance) <= _HeaderHeight) {
+                    mIsNeedAnim = false;
+                    if (mIsFistAnim) {
+                        mIsFistAnim = false;
                         Animation _AnimForListView = new Animation() {
 
                             @Override
                             protected void applyTransformation(float interpolatedTime, Transformation t) {
                                 ObjectAnimator.ofFloat(ll_title, "translationY", -_Start, -_HeaderHeight * interpolatedTime).start();
-                                _Start+=_HeaderHeight*interpolatedTime;
-                                _Params.topMargin= (int)(_HeaderHeight-15-_HeaderHeight * interpolatedTime);
+                                _Start += _HeaderHeight * interpolatedTime;
+                                _Params.topMargin = (int) (_HeaderHeight - 15 - _HeaderHeight * interpolatedTime);
                                 lv_news.setLayoutParams(_Params);
                             }
                         };
@@ -218,11 +224,11 @@ public class HomeAty extends BaseActivity {
         });
         if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
             NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-            if(mDownNewsArr.size() == 1){
+            if (mDownNewsArr.size() == 1) {
                 _NewsFeed.setBottom_flag(true);
-                if(mDownNewsArr.size() > 0) {
+                if (mDownNewsArr.size() > 0) {
                     lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                }else{
+                } else {
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                 }
             }
@@ -231,10 +237,10 @@ public class HomeAty extends BaseActivity {
 
             lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
             lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setRefreshingLabel("还有"+ mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setRefreshingLabel("还有"+ mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有"+ mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有"+ mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+            lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+            lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+            lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+            lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
 
             list_adapter.notifyDataSetChanged();
@@ -273,7 +279,7 @@ public class HomeAty extends BaseActivity {
                         public void run() {
                             synchronized (this) {
                                 NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
-                                if (mUpNewsArr.size() == 1) {
+                                if (mUpNewsArr.size() <= 1) {
                                     _NewsFeed.setTop_flag(true);
                                     if (mDownNewsArr.size() > 0) {
                                         lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -339,6 +345,14 @@ public class HomeAty extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             contentSize = 0;
+            if(!refresh_flag) {
+                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+            }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
             if (!"1".equals(feed.getSpecial())) {
@@ -445,7 +459,7 @@ public class HomeAty extends BaseActivity {
                 }
 
                 //如果是最后一条新闻显示阅读更多布局
-                if(feed.isBottom_flag()){
+                if (feed.isBottom_flag()) {
                     holder.rl_bottom_mark.setVisibility(View.VISIBLE);
                 }
                 holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
@@ -530,6 +544,8 @@ public class HomeAty extends BaseActivity {
                     holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
                     holder2.ll_bottom_item = (LinearLayout) convertView.findViewById(R.id.ll_bottom_item);
                     holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
+                    holder2.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder2.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     convertView.setTag(holder2);
                 } else {
 //                    if (ViewHolder2.class == convertView.getTag().getClass()) {
@@ -537,21 +553,23 @@ public class HomeAty extends BaseActivity {
 //                        holder2.ll_bottom_item.setVisibility(View.GONE);
 //                        holder2.rl_top_mark.setVisibility(View.GONE);
 //                    } else {
-                        holder2 = new ViewHolder2();
-                        convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item_top, null);
-                        holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
-                        holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
-                        holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
-                        holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
+                    holder2 = new ViewHolder2();
+                    convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item_top, null);
+                    holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                    holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
+                    holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
+                    holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
 
-                        ViewGroup.LayoutParams layoutParams = holder2.fl_news_content.getLayoutParams();
-                        layoutParams.width = width;
-                        layoutParams.height = (int) (height * 0.40);
-                        holder2.fl_news_content.setLayoutParams(layoutParams);
-                        holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
-                        holder2.ll_bottom_item = (LinearLayout) convertView.findViewById(R.id.ll_bottom_item);
-                        holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
-                        convertView.setTag(holder2);
+                    ViewGroup.LayoutParams layoutParams = holder2.fl_news_content.getLayoutParams();
+                    layoutParams.width = width;
+                    layoutParams.height = (int) (height * 0.40);
+                    holder2.fl_news_content.setLayoutParams(layoutParams);
+                    holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
+                    holder2.ll_bottom_item = (LinearLayout) convertView.findViewById(R.id.ll_bottom_item);
+                    holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
+                    holder2.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder2.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                    convertView.setTag(holder2);
 //                    }
                 }
 
@@ -571,25 +589,55 @@ public class HomeAty extends BaseActivity {
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
-                if(feed.isTime_flag()){
+                if (feed.isTime_flag()) {
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.GONE);
+
+                    long time = System.currentTimeMillis();
+                    Date date = new Date(time);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    String currentDate = format.format(date);
+                    String myDate = getMyDate(currentDate);
+                    holder2.tv_date.setText(myDate);
+
+                    //判断上午还是下午
+                    Calendar mCalendar = Calendar.getInstance();
+                    mCalendar.setTimeInMillis(time);
+
+                    int apm = mCalendar.get(Calendar.AM_PM);
+
+                    String am = "";
+                    if(apm == 0){
+                        am = "上午";
+                    }else{
+                        am = "下午";
+                    }
+
+                    //判断是星期几
+                    String weekday = "";
+                    try {
+                        weekday = dayForWeek(currentDate,format);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    holder2.tv_weekday.setText(weekday + "|" + am);
                 }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder2.iv_title_img,holder2.tv_title);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
 //                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder2.iv_title_img);
                 } else {
                     holder2.tv_title.setBackgroundColor(color);
                 }
 
-                if(feed.isTop_flag()){
+                if (feed.isTop_flag()) {
                     holder2.rl_top_mark.setVisibility(View.VISIBLE);
                 }
                 holder2.rl_top_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(GlobalParams.split_index_top);
+                        lv_news.getRefreshableView().setSelection(mMiddleNewsArr.size());
                     }
                 });
 
@@ -606,26 +654,265 @@ public class HomeAty extends BaseActivity {
             }
 
             //下拉时给显示的item添加动画
-            if (position == 0&&mIsNeedAnim) {
+            if (position == 0 && mIsNeedAnim) {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(HomeAty.this, R.anim.aty_list_item_in));
                 return convertView;
             }
             //上拉时给显示的item添加动画
-            if(position==mMiddleNewsArr.size()-1&&mIsNeedAnim){
+            if (position == mMiddleNewsArr.size() - 1 && mIsNeedAnim) {
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                int height=convertView.getHeight()==0?convertView.getMeasuredHeight():convertView.getHeight();
+                int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
                         .setInterpolator(new AccelerateDecelerateInterpolator());
-                convertView.setTranslationY(height/ 2);
+                convertView.setTranslationY(height / 2);
                 animator.translationYBy(-height / 2);
                 animator.start();
             }
             return convertView;
         }
 
+    }
+
+    private String getMyDate(String currentDate) {
+
+        int month = 0;
+        int day = 0;
+        String currMonth = "";
+        String currDay = "";
+
+        month = Integer.parseInt(currentDate.substring(5,7));
+        day = Integer.parseInt(currentDate.substring(8,10));
+
+        switch (month){
+            case 1:
+                currMonth = "一月";
+                break;
+
+            case 2:
+                currMonth = "二月";
+                break;
+
+            case 3:
+                currMonth = "三月";
+                break;
+
+            case 4:
+                currMonth = "四月";
+                break;
+
+            case 5:
+                currMonth = "五月";
+                break;
+
+            case 6:
+                currMonth = "六月";
+                break;
+
+            case 7:
+                currMonth = "七月";
+                break;
+
+            case 8:
+                currMonth = "八月";
+                break;
+
+            case 9:
+                currMonth = "九月";
+                break;
+
+            case 10:
+                currMonth = "十月";
+                break;
+
+            case 11:
+                currMonth = "十一月";
+                break;
+
+            case 12:
+                currMonth = "十二月";
+                break;
+
+        }
+
+        switch (day){
+
+            case 1:
+                currDay = "一日";
+                break;
+
+            case 2:
+                currDay = "二日";
+                break;
+
+            case 3:
+                currDay = "三日";
+                break;
+
+            case 4:
+                currDay = "四日";
+                break;
+
+            case 5:
+                currDay = "五日";
+                break;
+
+            case 6:
+                currDay = "六日";
+                break;
+
+            case 7:
+                currDay = "七日";
+                break;
+
+            case 8:
+                currDay = "八日";
+                break;
+
+            case 9:
+                currDay = "九日";
+                break;
+
+            case 10:
+                currDay = "十日";
+                break;
+
+            case 11:
+                currDay = "十一日";
+                break;
+
+            case 12:
+                currDay = "十二日";
+                break;
+
+            case 13:
+                currDay = "十三日";
+                break;
+
+            case 14:
+                currDay = "十四日";
+                break;
+
+            case 15:
+                currDay = "十五日";
+                break;
+
+            case 16:
+                currDay = "十六日";
+                break;
+
+            case 17:
+                currDay = "十七日";
+                break;
+
+            case 18:
+                currDay = "十八日";
+                break;
+
+            case 19:
+                currDay = "十九日";
+                break;
+
+            case 20:
+                currDay = "二十日";
+                break;
+
+            case 21:
+                currDay = "二十一日";
+                break;
+
+            case 22:
+                currDay = "二十二日";
+                break;
+
+            case 23:
+                currDay = "二十三日";
+                break;
+
+            case 24:
+                currDay = "二十四日";
+                break;
+
+            case 25:
+                currDay = "二十五日";
+                break;
+
+            case 26:
+                currDay = "二十六日";
+                break;
+
+            case 27:
+                currDay = "二十七日";
+                break;
+
+            case 28:
+                currDay = "二十八日";
+                break;
+
+            case 29:
+                currDay = "二十九日";
+                break;
+
+            case 30:
+                currDay = "三十日";
+                break;
+
+            case 31:
+                currDay = "三十一日";
+                break;
+
+
+        }
+
+        String aaa = currMonth + currDay;
+        return aaa;
+    }
+
+    public  String  dayForWeek(String pTime,SimpleDateFormat format) throws  Exception {
+        Calendar c = Calendar.getInstance();
+        c.setTime(format.parse(pTime));
+        String a = "";
+        int  dayForWeek = 0 ;
+        if (c.get(Calendar.DAY_OF_WEEK) == 1 ){
+            dayForWeek = 7 ;
+        }else {
+            dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1 ;
+        }
+
+        switch (dayForWeek){
+            case 1:
+                a = "星期一";
+                break;
+
+            case 2:
+                a = "星期二";
+                break;
+
+            case 3:
+                a = "星期三";
+                break;
+
+            case 4:
+                a = "星期四";
+                break;
+
+            case 5:
+                a = "星期五";
+                break;
+
+            case 6:
+                a = "星期六";
+                break;
+
+            case 7:
+                a = "星期天";
+                break;
+
+        }
+
+        return  a;
     }
 
 
@@ -663,6 +950,8 @@ public class HomeAty extends BaseActivity {
         ImageView iv_title_img;
         TextViewVertical tv_title;
         TextView tv_news_category;
+        TextView tv_date;
+        TextView tv_weekday;
         FrameLayout fl_news_content;
         LinearLayout ll_bottom_item;
         RelativeLayout rl_top_mark;
@@ -707,9 +996,14 @@ public class HomeAty extends BaseActivity {
 
             GlobalParams.split_index_top = _SplitStartIndex;
 
-            if(_SplitStartIndex > 1){
-                NewsFeed feed = result.get(_SplitStartIndex -1);
+            if (_SplitStartIndex > 1) {
+                NewsFeed feed = result.get(_SplitStartIndex - 1);
                 feed.setTime_flag(true);
+            } else if (_SplitStartIndex == 1) {
+                NewsFeed feed = result.get(_SplitStartIndex - 1);
+                feed.setTime_flag(true);
+                feed.setTop_flag(true);
+                lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
             }
 
             mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));

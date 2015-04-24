@@ -48,6 +48,7 @@
         android:background="#f3f3fa"
         android:scrollbars="none"
         android:clipToPadding="false"
+        android:listSelector="#ffffff"
         ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrHeaderBackground="#4d94c9"
