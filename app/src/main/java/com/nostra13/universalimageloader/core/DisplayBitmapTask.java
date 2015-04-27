@@ -18,7 +18,6 @@ package com.nostra13.universalimageloader.core;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
@@ -53,6 +52,7 @@ final class DisplayBitmapTask implements Runnable {
 			LoadedFrom loadedFrom) {
 		this.bitmap = bitmap;
 		imageUri = imageLoadingInfo.uri;
+
 		imageAware = imageLoadingInfo.imageAware;
 		memoryCacheKey = imageLoadingInfo.memoryCacheKey;
 		displayer = imageLoadingInfo.options.getDisplayer();
@@ -84,6 +84,9 @@ final class DisplayBitmapTask implements Runnable {
 			listener.onLoadingCancelled(imageUri, imageAware.getWrappedView());
 		} else {
 			L.d(LOG_DISPLAY_IMAGE_IN_IMAGEAWARE, loadedFrom, memoryCacheKey);
+
+            ImageLoaderConfiguration configuration = engine.configuration;
+
             if(tv_title == null){
                 displayer.display(bitmap, imageAware, loadedFrom);
             }else {

@@ -16,10 +16,20 @@
 package com.nostra13.universalimageloader.core;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.FastBlur;
+import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.TextViewVertical;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.FailReason.FailType;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -174,9 +184,11 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
 				if (bmp != null && options.isCacheInMemory()) {
 
-//                    bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth,GlobalParams.screenHeight);
 					L.d(LOG_CACHE_IMAGE_IN_MEMORY, memoryCacheKey);
-					configuration.memoryCache.put(memoryCacheKey, bmp);
+                    if(tv_title == null) {
+                        configuration.memoryCache.put(memoryCacheKey, bmp);
+                    }else{
+                    }
 				}
 			} else {
 				loadedFrom = LoadedFrom.MEMORY_CACHE;
