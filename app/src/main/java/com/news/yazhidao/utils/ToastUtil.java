@@ -45,7 +45,7 @@ public class ToastUtil {
                     LinearLayout toastView = (LinearLayout) toast.getView();
 //					toastView.setAlpha(.7f);
 //					toastView.getBackground().setAlpha(10);
-                    toastView.setGravity(Gravity.CENTER);
+                    toastView.setGravity(Gravity.CENTER_VERTICAL);
                     toastView.setOrientation(LinearLayout.HORIZONTAL);
                     ImageView iconView = new ImageView(YaZhiDaoApplication.getAppContext());
                     iconView.setImageResource(iconResId);

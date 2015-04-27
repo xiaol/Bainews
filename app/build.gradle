@@ -15,7 +15,7 @@ android {
 
     productFlavors {
 
-        yingyongbao {}
+//        yingyongbao {}
 //        xiaomi {}
 //        c360 {}
 //        baidu {}
@@ -38,6 +38,7 @@ android {
 //        wo {}
 //        sougou {}
 //        mm {}
+        official{}
 
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]

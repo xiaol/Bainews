@@ -18,7 +18,6 @@ package com.nostra13.universalimageloader.core.display;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
@@ -51,10 +50,10 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
     }
 
     @Override
-    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom, View tv_title) {
+    public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom ,View tv_title) {
 
         if(tv_title instanceof TextViewExtend) {
-            bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_EXTEND);
+            bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_EXTEND);
 
             if (tv_title != null) {
                 blur(bitmap, tv_title);
@@ -62,38 +61,44 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 
         }else if(tv_title instanceof TextViewVertical){
 
-            int height = bitmap.getHeight();
-            int width = bitmap.getWidth();
+            bitmap = Bitmap.createScaledBitmap(bitmap,
+                    GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4), false);
 
-            if(width >= GlobalParams.screenWidth && height >= (int)(GlobalParams.screenHeight * 0.4)){
-                bitmap = Bitmap.createBitmap(bitmap, 0, 0, GlobalParams.screenWidth, (int) (GlobalParams.screenHeight * 0.4));
-            }else if(width >= GlobalParams.screenWidth && height < (int)(GlobalParams.screenHeight * 0.4)){
-
-//                bitmap = ImageUtils.zoomBitmap2(bitmap,GlobalParams.screenWidth,(int)(GlobalParams.screenHeight * 0.4),2);
-
-                // 计算缩放比例
-                float scale = ((float) (GlobalParams.screenHeight * 0.4)) / height;
-
-                // 取得想要缩放的matrix参数
-                Matrix matrix = new Matrix();
-                matrix.postScale(scale,scale);//横竖都按照水平方向来缩放
-
-                // 得到新的图片bitmap
-                Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-                bitmap = Bitmap.createBitmap(newbm, 0, 0, GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4));
-
-            }else if(width < GlobalParams.screenWidth && height >= (int)(GlobalParams.screenHeight * 0.4)){
-                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
-            }else if(width < GlobalParams.screenWidth && height < (int)(GlobalParams.screenHeight * 0.4)){
-                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
-
-                if(bitmap.getHeight() < GlobalParams.screenHeight * 0.4){
-                    float scaleHeight = (float)(GlobalParams.screenHeight * 0.4 / bitmap.getHeight());
-
-                    bitmap = ImageUtils.zoomBitmap3(bitmap,GlobalParams.screenWidth,GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
-                }
-
-            }
+//            int height = bitmap.getHeight();
+//            int width = bitmap.getWidth();
+//
+//            if(width >= GlobalParams.screenWidth && height >= (int)(GlobalParams.screenHeight * 0.4)){
+//                bitmap = Bitmap.createBitmap(bitmap, 0, 0, GlobalParams.screenWidth, (int) (GlobalParams.screenHeight * 0.4));
+//            }else if(width >= GlobalParams.screenWidth && height < (int)(GlobalParams.screenHeight * 0.4)){
+//
+//
+//
+//                // 计算缩放比例
+//                float scale = ((float) (GlobalParams.screenHeight * 0.4)) / height;
+//
+//                // 取得想要缩放的matrix参数
+//                Matrix matrix = new Matrix();
+//                matrix.postScale(scale,scale);//横竖都按照水平方向来缩放
+//
+//                // 得到新的图片bitmap
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inJustDecodeBounds = true;
+//
+//                Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+//                bitmap = Bitmap.createBitmap(newbm, 0, 0, GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4));
+//
+//            }else if(width < GlobalParams.screenWidth && height >= (int)(GlobalParams.screenHeight * 0.4)){
+//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//            }else if(width < GlobalParams.screenWidth && height < (int)(GlobalParams.screenHeight * 0.4)){
+//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//
+//                if(bitmap.getHeight() < GlobalParams.screenHeight * 0.4){
+//                    float scaleHeight = (float)(GlobalParams.screenHeight * 0.4 / bitmap.getHeight());
+//
+//                    bitmap = ImageUtils.zoomBitmap3(bitmap,GlobalParams.screenWidth,GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//                }
+//
+//            }
 
         }
 
@@ -123,7 +128,7 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 
         if (canvas != null && bkg != null && paint != null) {
 
-            int px = DensityUtil.dip2px(GlobalParams.context,61);
+            int px = DensityUtil.dip2px(GlobalParams.context, 61);
 
             canvas.drawBitmap(bkg, 0, px, paint);
             canvas.drawColor(new Color().parseColor("#66000000"));

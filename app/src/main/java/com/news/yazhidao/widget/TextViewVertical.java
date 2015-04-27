@@ -7,15 +7,18 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.FontMetrics;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.DensityUtil;
 
 public class TextViewVertical extends View {
 
@@ -228,7 +231,10 @@ public class TextViewVertical extends View {
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-        int result = 400;
+
+        int result = 0;
+        result = DensityUtil.dip2px(GlobalParams.context,180);
+
 //        if (specMode == MeasureSpec.AT_MOST) {
 //            result = specSize;
 //        } else if (specMode == MeasureSpec.EXACTLY) {
