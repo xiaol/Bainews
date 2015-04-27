@@ -4,16 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:id="@+id/rl_top_mark"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:visibility="gone"
+        android:background="#2f393d">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="继续阅读"
+            android:layout_centerInParent="true"
+            android:textSize="23sp"
+            android:textColor="#ffffff" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/top_arrow" />
+
+    </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/fl_news_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_top_mark">
 
         <ImageView
             android:id="@+id/iv_title_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+             />
 
         <RelativeLayout
             android:layout_width="300dp"
@@ -21,22 +46,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30dp">
 
-            <!--<ImageView-->
-                <!--android:id="@+id/iv_top_line"-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginLeft="30dp"-->
-                <!--android:background="@drawable/top_line"-->
-                <!--/>-->
-
-
             <com.news.yazhidao.widget.TextViewVertical
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:padding="2dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical" />
 
@@ -44,19 +59,17 @@
                 android:id="@+id/tv_news_category"
                 android:layout_toRightOf="@+id/tv_title"
                 android:layout_marginTop="70dp"
-                android:paddingLeft="2dp"
                 android:layout_marginLeft="10dp"
+                android:paddingLeft="2dp"
                 android:layout_width="18dp"
                 android:layout_height="36dp"
+                android:textColor="#ffffff"
                 android:background="@drawable/bg_category_shehui" />
-
-
 
         </RelativeLayout>
 
 
     </FrameLayout>
-
 
 
     <LinearLayout
@@ -65,34 +78,64 @@
         android:layout_width="match_parent"
         android:layout_marginTop="15dp"
         android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:paddingTop="5dp"
+        android:layout_height="45dp">
 
         <ImageView
             android:layout_width="10dp"
             android:layout_height="20dp"
             android:layout_marginTop="2dp"
             android:layout_marginLeft="15dp"
-            android:background="@drawable/image_compass"
-            />
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/image_compass" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="#bbbbbb"
-            android:text="今天"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="四月二十三日"
+                android:textSize="13sp"
+                android:textColor="#000000"
+                />
+
+            <TextView
+                android:id="@+id/tv_weekday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星期三|早间"
+                android:textSize="13sp"
+                android:textColor="#000000"
+                />
+
+            </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#e2e2e2"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            />
+            android:layout_marginLeft="8dp" />
 
 
-        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_divider_top"
+        android:layout_below="@id/ll_bottom_item"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:background="#f3f3fa"
+        />
 
 </RelativeLayout>

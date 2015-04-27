@@ -2,17 +2,18 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,11 +29,14 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -50,6 +54,7 @@ public class NewsDetailAty extends BaseActivity {
     private NewsDetailHeaderView headerView;
     private ProgressWheel mNewsDetailProgressWheel;
     private View mNewsDetailProgressWheelWrapper;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_detail);
@@ -60,8 +65,8 @@ public class NewsDetailAty extends BaseActivity {
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
-        mNewsDetailProgressWheel=(ProgressWheel)findViewById(R.id.mNewsDetailProgressWheel);
-        mNewsDetailProgressWheelWrapper=findViewById(R.id.mNewsDetailProgressWheelWrapper);
+        mNewsDetailProgressWheel = (ProgressWheel) findViewById(R.id.mNewsDetailProgressWheel);
+        mNewsDetailProgressWheelWrapper = findViewById(R.id.mNewsDetailProgressWheelWrapper);
         mNewsDetailProgressWheel.spin();
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -86,12 +91,12 @@ public class NewsDetailAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL+getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 
             @Override
             public void success(NewsDetail result) {
-                headerView.setDetailData(result,new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                headerView.setDetailData(result, new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                     @Override
                     public void onclickPullUp(int height) {
                         msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
@@ -102,6 +107,8 @@ public class NewsDetailAty extends BaseActivity {
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
+                msgvNewsDetail.setSelection(1);
+
             }
 
             @Override
@@ -176,13 +183,9 @@ public class NewsDetailAty extends BaseActivity {
         headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Logger.i("down", bottom + "bottom=00000");
-//                msgvNewsDetail.mFlingRunnable.startScroll(bottom, 9000);
                 headerView.setContentViewHeight(headerView.getContentView().getHeight());
             }
         });
-        Log.i("tag", getMacAddressAndDeviceid(this)+"aaaaaa");
-
     }
 
     public String getMacAddressAndDeviceid(Context c) {
@@ -190,16 +193,19 @@ public class NewsDetailAty extends BaseActivity {
         WifiInfo wifiInf = wifiMan.getConnectionInfo();
         String macAddr = wifiInf.getMacAddress();
 
-        TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId()+macAddr;
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getDeviceId() + macAddr;
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
 
         Context mContext;
         ArrayList<NewsDetail.Relate> mArrData;
+        int screenWidth;
+
         StaggeredNewsDetailAdapter(Context context) {
             mContext = context;
+            screenWidth = DeviceInfoUtil.getScreenWidth() / 2 - DensityUtil.dip2px(mContext, 24);
         }
 
 
@@ -209,7 +215,7 @@ public class NewsDetailAty extends BaseActivity {
 
         @Override
         public int getCount() {
-            return mArrData==null?0:mArrData.size();
+            return mArrData == null ? 0 : mArrData.size();
         }
 
         @Override
@@ -242,20 +248,30 @@ public class NewsDetailAty extends BaseActivity {
                 holder.ivPicture.setVisibility(View.GONE);
             else {
                 holder.ivPicture.setVisibility(View.VISIBLE);
-                ImageLoaderHelper.dispalyImage(mContext, _Relate.img, holder.ivPicture);
+                ImageLoaderHelper.loadImage(mContext, _Relate.img, new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.ivPicture.getLayoutParams();
+                        layoutParams.width = screenWidth;
+                        layoutParams.height = screenWidth * loadedImage.getHeight() / loadedImage.getWidth();
+                        holder.ivPicture.setLayoutParams(layoutParams);
+                        holder.ivPicture.setImageBitmap(loadedImage);
+                    }
+                });
             }
-            TextUtil.setResourceSiteIcon(holder.ivSource,_Relate.sourceSitename);
+            TextUtil.setResourceSiteIcon(holder.ivSource, _Relate.sourceSitename);
             holder.tvSource.setText(_Relate.sourceSitename);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent _Intent=new Intent(NewsDetailAty.this,NewsDetailWebviewAty.class);
-                    _Intent.putExtra("url",_Relate.url);
+                    Intent _Intent = new Intent(NewsDetailAty.this, NewsDetailWebviewAty.class);
+                    _Intent.putExtra("url", _Relate.url);
                     startActivity(_Intent);
-                   // add umeng statistic
-                    HashMap<String,String> _MobParam=new HashMap<>();
-                    _MobParam.put("resource_site_name",_Relate.sourceSitename);
-                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_RELATE_ITEM_CLICK,_MobParam);
+                    // add umeng statistic
+                    HashMap<String, String> _MobParam = new HashMap<>();
+                    _MobParam.put("resource_site_name", _Relate.sourceSitename);
+                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_RELATE_ITEM_CLICK, _MobParam);
                 }
             });
             return convertView;

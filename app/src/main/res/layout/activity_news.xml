@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#4D94C9"
     >
 
     <LinearLayout
@@ -14,29 +15,43 @@
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_title"
-            android:layout_width="98dp"
+            android:layout_width="125dp"
             android:layout_height="22dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/app_titie"
+            android:background="@drawable/app_title2"
             />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_stroke1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/ll_title"
+        android:background="#a4a4a5"
+        />
+
+    <TextView
+        android:id="@+id/tv_stroke2"
+        android:layout_below="@+id/tv_stroke1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a4a4a5"
+        />
+
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/lv_news"
-        android:layout_below="@+id/ll_title"
+        android:layout_below="@+id/tv_stroke2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#f3f3fa"
         android:scrollbars="none"
-        android:dividerHeight="20dp"
-        android:divider="#f3f3fa"
         android:clipToPadding="false"
-        ptr:ptrDrawable="@drawable/default_ptr_flip"
+        ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderBackground="#f3f3fa"
-        ptr:ptrHeaderTextColor="#000000"
+        ptr:ptrHeaderBackground="#4d94c9"
+        ptr:ptrHeaderTextColor="#ffffff"
         ptr:ptrScrollingWhileRefreshingEnabled="false"
         ptr:ptrListViewExtrasEnabled="true"
         />

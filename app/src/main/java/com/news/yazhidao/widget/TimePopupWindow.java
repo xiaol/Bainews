@@ -19,10 +19,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.TimeFeed;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.utils.Logger;
 
 import java.util.ArrayList;
 
@@ -46,7 +53,8 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private RoundedProgressBar mrpbTime;
     private HorizontalListView mhlvDate;
     private DateAdapter mDateAdapter;
-    private int miCurrentProgress,miTotalProgress;
+    private long mlCurrentTime, mlTotalTime;
+    private int miCurrentProgress;
 
     public TimePopupWindow(Activity context, Bitmap bitmap) {
         super(context);
@@ -57,6 +65,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mHandler = new Handler(this);
         mDateAdapter = new DateAdapter(m_pContext);
         findHeadPortraitImageViews(bitmap);
+        loadData();
     }
 
     private void findHeadPortraitImageViews(Bitmap bitmap) {
@@ -67,47 +76,9 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mtvHour = (TextViewExtend) mMenuView.findViewById(R.id.tv_hour_num);
         mtvMin = (TextViewExtend) mMenuView.findViewById(R.id.tv_min_num);
         mtvSec = (TextViewExtend) mMenuView.findViewById(R.id.tv_sec_num);
-
         mhlvDate = (HorizontalListView) mMenuView.findViewById(R.id.lv_date);
         mDateAdapter.notifyDataSetChanged();
         mhlvDate.setAdapter(mDateAdapter);
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mHandler.sendEmptyMessage(0);
-            }
-        },1000);
-
-        new CountDownTimer(64000, 1000) {
-            public void onTick(long millisUntilFinished) {
-                int ss = 1000;
-                int mi = ss * 60;
-                int hh = mi * 60;
-                int dd = hh * 24;
-
-                long day = millisUntilFinished / dd;
-                long hour = (millisUntilFinished - day * dd) / hh;
-                long minute = (millisUntilFinished - day * dd - hour * hh) / mi;
-                long second = (millisUntilFinished - day * dd - hour * hh - minute * mi) / ss;
-                long milliSecond = millisUntilFinished - day * dd - hour * hh - minute * mi - second * ss;
-
-                String strDay = day < 10 ? "0" + day : "" + day; //天
-                String strHour = hour < 10 ? "0" + hour : "" + hour;//小时
-                String strMinute = minute < 10 ? "0" + minute : "" + minute;//分钟
-                String strSecond = second < 10 ? "0" + second : "" + second;//秒
-                String strMilliSecond = milliSecond < 10 ? "0" + milliSecond : "" + milliSecond;//毫秒
-                strMilliSecond = milliSecond < 100 ? "0" + strMilliSecond : "" + strMilliSecond;
-
-                mtvHour.setText("" + strHour);
-                mtvMin.setText("" + strMinute);
-                mtvSec.setText("" + strSecond);
-            }
-
-            public void onFinish() {
-
-            }
-        }.start();
-
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -132,6 +103,36 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 //                return true;
 //            }
 //        });
+    }
+
+
+    private void loadData() {
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME+"1", NetworkRequest.RequestMethod.GET);
+        _Request.setCallback(new JsonCallback<TimeFeed>() {
+
+            @Override
+            public void success(TimeFeed result) {
+                Logger.i("tag", result.getNext_upate_time()+result.getHistory_date().get(0));
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                Logger.i("tag","2221");
+//                Logger.e(TAG, exception.getMessage());
+            }
+        }.setReturnType(new TypeToken<TimeFeed>() {
+        }.getType()));
+        _Request.execute();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mlTotalTime = 1000000000;
+                mlCurrentTime = 100000000;
+                miCurrentProgress = (int) (mlCurrentTime * 100 / mlTotalTime);
+                Log.i("tag", miCurrentProgress + "miCurrentProgress");
+                mHandler.sendEmptyMessage(0);
+            }
+        }, 2000);
     }
 
     private void blur(Bitmap bkg, View view) {
@@ -162,19 +163,58 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         }
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
-    int porgress=0;
+
+    int porgress;
+
     @Override
     public boolean handleMessage(Message msg) {
         int i = mrpbTime.getProgress();
-        if(i<30){
+        if (i < miCurrentProgress) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    porgress = porgress+5;
+                    porgress = porgress + 5;
                     mrpbTime.setProgress(porgress);
                     mHandler.sendEmptyMessage(porgress);
+                    int random = (int) Math.round(Math.random() * (60 - 10) + 10);
+                    int random1 = (int) Math.round(Math.random() * (60 - 10) + 10);
+                    int random2 = (int) Math.round(Math.random() * (60 - 10) + 10);
+                    mtvHour.setText("" + random);
+                    mtvMin.setText("" + random1);
+                    mtvSec.setText("" + random2);
                 }
-            },100);
+            }, 100);
+        } else {
+            final long time = mlTotalTime - mlCurrentTime;
+            new CountDownTimer(time, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    int ss = 1000;
+                    int mi = ss * 60;
+                    int hh = mi * 60;
+                    int dd = hh * 24;
+
+                    long day = millisUntilFinished / dd;
+                    long hour = (millisUntilFinished - day * dd) / hh;
+                    long minute = (millisUntilFinished - day * dd - hour * hh) / mi;
+                    long second = (millisUntilFinished - day * dd - hour * hh - minute * mi) / ss;
+                    long milliSecond = millisUntilFinished - day * dd - hour * hh - minute * mi - second * ss;
+
+                    String strDay = day < 10 ? "0" + day : "" + day; //天
+                    String strHour = hour < 10 ? "0" + hour : "" + hour;//小时
+                    String strMinute = minute < 10 ? "0" + minute : "" + minute;//分钟
+                    String strSecond = second < 10 ? "0" + second : "" + second;//秒
+                    String strMilliSecond = milliSecond < 10 ? "0" + milliSecond : "" + milliSecond;//毫秒
+                    strMilliSecond = milliSecond < 100 ? "0" + strMilliSecond : "" + strMilliSecond;
+
+                    mtvHour.setText("" + strHour);
+                    mtvMin.setText("" + strMinute);
+                    mtvSec.setText("" + strSecond);
+                }
+
+                public void onFinish() {
+
+                }
+            }.start();
         }
         return false;
     }
