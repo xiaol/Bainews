@@ -115,7 +115,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initializeViews() {
-        mNewsUrl=getIntent().getStringExtra("url");
+        mNewsUrl=getIntent().getStringExtra(HomeAty.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient(){

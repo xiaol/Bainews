@@ -3,9 +3,6 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -54,7 +51,8 @@ public class NewsDetailAty extends BaseActivity {
     private NewsDetailHeaderView headerView;
     private ProgressWheel mNewsDetailProgressWheel;
     private View mNewsDetailProgressWheelWrapper;
-
+    //从哪儿进入的详情页
+    private String mSource;
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_detail);
@@ -62,6 +60,7 @@ public class NewsDetailAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
+        mSource =getIntent().getStringExtra(HomeAty.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
         mivBack = (ImageView) findViewById(R.id.back_imageView);
@@ -107,7 +106,9 @@ public class NewsDetailAty extends BaseActivity {
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
-                msgvNewsDetail.setSelection(1);
+                if(HomeAty.VALUE_NEWS_SOURCE.equals(mSource)){
+                    msgvNewsDetail.setSelection(1);
+                }
 
             }
 
@@ -188,14 +189,6 @@ public class NewsDetailAty extends BaseActivity {
         });
     }
 
-    public String getMacAddressAndDeviceid(Context c) {
-        WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInf = wifiMan.getConnectionInfo();
-        String macAddr = wifiInf.getMacAddress();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId() + macAddr;
-    }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {
 
