@@ -320,8 +320,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	@Override
-	protected void updateUIForMode() {
-		super.updateUIForMode();
+	protected void updateUIForMode(int i) {
+		super.updateUIForMode(0);
 
 		// Check Indicator Views consistent with new Mode
 		if (getShowIndicatorInternal()) {

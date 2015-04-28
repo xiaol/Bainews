@@ -10,6 +10,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.news.yazhidao.common.GlobalParams;
+
 /**
  * Created by Berkeley on 3/30/15.
  */
@@ -119,10 +121,16 @@ public class ImageUtils {
      * @return
      */
     public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth, int screenHeight, int type) {
-
+        boolean flag = false;
         Bitmap bitmap_big = zoomBitmap(bm, screenWidth);
 
         int newHeight = bitmap_big.getHeight();
+        int standardHeight = DensityUtil.dip2px(GlobalParams.context,450);
+
+        if(newHeight > standardHeight){
+            flag = true;
+        }
+
         if (type == 1) {
             //textviewextend
             if (newHeight > screenHeight * 0.27) {
@@ -135,7 +143,17 @@ public class ImageUtils {
             }
 
         }
-        Bitmap bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
+
+        Bitmap bitmap = null;
+
+        int shift = DensityUtil.dip2px(GlobalParams.context,100);
+
+        if(flag){
+            bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
+        }else {
+
+            bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
+        }
         return bitmap;
     }
 

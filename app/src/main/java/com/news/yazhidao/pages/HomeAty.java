@@ -15,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -66,6 +65,7 @@ public class HomeAty extends BaseActivity {
     private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
+    private ViewHolder3 holder3 = null;
     private int height = 0;
     private int width = 0;
     private int contentSize = 0;
@@ -77,6 +77,8 @@ public class HomeAty extends BaseActivity {
     //是否第一次执行隐藏banner动画
     private boolean mIsFistAnim = true;
     private boolean refresh_flag = false;
+    private boolean top_flag = false;
+    private boolean bottom_flag = false;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
@@ -84,7 +86,6 @@ public class HomeAty extends BaseActivity {
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private Handler mHandler = new Handler();
-
     @Override
     protected void setContentView() {
 
@@ -222,15 +223,17 @@ public class HomeAty extends BaseActivity {
                 lv_news.onRefreshComplete();
             }
         });
+
         if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
             NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
             if (mDownNewsArr.size() == 1) {
                 _NewsFeed.setBottom_flag(true);
-                if (mDownNewsArr.size() > 0) {
-                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                } else {
-                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                if(mUpNewsArr.size() > 0) {
+                    lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
+                }else{
+                    lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
+
             }
             mMiddleNewsArr.add(_NewsFeed);
             mDownNewsArr.remove(mDownNewsArr.size() - 1);
@@ -245,8 +248,8 @@ public class HomeAty extends BaseActivity {
 
             list_adapter.notifyDataSetChanged();
         }
-
     }
+
 
     /**
      * 下拉刷新时显示一条数据
@@ -472,7 +475,6 @@ public class HomeAty extends BaseActivity {
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, holder.tv_title);
-//                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder.iv_title_img);
                 }
 
                 final long start = System.currentTimeMillis();
@@ -652,8 +654,8 @@ public class HomeAty extends BaseActivity {
             }
             //上拉时给显示的item添加动画
             if (position == mMiddleNewsArr.size() - 1 && mIsNeedAnim) {
-                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
@@ -712,6 +714,21 @@ public class HomeAty extends BaseActivity {
         RelativeLayout rl_divider_top;
     }
 
+    class ViewHolder3 {
+
+        LinearLayout ll_image_list;
+        ImageView image_card1;
+        ImageView image_card2;
+        ImageView image_card3;
+        LetterSpacingTextView tv_title;
+        LetterSpacingTextView tv_news_category;
+        LinearLayout ll_source_content;
+        LinearLayout ll_source_interest;
+        TextViewExtend tv_interests;
+        RelativeLayout rl_bottom_mark;
+
+    }
+
     private void loadNewsData(final int timenews) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
@@ -762,8 +779,8 @@ public class HomeAty extends BaseActivity {
             if(_SplitStartIndex > 0) {
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
-                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-//            mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, _SplitStartIndex + 6));
+//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
+            mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, _SplitStartIndex + 6));
             }else{
                 mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
