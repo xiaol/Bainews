@@ -50,7 +50,6 @@
         android:listSelector="#f3f3fa"
         ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderBackground="#4d94c9"
         ptr:ptrHeaderTextColor="#ffffff"
         ptr:ptrScrollingWhileRefreshingEnabled="false"
         ptr:ptrListViewExtrasEnabled="true"

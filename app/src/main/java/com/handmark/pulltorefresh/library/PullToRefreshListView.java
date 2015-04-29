@@ -186,6 +186,11 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		super.onReset();
 	}
 
+
+    protected  LoadingLayout getHeaderLoadingLayout(){
+        return getHeaderLayout();
+    }
+
 	@Override
 	protected LoadingLayoutProxy createLoadingLayoutProxy(final boolean includeStart, final boolean includeEnd) {
 		LoadingLayoutProxy proxy = super.createLoadingLayoutProxy(includeStart, includeEnd);
@@ -203,6 +208,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 		return proxy;
 	}
+
+
 
 	protected ListView createListView(Context context, AttributeSet attrs) {
 		final ListView lv;

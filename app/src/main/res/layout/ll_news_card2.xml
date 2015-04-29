@@ -48,7 +48,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:text="反馈文理分科我离开我吕蒙WMV物品"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="#000000"
         />
 
