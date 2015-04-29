@@ -1,7 +1,9 @@
 package com.news.yazhidao.pages;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -37,6 +40,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -60,13 +64,13 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class HomeAty extends BaseActivity {
+public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
 
     //打开详情页时，带过去的url地址
-    public static String KEY_URL="url";
+    public static String KEY_URL = "url";
     //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
-    public static String KEY_NEWS_SOURCE="key_news_source";
-    public static String VALUE_NEWS_SOURCE="other_view";
+    public static String KEY_NEWS_SOURCE = "key_news_source";
+    public static String VALUE_NEWS_SOURCE = "other_view";
 
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
@@ -86,6 +90,8 @@ public class HomeAty extends BaseActivity {
     private TextViewExtend tv_title;
     private ImageLoaderHelper imageLoader;
     private LoadingLayout mylayout;
+    private TimeFeed mCurrentTimeFeed;
+    private long mTotalTime, mUpdateTime, mLastTime, mCurrentTime;
 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
@@ -101,6 +107,7 @@ public class HomeAty extends BaseActivity {
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private Handler mHandler = new Handler();
+
     @Override
     protected void setContentView() {
 
@@ -125,8 +132,11 @@ public class HomeAty extends BaseActivity {
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bitmap blurBitmap = takeScreenShot(HomeAty.this);
-                TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap);
+                mCurrentTime = System.currentTimeMillis();
+                long updateTime = mUpdateTime - (mCurrentTime - mLastTime);
+                RelativeLayout screenRelativeLayout = (RelativeLayout) findViewById(R.id.screen_RelativeLayout);
+                Bitmap blurBitmap = takeScreenShot(screenRelativeLayout);
+                TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap, mCurrentTimeFeed, updateTime, mTotalTime, HomeAty.this);
                 m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
                 m_ppopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -257,9 +267,9 @@ public class HomeAty extends BaseActivity {
             NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
             if (mDownNewsArr.size() == 1) {
                 _NewsFeed.setBottom_flag(true);
-                if(mUpNewsArr.size() > 0) {
+                if (mUpNewsArr.size() > 0) {
                     lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
-                }else{
+                } else {
                     lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
 
@@ -353,7 +363,61 @@ public class HomeAty extends BaseActivity {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
+
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + "1", NetworkRequest.RequestMethod.GET);
+        _Request.setCallback(new JsonCallback<TimeFeed>() {
+
+            @Override
+            public void success(TimeFeed result) {
+                mCurrentTimeFeed = result;
+                mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
+                mUpdateTime = Long.valueOf(mCurrentTimeFeed.getNext_upate_time());
+                mLastTime = System.currentTimeMillis();
+                alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                Intent intent = new Intent(HomeAty.this, AlarmReceiver.class);
+                intent.setAction("updateUI");
+                pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
+//                alarmManager.setRepeating(AlarmManager.RTC,System.currentTimeMillis(),Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 10000, pendingIntent);
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                mTotalTime = 1000 * 60 * 60 * 12;
+                mLastTime = System.currentTimeMillis();
+                mUpdateTime = mTotalTime - mLastTime;
+                Logger.e("tag", exception.getMessage());
+            }
+        }.setReturnType(new TypeToken<TimeFeed>() {
+        }.getType()));
+        _Request.execute();
     }
+
+    static AlarmManager alarmManager;
+    static PendingIntent pendingIntent;
+
+    @Override
+    public void refreshUI(String date, String type) {
+           Toast.makeText(this,"fdfsdf",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public static class AlarmReceiver extends BroadcastReceiver {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            if (intent.getAction().equals("updateUI")) {
+                Toast.makeText(context, "short alarm", Toast.LENGTH_LONG).show();
+                alarmManager.cancel(pendingIntent);
+                //更新数据
+
+
+            }
+        }
+    }
+
 
     private class MyAdapter extends BaseAdapter {
 
@@ -378,7 +442,7 @@ public class HomeAty extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             contentSize = 0;
             contentSize2 = 0;
-            if(!refresh_flag) {
+            if (!refresh_flag) {
                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
                 lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -388,6 +452,9 @@ public class HomeAty extends BaseActivity {
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
+
+
+
             if ("400".equals(feed.getSpecial())) {
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -448,7 +515,7 @@ public class HomeAty extends BaseActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
-                        intent.putExtra(KEY_NEWS_SOURCE,VALUE_NEWS_SOURCE);
+                        intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -564,7 +631,7 @@ public class HomeAty extends BaseActivity {
                         }
                     }
                 }
-            } else if("1".equals(feed.getSpecial())){
+            } else if ("1".equals(feed.getSpecial())) {
 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
@@ -613,7 +680,7 @@ public class HomeAty extends BaseActivity {
                 String title = feed.getTitle();
 
                 holder2.tv_title.setText(title);
-                int textsize = DensityUtil.dip2px(HomeAty.this,18);
+                int textsize = DensityUtil.dip2px(HomeAty.this, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
                 holder2.tv_title.setLineWidth(40);
@@ -639,7 +706,7 @@ public class HomeAty extends BaseActivity {
                     //判断是星期几
                     String weekday = "";
                     try {
-                        weekday = DateUtil.dayForWeek(currentDate,format);
+                        weekday = DateUtil.dayForWeek(currentDate, format);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -674,7 +741,7 @@ public class HomeAty extends BaseActivity {
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
-            }else if("9".equals(feed.getSpecial())){
+            } else if ("9".equals(feed.getSpecial())) {
 
                 images = feed.getImgUrl_ex();
 
@@ -682,10 +749,9 @@ public class HomeAty extends BaseActivity {
 
                     holder3 = new ViewHolder3();
 
-                    if(images.length == 2){
+                    if (images.length == 2) {
 
                         convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
-
                         holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
                         holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
                         holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
@@ -695,7 +761,7 @@ public class HomeAty extends BaseActivity {
                         holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                         holder3.tv_interests = (LetterSpacingTextView) convertView.findViewById(R.id.tv_interests);
                         holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    }else{
+                    } else {
                         convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
 
                         holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
@@ -721,7 +787,7 @@ public class HomeAty extends BaseActivity {
                     } else {
                         holder3 = new ViewHolder3();
 
-                        if(images.length == 2){
+                        if (images.length == 2) {
 
                             convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
 
@@ -756,7 +822,6 @@ public class HomeAty extends BaseActivity {
 
                 holder3.tv_title.setText(title);
                 holder3.tv_title.setFontSpacing(1);
-                holder3.tv_title.setShadowLayer(2f, 1, 2, new Color().parseColor("#000000"));
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -919,6 +984,7 @@ public class HomeAty extends BaseActivity {
         }
 
     }
+
     @Override
     protected void onResume() {
 
@@ -1023,12 +1089,11 @@ public class HomeAty extends BaseActivity {
                 feed.setTop_flag(true);
                 lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
             }
-            if(_SplitStartIndex > 0) {
+            if (_SplitStartIndex > 0) {
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, _SplitStartIndex + 6));
-            }else{
+            } else {
                 mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
                 lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
@@ -1036,25 +1101,26 @@ public class HomeAty extends BaseActivity {
         }
     }
 
-    private Bitmap takeScreenShot(Activity activity) {
+    private Bitmap takeScreenShot(View view1) {
         // View是你需要截图的View
-        View view = activity.getWindow().getDecorView();
+        View view = view1.getRootView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
         Bitmap b1 = view.getDrawingCache();
 
         // 获取状态栏高度
         Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
         int statusBarHeight = frame.top;
 
         // 获取屏幕长和高
-        int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-        int height = activity.getWindowManager().getDefaultDisplay()
+        int width = getWindowManager().getDefaultDisplay().getWidth();
+        int height = getWindowManager().getDefaultDisplay()
                 .getHeight();
         // 去掉标题栏
         // Bitmap b = Bitmap.createBitmap(b1, 0, 25, 320, 455);
-        Bitmap b = Bitmap.createBitmap(b1, 0, 0, width, height);
+        Logger.i("jigang", "header " + frame.top + ",," + width + ",," + height + ",,,bitmap " + b1.getHeight());
+        Bitmap b = Bitmap.createBitmap(b1, 0, 0, view.getWidth(), view.getHeight());
         view.destroyDrawingCache();
         return b;
     }

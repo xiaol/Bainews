@@ -45,6 +45,7 @@ import com.news.yazhidao.common.GlobalParams;
 public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {
 
     static final String LOG_TAG = "PullToRefresh-LoadingLayout";
+    private String bg_color;
 
     static final Interpolator ANIMATION_INTERPOLATOR = new LinearInterpolator();
 
@@ -133,7 +134,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderBackground)) {
             Drawable background = attrs.getDrawable(R.styleable.PullToRefresh_ptrHeaderBackground);
             if (null != background) {
-                setHeaderBackground("#4d94c9");
+                setHeaderBackground(bg_color);
             }
         }
 
@@ -200,6 +201,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         setLoadingDrawable(imageDrawable);
 
         reset();
+    }
+
+    public void setHeaderBackGroundColor(String color){
+        this.bg_color = color;
     }
 
     public void setHeaderBackground(String background) {

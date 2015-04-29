@@ -103,6 +103,11 @@
             </intent-filter>
 
         </activity>
+        <receiver android:name=".pages.HomeAty$AlarmReceiver">
+            <intent-filter>
+                <action android:name="updateUI" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
