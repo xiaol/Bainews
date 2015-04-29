@@ -684,7 +684,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
                 int textsize = DensityUtil.dip2px(HomeAty.this, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
-                holder2.tv_title.setLineWidth(40);
+                holder2.tv_title.setLineWidth(DensityUtil.dip2px(HomeAty.this,22));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
                 TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
