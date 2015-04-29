@@ -50,6 +50,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private int miCurrentProgress;
     private TimeFeed mCurrentTimeFeed;
     private IUpdateUI mUpdateUI;
+    private String mCurrentDate, mCurrentType;
 
     public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime, IUpdateUI updateUI) {
         super(context);
@@ -113,6 +114,13 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 
 
     private void loadData() {
+        String type = "";
+        if (mCurrentTimeFeed != null)
+            type = mCurrentTimeFeed.getNext_update_type();
+        if (type != null && type.equals("0"))
+            mivStatus.setBackgroundResource(R.drawable.bg_date_sun);
+        else
+            mivStatus.setBackgroundResource(R.drawable.bg_date_moon);
         if (mlTotalTime != 0) {
             miCurrentProgress = (int) ((mlTotalTime - mlCurrentTime) * 100 / mlTotalTime);
             mHandler.sendEmptyMessage(0);
@@ -202,7 +210,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 
                 public void onFinish() {
                     if (mUpdateUI != null)
-                        mUpdateUI.refreshUI("","");
+                        mUpdateUI.refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
                     dismiss();
                 }
             }.start();
@@ -210,6 +218,10 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         return false;
     }
 
+    public void setDateAndType(String currentDate, String currentType) {
+        mCurrentDate = currentDate;
+        mCurrentType = currentType;
+    }
 
     class DateAdapter extends BaseAdapter {
 
@@ -245,10 +257,10 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();
-                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) != 0)
+//                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
-                else
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
+//                else
+//                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 holder.tvDate = (TextViewExtend) convertView.findViewById(R.id.tv_date);
                 holder.ivMorning = (ImageView) convertView.findViewById(R.id.iv_date_morning);
                 holder.ivNight = (ImageView) convertView.findViewById(R.id.iv_date_night);
@@ -256,25 +268,46 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            if (position == 0) {
-                holder.ivMorning.setPressed(true);
+            if (mCurrentDate.equals(marrStrHistoryDate.get(position))) {
+                if (mCurrentType.equals("0"))
+                    holder.ivMorning.setPressed(true);
+                else
+                    holder.ivNight.setPressed(true);
+//                if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0) {
+//                    if (mCurrentType.equals("0"))
+//                        holder.ivMorning.setPressed(true);
+//                    else
+//                        holder.ivNight.setPressed(true);
+//                } else {
+//                    if (mCurrentType.equals("1"))
+//                        holder.ivMorning.setPressed(true);
+//                    else
+//                        holder.ivNight.setPressed(true);
+//                }
             } else {
                 holder.ivMorning.setPressed(false);
+                holder.ivNight.setPressed(false);
             }
             holder.tvDate.setText(marrStrHistoryDate.get(position));
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mUpdateUI != null)
-                        mUpdateUI.refreshUI("","");
+                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+//                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
+//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+//                    else
+//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
                     dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mUpdateUI != null)
-                        mUpdateUI.refreshUI("","");
+                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+//                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
+//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+//                    else
+//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
                     dismiss();
                 }
             });

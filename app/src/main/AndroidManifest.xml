@@ -103,7 +103,7 @@
             </intent-filter>
 
         </activity>
-        <receiver android:name=".pages.HomeAty$AlarmReceiver">
+        <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>
                 <action android:name="updateUI" />
             </intent-filter>

@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 import android.animation.ObjectAnimator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -43,6 +41,7 @@ import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.receiver.TimeoOutAlarmReceiver;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
@@ -63,14 +62,14 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
+public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
 
     //打开详情页时，带过去的url地址
     public static String KEY_URL = "url";
     //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String VALUE_NEWS_SOURCE = "other_view";
-
+    private String mCurrentDate, mCurrentType;
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
     private LinearLayout ll_title;
@@ -106,6 +105,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private Handler mHandler = new Handler();
 
+    private TimeoOutAlarmReceiver mTimeoOutAlarmReceiver;
     @Override
     protected void setContentView() {
 
@@ -122,6 +122,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
         setContentView(R.layout.activity_news);
 
         imageLoader = new ImageLoaderHelper(HomeAty.this);
+        mTimeoOutAlarmReceiver=new TimeoOutAlarmReceiver();
+        mTimeoOutAlarmReceiver.setListener(this);
     }
 
     @Override
@@ -135,6 +137,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
                 RelativeLayout screenRelativeLayout = (RelativeLayout) findViewById(R.id.screen_RelativeLayout);
                 Bitmap blurBitmap = takeScreenShot(screenRelativeLayout);
                 TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap, mCurrentTimeFeed, updateTime, mTotalTime, HomeAty.this);
+                m_ppopupWindow.setDateAndType(mCurrentDate, mCurrentType);
                 m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
                 m_ppopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -358,29 +361,37 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
-
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + "1", NetworkRequest.RequestMethod.GET);
+        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+        final String type;
+        if (isMorning != null && isMorning.equals("晚间")) {
+            type = "0";
+            mCurrentType="1";
+        } else {
+            type = "1";
+            mCurrentType="0";
+        }
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
 
             @Override
             public void success(TimeFeed result) {
                 mCurrentTimeFeed = result;
+                mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
                 mUpdateTime = Long.valueOf(mCurrentTimeFeed.getNext_upate_time());
                 mLastTime = System.currentTimeMillis();
                 alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                Intent intent = new Intent(HomeAty.this, AlarmReceiver.class);
+                Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-//                alarmManager.setRepeating(AlarmManager.RTC,System.currentTimeMillis(),Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
-                alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 10000, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
             }
 
             @Override
             public void failed(MyAppException exception) {
                 mTotalTime = 1000 * 60 * 60 * 12;
                 mLastTime = System.currentTimeMillis();
-                mUpdateTime = mTotalTime - mLastTime;
+                mUpdateTime = 0;
                 Logger.e("tag", exception.getMessage());
             }
         }.setReturnType(new TypeToken<TimeFeed>() {
@@ -393,26 +404,38 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
 
     @Override
     public void refreshUI(String date, String type) {
-           Toast.makeText(this,"fdfsdf",Toast.LENGTH_SHORT).show();
+        mCurrentDate = date;
+        mCurrentType = type;
+        String url = HttpConstant.URL_GET_NEWS_LIST + "?date=" + date + "&type=" + type;
+        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
+            public void success(ArrayList<NewsFeed> result) {
+                if (result != null) {
+                    //分别填充3个数据源
+                    inflateDataInArrs(result);
+                    list_adapter.notifyDataSetChanged();
+                }
+                lv_news.onRefreshComplete();
+            }
+
+            public void failed(MyAppException exception) {
+                lv_news.onRefreshComplete();
+            }
+        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType()));
+        request.execute();
     }
 
-    public static class AlarmReceiver extends BroadcastReceiver {
-
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            if (intent.getAction().equals("updateUI")) {
-                Toast.makeText(context, "short alarm", Toast.LENGTH_LONG).show();
-                alarmManager.cancel(pendingIntent);
-                //更新数据
-
-
-            }
+    @Override
+    public void updateUI(Intent intent) {
+        if (intent.getAction().equals("updateUI")) {
+            alarmManager.cancel(pendingIntent);
+            //更新数据
+            if(mCurrentTimeFeed!=null)
+                refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
         }
     }
-
 
     private class MyAdapter extends BaseAdapter {
 
