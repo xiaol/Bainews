@@ -10,9 +10,9 @@ import com.news.yazhidao.pages.TimeOutAlarmUpdateListener;
  * Created by fiocca on 15/4/29.
  */
 public class TimeoOutAlarmReceiver extends BroadcastReceiver {
-    private TimeOutAlarmUpdateListener mListener;
-    public void setListener(TimeOutAlarmUpdateListener listener){
-        this.mListener=listener;
+    private static TimeOutAlarmUpdateListener mListener;
+    public static void setListener(TimeOutAlarmUpdateListener listener){
+        mListener=listener;
     }
     @Override
     public void onReceive(Context context, Intent intent) {

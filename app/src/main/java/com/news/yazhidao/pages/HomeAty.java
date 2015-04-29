@@ -107,7 +107,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private Handler mHandler = new Handler();
 
-    private TimeoOutAlarmReceiver mTimeoOutAlarmReceiver;
     @Override
     protected void setContentView() {
 
@@ -124,8 +123,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         setContentView(R.layout.activity_news);
 
         imageLoader = new ImageLoaderHelper(HomeAty.this);
-        mTimeoOutAlarmReceiver=new TimeoOutAlarmReceiver();
-        mTimeoOutAlarmReceiver.setListener(this);
+        TimeoOutAlarmReceiver.setListener(this);
     }
 
     @Override

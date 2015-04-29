@@ -189,7 +189,8 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                     int mi = ss * 60;
                     int hh = mi * 60;
                     int dd = hh * 24;
-
+                    miCurrentProgress += (12*60*60*10)/(float)mlTotalTime;
+                    mrpbTime.setProgress(miCurrentProgress);
                     long day = millisUntilFinished / dd;
                     long hour = (millisUntilFinished - day * dd) / hh;
                     long minute = (millisUntilFinished - day * dd - hour * hh) / mi;
@@ -209,6 +210,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 }
 
                 public void onFinish() {
+                    mrpbTime.setProgress(100);
                     if (mUpdateUI != null)
                         mUpdateUI.refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
                     dismiss();
@@ -258,7 +260,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             if (convertView == null) {
                 holder = new Holder();
 //                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
 //                else
 //                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 holder.tvDate = (TextViewExtend) convertView.findViewById(R.id.tv_date);

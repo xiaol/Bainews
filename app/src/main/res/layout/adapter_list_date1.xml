@@ -36,7 +36,7 @@
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:background="@color/blue" />
+            android:background="@drawable/bg_date_line" />
     </LinearLayout>
 
     <com.news.yazhidao.widget.TextViewExtend
