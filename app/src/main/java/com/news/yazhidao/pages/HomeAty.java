@@ -21,7 +21,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -64,7 +63,13 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class HomeAty extends BaseActivity {
+public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
+
+    //打开详情页时，带过去的url地址
+    public static String KEY_URL = "url";
+    //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
+    public static String KEY_NEWS_SOURCE = "key_news_source";
+    public static String VALUE_NEWS_SOURCE = "other_view";
 
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
@@ -75,9 +80,12 @@ public class HomeAty extends BaseActivity {
     private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
+    private ViewHolder3 holder3 = null;
     private int height = 0;
     private int width = 0;
+    private String[] images;
     private int contentSize = 0;
+    private int contentSize2 = 0;
     private TextViewExtend tv_title;
     private ImageLoaderHelper imageLoader;
     private TimeFeed mCurrentTimeFeed;
@@ -88,6 +96,8 @@ public class HomeAty extends BaseActivity {
     //是否第一次执行隐藏banner动画
     private boolean mIsFistAnim = true;
     private boolean refresh_flag = false;
+    private boolean top_flag = false;
+    private boolean bottom_flag = false;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
@@ -124,7 +134,7 @@ public class HomeAty extends BaseActivity {
                 long updateTime = mUpdateTime - (mCurrentTime - mLastTime);
                 RelativeLayout screenRelativeLayout = (RelativeLayout) findViewById(R.id.screen_RelativeLayout);
                 Bitmap blurBitmap = takeScreenShot(screenRelativeLayout);
-                TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap, mCurrentTimeFeed,updateTime,mTotalTime);
+                TimePopupWindow m_ppopupWindow = new TimePopupWindow(HomeAty.this, blurBitmap, mCurrentTimeFeed, updateTime, mTotalTime, HomeAty.this);
                 m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
                 m_ppopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -247,15 +257,17 @@ public class HomeAty extends BaseActivity {
                 lv_news.onRefreshComplete();
             }
         });
+
         if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
             NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
             if (mDownNewsArr.size() == 1) {
                 _NewsFeed.setBottom_flag(true);
-                if (mDownNewsArr.size() > 0) {
-                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                if (mUpNewsArr.size() > 0) {
+                    lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
                 } else {
-                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                    lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
+
             }
             mMiddleNewsArr.add(_NewsFeed);
             mDownNewsArr.remove(mDownNewsArr.size() - 1);
@@ -270,7 +282,6 @@ public class HomeAty extends BaseActivity {
 
             list_adapter.notifyDataSetChanged();
         }
-
     }
 
 
@@ -380,6 +391,12 @@ public class HomeAty extends BaseActivity {
     static AlarmManager alarmManager;
     static PendingIntent pendingIntent;
 
+    @Override
+    public void refreshUI(String date, String type) {
+           Toast.makeText(this,"fdfsdf",Toast.LENGTH_SHORT).show();
+
+    }
+
     public static class AlarmReceiver extends BroadcastReceiver {
 
 
@@ -419,6 +436,7 @@ public class HomeAty extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             contentSize = 0;
+            contentSize2 = 0;
             if (!refresh_flag) {
                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
@@ -429,7 +447,7 @@ public class HomeAty extends BaseActivity {
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
-            if (!"1".equals(feed.getSpecial())) {
+            if ("400".equals(feed.getSpecial())) {
                 if (convertView == null) {
                     holder = new ViewHolder();
                     convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item, null);
@@ -488,7 +506,8 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -510,7 +529,7 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -546,7 +565,6 @@ public class HomeAty extends BaseActivity {
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img, holder.tv_title);
-//                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder.iv_title_img);
                 }
 
                 final long start = System.currentTimeMillis();
@@ -567,7 +585,7 @@ public class HomeAty extends BaseActivity {
                             public void onClick(View v) {
 
                                 Intent intent = new Intent(HomeAty.this, NewsDetailWebviewAty.class);
-                                intent.putExtra("url", source.getUrl());
+                                intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
                                 //umeng statistic onclick url below the head news
                                 HashMap<String, String> _MobMap = new HashMap<>();
@@ -606,7 +624,7 @@ public class HomeAty extends BaseActivity {
                         }
                     }
                 }
-            } else {
+            } else if ("1".equals(feed.getSpecial())) {
 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
@@ -710,12 +728,199 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        startActivity(intent);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
+            } else if ("9".equals(feed.getSpecial())) {
+
+                images = feed.getImgUrl_ex();
+
+                if (convertView == null) {
+
+                    holder3 = new ViewHolder3();
+
+                    if (images.length == 2) {
+
+                        convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
+                    } else {
+                        convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
+                    }
+
+                    holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                    holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
+                    holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
+                    holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
+                    holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                    holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                    holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                    holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                    holder3.tv_interests = (LetterSpacingTextView) convertView.findViewById(R.id.tv_interests);
+                    holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+
+                    convertView.setTag(holder3);
+                } else {
+                    if (ViewHolder3.class == convertView.getTag().getClass()) {
+                        holder3 = (ViewHolder3) convertView.getTag();
+                        holder3.ll_source_content.removeAllViews();
+                        holder3.rl_bottom_mark.setVisibility(View.GONE);
+                    } else {
+                        holder3 = new ViewHolder3();
+
+                        if (images.length == 2) {
+
+                            convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
+                        } else {
+                            convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
+                        }
+
+                        holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                        holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
+                        holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
+                        holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
+                        holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                        holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                        holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                        holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
+                        holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+
+                        convertView.setTag(holder3);
+                    }
+                }
+
+                String title = feed.getTitle();
+
+                holder3.tv_title.setText(title);
+                holder3.tv_title.setFontSpacing(1);
+                holder3.tv_title.setShadowLayer(2f, 1, 2, new Color().parseColor("#000000"));
+
+                holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
+
+                if (feed.getCategory() != null) {
+                    holder3.tv_news_category.setText(feed.getCategory());
+                    holder3.tv_news_category.setFontSpacing(5);
+                    TextUtil.setNewsBackGround(holder3.tv_news_category, feed.getCategory());
+                }
+
+                holder3.tv_interests.setText(feed.getOtherNum() + "家观点");
+                holder3.ll_image_list.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
+                        intent.putExtra("url", feed.getSourceUrl());
+                        startActivity(intent);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
+
+                //点击其他观点的点击事件
+                holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //uemng statistic click other viewpoint
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                    }
+                });
+
+                if (feed != null && feed.getOtherNum() != null) {
+                    if (Integer.parseInt(feed.getOtherNum()) == 0) {
+                        holder3.ll_source_interest.setVisibility(View.GONE);
+                    } else {
+                        holder3.ll_source_interest.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                //如果是最后一条新闻显示阅读更多布局
+                if (feed.isBottom_flag()) {
+                    holder3.rl_bottom_mark.setVisibility(View.VISIBLE);
+                }
+                holder3.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
+                    }
+                });
+
+                if (images.length == 2) {
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
+                } else {
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, images[2], holder3.image_card3);
+                }
+
+                final long start = System.currentTimeMillis();
+
+                sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
+
+                //解析新闻来源观点数据
+                if (sourceList != null && sourceList.size() > 0) {
+
+                    for (int a = 0; a < sourceList.size(); a++) {
+
+
+                        final NewsFeed.Source source = sourceList.get(a);
+
+                        LinearLayout ll_souce_view = (LinearLayout) View.inflate(getApplicationContext(), R.layout.lv_source_item, null);
+                        ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(HomeAty.this, NewsDetailWebviewAty.class);
+                                intent.putExtra("url", source.getUrl());
+                                startActivity(intent);
+                                //umeng statistic onclick url below the head news
+                                HashMap<String, String> _MobMap = new HashMap<>();
+                                _MobMap.put("resource_site_name", source.getSourceSitename());
+                                MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
+                            }
+                        });
+                        ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
+                        TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
+
+                        if (source != null) {
+
+                            String source_name = source.getSourceSitename();
+
+                            if (source_name != null) {
+                                if (source.getUser() != null && !"".equals(source.getUser())) {
+//                                    String str ="<font size=7>" + source.getUser() + "</font> : " + source.getTitle();
+
+                                    tv_news_source.setText(source.getUser() + ":" + source.getTitle());
+                                } else {
+                                    tv_news_source.setText(source_name + ": " + source.getTitle());
+                                }
+
+                                TextUtil.setResourceSiteIcon(iv_source, source_name);
+
+                            } else {
+
+                                tv_news_source.setText("匿名报道:");
+                            }
+
+                        }
+
+                        if (contentSize2 < 6) {
+                            holder3.ll_source_content.addView(ll_souce_view);
+                            contentSize2++;
+                        }
+                    }
+                }
+
             }
 
             //下拉时给显示的item添加动画
@@ -726,8 +931,8 @@ public class HomeAty extends BaseActivity {
             }
             //上拉时给显示的item添加动画
             if (position == mMiddleNewsArr.size() - 1 && mIsNeedAnim) {
-                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
@@ -783,6 +988,21 @@ public class HomeAty extends BaseActivity {
         RelativeLayout rl_divider_top;
     }
 
+    class ViewHolder3 {
+        LinearLayout ll_top_line;
+        LinearLayout ll_image_list;
+        ImageView image_card1;
+        ImageView image_card2;
+        ImageView image_card3;
+        LetterSpacingTextView tv_title;
+        LetterSpacingTextView tv_news_category;
+        LinearLayout ll_source_content;
+        LinearLayout ll_source_interest;
+        TextViewExtend tv_interests;
+        RelativeLayout rl_bottom_mark;
+
+    }
+
     private void loadNewsData(final int timenews) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
@@ -834,7 +1054,6 @@ public class HomeAty extends BaseActivity {
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-//            mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, _SplitStartIndex + 6));
             } else {
                 mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));

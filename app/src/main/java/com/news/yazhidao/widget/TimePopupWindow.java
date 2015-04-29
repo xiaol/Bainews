@@ -49,9 +49,9 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private long mlCurrentTime, mlTotalTime;
     private int miCurrentProgress;
     private TimeFeed mCurrentTimeFeed;
+    private IUpdateUI mUpdateUI;
 
-
-    public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime) {
+    public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime, IUpdateUI updateUI) {
         super(context);
         m_pContext = context;
         LayoutInflater inflater = (LayoutInflater) context
@@ -61,6 +61,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mCurrentTimeFeed = timeFeed;
         mlCurrentTime = updateTime;
         mlTotalTime = totalTime;
+        mUpdateUI = updateUI;
         mDateAdapter = new DateAdapter(m_pContext);
         findHeadPortraitImageViews(bitmap);
         loadData();
@@ -117,6 +118,10 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             mHandler.sendEmptyMessage(0);
             mDateAdapter.setData(mCurrentTimeFeed);
         }
+    }
+
+    public interface IUpdateUI {
+        void refreshUI(String date, String type);
     }
 
     private void blur(Bitmap bkg, View view) {
@@ -196,7 +201,9 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 }
 
                 public void onFinish() {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             }.start();
         }
@@ -258,13 +265,17 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             });
             return convertView;

@@ -27,8 +27,6 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
-import com.news.yazhidao.widget.TextViewExtend;
-import com.news.yazhidao.widget.TextViewVertical;
 import com.nostra13.universalimageloader.core.assist.LoadedFrom;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
@@ -52,18 +50,18 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
     @Override
     public void display(Bitmap bitmap, ImageAware imageAware, LoadedFrom loadedFrom ,View tv_title) {
 
-        if(tv_title instanceof TextViewExtend) {
-            bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_EXTEND);
-
-            if (tv_title != null) {
-                blur(bitmap, tv_title);
-            }
-
-        }else if(tv_title instanceof TextViewVertical){
-
-            bitmap = Bitmap.createScaledBitmap(bitmap,
-                    GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4), false);
-
+//        if(tv_title instanceof TextViewExtend) {
+//            bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_EXTEND);
+//
+//            if (tv_title != null) {
+//                blur(bitmap, tv_title);
+//            }
+//
+//        }else if(tv_title instanceof TextViewVertical){
+//
+//            bitmap = Bitmap.createScaledBitmap(bitmap,
+//                    GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4), false);
+//
 //            int height = bitmap.getHeight();
 //            int width = bitmap.getWidth();
 //
@@ -100,7 +98,7 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 //
 //            }
 
-        }
+//        }
 
         imageAware.setImageBitmap(bitmap);
 

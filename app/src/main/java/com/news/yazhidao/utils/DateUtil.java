@@ -13,13 +13,13 @@ public class DateUtil {
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
 
-        int apm = mCalendar.get(Calendar.AM_PM);
+        int apm = mCalendar.get(Calendar.HOUR_OF_DAY);
 
         String am = "";
-        if (apm == 0) {
-            am = "早间";
-        } else {
+        if (apm > 18 || apm < 6) {
             am = "晚间";
+        } else {
+            am = "早间";
         }
         return am;
     }

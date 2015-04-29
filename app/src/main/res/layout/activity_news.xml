@@ -3,7 +3,6 @@
     android:id="@+id/screen_RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4D94C9"
     >
 
     <ImageView
