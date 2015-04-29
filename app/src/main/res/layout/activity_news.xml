@@ -57,6 +57,7 @@
         ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrHeaderTextColor="#ffffff"
+        ptr:ptrHeaderBackground="#4D94C9"
         ptr:ptrScrollingWhileRefreshingEnabled="false"
         ptr:ptrListViewExtrasEnabled="true"
         />

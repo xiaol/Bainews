@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:layout_margin="10dp"
             android:background="@drawable/fenghuangwang"
             />
@@ -32,7 +32,7 @@
             android:id="@+id/image_card2"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="150dp"
+            android:layout_height="130dp"
             android:scaleType="centerCrop"
             android:layout_margin="10dp"
             android:background="@drawable/zhengquanzhixing"
@@ -43,7 +43,7 @@
     <com.news.yazhidao.widget.LetterSpacingTextView
         android:id="@+id/tv_title"
         android:layout_below="@+id/ll_image_list"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -54,7 +54,8 @@
 
     <com.news.yazhidao.widget.LetterSpacingTextView
         android:id="@+id/tv_news_category"
-        android:layout_below="@+id/tv_title"
+        android:layout_below="@+id/ll_image_list"
+        android:layout_marginTop="6dp"
         android:layout_width="36dp"
         android:layout_height="20dp"
         android:gravity="center"
@@ -68,7 +69,7 @@
     <LinearLayout
         android:id="@+id/ll_devider"
         android:layout_marginTop="6dp"
-        android:layout_below="@+id/tv_news_category"
+        android:layout_below="@+id/tv_title"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_margin="12dp"

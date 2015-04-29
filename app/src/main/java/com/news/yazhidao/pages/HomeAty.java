@@ -128,6 +128,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
 
     @Override
     protected void initializeViews() {
+
+
+
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,8 +456,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
 
-
-
             if ("400".equals(feed.getSpecial())) {
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -686,6 +687,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
                 holder2.tv_title.setLineWidth(40);
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
+                TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
@@ -776,8 +778,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
                         holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                     }
 
-
-
                     convertView.setTag(holder3);
                 } else {
                     if (ViewHolder3.class == convertView.getTag().getClass()) {
@@ -842,6 +842,19 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI {
                 }
 
                 holder3.tv_interests.setText(feed.getOtherNum() + "家观点");
+
+                holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                        startActivity(intent);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
+
                 holder3.ll_image_list.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

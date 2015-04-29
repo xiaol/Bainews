@@ -39,7 +39,6 @@ import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 
 @SuppressLint("ViewConstructor")
 public abstract class LoadingLayout extends FrameLayout implements ILoadingLayout {
@@ -51,6 +50,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 
     private FrameLayout mInnerLayout;
     private FrameLayout fl_title_img;
+    private View contentView;
 
     protected final ImageView mHeaderImage;
     protected final ProgressBar mHeaderProgress;
@@ -72,22 +72,23 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
     public LoadingLayout(Context context, final Mode mode, final Orientation scrollDirection, TypedArray attrs) {
         super(context);
 
-        GlobalParams.loading_context = this;
-
         mMode = mode;
         mScrollDirection = scrollDirection;
 
         switch (scrollDirection) {
             case HORIZONTAL:
-                LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_horizontal, this);
+                contentView = LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_horizontal, this);
                 break;
             case VERTICAL:
             default:
-                LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_vertical, this);
+                contentView = LayoutInflater.from(context).inflate(R.layout.pull_to_refresh_header_vertical, this);
                 break;
         }
 
-        mInnerLayout = (FrameLayout) findViewById(R.id.fl_inner);
+        mInnerLayout = (FrameLayout) contentView.findViewById(R.id.fl_inner);
+//        if(mInnerLayout != null){
+//            mInnerLayout.setBackgroundDrawable(new ColorDrawable(new Color().parseColor(bg_color)));
+//        }
         fl_title_img = (FrameLayout) findViewById(R.id.fl_title_img);
         FrameLayout.LayoutParams lp_img = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT,Gravity.CENTER_HORIZONTAL);
@@ -134,7 +135,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         if (attrs.hasValue(R.styleable.PullToRefresh_ptrHeaderBackground)) {
             Drawable background = attrs.getDrawable(R.styleable.PullToRefresh_ptrHeaderBackground);
             if (null != background) {
-                setHeaderBackground(bg_color);
+                ViewCompat.setBackground(this,background);
             }
         }
 
@@ -201,10 +202,6 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         setLoadingDrawable(imageDrawable);
 
         reset();
-    }
-
-    public void setHeaderBackGroundColor(String color){
-        this.bg_color = color;
     }
 
     public void setHeaderBackground(String background) {

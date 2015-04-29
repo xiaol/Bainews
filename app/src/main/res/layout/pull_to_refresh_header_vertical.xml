@@ -6,7 +6,6 @@
         android:id="@+id/fl_inner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#4d94c9"
         >
 
         <FrameLayout
