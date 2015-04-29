@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.widget.TextViewExtend;
 
@@ -61,6 +62,44 @@ public class TextUtil {
 
     }
 
+    public static void setViewCompatBackground(String category,LoadingLayout loadingLayout) {
+
+        if ("焦点".equals(category)) {
+            loadingLayout.setHeaderBackground("#ff4341");
+            loadingLayout.setHeaderBackGroundColor("#ff4341");
+        } else if ("国际".equals(category)) {
+            loadingLayout.setHeaderBackground("#007fff");
+            loadingLayout.setHeaderBackGroundColor("#007fff");
+        } else if ("港台".equals(category)) {
+            loadingLayout.setHeaderBackground("#726bf8");
+            loadingLayout.setHeaderBackGroundColor("#726bf8");
+        } else if ("内地".equals(category)) {
+            loadingLayout.setHeaderBackground("#18a68b");
+            loadingLayout.setHeaderBackGroundColor("#18a68b");
+        } else if ("财经".equals(category)) {
+            loadingLayout.setHeaderBackground("#32bfcd");
+            loadingLayout.setHeaderBackGroundColor("#32bfcd");
+        } else if ("科技".equals(category)) {
+            loadingLayout.setHeaderBackground("#007fff");
+            loadingLayout.setHeaderBackGroundColor("#007fff");
+        } else if ("体育".equals(category)) {
+            loadingLayout.setHeaderBackground("#df8145");
+            loadingLayout.setHeaderBackGroundColor("#df8145");
+        } else if ("社会".equals(category)) {
+            loadingLayout.setHeaderBackground("#00b285");
+            loadingLayout.setHeaderBackGroundColor("#00b285");
+        } else if ("国内".equals(category)) {
+            loadingLayout.setHeaderBackground("#726bf8");
+            loadingLayout.setHeaderBackGroundColor("#726bf8");
+        } else if ("娱乐".equals(category)) {
+            loadingLayout.setHeaderBackground("#ff7272");
+            loadingLayout.setHeaderBackGroundColor("#ff7272");
+        }
+
+    }
+
+
+    //卡片2类别背景设置
     public static void setNewsBackGround(TextViewExtend tv_news_category, String category) {
         if ("焦点".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_jiaodian);
@@ -82,6 +121,32 @@ public class TextUtil {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_guonei);
         } else if ("娱乐".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_bottom_yule);
+        }
+    }
+
+
+    //卡片3类别背景设置
+    public static void setNewsBackGroundRight(TextViewExtend tv_news_category, String category) {
+        if ("焦点".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_jiaodian);
+        } else if ("国际".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_guoji);
+        } else if ("港台".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_gangtai);
+        } else if ("内地".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_neidi);
+        } else if ("财经".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_caijing);
+        } else if ("科技".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_keji);
+        } else if ("体育".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_tiyu);
+        } else if ("社会".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_shehui);
+        } else if ("国内".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_guonei);
+        } else if ("娱乐".equals(category)) {
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_yule);
         }
     }
 

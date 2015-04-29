@@ -19,17 +19,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.TimeFeed;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
-import com.news.yazhidao.utils.Logger;
 
 import java.util.ArrayList;
 
@@ -45,7 +38,7 @@ import java.util.ArrayList;
 public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 
     private TextViewExtend mtvHour, mtvMin, mtvSec;
-    private ImageView mivBg, mivStatus;
+    private ImageView mivBg, mivStatus, mivClose;
     private View mMenuView;
     private Activity m_pContext;
     private Context mContext;
@@ -55,14 +48,20 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private DateAdapter mDateAdapter;
     private long mlCurrentTime, mlTotalTime;
     private int miCurrentProgress;
+    private TimeFeed mCurrentTimeFeed;
+    private IUpdateUI mUpdateUI;
 
-    public TimePopupWindow(Activity context, Bitmap bitmap) {
+    public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime, IUpdateUI updateUI) {
         super(context);
         m_pContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_time, null);
         mHandler = new Handler(this);
+        mCurrentTimeFeed = timeFeed;
+        mlCurrentTime = updateTime;
+        mlTotalTime = totalTime;
+        mUpdateUI = updateUI;
         mDateAdapter = new DateAdapter(m_pContext);
         findHeadPortraitImageViews(bitmap);
         loadData();
@@ -72,6 +71,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mrpbTime = (RoundedProgressBar) mMenuView.findViewById(R.id.progress_circle);
         mivBg = (ImageView) mMenuView.findViewById(R.id.bg_imageView);
         blur(bitmap, mivBg);
+        mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mivStatus = (ImageView) mMenuView.findViewById(R.id.iv_date_status);
         mtvHour = (TextViewExtend) mMenuView.findViewById(R.id.tv_hour_num);
         mtvMin = (TextViewExtend) mMenuView.findViewById(R.id.tv_min_num);
@@ -103,36 +103,25 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 //                return true;
 //            }
 //        });
+        mivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
 
     private void loadData() {
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME+"1", NetworkRequest.RequestMethod.GET);
-        _Request.setCallback(new JsonCallback<TimeFeed>() {
+        if (mlTotalTime != 0) {
+            miCurrentProgress = (int) ((mlTotalTime - mlCurrentTime) * 100 / mlTotalTime);
+            mHandler.sendEmptyMessage(0);
+            mDateAdapter.setData(mCurrentTimeFeed);
+        }
+    }
 
-            @Override
-            public void success(TimeFeed result) {
-                Logger.i("tag", result.getNext_upate_time()+result.getHistory_date().get(0));
-            }
-
-            @Override
-            public void failed(MyAppException exception) {
-                Logger.i("tag","2221");
-//                Logger.e(TAG, exception.getMessage());
-            }
-        }.setReturnType(new TypeToken<TimeFeed>() {
-        }.getType()));
-        _Request.execute();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mlTotalTime = 1000000000;
-                mlCurrentTime = 100000000;
-                miCurrentProgress = (int) (mlCurrentTime * 100 / mlTotalTime);
-                Log.i("tag", miCurrentProgress + "miCurrentProgress");
-                mHandler.sendEmptyMessage(0);
-            }
-        }, 2000);
+    public interface IUpdateUI {
+        void refreshUI(String date, String type);
     }
 
     private void blur(Bitmap bkg, View view) {
@@ -185,7 +174,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 }
             }, 100);
         } else {
-            final long time = mlTotalTime - mlCurrentTime;
+            final long time = mlCurrentTime - miCurrentProgress / 100;
             new CountDownTimer(time, 1000) {
                 public void onTick(long millisUntilFinished) {
                     int ss = 1000;
@@ -212,7 +201,9 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 }
 
                 public void onFinish() {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             }.start();
         }
@@ -223,19 +214,20 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
-        ArrayList<NewsDetail.Relate> mArrData;
+        ArrayList<String> marrStrHistoryDate;
 
         DateAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(ArrayList<NewsDetail.Relate> pArrData) {
-            mArrData = pArrData;
+        public void setData(TimeFeed timeFeed) {
+            if (timeFeed != null)
+                marrStrHistoryDate = timeFeed.getHistory_date();
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return marrStrHistoryDate == null ? 0 : marrStrHistoryDate.size();
         }
 
         @Override
@@ -253,7 +245,10 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date, null, false);
+                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) != 0)
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
+                else
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 holder.tvDate = (TextViewExtend) convertView.findViewById(R.id.tv_date);
                 holder.ivMorning = (ImageView) convertView.findViewById(R.id.iv_date_morning);
                 holder.ivNight = (ImageView) convertView.findViewById(R.id.iv_date_night);
@@ -266,17 +261,21 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             } else {
                 holder.ivMorning.setPressed(false);
             }
-            holder.tvDate.setText("4月21日");
+            holder.tvDate.setText(marrStrHistoryDate.get(position));
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if (mUpdateUI != null)
+                        mUpdateUI.refreshUI("","");
+                    dismiss();
                 }
             });
             return convertView;
