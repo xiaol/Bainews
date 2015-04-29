@@ -715,26 +715,51 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 if (feed.isTime_flag()) {
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.GONE);
+                    if(mCurrentDate == null) {
+                        long time = System.currentTimeMillis();
+                        Date date = new Date(time);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = format.format(date);
+                        String myDate = DateUtil.getMyDate(currentDate);
+                        holder2.tv_date.setText(myDate);
 
-                    long time = System.currentTimeMillis();
-                    Date date = new Date(time);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    String currentDate = format.format(date);
-                    String myDate = DateUtil.getMyDate(currentDate);
-                    holder2.tv_date.setText(myDate);
+                        //判断上午还是下午
+                        String am = DateUtil.getMorningOrAfternoon(time);
 
-                    //判断上午还是下午
-                    String am = DateUtil.getMorningOrAfternoon(time);
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(currentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                    //判断是星期几
-                    String weekday = "";
-                    try {
-                        weekday = DateUtil.dayForWeek(currentDate, format);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        holder2.tv_weekday.setText(weekday + "|" + am);
+                    }else{
+
+
+                        String myDate = DateUtil.getMyDate(mCurrentDate);
+                        holder2.tv_date.setText(myDate);
+
+                        String am = "";
+
+                        //判断上午还是下午
+                        if("0".equals(mCurrentType)){
+                            am = "早间";
+                        }else{
+                            am = "晚间";
+                        }
+
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(mCurrentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        holder2.tv_weekday.setText(weekday + "|" + am);
                     }
-
-                    holder2.tv_weekday.setText(weekday + "|" + am);
                 }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BaiNews.iml" filepath="$PROJECT_DIR$/BaiNews.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Bainews.iml" filepath="$PROJECT_DIR$/Bainews.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/umeng_social_sdk_library/umeng_social_sdk_library.iml" filepath="$PROJECT_DIR$/umeng_social_sdk_library/umeng_social_sdk_library.iml" />
