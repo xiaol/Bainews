@@ -61,6 +61,12 @@ import java.util.HashMap;
 
 public class HomeAty extends BaseActivity {
 
+    //打开详情页时，带过去的url地址
+    public static String KEY_URL="url";
+    //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
+    public static String KEY_NEWS_SOURCE="key_news_source";
+    public static String VALUE_NEWS_SOURCE="other_view";
+
     private PullToRefreshListView lv_news;
     private MyAdapter list_adapter;
     private LinearLayout ll_title;
@@ -436,7 +442,8 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(KEY_NEWS_SOURCE,VALUE_NEWS_SOURCE);
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -458,7 +465,7 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -514,7 +521,7 @@ public class HomeAty extends BaseActivity {
                             public void onClick(View v) {
 
                                 Intent intent = new Intent(HomeAty.this, NewsDetailWebviewAty.class);
-                                intent.putExtra("url", source.getUrl());
+                                intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
                                 //umeng statistic onclick url below the head news
                                 HashMap<String, String> _MobMap = new HashMap<>();
@@ -657,7 +664,7 @@ public class HomeAty extends BaseActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
