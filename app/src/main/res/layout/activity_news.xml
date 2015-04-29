@@ -1,9 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen_RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D94C9"
     >
+
+    <ImageView
+        android:id="@+id/screenlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:id="@+id/ll_title"
@@ -69,10 +75,10 @@
 
     <ImageView
         android:id="@+id/iv_time"
-        android:background="@drawable/default_ptr_rotate"
+        android:background="@drawable/ic_time"
         android:layout_margin="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_width="80dp"
-        android:layout_height="80dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
