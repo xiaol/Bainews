@@ -16,6 +16,7 @@
 package com.handmark.pulltorefresh.library.internal;
 
 import android.annotation.TargetApi;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -40,7 +41,11 @@ public class ViewCompat {
 		}
 	}
 
-	public static void setLayerType(View view, int layerType) {
+    public static void setBackgroundColor(View view, String background) {
+            view.setBackgroundColor(new Color().parseColor(background));
+    }
+
+    public static void setLayerType(View view, int layerType) {
 		if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
 			SDK11.setLayerType(view, layerType);
 		}

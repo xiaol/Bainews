@@ -38,7 +38,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 	protected LoadingLayout mHeaderLoadingView;
 	private LoadingLayout mFooterLoadingView;
 
-	private FrameLayout mLvFooterLoadingFrame;
+	public FrameLayout mLvFooterLoadingFrame;
+    public FrameLayout mLvHeaderLoadingFrame;
 
 
 	private boolean mListViewExtrasEnabled;
@@ -186,6 +187,11 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		super.onReset();
 	}
 
+
+    protected  LoadingLayout getHeaderLoadingLayout(){
+        return getHeaderLayout();
+    }
+
 	@Override
 	protected LoadingLayoutProxy createLoadingLayoutProxy(final boolean includeStart, final boolean includeEnd) {
 		LoadingLayoutProxy proxy = super.createLoadingLayoutProxy(includeStart, includeEnd);
@@ -234,12 +240,12 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
                     FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
 
 			// Create Loading Views ready for use later
-			FrameLayout frame = new FrameLayout(getContext());
+            mLvHeaderLoadingFrame = new FrameLayout(getContext());
 			mHeaderLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_START, a);
 
             mHeaderLoadingView.setVisibility(View.GONE);
-			frame.addView(mHeaderLoadingView, lp);
-			mRefreshableView.addHeaderView(frame, null, false);
+            mLvHeaderLoadingFrame.addView(mHeaderLoadingView, lp);
+			mRefreshableView.addHeaderView(mLvHeaderLoadingFrame, null, false);
 
 			mLvFooterLoadingFrame = new FrameLayout(getContext());
 			mFooterLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_END, a);
