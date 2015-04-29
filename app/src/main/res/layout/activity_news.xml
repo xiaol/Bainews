@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4D94C9"
     >
 
     <LinearLayout
@@ -66,5 +65,13 @@
         android:background="@drawable/nonetwork"
         android:visibility="gone"
         />
+
+    <ImageView
+        android:id="@+id/iv_time"
+        android:background="@drawable/default_ptr_rotate"
+        android:layout_margin="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
 
 </RelativeLayout>

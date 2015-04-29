@@ -15,6 +15,7 @@
         android:id="@+id/ll_image_list"
         android:layout_below="@id/rl_divider"
         android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -22,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:layout_height="130dp"
+            android:layout_height="150dp"
             android:layout_margin="10dp"
             android:background="@drawable/fenghuangwang"
             />
@@ -31,7 +32,7 @@
             android:id="@+id/image_card2"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="130dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:layout_margin="10dp"
             android:background="@drawable/zhengquanzhixing"
@@ -44,6 +45,8 @@
         android:layout_below="@+id/ll_image_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:text="反馈文理分科我离开我吕蒙WMV物品"
         android:textSize="24sp"
         android:textColor="#000000"
@@ -68,6 +71,7 @@
         android:layout_below="@+id/tv_news_category"
         android:orientation="vertical"
         android:layout_width="match_parent"
+        android:layout_margin="12dp"
         android:layout_height="2dp"
         android:background="@drawable/image_half_line"
         />

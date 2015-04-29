@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:minHeight="122dp"
     android:background="@drawable/bg_sina_item">
 
     <com.news.yazhidao.widget.RoundedImageView
@@ -10,13 +11,12 @@
         android:id="@+id/head_portrait_imageView"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/ic_sina"
-        />
+        android:src="@drawable/ic_sina" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/name_textView"
-        android:layout_marginTop="6dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="8dp"
         android:textSize="14sp"
         android:textColor="@color/black"
         android:layout_toRightOf="@+id/head_portrait_imageView"
@@ -25,9 +25,10 @@
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/content_textView"
-        android:layout_alignLeft="@+id/head_portrait_imageView"
+        android:layout_toRightOf="@+id/head_portrait_imageView"
         android:layout_marginTop="2dp"
-        android:paddingRight="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:textSize="12sp"
         android:maxLines="5"
         android:ellipsize="end"

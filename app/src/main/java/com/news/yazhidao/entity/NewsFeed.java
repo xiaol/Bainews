@@ -23,9 +23,18 @@ public class NewsFeed implements Serializable{
     private String root_class;
     private String category;
     private String special;
+    private String[] imgUrl_ex;
     private boolean time_flag;
     private boolean top_flag;
     private boolean bottom_flag;
+
+    public String[] getImgUrl_ex() {
+        return imgUrl_ex;
+    }
+
+    public void setImgUrl_ex(String[] imgUrl_ex) {
+        this.imgUrl_ex = imgUrl_ex;
+    }
 
     public boolean isTime_flag() {
         return time_flag;
