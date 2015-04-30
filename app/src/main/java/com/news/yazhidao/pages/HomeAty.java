@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -248,7 +249,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                                 //隐藏banner后，下拉或者上来都要有动画效果
                                 mIsNeedAnim = true;
                             }
-                        }, 1000);
+                        }, 600);
                         lv_news.startAnimation(_AnimForListView);
                     }
                 }
@@ -1029,8 +1030,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
             //上拉时给显示的item添加动画
             if (position == mMiddleNewsArr.size() - 1 && mIsNeedAnim) {
-//                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)

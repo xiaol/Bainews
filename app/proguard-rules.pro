@@ -106,6 +106,18 @@ java.lang.Object readResolve();
 -keep class **.R$* {
     *;
 }
+#umeng 更新混淆相关
+-keepclassmembers class * {
+   public <init>(org.json.JSONObject);
+}
+-keep public class com.news.yazhidao.R$*{
+    public static final int *;
+}
+-keep public class com.umeng.fb.ui.ThreadView {
+}
+-keep public class * extends com.umeng.**
+-keep class com.umeng.** { *; }
+
 
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
