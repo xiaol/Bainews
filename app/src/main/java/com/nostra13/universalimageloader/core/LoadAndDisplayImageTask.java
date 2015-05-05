@@ -186,12 +186,10 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
                             bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth, GlobalParams.screenHeight, 1);
 
                         } else if (tv_title instanceof TextViewVertical) {
-                            bmp = Bitmap.createScaledBitmap(bmp,
-                                    GlobalParams.screenWidth, (int) (GlobalParams.screenHeight * 0.4), false);
+                            bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth, GlobalParams.screenHeight, 2);
                         }
 
                         configuration.memoryCache.put(memoryCacheKey, bmp);
-
 
                     }
                 }

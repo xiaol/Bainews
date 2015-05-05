@@ -1249,12 +1249,12 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         switch (mCurrentMode) {
             case PULL_FROM_END:
-                newScrollValue = Math.round(Math.max(initialMotionValue - lastMotionValue, 0) / FRICTION) * 2;
+                newScrollValue = Math.round(Math.max(initialMotionValue - lastMotionValue, 0) / FRICTION) * 3;
                 itemDimension = getFooterSize();
                 break;
             case PULL_FROM_START:
             default:
-                newScrollValue = Math.round(Math.min(initialMotionValue - lastMotionValue, 0) / FRICTION) * 2;
+                newScrollValue = Math.round(Math.min(initialMotionValue - lastMotionValue, 0) / FRICTION) * 3;
                 itemDimension = getHeaderSize();
                 break;
         }
