@@ -130,7 +130,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     protected void initializeViews() {
 
 
-
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -371,10 +370,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         final String type;
         if (isMorning != null && isMorning.equals("晚间")) {
             type = "0";
-            mCurrentType="1";
+            mCurrentType = "1";
         } else {
             type = "1";
-            mCurrentType="0";
+            mCurrentType = "0";
         }
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
@@ -390,7 +389,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
+                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
             }
 
             @Override
@@ -438,7 +437,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         if (intent.getAction().equals("updateUI")) {
             alarmManager.cancel(pendingIntent);
             //更新数据
-            if(mCurrentTimeFeed!=null)
+            if (mCurrentTimeFeed != null)
                 refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
         }
     }
@@ -549,7 +548,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGround(holder.tv_news_category, feed.getCategory());
                     TextUtil.setTopLineBackground(feed.getCategory(), holder.ll_top_line);
-                    TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -705,10 +704,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 int textsize = DensityUtil.dip2px(HomeAty.this, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
-                holder2.tv_title.setLineWidth(DensityUtil.dip2px(HomeAty.this,22));
+                holder2.tv_title.setLineWidth(DensityUtil.dip2px(HomeAty.this, 22));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
-                TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
@@ -821,7 +820,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                             holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                             holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                             holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        }else{
+                        } else {
                             convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
 
                             holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
@@ -859,7 +858,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder3.tv_news_category.setText(feed.getCategory());
                     holder3.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGroundRight(holder3.tv_news_category, feed.getCategory());
-                    TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
                 holder3.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -915,23 +914,23 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     }
                 });
 
-                if(images.length == 2){
-                    if(holder3.image_card1 != null) {
+                if (images.length == 2) {
+                    if (holder3.image_card1 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
                     }
-                    if(holder3.image_card2 != null) {
+                    if (holder3.image_card2 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
                     }
-                }else{
+                } else {
 
-                    if(holder3.image_card1 != null) {
+                    if (holder3.image_card1 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
                     }
-                    if(holder3.image_card2 != null) {
+                    if (holder3.image_card2 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
                     }
 
-                    if(holder3.image_card3 != null) {
+                    if (holder3.image_card3 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[2], holder3.image_card3);
                     }
                 }

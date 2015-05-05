@@ -1,5 +1,6 @@
 package com.news.yazhidao.widget;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -47,7 +49,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private HorizontalListView mhlvDate;
     private DateAdapter mDateAdapter;
     private long mlCurrentTime, mlTotalTime;
-    private int miCurrentProgress;
+    private float mAnimationProgress, miCurrentProgress;
     private TimeFeed mCurrentTimeFeed;
     private IUpdateUI mUpdateUI;
     private String mCurrentDate, mCurrentType;
@@ -125,6 +127,11 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             miCurrentProgress = (int) ((mlTotalTime - mlCurrentTime) * 100 / mlTotalTime);
             mHandler.sendEmptyMessage(0);
             mDateAdapter.setData(mCurrentTimeFeed);
+
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mrpbTime, "translationY", 0);
+            objectAnimator.setDuration(1000);
+            objectAnimator.setInterpolator(new AccelerateInterpolator());
+            objectAnimator.start();
         }
     }
 
@@ -161,36 +168,50 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
 
-    int porgress;
+    public class AccelerateInterpolator implements Interpolator {
+        private final float mFactor;
+        private final double mDoubleFactor;
+
+        public AccelerateInterpolator() {
+            mFactor = 2.0f;
+            mDoubleFactor = 50.0f;
+        }
+
+        @Override
+        public float getInterpolation(float input) {
+            mAnimationProgress = input * miCurrentProgress;
+            if (input == 1.0f) {
+                mAnimationProgress = miCurrentProgress;
+            }
+            mHandler.sendEmptyMessage((int) mAnimationProgress);
+            if (mFactor == 1.0f) {
+                return input * input;
+            } else {
+                return (float) Math.pow(input, mDoubleFactor);
+            }
+        }
+    }
 
     @Override
     public boolean handleMessage(Message msg) {
-        int i = mrpbTime.getProgress();
-        if (i < miCurrentProgress) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    porgress = porgress + 5;
-                    mrpbTime.setProgress(porgress);
-                    mHandler.sendEmptyMessage(porgress);
-                    int random = (int) Math.round(Math.random() * (60 - 10) + 10);
-                    int random1 = (int) Math.round(Math.random() * (60 - 10) + 10);
-                    int random2 = (int) Math.round(Math.random() * (60 - 10) + 10);
-                    mtvHour.setText("" + random);
-                    mtvMin.setText("" + random1);
-                    mtvSec.setText("" + random2);
-                }
-            }, 100);
+        if (mAnimationProgress < miCurrentProgress) {
+            mrpbTime.setProgress((int) mAnimationProgress);
+            int random = (int) Math.round(Math.random() * (60 - 10) + 10);
+            int random1 = (int) Math.round(Math.random() * (60 - 10) + 10);
+            int random2 = (int) Math.round(Math.random() * (60 - 10) + 10);
+            mtvHour.setText("" + random);
+            mtvMin.setText("" + random1);
+            mtvSec.setText("" + random2);
         } else {
-            final long time = mlCurrentTime - miCurrentProgress / 100;
+            final long time = mlCurrentTime - 1000;
             new CountDownTimer(time, 1000) {
                 public void onTick(long millisUntilFinished) {
                     int ss = 1000;
                     int mi = ss * 60;
                     int hh = mi * 60;
                     int dd = hh * 24;
-                    miCurrentProgress += (12*60*60*10)/(float)mlTotalTime;
-                    mrpbTime.setProgress(miCurrentProgress);
+                    miCurrentProgress += (12 * 60 * 60 * 10 * 1.0f) / mlTotalTime;
+                    mrpbTime.setProgress((int) miCurrentProgress);
                     long day = millisUntilFinished / dd;
                     long hour = (millisUntilFinished - day * dd) / hh;
                     long minute = (millisUntilFinished - day * dd - hour * hh) / mi;
@@ -211,8 +232,6 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
 
                 public void onFinish() {
                     mrpbTime.setProgress(100);
-                    if (mUpdateUI != null)
-                        mUpdateUI.refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
                     dismiss();
                 }
             }.start();
