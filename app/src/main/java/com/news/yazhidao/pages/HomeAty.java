@@ -391,7 +391,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
+                alarmManager.set(AlarmManager.RTC,System.currentTimeMillis()+Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
             }
 
             @Override
