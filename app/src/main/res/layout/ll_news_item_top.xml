@@ -51,7 +51,6 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical" />
@@ -66,6 +65,15 @@
                 android:layout_height="36dp"
                 android:textColor="#ffffff"
                 android:background="@drawable/bg_category_shehui" />
+
+            <ImageView
+                android:layout_above="@+id/tv_title"
+                android:layout_width="20dp"
+                android:layout_height="5dp"
+                android:layout_marginRight="12dp"
+                android:layout_alignRight="@+id/tv_title"
+                android:background="@drawable/top_line"
+                />
 
         </RelativeLayout>
 

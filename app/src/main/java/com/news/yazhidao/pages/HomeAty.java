@@ -20,6 +20,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -128,8 +129,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     protected void initializeViews() {
-
-
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +173,22 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
         lv_news.getRefreshableView().setDivider(null);
+        lv_news.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if(view.getLastVisiblePosition() == totalItemCount - 1){
+
+                }
+
+            }
+        });
+
         mylayout = lv_news.getFooterLayout();
 
         list_adapter = new MyAdapter();
@@ -205,7 +220,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
                 if (NetUtil.checkNetWork(HomeAty.this)) {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
@@ -214,7 +228,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
-
             }
         });
         final int _HeaderHeight = DensityUtil.dip2px(this, 55);
@@ -247,7 +260,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                                 //隐藏banner后，下拉或者上来都要有动画效果
                                 mIsNeedAnim = true;
                             }
-                        }, 1000);
+                        }, 600);
                         lv_news.startAnimation(_AnimForListView);
                     }
                 }
@@ -265,31 +278,33 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
             }
         });
+        for(int i = 0;i < 2; i++) {
+            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
+                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
+                if (mDownNewsArr.size() == 1) {
+                    _NewsFeed.setBottom_flag(true);
+                    if (mUpNewsArr.size() > 0) {
+                        lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
+                    } else {
+                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
+                    }
 
-        if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
-            NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-            if (mDownNewsArr.size() == 1) {
-                _NewsFeed.setBottom_flag(true);
-                if (mUpNewsArr.size() > 0) {
-                    lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
-                } else {
-                    lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
+                mMiddleNewsArr.add(_NewsFeed);
+                mDownNewsArr.remove(mDownNewsArr.size() - 1);
+
+                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
             }
-            mMiddleNewsArr.add(_NewsFeed);
-            mDownNewsArr.remove(mDownNewsArr.size() - 1);
-
-            lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
-
-            list_adapter.notifyDataSetChanged();
         }
+
+        //更新ui
+        list_adapter.notifyDataSetChanged();
     }
 
 
@@ -375,6 +390,12 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             type = "1";
             mCurrentType = "0";
         }
+
+        //获取当前更新的相关信息
+        getUpdateParams(type);
+    }
+
+    private void getUpdateParams(String type) {
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
 
@@ -389,7 +410,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
+                alarmManager.set(AlarmManager.RTC,System.currentTimeMillis()+Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
             }
 
             @Override
@@ -430,6 +451,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
+        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+        final String strType;
+        if (isMorning != null && isMorning.equals("晚间")) {
+            strType = "0";
+            mCurrentType = "1";
+        } else {
+            strType = "1";
+            mCurrentType = "0";
+        }
+        getUpdateParams(strType);
     }
 
     @Override
@@ -714,26 +745,51 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 if (feed.isTime_flag()) {
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.GONE);
+                    if(mCurrentDate == null) {
+                        long time = System.currentTimeMillis();
+                        Date date = new Date(time);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = format.format(date);
+                        String myDate = DateUtil.getMyDate(currentDate);
+                        holder2.tv_date.setText(myDate);
 
-                    long time = System.currentTimeMillis();
-                    Date date = new Date(time);
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    String currentDate = format.format(date);
-                    String myDate = DateUtil.getMyDate(currentDate);
-                    holder2.tv_date.setText(myDate);
+                        //判断上午还是下午
+                        String am = DateUtil.getMorningOrAfternoon(time);
 
-                    //判断上午还是下午
-                    String am = DateUtil.getMorningOrAfternoon(time);
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(currentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                    //判断是星期几
-                    String weekday = "";
-                    try {
-                        weekday = DateUtil.dayForWeek(currentDate, format);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        holder2.tv_weekday.setText(weekday + "|" + am);
+                    }else{
+
+
+                        String myDate = DateUtil.getMyDate(mCurrentDate);
+                        holder2.tv_date.setText(myDate);
+
+                        String am = "";
+
+                        //判断上午还是下午
+                        if("0".equals(mCurrentType)){
+                            am = "早间";
+                        }else{
+                            am = "晚间";
+                        }
+
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(mCurrentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        holder2.tv_weekday.setText(weekday + "|" + am);
                     }
-
-                    holder2.tv_weekday.setText(weekday + "|" + am);
                 }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
@@ -1003,8 +1059,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
             //上拉时给显示的item添加动画
             if (position == mMiddleNewsArr.size() - 1 && mIsNeedAnim) {
-//                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
                 int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
                 ViewPropertyAnimator animator = convertView.animate()
                         .setDuration(300)
@@ -1078,6 +1134,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     private void loadNewsData(final int timenews) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
+//        String url = "http://121.40.38.56/news/baijia/fetchHom" + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
@@ -1103,6 +1160,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     private void inflateDataInArrs(ArrayList<NewsFeed> result) {
         int _SplitStartIndex = 0;
+        lv_news.setMode(PullToRefreshBase.Mode.BOTH);
         if (result != null && result.size() > 1) {
             for (int i = 0; i < result.size(); i++) {
                 if (!"1".equals(result.get(i).getSpecial())) {

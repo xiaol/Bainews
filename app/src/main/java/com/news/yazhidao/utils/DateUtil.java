@@ -220,8 +220,8 @@ public class DateUtil {
     }
 
     //判断今天是星期几
-    public static String dayForWeek(String pTime, SimpleDateFormat format) throws Exception {
-
+    public static String dayForWeek(String pTime) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         c.setTime(format.parse(pTime));
         String a = "";
