@@ -129,9 +129,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     protected void initializeViews() {
-
-
-
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +173,22 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
         lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
         lv_news.getRefreshableView().setDivider(null);
+        lv_news.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                if(view.getLastVisiblePosition() == totalItemCount - 1){
+
+                }
+
+            }
+        });
+
         mylayout = lv_news.getFooterLayout();
 
         list_adapter = new MyAdapter();
@@ -207,7 +220,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
                 if (NetUtil.checkNetWork(HomeAty.this)) {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
@@ -216,7 +228,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
-
             }
         });
         final int _HeaderHeight = DensityUtil.dip2px(this, 55);
@@ -267,31 +278,33 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
             }
         });
+        for(int i = 0;i < 2; i++) {
+            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
+                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
+                if (mDownNewsArr.size() == 1) {
+                    _NewsFeed.setBottom_flag(true);
+                    if (mUpNewsArr.size() > 0) {
+                        lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
+                    } else {
+                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
+                    }
 
-        if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
-            NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-            if (mDownNewsArr.size() == 1) {
-                _NewsFeed.setBottom_flag(true);
-                if (mUpNewsArr.size() > 0) {
-                    lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
-                } else {
-                    lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
+                mMiddleNewsArr.add(_NewsFeed);
+                mDownNewsArr.remove(mDownNewsArr.size() - 1);
+
+                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
             }
-            mMiddleNewsArr.add(_NewsFeed);
-            mDownNewsArr.remove(mDownNewsArr.size() - 1);
-
-            lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
-
-            list_adapter.notifyDataSetChanged();
         }
+
+        //更新ui
+        list_adapter.notifyDataSetChanged();
     }
 
 
@@ -372,11 +385,17 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         final String type;
         if (isMorning != null && isMorning.equals("晚间")) {
             type = "0";
-            mCurrentType="1";
+            mCurrentType = "1";
         } else {
             type = "1";
-            mCurrentType="0";
+            mCurrentType = "0";
         }
+
+        //获取当前更新的相关信息
+        getUpdateParams(type);
+    }
+
+    private void getUpdateParams(String type) {
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
 
@@ -432,6 +451,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
+        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+        final String strType;
+        if (isMorning != null && isMorning.equals("晚间")) {
+            strType = "0";
+            mCurrentType = "1";
+        } else {
+            strType = "1";
+            mCurrentType = "0";
+        }
+        getUpdateParams(strType);
     }
 
     @Override
@@ -439,7 +468,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         if (intent.getAction().equals("updateUI")) {
             alarmManager.cancel(pendingIntent);
             //更新数据
-            if(mCurrentTimeFeed!=null)
+            if (mCurrentTimeFeed != null)
                 refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
         }
     }
@@ -550,7 +579,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGround(holder.tv_news_category, feed.getCategory());
                     TextUtil.setTopLineBackground(feed.getCategory(), holder.ll_top_line);
-                    TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -706,10 +735,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 int textsize = DensityUtil.dip2px(HomeAty.this, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
-                holder2.tv_title.setLineWidth(DensityUtil.dip2px(HomeAty.this,22));
+                holder2.tv_title.setLineWidth(DensityUtil.dip2px(HomeAty.this, 22));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
-                TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
@@ -847,7 +876,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                             holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                             holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                             holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        }else{
+                        } else {
                             convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
 
                             holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
@@ -885,7 +914,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder3.tv_news_category.setText(feed.getCategory());
                     holder3.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGroundRight(holder3.tv_news_category, feed.getCategory());
-                    TextUtil.setViewCompatBackground(feed.getCategory(),mylayout);
+                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
                 holder3.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -941,23 +970,23 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     }
                 });
 
-                if(images.length == 2){
-                    if(holder3.image_card1 != null) {
+                if (images.length == 2) {
+                    if (holder3.image_card1 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
                     }
-                    if(holder3.image_card2 != null) {
+                    if (holder3.image_card2 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
                     }
-                }else{
+                } else {
 
-                    if(holder3.image_card1 != null) {
+                    if (holder3.image_card1 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[0], holder3.image_card1);
                     }
-                    if(holder3.image_card2 != null) {
+                    if (holder3.image_card2 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[1], holder3.image_card2);
                     }
 
-                    if(holder3.image_card3 != null) {
+                    if (holder3.image_card3 != null) {
                         ImageLoaderHelper.dispalyImage(HomeAty.this, images[2], holder3.image_card3);
                     }
                 }
@@ -1105,6 +1134,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     private void loadNewsData(final int timenews) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
+//        String url = "http://121.40.38.56/news/baijia/fetchHom" + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
@@ -1130,6 +1160,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     private void inflateDataInArrs(ArrayList<NewsFeed> result) {
         int _SplitStartIndex = 0;
+        lv_news.setMode(PullToRefreshBase.Mode.BOTH);
         if (result != null && result.size() > 1) {
             for (int i = 0; i < result.size(); i++) {
                 if (!"1".equals(result.get(i).getSpecial())) {

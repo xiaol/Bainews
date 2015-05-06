@@ -186,6 +186,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                         _DrawableLeft.setBounds(0, 0, _DrawableLeft.getMinimumWidth(), _DrawableLeft.getMinimumHeight());
                         mNewsDetailHeaderPulldown.setCompoundDrawables(_DrawableLeft,null,null,null);
                     }
+
+                    mNewsDetailHeaderPulldown.setVisibility(View.GONE);
                 }
             });
             mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName), pNewsDetail.originsourceSiteName));
