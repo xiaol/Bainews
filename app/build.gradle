@@ -8,7 +8,6 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 3
         versionName "0.8.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
@@ -82,4 +81,5 @@ dependencies {
     compile project(':umeng_social_sdk_library')
     compile project(':library')
     compile files('libs/umeng-update-v2.6.0.1.jar')
+    compile project(':sharesdk_mainlib')
 }
