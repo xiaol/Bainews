@@ -596,7 +596,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      */
     public abstract Orientation getPullToRefreshScrollDirection();
 
-    final void setState(State state, final boolean... params) {
+    final void setState(State state,boolean... params) {
         mState = state;
         if (DEBUG) {
 //			Log.d(LOG_TAG, "State: " + mState.name());
@@ -785,7 +785,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      *
      * @param doScroll - Whether the UI should scroll for this event.
      */
-    protected void onRefreshing(final boolean doScroll) {
+    protected void onRefreshing(boolean doScroll) {
         if (mMode.showHeaderLoadingLayout()) {
             mHeaderLayout.refreshing();
         }
@@ -1071,7 +1071,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      * @param listener    - Listener for scroll
      */
     protected final void smoothScrollTo(int scrollValue, OnSmoothScrollFinishedListener listener) {
-        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 0, listener);
+        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 2000, listener);
     }
 
     /**
@@ -1310,7 +1310,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      * @param duration    - Duration of animation in milliseconds
      */
     private final void smoothScrollTo(int scrollValue, long duration) {
-        smoothScrollTo(scrollValue, duration, 0, null);
+        smoothScrollTo(scrollValue, duration, duration, null);
     }
 
     private final void smoothScrollTo(int newScrollValue, long duration, long delayMillis,
@@ -1335,7 +1335,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                 // Default interpolator is a Decelerate Interpolator
                 mScrollAnimationInterpolator = new DecelerateInterpolator();
             }
-            mCurrentSmoothScrollRunnable = new SmoothScrollRunnable(oldScrollValue, newScrollValue, duration, listener);
+            mCurrentSmoothScrollRunnable = new SmoothScrollRunnable(oldScrollValue, newScrollValue, delayMillis, listener);
 
             if (delayMillis > 0) {
                 postDelayed(mCurrentSmoothScrollRunnable, delayMillis);
