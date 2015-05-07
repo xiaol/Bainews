@@ -33,12 +33,14 @@
                 android:text="33"
                 android:textSize="30sp"
                 android:paddingLeft="5dp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:text="分钟"
                 android:textSize="15sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -56,12 +58,14 @@
                 android:text="06"
                 android:textSize="30sp"
                 android:paddingRight="5dp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:text="小时"
                 android:textSize="15sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -79,12 +83,14 @@
                 android:text="06"
                 android:textSize="30sp"
                 android:paddingRight="5dp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:text="秒"
                 android:textSize="15sp"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -92,6 +98,7 @@
         <com.news.yazhidao.widget.TextViewExtend
             android:paddingTop="130dp"
             android:text="距离下次新闻更新"
+            android:textColor="@color/white"
             android:layout_centerInParent="true"
             android:layout_below="@+id/ll_min"
             android:layout_width="wrap_content"

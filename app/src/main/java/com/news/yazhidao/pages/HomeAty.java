@@ -182,7 +182,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-                if(view.getLastVisiblePosition() == totalItemCount - 1){
+                if (view.getLastVisiblePosition() == totalItemCount - 1) {
 
                 }
 
@@ -278,7 +278,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
             }
         });
-        for(int i = 0;i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
                 NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
                 if (mDownNewsArr.size() == 1) {
@@ -395,12 +395,15 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         getUpdateParams(type);
     }
 
+    private boolean misRefresh = false;
+
     private void getUpdateParams(String type) {
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
 
             @Override
             public void success(TimeFeed result) {
+                misRefresh = false;
                 mCurrentTimeFeed = result;
                 mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
@@ -410,7 +413,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-                alarmManager.set(AlarmManager.RTC,System.currentTimeMillis()+Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
+                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
             }
 
             @Override
@@ -451,22 +454,28 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
-        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-        final String strType;
-        if (isMorning != null && isMorning.equals("晚间")) {
-            strType = "0";
-            mCurrentType = "1";
-        } else {
-            strType = "1";
-            mCurrentType = "0";
+        if (misRefresh) {
+            String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+            final String StrType;
+            if (isMorning != null && isMorning.equals("晚间")) {
+                StrType = "0";
+                mCurrentType = "1";
+            } else {
+                StrType = "1";
+                mCurrentType = "0";
+            }
+
+            //获取当前更新的相关信息
+            getUpdateParams(StrType);
         }
-        getUpdateParams(strType);
     }
 
     @Override
     public void updateUI(Intent intent) {
         if (intent.getAction().equals("updateUI")) {
-            alarmManager.cancel(pendingIntent);
+            misRefresh = true;
+            if (alarmManager != null)
+                alarmManager.cancel(pendingIntent);
             //更新数据
             if (mCurrentTimeFeed != null)
                 refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());
@@ -745,7 +754,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 if (feed.isTime_flag()) {
                     holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.GONE);
-                    if(mCurrentDate == null) {
+                    if (mCurrentDate == null) {
                         long time = System.currentTimeMillis();
                         Date date = new Date(time);
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -765,7 +774,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         }
 
                         holder2.tv_weekday.setText(weekday + "|" + am);
-                    }else{
+                    } else {
 
 
                         String myDate = DateUtil.getMyDate(mCurrentDate);
@@ -774,9 +783,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         String am = "";
 
                         //判断上午还是下午
-                        if("0".equals(mCurrentType)){
+                        if ("0".equals(mCurrentType)) {
                             am = "早间";
-                        }else{
+                        } else {
                             am = "晚间";
                         }
 
