@@ -9,14 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ImageView
-        android:id="@+id/close_imageView"
-        android:layout_margin="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_date_close"/>
-
     <RelativeLayout
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
@@ -111,9 +103,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="70dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/bg_date_sun"/>
+            android:background="@drawable/bg_date_sun" />
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/close_imageView"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_date_close" />
 
     <com.news.yazhidao.widget.HorizontalListView
         android:id="@+id/lv_date"

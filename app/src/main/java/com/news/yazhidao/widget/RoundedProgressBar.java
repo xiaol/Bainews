@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 
 
 public class RoundedProgressBar extends View {
@@ -87,7 +88,7 @@ public class RoundedProgressBar extends View {
         //获取自定义属性和默认值
         roundColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundColor,R.color.bg_date_progress);
         roundProgressColor = mTypedArray.getColor(R.styleable.RoundProgressBar_roundProgressColor,R.color.date_progress);
-        roundWidth = mTypedArray.getDimension(R.styleable.RoundProgressBar_roundWidth, 30);
+        roundWidth = mTypedArray.getDimension(R.styleable.RoundProgressBar_roundWidth, DensityUtil.dip2px(context,7));
         max = mTypedArray.getInteger(R.styleable.RoundProgressBar_max, 100);
         textIsDisplayable = mTypedArray.getBoolean(R.styleable.RoundProgressBar_textIsDisplayable, true);
         style = mTypedArray.getInt(R.styleable.RoundProgressBar_style, 0);

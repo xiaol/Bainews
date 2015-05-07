@@ -129,7 +129,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     protected void initializeViews() {
-
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -459,6 +458,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
+        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+        final String strType;
+        if (isMorning != null && isMorning.equals("晚间")) {
+            strType = "0";
+            mCurrentType = "1";
+        } else {
+            strType = "1";
+            mCurrentType = "0";
+        }
+        getUpdateParams(strType);
     }
 
     @Override
