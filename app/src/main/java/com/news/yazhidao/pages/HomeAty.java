@@ -8,14 +8,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
@@ -55,6 +53,8 @@ import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
+import com.twotoasters.jazzylistview.JazzyHelper;
+import com.twotoasters.jazzylistview.JazzyListView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -62,9 +62,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
+
+    //JazzyListView
+    private static final String KEY_TRANSITION_EFFECT = "transition_effect";
+    private Map<String, Integer> mEffectMap;
+    private int mCurrentTransitionEffect = JazzyHelper.SLIDE_IN;
 
     //打开详情页时，带过去的url地址
     public static String KEY_URL = "url";
@@ -72,7 +78,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String VALUE_NEWS_SOURCE = "other_view";
     private String mCurrentDate, mCurrentType;
-    private PullToRefreshListView lv_news;
+    private JazzyListView lv_news;
     private MyAdapter list_adapter;
     private LinearLayout ll_title;
     private LinearLayout ll_no_network;
@@ -128,7 +134,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     }
 
     @Override
-    protected void initializeViews() {
+    protected void initializeViews(Bundle savedInstanceState) {
         ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
         ivTimeBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,7 +177,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
         });
 
-        lv_news = (PullToRefreshListView) findViewById(R.id.lv_news);
+        lv_news = (JazzyListView) findViewById(R.id.lv_news);
         lv_news.getRefreshableView().setDivider(null);
         lv_news.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -200,7 +206,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
         list_adapter = new MyAdapter();
         lv_news.setAdapter(list_adapter);
-        lv_news.setMode(PullToRefreshBase.Mode.BOTH);
+        lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
         lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
         lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -227,16 +233,11 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                if (NetUtil.checkNetWork(HomeAty.this)) {
-//                    lv_news.setVisibility(View.VISIBLE);
-//                    ll_no_network.setVisibility(View.GONE);
-//                    showNextDownNews();
-//                } else {
-//                    lv_news.setVisibility(View.GONE);
-//                    ll_no_network.setVisibility(View.VISIBLE);
-//                }
             }
         });
+
+        setupJazziness(mCurrentTransitionEffect);
+
         final int _HeaderHeight = DensityUtil.dip2px(this, 55);
         //设置listview 上拉时的监听器
         lv_news.setmPullToRefreshSlidingUpListener(new PullToRefreshBase.PullToRefreshSlidingUpListener() {
@@ -286,28 +287,29 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
         });
 
+        for(int i = 0;i < 3;i ++) {
+            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
+                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
+                if (mDownNewsArr.size() == 1) {
+                    _NewsFeed.setBottom_flag(true);
+                    if (mUpNewsArr.size() > 0) {
+                        lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
+                    } else {
+                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
+                    }
 
-        if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
-            NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-            if (mDownNewsArr.size() == 1) {
-                _NewsFeed.setBottom_flag(true);
-                if (mUpNewsArr.size() > 0) {
-                    lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
-                } else {
-                    lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                 }
+                mMiddleNewsArr.add(_NewsFeed);
+                mDownNewsArr.remove(mDownNewsArr.size() - 1);
+
+                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
             }
-            mMiddleNewsArr.add(_NewsFeed);
-            mDownNewsArr.remove(mDownNewsArr.size() - 1);
-
-            lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-            lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-            lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
         }
 
         //更新ui
@@ -348,11 +350,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                                 NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
                                 if (mUpNewsArr.size() <= 1) {
                                     _NewsFeed.setTop_flag(true);
-                                    if (mDownNewsArr.size() > 0) {
-                                        lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-                                    } else {
-                                        lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-                                    }
+                                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                                 }
                                 mMiddleNewsArr.add(0, _NewsFeed);
                                 mUpNewsArr.remove(mUpNewsArr.size() - 1);
@@ -400,6 +398,17 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
         //获取当前更新的相关信息
         getUpdateParams(type);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_TRANSITION_EFFECT, mCurrentTransitionEffect);
+    }
+
+    private void setupJazziness(int effect) {
+        mCurrentTransitionEffect = effect;
+        lv_news.setTransitionEffect(mCurrentTransitionEffect);
     }
 
     private void getUpdateParams(String type) {
@@ -1055,18 +1064,18 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 return convertView;
             }
             //上拉时给显示的item添加动画
-            if (position > mMiddleNewsArr.size() - 2 && mIsNeedAnim) {
-                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
-                ViewPropertyAnimator animator = convertView.animate()
-                        .setDuration(800)
-                        .setInterpolator(new AccelerateDecelerateInterpolator());
-                convertView.setTranslationY(height / 4);
-                animator.translationYBy(-height / 4);
-                animator.start();
-
-            }
+//            if (position > mMiddleNewsArr.size() - 2 && mIsNeedAnim) {
+//                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+//                convertView.measure(View.MeasureSpec.makeMeasureSpec(lv_news.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+//                int height = convertView.getHeight() == 0 ? convertView.getMeasuredHeight() : convertView.getHeight();
+//                ViewPropertyAnimator animator = convertView.animate()
+//                        .setDuration(800)
+//                        .setInterpolator(new AccelerateDecelerateInterpolator());
+//                convertView.setTranslationY(height / 4);
+//                animator.translationYBy(-height / 4);
+//                animator.start();
+//
+//            }
             return convertView;
         }
 
@@ -1205,7 +1214,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 NewsFeed feed = result.get(_SplitStartIndex - 1);
                 feed.setTime_flag(true);
                 feed.setTop_flag(true);
-                lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             }
             if (_SplitStartIndex > 0) {
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
@@ -1214,7 +1223,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             } else {
                 mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
-                lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             }
         }
     }

@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -114,7 +115,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    protected void initializeViews() {
+    protected void initializeViews(Bundle savedInstanceState) {
         mNewsUrl=getIntent().getStringExtra(HomeAty.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);

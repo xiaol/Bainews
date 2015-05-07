@@ -14,12 +14,13 @@ public abstract class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView();
-        initializeViews();
+        initializeViews(savedInstanceState);
         loadData();
+
     }
 
     protected abstract void setContentView();
-    protected abstract void initializeViews();
+    protected abstract void initializeViews(Bundle savedInstanceState);
     protected abstract void loadData();
 
 

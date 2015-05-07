@@ -214,7 +214,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		mOnLastItemVisibleListener = listener;
 	}
 
-	public final void setOnScrollListener(OnScrollListener listener) {
+	public void setOnScrollListener(OnScrollListener listener) {
 		mOnScrollListener = listener;
 	}
 

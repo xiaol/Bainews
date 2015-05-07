@@ -52,14 +52,14 @@
 
         <LinearLayout
             android:id="@+id/ll_source_interest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
             android:background="@drawable/bg_feedback_contact_way2"
             android:layout_below="@+id/tv_title"
             android:layout_marginRight="12dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="15dp"
-            android:gravity="center_vertical"
+            android:gravity="center_horizontal"
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
 
