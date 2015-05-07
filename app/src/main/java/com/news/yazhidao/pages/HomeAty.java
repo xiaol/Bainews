@@ -40,6 +40,8 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.TimeFeed;
+import com.news.yazhidao.listener.TimeOutAlarmUpdateListener;
+import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -51,7 +53,11 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
+import com.news.yazhidao.widget.LoginPopupWindow;
+import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
@@ -62,6 +68,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.framework.ShareSDK;
 
 
 public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
@@ -129,8 +139,30 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     protected void initializeViews() {
-        ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
-        ivTimeBg.setOnClickListener(new View.OnClickListener() {
+        View mHomeAtyLeftMenuWrapper = findViewById(R.id.mHomeAtyLeftMenuWrapper);
+        View mHomeAtyRightMenuWrapper = findViewById(R.id.mHomeAtyRightMenuWrapper);
+        final RoundedImageView mHomeAtyRightMenu = (RoundedImageView) findViewById(R.id.mHomeAtyRightMenu);
+        String[] userData = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
+        if(userData!=null){
+            Platform platform = ShareSDK.getPlatform(HomeAty.this, userData[1]);
+            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(),mHomeAtyRightMenu,false);
+        }
+        mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this,new UserLoginListener() {
+                    @Override
+                    public void userLogin(String platform, PlatformDb platformDb) {
+                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(),mHomeAtyRightMenu,false);
+                    }
+                });
+                loginPopupWindow.setAnimationStyle(R.style.AnimationAlpha);
+                loginPopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+
+            }
+        });
+        mHomeAtyLeftMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurrentTime = System.currentTimeMillis();
@@ -410,7 +442,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
                 pendingIntent = PendingIntent.getBroadcast(HomeAty.this, 0, intent, 0);
-                alarmManager.set(AlarmManager.RTC,System.currentTimeMillis()+Long.valueOf(mCurrentTimeFeed.getNext_upate_time()),pendingIntent);
+                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
             }
 
             @Override

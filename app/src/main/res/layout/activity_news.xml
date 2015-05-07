@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/screen_RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,8 +14,8 @@
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center"
-        android:background="#4fb5ea">
+        android:background="#4fb5ea"
+        android:gravity="center">
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_title"
@@ -34,69 +35,72 @@
 
     <TextView
         android:id="@+id/tv_stroke2"
-        android:layout_below="@+id/tv_stroke1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@+id/tv_stroke1"
         android:background="#a4a4a5" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/lv_news"
-        android:layout_below="@+id/tv_stroke2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/tv_stroke2"
         android:background="#f3f3fa"
-        android:scrollbars="none"
         android:clipToPadding="false"
         android:listSelector="#f3f3fa"
-        ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
+        android:scrollbars="none"
         ptr:ptrAnimationStyle="flip"
-        ptr:ptrHeaderTextColor="#ffffff"
+        ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
         ptr:ptrHeaderBackground="#4D94C9"
-        ptr:ptrScrollingWhileRefreshingEnabled="false"
-        ptr:ptrListViewExtrasEnabled="true" />
+        ptr:ptrHeaderTextColor="#ffffff"
+        ptr:ptrListViewExtrasEnabled="true"
+        ptr:ptrScrollingWhileRefreshingEnabled="false" />
 
     <LinearLayout
         android:id="@+id/ll_no_network"
-        android:orientation="horizontal"
-        android:layout_below="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/ll_title"
         android:background="@drawable/nonetwork"
+        android:orientation="horizontal"
         android:visibility="gone" />
 
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/mHomeAtyLeftMenuWrapper"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:gravity="center"
-        android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
+        android:layout_alignParentLeft="true"
+        android:layout_margin="20dp">
 
         <ImageView
-            android:id="@+id/iv_time"
-            android:background="@drawable/ic_time"
+            android:id="@+id/mHomeAtyLeftMenu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_time" />
+    </FrameLayout>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/mHomeAtyRightMenuWrapper"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:gravity="center"
-        android:layout_margin="20dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
+        android:visibility="gone"
+        android:layout_margin="20dp">
 
-        <ImageView
-            android:id="@+id/iv_menu"
-            android:background="@drawable/ic_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+        <com.news.yazhidao.widget.RoundedImageView
+            android:id="@+id/mHomeAtyRightMenu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            app:border_color="#000000"
+            app:border_width="2dp"
+            app:corner_radius="15dp"
+            android:scaleType="centerCrop"
+             />
+    </FrameLayout>
 
 </RelativeLayout>

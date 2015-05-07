@@ -1,3 +1,2 @@
 include ':app', ':sharesdk_mainlib'
-include ':umeng_social_sdk_library'
 include ':library'
