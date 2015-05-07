@@ -33,6 +33,7 @@
                 android:text="33"
                 android:textSize="30sp"
                 android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -119,8 +120,8 @@
         android:layout_marginTop="40dp"
         android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:background="@drawable/bg_date_close" />
 
     <com.news.yazhidao.widget.HorizontalListView
