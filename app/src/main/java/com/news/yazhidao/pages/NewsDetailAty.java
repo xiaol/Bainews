@@ -33,6 +33,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
@@ -98,20 +99,27 @@ public class NewsDetailAty extends BaseActivity {
 
             @Override
             public void success(NewsDetail result) {
-                headerView.setDetailData(result, new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
-                    @Override
-                    public void onclickPullUp(int height) {
-                        msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                if(result != null) {
+                    headerView.setDetailData(result, new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                        @Override
+                        public void onclickPullUp(int height) {
+                            msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                        }
+                    });
+                    mNewsDetailAdapter.setData(result.relate);
+                    mNewsDetailAdapter.notifyDataSetChanged();
+
+                    if (HomeAty.VALUE_NEWS_SOURCE.equals(mSource)) {
+                        msgvNewsDetail.setSelection(1);
                     }
-                });
-                mNewsDetailAdapter.setData(result.relate);
-                mNewsDetailAdapter.notifyDataSetChanged();
+                }else{
+                    ToastUtil.toastShort("新闻的内容为空，无法打开");
+                    NewsDetailAty.this.finish();
+                }
+
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
-                if(HomeAty.VALUE_NEWS_SOURCE.equals(mSource)){
-                    msgvNewsDetail.setSelection(1);
-                }
 
             }
 

@@ -73,7 +73,8 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private void findHeadPortraitImageViews(Bitmap bitmap) {
         mrpbTime = (RoundedProgressBar) mMenuView.findViewById(R.id.progress_circle);
         mivBg = (ImageView) mMenuView.findViewById(R.id.bg_imageView);
-        blur(bitmap, mivBg);
+//        blur(bitmap, mivBg);
+        mivBg.setBackgroundResource(R.drawable.time_bg);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mivStatus = (ImageView) mMenuView.findViewById(R.id.iv_date_status);
         mtvHour = (TextViewExtend) mMenuView.findViewById(R.id.tv_hour_num);
@@ -278,10 +279,10 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();
-//                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
-//                else
-//                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
+                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
+                else
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 holder.tvDate = (TextViewExtend) convertView.findViewById(R.id.tv_date);
                 holder.ivMorning = (ImageView) convertView.findViewById(R.id.iv_date_morning);
                 holder.ivNight = (ImageView) convertView.findViewById(R.id.iv_date_night);
@@ -290,45 +291,41 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 holder = (Holder) convertView.getTag();
             }
             if (mCurrentDate.equals(marrStrHistoryDate.get(position))) {
-                if (mCurrentType.equals("0"))
-                    holder.ivMorning.setPressed(true);
-                else
-                    holder.ivNight.setPressed(true);
-//                if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0) {
-//                    if (mCurrentType.equals("0"))
-//                        holder.ivMorning.setPressed(true);
-//                    else
-//                        holder.ivNight.setPressed(true);
-//                } else {
-//                    if (mCurrentType.equals("1"))
-//                        holder.ivMorning.setPressed(true);
-//                    else
-//                        holder.ivNight.setPressed(true);
-//                }
+                if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 1) {
+                    if (mCurrentType.equals("0"))
+                        holder.ivMorning.setPressed(true);
+                    else
+                        holder.ivNight.setPressed(true);
+                } else {
+                    if (mCurrentType.equals("1"))
+                        holder.ivMorning.setPressed(true);
+                    else
+                        holder.ivNight.setPressed(true);
+                }
             } else {
                 holder.ivMorning.setPressed(false);
                 holder.ivNight.setPressed(false);
             }
-            holder.tvDate.setText(marrStrHistoryDate.get(position));
+            holder.tvDate.setText(marrStrHistoryDate.get(position).substring(5));
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-//                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-//                    else
-//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
+                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+                    else
+                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
                     dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-//                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-//                    else
-//                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
+                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+                    else
+                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
                     dismiss();
                 }
             });
