@@ -52,13 +52,13 @@
 
         <LinearLayout
             android:id="@+id/ll_source_interest"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
+            android:layout_width="86dp"
+            android:layout_height="24dp"
             android:background="@drawable/bg_feedback_contact_way2"
             android:layout_below="@+id/tv_title"
             android:layout_marginRight="12dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
@@ -69,9 +69,8 @@
                 android:layout_height="wrap_content"
                 android:text="10个看点"
                 android:layout_marginRight="3dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="5dp"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:layout_alignParentRight="true" />
@@ -79,7 +78,7 @@
             <ImageView
                 android:layout_width="8dp"
                 android:layout_height="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/arrow_right_white" />
         </LinearLayout>

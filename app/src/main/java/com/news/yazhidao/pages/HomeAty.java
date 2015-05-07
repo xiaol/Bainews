@@ -38,6 +38,8 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.TimeFeed;
+import com.news.yazhidao.listener.TimeOutAlarmUpdateListener;
+import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -49,7 +51,11 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
+import com.news.yazhidao.widget.LoginPopupWindow;
+import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
@@ -63,6 +69,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.framework.ShareSDK;
 
 
 public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
@@ -135,8 +145,30 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     protected void initializeViews(Bundle savedInstanceState) {
-        ImageView ivTimeBg = (ImageView) findViewById(R.id.iv_time);
-        ivTimeBg.setOnClickListener(new View.OnClickListener() {
+        View mHomeAtyLeftMenuWrapper = findViewById(R.id.mHomeAtyLeftMenuWrapper);
+        View mHomeAtyRightMenuWrapper = findViewById(R.id.mHomeAtyRightMenuWrapper);
+        final RoundedImageView mHomeAtyRightMenu = (RoundedImageView) findViewById(R.id.mHomeAtyRightMenu);
+        String[] userData = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
+        if(userData!=null){
+            Platform platform = ShareSDK.getPlatform(HomeAty.this, userData[1]);
+            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(),mHomeAtyRightMenu,false);
+        }
+        mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this,new UserLoginListener() {
+                    @Override
+                    public void userLogin(String platform, PlatformDb platformDb) {
+                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(),mHomeAtyRightMenu,false);
+                    }
+                });
+                loginPopupWindow.setAnimationStyle(R.style.AnimationAlpha);
+                loginPopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+
+            }
+        });
+        mHomeAtyLeftMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurrentTime = System.currentTimeMillis();
@@ -410,6 +442,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         mCurrentTransitionEffect = effect;
         lv_news.setTransitionEffect(mCurrentTransitionEffect);
     }
+    private boolean misRefresh = false;
 
     private void getUpdateParams(String type) {
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
@@ -417,6 +450,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void success(TimeFeed result) {
+                misRefresh = false;
                 mCurrentTimeFeed = result;
                 mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
@@ -467,22 +501,28 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
-        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-        final String strType;
-        if (isMorning != null && isMorning.equals("晚间")) {
-            strType = "0";
-            mCurrentType = "1";
-        } else {
-            strType = "1";
-            mCurrentType = "0";
+        if (misRefresh) {
+            String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+            final String StrType;
+            if (isMorning != null && isMorning.equals("晚间")) {
+                StrType = "0";
+                mCurrentType = "1";
+            } else {
+                StrType = "1";
+                mCurrentType = "0";
+            }
+
+            //获取当前更新的相关信息
+            getUpdateParams(StrType);
         }
-        getUpdateParams(strType);
     }
 
     @Override
     public void updateUI(Intent intent) {
         if (intent.getAction().equals("updateUI")) {
-            alarmManager.cancel(pendingIntent);
+            misRefresh = true;
+            if (alarmManager != null)
+                alarmManager.cancel(pendingIntent);
             //更新数据
             if (mCurrentTimeFeed != null)
                 refreshUI(mCurrentTimeFeed.getHistory_date().get(3), mCurrentTimeFeed.getNext_update_type());

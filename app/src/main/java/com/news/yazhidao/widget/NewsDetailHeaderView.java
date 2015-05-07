@@ -198,6 +198,9 @@ public class NewsDetailHeaderView extends FrameLayout {
     }
 
     public void setDetailData(NewsDetail pNewsDetail,HeaderVeiwPullUpListener listener) {
+        if(pNewsDetail==null){
+            return;
+        }
         inflateDataToNewsheader(pNewsDetail,listener);
         if(pNewsDetail != null) {
             ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.baike;

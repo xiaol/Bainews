@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.news.yazhidao.pages.TimeOutAlarmUpdateListener;
+import com.news.yazhidao.listener.TimeOutAlarmUpdateListener;
 
 /**
  * Created by fiocca on 15/4/29.

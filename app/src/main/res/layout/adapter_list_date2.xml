@@ -13,21 +13,12 @@
         android:weightSum="2">
 
         <ImageView
-            android:id="@+id/iv_date_night"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/bg_date_night_selector" />
-
-        <ImageView
             android:id="@+id/iv_line"
             android:layout_width="1dp"
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:background="@color/blue" />
+            android:background="@drawable/bg_date_line" />
 
         <ImageView
             android:id="@+id/iv_date_morning"
@@ -37,6 +28,16 @@
             android:layout_margin="10dp"
             android:layout_gravity="bottom"
             android:background="@drawable/bg_date_sun_selector" />
+
+        <ImageView
+            android:id="@+id/iv_date_night"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_date_night_selector" />
+
     </LinearLayout>
 
     <com.news.yazhidao.widget.TextViewExtend

@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.ImageUtils;
-import com.news.yazhidao.utils.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,9 +54,7 @@ public class ImageManager {
         Bitmap bitmap = memoryCache.get(url);
         if (bitmap != null) {
             if (isPreHandle) {
-                Logger.i("jigang","before  "+bitmap.getWidth()+",,,"+bitmap.getHeight());
                 bitmap=ImageUtils.zoomBitmap(bitmap, DeviceInfoUtil.getScreenWidth());
-                Logger.i("jigang","after  "+bitmap.getWidth()+",,,"+bitmap.getHeight());
             }
             imageView.setImageBitmap(bitmap);
         }else {

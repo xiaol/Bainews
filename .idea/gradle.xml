@@ -12,7 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/jazzylistviewlibrary" />
             <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/umeng_social_sdk_library" />
+            <option value="$PROJECT_DIR$/sharesdk_mainlib" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -33,23 +33,23 @@
 #-libraryjars ../../external-libs/analytics-5.4.2.jar
 #-libraryjars ../../External-libs/gson-2.3.1.jar
 -libraryjars ../library
--libraryjars ../umeng_social_sdk_library/libs/httpmime-4.1.3.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_AtFriends.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_instagram.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_1.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_2.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_3.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_renren_1.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_renren_2.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_Sina.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_1.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_2.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_3.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tumblr.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_UserCenter.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_WeiXin_1.jar
--libraryjars ../umeng_social_sdk_library/libs/SocialSDK_WeiXin_2.jar
--libraryjars ../umeng_social_sdk_library/libs/umeng_social_sdk.jar
+#-libraryjars ../umeng_social_sdk_library/libs/httpmime-4.1.3.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_AtFriends.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_instagram.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_1.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_2.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_QQZone_3.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_renren_1.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_renren_2.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_Sina.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_1.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_2.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tencentWB_3.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_tumblr.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_UserCenter.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_WeiXin_1.jar
+#-libraryjars ../umeng_social_sdk_library/libs/SocialSDK_WeiXin_2.jar
+#-libraryjars ../umeng_social_sdk_library/libs/umeng_social_sdk.jar
 
 -dontwarn android.**
 -dontwarn com.google.gson.**
@@ -117,7 +117,13 @@ java.lang.Object readResolve();
 }
 -keep public class * extends com.umeng.**
 -keep class com.umeng.** { *; }
-
+#ShareSDK 混淆相关
+-keep class cn.sharesdk.**{*;}
+-keep class com.sina.**{*;}
+-keep class **.R$* {*;}
+-keep class **.R{*;}
+-dontwarn cn.sharesdk.**
+-dontwarn **.R$*
 
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
