@@ -20,6 +20,7 @@ import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.TimeFeed;
@@ -56,7 +57,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private float mAnimationProgress, miCurrentProgress;
     private TimeFeed mCurrentTimeFeed;
     private IUpdateUI mUpdateUI;
-    private String mCurrentDate, mCurrentType;
+    private String mCurrentDate, mCurrentType, mStrSelectedDate;
 
     public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime, IUpdateUI updateUI) {
         super(context);
@@ -248,8 +249,38 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     public void setDateAndType(String currentDate, String currentType) {
         mCurrentDate = currentDate;
         mCurrentType = currentType;
+        if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = df.parse(mCurrentDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.DAY_OF_MONTH, +1);
+                date = calendar.getTime();
+                mStrSelectedDate = df.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mStrSelectedDate = mCurrentDate;
+        }
+        ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
+        Log.i("tag","i==="+mStrSelectedDate);
+        for (int i = 0; i < arrTimeList.size(); i++) {
+            if (mStrSelectedDate != null && mStrSelectedDate.equals(arrTimeList.get(i))) {
+                final int j = i;
+                mhlvDate.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mhlvDate.scrollTo(width*j);
+                    }
+                }, 100);
+
+            }
+        }
     }
 
+    int width;
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
@@ -295,23 +326,25 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            String strDate1 = null;
-            if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
-                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                try {
-                    Date date = df.parse(mCurrentDate);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(date);
-                    calendar.add(Calendar.DAY_OF_MONTH, +1);
-                    date = calendar.getTime();
-                    strDate1 = df.format(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                strDate1 = mCurrentDate;
-            }
-            if (strDate1 != null && strDate1.equals(marrStrHistoryDate.get(position))) {
+            convertView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            convertView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            width=convertView.getMeasuredWidth();
+//            if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
+//                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//                try {
+//                    Date date = df.parse(mCurrentDate);
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(date);
+//                    calendar.add(Calendar.DAY_OF_MONTH, +1);
+//                    date = calendar.getTime();
+//                    mStrSelectedDate = df.format(date);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                mStrSelectedDate = mCurrentDate;
+//            }
+            if (mStrSelectedDate != null && mStrSelectedDate.equals(marrStrHistoryDate.get(position))) {
                 if (mCurrentType.equals("0"))
                     holder.ivMorning.setPressed(true);
                 else

@@ -419,17 +419,14 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             ll_no_network.setVisibility(View.VISIBLE);
         }
         String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-        final String type;
         if (isMorning != null && isMorning.equals("晚间")) {
-            type = "0";
             mCurrentType = "1";
         } else {
-            type = "1";
             mCurrentType = "0";
         }
 
         //获取当前更新的相关信息
-        getUpdateParams(type);
+        getUpdateParams();
     }
 
     @Override
@@ -444,8 +441,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     }
     private boolean misRefresh = false;
 
-    private void getUpdateParams(String type) {
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME + type, NetworkRequest.RequestMethod.GET);
+    private void getUpdateParams() {
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_REFRESH_TIME, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<TimeFeed>() {
 
             @Override
@@ -503,17 +500,13 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         request.execute();
         if (misRefresh) {
             String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-            final String StrType;
             if (isMorning != null && isMorning.equals("晚间")) {
-                StrType = "0";
                 mCurrentType = "1";
             } else {
-                StrType = "1";
                 mCurrentType = "0";
             }
-
             //获取当前更新的相关信息
-            getUpdateParams(StrType);
+            getUpdateParams();
         }
     }
 
@@ -1286,7 +1279,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 .getHeight();
         // 去掉标题栏
         // Bitmap b = Bitmap.createBitmap(b1, 0, 25, 320, 455);
-        Logger.i("jigang", "header " + frame.top + ",," + width + ",," + height + ",,,bitmap " + b1.getHeight());
         Bitmap b = Bitmap.createBitmap(b1, 0, 0, view.getWidth(), view.getHeight());
         view.destroyDrawingCache();
         return b;
