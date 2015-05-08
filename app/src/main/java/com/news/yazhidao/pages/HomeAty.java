@@ -149,17 +149,17 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         View mHomeAtyRightMenuWrapper = findViewById(R.id.mHomeAtyRightMenuWrapper);
         final RoundedImageView mHomeAtyRightMenu = (RoundedImageView) findViewById(R.id.mHomeAtyRightMenu);
         String[] userData = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
-        if(userData!=null){
+        if (userData != null) {
             Platform platform = ShareSDK.getPlatform(HomeAty.this, userData[1]);
-            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(),mHomeAtyRightMenu,false);
+            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(), mHomeAtyRightMenu, false);
         }
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this,new UserLoginListener() {
+                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this, new UserLoginListener() {
                     @Override
                     public void userLogin(String platform, PlatformDb platformDb) {
-                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(),mHomeAtyRightMenu,false);
+                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(), mHomeAtyRightMenu, false);
                     }
                 });
                 loginPopupWindow.setAnimationStyle(R.style.AnimationAlpha);
@@ -319,7 +319,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
         });
 
-        for(int i = 0;i < 3;i ++) {
+        for (int i = 0; i < 3; i++) {
             if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
                 NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
                 if (mDownNewsArr.size() == 1) {
@@ -418,13 +418,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
-        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-        if (isMorning != null && isMorning.equals("晚间")) {
-            mCurrentType = "1";
-        } else {
-            mCurrentType = "0";
-        }
-
         //获取当前更新的相关信息
         getUpdateParams();
     }
@@ -439,6 +432,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         mCurrentTransitionEffect = effect;
         lv_news.setTransitionEffect(mCurrentTransitionEffect);
     }
+
     private boolean misRefresh = false;
 
     private void getUpdateParams() {
@@ -449,9 +443,15 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             public void success(TimeFeed result) {
                 misRefresh = false;
                 mCurrentTimeFeed = result;
-                mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
                 mUpdateTime = Long.valueOf(mCurrentTimeFeed.getNext_upate_time());
+                if (mCurrentTimeFeed.getNext_update_type().equals("0")) {
+                    mCurrentType = "1";
+                    mCurrentDate = mCurrentTimeFeed.getHistory_date().get(2);
+                } else {
+                    mCurrentType = "0";
+                    mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
+                }
                 mLastTime = System.currentTimeMillis();
                 alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
@@ -462,6 +462,12 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void failed(MyAppException exception) {
+                String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+                if (isMorning != null && isMorning.equals("晚间")) {
+                    mCurrentType = "1";
+                } else {
+                    mCurrentType = "0";
+                }
                 mTotalTime = 1000 * 60 * 60 * 12;
                 mLastTime = System.currentTimeMillis();
                 mUpdateTime = 0;
@@ -499,12 +505,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.getType()));
         request.execute();
         if (misRefresh) {
-            String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-            if (isMorning != null && isMorning.equals("晚间")) {
-                mCurrentType = "1";
-            } else {
-                mCurrentType = "0";
-            }
             //获取当前更新的相关信息
             getUpdateParams();
         }
@@ -694,7 +694,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
                         ImageView iv_combine_line = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line);
 
-                        setLineVisibility(sourceList,iv_combine_line,contentSize);
+                        setLineVisibility(sourceList, iv_combine_line, contentSize);
 
                         if (source != null) {
 
@@ -1114,27 +1114,27 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     }
 
-    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line,int a) {
+    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line, int a) {
 
-        switch (sourceList.size()){
+        switch (sourceList.size()) {
             case 1:
                 iv_combine_line.setVisibility(View.GONE);
                 break;
 
             case 2:
-                if(a == 1){
+                if (a == 1) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
 
             case 3:
-                if(a >= 2){
+                if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
 
             default:
-                if(a >= 2){
+                if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
