@@ -1071,7 +1071,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      * @param listener    - Listener for scroll
      */
     protected final void smoothScrollTo(int scrollValue, OnSmoothScrollFinishedListener listener) {
-        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 2000, listener);
+        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 0, listener);
     }
 
     /**
