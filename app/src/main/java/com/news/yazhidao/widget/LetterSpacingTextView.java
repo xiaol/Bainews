@@ -59,7 +59,7 @@ public class LetterSpacingTextView extends TextViewExtend {
         if (this == null || this.originalText == null) return;
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < originalText.length(); i++) {
-            String c = ""+ originalText.charAt(i);
+            String c = String.valueOf( originalText.charAt(i));
             builder.append(c);
             if (i + 1 < originalText.length()) {
 //                if (isNumOrLetters(c)) {

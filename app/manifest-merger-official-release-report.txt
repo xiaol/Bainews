@@ -57,19 +57,19 @@ application
 ADDED from AndroidManifest.xml:16:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
-MERGED from BaiNews:library:unspecified:9:5
+MERGED from Bainews:library:unspecified:9:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
-MERGED from BaiNews:sharesdk_mainlib:unspecified:11:5
+MERGED from Bainews:sharesdk_mainlib:unspecified:11:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
 		ADDED from AndroidManifest.xml:19:9
 	android:debuggable
-		ADDED from BaiNews:sharesdk_mainlib:unspecified:13:9
+		ADDED from Bainews:sharesdk_mainlib:unspecified:13:9
 	android:icon
 		ADDED from AndroidManifest.xml:18:9
 	android:allowBackup
-		ADDED from BaiNews:sharesdk_mainlib:unspecified:12:9
+		ADDED from Bainews:sharesdk_mainlib:unspecified:12:9
 	android:theme
 		ADDED from AndroidManifest.xml:20:9
 	android:name
@@ -189,9 +189,9 @@ uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
-MERGED from BaiNews:library:unspecified:7:5
+MERGED from Bainews:library:unspecified:7:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
-MERGED from BaiNews:sharesdk_mainlib:unspecified:7:5
+MERGED from Bainews:sharesdk_mainlib:unspecified:7:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:targetSdkVersion

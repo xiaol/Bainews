@@ -90,6 +90,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     private String mCurrentDate, mCurrentType;
     private JazzyListView lv_news;
     private MyAdapter list_adapter;
+    private TextView tv_stroke1;
+    private TextView tv_stroke2;
     private LinearLayout ll_title;
     private LinearLayout ll_no_network;
     private long mLastPressedBackKeyTime;
@@ -182,6 +184,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         | Gravity.CENTER, 0, 0);
             }
         });
+
         //添加umeng更新
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -191,6 +194,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }, 2000);
 
         ll_title = (LinearLayout) findViewById(R.id.ll_title);
+        tv_stroke1 = (TextView) findViewById(R.id.tv_stroke1);
+        tv_stroke2 = (TextView) findViewById(R.id.tv_stroke2);
         tv_title = (TextViewExtend) findViewById(R.id.tv_title);
         ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
         ll_no_network.setOnClickListener(new View.OnClickListener() {
@@ -271,7 +276,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         setupJazziness(mCurrentTransitionEffect);
 
         final int _HeaderHeight = DensityUtil.dip2px(this, 55);
-        //设置listview 上拉时的监听器
+//        设置listview 上拉时的监听器
         lv_news.setmPullToRefreshSlidingUpListener(new PullToRefreshBase.PullToRefreshSlidingUpListener() {
             int _Start = 0;
 
@@ -301,7 +306,27 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                                 mIsNeedAnim = true;
                             }
                         }, 600);
-                        lv_news.startAnimation(_AnimForListView);
+
+                        ll_title.startAnimation(_AnimForListView);
+
+//                        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_title, "alpha", 1f, 0f)
+//                                .setDuration(1000);
+////                        ValueAnimator animator = ValueAnimator.ofInt(255,0);
+//                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+//                        {
+//                            @Override
+//                            public void onAnimationUpdate(ValueAnimator animation)
+//                            {
+//                                float cVal = (Float) animation.getAnimatedValue();
+//                                ll_title.setAlpha(cVal);
+//                                tv_stroke1.setVisibility(View.GONE);
+//                                tv_stroke2.setVisibility(View.GONE);
+//                            }
+//
+//
+//                        });
+//                        animator.start();
+
                     }
                 }
             }
@@ -578,7 +603,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     convertView.setTag(holder);
                 } else {
-                    if (ViewHolder.class == convertView.getTag().getClass()) {
+                    if (convertView.getTag() != null && ViewHolder.class == convertView.getTag().getClass()) {
                         holder = (ViewHolder) convertView.getTag();
                         holder.ll_source_content.removeAllViews();
                         holder.rl_bottom_mark.setVisibility(View.GONE);
@@ -675,6 +700,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
+                    int i = sourceList.size();
+
+                    setContentParams(holder.ll_source_content,i);
 
                     for (int a = 0; a < sourceList.size(); a++) {
 
@@ -883,7 +911,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                         holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                         holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                        holder3.tv_interests = (LetterSpacingTextView) convertView.findViewById(R.id.tv_interests);
+                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                         holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                     } else {
                         convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
@@ -896,13 +924,13 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                         holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                         holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                        holder3.tv_interests = (LetterSpacingTextView) convertView.findViewById(R.id.tv_interests);
+                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                         holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                     }
 
                     convertView.setTag(holder3);
                 } else {
-                    if (ViewHolder3.class == convertView.getTag().getClass()) {
+                    if (convertView.getTag() != null && ViewHolder3.class == convertView.getTag().getClass()) {
                         holder3 = (ViewHolder3) convertView.getTag();
                         holder3.ll_source_content.removeAllViews();
                         holder3.rl_bottom_mark.setVisibility(View.GONE);
@@ -944,6 +972,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                 holder3.tv_title.setText(title);
                 holder3.tv_title.setFontSpacing(1);
+                holder3.tv_title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
+                        intent.putExtra("url", feed.getSourceUrl());
+                        startActivity(intent);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1118,6 +1156,35 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 //            }
             return convertView;
         }
+
+    }
+
+    private void setContentParams(LinearLayout ll_source_content, int i) {
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.rl_title_content);
+        params.setMargins(30,24,20,10);
+
+        switch (i){
+            case 1:
+                params.height = DensityUtil.dip2px(HomeAty.this,45);
+                break;
+
+            case 2:
+                params.height = DensityUtil.dip2px(HomeAty.this,85);
+                break;
+
+            case 3:
+                params.height = DensityUtil.dip2px(HomeAty.this,125);
+                break;
+
+            default:
+                params.height = DensityUtil.dip2px(HomeAty.this,125);
+                break;
+
+        }
+
+        ll_source_content.setLayoutParams(params);
 
     }
 
