@@ -26,7 +26,11 @@ import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 //m_ppopupWindow = new TSHeadPortraitPopupWindow(m_pActivity, m_pUserData.getM_strPhotoUrl());
@@ -306,26 +310,34 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                 holder.ivMorning.setPressed(false);
                 holder.ivNight.setPressed(false);
             }
-            holder.tvDate.setText(marrStrHistoryDate.get(position).substring(5));
+            final String strCurrentDate = marrStrHistoryDate.get(position);
+            holder.tvDate.setText(strCurrentDate.substring(5));
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-                    else
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
                     dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-                    else
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date date = df.parse(strCurrentDate);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date);
+                            calendar.add(Calendar.DAY_OF_MONTH, -1);
+                            date = calendar.getTime();
+                            String strDate = df.format(date);
+                            mUpdateUI.refreshUI(strDate, "1");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        mUpdateUI.refreshUI(strCurrentDate, "1");
+                    }
                     dismiss();
                 }
             });
