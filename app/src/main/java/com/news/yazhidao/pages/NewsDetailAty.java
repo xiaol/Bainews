@@ -73,23 +73,23 @@ public class NewsDetailAty extends BaseActivity {
         mNewsDetailProgressWheelWrapper = findViewById(R.id.mNewsDetailProgressWheelWrapper);
         mNewsDetailProgressWheel.spin();
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
-        mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.DISABLED);
         msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
-        msgvNewsDetail.setSmoothScrollbarEnabled(true);
+//        msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
         msgvNewsDetail.setAdapter(mNewsDetailAdapter);
-        mPullToRefreshStaggeredGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<StaggeredGridView>() {
-
-            @Override
-            public void onRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
-                if (!mHasRequestedMore) {
-                    //TODO load more
-                    mNewsDetailAdapter.notifyDataSetChanged();
-                    mPullToRefreshStaggeredGridView.onRefreshComplete();
-                    mHasRequestedMore = false;
-                }
-            }
-        });
+//        mPullToRefreshStaggeredGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<StaggeredGridView>() {
+//
+//            @Override
+//            public void onRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
+//                if (!mHasRequestedMore) {
+//                    //TODO load more
+//                    mNewsDetailAdapter.notifyDataSetChanged();
+//                    mPullToRefreshStaggeredGridView.onRefreshComplete();
+//                    mHasRequestedMore = false;
+//                }
+//            }
+//        });
         setListener();
     }
 
