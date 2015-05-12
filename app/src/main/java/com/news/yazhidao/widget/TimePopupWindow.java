@@ -248,6 +248,15 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     public void setDateAndType(String currentDate, String currentType) {
         mCurrentDate = currentDate;
         mCurrentType = currentType;
+        if (mCurrentTimeFeed == null) {
+            mCurrentTimeFeed = new TimeFeed();
+            if (mCurrentType.equals("0"))
+                mCurrentTimeFeed.setNext_update_type("1");
+            else
+                mCurrentTimeFeed.setNext_update_type("0");
+            mCurrentTimeFeed.setNext_upate_time("24894000");
+            mCurrentTimeFeed.setNext_update_freq("43200000");
+        }
         if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             try {
@@ -263,23 +272,25 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         } else {
             mStrSelectedDate = mCurrentDate;
         }
-        ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
-        Log.i("tag","i==="+mStrSelectedDate);
-        for (int i = 0; i < arrTimeList.size(); i++) {
-            if (mStrSelectedDate != null && mStrSelectedDate.equals(arrTimeList.get(i))) {
-                final int j = i;
-                mhlvDate.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mhlvDate.scrollTo(width*j);
-                    }
-                }, 100);
-
+        if(mCurrentTimeFeed.getHistory_date()!=null) {
+            ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
+            Log.i("tag", "i===" + mStrSelectedDate);
+            for (int i = 0; i < arrTimeList.size(); i++) {
+                if (mStrSelectedDate != null && mStrSelectedDate.equals(arrTimeList.get(i))) {
+                    final int j = i;
+                    mhlvDate.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mhlvDate.scrollTo(width * j);
+                        }
+                    }, 100);
+                }
             }
         }
     }
 
     int width;
+
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
@@ -327,7 +338,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             }
             convertView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             convertView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-            width=convertView.getMeasuredWidth();
+            width = convertView.getMeasuredWidth();
             if (mStrSelectedDate != null && mStrSelectedDate.equals(marrStrHistoryDate.get(position))) {
                 if (mCurrentType.equals("0"))
                     holder.ivMorning.setPressed(true);
