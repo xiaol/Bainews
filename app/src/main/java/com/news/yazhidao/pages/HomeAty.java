@@ -496,7 +496,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 }
                 mTotalTime = 1000 * 60 * 60 * 12;
                 mLastTime = System.currentTimeMillis();
-                mUpdateTime = 0;
+                mUpdateTime = 24894000;
                 Logger.e("tag", exception.getMessage());
             }
         }.setReturnType(new TypeToken<TimeFeed>() {
