@@ -61,6 +61,8 @@
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
         android:layout_toLeftOf="@+id/tv_news_category"
+        android:layout_alignParentLeft="true"
+        android:gravity="left"
         android:layout_height="wrap_content"
         android:text="反馈文理分科我离开我吕蒙WMV物品"
         android:textSize="20sp"

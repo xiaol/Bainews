@@ -151,17 +151,17 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         View mHomeAtyRightMenuWrapper = findViewById(R.id.mHomeAtyRightMenuWrapper);
         final RoundedImageView mHomeAtyRightMenu = (RoundedImageView) findViewById(R.id.mHomeAtyRightMenu);
         String[] userData = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
-        if(userData!=null){
+        if (userData != null) {
             Platform platform = ShareSDK.getPlatform(HomeAty.this, userData[1]);
-            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(),mHomeAtyRightMenu,false);
+            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(), mHomeAtyRightMenu, false);
         }
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this,new UserLoginListener() {
+                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this, new UserLoginListener() {
                     @Override
                     public void userLogin(String platform, PlatformDb platformDb) {
-                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(),mHomeAtyRightMenu,false);
+                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(), mHomeAtyRightMenu, false);
                     }
                 });
                 loginPopupWindow.setAnimationStyle(R.style.AnimationAlpha);
@@ -344,7 +344,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             }
         });
 
-        for(int i = 0;i < 3;i ++) {
+        for (int i = 0; i < 3; i++) {
             if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
                 NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
                 if (mDownNewsArr.size() == 1) {
@@ -465,6 +465,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         mCurrentTransitionEffect = effect;
         lv_news.setTransitionEffect(mCurrentTransitionEffect);
     }
+
     private boolean misRefresh = false;
 
     private void getUpdateParams() {
@@ -588,7 +589,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item2, null);
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                     holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
-                    holder.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                    holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                     holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                     holder.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                     holder.ll_top_line = (LinearLayout) convertView.findViewById(R.id.ll_top_line);
@@ -606,7 +607,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item2, null);
                         holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                         holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
-                        holder.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                        holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                         holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
 
                         holder.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
@@ -620,10 +621,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                 String title = feed.getTitle();
 
-//            holder.iv_title_img.setBackgroundResource(R.color.red);
-
-                holder.tv_title.setText(title);
-                holder.tv_title.setFontSpacing(3);
+                holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
+//                holder.tv_title.setFontSpacing(3);
 
                 holder.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -641,7 +640,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder.tv_news_category.setText(feed.getCategory());
                     holder.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGroundRight(holder.tv_news_category, feed.getCategory());
-                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
+//                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum() + "家观点");
@@ -691,13 +690,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 final long start = System.currentTimeMillis();
 
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
+                setContentParams(holder.ll_source_content, sourceList.size());
 
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
-                    int i = sourceList.size();
-
-                    setContentParams(holder.ll_source_content,i);
-
                     for (int a = 0; a < sourceList.size(); a++) {
 
 
@@ -723,7 +719,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
                         ImageView iv_combine_line = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line);
 
-                        setLineVisibility(sourceList,iv_combine_line,contentSize);
+                        setLineVisibility(sourceList, iv_combine_line, contentSize);
 
                         if (source != null) {
 
@@ -891,76 +887,37 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                 images = feed.getImgUrl_ex();
 
-                if (convertView == null) {
 
-                    holder3 = new ViewHolder3();
+                holder3 = new ViewHolder3();
 
-                    if (images.length == 2) {
+                if (images.length == 2) {
 
-                        convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
-                        holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                        holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                        holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                        holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                        holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                        holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                        holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                        holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    } else {
-                        convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
-
-                        holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                        holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                        holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                        holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
-                        holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                        holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                        holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                        holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                        holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    }
-
-                    convertView.setTag(holder3);
+                    convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
+                    holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                    holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
+                    holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
+                    holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                    holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                    holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                    holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                    holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
+                    holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                 } else {
-                    if (convertView.getTag() != null && ViewHolder3.class == convertView.getTag().getClass()) {
-                        holder3 = (ViewHolder3) convertView.getTag();
-                        holder3.ll_source_content.removeAllViews();
-                        holder3.rl_bottom_mark.setVisibility(View.GONE);
-                    } else {
-                        holder3 = new ViewHolder3();
+                    convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
 
-                        if (images.length == 2) {
-
-                            convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card2, null);
-
-                            holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                            holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                            holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                            holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                            holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                            holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                            holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                            holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                            holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        } else {
-                            convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
-
-                            holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                            holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                            holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                            holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
-                            holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                            holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                            holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                            holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                            holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                            holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        }
-                        convertView.setTag(holder3);
-                    }
+                    holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                    holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
+                    holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
+                    holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
+                    holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                    holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                    holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                    holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                    holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
+                    holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                 }
+
+                convertView.setTag(holder3);
 
                 String title = feed.getTitle();
 
@@ -1156,24 +1113,28 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     private void setContentParams(LinearLayout ll_source_content, int i) {
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.BELOW,R.id.rl_title_content);
-        params.setMargins(30,24,20,10);
+        params.addRule(RelativeLayout.BELOW, R.id.rl_title_content);
+        params.setMargins(30, 24, 20, 10);
 
-        switch (i){
+        switch (i) {
+            case 0:
+                params.height = DensityUtil.dip2px(HomeAty.this, 0);
+                break;
+
             case 1:
-                params.height = DensityUtil.dip2px(HomeAty.this,45);
+                params.height = DensityUtil.dip2px(HomeAty.this, 40);
                 break;
 
             case 2:
-                params.height = DensityUtil.dip2px(HomeAty.this,85);
+                params.height = DensityUtil.dip2px(HomeAty.this, 75);
                 break;
 
             case 3:
-                params.height = DensityUtil.dip2px(HomeAty.this,125);
+                params.height = DensityUtil.dip2px(HomeAty.this, 110);
                 break;
 
             default:
-                params.height = DensityUtil.dip2px(HomeAty.this,125);
+                params.height = DensityUtil.dip2px(HomeAty.this, 110);
                 break;
 
         }
@@ -1182,27 +1143,27 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     }
 
-    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line,int a) {
+    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line, int a) {
 
-        switch (sourceList.size()){
+        switch (sourceList.size()) {
             case 1:
                 iv_combine_line.setVisibility(View.GONE);
                 break;
 
             case 2:
-                if(a == 1){
+                if (a == 1) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
 
             case 3:
-                if(a >= 2){
+                if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
 
             default:
-                if(a >= 2){
+                if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
                 }
                 break;
@@ -1229,7 +1190,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     class ViewHolder {
 
         ImageView iv_title_img;
-        LetterSpacingTextView tv_title;
+        TextView tv_title;
         LetterSpacingTextView tv_news_category;
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;

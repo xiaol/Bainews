@@ -27,7 +27,7 @@
             android:background="@drawable/image_back" />
 
 
-        <com.news.yazhidao.widget.LetterSpacingTextView
+        <TextView
             android:id="@+id/tv_title"
             android:layout_toRightOf="@+id/iv_title_img"
             android:layout_width="180dp"

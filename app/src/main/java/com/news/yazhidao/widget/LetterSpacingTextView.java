@@ -59,18 +59,14 @@ public class LetterSpacingTextView extends TextViewExtend {
         if (this == null || this.originalText == null) return;
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < originalText.length(); i++) {
-            String c = String.valueOf( originalText.charAt(i));
+            String c = String.valueOf(originalText.charAt(i));
             builder.append(c);
             if (i + 1 < originalText.length()) {
-//                if (isNumOrLetters(c)) {
-//                    Log.i("aaaa", "----" + c + ",,,,," + isNumOrLetters(originalText.charAt(i + 1) + ""));
-//                    if (isNumOrLetters(originalText.charAt(i + 1) + "")) {
-//                        continue;
-//                    } else {
-//                        builder.append("\u00A0");
-//                    }
+//                if("-".equals(c)){
+//
+//                }else {
+                    builder.append("\u00A0");
 //                }
-                builder.append("\u00A0");
             }
         }
         SpannableString finalText = new SpannableString(builder.toString());
@@ -81,6 +77,8 @@ public class LetterSpacingTextView extends TextViewExtend {
         }
         super.setText(finalText, BufferType.SPANNABLE);
     }
+
+
     //工具类：判断是否是字母或者数字
     public boolean isNumOrLetters(String str)
     {
