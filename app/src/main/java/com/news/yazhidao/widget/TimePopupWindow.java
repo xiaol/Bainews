@@ -67,7 +67,6 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mMenuView = inflater.inflate(R.layout.popup_window_time, null);
         mHandler = new Handler(this);
         mCurrentTimeFeed = timeFeed;
-//        mCurrentTimeFeed.setNext_update_type("0");
         mlCurrentTime = updateTime;
         mlTotalTime = totalTime;
         mUpdateUI = updateUI;
@@ -329,21 +328,6 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             convertView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             convertView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             width=convertView.getMeasuredWidth();
-//            if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
-//                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//                try {
-//                    Date date = df.parse(mCurrentDate);
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.setTime(date);
-//                    calendar.add(Calendar.DAY_OF_MONTH, +1);
-//                    date = calendar.getTime();
-//                    mStrSelectedDate = df.format(date);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                mStrSelectedDate = mCurrentDate;
-//            }
             if (mStrSelectedDate != null && mStrSelectedDate.equals(marrStrHistoryDate.get(position))) {
                 if (mCurrentType.equals("0"))
                     holder.ivMorning.setPressed(true);

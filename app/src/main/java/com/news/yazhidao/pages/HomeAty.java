@@ -444,13 +444,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
         }
-        String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-        if (isMorning != null && isMorning.equals("晚间")) {
-            mCurrentType = "1";
-        } else {
-            mCurrentType = "0";
-        }
-
         //获取当前更新的相关信息
         getUpdateParams();
     }
@@ -476,9 +469,15 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
             public void success(TimeFeed result) {
                 misRefresh = false;
                 mCurrentTimeFeed = result;
-                mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());
                 mUpdateTime = Long.valueOf(mCurrentTimeFeed.getNext_upate_time());
+                if (mCurrentTimeFeed.getNext_update_type().equals("0")) {
+                    mCurrentType = "1";
+                    mCurrentDate = mCurrentTimeFeed.getHistory_date().get(2);
+                } else {
+                    mCurrentType = "0";
+                    mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
+                }
                 mLastTime = System.currentTimeMillis();
                 alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 Intent intent = new Intent(HomeAty.this, TimeoOutAlarmReceiver.class);
@@ -489,6 +488,12 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             @Override
             public void failed(MyAppException exception) {
+                String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
+                if (isMorning != null && isMorning.equals("晚间")) {
+                    mCurrentType = "1";
+                } else {
+                    mCurrentType = "0";
+                }
                 mTotalTime = 1000 * 60 * 60 * 12;
                 mLastTime = System.currentTimeMillis();
                 mUpdateTime = 0;
@@ -526,12 +531,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         }.getType()));
         request.execute();
         if (misRefresh) {
-            String isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis());
-            if (isMorning != null && isMorning.equals("晚间")) {
-                mCurrentType = "1";
-            } else {
-                mCurrentType = "0";
-            }
             //获取当前更新的相关信息
             getUpdateParams();
         }
