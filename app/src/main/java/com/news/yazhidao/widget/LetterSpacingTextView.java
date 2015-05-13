@@ -62,11 +62,7 @@ public class LetterSpacingTextView extends TextViewExtend {
             String c = String.valueOf(originalText.charAt(i));
             builder.append(c);
             if (i + 1 < originalText.length()) {
-//                if("-".equals(c)){
-//
-//                }else {
-                    builder.append("\u00A0");
-//                }
+                builder.append("\u00A0");
             }
         }
         SpannableString finalText = new SpannableString(builder.toString());

@@ -143,7 +143,7 @@
         android:id="@+id/rl_divider_top"
         android:layout_below="@id/ll_bottom_item"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="20dp"
         android:background="#f3f3fa"
         />
 

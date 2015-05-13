@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -309,24 +310,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                         ll_title.startAnimation(_AnimForListView);
 
-//                        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_title, "alpha", 1f, 0f)
-//                                .setDuration(1000);
-////                        ValueAnimator animator = ValueAnimator.ofInt(255,0);
-//                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-//                        {
-//                            @Override
-//                            public void onAnimationUpdate(ValueAnimator animation)
-//                            {
-//                                float cVal = (Float) animation.getAnimatedValue();
-//                                ll_title.setAlpha(cVal);
-//                                tv_stroke1.setVisibility(View.GONE);
-//                                tv_stroke2.setVisibility(View.GONE);
-//                            }
-//
-//
-//                        });
-//                        animator.start();
-
                     }
                 }
             }
@@ -595,12 +578,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                     holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                    holder.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                    holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                     convertView.setTag(holder);
                 } else {
                     if (convertView.getTag() != null && ViewHolder.class == convertView.getTag().getClass()) {
                         holder = (ViewHolder) convertView.getTag();
                         holder.ll_source_content.removeAllViews();
                         holder.rl_bottom_mark.setVisibility(View.GONE);
+                        holder.ll_time_item.setVisibility(View.GONE);
                     } else {
                         holder = new ViewHolder();
                         convertView = View.inflate(getApplicationContext(), R.layout.ll_news_item2, null);
@@ -613,7 +600,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                         holder.ll_top_line = (LinearLayout) convertView.findViewById(R.id.ll_top_line);
                         holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                         holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                        holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                         holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                        holder.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                        holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                         convertView.setTag(holder);
                     }
                 }
@@ -674,6 +664,57 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 if (feed.isBottom_flag()) {
                     holder.rl_bottom_mark.setVisibility(View.VISIBLE);
                 }
+
+                if (feed.isTime_flag()) {
+                    holder.ll_time_item.setVisibility(View.VISIBLE);
+
+                    if (mCurrentDate == null) {
+                        long time = System.currentTimeMillis();
+                        Date date = new Date(time);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = format.format(date);
+                        String myDate = DateUtil.getMyDate(currentDate);
+                        holder.tv_date.setText(myDate);
+
+                        //判断上午还是下午
+                        String am = DateUtil.getMorningOrAfternoon(time);
+
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(currentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        holder.tv_weekday.setText(weekday + "|" + am);
+                    } else {
+
+
+                        String myDate = DateUtil.getMyDate(mCurrentDate);
+                        holder.tv_date.setText(myDate);
+
+                        String am = "";
+
+                        //判断上午还是下午
+                        if ("0".equals(mCurrentType)) {
+                            am = "早间";
+                        } else {
+                            am = "晚间";
+                        }
+
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(mCurrentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        holder.tv_weekday.setText(weekday + "|" + am);
+                    }
+                }
+
                 holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -724,18 +765,27 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                             String source_name = source.getSourceSitename();
 
+                            String finalText = "";
+                            String source_title = source.getTitle();
+//                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
+                            String source_name_font = "";
+                            source_title = "<big color =\"red\">" + source_title + "</big>";
                             if (source_name != null) {
-                                if (source.getUser() != null && !"".equals(source.getUser())) {
-//                                    String str ="<font size=7>" + source.getUser() + "</font> : " + source.getTitle();
 
-                                    tv_news_source.setText(source.getUser() + ":" + source.getTitle());
+                                if (source.getUser() != null && !"".equals(source.getUser())) {
+                                    source_name_font = "<font color =\"#7d7d7d\">" + source.getUser() + "</font>" +  ": ";
+                                    finalText = source_name_font + source_title;
+                                    tv_news_source.setText(Html.fromHtml(finalText));
                                 } else {
-                                    tv_news_source.setText(source_name + ": " + source.getTitle());
+                                    source_name_font = "<font color =\"#7d7d7d\">" + source_name + "</font>" + ": ";
+                                    finalText = source_name_font  + source_title;
+                                    tv_news_source.setText(Html.fromHtml(finalText));
                                 }
 
                             } else {
-
-                                tv_news_source.setText("匿名报道:");
+                                String anonyStr = "<font color =\"#7d7d7d\">" + "匿名报道:" + "</font>" +  ": ";
+                                finalText = anonyStr + source_title;
+                                tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
                         }
@@ -806,7 +856,6 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
                 if (feed.isTime_flag()) {
-                    holder2.ll_bottom_item.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.GONE);
                     if (mCurrentDate == null) {
                         long time = System.currentTimeMillis();
@@ -901,6 +950,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+                    holder3.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                    holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                 } else {
                     convertView = View.inflate(getApplicationContext(), R.layout.ll_news_card, null);
 
@@ -914,6 +966,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+                    holder3.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                    holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                 }
 
                 convertView.setTag(holder3);
@@ -997,6 +1052,10 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 if (feed.isBottom_flag()) {
                     holder3.rl_bottom_mark.setVisibility(View.VISIBLE);
                 }
+
+                if(feed.isTime_flag()){
+                    holder3.ll_time_item.setVisibility(View.VISIBLE);
+                }
                 holder3.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1058,20 +1117,30 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
                             String source_name = source.getSourceSitename();
 
+                            String finalText = "";
+                            String source_title = source.getTitle();
+//                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
+                            String source_name_font = "";
+                            source_title = "<font color =\"red\">" + "<big>" + source_title + "</big>" + "</font>";
                             if (source_name != null) {
-                                if (source.getUser() != null && !"".equals(source.getUser())) {
-//                                    String str ="<font size=7>" + source.getUser() + "</font> : " + source.getTitle();
 
-                                    tv_news_source.setText(source.getUser() + ":" + source.getTitle());
+                                if (source.getUser() != null && !"".equals(source.getUser())) {
+
+                                    source_name_font = "<font color =\"#7d7d7d\">" + source.getUser() + "</font>" +  ": ";
+                                    finalText = source_name_font + source_title;
+                                    tv_news_source.setText(Html.fromHtml(finalText));
                                 } else {
-                                    tv_news_source.setText(source_name + ": " + source.getTitle());
+                                    source_name_font = "<font color =\"#7d7d7d\">" + source_name + "</font>" + ": ";
+                                    finalText = source_name_font  + source_title;
+                                    tv_news_source.setText(Html.fromHtml(finalText));
                                 }
 
                                 TextUtil.setResourceSiteIcon(iv_source, source_name);
 
                             } else {
-
-                                tv_news_source.setText("匿名报道:");
+                                String anonyStr = "<font color =\"#7d7d7d\">" + "匿名报道:" + "</font>" +  ": ";
+                                finalText = anonyStr + source_title;
+                                tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
                         }
@@ -1113,7 +1182,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW, R.id.rl_title_content);
-        params.setMargins(30, 24, 20, 10);
+        params.setMargins(30, 24, 20, 20);
 
         switch (i) {
             case 0:
@@ -1121,7 +1190,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(HomeAty.this, 40);
+                params.height = DensityUtil.dip2px(HomeAty.this, 45);
                 break;
 
             case 2:
@@ -1129,11 +1198,11 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 3:
-                params.height = DensityUtil.dip2px(HomeAty.this, 110);
+                params.height = DensityUtil.dip2px(HomeAty.this, 140);
                 break;
 
             default:
-                params.height = DensityUtil.dip2px(HomeAty.this, 110);
+                params.height = DensityUtil.dip2px(HomeAty.this, 140);
                 break;
 
         }
@@ -1197,6 +1266,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         TextViewExtend tv_interests;
         RelativeLayout rl_bottom_mark;
         LinearLayout ll_top_line;
+        LinearLayout ll_time_item;
+        TextView tv_date;
+        TextView tv_weekday;
 
     }
 
@@ -1224,6 +1296,9 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
         TextViewExtend tv_interests;
+        LinearLayout ll_time_item;
+        TextView tv_date;
+        TextView tv_weekday;
         RelativeLayout rl_bottom_mark;
 
     }
@@ -1271,20 +1346,18 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
             GlobalParams.split_index_top = _SplitStartIndex;
 
-            if (_SplitStartIndex > 1) {
-                NewsFeed feed = result.get(_SplitStartIndex - 1);
+            if (_SplitStartIndex >= 1) {
+                NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
-            } else if (_SplitStartIndex == 1) {
-                NewsFeed feed = result.get(_SplitStartIndex - 1);
-                feed.setTime_flag(true);
-                feed.setTop_flag(true);
-                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-            }
-            if (_SplitStartIndex > 0) {
+
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-            } else {
+            } else if (_SplitStartIndex == 0) {
+                NewsFeed feed = result.get(_SplitStartIndex);
+                feed.setTime_flag(true);
+                feed.setTop_flag(true);
+
                 mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
                 lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -1317,16 +1390,16 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        long pressedBackKeyTime = System.currentTimeMillis();
-        if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
-            finish();
-        } else {
-            ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-            //ToastUtil.toastLong(R.string.press_back_again_exit);
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            long pressedBackKeyTime = System.currentTimeMillis();
+            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
+                finish();
+            } else {
+                ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+                //ToastUtil.toastLong(R.string.press_back_again_exit);
+            }
+            mLastPressedBackKeyTime = pressedBackKeyTime;
         }
-        mLastPressedBackKeyTime = pressedBackKeyTime;
-
 
         return true;
     }
