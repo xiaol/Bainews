@@ -78,6 +78,11 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".pages.FeedBackActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
         <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>
