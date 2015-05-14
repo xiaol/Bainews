@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -60,10 +58,15 @@ public class FeedBackActivity extends BaseActivity {
         mTitleView.setText("与T对话中");
         mlvFeedBack = (PullToRefreshExpandableListView) findViewById(R.id.private_chat_message_list_view);//得到ListView对象的引用 /*为ListView设置Adapter来绑定数据*/
         mlvActual = mlvFeedBack.getRefreshableView();
-//        mlvActual.setPadding(0, 30, 0, 20);
         mlvActual.setAdapter(mAdapter);
         mlvActual.setGroupIndicator(null);
         mlvActual.setDivider(null);
+        mlvActual.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
 //        int groupCount = mlvActual.getCount();
 //        for (int i = 0; i < groupCount; i++) {
 //            mlvActual.expandGroup(i);
@@ -85,13 +88,8 @@ public class FeedBackActivity extends BaseActivity {
         });
         mFeedbackTip = (RelativeLayout) findViewById(R.id.feedback_tip);
         mFeedbackTip.setVisibility(View.GONE);
-        mFeedbackTip.setFocusable(false);
+        mFeedbackTip.requestFocus();
         metFeedBack = (EditText) findViewById(R.id.edit_feedback);
-        metFeedBack.setCursorVisible(false);//失去光标
-        metFeedBack.setImeOptions(EditorInfo.IME_ACTION_SEND);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(metFeedBack.getWindowToken(), 0);
-        metFeedBack.clearFocus();
     }
 
     @Override

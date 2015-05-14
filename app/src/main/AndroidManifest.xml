@@ -69,7 +69,8 @@
             android:name=".pages.HomeAty"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pages.SplashAty"
+            android:windowSoftInputMode="adjustResize"
+            android:name=".pages.FeedBackActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,11 +79,11 @@
             </intent-filter>
 
         </activity>
-        <activity
-            android:windowSoftInputMode="adjustResize"
-            android:name=".pages.FeedBackActivity"
-            android:screenOrientation="portrait">
-        </activity>
+        <!--<activity-->
+            <!--android:windowSoftInputMode="adjustResize"-->
+            <!--android:name=".pages.FeedBackActivity"-->
+            <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
         <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>
