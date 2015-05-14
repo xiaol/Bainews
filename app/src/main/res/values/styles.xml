@@ -21,4 +21,15 @@
         <item name="android:windowEnterAnimation">@anim/alpha_in</item>
         <item name="android:windowExitAnimation">@anim/alpha_out</item>
     </style>
+
+
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Application theme. -->
+    <style name="SwipeBackTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
 </resources>

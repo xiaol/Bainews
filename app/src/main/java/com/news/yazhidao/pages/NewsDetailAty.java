@@ -22,7 +22,6 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
@@ -37,6 +36,8 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class NewsDetailAty extends BaseActivity {
+public class NewsDetailAty extends SwipeBackActivity {
 
     private static final String TAG = "NewsDetailAty";
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
@@ -57,13 +58,19 @@ public class NewsDetailAty extends BaseActivity {
     private View mNewsDetailProgressWheelWrapper;
     //从哪儿进入的详情页
     private String mSource;
+    private SwipeBackLayout mSwipeBackLayout;
+
     @Override
     protected void setContentView() {
+        super.setContentView();
         setContentView(R.layout.aty_detail);
     }
 
     @Override
     protected void initializeViews() {
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+
         mSource =getIntent().getStringExtra(HomeAty.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
@@ -199,7 +206,6 @@ public class NewsDetailAty extends BaseActivity {
             }
         });
     }
-
     public String getMacAddressAndDeviceid(Context c) {
         WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInf = wifiMan.getConnectionInfo();

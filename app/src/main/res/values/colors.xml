@@ -115,4 +115,13 @@
     <color name="news_sourcesite_bottom_divider">#dddddd</color>
     <color name="news_sourcesite_divider">#d6d6d6</color>
     <color name="bg_ews_detail_relate_item">#f7f7f7</color>
+
+    <!--login portion-->
+   <color name="bg_home_login_header">#50b5eb</color>
+    <color name="home_login_chat">#2b2b2b</color>
+    <color name="home_logout">#ff7878</color>
+    <color name="bg_home_login_weixin">#00e17f</color>
+    <color name="bg_home_login_weibo">#ff5d5d</color>
+    <color name="bg_home_login_mode">#000000</color>
+    <color name="divide_home_login">#989898</color>
 </resources>

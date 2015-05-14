@@ -41,7 +41,6 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.listener.TimeOutAlarmUpdateListener;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -53,11 +52,8 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
-import com.news.yazhidao.utils.image.ImageManager;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
-import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
@@ -68,10 +64,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformDb;
-import cn.sharesdk.framework.ShareSDK;
 
 
 public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
@@ -141,25 +133,13 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
     protected void initializeViews() {
         View mHomeAtyLeftMenuWrapper = findViewById(R.id.mHomeAtyLeftMenuWrapper);
         View mHomeAtyRightMenuWrapper = findViewById(R.id.mHomeAtyRightMenuWrapper);
-        final RoundedImageView mHomeAtyRightMenu = (RoundedImageView) findViewById(R.id.mHomeAtyRightMenu);
-        String[] userData = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
-        if(userData!=null){
-            Platform platform = ShareSDK.getPlatform(HomeAty.this, userData[1]);
-            ImageManager.getInstance(HomeAty.this).DisplayImage(platform.getDb().getUserIcon(),mHomeAtyRightMenu,false);
-        }
+        final ImageView mHomeAtyRightMenu = (ImageView) findViewById(R.id.mHomeAtyRightMenu);
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginPopupWindow loginPopupWindow = new LoginPopupWindow(HomeAty.this,new UserLoginListener() {
-                    @Override
-                    public void userLogin(String platform, PlatformDb platformDb) {
-                        ImageManager.getInstance(HomeAty.this).DisplayImage(platformDb.getUserIcon(),mHomeAtyRightMenu,false);
-                    }
-                });
-                loginPopupWindow.setAnimationStyle(R.style.AnimationAlpha);
-                loginPopupWindow.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                LoginPopupWindow window1=new LoginPopupWindow(HomeAty.this);
+                window1.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
-
             }
         });
         mHomeAtyLeftMenuWrapper.setOnClickListener(new View.OnClickListener() {

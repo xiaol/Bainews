@@ -1,2 +1,3 @@
 include ':app', ':sharesdk_mainlib'
 include ':library'
+include ':sharesdk_onekeyshare'

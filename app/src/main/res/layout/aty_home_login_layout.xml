@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:clipChildren="false"
-    android:background="#33333333"
     >
     <RelativeLayout
         android:id="@+id/mHomeAtyLoginBg"
@@ -14,14 +13,6 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         >
-        <ImageView
-            android:id="@+id/login_sheet_bg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:clipToPadding="false"
-
-            />
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/login_title"
             android:layout_width="wrap_content"
@@ -128,6 +119,34 @@
                 android:textColor="@color/new_gray"
                 android:textSize="@dimen/textsize_twenty"
                 android:text="注销"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/common_padding_fifteen"
+                android:gravity="center"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/mHomeAtyShare"
+            android:layout_width="@dimen/simple_button_width"
+            android:layout_height="@dimen/simple_button_height"
+            android:layout_below="@id/mHomeAtyLogOut"
+            android:layout_marginTop="@dimen/common_padding_twenty"
+            android:layout_centerHorizontal="true"
+            android:background="#aa5588">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/common_padding_thirty"
+                />
+            <com.news.yazhidao.widget.TextViewExtend
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/new_gray"
+                android:textSize="@dimen/textsize_twenty"
+                android:text="分享"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/common_padding_fifteen"
                 android:gravity="center"
