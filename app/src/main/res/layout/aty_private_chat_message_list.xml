@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/blue"
+        android:id="@+id/relativeLayout">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lines="1"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:id="@+id/nav_title_view"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_button"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/bg_date_close" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/title_line"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/title_line_bg" />
+    <RelativeLayout
+        android:id="@+id/edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/Gray">
+
+        <EditText
+            android:id="@+id/edit_feedback"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:hint="友情提示：请写下你的反馈意见"
+            android:layout_margin="10dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:background="@drawable/white_feedback_solid"
+            android:textColor="@color/new_tip_text"/>
+    </RelativeLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/private_chat_message_list_view"
+        android:layout_below="@+id/title_line"
+        android:layout_above="@+id/edit_layout"
+        android:scrollbars="none"
+        android:cacheColorHint="#00000000"
+        android:listSelector="@null"/>
+
+    <RelativeLayout
+        android:id="@+id/feedback_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout"
+        android:gravity="center"
+        android:background="@color/new_tip_bg">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="友情提示：请写下你的反馈意见，我们将在24小时内回复，谢谢。"
+            android:padding="10dp"
+            android:textColor="@color/new_tip_text"
+            android:textSize="@dimen/textsize_fourteen"
+            android:gravity="center" />
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

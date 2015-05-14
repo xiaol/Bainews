@@ -3,6 +3,7 @@
     android:id="@+id/ll_souce_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     >
 
     <com.news.yazhidao.widget.CircleView
@@ -12,7 +13,7 @@
         android:layout_gravity="center"
         android:text="1"
         android:paddingLeft="6dp"
-        android:layout_marginLeft="2dp"
+        android:layout_marginLeft="10dp"
         android:textColor="#ffffff"
         />
 
@@ -34,11 +35,11 @@
 
     <ImageView
         android:id="@+id/iv_combine_line"
-        android:layout_width="2dp"
-        android:layout_height="20dp"
+        android:layout_width="3dp"
+        android:layout_height="30dp"
         android:layout_below="@id/iv_source"
         android:background="@drawable/source_item_combine_line"
-        android:layout_marginLeft="10.5dp"
+        android:layout_marginLeft="18dp"
         android:layout_marginTop="-1dp"
         android:layout_marginBottom="-1dp"
         />

@@ -16,6 +16,7 @@ public abstract class BaseActivity extends Activity {
         setContentView();
         initializeViews();
         loadData();
+
     }
 
     protected abstract void setContentView();

@@ -20,13 +20,18 @@ import android.view.animation.Interpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 //m_ppopupWindow = new TSHeadPortraitPopupWindow(m_pActivity, m_pUserData.getM_strPhotoUrl());
@@ -52,7 +57,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     private float mAnimationProgress, miCurrentProgress;
     private TimeFeed mCurrentTimeFeed;
     private IUpdateUI mUpdateUI;
-    private String mCurrentDate, mCurrentType;
+    private String mCurrentDate, mCurrentType, mStrSelectedDate;
 
     public TimePopupWindow(Activity context, Bitmap bitmap, TimeFeed timeFeed, Long updateTime, Long totalTime, IUpdateUI updateUI) {
         super(context);
@@ -243,7 +248,48 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
     public void setDateAndType(String currentDate, String currentType) {
         mCurrentDate = currentDate;
         mCurrentType = currentType;
+        if (mCurrentTimeFeed == null) {
+            mCurrentTimeFeed = new TimeFeed();
+            if (mCurrentType.equals("0"))
+                mCurrentTimeFeed.setNext_update_type("1");
+            else
+                mCurrentTimeFeed.setNext_update_type("0");
+            mCurrentTimeFeed.setNext_upate_time("24894000");
+            mCurrentTimeFeed.setNext_update_freq("43200000");
+        }
+        if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0 && mCurrentType.equals("1")) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = df.parse(mCurrentDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.DAY_OF_MONTH, +1);
+                date = calendar.getTime();
+                mStrSelectedDate = df.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mStrSelectedDate = mCurrentDate;
+        }
+        if(mCurrentTimeFeed.getHistory_date()!=null) {
+            ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
+            Log.i("tag", "i===" + mStrSelectedDate);
+            for (int i = 0; i < arrTimeList.size(); i++) {
+                if (mStrSelectedDate != null && mStrSelectedDate.equals(arrTimeList.get(i))) {
+                    final int j = i;
+                    mhlvDate.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mhlvDate.scrollTo(width * j);
+                        }
+                    }, 100);
+                }
+            }
+        }
     }
+
+    int width;
 
     class DateAdapter extends BaseAdapter {
 
@@ -290,42 +336,49 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            if (mCurrentDate.equals(marrStrHistoryDate.get(position))) {
-                if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 1) {
-                    if (mCurrentType.equals("0"))
-                        holder.ivMorning.setPressed(true);
-                    else
-                        holder.ivNight.setPressed(true);
-                } else {
-                    if (mCurrentType.equals("1"))
-                        holder.ivMorning.setPressed(true);
-                    else
-                        holder.ivNight.setPressed(true);
-                }
+            convertView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            convertView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            width = convertView.getMeasuredWidth();
+            if (mStrSelectedDate != null && mStrSelectedDate.equals(marrStrHistoryDate.get(position))) {
+                if (mCurrentType.equals("0"))
+                    holder.ivMorning.setPressed(true);
+                else
+                    holder.ivNight.setPressed(true);
             } else {
                 holder.ivMorning.setPressed(false);
                 holder.ivNight.setPressed(false);
             }
-            holder.tvDate.setText(marrStrHistoryDate.get(position).substring(5));
+            final String strCurrentDate = marrStrHistoryDate.get(position);
+            holder.tvDate.setText(strCurrentDate.substring(5));
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-                    else
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
+                    Log.i("tag", strCurrentDate);
+                    mUpdateUI.refreshUI(strCurrentDate, "0");
                     dismiss();
                 }
             });
             holder.ivNight.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
-                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "0");
-                    else
-                        mUpdateUI.refreshUI(marrStrHistoryDate.get(position), "1");
+                    if (mUpdateUI != null && Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        try {
+                            Date date = df.parse(strCurrentDate);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date);
+                            calendar.add(Calendar.DAY_OF_MONTH, -1);
+                            date = calendar.getTime();
+                            String strDate = df.format(date);
+                            Log.i("tag", strDate);
+                            mUpdateUI.refreshUI(strDate, "1");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.i("tag", strCurrentDate);
+                        mUpdateUI.refreshUI(strCurrentDate, "1");
+                    }
                     dismiss();
                 }
             });

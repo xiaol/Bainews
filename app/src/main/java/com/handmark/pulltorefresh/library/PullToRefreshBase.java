@@ -1071,7 +1071,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
      * @param listener    - Listener for scroll
      */
     protected final void smoothScrollTo(int scrollValue, OnSmoothScrollFinishedListener listener) {
-        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 2000, listener);
+        smoothScrollTo(scrollValue, getPullToRefreshScrollDuration(), 100, listener);
     }
 
     /**
@@ -1691,7 +1691,12 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
                  * calculations. We use 1000 as it gives us good accuracy and
                  * small rounding errors
                  */
-                long normalizedTime = (1000 * (System.currentTimeMillis() - mStartTime)) / mDuration;
+
+                long normalizedTime = 0;
+
+                if(mDuration != 0) {
+                    normalizedTime = (1000 * (System.currentTimeMillis() - mStartTime)) / mDuration;
+                }
                 normalizedTime = Math.max(Math.min(normalizedTime, 1000), 0);
 
                 final int deltaY = Math.round((mScrollFromY - mScrollToY)

@@ -2,10 +2,69 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="10dp"
     android:background="@drawable/bg_feedstream_list_table">
+
+    <LinearLayout
+        android:id="@+id/ll_time_item"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:background="#f3f3fa"
+        android:paddingTop="5dp"
+        android:layout_height="45dp">
+
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/image_compass" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="四月二十三日"
+                android:textSize="13sp"
+                android:textColor="#000000"
+                />
+
+            <TextView
+                android:id="@+id/tv_weekday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="星期三|早间"
+                android:textSize="13sp"
+                android:textColor="#000000"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#e2e2e2"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp" />
+
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_divider"
+        android:layout_below="@+id/ll_time_item"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:background="#f3f3fa" />
@@ -27,14 +86,14 @@
             android:background="@drawable/image_back" />
 
 
-        <com.news.yazhidao.widget.LetterSpacingTextView
+        <TextView
             android:id="@+id/tv_title"
             android:layout_toRightOf="@+id/iv_title_img"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="13dp"
             android:layout_marginLeft="8dp"
-            android:maxLines="2"
+            android:maxLines="3"
             android:ellipsize="end"
             android:textSize="18sp"
             android:textColor="#7d7d7d" />
@@ -52,14 +111,14 @@
 
         <LinearLayout
             android:id="@+id/ll_source_interest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="86dp"
+            android:layout_height="24dp"
             android:background="@drawable/bg_feedback_contact_way2"
             android:layout_below="@+id/tv_title"
             android:layout_marginRight="12dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="15dp"
-            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
 
@@ -69,9 +128,8 @@
                 android:layout_height="wrap_content"
                 android:text="10个看点"
                 android:layout_marginRight="3dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="5dp"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:layout_alignParentRight="true" />
@@ -79,7 +137,7 @@
             <ImageView
                 android:layout_width="8dp"
                 android:layout_height="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:background="@drawable/arrow_right_white" />
         </LinearLayout>
@@ -91,11 +149,10 @@
         android:layout_below="@+id/rl_title_content"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:layout_marginRight="12dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="12dp"
-        android:paddingBottom="10dp"
         android:layout_marginBottom="3dp" />
 
     <RelativeLayout
