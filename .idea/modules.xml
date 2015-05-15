@@ -9,10 +9,14 @@
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
 <<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" filepath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
+=======
+<<<<<<< HEAD
 =======
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
 >>>>>>> 3767fc5a4f81d56f1d64baa26bd51753760c883f
+>>>>>>> 1916878a5a3a92aabb5c9b3d64908ded0cf660d0
     </modules>
   </component>
 </project>

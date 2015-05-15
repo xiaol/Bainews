@@ -1,94 +1,81 @@
 package com.news.yazhidao.widget;
 
-import android.app.ProgressDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.util.Log;
+import android.text.Html;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserLoginListener;
-import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.listener.UserLoginPopupStateListener;
+import com.news.yazhidao.pages.FeedBackActivity;
+import com.news.yazhidao.utils.helper.ShareSdkHelper;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
-import java.util.HashMap;
-
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.PlatformActionListener;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.weibo.TencentWeibo;
-import cn.sharesdk.wechat.friends.Wechat;
+import cn.sharesdk.framework.PlatformDb;
 
 /**
- * 登陆界面
+ * Created by fengjigang on 15/5/12.
  */
-public class LoginPopupWindow extends PopupWindow implements PlatformActionListener, OnClickListener {
-    public final String TAG = "LoginPopupWindow";
-    private View mMenuView;
+public class LoginPopupWindow extends PopupWindow implements View.OnClickListener,UserLoginListener {
+    private final View mPopupWidow;
     private Context mContext;
-    RelativeLayout mWeiboLogin, mWeiXinLogin;
-    ImageView mCancelLogin;
-    private ProgressDialog mProgressDialog;
-    private AsyncTask mLoginTask;
-    private UserLoginListener mListener;
-    private View mHomeAtyLoginBg;
-    private int mScreenWidth;
-    private int mScreenHeight;
-    private View mHomeAtyLoginOut;
+    private RoundedImageView mHomeUserIcon;
+    private TextView mHomeLogin;
+    private View mHomeChatWrapper;
+    private View mHomeLoginCancel;
+    private UserLoginListener mUserLoginListener;
+    private View mHomeLogout;
 
-    public LoginPopupWindow(Context context,UserLoginListener listener) {
-        super(context);
-        mContext = context;
-        this.mListener=listener;
-        LayoutInflater inflater = (LayoutInflater) context
+    public LoginPopupWindow(Context mContext){
+        this.mContext=mContext;
+        LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mMenuView = inflater.inflate(R.layout.aty_home_login_layout, null);
-        mScreenHeight= DeviceInfoUtil.getScreenHeight();
-        mScreenWidth=DeviceInfoUtil.getScreenWidth();
-        findViews();
+        mPopupWidow = inflater.inflate(R.layout.aty_home_login, null);
+        initConfig();
+        initViews();
     }
 
-    @Override
-    public void setOnDismissListener(OnDismissListener onDismissListener) {
-        super.setOnDismissListener(onDismissListener);
+    private void initViews() {
+        mHomeUserIcon=(RoundedImageView)mPopupWidow.findViewById(R.id.mHomeUserIcon);
+        mHomeLogin=(TextView)mPopupWidow.findViewById(R.id.mHomeLogin);
+        mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
+        mHomeChatWrapper=mPopupWidow.findViewById(R.id.mHomeChatWrapper);
+        mHomeLoginCancel=mPopupWidow.findViewById(R.id.mHomeLoginCancel);
+        mHomeLogout=mPopupWidow.findViewById(R.id.mHomeLogout);
+        mHomeLogout.setOnClickListener(this);
+        mHomeLoginCancel.setOnClickListener(this);
+        mHomeLogin.setOnClickListener(this);
+        mHomeChatWrapper.setOnClickListener(this);
+        //判断用户是否登录，并且登录有效
+        User user = SharedPreManager.getUser();
+        if(user!=null){
+            mHomeLogin.setOnClickListener(null);
+            mHomeLogin.setText(user.getUserName());
+            mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
+            mHomeLogout.setVisibility(View.VISIBLE);
+            mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
+            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(),mHomeUserIcon,false);
+        }
     }
 
-
-    private void findViews() {
-        mWeiboLogin = (RelativeLayout) mMenuView.findViewById(R.id.mWeiboLogin);
-        mCancelLogin = (ImageView) mMenuView.findViewById(R.id.mCancelLogin);
-        mWeiXinLogin = (RelativeLayout) mMenuView.findViewById(R.id.mWeiXinLogin);
-        mHomeAtyLoginBg=mMenuView.findViewById(R.id.mHomeAtyLoginBg);
-        mHomeAtyLoginOut=mMenuView.findViewById(R.id.mHomeAtyLogOut);
-        mHomeAtyLoginOut.setOnClickListener(this);
-        mWeiboLogin.setOnClickListener(this);
-        mCancelLogin.setOnClickListener(this);
-        mWeiXinLogin.setOnClickListener(this);
-
-        mProgressDialog = new ProgressDialog(mContext);
-        mProgressDialog.setMessage("请稍候");
-        mProgressDialog.setCancelable(true);// 设置是否可以通过点击Back键取消
-        mProgressDialog.setCanceledOnTouchOutside(false);// 设置在点击Dialog外是否取消Dialog进度条
-
+    private void initConfig() {
         //设置SelectPicPopupWindow的View
-        this.setContentView(mMenuView);
+        this.setContentView(mPopupWidow);
         //设置SelectPicPopupWindow弹出窗体的宽
-        this.setWidth(LayoutParams.MATCH_PARENT);
+        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(LayoutParams.WRAP_CONTENT);
+        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //设置SelectPicPopupWindow弹出窗体动画效果
@@ -97,122 +84,71 @@ public class LoginPopupWindow extends PopupWindow implements PlatformActionListe
         ColorDrawable dw = new ColorDrawable(0xb0000000);
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
-        //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
-        mMenuView.setOnTouchListener(new OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-
-                int _Width=mHomeAtyLoginBg.getWidth();
-                int _Height=mHomeAtyLoginBg.getHeight();
-                Rect rect=new Rect(mScreenWidth/2-_Width/2,mScreenHeight/2-_Height/2,mScreenWidth-(mScreenWidth/2-_Width/2),mScreenHeight-(mScreenHeight/2-_Height/2));
-                int y = (int) event.getY();
-                int x=(int)event.getX();
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                   if(!rect.contains(x,y)){
-                       dismiss();
-                   }
-                }
-                return true;
-            }
-        });
     }
-
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.mCancelLogin:
+        switch (v.getId()){
+            case R.id.mHomeLoginCancel:
+                this.dismiss();
+                break;
+            case R.id.mHomeLogin:
+                openLoginModeWindow();
+                break;
+            case R.id.mHomeLogout:
+                logout();
+                break;
+            case R.id.mHomeChatWrapper:
+                //TODO 打开反馈界面
+                Intent intent =new Intent(mContext, FeedBackActivity.class);
+                mContext.startActivity(intent);
                 dismiss();
                 break;
-            case R.id.mWeiboLogin:
-                authorize(mContext, SinaWeibo.NAME, this);
-                break;
-            case R.id.mWeiXinLogin:
-                authorize(mContext, Wechat.NAME, this);
-                break;
-            case R.id.mHomeAtyLogOut:
-                logout();
-
-                break;
         }
     }
 
     /**
-     * 用户注销登陆
+     * 用户退出登录
      */
     private void logout() {
-        String[] data = SharedPreManager.getUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM);
-        if(data!=null){
-            ShareSDK.getPlatform(mContext,data[1]).removeAccount();
-        }
-        SharedPreManager.remove(CommonConstant.FILE_USER_INFO,CommonConstant.KEY_USER_ID_AND_PLATFORM);
+        ShareSdkHelper.logout(mContext);
+        mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
+        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
+        mHomeLogin.setOnClickListener(this);
+        mHomeLogout.setVisibility(View.GONE);
+        mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
     }
 
-    /**
-     * sharesdk 授权认证
-     *
-     * @param mContext
-     * @param platform
-     * @param listener
-     */
-    private void authorize(Context mContext, String platform, PlatformActionListener listener) {
-//        mProgressDialog.show();
-        Platform _Plateform = ShareSDK.getPlatform(mContext, platform);
-        //判断指定平台是否已经完成授权
-        if (_Plateform.isValid()) {
-            String userId = _Plateform.getDb().getUserId();
-            if (userId != null) {
-                if(mListener!=null){
-                    mListener.userLogin(platform,_Plateform.getDb());
-                }
-                return;
+    private void openLoginModeWindow() {
+        LoginModePopupWindow window=new LoginModePopupWindow(mContext,this,new UserLoginPopupStateListener(){
+
+            @Override
+            public void close() {
+                LoginPopupWindow.this.dismiss();
             }
-        }
-        if (SinaWeibo.NAME.equals(platform) || TencentWeibo.NAME.equals(platform)) {
-            //关注指定的微博
-            _Plateform.followFriend("火花无线");
-        }
-        _Plateform.SSOSetting(false);
-        _Plateform.setPlatformActionListener(listener);
-        _Plateform.authorize();
+        });
+        window.showAtLocation(((Activity)mContext).getWindow().getDecorView(), Gravity.CENTER
+                | Gravity.CENTER, 0, 0);
     }
 
 
     @Override
-    public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
-        Logger.i(TAG, "onComplete-----");
-        String userId = platform.getDb().getUserId();
-        if (userId != null) {
-            String nickName = platform.getDb().getUserName();
-            String gender = platform.getDb().getUserGender();
-            String iconURL = platform.getDb().getUserIcon();
-            String token = platform.getDb().getToken();
-            Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token);
-            //保存用户登陆信息到sp中
-            SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER_INFO, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
-            if(mListener!=null){
-                mListener.userLogin(platform.getName(),platform.getDb());
-            }
-        }
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
+    public void userLogin(String platform, PlatformDb platformDb) {
+        mHomeLogin.setOnClickListener(null);
+        mHomeLogin.setText(platformDb.getUserName());
+        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
+        mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
+        mHomeLogout.setVisibility(View.VISIBLE);
+        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(),mHomeUserIcon,false);
     }
 
     @Override
-    public void onError(Platform platform, int i, Throwable throwable) {
-        Logger.e(TAG, "authorize error-----");
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
+    public void userLogout() {
+        ShareSdkHelper.logout(mContext);
+        mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
+        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
+        mHomeLogin.setOnClickListener(this);
     }
-
-    @Override
-    public void onCancel(Platform platform, int i) {
-        Logger.e(TAG, "authorize cancel-----");
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-    }
-
 }

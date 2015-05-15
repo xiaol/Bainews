@@ -7,7 +7,6 @@ public class FeedBack implements Serializable{
 
     //聊聊时间
     public String updateTime;
-    public int id;
     public ArrayList<Content> content;
 
     public class Content {

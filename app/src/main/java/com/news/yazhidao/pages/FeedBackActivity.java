@@ -3,10 +3,14 @@ package com.news.yazhidao.pages;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -18,14 +22,26 @@ import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.entity.FeedBack;
+import com.news.yazhidao.entity.Message;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.SendMessageListener;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.request.SendMessageRequest;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
-public class FeedBackActivity extends BaseActivity {
+public class FeedBackActivity extends BaseActivity implements SendMessageListener {
 
 
     private PullToRefreshExpandableListView mlvFeedBack;
@@ -33,29 +49,33 @@ public class FeedBackActivity extends BaseActivity {
     private TextViewExtend mTitleView;
     private RelativeLayout mFeedbackTip;
     private ExpandableListView mlvActual;
-    private FeedBack mFeedBack;
+    private ArrayList<FeedBack> marrFeedBack;
     private EditText metFeedBack;
+    private User mUser;
+    private MessageReceiver mReceiver;
+    private String mJPushId, mUserId, mUserPlatformType;
+    private boolean mIsSend = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        IntentFilter intentfilter = new IntentFilter();
-//        intentfilter.addAction(AppConfigure.NOTIF_RECIEVE_PRIVATE_CHAT);
-//        registerReceiver(mReceiver, intentfilter);
+        mReceiver = new MessageReceiver();
+        IntentFilter intentfilter = new IntentFilter();
+        intentfilter.addAction("messagemessagemessage");
+        registerReceiver(mReceiver, intentfilter);
     }
 
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_private_chat_message_list);
-
     }
 
     @Override
-    protected void initializeViews(Bundle savedInstanceState) {
+    protected void initializeViews() {
         mAdapter = new TSPrivateChatMessageAdapter(this);
 
         mTitleView = (TextViewExtend) findViewById(R.id.nav_title_view);
-        mTitleView.setText("与T对话中");
+
         mlvFeedBack = (PullToRefreshExpandableListView) findViewById(R.id.private_chat_message_list_view);//得到ListView对象的引用 /*为ListView设置Adapter来绑定数据*/
         mlvActual = mlvFeedBack.getRefreshableView();
         mlvActual.setAdapter(mAdapter);
@@ -67,10 +87,6 @@ public class FeedBackActivity extends BaseActivity {
                 return true;
             }
         });
-//        int groupCount = mlvActual.getCount();
-//        for (int i = 0; i < groupCount; i++) {
-//            mlvActual.expandGroup(i);
-//        }
         ImageView pBackButton = (ImageView) findViewById(R.id.back_button);
         pBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,57 +95,127 @@ public class FeedBackActivity extends BaseActivity {
             }
         });
 
-        mlvFeedBack.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-        mlvFeedBack.setOnPullEventListener(new PullToRefreshBase.OnPullEventListener<ExpandableListView>() {
-            @Override
-            public void onPullEvent(PullToRefreshBase<ExpandableListView> refreshView, PullToRefreshBase.State state, PullToRefreshBase.Mode direction) {
-
-            }
-        });
+        mlvFeedBack.setMode(PullToRefreshBase.Mode.DISABLED);
+//        mlvFeedBack.setOnPullEventListener(new PullToRefreshBase.OnPullEventListener<ExpandableListView>() {
+//            @Override
+//            public void onPullEvent(PullToRefreshBase<ExpandableListView> refreshView, PullToRefreshBase.State state, PullToRefreshBase.Mode direction) {
+//
+//            }
+//        });
         mFeedbackTip = (RelativeLayout) findViewById(R.id.feedback_tip);
         mFeedbackTip.setVisibility(View.GONE);
         mFeedbackTip.requestFocus();
         metFeedBack = (EditText) findViewById(R.id.edit_feedback);
+        metFeedBack.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (mIsSend && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    /*隐藏软键盘*/
+                    InputMethodManager imm = (InputMethodManager) v
+                            .getContext().getSystemService(
+                                    Context.INPUT_METHOD_SERVICE);
+                    if (imm.isActive()) {
+                        imm.hideSoftInputFromWindow(
+                                v.getApplicationWindowToken(), 0);
+                    }
+                    mIsSend = false;
+                    Message message = new Message("010df996d57", mJPushId, metFeedBack.getText().toString(), "text");
+                    SendMessageRequest.sendMessage(message, FeedBackActivity.this);
+                    int size = marrFeedBack.size();
+                    String millis = marrFeedBack.get(size - 1).updateTime;
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Long lastTime = 0l;
+                    try {
+                        lastTime = df.parse(millis).getTime();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if ((System.currentTimeMillis() - lastTime) > 15 * 60 * 1000) {
+                        FeedBack mFeedBack = new FeedBack();
+                        try {
+                            Date date = new Date();
+                            String strDate = df.format(date);
+                            mFeedBack.updateTime = strDate;
+                            Log.i("tag", strDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        ArrayList<FeedBack.Content> contents = new ArrayList<>();
+                        FeedBack.Content content = mFeedBack.new Content();
+                        content.content = metFeedBack.getText().toString();
+                        content.type = "0";
+                        contents.add(content);
+                        mFeedBack.content = contents;
+                        marrFeedBack.add(mFeedBack);
+                    } else {
+                        FeedBack.Content content = marrFeedBack.get(size - 1).new Content();
+                        content.content = metFeedBack.getText().toString();
+                        content.type = "0";
+                        marrFeedBack.get(size - 1).content.add(content);
+                    }
+                    mAdapter.SetChatData(marrFeedBack);
+                    int groupCount = mAdapter.getGroupCount();
+                    for (int i = 0; i < groupCount; i++) {
+                        mlvActual.expandGroup(i);
+                    }
+                    mlvActual.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Select the last row so it will scroll into view...
+                            mlvActual.setSelection(marrFeedBack.size() * 200);
+                        }
+                    });
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     protected void loadData() {
-        mFeedBack = new FeedBack();
-        mFeedBack.id = 10;
-        mFeedBack.updateTime = "111111";
+        mJPushId = SharedPreManager.getJPushId();
+        mUser = SharedPreManager.getUser();
+        if (mUser != null) {
+            mUserId = mUser.getUserId();
+            mUserPlatformType = mUser.getPlatformType();
+            mTitleView.setText("与 "+mUser.getUserName()+" 对话中");
+        }
+        marrFeedBack = new ArrayList<>();
+        FeedBack mFeedBack = new FeedBack();
+        mFeedBack.updateTime = "2015-05-14 16:00:10";
         ArrayList<FeedBack.Content> contents = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             FeedBack.Content content = mFeedBack.new Content();
             if (i % 2 == 0) {
-                content.content = "dasfdsafd";
+                content.content = "dhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhk";
                 content.type = "0";
             } else {
-                content.content = "aaaaaaaa";
+                content.content = "a";
                 content.type = "1";
             }
             contents.add(content);
         }
         mFeedBack.content = contents;
-        final ArrayList<FeedBack> arrayList = new ArrayList<>();
-        arrayList.add(mFeedBack);
-        mAdapter.SetChatData(arrayList);
+        marrFeedBack.add(mFeedBack);
+        mAdapter.SetChatData(marrFeedBack);
+        int groupCount = mAdapter.getGroupCount();
+        for (int i = 0; i < groupCount; i++) {
+            mlvActual.expandGroup(i);
+        }
         mlvActual.post(new Runnable() {
             @Override
             public void run() {
                 // Select the last row so it will scroll into view...
-                mlvActual.setSelection(arrayList.size() * 2);
+                mlvActual.setSelection(marrFeedBack.size() * 200);
             }
         });
-
-        int groupCount = mlvActual.getCount();
-        for (int i = 0; i < groupCount; i++) {
-            mlvActual.expandGroup(i);
-        }
     }
 
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
@@ -166,45 +252,110 @@ public class FeedBackActivity extends BaseActivity {
 
 //    }
 
-
-    public void SaveDataArrayToDic() {
-//        Collections.reverse(argDatas);
-    }
-
-
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    class MessageReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i("tag", "000000000");
+            int size = marrFeedBack.size();
+            String millis = marrFeedBack.get(size - 1).updateTime;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Long lastTime = 0l;
+            try {
+                lastTime = df.parse(millis).getTime();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            JSONObject object = null;
+            try {
+                object = new JSONObject(intent.getStringExtra("message"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if ((System.currentTimeMillis() - lastTime) > 15 * 60 * 1000) {
+                FeedBack mFeedBack = new FeedBack();
+                try {
+                    Date date = new Date();
+                    String strDate = df.format(date);
+                    mFeedBack.updateTime = strDate;
+                    Log.i("tag", strDate);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                ArrayList<FeedBack.Content> contents = new ArrayList<>();
+                FeedBack.Content content = mFeedBack.new Content();
+                try {
+                    content.content = object.getString("content");
+                    content.type = "1";
+                    contents.add(content);
+                    mFeedBack.content = contents;
+                    marrFeedBack.add(mFeedBack);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                FeedBack.Content content = marrFeedBack.get(size - 1).new Content();
+                try {
+                    content.content = object.getString("content");
+                    content.type = "1";
+                    marrFeedBack.get(size - 1).content.add(content);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            mAdapter.SetChatData(marrFeedBack);
+            int groupCount = mAdapter.getGroupCount();
+            for (int i = 0; i < groupCount; i++) {
+                mlvActual.expandGroup(i);
+            }
+            mlvActual.post(new Runnable() {
+                @Override
+                public void run() {
+                    // Select the last row so it will scroll into view...
+                    mlvActual.setSelection(marrFeedBack.size() * 200);
+                }
+            });
         }
-    };
+    }
 
+
+    @Override
+    public void success(String result) {
+        mIsSend = true;
+        metFeedBack.setText("");
+    }
+
+    @Override
+    public void failed(MyAppException exception) {
+        mIsSend = true;
+        metFeedBack.setText("");
+    }
 
     class TSPrivateChatMessageAdapter extends BaseExpandableListAdapter {
 
         Context mContext;
-        ArrayList<FeedBack> marrFeedBack;
+        ArrayList<FeedBack> arrFeedBack;
 
         public TSPrivateChatMessageAdapter(Context context) {
             mContext = context;
         }
 
-        public void SetChatData(ArrayList<FeedBack> arrFeedBack) {
-            marrFeedBack = arrFeedBack;
+        public void SetChatData(ArrayList<FeedBack> feedBack) {
+            arrFeedBack = feedBack;
             this.notifyDataSetChanged();
         }
 
         @Override
         public int getGroupCount() {
             // TODO Auto-generated method stub
-            return marrFeedBack == null ? 0 : marrFeedBack.size();
+            return arrFeedBack == null ? 0 : arrFeedBack.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
             // TODO Auto-generated method stub
-            if (marrFeedBack != null) {
-                ArrayList<FeedBack.Content> contents = marrFeedBack.get(groupPosition).content;
+            if (arrFeedBack != null) {
+                ArrayList<FeedBack.Content> contents = arrFeedBack.get(groupPosition).content;
                 return contents == null ? 0 : contents.size();
             } else
                 return 0;
@@ -213,13 +364,13 @@ public class FeedBackActivity extends BaseActivity {
         @Override
         public Object getGroup(int groupPosition) {
             // TODO Auto-generated method stub
-            return marrFeedBack.get(groupPosition);
+            return arrFeedBack.get(groupPosition);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
             // TODO Auto-generated method stub
-            return marrFeedBack.get(groupPosition).content.get(childPosition);
+            return arrFeedBack.get(groupPosition).content.get(childPosition);
         }
 
         @Override
@@ -253,7 +404,7 @@ public class FeedBackActivity extends BaseActivity {
             } else {
                 groupHolder = (GroupHolder) convertView.getTag();
             }
-            FeedBack feedBack = marrFeedBack.get(groupPosition);
+            FeedBack feedBack = arrFeedBack.get(groupPosition);
             groupHolder.m_pDateView.setText(feedBack.updateTime);
             return convertView;
         }
@@ -285,7 +436,7 @@ public class FeedBackActivity extends BaseActivity {
             } else {
                 holder = (ChildHolder) convertView.getTag();
             }
-            FeedBack.Content content = marrFeedBack.get(groupPosition).content.get(childPosition);
+            FeedBack.Content content = arrFeedBack.get(groupPosition).content.get(childPosition);
 
             //显示右侧
             if (content.type != null && content.type.equals("0")) {
@@ -295,7 +446,10 @@ public class FeedBackActivity extends BaseActivity {
                 holder.m_pRightContentView.setVisibility(View.VISIBLE);
                 holder.m_pLeftNameView.setVisibility(View.GONE);
                 holder.m_pRightNameView.setVisibility(View.VISIBLE);
-//                ImageLoader.getInstance().displayImage("url", holder.m_pRightIconView);
+                if (mUser != null) {
+                    ImageLoader.getInstance().displayImage(mUser.getUserIcon(), holder.m_pRightIconView);
+                    holder.m_pRightNameView.setText(mUser.getUserName());
+                }
                 holder.m_pRightContentView.setText(content.content);
             } else {
                 holder.m_pLeftIconView.setVisibility(View.VISIBLE);
@@ -304,7 +458,6 @@ public class FeedBackActivity extends BaseActivity {
                 holder.m_pRightContentView.setVisibility(View.GONE);
                 holder.m_pLeftNameView.setVisibility(View.VISIBLE);
                 holder.m_pRightNameView.setVisibility(View.GONE);
-//                ImageLoader.getInstance().displayImage("url", holder.m_pLeftIconView);
                 holder.m_pLeftContentView.setText(content.content);
             }
             return convertView;

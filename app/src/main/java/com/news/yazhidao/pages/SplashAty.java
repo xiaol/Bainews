@@ -1,7 +1,6 @@
 package com.news.yazhidao.pages;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 
 import com.news.yazhidao.R;
@@ -21,7 +20,7 @@ public class SplashAty extends BaseActivity {
     }
 
     @Override
-    protected void initializeViews(Bundle savedInstanceState) {
+    protected void initializeViews() {
         //add umeng statistic access app
         final long _Strat=System.currentTimeMillis();
         ZipperUtil.unzip(this,new ZipperUtil.ZipCompleteListener() {
