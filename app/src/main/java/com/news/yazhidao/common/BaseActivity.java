@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import com.umeng.analytics.MobclickAgent;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  *  Created by feng on 3/23/15.
  */
@@ -14,13 +16,13 @@ public abstract class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView();
-        initializeViews(savedInstanceState);
+        initializeViews();
         loadData();
 
     }
 
     protected abstract void setContentView();
-    protected abstract void initializeViews(Bundle savedInstanceState);
+    protected abstract void initializeViews();
     protected abstract void loadData();
 
 
@@ -28,12 +30,14 @@ public abstract class BaseActivity extends Activity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
+        JPushInterface.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+        JPushInterface.onPause(this);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

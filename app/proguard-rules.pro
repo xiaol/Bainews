@@ -125,6 +125,10 @@ java.lang.Object readResolve();
 -dontwarn cn.sharesdk.**
 -dontwarn **.R$*
 
+#JPush 混淆相关
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** {*; }
+
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
 -keep class com.news.yazhidao.entity.** { *; }

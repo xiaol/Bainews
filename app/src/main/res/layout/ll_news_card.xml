@@ -170,7 +170,7 @@
         android:layout_alignParentRight="true"
         android:orientation="horizontal">
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <com.news.yazhidao.widget.LetterSpacingTextView
             android:id="@+id/tv_interests"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

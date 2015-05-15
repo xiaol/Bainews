@@ -3,6 +3,9 @@ package com.news.yazhidao.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.news.yazhidao.BuildConfig;
+
+import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
 
 /**
@@ -14,6 +17,8 @@ public class YaZhiDaoApplication extends Application {
     public void onCreate() {
         mContext=this;
         ShareSDK.initSDK(this);
+        JPushInterface.init(this);
+        JPushInterface.setDebugMode(BuildConfig.DEBUG);
         super.onCreate();
     }
     public static Context getAppContext(){
