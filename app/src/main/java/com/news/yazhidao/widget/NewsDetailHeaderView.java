@@ -33,6 +33,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.widget.imagewall.ImageWallView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.NameValuePair;
@@ -46,6 +47,7 @@ import java.util.List;
  * Created by h.yuan on 2015/3/23.
  */
 public class NewsDetailHeaderView extends FrameLayout {
+
 
     public static interface HeaderVeiwPullUpListener {
         void onclickPullUp(int height);
@@ -83,6 +85,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int type = 0;
     private String srcText = "";
 
+    private ImageWallView mImageWall;
     //是否点击了展开全文
     private boolean isClickedPullDown = false;
     //当前文章隐藏的位置
@@ -133,12 +136,12 @@ public class NewsDetailHeaderView extends FrameLayout {
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
-
         mNewsDeatailTitleLayout = (LinearLayout) mRootView.findViewById(R.id.mNewsDeatailTitleLayout);
         mNewsDetailEditableLayout = (RelativeLayout) mRootView.findViewById(R.id.mNewsDetailEditableLayout);
         mNewsDetailEdittext = (EditText) mRootView.findViewById(R.id.mNewsDetailEdittext);
         MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
         MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
+        mImageWall=(ImageWallView)mRootView.findViewById(R.id.mImageWall);
     }
 
     public void setContentViewHeight(int pHeight) {
@@ -433,7 +436,12 @@ public class NewsDetailHeaderView extends FrameLayout {
             } else {
                 mllBaiKe.setVisibility(GONE);
             }
-
+            //图片墙的相关显示
+        if(pNewsDetail.imgWall!=null){
+//            mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_7_232);
+        }else{
+//            mImageWall.setVisibility(GONE);
+        }
             ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
             if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
                 for (int i = 0; i < pArrZhiHu.size(); i++) {

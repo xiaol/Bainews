@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.ToastUtil;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -33,6 +34,7 @@ public class MessageJPushReceiver extends BroadcastReceiver {
 
             Logger.i("jigang","receive custom title="+title);
             Logger.i("jigang","receive custom message="+message);
+            ToastUtil.toastLong(message);
             Logger.i("jigang","receive custom extras="+extras);
             Logger.i("jigang","receive custom type="+type);
             Logger.i("jigang","receive custom file="+file);

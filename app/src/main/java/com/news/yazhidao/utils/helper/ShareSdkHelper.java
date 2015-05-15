@@ -94,6 +94,7 @@ public class ShareSdkHelper {
         @Override
         public void onCancel(Platform platform, int i) {
             Logger.e(TAG, "authorize cancel-----");
+            mUserLoginPopupStateListener.close();
         }
     };
 

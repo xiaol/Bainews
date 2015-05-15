@@ -9,9 +9,18 @@
     <LinearLayout
         android:id="@+id/mNewsDeatailTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_gray"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_grag_line_top_bottom"
+        android:layout_marginTop="@dimen/news_detail_layout_margin_top"
         android:orientation="vertical">
+
+        <com.news.yazhidao.widget.imagewall.ImageWallView
+            android:visibility="gone"
+            android:id="@+id/mImageWall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top" />
 
         <!--新闻详情展示-->
         <include layout="@layout/aty_news_detail_header_news_display" />
@@ -120,8 +129,7 @@
         android:id="@+id/mNewsDetailEditableLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/mNewsDetailEdittext"

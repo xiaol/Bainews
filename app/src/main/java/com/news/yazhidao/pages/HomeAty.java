@@ -618,7 +618,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(HomeAty.this, NewsDetailAty.class);
-                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(KEY_URL,feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(HomeAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
