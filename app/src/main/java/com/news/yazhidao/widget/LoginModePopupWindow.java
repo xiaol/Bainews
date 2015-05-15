@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import com.news.yazhidao.R;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
@@ -66,7 +67,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
     }
-
+private long mFirstClickTime;
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -75,6 +76,11 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
                 mUserLoginPopupStateListener.close();
                 break;
             case R.id.mLoginModeWeibo:
+                if(System.currentTimeMillis()-mFirstClickTime<2000){
+                    Logger.i("jigang","你点击太频繁啦");
+                    return;
+                }
+                mFirstClickTime=System.currentTimeMillis();
                 ShareSdkHelper.authorize(mContext, SinaWeibo.NAME,mUserLoginListener,new UserLoginPopupStateListener(){
 
                     @Override
@@ -84,6 +90,11 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
                 });
                 break;
             case R.id.mLoginModeWeiXin:
+                if(System.currentTimeMillis()-mFirstClickTime<2000){
+                    Logger.i("jigang","你点击太频繁啦1111");
+                    return;
+                }
+                mFirstClickTime=System.currentTimeMillis();
                 ShareSdkHelper.authorize(mContext, Wechat.NAME,mUserLoginListener, new UserLoginPopupStateListener() {
                     @Override
                     public void close() {

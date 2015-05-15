@@ -22,6 +22,7 @@ import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.widget.imagewall.ImageWallView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
  * Created by h.yuan on 2015/3/23.
  */
 public class NewsDetailHeaderView extends FrameLayout {
+
 
     public static interface HeaderVeiwPullUpListener {
         void onclickPullUp(int height);
@@ -52,6 +54,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private TextView mNewsDetailHeaderLocation;
     private TextView mNewsDetailRelate;
     private TextView mNewsDetailHeaderPulldown;
+    private ImageWallView mImageWall;
     //是否点击了展开全文
     private boolean isClickedPullDown=false;
     //当前文章隐藏的位置
@@ -102,6 +105,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
+        mImageWall=(ImageWallView)mRootView.findViewById(R.id.mImageWall);
     }
 
     public void setContentViewHeight(int pHeight){
@@ -224,7 +228,12 @@ public class NewsDetailHeaderView extends FrameLayout {
             } else {
                 mllBaiKe.setVisibility(GONE);
             }
-
+            //图片墙的相关显示
+        if(pNewsDetail.imgWall!=null){
+//            mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_7_232);
+        }else{
+//            mImageWall.setVisibility(GONE);
+        }
             ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
             if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
                 for (int i = 0; i < pArrZhiHu.size(); i++) {

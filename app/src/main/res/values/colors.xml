@@ -115,6 +115,14 @@
     <color name="news_sourcesite_bottom_divider">#dddddd</color>
     <color name="news_sourcesite_divider">#d6d6d6</color>
     <color name="bg_ews_detail_relate_item">#f7f7f7</color>
+    <!--自定义dialog相关-->
+    <color name="text_color">#FFFFFF</color>
+    <color name="divider_color">#11000000</color>
+    <color name="msg_color">#FFFFFFFF</color>
+    <color name="dialog_bg">#ffe74c3c</color>
+
+    <color name="btn_press_color">#66000000</color>
+    <color name="btn_unpress_color">#22000000</color>
 
     <!--login portion-->
    <color name="bg_home_login_header">#50b5eb</color>
