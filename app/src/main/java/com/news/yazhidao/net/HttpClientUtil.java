@@ -4,6 +4,7 @@ package com.news.yazhidao.net;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -22,6 +23,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -61,6 +63,8 @@ public class HttpClientUtil {
             addRequestHeaders(post, request.headers);
             if (request.params == null) {
                 throw new IllegalArgumentException("You should set post parameters when use POST to request ");
+            }else{
+                post.setEntity(new UrlEncodedFormEntity(request.params, HTTP.UTF_8));
             }
             return client.execute(post);
         } catch (ConnectTimeoutException e) {

@@ -29,7 +29,7 @@
         你可以在这里  <font color="#ffffff"><big>登录</big></font>
     ]]>
     </string>
-    <string name="home_login_chat">和店小二聊聊</string>
+    <string name="home_login_chat">和金鱼聊聊</string>
     <string name="home_login_mode_join">加入百家</string>
     <string name="home_login_mode_join_slogan">与世界分享你的真知灼见</string>
     <string name="home_login_mode_weixin">使用微信账号登录</string>

@@ -1,8 +1,10 @@
 package com.news.yazhidao.net;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by fengjigang on 15/1/5.
@@ -19,6 +21,14 @@ public class NetworkRequest {
         addHeader("Accept-Encoding","gzip");
     }
 
+    public NetworkRequest(String url, RequestMethod method,List<NameValuePair> params) {
+        this.url = url;
+        this.method = method;
+        this.params = params;
+        //默认添加请求头 使用gzip
+        addHeader("Accept-Encoding","gzip");
+    }
+
     public NetworkRequest(String url) {
         this.url = url;
         this.method = RequestMethod.GET;
@@ -28,10 +38,19 @@ public class NetworkRequest {
         GET, POST, PUT, DELETE
     }
 
+    public List<NameValuePair> getParams() {
+        return params;
+    }
+
+    public void setParams(List<NameValuePair> params) {
+        this.params = params;
+    }
+
     public RequestMethod method;
 
     public String url;
-    public HttpEntity params;
+    public HttpEntity entity;
+    public List<NameValuePair> params;
     public HashMap<String, String> headers;
     public AbstractCallBack callback;
     private NetworkRequestTask nrTask;

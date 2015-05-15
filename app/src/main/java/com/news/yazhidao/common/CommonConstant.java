@@ -28,7 +28,6 @@ public final class CommonConstant {
 
     public static final String FILE_USER="user";
     public static final String FILE_JPUSH="jpush";
-    public static final String KEY_USER_ID_AND_PLATFORM="user_id";
     public static final String KEY_USER_INFO="user_info";
     public static final String KEY_JPUSH_ID = "jpush_id";
 }

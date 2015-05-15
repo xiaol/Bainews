@@ -21,13 +21,15 @@ import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.customdialog.Effectstype;
+import com.news.yazhidao.widget.customdialog.SuperDialogBuilder;
 
 import cn.sharesdk.framework.PlatformDb;
 
 /**
  * Created by fengjigang on 15/5/12.
  */
-public class LoginPopupWindow extends PopupWindow implements View.OnClickListener,UserLoginListener {
+public class LoginPopupWindow extends PopupWindow implements View.OnClickListener, UserLoginListener {
     private final View mPopupWidow;
     private Context mContext;
     private RoundedImageView mHomeUserIcon;
@@ -37,8 +39,8 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     private UserLoginListener mUserLoginListener;
     private View mHomeLogout;
 
-    public LoginPopupWindow(Context mContext){
-        this.mContext=mContext;
+    public LoginPopupWindow(Context mContext) {
+        this.mContext = mContext;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mPopupWidow = inflater.inflate(R.layout.aty_home_login, null);
@@ -47,25 +49,25 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     }
 
     private void initViews() {
-        mHomeUserIcon=(RoundedImageView)mPopupWidow.findViewById(R.id.mHomeUserIcon);
-        mHomeLogin=(TextView)mPopupWidow.findViewById(R.id.mHomeLogin);
+        mHomeUserIcon = (RoundedImageView) mPopupWidow.findViewById(R.id.mHomeUserIcon);
+        mHomeLogin = (TextView) mPopupWidow.findViewById(R.id.mHomeLogin);
         mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
-        mHomeChatWrapper=mPopupWidow.findViewById(R.id.mHomeChatWrapper);
-        mHomeLoginCancel=mPopupWidow.findViewById(R.id.mHomeLoginCancel);
-        mHomeLogout=mPopupWidow.findViewById(R.id.mHomeLogout);
+        mHomeChatWrapper = mPopupWidow.findViewById(R.id.mHomeChatWrapper);
+        mHomeLoginCancel = mPopupWidow.findViewById(R.id.mHomeLoginCancel);
+        mHomeLogout = mPopupWidow.findViewById(R.id.mHomeLogout);
         mHomeLogout.setOnClickListener(this);
         mHomeLoginCancel.setOnClickListener(this);
         mHomeLogin.setOnClickListener(this);
         mHomeChatWrapper.setOnClickListener(this);
         //判断用户是否登录，并且登录有效
         User user = SharedPreManager.getUser();
-        if(user!=null){
+        if (user != null) {
             mHomeLogin.setOnClickListener(null);
             mHomeLogin.setText(user.getUserName());
-            mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
+            mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             mHomeLogout.setVisibility(View.VISIBLE);
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
-            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(),mHomeUserIcon,false);
+            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false);
         }
     }
 
@@ -88,7 +90,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mHomeLoginCancel:
                 this.dismiss();
                 break;
@@ -99,7 +101,6 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                 logout();
                 break;
             case R.id.mHomeChatWrapper:
-                //TODO 打开反馈界面
                 Intent intent =new Intent(mContext, FeedBackActivity.class);
                 mContext.startActivity(intent);
                 dismiss();
@@ -111,24 +112,45 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
      * 用户退出登录
      */
     private void logout() {
-        ShareSdkHelper.logout(mContext);
-        mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
-        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
-        mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
-        mHomeLogin.setOnClickListener(this);
-        mHomeLogout.setVisibility(View.GONE);
-        mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
+        final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(mContext);
+        _DialogBuilder.withMessage("退出后，就不能参与评论了")
+                .withDuration(400)
+                .withIcon(R.drawable.app_icon)
+                .withTitle("退出登录")
+                .withEffect(Effectstype.Sidefill)
+                .withButton1Text("OK")
+                .withButton2Text("Cancel")
+                .setButton1Click(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        _DialogBuilder.dismiss();
+                        ShareSdkHelper.logout(mContext);
+                        mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
+                        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                        mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
+                        mHomeLogin.setOnClickListener(LoginPopupWindow.this);
+                        mHomeLogout.setVisibility(View.GONE);
+                        mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
+                    }
+                }).setButton2Click(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _DialogBuilder.dismiss();
+            }
+        }).show();
+
+
     }
 
     private void openLoginModeWindow() {
-        LoginModePopupWindow window=new LoginModePopupWindow(mContext,this,new UserLoginPopupStateListener(){
+        LoginModePopupWindow window = new LoginModePopupWindow(mContext, this, new UserLoginPopupStateListener() {
 
             @Override
             public void close() {
                 LoginPopupWindow.this.dismiss();
             }
         });
-        window.showAtLocation(((Activity)mContext).getWindow().getDecorView(), Gravity.CENTER
+        window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
                 | Gravity.CENTER, 0, 0);
     }
 
@@ -137,17 +159,17 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     public void userLogin(String platform, PlatformDb platformDb) {
         mHomeLogin.setOnClickListener(null);
         mHomeLogin.setText(platformDb.getUserName());
-        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
+        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
         mHomeLogout.setVisibility(View.VISIBLE);
-        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(),mHomeUserIcon,false);
+        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false);
     }
 
     @Override
     public void userLogout() {
         ShareSdkHelper.logout(mContext);
         mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
-        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
         mHomeLogin.setOnClickListener(this);
     }

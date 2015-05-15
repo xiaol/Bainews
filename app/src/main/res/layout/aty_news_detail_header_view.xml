@@ -1,108 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/bg_gray"
-    android:orientation="vertical">
-
-    <!--新闻详情展示-->
-    <include layout="@layout/aty_news_detail_header_news_display" />
+    android:id="@+id/fl_content">
 
     <LinearLayout
-        android:id="@+id/baike_linerLayout"
+        android:id="@+id/mNewsDeatailTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_grag_line_top_bottom"
         android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:orientation="vertical" />
+        android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/zhihu_linerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:background="@drawable/bg_grag_line_top_bottom"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_zhihu"
-            android:layout_marginLeft="@dimen/news_detail_item_margin_left"
-            android:layout_marginRight="@dimen/news_detail_item_margin_left"
-            android:layout_marginTop="@dimen/news_detail_item_margin_top" />
-
-        <LinearLayout
-            android:id="@+id/zhihu_item_linerLayout"
-            android:layout_marginBottom="-2dp"
+        <com.news.yazhidao.widget.imagewall.ImageWallView
+            android:visibility="gone"
+            android:id="@+id/mImageWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top" />
 
-        </LinearLayout>
-    </LinearLayout>
+        <!--新闻详情展示-->
+        <include layout="@layout/aty_news_detail_header_news_display" />
 
-    <LinearLayout
-        android:id="@+id/douban_linerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:background="@drawable/bg_grag_line_top_bottom"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/baike_linerLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="@dimen/news_detail_item_margin_top"
-            android:layout_marginLeft="@dimen/news_detail_item_margin_left"
-            android:background="@drawable/ic_douban" />
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:orientation="vertical" />
 
-        <com.news.yazhidao.widget.WordWrapView
-            android:id="@+id/douban_item_tabLayout"
-            android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+        <LinearLayout
+            android:id="@+id/zhihu_linerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_zhihu"
+                android:layout_marginLeft="@dimen/news_detail_item_margin_left"
+                android:layout_marginRight="@dimen/news_detail_item_margin_left"
+                android:layout_marginTop="@dimen/news_detail_item_margin_top" />
+
+            <LinearLayout
+                android:id="@+id/zhihu_item_linerLayout"
+                android:layout_marginBottom="-2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/douban_linerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="@dimen/news_detail_item_margin_top"
+                android:layout_marginLeft="@dimen/news_detail_item_margin_left"
+                android:background="@drawable/ic_douban" />
+
+            <com.news.yazhidao.widget.WordWrapView
+                android:id="@+id/douban_item_tabLayout"
+                android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sina_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:orientation="horizontal">
+
+            <HorizontalScrollView
+                android:id="@+id/sina_scollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00000000"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/sina_item_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/news_detail_item_margin_top"
+                    android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                    android:orientation="horizontal">
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/mNewsDetailRelate"
+            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:background="@drawable/bg_detail_relate"
+            android:paddingLeft="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:gravity="left"
+            android:text="相关观点"
+            android:textSize="18sp"
+            android:textColor="@color/sina_item_content_gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/sina_linearLayout"
+    <RelativeLayout
+        android:id="@+id/mNewsDetailEditableLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_grag_line_top_bottom"
-        android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:orientation="horizontal">
+        android:visibility="gone">
 
-        <HorizontalScrollView
-            android:id="@+id/sina_scollView"
+        <EditText
+            android:id="@+id/mNewsDetailEdittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:cacheColorHint="#00000000"
-            android:overScrollMode="never"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/sina_item_layout"
-                android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:gravity="top"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:text="hello world!"
+            android:textSize="20sp"
+            android:textColor="#7d7d7d"
+            android:background="@drawable/bg_edittext"
+            android:layout_margin="10dp" />
+
+        <LinearLayout
+            android:layout_below="@+id/mNewsDetailEdittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/news_detail_item_margin_top"
-                android:layout_marginBottom="@dimen/news_detail_item_margin_top"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:id="@+id/MnewsDetailButtonConfirm"
+                android:text="确认编辑"
+                android:textSize="22sp" />
 
-            </LinearLayout>
-        </HorizontalScrollView>
-    </LinearLayout>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:id="@+id/MnewsDetailButtonCancel"
+                android:text="取消编辑"
+                android:textSize="22sp" />
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/mNewsDetailRelate"
-        android:layout_marginTop="@dimen/news_detail_layout_margin_top"
-        android:background="@drawable/bg_detail_relate"
-        android:paddingLeft="16dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:gravity="left"
-        android:text="相关观点"
-        android:textSize="18sp"
-        android:textColor="@color/sina_item_content_gray"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

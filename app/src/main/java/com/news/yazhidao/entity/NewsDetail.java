@@ -2,6 +2,7 @@ package com.news.yazhidao.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 新闻详情entity
@@ -27,10 +28,12 @@ public class NewsDetail implements Serializable{
 
     public ArrayList<ZhiHu> zhihu;
 
+    public ArrayList<Point> point;
+
     public ArrayList<ArrayList<String>> douban;  //get(0)  title  get(1) url
 
     public ArrayList<Weibo> weibo;
-
+    public ArrayList<HashMap<String,String>> imgWall;
     //相关新闻
     public ArrayList<Relate> relate;
 
@@ -63,6 +66,17 @@ public class NewsDetail implements Serializable{
         public String url;
         public String user;
         public String title;
+    }
+
+    public class Point {
+        public String userName;
+        public String srcText;
+        public String desText;
+        public String paragraphIndex;
+        public String type;
+        public String uuid;
+        public String userIcon;
+        public String sourceUrl;
     }
 
 

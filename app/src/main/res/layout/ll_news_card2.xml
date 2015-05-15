@@ -123,7 +123,7 @@
         android:layout_height="wrap_content"
         android:text="反馈文理分科我离开我吕蒙WMV物品"
         android:textSize="20sp"
-        android:textColor="#000000"
+        android:textColor="#7d7d7d"
         />
 
     <LinearLayout

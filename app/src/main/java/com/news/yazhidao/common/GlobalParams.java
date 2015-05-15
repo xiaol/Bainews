@@ -17,5 +17,6 @@ public class GlobalParams {
     public static int split_index_top = 0;
     public static int split_index_bottom = 0;
     public static LoadingLayout loading_context;
+    public static String news_detail_url;
 
 }
