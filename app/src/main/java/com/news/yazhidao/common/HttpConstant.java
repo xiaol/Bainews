@@ -11,4 +11,5 @@ public class HttpConstant {
     public static final String URL_USER_LOGIN="http://api.deeporiginalx.com/news/baijia/fetchLogin";
     public static final String URL_UPLOAD_JPUSHID = "http://api.deeporiginalx.com/news/baijia/fetchImUser?";
     public static final String URL_SEND_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchIm?";
+    public static final String URL_GET_HISTORY_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchImContent?";
 }

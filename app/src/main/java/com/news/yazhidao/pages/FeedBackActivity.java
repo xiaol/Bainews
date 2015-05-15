@@ -17,15 +17,19 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.FeedBack;
 import com.news.yazhidao.entity.Message;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.SendMessageListener;
+import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.request.SendMessageRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -39,6 +43,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class FeedBackActivity extends BaseActivity implements SendMessageListener {
@@ -53,12 +58,13 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
     private EditText metFeedBack;
     private User mUser;
     private MessageReceiver mReceiver;
-    private String mJPushId, mUserId, mUserPlatformType;
+    private String mJPushId, mUserId, mUserPlatformType, mReceiverId;
     private boolean mIsSend = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        marrFeedBack = new ArrayList<>();
         mReceiver = new MessageReceiver();
         IntentFilter intentfilter = new IntentFilter();
         intentfilter.addAction("messagemessagemessage");
@@ -67,6 +73,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
 
     @Override
     protected void setContentView() {
+        mReceiverId = "0005150a7dd";
         setContentView(R.layout.aty_private_chat_message_list);
     }
 
@@ -119,10 +126,14 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                                 v.getApplicationWindowToken(), 0);
                     }
                     mIsSend = false;
-                    Message message = new Message("010df996d57", mJPushId, metFeedBack.getText().toString(), "text");
+                    Message message = new Message(mReceiverId, mJPushId, metFeedBack.getText().toString(), "text");
                     SendMessageRequest.sendMessage(message, FeedBackActivity.this);
                     int size = marrFeedBack.size();
-                    String millis = marrFeedBack.get(size - 1).updateTime;
+                    String millis;
+                    if (size > 0)
+                        millis = marrFeedBack.get(size - 1).updateTime;
+                    else
+                        millis = String.valueOf(System.currentTimeMillis());
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     Long lastTime = 0l;
                     try {
@@ -162,7 +173,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                         @Override
                         public void run() {
                             // Select the last row so it will scroll into view...
-                            mlvActual.setSelection(marrFeedBack.size() * 200);
+                            mlvActual.setSelection(marrFeedBack.size() * 2000);
                         }
                     });
                     return true;
@@ -179,37 +190,47 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         if (mUser != null) {
             mUserId = mUser.getUserId();
             mUserPlatformType = mUser.getPlatformType();
-            mTitleView.setText("与 "+mUser.getUserName()+" 对话中");
+            mTitleView.setText("与 " + mUser.getUserName() + " 对话中");
         }
-        marrFeedBack = new ArrayList<>();
-        FeedBack mFeedBack = new FeedBack();
-        mFeedBack.updateTime = "2015-05-14 16:00:10";
-        ArrayList<FeedBack.Content> contents = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            FeedBack.Content content = mFeedBack.new Content();
-            if (i % 2 == 0) {
-                content.content = "dhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhkdhhhlkjhlkjhk";
-                content.type = "0";
-            } else {
-                content.content = "a";
-                content.type = "1";
-            }
-            contents.add(content);
-        }
-        mFeedBack.content = contents;
-        marrFeedBack.add(mFeedBack);
-        mAdapter.SetChatData(marrFeedBack);
-        int groupCount = mAdapter.getGroupCount();
-        for (int i = 0; i < groupCount; i++) {
-            mlvActual.expandGroup(i);
-        }
-        mlvActual.post(new Runnable() {
+        NetworkRequest request = new NetworkRequest(HttpConstant.URL_GET_HISTORY_MESSAGE, NetworkRequest.RequestMethod.GET);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("jpushId", mJPushId);
+        hashMap.put("userId", mUserId == null ? "" : mUserId);
+        hashMap.put("platformType", mUserPlatformType== null ? "" : mUserPlatformType);
+        request.getParams = hashMap;
+        request.setCallback(new JsonCallback<ArrayList<FeedBack>>() {
             @Override
-            public void run() {
-                // Select the last row so it will scroll into view...
-                mlvActual.setSelection(marrFeedBack.size() * 200);
+            public void success(ArrayList<FeedBack> result) {
+                if (result != null) {
+                    marrFeedBack = result;
+                    for (int i = 0; i < marrFeedBack.size(); i++) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Date date = new Date(Long.valueOf(marrFeedBack.get(i).updateTime));
+                        marrFeedBack.get(i).updateTime = df.format(date);
+//                        mReceiverId = marrFeedBack.get(i).serviceId;
+                    }
+                    mAdapter.SetChatData(marrFeedBack);
+                    int groupCount = mAdapter.getGroupCount();
+                    for (int i = 0; i < groupCount; i++) {
+                        mlvActual.expandGroup(i);
+                    }
+                    mlvActual.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Select the last row so it will scroll into view...
+                            mlvActual.setSelection(marrFeedBack.size() * 2000);
+                        }
+                    });
+                }
             }
-        });
+
+            @Override
+            public void failed(MyAppException exception) {
+
+            }
+        }.setReturnType(new TypeToken<ArrayList<FeedBack>>() {
+        }.getType()));
+        request.execute();
     }
 
 
@@ -256,7 +277,6 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("tag", "000000000");
             int size = marrFeedBack.size();
             String millis = marrFeedBack.get(size - 1).updateTime;
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -269,6 +289,8 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
             JSONObject object = null;
             try {
                 object = new JSONObject(intent.getStringExtra("message"));
+                if ("0005150a7dd".equals(SharedPreManager.getJPushId()))
+                    mReceiverId = object.getString("senderId");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -312,7 +334,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                 @Override
                 public void run() {
                     // Select the last row so it will scroll into view...
-                    mlvActual.setSelection(marrFeedBack.size() * 200);
+                    mlvActual.setSelection(marrFeedBack.size() * 2000);
                 }
             });
         }
