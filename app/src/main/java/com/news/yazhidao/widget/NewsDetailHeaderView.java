@@ -8,23 +8,38 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.umeng.analytics.MobclickAgent;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -52,6 +67,18 @@ public class NewsDetailHeaderView extends FrameLayout {
     private TextView mNewsDetailHeaderLocation;
     private TextView mNewsDetailRelate;
     private TextView mNewsDetailHeaderPulldown;
+    private RelativeLayout mNewsDetailEditableLayout;
+    private LinearLayout mNewsDeatailTitleLayout;
+    private EditText mNewsDetailEdittext;
+    private Button MnewsDetailButtonConfirm;
+    private Button MnewsDetailButtonCancel;
+
+    private static int EDIT_POSITION;
+    private static final int TITLE = 1;
+    private static final int DESCRIPTION = 2;
+    private static final int DETAIL = 3;
+    private static int tag = -1;
+
     //是否点击了展开全文
     private boolean isClickedPullDown=false;
     //当前文章隐藏的位置
@@ -102,6 +129,12 @@ public class NewsDetailHeaderView extends FrameLayout {
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
+
+        mNewsDeatailTitleLayout = (LinearLayout) mRootView.findViewById(R.id.mNewsDeatailTitleLayout);
+        mNewsDetailEditableLayout = (RelativeLayout) mRootView.findViewById(R.id.mNewsDetailEditableLayout);
+        mNewsDetailEdittext = (EditText) mRootView.findViewById(R.id.mNewsDetailEdittext);
+        MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
+        MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
     }
 
     public void setContentViewHeight(int pHeight){
@@ -128,20 +161,99 @@ public class NewsDetailHeaderView extends FrameLayout {
             }
             mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
+            mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    mNewsDeatailTitleLayout.setVisibility(View.GONE);
+                    mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
+                    mNewsDetailEdittext.setText(mNewsDetailHeaderTitle.getText());
+                    EDIT_POSITION = TITLE;
+
+                    return true;
+                }
+            });
+
+            MnewsDetailButtonConfirm.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    switch (EDIT_POSITION){
+                        case TITLE:
+                            mNewsDetailHeaderTitle.setText(mNewsDetailEdittext.getText());
+                            mNewsDeatailTitleLayout.setVisibility(View.VISIBLE);
+                            mNewsDetailEditableLayout.setVisibility(View.GONE);
+                            break;
+
+                        case DESCRIPTION:
+                            mNewsDetailHeaderDesc.setText(mNewsDetailEdittext.getText());
+                            mNewsDeatailTitleLayout.setVisibility(View.VISIBLE);
+                            mNewsDetailEditableLayout.setVisibility(View.GONE);
+                            break;
+
+                        case DETAIL:
+                            LetterSpacingTextView tv = (LetterSpacingTextView)mNewsDetailHeaderContentParent.getChildAt(tag);
+                            tv.setText(mNewsDetailEdittext.getText());
+                            mNewsDeatailTitleLayout.setVisibility(View.VISIBLE);
+                            mNewsDetailEditableLayout.setVisibility(View.GONE);
+                            break;
+                    }
+
+                    //修改新闻内容
+                    modifyNewsContent(pNewsDetail,mNewsDetailEdittext.getText().toString(),EDIT_POSITION);
+
+                }
+            });
+
+            MnewsDetailButtonCancel.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mNewsDeatailTitleLayout.setVisibility(View.VISIBLE);
+                    mNewsDetailEditableLayout.setVisibility(View.GONE);
+                }
+            });
             mNewsDetailHeaderTime.setText(pNewsDetail.updateTime);
             mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
             mNewsDetailHeaderDesc.setFontSpacing(LetterSpacingTextView.BIG);
             mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
+            mNewsDetailHeaderDesc.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    mNewsDeatailTitleLayout.setVisibility(View.GONE);
+                    mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
+                    mNewsDetailEdittext.setText(mNewsDetailHeaderDesc.getText());
+                    EDIT_POSITION = DESCRIPTION;
+
+                    return true;
+                }
+            });
+
             if (!android.text.TextUtils.isEmpty(pNewsDetail.content)) {
                 String[] _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder=new StringBuilder();
                 for(int i=0;i<_Split.length;i++){
-                    LetterSpacingTextView _TextVE=new LetterSpacingTextView(mContext);
+                    final LetterSpacingTextView _TextVE=new LetterSpacingTextView(mContext);
                     _TextVE.setFontSpacing(LetterSpacingTextView.NORMALBIG);
-                    _TextVE.setLineSpacing(DensityUtil.dip2px(mContext,32),0);
-                    _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                    _TextVE.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
+                    _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     _TextVE.setTextColor(getResources().getColor(R.color.black));
                     _TextVE.setText(_Split[i]);
+                    _TextVE.setTag(i);
+                    _TextVE.setOnLongClickListener(new OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+
+                            mNewsDeatailTitleLayout.setVisibility(View.GONE);
+                            mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
+                            mNewsDetailEdittext.setText(_TextVE.getText());
+                            EDIT_POSITION = DETAIL;
+                            tag = (int)_TextVE.getTag();
+
+                            return true;
+                        }
+                    });
                     LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     _LayoutParams.setMargins(0,0,0, DensityUtil.dip2px(mContext,22));
                     _TextVE.setLayoutParams(_LayoutParams);
@@ -195,6 +307,44 @@ public class NewsDetailHeaderView extends FrameLayout {
                 mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
         }
 
+    }
+
+    //修改新闻内容
+    private void modifyNewsContent(NewsDetail pNewsDetail,String srcText,int edit_position) {
+        String url = HttpConstant.URL_GET_NEWS_LIST;
+        final long start = System.currentTimeMillis();
+        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.POST);
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sourceUrl", GlobalParams.news_detail_url));
+        params.add(new BasicNameValuePair("srcText",srcText));
+        params.add(new BasicNameValuePair("desText",""));
+        params.add(new BasicNameValuePair("paragraphIndex",tag+""));
+        if(edit_position == 1) {
+            params.add(new BasicNameValuePair("type", "title"));
+        }else if(edit_position == 2){
+            params.add(new BasicNameValuePair("type", "abstract"));
+        }else if(edit_position == 3){
+            params.add(new BasicNameValuePair("type", "content"));
+        }
+        params.add(new BasicNameValuePair("uuid",""));
+        params.add(new BasicNameValuePair("userIcon",""));
+        params.add(new BasicNameValuePair("userName", ""));
+        request.setParams(params);
+        request.setCallback(new JsonCallback<Object>() {
+
+            public void success(Object result) {
+
+
+                long delta = System.currentTimeMillis() - start;
+                Logger.i("ariesy", result + "");
+            }
+
+            public void failed(MyAppException exception) {
+            }
+        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType()));
+        request.execute();
     }
 
     public void setDetailData(NewsDetail pNewsDetail,HeaderVeiwPullUpListener listener) {

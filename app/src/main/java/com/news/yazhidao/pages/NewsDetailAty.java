@@ -25,6 +25,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.net.JsonCallback;
@@ -68,6 +69,7 @@ public class NewsDetailAty extends BaseActivity {
         mSource =getIntent().getStringExtra(HomeAty.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
+
         mivBack = (ImageView) findViewById(R.id.back_imageView);
         mNewsDetailProgressWheel = (ProgressWheel) findViewById(R.id.mNewsDetailProgressWheel);
         mNewsDetailProgressWheelWrapper = findViewById(R.id.mNewsDetailProgressWheelWrapper);
@@ -78,24 +80,13 @@ public class NewsDetailAty extends BaseActivity {
 //        msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
         msgvNewsDetail.setAdapter(mNewsDetailAdapter);
-//        mPullToRefreshStaggeredGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<StaggeredGridView>() {
-//
-//            @Override
-//            public void onRefresh(PullToRefreshBase<StaggeredGridView> refreshView) {
-//                if (!mHasRequestedMore) {
-//                    //TODO load more
-//                    mNewsDetailAdapter.notifyDataSetChanged();
-//                    mPullToRefreshStaggeredGridView.onRefreshComplete();
-//                    mHasRequestedMore = false;
-//                }
-//            }
-//        });
         setListener();
     }
 
     @Override
     protected void loadData() {
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + getIntent().getStringExtra("url"), NetworkRequest.RequestMethod.GET);
+        GlobalParams.news_detail_url = getIntent().getStringExtra("url");
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 
             @Override
@@ -126,7 +117,6 @@ public class NewsDetailAty extends BaseActivity {
 
             @Override
             public void failed(MyAppException exception) {
-//                Logger.e(TAG, exception.getMessage());
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);

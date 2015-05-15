@@ -769,7 +769,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                             String source_title = source.getTitle();
 //                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
                             String source_name_font = "";
-                            source_title = "<big color =\"red\">" + source_title + "</big>";
+                            source_title = "<font color =\"#000000\">" + "<big>" + source_title + "</big>" + "</font>";
                             if (source_name != null) {
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {
@@ -1121,7 +1121,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                             String source_title = source.getTitle();
 //                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
                             String source_name_font = "";
-                            source_title = "<font color =\"red\">" + "<big>" + source_title + "</big>" + "</font>";
+                            source_title = "<font color =\"#000000\">" + "<big>" + source_title + "</big>" + "</font>";
                             if (source_name != null) {
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {
@@ -1194,7 +1194,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 2:
-                params.height = DensityUtil.dip2px(HomeAty.this, 75);
+                params.height = DensityUtil.dip2px(HomeAty.this, 95);
                 break;
 
             case 3:
@@ -1354,6 +1354,8 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
             } else if (_SplitStartIndex == 0) {
+
+
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
                 feed.setTop_flag(true);
