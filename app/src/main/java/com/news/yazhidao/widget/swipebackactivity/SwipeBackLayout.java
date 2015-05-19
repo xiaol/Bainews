@@ -356,9 +356,29 @@ public class SwipeBackLayout extends FrameLayout {
         mDragHelper.smoothSlideViewTo(mContentView, left, top);
         invalidate();
     }
-
+    float xDelta=0;
+    float yDelta=0;
+    float xLast=0;
+    float yLast=0;
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        //处理左右滑动和上下滑动冲突事件
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                xDelta=yDelta=0;
+                xLast=event.getX();
+                yLast=event.getY();
+            case MotionEvent.ACTION_MOVE:
+                float curX = event.getX();
+                float curY = event.getY();
+                xDelta+=Math.abs(curX-xLast);
+                yDelta+=Math.abs(curY-yLast);
+                if(xDelta<yDelta){
+                    return false;
+                }
+            case MotionEvent.ACTION_UP:
+                break;
+        }
         if (!mEnable) {
             return false;
         }
@@ -495,7 +515,6 @@ public class SwipeBackLayout extends FrameLayout {
                         listener.onEdgeTouch(mTrackingEdge);
                     }
                 }
-                vibrate(20);
                 mIsScrollOverValid = true;
             }
             return ret;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 
 import cn.jpush.android.api.JPushInterface;
@@ -12,9 +13,12 @@ import cn.jpush.android.api.JPushInterface;
  *  Created by feng on 3/23/15.
  */
 public abstract class BaseActivity extends Activity {
+    protected SwipeBackActivityHelper mHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHelper = new SwipeBackActivityHelper(this);
+        mHelper.onActivityCreate();
         setContentView();
         initializeViews();
         loadData();
