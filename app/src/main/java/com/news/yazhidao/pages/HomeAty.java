@@ -704,7 +704,7 @@ public class HomeAty extends BaseActivity implements TimePopupWindow.IUpdateUI, 
 
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img);
+                    ImageLoaderHelper.dispalyImage(HomeAty.this, feed.getImgUrl(), holder.iv_title_img,holder.iv_title_img);
                 }
 
                 final long start = System.currentTimeMillis();
