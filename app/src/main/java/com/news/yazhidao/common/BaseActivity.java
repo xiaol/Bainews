@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.news.yazhidao.pages.FeedBackActivity;
+import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 
@@ -17,6 +20,8 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean runningForeground = DeviceInfoUtil.isRunningForeground(this, FeedBackActivity.class.getSimpleName());
+        Logger.i("jigang","----"+runningForeground);
         mHelper = new SwipeBackActivityHelper(this);
         mHelper.onActivityCreate();
         setContentView();

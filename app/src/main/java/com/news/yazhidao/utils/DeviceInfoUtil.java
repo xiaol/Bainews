@@ -1,6 +1,8 @@
 package com.news.yazhidao.utils;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -176,6 +178,40 @@ public class DeviceInfoUtil {
             return String.valueOf(value);
         } catch (PackageManager.NameNotFoundException e) {
             return null;
+        }
+    }
+
+    /**
+     * 获取当前显示的activity的ClassName
+     * @param mContext
+     * @return
+     */
+    public static String getTopActivityName(Context mContext) {
+        String activityName = null;
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> appTasks = manager.getRunningTasks(1);
+        if (!appTasks.isEmpty()) {
+            ComponentName topActivity = appTasks.get(0).topActivity;
+            activityName = topActivity.getClassName();
+        }
+        Logger.i("jigang","----getTopActivityName--"+activityName);
+        return activityName;
+    }
+
+    /**
+     * 判断activity是否在栈顶
+     * @param mContext
+     * @param simpleClassName
+     * @return
+     */
+    public static boolean isRunningForeground(Context mContext,String simpleClassName){
+        String packageName = mContext.getPackageName();
+        String topActivityName = getTopActivityName(mContext);
+        if(packageName!=null&&topActivityName!=null){
+            Logger.i("jigang","----"+packageName+"."+simpleClassName);
+            return topActivityName.endsWith(simpleClassName);
+        }else{
+            return false;
         }
     }
 

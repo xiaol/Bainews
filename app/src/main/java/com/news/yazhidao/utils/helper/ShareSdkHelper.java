@@ -3,6 +3,7 @@ package com.news.yazhidao.utils.helper;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.news.yazhidao.entity.NewsFeed;
@@ -11,6 +12,7 @@ import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.listener.UserLoginRequestListener;
 import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.net.request.UserLoginRequest;
 import com.news.yazhidao.pages.ShareSdkAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -66,6 +68,10 @@ public class ShareSdkHelper {
                     public void success(User user) {
                         //保存user json串到sp 中
                         SharedPreManager.saveUser(user);
+                        String jPushId = SharedPreManager.getJPushId();
+                        if(!TextUtils.isEmpty(jPushId)){
+                            UploadJpushidRequest.uploadJpushId(jPushId);
+                        }
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
                         if (mUserLoginListener != null) {
                             mHandler.post(new Runnable() {
@@ -83,6 +89,7 @@ public class ShareSdkHelper {
                         Logger.e(TAG, "UserLoginRequest exception");
                     }
                 });
+
             }
         }
 
