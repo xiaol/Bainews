@@ -39,7 +39,7 @@
         android:gravity="left"
         android:textSize="@dimen/textsize_sixteen"
         android:layout_marginBottom="10dp"
-        android:maxWidth="100dp" />
+        android:maxWidth="240dp" />
 
     <com.news.yazhidao.widget.RoundedImageView
         android:layout_width="45dp"
@@ -77,6 +77,6 @@
         android:gravity="left"
         android:textSize="@dimen/textsize_sixteen"
         android:layout_marginBottom="10dp"
-        android:maxWidth="100dp" />
+        android:maxWidth="240dp" />
 
 </RelativeLayout>

@@ -22,7 +22,7 @@
             android:textColor="@color/white"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -39,6 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/title_line_bg" />
+
     <RelativeLayout
         android:id="@+id/edit_layout"
         android:layout_width="match_parent"
@@ -58,7 +59,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:background="@drawable/white_feedback_solid"
-            android:textColor="@color/new_tip_text"/>
+            android:textColor="@color/new_tip_text" />
     </RelativeLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
@@ -67,9 +68,10 @@
         android:id="@+id/private_chat_message_list_view"
         android:layout_below="@+id/title_line"
         android:layout_above="@+id/edit_layout"
+        android:divider="@null"
         android:scrollbars="none"
         android:listSelector="@android:color/transparent"
-        android:cacheColorHint="#00000000"/>
+        android:cacheColorHint="#00000000" />
 
     <RelativeLayout
         android:id="@+id/feedback_tip"
@@ -88,7 +90,6 @@
             android:textSize="@dimen/textsize_fourteen"
             android:gravity="center" />
     </RelativeLayout>
-
 
 
 </RelativeLayout>

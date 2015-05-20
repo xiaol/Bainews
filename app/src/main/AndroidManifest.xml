@@ -150,6 +150,9 @@
         <activity
             android:name=".pages.HomeAty"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.ChatAty"
+            android:screenOrientation="portrait" />
         <activity android:name=".pages.ShareSdkAty"/>
         <activity
             android:name=".pages.SplashAty"

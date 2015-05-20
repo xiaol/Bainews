@@ -22,6 +22,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.FeedBack;
 import com.news.yazhidao.entity.Message;
@@ -31,7 +32,6 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.request.SendMessageRequest;
-import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -73,7 +73,10 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
 
     @Override
     protected void setContentView() {
-        mReceiverId = "0005150a7dd";
+        if (getIntent() != null)
+            mReceiverId = getIntent().getStringExtra("userJpushId");
+        else
+            mReceiverId = CommonConstant.JINYU_JPUSH_ID;
         setContentView(R.layout.aty_private_chat_message_list);
     }
 
@@ -87,7 +90,6 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         mlvActual = mlvFeedBack.getRefreshableView();
         mlvActual.setAdapter(mAdapter);
         mlvActual.setGroupIndicator(null);
-        mlvActual.setDivider(null);
         mlvActual.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -112,6 +114,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         mFeedbackTip = (RelativeLayout) findViewById(R.id.feedback_tip);
         mFeedbackTip.setVisibility(View.GONE);
         mFeedbackTip.requestFocus();
+
         metFeedBack = (EditText) findViewById(R.id.edit_feedback);
         metFeedBack.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -164,18 +167,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                         content.type = "0";
                         marrFeedBack.get(size - 1).content.add(content);
                     }
-                    mAdapter.SetChatData(marrFeedBack);
-                    int groupCount = mAdapter.getGroupCount();
-                    for (int i = 0; i < groupCount; i++) {
-                        mlvActual.expandGroup(i);
-                    }
-                    mlvActual.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Select the last row so it will scroll into view...
-                            mlvActual.setSelection(marrFeedBack.size() * 2000);
-                        }
-                    });
+                    refreshUI();
                     return true;
                 }
                 return false;
@@ -196,7 +188,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("jpushId", mJPushId);
         hashMap.put("userId", mUserId == null ? "" : mUserId);
-        hashMap.put("platformType", mUserPlatformType== null ? "" : mUserPlatformType);
+        hashMap.put("platformType", mUserPlatformType == null ? "" : mUserPlatformType);
         request.getParams = hashMap;
         request.setCallback(new JsonCallback<ArrayList<FeedBack>>() {
             @Override
@@ -209,18 +201,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                         marrFeedBack.get(i).updateTime = df.format(date);
 //                        mReceiverId = marrFeedBack.get(i).serviceId;
                     }
-                    mAdapter.SetChatData(marrFeedBack);
-                    int groupCount = mAdapter.getGroupCount();
-                    for (int i = 0; i < groupCount; i++) {
-                        mlvActual.expandGroup(i);
-                    }
-                    mlvActual.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Select the last row so it will scroll into view...
-                            mlvActual.setSelection(marrFeedBack.size() * 2000);
-                        }
-                    });
+                    refreshUI();
                 }
             }
 
@@ -238,6 +219,21 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
     protected void onDestroy() {
         unregisterReceiver(mReceiver);
         super.onDestroy();
+    }
+
+    private void refreshUI() {
+        mAdapter.SetChatData(marrFeedBack);
+        int groupCount = mAdapter.getGroupCount();
+        for (int i = 0; i < groupCount; i++) {
+            mlvActual.expandGroup(i);
+        }
+        mlvActual.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                mlvActual.setSelection(marrFeedBack.size() * 2000);
+            }
+        });
     }
 
 //    @Override
@@ -289,7 +285,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
             JSONObject object = null;
             try {
                 object = new JSONObject(intent.getStringExtra("message"));
-                if ("0005150a7dd".equals(SharedPreManager.getJPushId()))
+                if (CommonConstant.JINYU_JPUSH_ID.equals(SharedPreManager.getJPushId()))
                     mReceiverId = object.getString("senderId");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -325,18 +321,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                     e.printStackTrace();
                 }
             }
-            mAdapter.SetChatData(marrFeedBack);
-            int groupCount = mAdapter.getGroupCount();
-            for (int i = 0; i < groupCount; i++) {
-                mlvActual.expandGroup(i);
-            }
-            mlvActual.post(new Runnable() {
-                @Override
-                public void run() {
-                    // Select the last row so it will scroll into view...
-                    mlvActual.setSelection(marrFeedBack.size() * 2000);
-                }
-            });
+            refreshUI();
         }
     }
 
@@ -444,16 +429,12 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                 holder.m_pLeftNameView = (TextViewExtend) convertView.findViewById(R.id.name_view_left);
                 //左文字框
                 holder.m_pLeftContentView = (TextViewExtend) convertView.findViewById(R.id.content_view_left);
-                holder.m_pLeftContentView.setTextSize(16.0f);
-                holder.m_pLeftContentView.setMaxWidth(DensityUtil.dip2px(mContext, 240));
                 //右头像
                 holder.m_pRightIconView = (RoundedImageView) convertView.findViewById(R.id.right_icon_view);
                 holder.m_pRightIconView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.m_pRightNameView = (TextViewExtend) convertView.findViewById(R.id.name_view_right);
                 //右文字框
                 holder.m_pRightContentView = (TextViewExtend) convertView.findViewById(R.id.content_view_right);
-                holder.m_pRightContentView.setTextSize(16.0f);
-                holder.m_pRightContentView.setMaxWidth(DensityUtil.dip2px(mContext, 240));
                 convertView.setTag(holder);
             } else {
                 holder = (ChildHolder) convertView.getTag();
