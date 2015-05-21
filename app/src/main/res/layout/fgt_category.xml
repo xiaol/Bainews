@@ -8,6 +8,5 @@
     android:fadingEdge="none"
     android:overScrollMode="never"
     android:scrollbars="none"
-    app:column_count="2"
-    app:item_margin="16dp" >
+    android:numColumns="2" >
 </GridView>

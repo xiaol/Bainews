@@ -63,6 +63,7 @@ public class HomeAty extends BaseActivity {
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
+        GlobalParams.pager = pager;
         pager.setCurrentItem(1);
         changeColor(getResources().getColor(R.color.tab_blue));
 
@@ -139,7 +140,13 @@ public class HomeAty extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return NewsFeedFragment.newInstance(position);
+
+            if(position == 0){
+                return new CategoryFgt();
+            }else{
+                return NewsFeedFragment.newInstance(position);
+            }
+
         }
     }
 

@@ -1,21 +1,24 @@
 package com.news.yazhidao.pages;
 
-import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.widget.LetterSpacingTextView;
 
 
-public class CategoryFgt extends Fragment {
+public class CategoryFgt extends Fragment{
 
     private View rootView;
     private GridView mgvCategory;
@@ -32,7 +35,6 @@ public class CategoryFgt extends Fragment {
         return rootView;
     }
 
-
     private void initVars() {
         marrCategoryName = getResources().getStringArray(R.array.category_list_name);
         marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
@@ -43,6 +45,15 @@ public class CategoryFgt extends Fragment {
     private void findViews() {
         mgvCategory = (GridView) rootView.findViewById(R.id.category_gridview);
         mgvCategory.setAdapter(mAdapter);
+        mgvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                GlobalParams.pager.setCurrentItem(1);
+                GlobalParams.currentCatePos = position;
+                Intent intent = new Intent("sendposition");
+                GlobalParams.context.sendBroadcast(intent);
+            }
+        });
     }
 
     class CategoryAdapter extends BaseAdapter {
@@ -82,7 +93,9 @@ public class CategoryFgt extends Fragment {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_category, null, false);
                 holder.ivBgIcon = (ImageView) convertView.findViewById(R.id.iv_bg_icon);
-                holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_name);
+                holder.tvName = (LetterSpacingTextView) convertView.findViewById(R.id.tv_name);
+                holder.tvName.setFontSpacing(5);
+                holder.tvName.setTextSize(16);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
@@ -95,7 +108,9 @@ public class CategoryFgt extends Fragment {
 
     class Holder {
         ImageView ivBgIcon;
-        TextViewExtend tvName;
+        LetterSpacingTextView tvName;
     }
+
+
 
 }

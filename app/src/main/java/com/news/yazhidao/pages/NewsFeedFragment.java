@@ -18,8 +18,10 @@ package com.news.yazhidao.pages;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -142,7 +144,19 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 		return f;
 	}
 
-	@Override
+    @Override
+    public void onResume() {
+
+        if(GlobalParams.currentCatePos != -1){
+            loadNewsFeedData(GlobalParams.currentCatePos);
+        }
+
+        super.onResume();
+    }
+
+
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		position = getArguments().getInt(ARG_POSITION);
@@ -158,6 +172,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         imageLoader = new ImageLoaderHelper(GlobalParams.context);
         TimeoOutAlarmReceiver.setListener(this);
 
+        NewsFeedReceiver rt = new NewsFeedReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("sendposition");
+        GlobalParams.context.registerReceiver(rt, filter);
 
 	}
 
@@ -1314,6 +1332,39 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         }
     }
 
+    //获取当前点击分类的新闻
+    private void loadNewsFeedData(final int position) {
+
+        String url = HttpConstant.URL_GET_NEWS_LIST + "?channelId=" + position + "&page=1&limit=50";
+        final long start = System.currentTimeMillis();
+        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
+
+            public void success(ArrayList<NewsFeed> result) {
+
+
+                long delta = System.currentTimeMillis() - start;
+                Logger.i("ariesy", delta + "");
+                if (result != null) {
+                    //分别填充3个数据源
+                    mMiddleNewsArr = result;
+                    mDownNewsArr.clear();
+                    mUpNewsArr.clear();
+                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                    list_adapter.notifyDataSetChanged();
+                }
+
+                lv_news.onRefreshComplete();
+            }
+
+            public void failed(MyAppException exception) {
+                lv_news.onRefreshComplete();
+            }
+        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType()));
+        request.execute();
+    }
+
     private Bitmap takeScreenShot(View view1) {
         // View是你需要截图的View
         View view = view1.getRootView();
@@ -1335,6 +1386,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         Bitmap b = Bitmap.createBitmap(b1, 0, 0, view.getWidth(), view.getHeight());
         view.destroyDrawingCache();
         return b;
+    }
+
+    private class NewsFeedReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if("sendposition".equals(intent.getAction())){
+                loadNewsFeedData(GlobalParams.currentCatePos);
+            }
+        }
     }
 
 

@@ -48,8 +48,9 @@
         <item>@drawable/bg_category_sports</item>
         <item>@drawable/bg_category_finance_and_economics</item>
     </array>
+
     <string-array name="category_list_name">
-        <item>实事</item>
+        <item>时事</item>
         <item>娱乐</item>
         <item>科技</item>
         <item>国际</item>
