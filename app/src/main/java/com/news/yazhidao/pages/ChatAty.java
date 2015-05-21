@@ -1,7 +1,9 @@
 package com.news.yazhidao.pages;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,9 @@ import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,10 +38,16 @@ public class ChatAty extends BaseActivity {
 
     private PrivateChatHistoryAdapter mAdapter;
     private ListView mListView;
+    private MessageReceiver mReceiver;
+    private ArrayList<FeedBackList> mFeedList;
 
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_chat);
+        mReceiver = new MessageReceiver();
+        IntentFilter intentfilter = new IntentFilter();
+        intentfilter.addAction("FeedBackMessageList");
+        registerReceiver(mReceiver, intentfilter);
     }
 
     @Override
@@ -56,7 +67,8 @@ public class ChatAty extends BaseActivity {
 
             @Override
             public void success(ArrayList<FeedBackList> result) {
-                mAdapter.setData(result);
+                mFeedList = result;
+                mAdapter.setData(mFeedList);
                 Log.i("tag", result.toString());
                 mAdapter.notifyDataSetChanged();
             }
@@ -69,6 +81,11 @@ public class ChatAty extends BaseActivity {
         request.execute();
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mReceiver);
+        super.onDestroy();
+    }
 
     public class PrivateChatHistoryAdapter extends BaseAdapter {
 
@@ -121,14 +138,19 @@ public class ChatAty extends BaseActivity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    data.notifacation="0";
                     Intent intent = new Intent(mContext, FeedBackActivity.class);
-                    intent.putExtra("userJpushId",data.jpushId);
+                    intent.putExtra("userJpushId", data.jpushId);
                     mContext.startActivity(intent);
                 }
             });
             String strPhoto = data.userIcon;
             if (strPhoto != null && !strPhoto.equals(""))
                 ImageLoader.getInstance().displayImage(strPhoto, holder.m_pIconView);
+            if ("1".equals(data.notifacation))
+                holder.m_pNewCount.setVisibility(View.VISIBLE);
+            else
+                holder.m_pNewCount.setVisibility(View.INVISIBLE);
 //          holder.m_pNewCount.SetValue(pData.getM_iNewChatCount());
             String strUserName = data.userName;
             if (strUserName != null && !strUserName.equals(""))
@@ -150,5 +172,27 @@ public class ChatAty extends BaseActivity {
             TextViewExtend m_pDateView;
         }
 
+    }
+
+    class MessageReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            JSONObject object = null;
+            try {
+                object = new JSONObject(intent.getStringExtra("message"));
+                String mReceiverId = object.getString("senderId");
+                for (int i = 0; i < mFeedList.size(); i++) {
+                    if (mReceiverId.equals(mFeedList.get(i).jpushId)) {
+                        mFeedList.get(i).notifacation = "1";
+                        break;
+                    }
+                }
+                mAdapter.setData(mFeedList);
+                mAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

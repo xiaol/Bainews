@@ -67,13 +67,13 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         marrFeedBack = new ArrayList<>();
         mReceiver = new MessageReceiver();
         IntentFilter intentfilter = new IntentFilter();
-        intentfilter.addAction("messagemessagemessage");
+        intentfilter.addAction("FeedBackMessage");
         registerReceiver(mReceiver, intentfilter);
     }
 
     @Override
     protected void setContentView() {
-        if (getIntent() != null)
+        if (getIntent().getStringExtra("userJpushId") != null)
             mReceiverId = getIntent().getStringExtra("userJpushId");
         else
             mReceiverId = CommonConstant.JINYU_JPUSH_ID;
@@ -129,7 +129,8 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
                                 v.getApplicationWindowToken(), 0);
                     }
                     mIsSend = false;
-                    Message message = new Message(mReceiverId, mJPushId, metFeedBack.getText().toString(), "text");
+                    Message message;
+                    message = new Message(mReceiverId, mJPushId, metFeedBack.getText().toString(), "text");
                     SendMessageRequest.sendMessage(message, FeedBackActivity.this);
                     int size = marrFeedBack.size();
                     String millis;
@@ -186,7 +187,10 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         }
         NetworkRequest request = new NetworkRequest(HttpConstant.URL_GET_HISTORY_MESSAGE, NetworkRequest.RequestMethod.GET);
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("jpushId", mJPushId);
+        if (getIntent().getStringExtra("userJpushId") != null)
+            hashMap.put("jpushId", getIntent().getStringExtra("userJpushId"));
+        else
+            hashMap.put("jpushId", mJPushId);
         hashMap.put("userId", mUserId == null ? "" : mUserId);
         hashMap.put("platformType", mUserPlatformType == null ? "" : mUserPlatformType);
         request.getParams = hashMap;

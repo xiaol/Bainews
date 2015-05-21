@@ -9,4 +9,5 @@ public class FeedBackList implements Serializable{
     public String platformType;
     public String jpushId;
     public String userIcon;
+    public String notifacation;
 }
