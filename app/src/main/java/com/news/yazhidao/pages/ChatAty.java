@@ -14,7 +14,6 @@ import android.widget.ListView;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.FeedBackList;
@@ -23,6 +22,8 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
@@ -34,12 +35,14 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class ChatAty extends BaseActivity {
+public class ChatAty extends SwipeBackActivity {
 
     private PrivateChatHistoryAdapter mAdapter;
     private ListView mListView;
     private MessageReceiver mReceiver;
     private ArrayList<FeedBackList> mFeedList;
+    private SwipeBackLayout mSwipeBackLayout;
+
 
     @Override
     protected void setContentView() {
@@ -52,6 +55,8 @@ public class ChatAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mAdapter = new PrivateChatHistoryAdapter(this);
         mListView = (ListView) findViewById(R.id.chat_list_view);
         mListView.setAdapter(mAdapter);
