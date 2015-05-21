@@ -169,8 +169,12 @@
 
             android:screenOrientation="portrait" />
 
-        <activity android:name=".pages.ShareSdkAty" />
+        <activity
+            android:name=".pages.ChatAty"
+            android:theme="@style/SwipeBackTheme"
+            android:screenOrientation="portrait" />
 
+        <activity android:name=".pages.ShareSdkAty"/>
         <activity
             android:name=".pages.SplashAty"
             android:screenOrientation="portrait">
