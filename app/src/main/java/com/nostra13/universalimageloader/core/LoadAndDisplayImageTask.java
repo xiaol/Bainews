@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.view.View;
 
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.ImageUtils;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
@@ -187,6 +188,24 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 
                         } else if (tv_title instanceof TextViewVertical) {
                             bmp = ImageUtils.zoomBitmap2(bmp, GlobalParams.screenWidth, GlobalParams.screenHeight, 2);
+                        }else{
+                            int width = DensityUtil.dip2px(GlobalParams.context, 110);
+                            int height = DensityUtil.dip2px(GlobalParams.context,100);
+
+                            //按照宽度是110的规格来等比例缩放
+                            bmp = ImageUtils.zoomBitmap(bmp,width);
+
+                            if(width >= bmp.getWidth() && height >= bmp.getHeight()){
+                                bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight());
+                            }else if(width >= bmp.getWidth() && height < bmp.getHeight()){
+                                bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), height);
+
+                            }else if(width < bmp.getWidth() && height >= bmp.getHeight()){
+                                bmp = Bitmap.createBitmap(bmp, 0, 0, width, bmp.getHeight());
+                            }else{
+                                bmp = Bitmap.createBitmap(bmp, 0, 0, width, height);
+                            }
+
                         }
 
                         configuration.memoryCache.put(memoryCacheKey, bmp);

@@ -2,6 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+        <item name="android:windowBackground">@color/background_window</item>
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorPrimaryDark">@color/greenDark</item>
+        <item name="colorAccent">@color/banana</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <!-- Customize your theme here. -->
     </style>
     <style name="style_self_dialog_toast" parent="@android:style/Theme.Dialog">
@@ -16,16 +24,26 @@
         <item name="android:minWidth">240dp</item>
         <item name="android:maxWidth">280dp</item>
     </style>
+
+    <style name="home_style"  >
+        <item name="android:windowNoTitle">true</item>
+    </style>
     <style name="AnimationAlpha">
         <!-- PopupWindow左右弹出的效果 -->
         <item name="android:windowEnterAnimation">@anim/alpha_in</item>
         <item name="android:windowExitAnimation">@anim/alpha_out</item>
     </style>
 
+    <style name="Theme.Timetodo" parent="@android:style/Theme.Holo.Light">
+        <!-- translucent system bars -->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <!-- Application theme. -->

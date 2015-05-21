@@ -4,23 +4,24 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 /**
  * Created by fengjigang on 15/3/27.
  */
-public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickListener {
+public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnClickListener {
     private static final String TAG = "NewsDetailWebviewAty";
     private WebView mNewsSourcesiteWebview;
     private String mNewsUrl;
@@ -31,13 +32,17 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private View mNewsSourcesiteFooterShare;
     private TextView mNewsSourcesiteBlameNum;
     private TextView mNewsSourcesitePraiseNum;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private TextView mNewsSourcesiteBlameNumReduce;
     private TextView mNewsSourcesitePraiseNumIncrease;
     private int mClickNum=0;
+    private ProgressBar mNewsSourcesiteProgress;
+    private SwipeBackLayout mSwipeBackLayout;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
+        mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
         mNewsSourcesiteLeftBack=findViewById(R.id.mNewsSourcesiteLeftBack);
         mNewsSourcesiteLeftBack.setOnClickListener(this);
         mNewsSourcesiteUrl=(TextView)findViewById(R.id.mNewsSourcesiteUrl);
@@ -115,7 +120,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     @Override
     protected void initializeViews() {
-        mNewsUrl=getIntent().getStringExtra(HomeAty.KEY_URL);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+
+        mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient(){
@@ -123,8 +131,12 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 Logger.e(TAG,"xxx  "+newProgress);
-                if(newProgress>=89&&mProgressDialog!=null&&mProgressDialog.isShowing()){
-                    mProgressDialog.dismiss();
+//                if(newProgress>=89&&mProgressDialog!=null&&mProgressDialog.isShowing()){
+//                    mProgressDialog.dismiss();
+//                }
+                mNewsSourcesiteProgress.setProgress(newProgress);
+                if(newProgress==100){
+                    mNewsSourcesiteProgress.setVisibility(View.GONE);
                 }
             }
         });
@@ -139,10 +151,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if(mProgressDialog==null){
-                    mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
-                    mProgressDialog.setCancelable(true);
-                }
+//                if(mProgressDialog==null){
+//                    mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
+//                    mProgressDialog.setCancelable(true);
+//                }
                 Logger.e(TAG, "xxxx onPageStarted");
             }
 
@@ -150,9 +162,9 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                     Logger.e(TAG, "xxxx onPageFinished");
-                if(mProgressDialog!=null&&mProgressDialog.isShowing()){
-                    mProgressDialog.dismiss();
-                }
+//                if(mProgressDialog!=null&&mProgressDialog.isShowing()){
+//                    mProgressDialog.dismiss();
+//                }
             }
         });
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);

@@ -72,7 +72,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
-        mSource =getIntent().getStringExtra(HomeAty.KEY_NEWS_SOURCE);
+        mSource =getIntent().getStringExtra(NewsFeedFragment.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
 
@@ -107,7 +107,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                     mNewsDetailAdapter.setData(result.relate);
                     mNewsDetailAdapter.notifyDataSetChanged();
 
-                    if (HomeAty.VALUE_NEWS_SOURCE.equals(mSource)) {
+                    if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
                         msgvNewsDetail.setSelection(1);
                     }
                 }else{
