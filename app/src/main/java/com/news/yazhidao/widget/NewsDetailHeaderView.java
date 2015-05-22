@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -143,7 +142,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         mNewsDetailEdittext = (EditText) mRootView.findViewById(R.id.mNewsDetailEdittext);
         MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
         MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
-        mImageWall=(ImageWallView)mRootView.findViewById(R.id.mImageWall);
+        mImageWall = (ImageWallView) mRootView.findViewById(R.id.mImageWall);
     }
 
     public void setContentViewHeight(int pHeight) {
@@ -327,7 +326,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     mNewsDetailHeaderPulldown.setVisibility(View.GONE);
                 }
             });
-            mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName), pNewsDetail.originsourceSiteName));
+            mNewsDetailHeaderSourceName.setText("摘要来自：棱镜");
             if (pNewsDetail.ne != null)
                 mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
 
@@ -439,13 +438,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                 mllBaiKe.setVisibility(GONE);
             }
             //图片墙的相关显示
-            
-        if(pNewsDetail.imgWall!=null){
-            mImageWall.setVisibility(View.VISIBLE);
-            mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
-        }else{
-            mImageWall.setVisibility(GONE);
-        }
+
+            if (pNewsDetail.imgWall != null) {
+                mImageWall.setVisibility(View.VISIBLE);
+                mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
+            } else {
+                mImageWall.setVisibility(GONE);
+            }
             ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
             if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
                 for (int i = 0; i < pArrZhiHu.size(); i++) {
@@ -505,16 +504,18 @@ public class NewsDetailHeaderView extends FrameLayout {
                     }
                     layoutParams.leftMargin = DensityUtil.dip2px(mContext, 16);
                     sinaView.setLayoutParams(layoutParams);
-                    sinaView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                            _Intent.putExtra("url", pWeiBo.url);
-                            mContext.startActivity(_Intent);
-                            //add umeng statistic weibo
-                            MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
-                        }
-                    });
+                    if (pWeiBo.isCommentFlag == null ||"".equals(pWeiBo.isCommentFlag)) {
+                        sinaView.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                _Intent.putExtra("url", pWeiBo.url);
+                                mContext.startActivity(_Intent);
+                                //add umeng statistic weibo
+                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
+                            }
+                        });
+                    }
                 }
             } else {
                 mllSina.setVisibility(GONE);
