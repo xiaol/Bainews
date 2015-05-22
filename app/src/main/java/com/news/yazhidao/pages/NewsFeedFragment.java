@@ -99,6 +99,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String VALUE_NEWS_SOURCE = "other_view";
+    public static final String VALUE_NEWS_NOTIFICATION = "notification";
     private String mCurrentDate, mCurrentType;
     private JazzyListView lv_news;
     private MyAdapter list_adapter;
