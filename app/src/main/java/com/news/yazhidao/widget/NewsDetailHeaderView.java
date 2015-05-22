@@ -504,7 +504,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     }
                     layoutParams.leftMargin = DensityUtil.dip2px(mContext, 16);
                     sinaView.setLayoutParams(layoutParams);
-                    if (pWeiBo.isCommentFlag == null || "".equals(pWeiBo.isCommentFlag)) {
+                    if (pWeiBo.isCommentFlag == null ||"".equals(pWeiBo.isCommentFlag)) {
                         sinaView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {

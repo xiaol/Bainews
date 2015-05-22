@@ -73,11 +73,7 @@ public class SinaView extends FrameLayout {
             ImageLoaderHelper.dispalyImage(mContext, weiboData.img, mivPicture);
         }
         if (weiboData.isCommentFlag != null && !"".equals(weiboData.isCommentFlag)) {
-//            mHeadPortrait.setVisibility(GONE);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mHeadPortrait.getLayoutParams();
-            layoutParams.width = 0;
-            layoutParams.height = 1;
-            mHeadPortrait.setLayoutParams(layoutParams);
+            mHeadPortrait.setVisibility(GONE);
         }
     }
 }
