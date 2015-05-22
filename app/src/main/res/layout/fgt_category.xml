@@ -1,12 +1,20 @@
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/category_gridview"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:cacheColorHint="#00000000"
-    android:fadingEdge="none"
-    android:overScrollMode="never"
-    android:scrollbars="none"
-    android:numColumns="2" >
-</GridView>
+    android:background="#dfe6e9"
+    >
+
+    <GridView
+        android:id="@+id/category_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dfe6e9"
+        android:cacheColorHint="#00000000"
+        android:fadingEdge="none"
+        android:overScrollMode="never"
+        android:verticalSpacing="0dp"
+        android:horizontalSpacing="0dp"
+        android:layout_marginTop="13dp"
+        android:numColumns="2"></GridView>
+
+</LinearLayout>

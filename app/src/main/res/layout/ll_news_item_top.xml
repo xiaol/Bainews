@@ -29,11 +29,21 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_divider_top"
+        android:layout_below="@id/rl_top_mark"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:background="#dfe6e9"
+        />
+
     <FrameLayout
         android:id="@+id/fl_news_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_top_mark">
+        android:layout_marginBottom="12dp"
+        android:background="#dfe6e9"
+        android:layout_below="@+id/rl_divider_top">
 
         <ImageView
             android:id="@+id/iv_title_img"
@@ -74,77 +84,7 @@
                 android:layout_alignRight="@+id/tv_title"
                 android:background="@drawable/top_line"
                 />
-
         </RelativeLayout>
 
-
     </FrameLayout>
-
-
-    <LinearLayout
-        android:id="@+id/ll_bottom_item"
-        android:layout_below="@+id/fl_news_content"
-        android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
-        android:visibility="gone"
-        android:paddingTop="5dp"
-        android:layout_height="45dp">
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/image_compass" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="3dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            >
-
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="四月二十三日"
-                android:textSize="13sp"
-                android:textColor="#000000"
-                />
-
-            <TextView
-                android:id="@+id/tv_weekday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="星期三|早间"
-                android:textSize="13sp"
-                android:textColor="#000000"
-                />
-
-            </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#e2e2e2"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp" />
-
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_divider_top"
-        android:layout_below="@id/ll_bottom_item"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:background="#f3f3fa"
-        />
-
 </RelativeLayout>

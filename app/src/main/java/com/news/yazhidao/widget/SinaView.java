@@ -72,5 +72,8 @@ public class SinaView extends FrameLayout {
             mtvContent.setMaxLines(2);
             ImageLoaderHelper.dispalyImage(mContext, weiboData.img, mivPicture);
         }
+        if (weiboData.isCommentFlag != null && !"".equals(weiboData.isCommentFlag)) {
+            mHeadPortrait.setVisibility(GONE);
+        }
     }
 }
