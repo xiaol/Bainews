@@ -92,6 +92,7 @@ public class NewsDetailAty extends SwipeBackActivity {
     @Override
     protected void loadData() {
         GlobalParams.news_detail_url = getIntent().getStringExtra("url");
+//        String picwalldetail = "http://121.41.75.213:9999/news/baijia/fetchContent?url=http://news.163.com/photoview/00AO0001/90611.html";
         NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url, NetworkRequest.RequestMethod.GET);
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 

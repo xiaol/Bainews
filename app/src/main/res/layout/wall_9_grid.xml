@@ -39,13 +39,13 @@
         android:scaleType="fitXY" >
     </ImageView>
 
-</LinearLayout><LinearLayout
+</LinearLayout>
+    <LinearLayout
     android:id="@+id/row2"
     android:layout_width="fill_parent"
     android:layout_height="86dip"
     android:orientation="horizontal" 
     android:layout_marginTop="-3dip"
-    android:layout_marginBottom="-3dip"
     >
 
      <ImageView
@@ -82,7 +82,9 @@
     android:id="@+id/row3"
     android:layout_width="fill_parent"
     android:layout_height="86dip"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:layout_marginTop="-3dip"
+    >
 
     <ImageView
         android:id="@+id/col31"

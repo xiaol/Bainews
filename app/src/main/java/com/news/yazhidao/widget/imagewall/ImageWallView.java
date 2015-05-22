@@ -6,17 +6,9 @@ import android.widget.FrameLayout;
 
 public class ImageWallView extends FrameLayout {
 
-
-    public ImageWallView(Context context) {
-        this(context, null);
-    }
-
     public ImageWallView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ImageWallView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs);
+        // TODO Auto-generated constructor stub
     }
 
     public void addSource(Object source,int styleconstant){

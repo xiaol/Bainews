@@ -171,6 +171,13 @@
                 <action android:name="updateUI" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.news.yazhidao.widget.imagewall.WallActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance">
+
+        </activity>
     </application>
 
 </manifest>
