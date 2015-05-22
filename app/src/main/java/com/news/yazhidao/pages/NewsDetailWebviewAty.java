@@ -47,6 +47,9 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
         mNewsSourcesiteLeftBack.setOnClickListener(this);
         mNewsSourcesiteUrl=(TextView)findViewById(R.id.mNewsSourcesiteUrl);
         mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
+        mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
+        mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+
         mNewsSourcesiteFooterPraise=findViewById(R.id.mNewsSourcesiteFooterPraise);
         mNewsSourcesiteFooterPraise.setOnClickListener(this);
         mNewsSourcesiteFooterBlame=findViewById(R.id.mNewsSourcesiteFooterBlame);

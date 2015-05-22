@@ -325,7 +325,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     mNewsDetailHeaderPulldown.setVisibility(View.GONE);
                 }
             });
-            mNewsDetailHeaderSourceName.setText(String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderSourceName), pNewsDetail.originsourceSiteName));
+            mNewsDetailHeaderSourceName.setText("摘要来自：棱镜");
             if (pNewsDetail.ne != null)
                 mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
 

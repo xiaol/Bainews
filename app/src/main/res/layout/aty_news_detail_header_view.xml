@@ -89,7 +89,7 @@
             android:layout_marginTop="@dimen/news_detail_layout_margin_top"
             android:orientation="horizontal">
 
-            <HorizontalScrollView
+            <com.news.yazhidao.widget.CustomHorizontalScrollView
                 android:id="@+id/sina_scollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                     android:orientation="horizontal">
 
                 </LinearLayout>
-            </HorizontalScrollView>
+            </com.news.yazhidao.widget.CustomHorizontalScrollView>
         </LinearLayout>
 
         <com.news.yazhidao.widget.TextViewExtend
