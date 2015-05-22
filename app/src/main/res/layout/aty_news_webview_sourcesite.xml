@@ -4,13 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+
     <LinearLayout
         android:id="@+id/mNewsSourcesiteHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/mNewsSourcesiteLeftBack"
@@ -35,25 +38,31 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_below="@id/mNewsSourcesiteHeader"
-        android:background="@color/news_sourcesite_divider" />
+        android:background="@color/news_sourcesite_divider"
+        android:visibility="gone"
+        />
 
 
     <WebView
         android:id="@+id/mNewsSourcesiteWebview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mNewsSourcesiteTopDivider"
-        >
+        android:layout_below="@id/mNewsSourcesiteTopDivider">
 
     </WebView>
-
+    <ProgressBar
+        android:id="@+id/mNewsSourcesiteProgress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:progressDrawable="@drawable/detail_page_progressbar_horizontal" />
     <ImageView
-        android:layout_alignTop="@+id/mNewsSourcesiteFooter"
         android:id="@+id/mNewsSourcesiteBottomDivider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="-1px"
+        android:layout_alignTop="@+id/mNewsSourcesiteFooter"
         android:layout_below="@id/mNewsSourcesiteWebview"
+        android:layout_marginTop="-1px"
         android:background="@color/news_sourcesite_divider" />
 
     <LinearLayout
@@ -62,16 +71,16 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/mNewsSourcesiteFooterPraise"
-            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            >
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/mNewsSourcesitePraiseImg"
@@ -81,21 +90,21 @@
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/mNewsSourcesitePraiseNum"
-                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
                 android:text="1234" />
+
             <TextView
                 android:id="@+id/mNewsSourcesitePraiseNumIncrease"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/mNewsSourcesitePraiseImg"
                 android:text="+1"
                 android:textColor="#ff0000"
-                android:layout_marginLeft="5dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <ImageView
@@ -105,10 +114,10 @@
 
         <RelativeLayout
             android:id="@+id/mNewsSourcesiteFooterBlame"
-            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:gravity="center">
 
             <ImageView
@@ -121,19 +130,19 @@
                 android:id="@+id/mNewsSourcesiteBlameNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
                 android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
                 android:text="304" />
+
             <TextView
                 android:id="@+id/mNewsSourcesiteBlameNumReduce"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/mNewsSourcesiteBlameNumImg"
                 android:text="-1"
                 android:textColor="#ff0000"
-                android:layout_marginLeft="5dp"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </RelativeLayout>
 
         <ImageView
@@ -143,16 +152,16 @@
 
         <FrameLayout
             android:id="@+id/mNewsSourcesiteFooterShare"
-            android:background="@drawable/news_detail_webview_bottom_item_selector"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@drawable/news_detail_webview_bottom_item_selector">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:src="@drawable/btn_news_sourcesite_share" />
 
         </FrameLayout>

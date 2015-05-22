@@ -7,19 +7,11 @@ import android.view.View;
 import com.news.yazhidao.common.BaseActivity;
 
 public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivityBase {
-    private SwipeBackActivityHelper mHelper;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mHelper = new SwipeBackActivityHelper(this);
-        mHelper.onActivityCreate();
-    }
 
     @Override
     protected void setContentView() {
-        mHelper = new SwipeBackActivityHelper(this);
-        mHelper.onActivityCreate();
+
     }
 
     @Override

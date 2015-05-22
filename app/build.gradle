@@ -8,8 +8,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 7
-        versionName "0.8.4"
+        versionCode 85
+        versionName "0.8.5"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -75,12 +75,14 @@ android {
 
 }
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.umeng.analytics:analytics:5.4.2'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile project(':library')
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile project(':sharesdk_mainlib')
     compile files('libs/jpush-sdk-release1.7.4.jar')
+    compile project(':library_pageslidingtabstrip')
 }

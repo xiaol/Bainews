@@ -16,6 +16,14 @@ public class SplashAty extends BaseActivity {
     private Handler mHandler=new Handler();
     @Override
     protected void setContentView() {
+
+//        //定义全屏参数
+//        int flag= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+//        //获得当前窗体对象
+//        Window window = SplashAty.this.getWindow();
+//        //设置当前窗体为全屏显示
+//        window.setFlags(flag, flag);
+
         setContentView(R.layout.aty_splash);
     }
 
@@ -26,7 +34,7 @@ public class SplashAty extends BaseActivity {
         ZipperUtil.unzip(this,new ZipperUtil.ZipCompleteListener() {
             @Override
             public void complate() {
-                if(System.currentTimeMillis()-_Strat<2000){
+                if(System.currentTimeMillis() -_Strat<2000){
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {

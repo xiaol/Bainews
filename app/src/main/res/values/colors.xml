@@ -132,4 +132,12 @@
     <color name="bg_home_login_weibo">#ff5d5d</color>
     <color name="bg_home_login_mode">#000000</color>
     <color name="divide_home_login">#989898</color>
+
+
+    <color name="background_window">#FFE5E5E5</color>
+    <color name="green">#689F38</color>
+    <color name="greenDark">#3E5F22</color>
+    <color name="banana">#ffd800</color>
+    <color name="tab_blue">#4fb5ea</color>
+    <color name="tabtextcolor">#007ed7</color>
 </resources>
