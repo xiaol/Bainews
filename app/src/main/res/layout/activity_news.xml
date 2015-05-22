@@ -9,42 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/ll_title"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#4fb5ea"
-        android:gravity="center">
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/tv_title"
-            android:layout_width="125dp"
-            android:layout_height="22dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/app_title2" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_stroke1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/ll_title"
-        android:background="#a4a4a5" />
-
-    <TextView
-        android:id="@+id/tv_stroke2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/tv_stroke1"
-        android:background="#a4a4a5" />
-
     <com.twotoasters.jazzylistview.JazzyListView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/lv_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv_stroke2"
         android:background="#f3f3fa"
         android:clipToPadding="false"
         android:listSelector="#f3f3fa"
@@ -60,7 +29,6 @@
         android:id="@+id/ll_no_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ll_title"
         android:background="@drawable/nonetwork"
         android:orientation="horizontal"
         android:visibility="gone" />

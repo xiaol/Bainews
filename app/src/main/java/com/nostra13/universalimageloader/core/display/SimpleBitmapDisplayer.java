@@ -59,8 +59,6 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 //
 //        }else if(tv_title instanceof TextViewVertical){
 //
-//            bitmap = Bitmap.createScaledBitmap(bitmap,
-//                    GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4), false);
 //
 //            int height = bitmap.getHeight();
 //            int width = bitmap.getWidth();
@@ -83,21 +81,57 @@ public final class SimpleBitmapDisplayer implements BitmapDisplayer {
 //                options.inJustDecodeBounds = true;
 //
 //                Bitmap newbm = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-//                bitmap = Bitmap.createBitmap(newbm, 0, 0, GlobalParams.screenWidth, (int)(GlobalParams.screenHeight * 0.4));
+//                bitmap = Bitmap.createBitmap(newbm, 0, 0, GlobalParams.screenWidth, (int) (GlobalParams.screenHeight * 0.4));
 //
 //            }else if(width < GlobalParams.screenWidth && height >= (int)(GlobalParams.screenHeight * 0.4)){
-//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_VERTICAL);
 //            }else if(width < GlobalParams.screenWidth && height < (int)(GlobalParams.screenHeight * 0.4)){
-//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//                bitmap = ImageUtils.zoomBitmap2(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_VERTICAL);
 //
 //                if(bitmap.getHeight() < GlobalParams.screenHeight * 0.4){
 //                    float scaleHeight = (float)(GlobalParams.screenHeight * 0.4 / bitmap.getHeight());
 //
-//                    bitmap = ImageUtils.zoomBitmap3(bitmap,GlobalParams.screenWidth,GlobalParams.screenHeight,TYPE_TEXTVIEW_VERTICAL);
+//                    bitmap = ImageUtils.zoomBitmap3(bitmap, GlobalParams.screenWidth, GlobalParams.screenHeight, TYPE_TEXTVIEW_VERTICAL);
 //                }
 //
 //            }
-
+//
+//        }else{
+//
+//            int width = DensityUtil.dip2px(GlobalParams.context,110);
+//            int height = DensityUtil.dip2px(GlobalParams.context,100);
+//
+//            //按照宽度是110的规格来等比例缩放
+//            bitmap = ImageUtils.zoomBitmap(bitmap,width);
+//
+//            //如果高度 小于100 进行2次缩放
+//            if(bitmap.getHeight() < height){
+//                int bitmap_width = height * width /bitmap.getHeight();
+//                bitmap = ImageUtils.zoomBitmap(bitmap,bitmap_width);
+//
+//                int shift_hori = DensityUtil.dip2px(GlobalParams.context,27);
+//
+//                //如果加上偏移量超过图片的宽度
+//                if(shift_hori + width >= bitmap.getWidth()){
+//                    bitmap = Bitmap.createBitmap(bitmap, shift_hori, bitmap.getWidth() - width, bitmap.getWidth(), height);
+//                }else {
+//                    //反之
+//                    bitmap = Bitmap.createBitmap(bitmap, shift_hori, 0, width + shift_hori, height);
+//                }
+//            }else {
+//
+//                int shift = DensityUtil.dip2px(GlobalParams.context, 10);
+//
+//                //如果偏移量超过图片的高度
+//                if (shift + height >= bitmap.getHeight()) {
+//                    bitmap = Bitmap.createBitmap(bitmap, 0, bitmap.getHeight() - height, width, bitmap.getHeight());
+//                } else {
+//                    //反之
+//                    bitmap = Bitmap.createBitmap(bitmap, 0, shift, width, shift + height);
+//                }
+//            }
+//
+//
 //        }
 
         imageAware.setImageBitmap(bitmap);

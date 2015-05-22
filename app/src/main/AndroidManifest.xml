@@ -166,8 +166,15 @@
         </activity>
         <activity
             android:name=".pages.HomeAty"
+
             android:screenOrientation="portrait" />
-        <activity android:name=".pages.ShareSdkAty" />
+
+        <activity
+            android:name=".pages.ChatAty"
+            android:theme="@style/SwipeBackTheme"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".pages.ShareSdkAty"/>
         <activity
             android:name=".pages.SplashAty"
             android:screenOrientation="portrait">
@@ -188,6 +195,13 @@
                 <action android:name="updateUI" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.news.yazhidao.widget.imagewall.WallActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance">
+
+        </activity>
     </application>
 
 </manifest>

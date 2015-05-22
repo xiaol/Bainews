@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.news.yazhidao.net.request.UploadJpushidRequest;
+import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -36,19 +37,20 @@ public class MessageJPushReceiver extends BroadcastReceiver {
             boolean isFeedBackForeground = DeviceInfoUtil.isRunningForeground(context, FeedBackActivity.class.getSimpleName());
             //判断会话列表是否在前台
             //TODO 修改当前传入的activity name
-            boolean isMessageListForeground = DeviceInfoUtil.isRunningForeground(context, "list");
-
+            boolean isMessageListForeground = DeviceInfoUtil.isRunningForeground(context,ChatAty.class.getSimpleName());
+            Intent intent1;
             if(isFeedBackForeground){
-
+                intent1 = new Intent("FeedBackMessage");
+                intent1.putExtra("message",message);
+                context.sendBroadcast(intent1);
             }else  if(isMessageListForeground){
-
+                intent1= new Intent("FeedBackMessageList");
+                intent1.putExtra("message",message);
+                context.sendBroadcast(intent1);
             }else{
-                Intent clickIntent=new Intent(context, FeedBackActivity.class);
-                NotificationHelper.sendNotification(context,"测试title",message,clickIntent);
+                intent1=new Intent(context, FeedBackActivity.class);
+                NotificationHelper.sendNotification(context,"测试title",message,intent1);
             }
-            Intent intent1 = new Intent("messagemessagemessage");
-            intent1.putExtra("message",message);
-            context.sendBroadcast(intent1);
             Logger.i("jigang","receive custom title="+title);
             Logger.i("jigang","receive custom message="+message);
             Logger.i("jigang","receive custom extras="+extras);

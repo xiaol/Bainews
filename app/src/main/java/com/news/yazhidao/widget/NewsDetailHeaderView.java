@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
+import com.news.yazhidao.widget.imagewall.ViewWall;
 import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.NameValuePair;
@@ -437,10 +439,12 @@ public class NewsDetailHeaderView extends FrameLayout {
                 mllBaiKe.setVisibility(GONE);
             }
             //图片墙的相关显示
+            
         if(pNewsDetail.imgWall!=null){
-//            mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_7_232);
+            mImageWall.setVisibility(View.VISIBLE);
+            mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
         }else{
-//            mImageWall.setVisibility(GONE);
+            mImageWall.setVisibility(GONE);
         }
             ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
             if (pArrZhiHu != null && pArrZhiHu.size() > 0) {

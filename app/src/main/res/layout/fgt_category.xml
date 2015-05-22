@@ -1,0 +1,12 @@
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/category_gridview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:cacheColorHint="#00000000"
+    android:fadingEdge="none"
+    android:overScrollMode="never"
+    android:scrollbars="none"
+    android:numColumns="2" >
+</GridView>

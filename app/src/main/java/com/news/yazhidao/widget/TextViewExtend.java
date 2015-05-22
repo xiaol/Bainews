@@ -36,6 +36,9 @@ public class TextViewExtend extends TextView {
             catch (Exception e) {
                 Logger.e(TAG,e.getMessage());
             }
+            if(tf==null){
+                return;
+            }
             fontCache.put(_KeyFontName, tf);
         }
         setTypeface(tf);

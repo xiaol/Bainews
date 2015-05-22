@@ -126,7 +126,7 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
-        mNewsUrl=getIntent().getStringExtra(HomeAty.KEY_URL);
+        mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient(){

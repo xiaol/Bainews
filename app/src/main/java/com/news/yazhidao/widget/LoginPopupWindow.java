@@ -14,9 +14,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
+import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.image.ImageManager;
@@ -101,7 +103,12 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                 logout();
                 break;
             case R.id.mHomeChatWrapper:
-                Intent intent =new Intent(mContext, FeedBackActivity.class);
+                String strJPushId = SharedPreManager.getJPushId();
+                Intent intent;
+                if (CommonConstant.JINYU_JPUSH_ID.equals(strJPushId))
+                    intent = new Intent(mContext, ChatAty.class);
+                else
+                    intent = new Intent(mContext, FeedBackActivity.class);
                 mContext.startActivity(intent);
                 dismiss();
                 break;
