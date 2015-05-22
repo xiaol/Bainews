@@ -87,5 +87,6 @@ public class NewsDetail implements Serializable{
         public String user;
         public String title;
         public String img;
+        public String isCommentFlag;
     }
 }

@@ -8,8 +8,7 @@
         android:id="@+id/ll_time_item"
         android:layout_width="match_parent"
         android:visibility="gone"
-        android:background="#f3f3fa"
-        android:paddingTop="5dp"
+        android:background="#dfe6e9"
         android:layout_height="45dp">
 
         <ImageView
@@ -65,8 +64,8 @@
         android:id="@+id/rl_divider"
         android:layout_below="@+id/ll_time_item"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="#f3f3fa" />
+        android:layout_height="15dp"
+        android:background="#dfe6e9" />
 
     <RelativeLayout
         android:id="@+id/rl_title_content"
@@ -180,6 +179,13 @@
             android:background="@drawable/top_arrow" />
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:background="#dfe6e9"
+        android:layout_below="@+id/rl_bottom_mark"
+        />
 
 
 </RelativeLayout>

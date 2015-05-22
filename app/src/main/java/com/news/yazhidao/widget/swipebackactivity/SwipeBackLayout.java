@@ -377,6 +377,7 @@ public class SwipeBackLayout extends FrameLayout {
                     return false;
                 }
             case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                 break;
         }
         if (!mEnable) {
