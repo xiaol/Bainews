@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_item_content"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#dfe6e9"
+    >
 
     <RelativeLayout
         android:id="@+id/rl_top_mark"
@@ -53,7 +55,7 @@
 
         <RelativeLayout
             android:layout_width="300dp"
-            android:layout_height="260dp"
+            android:layout_height="230dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30dp">
 
