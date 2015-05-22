@@ -197,6 +197,17 @@ public class NewsDetailAty extends SwipeBackActivity {
             }
         });
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
+        if(NewsFeedFragment.VALUE_NEWS_NOTIFICATION.equals(mSource)){
+            Intent intent= new Intent(this,HomeAty.class);
+            startActivity(intent);
+        }
+    }
+
     public String getMacAddressAndDeviceid(Context c) {
         WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInf = wifiMan.getConnectionInfo();
