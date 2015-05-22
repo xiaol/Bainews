@@ -69,6 +69,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
+import com.news.yazhidao.widget.ProgressWheel;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
@@ -104,6 +105,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private TextView tv_stroke1;
     private TextView tv_stroke2;
     private LinearLayout ll_no_network;
+    private NewsFeedReceiver rt;
 
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
     private int color = new Color().parseColor("#55ffffff");
@@ -119,6 +121,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private LoadingLayout mylayout;
     private TimeFeed mCurrentTimeFeed;
     private long mTotalTime, mUpdateTime, mLastTime, mCurrentTime;
+    private ProgressWheel mNewsFeedProgressWheel;
+    private View mNewsFeedProgressWheelWrapper;
 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
@@ -145,18 +149,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 	}
 
     @Override
-    public void onResume() {
-
-        if(GlobalParams.currentCatePos != -1){
-            loadNewsFeedData(GlobalParams.currentCatePos);
-        }
-
-        super.onResume();
-    }
-
-
-
-    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		position = getArguments().getInt(ARG_POSITION);
@@ -172,14 +164,20 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         imageLoader = new ImageLoaderHelper(GlobalParams.context);
         TimeoOutAlarmReceiver.setListener(this);
 
-        NewsFeedReceiver rt = new NewsFeedReceiver();
+        rt = new NewsFeedReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("sendposition");
         GlobalParams.context.registerReceiver(rt, filter);
 
 	}
 
-	@Override
+    @Override
+    public void onDestroy() {
+        GlobalParams.context.unregisterReceiver(rt);
+        super.onDestroy();
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.activity_news,container,false);
         ViewCompat.setElevation(rootView, 50);
@@ -210,6 +208,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         | Gravity.CENTER, 0, 0);
             }
         });
+
+        mNewsFeedProgressWheel = (ProgressWheel) rootView.findViewById(R.id.mNewsFeedProgressWheel);
+        mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
+        mNewsFeedProgressWheel.spin();
 
         //添加umeng更新
         mHandler.postDelayed(new Runnable() {
@@ -1287,10 +1289,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     list_adapter.notifyDataSetChanged();
                 }
                 lv_news.onRefreshComplete();
+                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsFeedProgressWheel.stopSpinning();
+                mNewsFeedProgressWheel.setVisibility(View.GONE);
             }
 
             public void failed(MyAppException exception) {
                 lv_news.onRefreshComplete();
+                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsFeedProgressWheel.stopSpinning();
+                mNewsFeedProgressWheel.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
@@ -1355,10 +1363,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 lv_news.onRefreshComplete();
+                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsFeedProgressWheel.stopSpinning();
+                mNewsFeedProgressWheel.setVisibility(View.GONE);
             }
 
             public void failed(MyAppException exception) {
                 lv_news.onRefreshComplete();
+                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                mNewsFeedProgressWheel.stopSpinning();
+                mNewsFeedProgressWheel.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
@@ -1393,7 +1407,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         @Override
         public void onReceive(Context context, Intent intent) {
             if("sendposition".equals(intent.getAction())){
-                loadNewsFeedData(GlobalParams.currentCatePos);
+                if(GlobalParams.currentCatePos == 0){
+                    loadNewsData(1);
+                }else {
+                    loadNewsFeedData(GlobalParams.currentCatePos - 1);
+                }
             }
         }
     }

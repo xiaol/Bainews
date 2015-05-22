@@ -178,6 +178,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                     mNewsDeatailTitleLayout.setVisibility(View.GONE);
                     mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
                     mNewsDetailEdittext.setText(mNewsDetailHeaderTitle.getText());
+                    mNewsDetailEdittext.setOnLongClickListener(new OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+
+                            return true;
+                        }
+                    });
                     EDIT_POSITION = TITLE;
 
                     return true;
@@ -349,9 +356,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                             if ("".equals(point.desText)) {
                                 if (point.paragraphIndex != null && !"".equals(point.paragraphIndex)) {
                                     int index = Integer.parseInt(point.paragraphIndex);
-                                    if (mNewsDetailHeaderContentParent != null && index <= mNewsDetailHeaderContentParent.getChildCount()) {
-                                        View v = mNewsDetailHeaderContentParent.getChildAt(index);
-                                        v.setVisibility(View.GONE);
+                                    if (mNewsDetailHeaderContentParent != null && index > mNewsDetailHeaderContentParent.getChildCount()) {
+                                            mNewsDetailHeaderContentParent.removeViewAt(index);
+//                                        v.setVisibility(View.GONE);
+                                    }else{
+                                        LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(index);
+                                        tv.setText("");
+                                        tv.setVisibility(View.GONE);
                                     }
                                 }
                             } else {

@@ -41,20 +41,27 @@
     </string>
     <string name="home_logout">退出登录</string>
     <array name="bg_category_list">
+
+        <item>@drawable/bg_categery_today</item>
         <item>@drawable/bg_category_true_story</item>
         <item>@drawable/bg_category_amusement</item>
         <item>@drawable/bg_category_technology</item>
         <item>@drawable/bg_category_international</item>
         <item>@drawable/bg_category_sports</item>
         <item>@drawable/bg_category_finance_and_economics</item>
+        <item>@drawable/bg_categery_gangtai</item>
+        <item>@drawable/bg_categery_shehui</item>
     </array>
 
     <string-array name="category_list_name">
+        <item>今日</item>
         <item>时事</item>
         <item>娱乐</item>
         <item>科技</item>
         <item>国际</item>
         <item>体育</item>
         <item>财经</item>
+        <item>港台</item>
+        <item>社会</item>
     </string-array>
 </resources>
