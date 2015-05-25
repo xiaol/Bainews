@@ -3,15 +3,14 @@
     android:id="@+id/mNewsDetailHeaderWrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="10dp"
-    android:paddingLeft="10dp"
-
+    android:paddingLeft="13dp"
     >
 
     <ImageView
         android:id="@+id/iv_bg_icon"
         android:layout_width="160dp"
         android:layout_height="110dp"
+        android:layout_marginBottom="13dp"
         android:scaleType="centerCrop"/>
 
     <com.news.yazhidao.widget.LetterSpacingTextView
