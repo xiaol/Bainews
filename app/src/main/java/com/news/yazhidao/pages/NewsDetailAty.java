@@ -51,7 +51,6 @@ public class NewsDetailAty extends SwipeBackActivity {
     private static final String TAG = "NewsDetailAty";
     private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
     private StaggeredGridView msgvNewsDetail;
-    private boolean mHasRequestedMore;
     private StaggeredNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
     private NewsDetailHeaderView headerView;
@@ -65,6 +64,11 @@ public class NewsDetailAty extends SwipeBackActivity {
     protected void setContentView() {
         super.setContentView();
         setContentView(R.layout.aty_detail);
+    }
+
+    @Override
+    protected boolean translucentStatus() {
+        return false;
     }
 
     @Override
