@@ -1,6 +1,9 @@
 package com.news.yazhidao.net;
 
 import android.os.AsyncTask;
+import android.os.Build;
+
+import com.news.yazhidao.utils.Logger;
 
 import org.apache.http.HttpResponse;
 
@@ -31,6 +34,7 @@ public class NetworkRequestTask extends AsyncTask<String, Integer, Object> {
     }
 
     private Object request(int retry, int retryCount) {
+        Logger.i("jigang", Build.VERSION.SDK_INT+"--------");
         try {
             Object result;
             if(request.callback!=null){
