@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -52,8 +53,7 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
         mNewsSourcesiteLeftBack.setOnClickListener(this);
         mNewsSourcesiteUrl=(TextView)findViewById(R.id.mNewsSourcesiteUrl);
         mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
-        mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
-        mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+
 
         mNewsSourcesiteFooterPraise=findViewById(R.id.mNewsSourcesiteFooterPraise);
         mNewsSourcesiteFooterPraise.setOnClickListener(this);
@@ -134,16 +134,18 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
         mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
-        mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient(){
+        mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
+        mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+        mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                Logger.e(TAG,"xxx  "+newProgress);
+                Logger.e(TAG, "xxx  " + newProgress);
 //                if(newProgress>=89&&mProgressDialog!=null&&mProgressDialog.isShowing()){
 //                    mProgressDialog.dismiss();
 //                }
                 mNewsSourcesiteProgress.setProgress(newProgress);
-                if(newProgress==100){
+                if (newProgress == 100) {
                     mNewsSourcesiteProgress.setVisibility(View.GONE);
                 }
             }
@@ -183,5 +185,10 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
 
     }
 
-
+    @Override
+    public void finish() {
+        super.finish();
+        ViewGroup viewGroup= (ViewGroup) getWindow().getDecorView();
+        viewGroup.removeAllViews();
+    }
 }

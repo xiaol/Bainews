@@ -29,4 +29,9 @@ public abstract class JsonCallback<T> extends AbstractCallBack<T> {
         this.mReturnType=type;
         return this;
     }
+
+    @Override
+    public T postRequest(T t) {
+        return super.postRequest(t);
+    }
 }

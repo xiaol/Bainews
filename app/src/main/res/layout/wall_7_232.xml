@@ -10,20 +10,20 @@
         android:orientation="horizontal" >
 
         <ImageView
-            android:padding="3dip"
+            android:layout_margin="3dip"
             android:id="@+id/col11"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1" android:scaleType="fitXY">
+            android:layout_weight="1" android:scaleType="centerCrop">
         </ImageView>
 
         <ImageView 
-            android:padding="3dip"
+            android:layout_margin="3dip"
             android:layout_marginLeft="-3dip"
             android:id="@+id/col12"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1" android:scaleType="fitXY">
+            android:layout_weight="1" android:scaleType="centerCrop">
         </ImageView>
     </LinearLayout>
 
@@ -38,7 +38,7 @@
             android:id="@+id/col21"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1" android:scaleType="fitXY">
+            android:layout_weight="1" android:scaleType="centerCrop">
         </ImageView>
 
         <ImageView 
@@ -47,7 +47,7 @@
             android:id="@+id/col22"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1" android:scaleType="fitXY">
+            android:layout_weight="1" android:scaleType="centerCrop">
         </ImageView>
         <ImageView 
             android:layout_marginRight="3dip"
@@ -55,7 +55,7 @@
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1" 
-            android:scaleType="fitXY">
+            android:scaleType="centerCrop">
         </ImageView>
     
     </LinearLayout>
@@ -66,23 +66,23 @@
 
         <ImageView 
             
-            android:padding="3dip"
+            android:layout_margin="3dip"
             android:id="@+id/col31"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="3" 
-            android:scaleType="fitXY">
+            android:scaleType="centerCrop">
         </ImageView>
 
         <ImageView 
             
-            android:padding="3dip"
+            android:layout_margin="3dip"
             android:layout_marginLeft="-3dip"
             android:id="@+id/col32"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1" 
-            android:scaleType="fitXY">
+            android:scaleType="centerCrop">
         </ImageView>
     </LinearLayout>
 </LinearLayout>
