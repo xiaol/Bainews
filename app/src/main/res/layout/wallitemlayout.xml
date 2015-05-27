@@ -11,36 +11,44 @@
         android:layout_centerVertical="true"
         android:scaleType="fitXY" />
 
-    <LinearLayout android:id="@+id/txtlayout"
+    <LinearLayout
+        android:id="@+id/txtlayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
         android:layout_below="@id/image"
-        android:layout_marginBottom="20dip"
-        android:layout_marginTop="220dip"
-        android:orientation="vertical"
+
+        android:layout_marginTop="430dip"
+
+        android:orientation="horizontal"
+
         android:paddingLeft="19dip"
-        android:paddingRight="19dip" >
+        android:paddingRight="19dip"
+        android:paddingTop="20dip"
+        >
 
         <TextView
             android:id="@+id/txt"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="top"
-            android:textColor="@android:color/white"
-            android:lines="7"
+            android:layout_gravity="top"
             android:ellipsize="end"
-            android:textSize="15dip" />
+            android:maxLines="7"
+            android:textColor="@android:color/white"
+            android:textSize="15dip"
+
+            />
     </LinearLayout>
 
-    <TextView 
-        android:paddingLeft="19dip"
-        android:paddingRight="19dip"
+    <TextView
         android:id="@+id/pagination"
+        android:shadowColor="#a6000000"
+
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:paddingBottom="30dip"
+        android:padding="19dip"
+        android:paddingBottom="20dip"
         android:textColor="@android:color/white"
         android:textSize="13dip" />
 
