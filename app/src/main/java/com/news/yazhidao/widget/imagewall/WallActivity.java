@@ -4,31 +4,24 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.adapter.Logs;
 import com.news.yazhidao.utils.adapter.MapAdapter;
-import com.news.yazhidao.utils.adapter.MapContent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,18 +179,16 @@ public class WallActivity extends Activity {
     public View getView( final int position) {
 
 
-        View view =
-
-                layouts.get(position);
+        View view =layouts.get(position);
         ((TextView) view.findViewById(R.id.pagination)).setText((position + 1) + "/" + browsedata.size());
-        ((TextView) view.findViewById(R.id.pagination)).setShadowLayer(50, 5, 5, Color.BLACK);
-        ((TextView) view.findViewById(R.id.txt)).setShadowLayer(50, 5, 5, Color.BLACK);
+        ((TextView) view.findViewById(R.id.pagination)).setShadowLayer(5, 3, 3, Color.BLACK);
+        ((TextView) view.findViewById(R.id.txt)).setShadowLayer(5, 3, 3, Color.BLACK);
         String note = ((Map) browsedata.get(position)).get("note").toString();
         String img = ((Map) browsedata.get(position)).get("img").toString();
 
         ((TextView) view.findViewById(R.id.txt)).setText(note);
-        BitmapFactory.Options bf = new BitmapFactory.Options();
-        bf.inSampleSize = 1024;
+//        BitmapFactory.Options bf = new BitmapFactory.Options();
+//        bf.inSampleSize = 8;
 //        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
 //            @Override
 //            public void onLoadingStarted(String imageUri, View view) {
