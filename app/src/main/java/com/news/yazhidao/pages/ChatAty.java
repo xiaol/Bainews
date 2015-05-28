@@ -23,7 +23,6 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
@@ -41,7 +40,6 @@ public class ChatAty extends SwipeBackActivity {
     private ListView mListView;
     private MessageReceiver mReceiver;
     private ArrayList<FeedBackList> mFeedList;
-    private SwipeBackLayout mSwipeBackLayout;
 
 
     @Override
@@ -55,8 +53,6 @@ public class ChatAty extends SwipeBackActivity {
 
     @Override
     protected void initializeViews() {
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mAdapter = new PrivateChatHistoryAdapter(this);
         mListView = (ListView) findViewById(R.id.chat_list_view);
         mListView.setAdapter(mAdapter);

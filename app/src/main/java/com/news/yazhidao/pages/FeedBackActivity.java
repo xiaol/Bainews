@@ -21,7 +21,6 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.FeedBack;
@@ -35,6 +34,8 @@ import com.news.yazhidao.net.request.SendMessageRequest;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
@@ -46,7 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class FeedBackActivity extends BaseActivity implements SendMessageListener {
+public class FeedBackActivity extends SwipeBackActivity implements SendMessageListener {
 
 
     private PullToRefreshExpandableListView mlvFeedBack;
@@ -60,6 +61,7 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
     private MessageReceiver mReceiver;
     private String mJPushId, mUserId, mUserPlatformType, mReceiverId;
     private boolean mIsSend = true;
+    private SwipeBackLayout mSwipeBackLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +72,13 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
         intentfilter.addAction("FeedBackMessage");
         registerReceiver(mReceiver, intentfilter);
     }
-
+    @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
     @Override
     protected void setContentView() {
+
         if (getIntent().getStringExtra("userJpushId") != null)
             mReceiverId = getIntent().getStringExtra("userJpushId");
         else
@@ -82,8 +88,10 @@ public class FeedBackActivity extends BaseActivity implements SendMessageListene
 
     @Override
     protected void initializeViews() {
-        mAdapter = new TSPrivateChatMessageAdapter(this);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
+        mAdapter = new TSPrivateChatMessageAdapter(this);
         mTitleView = (TextViewExtend) findViewById(R.id.nav_title_view);
 
         mlvFeedBack = (PullToRefreshExpandableListView) findViewById(R.id.private_chat_message_list_view);//得到ListView对象的引用 /*为ListView设置Adapter来绑定数据*/

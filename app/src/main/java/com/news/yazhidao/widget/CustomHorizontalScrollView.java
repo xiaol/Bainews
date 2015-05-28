@@ -31,7 +31,6 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -42,7 +41,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
                 requestDisallowInterceptTouchEvent(false);
                 break;
         }
-        return true;
+        return super.onInterceptTouchEvent(event);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
                 mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(false);
                 break;
         }
-        return true;
+        return super.onTouchEvent(event);
     }
 
     @Override

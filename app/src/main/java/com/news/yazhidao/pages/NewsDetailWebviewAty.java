@@ -41,6 +41,11 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
     private SwipeBackLayout mSwipeBackLayout;
 
     @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
+
+    @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
         mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
