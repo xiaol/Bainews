@@ -4,24 +4,31 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.adapter.Logs;
 import com.news.yazhidao.utils.adapter.MapAdapter;
+import com.news.yazhidao.utils.adapter.MapContent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +76,7 @@ public class WallActivity extends Activity {
                         value);
             }
 
+
         };
         if (browsedata == null) {
             throw new RuntimeException("browsedata invalidly is null");
@@ -115,23 +123,21 @@ public class WallActivity extends Activity {
                                     Object object) {
 //                ((ViewPager) container).removeView(layouts.get(position));
             }
-
-            List list = new ArrayList();
-
+        List list = new ArrayList();
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 if (list.contains(position)) {
                     return container.getChildAt(position);
-                } else {
+                }else{
                     list.add(position);
                 }
                 container.addView(layouts.get(position));
                 BitmapFactory.Options bf = new BitmapFactory.Options();
                 bf.inSampleSize = 256;
 
-                if (bitmap.containsKey(position)) {
+                if(bitmap.containsKey(position)){
                     ((ImageView) layouts.get(position).findViewById(R.id.image)).setImageBitmap(bitmap.get(position));
-                } else {
+                }else {
                     ImageLoader.getInstance().displayImage(((Map) browsedata.get(position)).get("img").toString(),
                             ((ImageView) layouts.get(position).findViewById(R.id.image)), getImageOption(bf), new ImageLoadingListener() {
                                 @Override
@@ -168,17 +174,16 @@ public class WallActivity extends Activity {
 //                if(position+1<getCount()){
 //                    getView((ViewPager) container, position + 1);
 //                }
-                return layouts.get(position);
+            return  layouts.get(position);
             }
+
 
 
         });
         pager.setCurrentItem(getIntent().getIntExtra("page", 0));
     }
-
-    Map<Integer, Bitmap> bitmap = new HashMap<Integer, Bitmap>();
-
-    public View getView(final int position) {
+    Map<Integer,Bitmap> bitmap = new HashMap<Integer,Bitmap>();
+    public View getView( final int position) {
 
 
         View view =
@@ -192,28 +197,28 @@ public class WallActivity extends Activity {
 
         ((TextView) view.findViewById(R.id.txt)).setText(note);
         BitmapFactory.Options bf = new BitmapFactory.Options();
-        bf.inSampleSize = 8;
-        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                bitmap.put(position, loadedImage);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
+        bf.inSampleSize = 1024;
+//        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
+//            @Override
+//            public void onLoadingStarted(String imageUri, View view) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                bitmap.put(position,loadedImage);
+//            }
+//
+//            @Override
+//            public void onLoadingCancelled(String imageUri, View view) {
+//
+//            }
+//        });
 //        BitmapFactory.Options bf = new BitmapFactory.Options();
 //        bf.inSampleSize = 8;
 
@@ -229,7 +234,6 @@ public class WallActivity extends Activity {
 
         return view;
     }
-
     public DisplayImageOptions getImageOption(
             BitmapFactory.Options decodingOptions) {
         final DisplayImageOptions options = new DisplayImageOptions.Builder()
