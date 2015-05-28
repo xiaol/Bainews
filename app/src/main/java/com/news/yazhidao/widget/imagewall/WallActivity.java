@@ -196,29 +196,29 @@ public class WallActivity extends Activity {
         String img = ((Map) browsedata.get(position)).get("img").toString();
 
         ((TextView) view.findViewById(R.id.txt)).setText(note);
-        BitmapFactory.Options bf = new BitmapFactory.Options();
-        bf.inSampleSize = 8;
-        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
-
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                bitmap.put(position,loadedImage);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
+//        BitmapFactory.Options bf = new BitmapFactory.Options();
+//        bf.inSampleSize = 8;
+//        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
+//            @Override
+//            public void onLoadingStarted(String imageUri, View view) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                bitmap.put(position,loadedImage);
+//            }
+//
+//            @Override
+//            public void onLoadingCancelled(String imageUri, View view) {
+//
+//            }
+//        });
 //        BitmapFactory.Options bf = new BitmapFactory.Options();
 //        bf.inSampleSize = 8;
 
