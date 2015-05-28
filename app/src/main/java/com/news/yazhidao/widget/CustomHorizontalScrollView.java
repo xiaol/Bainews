@@ -12,6 +12,7 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
  */
 public class CustomHorizontalScrollView extends HorizontalScrollView {
     private SwipeBackActivity mActivity;
+
     public CustomHorizontalScrollView(Context context) {
         this(context, null);
     }
@@ -22,13 +23,16 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
 
     public CustomHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mActivity=(SwipeBackActivity)context;
+        mActivity = (SwipeBackActivity) context;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
 
-        switch (event.getAction()){
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
+                break;
             case MotionEvent.ACTION_MOVE:
                 mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
                 break;
@@ -42,7 +46,10 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
+                break;
             case MotionEvent.ACTION_MOVE:
                 mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
                 break;
@@ -56,7 +63,13 @@ public class CustomHorizontalScrollView extends HorizontalScrollView {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+
+                mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
+                break;
+
             case MotionEvent.ACTION_MOVE:
                 mActivity.getSwipeBackLayout().requestDisallowInterceptTouchEvent(true);
                 break;

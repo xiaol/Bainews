@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_grag_line_top_bottom"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top" />
+             />
 
         <!--新闻详情展示-->
         <include layout="@layout/aty_news_detail_header_news_display" />
