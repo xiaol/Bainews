@@ -210,14 +210,16 @@ public class JazzyHelper implements AbsListView.OnScrollListener {
     }
 
     private void doJazzinessImpl(View item, int position, int scrollDirection) {
-        ViewPropertyAnimator animator = item.animate()
-                .setDuration(DURATION)
-                .setInterpolator(new AccelerateDecelerateInterpolator());
+        if(item != null) {
+            ViewPropertyAnimator animator = item.animate()
+                    .setDuration(DURATION)
+                    .setInterpolator(new AccelerateDecelerateInterpolator());
 
-        scrollDirection = scrollDirection > 0 ? 1 : -1;
-        mTransitionEffect.initView(item, position, scrollDirection);
-        mTransitionEffect.setupAnimation(item, position, scrollDirection, animator);
-        animator.start();
+            scrollDirection = scrollDirection > 0 ? 1 : -1;
+            mTransitionEffect.initView(item, position, scrollDirection);
+            mTransitionEffect.setupAnimation(item, position, scrollDirection, animator);
+            animator.start();
+        }
     }
 
     /**

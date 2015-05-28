@@ -175,7 +175,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     @Override
     public void onDestroy() {
-        GlobalParams.context.unregisterReceiver(rt);
+        if(rt != null) {
+            GlobalParams.context.unregisterReceiver(rt);
+        }
         super.onDestroy();
     }
 

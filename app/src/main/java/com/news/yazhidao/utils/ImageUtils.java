@@ -149,7 +149,12 @@ public class ImageUtils {
         int shift = DensityUtil.dip2px(GlobalParams.context,100);
 
         if(flag){
-            bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
+
+            if(bitmap_big.getHeight() > shift + newHeight) {
+                bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
+            }else{
+                bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
+            }
         }else {
 
             bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
