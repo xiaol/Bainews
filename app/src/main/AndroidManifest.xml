@@ -198,6 +198,7 @@
         <activity
             android:name="com.news.yazhidao.widget.imagewall.WallActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance">
 
         </activity>
