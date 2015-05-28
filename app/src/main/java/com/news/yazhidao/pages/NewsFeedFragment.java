@@ -1322,7 +1322,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
         int _SplitStartIndex = 0;
-        if (result != null && result.size() > 1) {
+        if (result != null && result.size() > 0) {
             for (int i = 0; i < result.size(); i++) {
                 if (!"1".equals(result.get(i).getSpecial())) {
                     _SplitStartIndex = i;
@@ -1339,8 +1339,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-            } else if (_SplitStartIndex == 0) {
 
+                if(mUpNewsArr.size() == 0){
+                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                }else{
+                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                }
+            } else if (_SplitStartIndex == 0) {
 
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
