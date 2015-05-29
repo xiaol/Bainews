@@ -123,6 +123,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private long mTotalTime, mUpdateTime, mLastTime, mCurrentTime;
     private ProgressWheel mNewsFeedProgressWheel;
     private View mNewsFeedProgressWheelWrapper;
+    private Context mContext;
 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
@@ -151,8 +152,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity();
         position = getArguments().getInt(ARG_POSITION);
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
 
@@ -160,20 +162,20 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         GlobalParams.maxHeight = (int) (height * 0.27);
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
-        imageLoader = new ImageLoaderHelper(getActivity());
+        imageLoader = new ImageLoaderHelper(mContext);
         TimeoOutAlarmReceiver.setListener(this);
 
         rt = new NewsFeedReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("sendposition");
-        getActivity().registerReceiver(rt, filter);
+        mContext.registerReceiver(rt, filter);
 
     }
 
     @Override
     public void onDestroy() {
         if (rt != null) {
-            getActivity().unregisterReceiver(rt);
+            mContext.unregisterReceiver(rt);
         }
         super.onDestroy();
     }
@@ -190,8 +192,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginPopupWindow window1 = new LoginPopupWindow(getActivity());
-                window1.showAtLocation(((HomeAty) (getActivity())).getWindow().getDecorView(), Gravity.CENTER
+                LoginPopupWindow window1 = new LoginPopupWindow(mContext);
+                window1.showAtLocation(((HomeAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
             }
         });
@@ -203,10 +205,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     mCurrentTime = System.currentTimeMillis();
                     long updateTime = mUpdateTime - (mCurrentTime - mLastTime);
                     RelativeLayout screenRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.screen_RelativeLayout);
-                    TimePopupWindow m_ppopupWindow = new TimePopupWindow((HomeAty) getActivity(), null, mCurrentTimeFeed, updateTime, mTotalTime, NewsFeedFragment.this);
+                    TimePopupWindow m_ppopupWindow = new TimePopupWindow((HomeAty) mContext, null, mCurrentTimeFeed, updateTime, mTotalTime, NewsFeedFragment.this);
                     m_ppopupWindow.setDateAndType(mCurrentDate, mCurrentType);
                     m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
-                    m_ppopupWindow.showAtLocation(((HomeAty) (getActivity())).getWindow().getDecorView(), Gravity.CENTER
+                    m_ppopupWindow.showAtLocation(((HomeAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                             | Gravity.CENTER, 0, 0);
                 }
             }
@@ -219,8 +221,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (getActivity() != null)
-                    UmengUpdateAgent.update(getActivity());
+                if (mContext != null)
+                    UmengUpdateAgent.update(mContext);
             }
         }, 2000);
 
@@ -229,7 +231,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ll_no_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (NetUtil.checkNetWork(getActivity())) {
+                if (NetUtil.checkNetWork(mContext)) {
 
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
@@ -254,7 +256,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                 if (view.getLastVisiblePosition() == totalItemCount - 1) {
-                    if (NetUtil.checkNetWork(getActivity())) {
+                    if (NetUtil.checkNetWork(mContext)) {
                         lv_news.setVisibility(View.VISIBLE);
                         ll_no_network.setVisibility(View.GONE);
                         showNextDownNews();
@@ -285,7 +287,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
-                if (NetUtil.checkNetWork(getActivity())) {
+                if (NetUtil.checkNetWork(mContext)) {
                     lv_news.setVisibility(View.VISIBLE);
                     ll_no_network.setVisibility(View.GONE);
                     showNextUpNews();
@@ -360,7 +362,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         });
         if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
             ListView listView = lv_news.getRefreshableView();
-            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f + DensityUtil.dip2px(getActivity(), 20));
+            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f + DensityUtil.dip2px(mContext, 20));
             localTranslateAnimation.setDuration(300);
             listView.setScrollY(0);
             listView.clearAnimation();
@@ -409,7 +411,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     }
 
     protected void loadData() {
-        if (NetUtil.checkNetWork(getActivity())) {
+        if (NetUtil.checkNetWork(mContext)) {
             ll_no_network.setVisibility(View.GONE);
             lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             loadNewsData(1);
@@ -453,10 +455,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     mCurrentDate = mCurrentTimeFeed.getHistory_date().get(3);
                 }
                 mLastTime = System.currentTimeMillis();
-                alarmManager = (AlarmManager) ((HomeAty) (getActivity())).getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(getActivity(), TimeoOutAlarmReceiver.class);
+                alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(mContext, TimeoOutAlarmReceiver.class);
                 intent.setAction("updateUI");
-                pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
+                pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
                 alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + Long.valueOf(mCurrentTimeFeed.getNext_upate_time()), pendingIntent);
             }
 
@@ -562,7 +564,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             if ("400".equals(feed.getSpecial())) {
                 if (convertView == null) {
                     holder = new ViewHolder();
-                    convertView = View.inflate(getActivity(), R.layout.ll_news_item2, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_item2, null);
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                     holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                     holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
@@ -584,7 +586,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         holder.ll_time_item.setVisibility(View.GONE);
                     } else {
                         holder = new ViewHolder();
-                        convertView = View.inflate(getActivity(), R.layout.ll_news_item2, null);
+                        convertView = View.inflate(mContext, R.layout.ll_news_item2, null);
                         holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                         holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                         holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
@@ -610,12 +612,12 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
@@ -631,11 +633,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
                 //点击其他观点的点击事件
@@ -643,7 +645,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     @Override
                     public void onClick(View v) {
                         //uemng statistic click other viewpoint
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
                     }
                 });
                 if (feed != null && feed.getOtherNum() != null) {
@@ -718,7 +720,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(getActivity(), feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
+                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
                 }
 
                 final long start = System.currentTimeMillis();
@@ -733,18 +735,18 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         final NewsFeed.Source source = sourceList.get(a);
 
-                        RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(getActivity(), R.layout.lv_source_item2, null);
+                        RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item2, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
-                                Intent intent = new Intent(getActivity(), NewsDetailWebviewAty.class);
+                                Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
                                 intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
                                 //umeng statistic onclick url below the head news
                                 HashMap<String, String> _MobMap = new HashMap<>();
                                 _MobMap.put("resource_site_name", source.getSourceSitename());
-                                MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
+                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                             }
                         });
                         TextView iv_source = (TextView) ll_souce_view.findViewById(R.id.iv_source);
@@ -794,7 +796,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
-                    convertView = View.inflate(getActivity(), R.layout.ll_news_item_top, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
                     holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                     holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
                     holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
@@ -811,7 +813,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 //                        holder2.rl_top_mark.setVisibility(View.GONE);
 //                    } else {
                     holder2 = new ViewHolder2();
-                    convertView = View.inflate(getActivity(), R.layout.ll_news_item_top, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
                     holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                     holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
                     holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
@@ -837,10 +839,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 String title = feed.getTitle();
 
                 holder2.tv_title.setText(title);
-                int textsize = DensityUtil.dip2px(getActivity(), 18);
+                int textsize = DensityUtil.dip2px(mContext, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#ffffff"));
-                holder2.tv_title.setLineWidth(DensityUtil.dip2px(getActivity(), 22));
+                holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 22));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
                 holder2.tv_news_category.setText(feed.getCategory());
                 TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
@@ -897,7 +899,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(getActivity(), feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
+                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
 //                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder2.iv_title_img);
                 } else {
                     holder2.tv_title.setBackgroundColor(color);
@@ -916,11 +918,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder2.iv_title_img.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
             } else if ("9".equals(feed.getSpecial())) {
@@ -932,7 +934,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 if (images.length == 2) {
 
-                    convertView = View.inflate(getActivity(), R.layout.ll_news_card2, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_card2, null);
                     holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
                     holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
                     holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
@@ -946,7 +948,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                 } else {
-                    convertView = View.inflate(getActivity(), R.layout.ll_news_card, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_card, null);
 
                     holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
                     holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
@@ -972,22 +974,22 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder3.tv_title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
@@ -1003,23 +1005,23 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
                 holder3.ll_image_list.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         startActivity(intent);
                         //uemng statistic view the head news
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
@@ -1028,7 +1030,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     @Override
                     public void onClick(View v) {
                         //uemng statistic click other viewpoint
-                        MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
                     }
                 });
 
@@ -1057,22 +1059,22 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 if (images.length == 2) {
                     if (holder3.image_card1 != null) {
-                        ImageLoaderHelper.dispalyImage(getActivity(), images[0], holder3.image_card1);
+                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
                     }
                     if (holder3.image_card2 != null) {
-                        ImageLoaderHelper.dispalyImage(getActivity(), images[1], holder3.image_card2);
+                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
                     }
                 } else {
 
                     if (holder3.image_card1 != null) {
-                        ImageLoaderHelper.dispalyImage(getActivity(), images[0], holder3.image_card1);
+                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
                     }
                     if (holder3.image_card2 != null) {
-                        ImageLoaderHelper.dispalyImage(getActivity(), images[1], holder3.image_card2);
+                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
                     }
 
                     if (holder3.image_card3 != null) {
-                        ImageLoaderHelper.dispalyImage(getActivity(), images[2], holder3.image_card3);
+                        ImageLoaderHelper.dispalyImage(mContext, images[2], holder3.image_card3);
                     }
                 }
 
@@ -1088,18 +1090,18 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         final NewsFeed.Source source = sourceList.get(a);
 
-                        LinearLayout ll_souce_view = (LinearLayout) View.inflate(getActivity(), R.layout.lv_source_item, null);
+                        LinearLayout ll_souce_view = (LinearLayout) View.inflate(mContext, R.layout.lv_source_item, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
-                                Intent intent = new Intent(getActivity(), NewsDetailWebviewAty.class);
+                                Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
                                 intent.putExtra("url", source.getUrl());
                                 startActivity(intent);
                                 //umeng statistic onclick url below the head news
                                 HashMap<String, String> _MobMap = new HashMap<>();
                                 _MobMap.put("resource_site_name", source.getSourceSitename());
-                                MobclickAgent.onEvent(getActivity(), CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
+                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                             }
                         });
                         ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
@@ -1149,7 +1151,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             //下拉时给显示的item添加动画
             if (position == 0 && mIsNeedAnim) {
                 convertView.clearAnimation();
-                convertView.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.aty_list_item_in));
+                convertView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.aty_list_item_in));
                 return convertView;
             }
             //上拉时给显示的item添加动画
@@ -1178,23 +1180,23 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         switch (i) {
             case 0:
-                params.height = DensityUtil.dip2px(getActivity(), 0);
+                params.height = DensityUtil.dip2px(mContext, 0);
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(getActivity(), 45);
+                params.height = DensityUtil.dip2px(mContext, 45);
                 break;
 
             case 2:
-                params.height = DensityUtil.dip2px(getActivity(), 95);
+                params.height = DensityUtil.dip2px(mContext, 95);
                 break;
 
             case 3:
-                params.height = DensityUtil.dip2px(getActivity(), 140);
+                params.height = DensityUtil.dip2px(mContext, 140);
                 break;
 
             default:
-                params.height = DensityUtil.dip2px(getActivity(), 140);
+                params.height = DensityUtil.dip2px(mContext, 140);
                 break;
 
         }
