@@ -1,12 +1,8 @@
 package com.news.yazhidao.widget.imagewall;
 
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +16,9 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.util.HashMap;
+import java.util.List;
+
 public class ViewWall {
     public static final int STYLE_7_232 = R.layout.wall_7_232;
     public static final int STYLE_9 = R.layout.wall_9_grid;
@@ -27,8 +26,6 @@ public class ViewWall {
 
     /**
      * @param ctx
-     * @param layoutid : walllayout
-     * @param urls     : net source
      */
 
     public ViewWall(Context ctx) {
@@ -96,11 +93,11 @@ public class ViewWall {
                 }
 
             } else {
-                if(i<=5){
+                if (i <= 5) {
 
-                view.findViewById(R.id.row3).setVisibility(View.GONE);
-            }
-                if(i<=2){
+                    view.findViewById(R.id.row3).setVisibility(View.GONE);
+                }
+                if (i <= 2) {
                     view.findViewById(R.id.row2).setVisibility(View.GONE);
                 }
                 break;
@@ -161,11 +158,11 @@ public class ViewWall {
                         }
                     });
         }
-        if(i-1<=5){
+        if (i - 1 <= 5) {
 
             view.findViewById(R.id.row3).setVisibility(View.GONE);
         }
-        if(i-1<=2){
+        if (i - 1 <= 2) {
             view.findViewById(R.id.row2).setVisibility(View.GONE);
         }
     }
