@@ -172,7 +172,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     @Override
     public void onDestroy() {
-        if(rt != null) {
+        if (rt != null) {
             getActivity().unregisterReceiver(rt);
         }
         super.onDestroy();
@@ -219,7 +219,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                UmengUpdateAgent.update(getActivity());
+                if (getActivity() != null)
+                    UmengUpdateAgent.update(getActivity());
             }
         }, 2000);
 
@@ -1340,9 +1341,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
                 mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
 
-                if(mUpNewsArr.size() == 0){
+                if (mUpNewsArr.size() == 0) {
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-                }else{
+                } else {
                     lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                 }
             } else if (_SplitStartIndex == 0) {
