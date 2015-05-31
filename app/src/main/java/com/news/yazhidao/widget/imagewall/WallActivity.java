@@ -123,21 +123,23 @@ public class WallActivity extends Activity {
                                     Object object) {
 //                ((ViewPager) container).removeView(layouts.get(position));
             }
-        List list = new ArrayList();
+
+            List list = new ArrayList();
+
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
                 if (list.contains(position)) {
                     return container.getChildAt(position);
-                }else{
+                } else {
                     list.add(position);
                 }
                 container.addView(layouts.get(position));
                 BitmapFactory.Options bf = new BitmapFactory.Options();
                 bf.inSampleSize = 256;
 
-                if(bitmap.containsKey(position)){
+                if (bitmap.containsKey(position)) {
                     ((ImageView) layouts.get(position).findViewById(R.id.image)).setImageBitmap(bitmap.get(position));
-                }else {
+                } else {
                     ImageLoader.getInstance().displayImage(((Map) browsedata.get(position)).get("img").toString(),
                             ((ImageView) layouts.get(position).findViewById(R.id.image)), getImageOption(bf), new ImageLoadingListener() {
                                 @Override
@@ -174,16 +176,17 @@ public class WallActivity extends Activity {
 //                if(position+1<getCount()){
 //                    getView((ViewPager) container, position + 1);
 //                }
-            return  layouts.get(position);
+                return layouts.get(position);
             }
-
 
 
         });
         pager.setCurrentItem(getIntent().getIntExtra("page", 0));
     }
-    Map<Integer,Bitmap> bitmap = new HashMap<Integer,Bitmap>();
-    public View getView( final int position) {
+
+    Map<Integer, Bitmap> bitmap = new HashMap<Integer, Bitmap>();
+
+    public View getView(final int position) {
 
 
         View view =
@@ -231,9 +234,16 @@ public class WallActivity extends Activity {
 //
 //        ((ImageView) view.findViewById(R.id.image)).getRootView().invalidate();
 
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                ((Activity) view.getContext()).finish();
+            }
+        });
         return view;
     }
+
     public DisplayImageOptions getImageOption(
             BitmapFactory.Options decodingOptions) {
         final DisplayImageOptions options = new DisplayImageOptions.Builder()

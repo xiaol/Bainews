@@ -2,6 +2,8 @@ package com.news.yazhidao.widget.imagewall;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.GlobalParams;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -83,6 +86,7 @@ public class ViewWall {
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
 
+
         int i;
         for (i = 0; i < urls.size(); i++) {
 
@@ -96,11 +100,11 @@ public class ViewWall {
                 }
 
             } else {
-                if(i<=5){
+                if (i <= 5) {
 
-                view.findViewById(R.id.row3).setVisibility(View.GONE);
-            }
-                if(i<=2){
+                    view.findViewById(R.id.row3).setVisibility(View.GONE);
+                }
+                if (i <= 2) {
                     view.findViewById(R.id.row2).setVisibility(View.GONE);
                 }
                 break;
@@ -150,6 +154,29 @@ public class ViewWall {
                         @Override
                         public void onClick(View v) {
                             // TODO Auto-generated method stub
+//                            for (Map m : urls) {
+//                                if (m == null) {
+//                                    continue;
+//                                }
+//                                String strurl = m.get("img").toString();
+//                                BitmapFactory.Options op = null;
+//                                while (op == null)
+//                                    try {
+//                                        op = BitmapUtil.getBitmapFactoryOptions(strurl);
+//                                    } catch (Exception e) {
+//                                        // TODO Auto-generated catch block
+//                                        continue;
+//                                    }
+//
+//                                float thumbnailHeight = op.outHeight
+//                                        * (GlobalParams.screenWidth / 2f)
+//                                        / op.outWidth;
+//                                BitmapInfo bitmapInfo = new BitmapInfo((int) (GlobalParams.screenWidth / 2f),
+//                                        (int) thumbnailHeight);
+//                                bitmapinfos.put(strurl, bitmapInfo);
+//                            }
+
+
                             int end = urls.size() > 9 ? 9 : urls.size();
                             WallActivity.browsedata = urls.subList(0, end);
 
@@ -160,13 +187,47 @@ public class ViewWall {
                                             WallActivity.class).putExtra("page", j));
                         }
                     });
+//            Map m = urls.get(i);
+//            if (m == null) {
+//                continue;
+//            }
+//            String strurl = m.get("img").toString();
+//            BitmapFactory.Options op = null;
+//            while (op == null)
+//                try {
+//                    op = BitmapUtil.getBitmapFactoryOptions(strurl);
+//                } catch (Exception e) {
+//                    // TODO Auto-generated catch block
+//                    continue;
+//                }
+//            new Random().nextInt(5);
+//            float thumbnailHeight = op.outHeight
+//                    * (GlobalParams.screenWidth / 2f)
+//                    / op.outWidth;
+//            BitmapInfo bitmapInfo = new BitmapInfo((int) (GlobalParams.screenWidth / 2f),
+//                    (int) thumbnailHeight);
+//            bitmapinfos.put(strurl, bitmapInfo);
+
+
         }
-        if(i-1<=5){
+        if (i - 1 <= 5) {
 
             view.findViewById(R.id.row3).setVisibility(View.GONE);
         }
-        if(i-1<=2){
+        if (i - 1 <= 2) {
             view.findViewById(R.id.row2).setVisibility(View.GONE);
+        }
+    }
+
+    Map<String, BitmapInfo> bitmapinfos = new HashMap<String, BitmapInfo>();
+
+    public class BitmapInfo {
+        public int width;
+        public int height;
+
+        public BitmapInfo(int width, int height) {
+            this.width = width;
+            this.height = height;
         }
     }
 
