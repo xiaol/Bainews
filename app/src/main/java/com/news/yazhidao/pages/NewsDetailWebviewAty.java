@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -187,8 +186,9 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
 
     @Override
     public void finish() {
+        if (mNewsSourcesiteWebview != null) {
+            mNewsSourcesiteWebview.removeAllViews();
+        }
         super.finish();
-        ViewGroup viewGroup= (ViewGroup) getWindow().getDecorView();
-        viewGroup.removeAllViews();
     }
 }

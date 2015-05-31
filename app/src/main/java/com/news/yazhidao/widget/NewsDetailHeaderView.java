@@ -288,7 +288,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     _LayoutParams.setMargins(0, 0, 0, DensityUtil.dip2px(mContext, 22));
                     _TextVE.setLayoutParams(_LayoutParams);
-                    if (_StringBuilder.append(_Split[i]).length() > 200) {
+                    if (i>=2&&_StringBuilder.append(_Split[i]).length() > 200) {
                         _TextVE.setVisibility(GONE);
                         if (_CurrentPos == 0) {
                             _CurrentPos = i;

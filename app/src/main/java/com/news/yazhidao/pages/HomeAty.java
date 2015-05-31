@@ -67,13 +67,6 @@ public class HomeAty extends BaseActivity {
         pager.setCurrentItem(1);
         changeColor(getResources().getColor(R.color.tab_blue));
 
-        tabs.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
-            @Override
-            public void onTabReselected(int position) {
-                Toast.makeText(HomeAty.this, "Tab reselected: " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     @Override
