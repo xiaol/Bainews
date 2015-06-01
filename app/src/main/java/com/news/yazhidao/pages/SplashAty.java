@@ -8,6 +8,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.ZipperUtil;
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
 import java.text.ParseException;
@@ -19,6 +20,7 @@ import java.util.Date;
  */
 public class SplashAty extends BaseActivity {
     private Handler mHandler = new Handler();
+    private String umeng_channel;
 
     @Override
     protected void setContentView() {
@@ -37,13 +39,23 @@ public class SplashAty extends BaseActivity {
     protected void initializeViews() {
         //add umeng statistic access app
         final long _Strat = System.currentTimeMillis();
+        ImageView imageView = (ImageView) findViewById(R.id.bg_imageView);
+        umeng_channel = AnalyticsConfig.getChannel(this);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date1 = df.parse("2015-05-31");
             Date date2 = df.parse("2015-06-02");
             if (_Strat > date1.getTime() && _Strat < date2.getTime()) {
-                ImageView imageView = (ImageView) findViewById(R.id.bg_imageView);
-                imageView.setBackgroundResource(R.drawable.bg_splash_festival);
+
+                if("c360".equals(umeng_channel)){
+                    imageView.setBackgroundResource(R.drawable.bg_splash_c360_special);
+                }else{
+                    imageView.setBackgroundResource(R.drawable.bg_splash_festival);
+                }
+            }else{
+                if("c360".equals(umeng_channel)){
+                    imageView.setBackgroundResource(R.drawable.bg_splash_c360_normal);
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
