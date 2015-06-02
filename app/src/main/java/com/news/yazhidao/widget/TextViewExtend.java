@@ -5,9 +5,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.ZipperUtil;
-
 import java.util.Hashtable;
 
 public class TextViewExtend extends TextView {
@@ -23,26 +20,26 @@ public class TextViewExtend extends TextView {
 
     public TextViewExtend(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setCustomFont(context);
+//        setCustomFont(context);
     }
 
-    private void setCustomFont(Context ctx) {
-        String _KeyFontName=ZipperUtil.getSaveFontPath(ctx).toString();
-        Typeface tf = fontCache.get(_KeyFontName);
-        if(tf == null) {
-            try {
-                tf = Typeface.createFromFile(_KeyFontName);
-            }
-            catch (Exception e) {
-                Logger.e(TAG,e.getMessage());
-            }
-            if(tf==null){
-                return;
-            }
-            fontCache.put(_KeyFontName, tf);
-        }
-        setTypeface(tf);
-    }
+//    private void setCustomFont(Context ctx) {
+//        String _KeyFontName=ZipperUtil.getSaveFontPath(ctx).toString();
+//        Typeface tf = fontCache.get(_KeyFontName);
+//        if(tf == null) {
+//            try {
+//                tf = Typeface.createFromFile(_KeyFontName);
+//            }
+//            catch (Exception e) {
+//                Logger.e(TAG,e.getMessage());
+//            }
+//            if(tf==null){
+//                return;
+//            }
+//            fontCache.put(_KeyFontName, tf);
+//        }
+//        setTypeface(tf);
+//    }
 
     @Override
     public void setTypeface(Typeface tf, int style) {

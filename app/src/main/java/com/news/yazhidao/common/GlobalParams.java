@@ -3,6 +3,7 @@ package com.news.yazhidao.common;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 /**
@@ -20,6 +21,7 @@ public class GlobalParams {
     public static int split_index_bottom = 0;
     public static LoadingLayout loading_context;
     public static ViewPager pager;
+    public static PagerSlidingTabStrip tabs;
     public static String news_detail_url;
 
 }

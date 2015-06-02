@@ -4,24 +4,31 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.adapter.Logs;
 import com.news.yazhidao.utils.adapter.MapAdapter;
+import com.news.yazhidao.utils.adapter.MapContent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +58,8 @@ public class WallActivity extends Activity {
                 // TODO Auto-generated method stub
                 super.getViewInDetail(item, position, convertView);
                 ((TextView) convertView.findViewById(R.id.pagination)).setText((position + 1) + "/" + browsedata.size());
-                ((TextView) convertView.findViewById(R.id.pagination)).setShadowLayer(5, 5, 5, Color.BLACK);
-                ((TextView) convertView.findViewById(R.id.txt)).setShadowLayer(5, 5, 5, Color.BLACK);
+                ((TextView) convertView.findViewById(R.id.pagination)).setShadowLayer(50, 5, 5, Color.BLACK);
+                ((TextView) convertView.findViewById(R.id.txt)).setShadowLayer(50, 5, 5, Color.BLACK);
             }
 
             @Override
@@ -62,19 +69,21 @@ public class WallActivity extends Activity {
                 if (name.equals("img")) {
                     Logs.e("============== " + value + " " + getCount() + ""
                             + convertView.findViewById(R.id.image));
-                }
 
+
+                }
                 return super.findAndBindView(convertView, pos, item, name,
                         value);
             }
 
 
         };
-
         if (browsedata == null) {
             throw new RuntimeException("browsedata invalidly is null");
         }
-
+//        commtAdapter.setItemDataSrc(new MapContent(browsedata));
+//        ((Gallery) findViewById(R.id.wall)).setAdapter(commtAdapter);
+//        ((Gallery) findViewById(R.id.wall)).setSelection(getIntent().getIntExtra("page", 0));
 
         android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) this.findViewById(R.id.wall);
         for (int i = 0; i < browsedata.size(); i++) {
@@ -82,6 +91,20 @@ public class WallActivity extends Activity {
             getView(i);
         }
 
+
+//        List<PageInfo> pageInfos = new ArrayList<PageInfo>(0);
+//        pageInfos.add( genPageInfo(getClass(),
+//                this, getClass(),R.layout.wallitemlayout));
+//        for(int i = 0;i<browsedata.size();i++){
+//            pageInfos.add( genPageInfo(getClass(),
+//                    this, getClass(),R.layout.wallitemlayout));
+//        }
+//
+//        ViewPagerHelper viewPagerHelper = new ViewPagerHelper(this, null);
+//        viewPagerHelper.setLayoutid(R.id.wall);
+//        viewPagerHelper.setup(this, 0, pageInfos);
+//        pager.setCurrentItem(getIntent()
+//                .getIntExtra("page", 0));
         commtAdapter.notifyDataSetChanged();
 
         pager.setAdapter(new PagerAdapter() {
@@ -98,6 +121,7 @@ public class WallActivity extends Activity {
             @Override
             public void destroyItem(ViewGroup container, int position,
                                     Object object) {
+//                ((ViewPager) container).removeView(layouts.get(position));
             }
 
             List list = new ArrayList();
@@ -130,8 +154,14 @@ public class WallActivity extends Activity {
 
                                 @Override
                                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+
                                     view.getLayoutParams().height = loadedImage.getHeight() * GlobalParams.screenWidth / loadedImage.getWidth();
+
+
                                     view.invalidate();
+
+
                                 }
 
                                 @Override
@@ -140,6 +170,12 @@ public class WallActivity extends Activity {
                                 }
                             });
                 }
+//                if(position-1>=0){
+//                    getView((ViewPager) container, position - 1);
+//                }
+//                if(position+1<getCount()){
+//                    getView((ViewPager) container, position + 1);
+//                }
                 return layouts.get(position);
             }
 
@@ -153,14 +189,58 @@ public class WallActivity extends Activity {
     public View getView(final int position) {
 
 
-        View view = layouts.get(position);
+        View view =
+
+                layouts.get(position);
         ((TextView) view.findViewById(R.id.pagination)).setText((position + 1) + "/" + browsedata.size());
-        ((TextView) view.findViewById(R.id.pagination)).setShadowLayer(5, 3, 3, Color.BLACK);
-        ((TextView) view.findViewById(R.id.txt)).setShadowLayer(5, 3, 3, Color.BLACK);
+        ((TextView) view.findViewById(R.id.pagination)).setShadowLayer(50, 5, 5, Color.BLACK);
+        ((TextView) view.findViewById(R.id.txt)).setShadowLayer(50, 5, 5, Color.BLACK);
         String note = ((Map) browsedata.get(position)).get("note").toString();
         String img = ((Map) browsedata.get(position)).get("img").toString();
 
         ((TextView) view.findViewById(R.id.txt)).setText(note);
+//        BitmapFactory.Options bf = new BitmapFactory.Options();
+//        bf.inSampleSize = 8;
+//        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
+//            @Override
+//            public void onLoadingStarted(String imageUri, View view) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+//
+//            }
+//
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                bitmap.put(position,loadedImage);
+//            }
+//
+//            @Override
+//            public void onLoadingCancelled(String imageUri, View view) {
+//
+//            }
+//        });
+//        BitmapFactory.Options bf = new BitmapFactory.Options();
+//        bf.inSampleSize = 8;
+
+//        Bitmap bitmap = BitmapFactory.decodeFile(ImageLoader.getInstance().getDiskCache().get(img.toString()).toString(), bf);
+//        ((ImageView) view.findViewById(R.id.image)).setImageBitmap(bitmap);
+//
+//        ((RelativeLayout.LayoutParams)((RelativeLayout)((ImageView) view.findViewById(R.id.image)).getParent()).getLayoutParams()).addRule(Gravity.CENTER_VERTICAL);
+//        RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(-1,bitmap.getHeight() * GlobalParams.screenWidth / bitmap.getWidth());
+//        ((ImageView) view.findViewById(R.id.image)).setLayoutParams(rl);
+//
+//        ((ImageView) view.findViewById(R.id.image)).getRootView().invalidate();
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                ((Activity) view.getContext()).finish();
+            }
+        });
         return view;
     }
 

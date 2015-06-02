@@ -270,12 +270,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     }
 
     private void addTab(final int position, CharSequence title, View tabView) {
-        TextView textView = (TextView) tabView.findViewById(R.id.psts_tab_title);
-        if (textView != null) {
-            if (title != null)
-                textView.setText(title);
-
-        }
+        setTabTitle(title, tabView);
 
         tabView.setFocusable(true);
         tabView.setOnClickListener(new OnClickListener() {
@@ -292,6 +287,15 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         });
 
         tabsContainer.addView(tabView, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
+    }
+
+    public void setTabTitle(CharSequence title, View tabView) {
+        TextView textView = (TextView) tabView.findViewById(R.id.psts_tab_title);
+        if (textView != null) {
+            if (title != null)
+                textView.setText(title);
+
+        }
     }
 
     private void updateTabStyles() {
@@ -484,7 +488,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     }
 
-    private void updateSelection(int position) {
+    public void updateSelection(int position) {
         for (int i = 0; i < tabCount; ++i) {
             View tv = tabsContainer.getChildAt(i);
             final boolean selected = i == position;
@@ -494,6 +498,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             } else {
                 notSelected(tv);
             }
+        }
+    }
+
+    public void updateSelection2(int position,String title) {
+        TextView tv = (TextView) tabsContainer.getChildAt(position);
+        final boolean selected = true;
+        tv.setSelected(selected);
+        tv.setText(title);
+        if (selected) {
+            selected(tv);
+        } else {
+            notSelected(tv);
         }
     }
 
