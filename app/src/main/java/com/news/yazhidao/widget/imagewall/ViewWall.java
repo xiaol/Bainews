@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -26,10 +25,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class ViewWall {
     public static final int STYLE_7_232 = R.layout.wall_7_232;
-    public static final int STYLE_8_323 = R.layout.wall_8_323;
-
     public static final int STYLE_9 = R.layout.wall_9_grid;
-
     public int layoutid;
 
     /**
@@ -52,14 +48,11 @@ public class ViewWall {
     public void setLayoutId(int id) {
         switch (id) {
             case STYLE_7_232:
-                ids = new int[][]{{R.id.col11, R.id.col12}, {R.id.col21, R.id.col22,
-                        R.id.col23}, {R.id.col31, R.id.col32}};
+                ids = new int[]{R.id.col11, R.id.col12, R.id.col21, R.id.col22,
+                        R.id.col23, R.id.col31, R.id.col32};
             case STYLE_9:
-                ids = new int[][]{{R.id.col11, R.id.col12, R.id.col13}, {R.id.col21,
-                        R.id.col22, R.id.col23}, {R.id.col31, R.id.col32, R.id.col33}};
-            case STYLE_8_323:
-                ids = new int[][]{{R.id.col11, R.id.col12, R.id.col13}, {R.id.col21,
-                        R.id.col22}, {R.id.col31, R.id.col32, R.id.col33}};
+                ids = new int[]{R.id.col11, R.id.col12, R.id.col13, R.id.col21,
+                        R.id.col22, R.id.col23, R.id.col31, R.id.col32, R.id.col33};
         }
         this.layoutid = id;
     }
@@ -77,7 +70,6 @@ public class ViewWall {
         return view;
     }
 
- 
     public void setData() {
         if (urls == null) {
             throw new RuntimeException("urls is not setted");
@@ -96,64 +88,30 @@ public class ViewWall {
 
 
         int i;
-            int rr = 0;
         for (i = 0; i < urls.size(); i++) {
 
-
-            int total = 0;
-
-            int drcount = 0;
-            int balance = 0;
-            for (; rr < ids.length; rr++) {
-                total += ids[rr].length;
-
-                if(drcount>=urls.size()){
-                    break;
-                }
-                drcount += Integer.parseInt(urls.get(drcount).get("units"));
-                if(i<drcount){
-                    break;
-                }
-                balance += total-drcount;
-                if ((drcount - 1 - ( total - 1)) > 0) {
-                    continue;
-                }
-
-            }
-
-            int idx = ids[rr].length -( total - (i+1))-1+balance;
-
-
-
-                View picwallview = ((ImageView) view.findViewById(ids[rr][idx]));
+            if (ids.length >= i + 1) {
+                View picwallview = ((ImageView) view.findViewById(ids[i]));
                 if (picwallview != null) {
-
-                        picwallview.setVisibility(View.VISIBLE);
-
+                    picwallview.setVisibility(View.VISIBLE);
                 } else {
 
                     continue;
                 }
 
+            } else {
+                if (i <= 5) {
 
-
-
-            final int j = i;
-
-            DisplayImageOptions ip = DisplayImageOptions.createSimple();
-            if (urls.get(i).containsKey("scaledw")) {
-
-
-                ip.getDecodingOptions().outWidth = Integer.parseInt(urls.get(i).get("scaledw"));
-                ip.getDecodingOptions().outHeight = Integer.parseInt(urls.get(i).get("scaledh"));
-                ((ImageView) view.findViewById(ids[rr][idx])).getLayoutParams().width = ip.getDecodingOptions().outWidth;
-                ((ImageView) view.findViewById(ids[rr][idx])).getLayoutParams().height = ip.getDecodingOptions().outHeight;
+                    view.findViewById(R.id.row3).setVisibility(View.GONE);
+                }
+                if (i <= 2) {
+                    view.findViewById(R.id.row2).setVisibility(View.GONE);
+                }
+                break;
             }
-
-
-
+            final int j = i;
             ImageLoader.getInstance().displayImage(urls.get(i).get("img"),
-                    ((ImageView) view.findViewById(ids[rr][idx])), ip,
+                    ((ImageView) view.findViewById(ids[i])),
                     new ImageLoadingListener() {
 
                         @Override
@@ -190,7 +148,7 @@ public class ViewWall {
                         }
                     });
 
-            ((ImageView) view.findViewById(ids[rr][idx]))
+            ((ImageView) view.findViewById(ids[i]))
                     .setOnClickListener(new OnClickListener() {
 
                         @Override
@@ -252,11 +210,11 @@ public class ViewWall {
 
 
         }
-        if (rr <= 1) {
+        if (i - 1 <= 5) {
 
             view.findViewById(R.id.row3).setVisibility(View.GONE);
         }
-        if (rr <= 0) {
+        if (i - 1 <= 2) {
             view.findViewById(R.id.row2).setVisibility(View.GONE);
         }
     }
@@ -275,7 +233,7 @@ public class ViewWall {
 
     public View view;
 
-    int[][] ids;
+    int[] ids;
     String[] localpath;
 
     private List<HashMap<String, String>> urls;
