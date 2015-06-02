@@ -462,17 +462,17 @@ public class NewsDetailHeaderView extends FrameLayout {
             //图片墙的相关显示
 
 
-//            if (pNewsDetail.imgWall != null) {
-//
-//
-//                mImageWall.setVisibility(View.VISIBLE);
-//                mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
-//        } else {
-//            mImageWall.setVisibility(GONE);
-//        }
-//            if(true){
-//                return;
-//            }
+            if (pNewsDetail.imgWall != null) {
+
+
+                mImageWall.setVisibility(View.VISIBLE);
+                mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
+        } else {
+            mImageWall.setVisibility(GONE);
+        }
+            if(true){
+                return;
+            }
             if (pNewsDetail.imgWall != null) {
                 new Compt().putTask(new BackRunnable() {
                     @Override

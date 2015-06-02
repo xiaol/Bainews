@@ -77,6 +77,7 @@ public class ViewWall {
         return view;
     }
 
+ 
     public void setData() {
         if (urls == null) {
             throw new RuntimeException("urls is not setted");
