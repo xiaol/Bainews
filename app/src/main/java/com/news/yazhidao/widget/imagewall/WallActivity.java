@@ -121,18 +121,18 @@ public class WallActivity extends Activity {
             @Override
             public void destroyItem(ViewGroup container, int position,
                                     Object object) {
-//                ((ViewPager) container).removeView(layouts.get(position));
+                ((ViewPager) container).removeView(layouts.get(position));
             }
 
             List list = new ArrayList();
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                if (list.contains(position)) {
-                    return container.getChildAt(position);
-                } else {
-                    list.add(position);
-                }
+//                if (list.contains(position)) {
+//                    return container.getChildAt(position);
+//                } else {
+//                    list.add(position);
+//                }
                 container.addView(layouts.get(position));
                 BitmapFactory.Options bf = new BitmapFactory.Options();
                 bf.inSampleSize = 256;
