@@ -1,9 +1,13 @@
 package com.news.yazhidao.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +37,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.widget.imagewall.BitmapUtil;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
 import com.news.yazhidao.widget.imagewall.ViewWall;
 import com.umeng.analytics.MobclickAgent;
@@ -41,7 +46,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import app.base.task.BackRunnable;
+import app.base.task.CallbackRunnable;
+import app.base.task.Compt;
 
 
 /**
@@ -288,7 +299,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     _LayoutParams.setMargins(0, 0, 0, DensityUtil.dip2px(mContext, 22));
                     _TextVE.setLayoutParams(_LayoutParams);
-                    if (i>=2&&_StringBuilder.append(_Split[i]).length() > 200) {
+                    if (i >= 2 && _StringBuilder.append(_Split[i]).length() > 200) {
                         _TextVE.setVisibility(GONE);
                         if (_CurrentPos == 0) {
                             _CurrentPos = i;
@@ -358,9 +369,9 @@ public class NewsDetailHeaderView extends FrameLayout {
                                 if (point.paragraphIndex != null && !"".equals(point.paragraphIndex)) {
                                     int index = Integer.parseInt(point.paragraphIndex);
                                     if (mNewsDetailHeaderContentParent != null && index > mNewsDetailHeaderContentParent.getChildCount()) {
-                                            mNewsDetailHeaderContentParent.removeViewAt(index);
+                                        mNewsDetailHeaderContentParent.removeViewAt(index);
 //                                        v.setVisibility(View.GONE);
-                                    }else{
+                                    } else {
                                         LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(index);
                                         tv.setText("");
                                         tv.setVisibility(View.GONE);
@@ -421,7 +432,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         request.execute();
     }
 
-    public void setDetailData(NewsDetail pNewsDetail, HeaderVeiwPullUpListener listener) {
+    public void setDetailData(final NewsDetail pNewsDetail, HeaderVeiwPullUpListener listener) {
         if (pNewsDetail == null) {
             return;
         }
@@ -450,9 +461,329 @@ public class NewsDetailHeaderView extends FrameLayout {
             }
             //图片墙的相关显示
 
+
+//            if (pNewsDetail.imgWall != null) {
+//
+//
+//                mImageWall.setVisibility(View.VISIBLE);
+//                mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
+//        } else {
+//            mImageWall.setVisibility(GONE);
+//        }
+//            if(true){
+//                return;
+//            }
             if (pNewsDetail.imgWall != null) {
-                mImageWall.setVisibility(View.VISIBLE);
-                mImageWall.addSource(pNewsDetail.imgWall, ViewWall.STYLE_9);
+                new Compt().putTask(new BackRunnable() {
+                    @Override
+                    public void run() {
+                        for (Map<String, String> m : pNewsDetail.imgWall) {
+                            String url = m.get("img").toString();
+
+                            BitmapFactory.Options op = null;
+                            while (op == null)
+                                try {
+                                    op = BitmapUtil.getBitmapFactoryOptions(url);
+                                } catch (Exception e) {
+                                    // TODO Auto-generated catch block
+                                    continue;
+                                }
+
+
+                            m.put("w", "" + op.outWidth);
+                            m.put("h", "" + op.outHeight);
+
+
+                        }
+
+
+                        List<HashMap<String, String>> resultList = new ArrayList<HashMap<String, String>>();
+                        List<HashMap<String, String>> minor = new ArrayList<HashMap<String, String>>(pNewsDetail.imgWall.subList(0, 9));
+                        this.object = composeMatch(resultList, minor);
+
+
+                    }
+
+                    private List<HashMap<String, String>> composeMatch(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
+//                        for (int i = 0; i < 10000; i++) {
+                            getMatched(resultList, minor, "2");
+//                                for (int j = 0; j < 10000; j++) {
+//
+//                                    if (get2Matched(resultList, minor, j) != -1) {
+//                                        for (int l = 0; l < 10000; l++) {
+//                                            if (get3Matched(resultList, minor, l) != -1) {
+//                                return resultList;
+//                                            }else{
+//                                                break;
+//                                            }
+//
+//                                        }
+//                                    }else{
+//                                        break;
+//                                    }
+//                                }
+//                            } else {
+//                                break;
+//                            }
+//
+//                        }
+                        Log.i("","--------------- "+resultList);
+                        return resultList;
+                    }
+
+                    private int getMatched(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor, String type) {
+                        int y = 0;
+                        int i = 0;
+                        if (type.length() == 0) {
+                            return 0;
+                        } else if (type.length() == 1) {
+                            i = Integer.parseInt(type);
+                        } else {
+                            String[] ts = type.split("-");
+                            i = Integer.parseInt(ts[0]);
+                            type = type.substring(2);
+                        }
+                        if (i == 2) {
+                            y = get2Matched(resultList, minor, type);
+                        } else if (i == 3) {
+                            y = get3Matched(resultList, minor, type);
+                        }
+                        return y;
+                    }
+
+                    private List<HashMap<String, String>> get1Matched(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
+                        return minor;
+                    }
+
+                    private int get2Matched(List<HashMap<String, String>> maps, List source, String sq) {
+                        int th = 0;
+                        if (sq.length() == 0) {
+                            return -1;
+                        } else if (sq.length() == 1) {
+                            th = Integer.parseInt(sq);
+                            sq = "";
+                        } else {
+                            String[] ts = sq.split("-");
+                            th = Integer.parseInt(ts[0]);
+                            sq = sq.substring(2);
+                        }
+                        int which = 0;
+                        int stepcnst = 20;
+                        float ratio = 1.2f;
+                        float constW = 0;
+                        for (int i = stepcnst; i < GlobalParams.screenWidth; i += stepcnst) {
+                            if (i >= GlobalParams.screenWidth - 1) {
+                                if (ratio == 1f)
+                                    break;
+                                ratio -= 0.1;
+
+                                i = 1;
+                                continue;
+                            }
+                            int scaledw1 = i;
+                            int scaledw2 = GlobalParams.screenWidth - scaledw1;
+                            int scaledh1 = 0;
+                            int scaledh2 = 0;
+                            HashMap<String, String> m1 = null;
+                            HashMap<String, String> m2 = null;
+                            List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
+
+                            for (HashMap<String, String> first : list) {
+                                int whead = Integer.parseInt(first.get("w").toString());
+                                int hhead = Integer.parseInt(first.get("h").toString());
+
+                                if (scaledh1 == 0) {
+
+                                    scaledh1 = hhead * scaledw1 / whead;
+                                    m1 = first;
+                                }
+                                List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
+                                for (HashMap<String, String> m : list2) {
+                                    if (first.get("img").equals(m.get("img"))) {
+                                        continue;
+                                    }
+                                    int w = Integer.parseInt(m.get("w").toString());
+                                    int h = Integer.parseInt(m.get("h").toString());
+
+
+                                    scaledh2 = h * scaledw2 / w;
+
+                                    if (Math.abs(scaledh1 - scaledh2) < 10) {
+                                        if ((scaledh2 < scaledh1 && scaledh2 * ratio >= scaledh1) || (scaledh1 < scaledh2 && scaledh1 * ratio >= scaledh2)) {
+
+                                            if (th == which+1) {
+                                                m2 = m;
+                                                m2.put("units", "2");
+                                                m2.put("position", "2");
+                                                m2.put("scaledh", "" + scaledh2);
+                                                m2.put("scaledw", "" + scaledw2);
+                                                m1.put("units", "2");
+                                                m1.put("position", "1");
+                                                m1.put("scaledh", "" + scaledh1);
+                                                m1.put("scaledw", "" + scaledw1);
+                                                maps.add(m1);
+                                                maps.add(m2);
+                                                source.remove(m2);
+                                                source.remove(m1);
+                                                return getMatched(maps,source,sq)+th;
+
+
+                                            }
+                                            which++;
+                                            continue;
+                                        } else {
+
+                                            scaledh2 = 0;
+                                            m2 = null;
+                                            continue;
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        return -1;
+                    }
+
+                    private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
+                        int th = 0;
+                        if (sq.length() == 0) {
+                            return -1;
+                        } else if (sq.length() == 1) {
+                            th = Integer.parseInt(sq);
+                        } else {
+                            String[] ts = sq.split("-");
+                            th = Integer.parseInt(ts[0]);
+                            sq = sq.substring(2);
+                        }
+                        float ratio1 = 1.3f;
+                        int which = 0;
+                        float constW = 0;
+                        int stepcnst = 50;
+
+                        List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
+                        HashMap<String, String> m1 = null;
+                        for (HashMap<String, String> first : list) {
+
+                            int whead = Integer.parseInt(first.get("w").toString());
+                            int hhead = Integer.parseInt(first.get("h").toString());
+                            for (int i = stepcnst; i < GlobalParams.screenWidth; i += stepcnst) {
+
+                                if (i >= GlobalParams.screenWidth - 1) {
+                                    if (ratio1 == 1f)
+                                        break;
+                                    ratio1 -= 0.1;
+
+                                    i = 1;
+                                    continue;
+                                }
+                                int scaledw1 = i;
+                                int scaledw2 = GlobalParams.screenWidth - scaledw1;
+                                int scaledh1 = 0;
+                                int scaledh2 = 0;
+                                if (scaledh1 == 0) {
+
+                                    scaledh1 = hhead * scaledw1 / whead;
+                                    m1 = first;
+                                }
+                                List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
+                                HashMap<String, String> m2 = null;
+                                float ratio2 = 1f;
+                                for (HashMap<String, String> m : list2) {
+                                    if (first.get("img").equals(m.get("img"))) {
+                                        continue;
+                                    }
+
+                                    int w = Integer.parseInt(m.get("w").toString());
+                                    int h = Integer.parseInt(m.get("h").toString());
+
+                                    for (int i2 = stepcnst; i2 < GlobalParams.screenWidth; i2 += stepcnst) {
+                                        if (i2 >= GlobalParams.screenWidth - 1) {
+                                            if (ratio2 == 1f)
+                                                break;
+                                            ratio2 -= 0.1;
+
+                                            i = 1;
+                                            continue;
+                                        }
+                                        scaledw2 = i;
+                                        int scaledw3 = GlobalParams.screenWidth - scaledw1 - scaledw2;
+                                        int scaledh3 = 0;
+                                        if (scaledh1 == 0) {
+
+                                            scaledh1 = hhead * scaledw1 / whead;
+                                            m1 = first;
+                                        }
+                                        if (scaledh2 == 0) {
+
+                                            scaledh2 = h * scaledw2 / w;
+                                            m2 = m;
+                                        }
+
+                                        HashMap<String, String> m3 = null;
+                                        for (HashMap<String, String> mm : list2) {
+                                            if (m.get("img").equals(mm.get("img"))) {
+                                                continue;
+                                            }
+
+                                            int w3 = Integer.parseInt(mm.get("w").toString());
+                                            int h3 = Integer.parseInt(mm.get("h").toString());
+                                            scaledh3 = h3 * scaledw3 / w3;
+
+                                            if (Math.abs(scaledh1 - scaledh2) < stepcnst && Math.abs(scaledh2 - scaledh3) < stepcnst) {
+                                                if (((scaledh2 - scaledh1 < 0 && scaledh2 * ratio1 >= scaledh1) || (scaledh1 - scaledh2 < 0 && scaledh1 * ratio1 >= scaledh2)) && ((scaledh2 - scaledh3 < 0 && scaledh2 * ratio2 >= scaledh3) || (scaledh3 - scaledh2 < 0 && scaledh3 * ratio2 >= scaledh2))) {
+                                                    if (th == which+1) {
+
+                                                        m3 = mm;
+                                                        m3.put("units", "3");
+                                                        m3.put("position", "3");
+                                                        m3.put("scaledh", "" + scaledh3);
+                                                        m3.put("scaledw", "" + scaledw3);
+                                                        m2.put("units", "3");
+                                                        m2.put("position", "2");
+                                                        m2.put("scaledh", "" + scaledh2);
+                                                        m2.put("scaledw", "" + scaledw2);
+                                                        m1.put("units", "3");
+                                                        m1.put("position", "1");
+                                                        m1.put("scaledh", "" + scaledh1);
+                                                        m1.put("scaledw", "" + scaledw1);
+                                                        maps.add(m1);
+                                                        maps.add(m2);
+                                                        maps.add(m3);
+                                                        source.remove(m3);
+                                                        source.remove(m2);
+                                                        source.remove(m1);
+                                                        return getMatched(maps,source,sq)+th;
+
+                                                    }
+                                                    which++;
+                                                    continue;
+                                                } else {
+
+                                                    scaledh3 = 0;
+                                                    m3 = null;
+                                                    continue;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                        return -1;
+                    }
+                }
+                        , new CallbackRunnable() {
+                    @Override
+                    public boolean run(Message message, boolean b, Activity activity) throws Exception {
+
+                        mImageWall.setVisibility(View.VISIBLE);
+                        mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
+                        return false;
+                    }
+                }).run();
+
             } else {
                 mImageWall.setVisibility(GONE);
             }
@@ -515,7 +846,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     }
                     layoutParams.leftMargin = DensityUtil.dip2px(mContext, 16);
                     sinaView.setLayoutParams(layoutParams);
-                    if (pWeiBo.isCommentFlag == null ||"".equals(pWeiBo.isCommentFlag)) {
+                    if (pWeiBo.isCommentFlag == null || "".equals(pWeiBo.isCommentFlag)) {
                         sinaView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
