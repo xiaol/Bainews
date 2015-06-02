@@ -124,6 +124,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private ProgressWheel mNewsFeedProgressWheel;
     private View mNewsFeedProgressWheelWrapper;
     private Context mContext;
+    private TextViewExtend mtvProgress;
+    private int miCurrentCount, miTotalCount;
 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
@@ -185,7 +187,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         final View rootView = inflater.inflate(R.layout.activity_news, container, false);
         ViewCompat.setElevation(rootView, 50);
 
-
+        mtvProgress = (TextViewExtend) rootView.findViewById(R.id.mHomeAtyLeftMenu);
         View mHomeAtyLeftMenuWrapper = rootView.findViewById(R.id.mHomeAtyLeftMenuWrapper);
         View mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
         final ImageView mHomeAtyRightMenu = (ImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
@@ -334,7 +336,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
                 mMiddleNewsArr.add(_NewsFeed);
                 mDownNewsArr.remove(mDownNewsArr.size() - 1);
-
+                if (miCurrentCount < miTotalCount)
+                    miCurrentCount ++;
+                mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
                 lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -344,7 +348,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
             }
         }
-
         //更新ui
         list_adapter.notifyDataSetChanged();
     }
@@ -376,6 +379,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
+                    if (miCurrentCount < miTotalCount)
+                        miCurrentCount++;
+                    mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
                     new Handler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -498,12 +504,17 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 if (result != null) {
                     //分别填充3个数据源
                     inflateDataInArrs(result);
+                    miCurrentCount = 3;
+                    miTotalCount = result.size();
+                    mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
                 }
                 lv_news.onRefreshComplete();
             }
 
             public void failed(MyAppException exception) {
+                miCurrentCount = 0;
+                mtvProgress.setText("0");
                 lv_news.onRefreshComplete();
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
@@ -1299,6 +1310,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 if (result != null) {
                     //分别填充3个数据源
                     inflateDataInArrs(result);
+                    miCurrentCount = 3;
+                    miTotalCount = result.size();
+                    mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
                 }
                 lv_news.onRefreshComplete();
@@ -1310,7 +1324,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             public void failed(MyAppException exception) {
 
                 isClick = true;
-
+                miCurrentCount = 0;
+                mtvProgress.setText("0");
                 lv_news.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsFeedProgressWheel.stopSpinning();
@@ -1376,11 +1391,19 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 Logger.i("ariesy", delta + "");
                 if (result != null) {
                     //分别填充3个数据源
-                    mMiddleNewsArr = result;
-                    mDownNewsArr.clear();
-                    mUpNewsArr.clear();
-                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                    inflateDataInArrs(result);
+                    miCurrentCount = 3;
+                    miTotalCount = result.size();
+                    mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
+//                    mMiddleNewsArr = result;
+//                    mDownNewsArr.clear();
+//                    mUpNewsArr.clear();
+//                    miCurrentCount = 3;
+//                    miTotalCount = result.size();
+//                    mtvProgress.setText("3/" + result.size());
+//                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+//                    list_adapter.notifyDataSetChanged();
                 }
 
                 lv_news.onRefreshComplete();
@@ -1390,6 +1413,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             }
 
             public void failed(MyAppException exception) {
+                miCurrentCount = 0;
+                mtvProgress.setText("0");
                 lv_news.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsFeedProgressWheel.stopSpinning();

@@ -3,15 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bainews.iml" filepath="$PROJECT_DIR$/Bainews.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Bainews.iml" filepath="$PROJECT_DIR$/Bainews.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" filepath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" filepath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" filepath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" filepath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" filepath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
     </modules>
   </component>
 </project>
+
