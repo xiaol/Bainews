@@ -604,7 +604,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private List<HashMap<String, String>> composeMatch(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
 //                        for (int i = 0; i < 10000; i++) {
-        getMatched(resultList, minor, "2-2-2");
+        getMatched(resultList, minor, "2-3-2");
 //                                for (int j = 0; j < 10000; j++) {
 //
 //                                    if (get2Matched(resultList, minor, j) != -1) {
@@ -735,10 +735,10 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
         int th = 0;
 
-        float ratio1 = 1.5f;
+        float ratio1 = 1.3f;
         int which = 0;
         float constW = 0;
-        int stepcnst = 50;
+        int stepcnst = 60;
 
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
         HashMap<String, String> m1 = null;
@@ -760,16 +760,15 @@ public class NewsDetailHeaderView extends FrameLayout {
                 int scaledw2 = GlobalParams.screenWidth - scaledw1;
                 int scaledh1 = 0;
                 int scaledh2 = 0;
-                if (scaledh1 == 0) {
+
 
                     scaledh1 = hhead * scaledw1 / whead;
                     m1 = first;
-                }
                 List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
                 HashMap<String, String> m2 = null;
                 float ratio2 = 1f;
                 for (HashMap<String, String> m : list2) {
-                    if (first.get("img").equals(m.get("img"))) {
+                    if (first.get("img").toString().equals(m.get("img").toString())) {
                         continue;
                     }
 
@@ -782,49 +781,46 @@ public class NewsDetailHeaderView extends FrameLayout {
                                 break;
                             ratio2 -= 0.1;
 
-                            i = 1;
+                            i2 = 1;
                             continue;
                         }
-                        scaledw2 = i;
+                        scaledw2 = i2;
                         int scaledw3 = GlobalParams.screenWidth - scaledw1 - scaledw2;
                         int scaledh3 = 0;
-                        if (scaledh1 == 0) {
 
-                            scaledh1 = hhead * scaledw1 / whead;
-                            m1 = first;
-                        }
-                        if (scaledh2 == 0) {
 
                             scaledh2 = h * scaledw2 / w;
                             m2 = m;
-                        }
 
                         HashMap<String, String> m3 = null;
                         for (HashMap<String, String> mm : list2) {
-                            if (m.get("img").equals(mm.get("img"))) {
+                            if (m.get("img").toString().equals(mm.get("img").toString())) {
                                 continue;
                             }
-
+                            if (m1.get("img").toString().equals(mm.get("img").toString())) {
+                                continue;
+                            }
                             int w3 = Integer.parseInt(mm.get("w").toString());
                             int h3 = Integer.parseInt(mm.get("h").toString());
                             scaledh3 = h3 * scaledw3 / w3;
 
                             if (Math.abs(scaledh1 - scaledh2) < stepcnst && Math.abs(scaledh2 - scaledh3) < stepcnst) {
-                                if (((scaledh2 - scaledh1 < 0 && scaledh2 * ratio1 >= scaledh1) || (scaledh1 - scaledh2 < 0 && scaledh1 * ratio1 >= scaledh2)) && ((scaledh2 - scaledh3 < 0 && scaledh2 * ratio2 >= scaledh3) || (scaledh3 - scaledh2 < 0 && scaledh3 * ratio2 >= scaledh2))) {
-                                    if (th == which+1) {
+                                if (((scaledh2 - scaledh1 < 0 && scaledh2 * ratio1 >= scaledh1) || (scaledh1 - scaledh2 < 0 && scaledh1 * ratio1 >= scaledh2)) && ((scaledh2 - scaledh3 < 0 && scaledh2 * ratio1 >= scaledh3) || (scaledh3 - scaledh2 < 0 && scaledh3 * ratio1 >= scaledh2))) {
 
+
+                                    int scaledh = Math.max(Math.max(scaledh2,scaledh1),Math.max(scaledh2,scaledh3));
                                         m3 = mm;
                                         m3.put("units", "3");
                                         m3.put("position", "3");
-                                        m3.put("scaledh", "" + scaledh3);
+                                        m3.put("scaledh", "" + scaledh);
                                         m3.put("scaledw", "" + scaledw3);
                                         m2.put("units", "3");
                                         m2.put("position", "2");
-                                        m2.put("scaledh", "" + scaledh2);
+                                        m2.put("scaledh", "" + scaledh);
                                         m2.put("scaledw", "" + scaledw2);
                                         m1.put("units", "3");
                                         m1.put("position", "1");
-                                        m1.put("scaledh", "" + scaledh1);
+                                        m1.put("scaledh", "" + scaledh);
                                         m1.put("scaledw", "" + scaledw1);
                                         maps.add(m1);
                                         maps.add(m2);
@@ -832,13 +828,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         source.remove(m3);
                                         source.remove(m2);
                                         source.remove(m1);
-                                        return getMatched(maps,source,sq)+th;
 
-                                    }
-                                    which++;
-                                    continue;
-                                } else {
-
+                                        return getMatched(maps,source,sq)+th++;
+                                   } else {
+                                    scaledh1 = 0;
+                                    m1 = null;
+                                    scaledh2 = 0;
+                                    m2 = null;
                                     scaledh3 = 0;
                                     m3 = null;
                                     continue;
