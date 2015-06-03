@@ -18,7 +18,7 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 
 
-public class CategoryFgt extends Fragment{
+public class CategoryFgt extends Fragment {
 
     private View rootView;
     private GridView mgvCategory;
@@ -52,8 +52,45 @@ public class CategoryFgt extends Fragment{
                 GlobalParams.currentCatePos = position;
                 Intent intent = new Intent("sendposition");
                 GlobalParams.context.sendBroadcast(intent);
+                if(GlobalParams.tabs != null) {
+                    setTabTitle(position);
+                }
             }
         });
+    }
+
+    private void setTabTitle(int position) {
+
+        switch (position) {
+            case 0:
+                GlobalParams.tabs.updateSelection2(1, "今日");
+                break;
+            case 1:
+                GlobalParams.tabs.updateSelection2(1, "实事");
+                break;
+            case 2:
+                GlobalParams.tabs.updateSelection2(1, "娱乐");
+                break;
+            case 3:
+                GlobalParams.tabs.updateSelection2(1, "科技");
+                break;
+            case 4:
+                GlobalParams.tabs.updateSelection2(1, "国际");
+                break;
+            case 5:
+                GlobalParams.tabs.updateSelection2(1, "体育");
+                break;
+            case 6:
+                GlobalParams.tabs.updateSelection2(1, "财经");
+                break;
+            case 7:
+                GlobalParams.tabs.updateSelection2(1, "港台");
+                break;
+            case 8:
+                GlobalParams.tabs.updateSelection2(1, "社会");
+                break;
+        }
+
     }
 
     class CategoryAdapter extends BaseAdapter {
@@ -110,7 +147,6 @@ public class CategoryFgt extends Fragment{
         ImageView ivBgIcon;
         LetterSpacingTextView tvName;
     }
-
 
 
 }

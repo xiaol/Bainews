@@ -194,7 +194,6 @@ public class DeviceInfoUtil {
             ComponentName topActivity = appTasks.get(0).topActivity;
             activityName = topActivity.getClassName();
         }
-        Logger.i("jigang","----getTopActivityName--"+activityName);
         return activityName;
     }
 
@@ -208,7 +207,6 @@ public class DeviceInfoUtil {
         String packageName = mContext.getPackageName();
         String topActivityName = getTopActivityName(mContext);
         if(packageName!=null&&topActivityName!=null){
-            Logger.i("jigang","----"+packageName+"."+simpleClassName);
             return topActivityName.endsWith(simpleClassName);
         }else{
             return false;

@@ -2,116 +2,107 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-<LinearLayout
-    android:id="@+id/row1"
-    android:layout_width="fill_parent"
-    android:layout_height="86dip"
-    android:orientation="horizontal" >
-
-    <ImageView
-        android:layout_margin="3dip"
-        android:id="@+id/col11"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/col12"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="3dip"
-        android:layout_marginBottom="3dip"
-        android:scaleType="centerCrop" >
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/col13"
-        android:layout_margin="3dip"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
-
-</LinearLayout>
     <LinearLayout
-    android:id="@+id/row2"
-    android:layout_width="fill_parent"
-    android:layout_height="86dip"
-    android:orientation="horizontal"
+        android:id="@+id/row1"
+        android:layout_width="fill_parent"
+        android:layout_height="82dip"
+        android:orientation="horizontal">
+
+        <ImageView android:visibility="gone"
+            android:layout_margin="3dip"
+            android:id="@+id/col11"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            ></ImageView>
+
+        <ImageView android:visibility="gone"
+            android:id="@+id/col12"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="3dip"
+            android:layout_marginBottom="3dip"
+            android:scaleType="centerCrop"></ImageView>
+
+       <ImageView android:visibility="gone"
+            android:id="@+id/col13"
+            android:layout_margin="3dip"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row2"
+        android:layout_width="fill_parent"
+        android:layout_height="82dip"
+        android:orientation="horizontal"
         android:layout_marginBottom="3dip"
         android:layout_marginLeft="3dip"
-        android:layout_marginRight="3dip"
-    >
+        android:layout_marginRight="3dip">
 
-     <ImageView
-        android:layout_marginRight="3dip"
-        android:id="@+id/col21"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
+        <ImageView android:visibility="gone"
+            android:layout_marginRight="3dip"
+            android:id="@+id/col21"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
 
-    <ImageView
-        android:id="@+id/col22"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
+        <ImageView android:visibility="gone"
+            android:id="@+id/col22"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
 
-    <ImageView
-        android:id="@+id/col23"
+        <ImageView android:visibility="gone"
+            android:id="@+id/col23"
+            android:layout_marginLeft="3dip"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/row3"
+        android:layout_width="fill_parent"
+        android:layout_height="82dip"
+        android:orientation="horizontal"
+        android:layout_marginBottom="3dip"
         android:layout_marginLeft="3dip"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
+        android:layout_marginRight="3dip">
 
-</LinearLayout>
-<LinearLayout
-    android:id="@+id/row3"
-    android:layout_width="fill_parent"
-    android:layout_height="86dip"
-    android:orientation="horizontal"
-    android:layout_marginBottom="3dip"
+        <ImageView android:visibility="gone"
+            android:layout_marginRight="3dip"
+            android:id="@+id/col31"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
 
-    android:layout_marginLeft="3dip"
-    android:layout_marginRight="3dip"
-    >
+        <ImageView android:visibility="gone"
+            android:id="@+id/col32"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
 
-    <ImageView
-        android:id="@+id/col31"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_marginRight="3dip"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
+        <ImageView android:visibility="gone"
+            android:id="@+id/col33"
+            android:layout_marginLeft="3dip"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"></ImageView>
 
-    <ImageView
-        android:id="@+id/col32"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
-
-    <ImageView 
-        android:layout_marginLeft="3dip"
-        android:id="@+id/col33"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:scaleType="centerCrop" >
-    </ImageView>
-
-</LinearLayout>
+    </LinearLayout>
 </LinearLayout>

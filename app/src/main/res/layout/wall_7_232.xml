@@ -19,7 +19,7 @@
 
         <ImageView 
             android:layout_margin="3dip"
-            android:layout_marginLeft="-3dip"
+
             android:id="@+id/col12"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
@@ -77,7 +77,6 @@
         <ImageView 
             
             android:layout_margin="3dip"
-            android:layout_marginLeft="-3dip"
             android:id="@+id/col32"
             android:layout_width="0dp"
             android:layout_height="fill_parent"

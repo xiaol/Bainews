@@ -212,61 +212,6 @@ public class MapAdapter extends BaseAdapter implements ExpandableListAdapter {
     Map<Integer, Bitmap> noStyncImageMap = new HashMap<Integer, Bitmap>();
     private List<Style> styles = new ArrayList<Style>();
 
-    // public void prepareImageSource(String tosetImageField, Object object) {
-    // setImageLoadedField(tosetImageField);
-    // if (object instanceof List) {
-    // List list = (List) object;
-    // int count = list.size();
-    // for (int i = 0; i < count; i++) {
-    // Object o = list.get(i);
-    // String path = null;
-    // if (o instanceof Map) {
-    // Map m = (Map) o;
-    // path = m.get(imageField).toString();
-    // } else if (o instanceof Entity) {
-    // Map m = ((Entity) o).fieldContents;
-    // path = m.get(imageField).toString();
-    // }
-    // try {
-    // noStyncImageMap.put(new Integer(i),
-    // (Bitmap) NetUtil.getImageDrawable(new URL(path)));
-    // } catch (MalformedURLException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (Exception e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    //
-    // }
-    // } else if (object instanceof JSONArray) {
-    // JSONArray jsonarray = (JSONArray) object;
-    // for (int i = 0; i < jsonarray.length(); i++) {
-    //
-    // String path = null;
-    // try {
-    // path = JsonUtil.findJsonNode(imageField,
-    // jsonarray.get(i).toString()).toString();
-    // } catch (JSONException e1) {
-    // // TODO Auto-generated catch block
-    // e1.printStackTrace();
-    // }
-    // if (path != null) {
-    // try {
-    // noStyncImageMap.put(new Integer(i), (Bitmap) NetUtil
-    // .getImageDrawable(new URL(path)));
-    // } catch (MalformedURLException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // } catch (Exception e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // }
-    // }
-    // }
-    // }
-
     public void reinitSelectedAllBck(int count) {
         selected = new ArrayList<Integer>(count);
         selectedbck = new ArrayList<Integer>(count);
