@@ -17,6 +17,13 @@
         <!--新闻详情展示-->
         <include layout="@layout/aty_news_detail_header_news_display" />
 
+        <com.news.yazhidao.widget.imagewall.ImageWallView
+            android:visibility="gone"
+            android:id="@+id/mImageWall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_grag_line_top_bottom"
+            />
         <LinearLayout
             android:id="@+id/baike_linerLayout"
             android:layout_width="match_parent"
@@ -103,13 +110,6 @@
                 </LinearLayout>
             </com.news.yazhidao.widget.CustomHorizontalScrollView>
         </LinearLayout>
-        <com.news.yazhidao.widget.imagewall.ImageWallView
-            android:visibility="gone"
-            android:id="@+id/mImageWall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_grag_line_top_bottom"
-            />
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailRelate"
             android:layout_marginTop="@dimen/news_detail_layout_margin_top"
