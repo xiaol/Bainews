@@ -11,7 +11,6 @@ import android.widget.PopupWindow;
 import com.news.yazhidao.R;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
@@ -77,7 +76,6 @@ private long mFirstClickTime;
                 break;
             case R.id.mLoginModeWeibo:
                 if(System.currentTimeMillis()-mFirstClickTime<2000){
-                    Logger.i("jigang","你点击太频繁啦");
                     return;
                 }
                 mFirstClickTime=System.currentTimeMillis();
@@ -91,7 +89,6 @@ private long mFirstClickTime;
                 break;
             case R.id.mLoginModeWeiXin:
                 if(System.currentTimeMillis()-mFirstClickTime<2000){
-                    Logger.i("jigang","你点击太频繁啦1111");
                     return;
                 }
                 mFirstClickTime=System.currentTimeMillis();

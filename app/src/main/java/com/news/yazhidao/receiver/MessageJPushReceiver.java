@@ -70,7 +70,7 @@ public class MessageJPushReceiver extends BroadcastReceiver {
                 String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
                 Logger.i("jigang", "receive custom extras=" + extras);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
-                if (extras == null) {
+                if (extras == null||"{}".equals(extras)) {
                     Intent HomeIntent = new Intent(context, HomeAty.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(HomeIntent);
