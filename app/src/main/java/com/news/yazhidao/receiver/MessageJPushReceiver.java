@@ -35,7 +35,7 @@ public class MessageJPushReceiver extends BroadcastReceiver {
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(_Action)) {
             String jpushId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
             Logger.i("jigang", "----title---" + jpushId);
-            UploadJpushidRequest.uploadJpushId(jpushId);
+            UploadJpushidRequest.uploadJpushId(context,jpushId);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(_Action)) {
             String title = bundle.getString(JPushInterface.EXTRA_TITLE);
             String message = bundle.getString(JPushInterface.EXTRA_MESSAGE);

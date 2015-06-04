@@ -1,5 +1,7 @@
 package com.news.yazhidao.net.request;
 
+import android.content.Context;
+
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.MyAppException;
@@ -17,9 +19,9 @@ import java.util.HashMap;
 public class UploadJpushidRequest {
     private static final String TAG = "UploadJpushidRequest";
 
-    public static void uploadJpushId(final String jpushId) {
+    public static void uploadJpushId(Context mContext,final String jpushId) {
 
-        User user = SharedPreManager.getUser();
+        User user = SharedPreManager.getUser(mContext);
         NetworkRequest request = new NetworkRequest(HttpConstant.URL_UPLOAD_JPUSHID, NetworkRequest.RequestMethod.GET);
         HashMap<String, Object> params = new HashMap<>();
         params.put("uuid", DeviceInfoUtil.getUUID());

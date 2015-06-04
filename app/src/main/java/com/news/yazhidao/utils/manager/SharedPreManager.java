@@ -45,14 +45,14 @@ public class SharedPreManager {
      * @param user
      */
     public static void saveUser(User user){
-        save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_INFO,user.toJsonString());
+        save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO, user.toJsonString());
     }
 
     /**
      * 删除保存的user json
      */
     public static void deleteUser(Context mContext){
-        User user = getUser();
+        User user = getUser(mContext);
         if(user!=null){
             ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
         }
@@ -62,12 +62,18 @@ public class SharedPreManager {
      * 从 sp 中获取用户对象
      * @return
      */
-    public static User getUser(){
+    public static User getUser(Context mContext){
         String userJson = get(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
         if(TextUtils.isEmpty(userJson)){
             return null;
         }
-        return User.parseUser(userJson);
+        User user = User.parseUser(userJson);
+        if(ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
+            return user;
+        }else{
+            remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+        }
+        return null;
     }
     public static void save(String spName, String key, long value){
         Logger.d("SettingsManager", "SettingsManager : " + spName + ":" + "key : " + key + "value : " + value);

@@ -187,7 +187,7 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
     @Override
     protected void loadData() {
         mJPushId = SharedPreManager.getJPushId();
-        mUser = SharedPreManager.getUser();
+        mUser = SharedPreManager.getUser(FeedBackActivity.this);
         if (mUser != null) {
             mUserId = mUser.getUserId();
             mUserPlatformType = mUser.getPlatformType();
