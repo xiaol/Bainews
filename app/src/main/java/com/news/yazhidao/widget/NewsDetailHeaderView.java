@@ -659,7 +659,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
         int which = 0;
         int stepcnst = 60;
-        float ratio = 1.3f;
+        float ratio = 1.f;
         float constW = 0;
         for (int i = stepcnst; i < GlobalParams.screenWidth; i += stepcnst) {
             if (i >= GlobalParams.screenWidth - 1) {
@@ -735,10 +735,10 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
         int th = 0;
 
-        float ratio1 = 1.3f;
+        float ratio1 = 1.5f;
         int which = 0;
         float constW = 0;
-        int stepcnst = 60;
+        int stepcnst = 80;
 
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
         HashMap<String, String> m1 = null;
