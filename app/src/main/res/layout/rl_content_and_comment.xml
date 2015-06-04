@@ -35,7 +35,7 @@
                 android:layout_width="51dp"
                 android:layout_height="25dp"
                 android:paddingLeft="20dp"
-                android:paddingTop="8dp"
+                android:paddingTop="4dp"
                 android:textColor="@color/red"
                 android:textSize="10sp"
                 android:background="@drawable/bg_add_praise"
