@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
@@ -15,6 +16,7 @@ import com.news.yazhidao.pages.NewsFeedFragment;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.NotificationHelper;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import org.json.JSONException;
@@ -45,7 +47,6 @@ public class MessageJPushReceiver extends BroadcastReceiver {
             //判断反馈界面是否在前台
             boolean isFeedBackForeground = DeviceInfoUtil.isRunningForeground(context, FeedBackActivity.class.getSimpleName());
             //判断会话列表是否在前台
-            //TODO 修改当前传入的activity name
             boolean isMessageListForeground = DeviceInfoUtil.isRunningForeground(context, ChatAty.class.getSimpleName());
             Intent intent1;
             if (isFeedBackForeground) {
@@ -65,8 +66,14 @@ public class MessageJPushReceiver extends BroadcastReceiver {
             Logger.i("jigang", "receive custom extras=" + extras);
             Logger.i("jigang", "receive custom type=" + type);
             Logger.i("jigang", "receive custom file=" + file);
-        } else {
-            if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(_Action)) {
+        }else if(JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(_Action)){
+            Logger.e("jigang", "ACTION_NOTIFICATION_RECEIVED");
+            //umeng statistic notification received
+            MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_RECEIVED);
+        } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(_Action)) {
+            //umeng statistic notification received and opened it
+            MobclickAgent.onEvent(context,CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
+
                 String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
                 Logger.i("jigang", "receive custom extras=" + extras);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
@@ -100,5 +107,5 @@ public class MessageJPushReceiver extends BroadcastReceiver {
                 }
             }
         }
-    }
+
 }
