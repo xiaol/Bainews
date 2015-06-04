@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_souce_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    >
+
+    <ImageView
+        android:id="@+id/iv_combine_line_top"
+        android:layout_width="1dp"
+        android:layout_height="15dp"
+        android:background="@drawable/source_item_combine_line"
+        android:layout_marginLeft="18dp"
+        />
+
+
+    <ImageView
+        android:id="@+id/iv_source"
+        android:layout_below="@+id/iv_combine_line_top"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/img_blue_point"
+        />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_news_source"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/iv_source"
+        android:lineSpacingExtra="3dp"
+        android:layout_marginTop="10dp"
+        android:gravity="left"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="13dp"
+        android:textColor="#666666"
+        android:text="Fay苏"
+        android:textSize="12sp"
+        />
+
+    <ImageView
+        android:id="@+id/iv_combine_line"
+        android:layout_width="1dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/iv_source"
+        android:background="@drawable/source_item_combine_line"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="-1dp"
+        android:layout_marginBottom="-1dp"
+        />
+
+
+    <TextView
+        android:id="@+id/tv_devider_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/image_half_line"
+        android:layout_below="@+id/tv_news_source"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="32dp"
+        />
+
+
+</RelativeLayout>

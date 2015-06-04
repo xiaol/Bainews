@@ -65,6 +65,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.ProgressWheel;
@@ -120,6 +121,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private TextViewExtend tv_title;
     private LoadingLayout mylayout;
     private TimeFeed mCurrentTimeFeed;
+    private int source_title_length = 0;
     private long mTotalTime, mUpdateTime, mLastTime, mCurrentTime;
     private ProgressWheel mNewsFeedProgressWheel;
     private View mNewsFeedProgressWheelWrapper;
@@ -142,6 +144,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private ImageLoaderHelper imageLoader;
     private Handler mHandler = new Handler();
+    private int TYPE_VIEWHOLDER = 1;
+    private int TYPE_VIEWHOLDER3 = 3;
 
     public static NewsFeedFragment newInstance(int position) {
         NewsFeedFragment f = new NewsFeedFragment();
@@ -337,7 +341,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mMiddleNewsArr.add(_NewsFeed);
                 mDownNewsArr.remove(mDownNewsArr.size() - 1);
                 if (miCurrentCount < miTotalCount)
-                    miCurrentCount ++;
+                    miCurrentCount++;
                 mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
@@ -561,6 +565,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         public View getView(int position, View convertView, ViewGroup parent) {
             contentSize = 0;
             contentSize2 = 0;
+
             if (!refresh_flag) {
                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
                 lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
@@ -573,21 +578,27 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             final NewsFeed feed = mMiddleNewsArr.get(position);
 
             if ("400".equals(feed.getSpecial())) {
+                //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
-                    convertView = View.inflate(mContext, R.layout.ll_news_item2, null);
+                    convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                     holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                     holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                     holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                    holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
+                    holder.img_source_baidu = (ImageView) convertView.findViewById(R.id.img_source_baidu);
+                    holder.img_source_zhihu = (ImageView) convertView.findViewById(R.id.img_source_zhihu);
+                    holder.img_source_biimgs = (ImageView) convertView.findViewById(R.id.img_source_biimgs);
+                    holder.img_source_comment = (ImageView) convertView.findViewById(R.id.img_source_comment);
                     holder.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    holder.ll_top_line = (LinearLayout) convertView.findViewById(R.id.ll_top_line);
                     holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                     holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     holder.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
                     holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
+                    holder.cv_opinions = (CircleView) convertView.findViewById(R.id.cv_opinions);
                     convertView.setTag(holder);
                 } else {
                     if (convertView.getTag() != null && ViewHolder.class == convertView.getTag().getClass()) {
@@ -597,20 +608,24 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         holder.ll_time_item.setVisibility(View.GONE);
                     } else {
                         holder = new ViewHolder();
-                        convertView = View.inflate(mContext, R.layout.ll_news_item2, null);
+                        convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
                         holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                         holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                         holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                         holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-
+                        holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
+                        holder.img_source_baidu = (ImageView) convertView.findViewById(R.id.img_source_baidu);
+                        holder.img_source_zhihu = (ImageView) convertView.findViewById(R.id.img_source_zhihu);
+                        holder.img_source_biimgs = (ImageView) convertView.findViewById(R.id.img_source_biimgs);
+                        holder.img_source_comment = (ImageView) convertView.findViewById(R.id.img_source_comment);
                         holder.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        holder.ll_top_line = (LinearLayout) convertView.findViewById(R.id.ll_top_line);
                         holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                         holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                         holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                         holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                         holder.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
                         holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                        holder.cv_opinions = (CircleView) convertView.findViewById(R.id.cv_opinions);
                         convertView.setTag(holder);
                     }
                 }
@@ -632,6 +647,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 });
 
+                holder.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
+                holder.cv_opinions.setText("观点");
+                holder.cv_opinions.setTextColor(Color.WHITE);
+                holder.cv_opinions.setTextSize(12);
+
                 if (feed.getCategory() != null) {
                     holder.tv_news_category.setText(feed.getCategory());
                     holder.tv_news_category.setFontSpacing(5);
@@ -639,7 +659,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 //                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
-                holder.tv_interests.setText(feed.getOtherNum() + "家观点");
+                holder.tv_interests.setText(feed.getOtherNum());
 
                 holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -737,16 +757,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 final long start = System.currentTimeMillis();
 
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
-                setContentParams(holder.ll_source_content, sourceList.size());
 
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
-                    for (int a = 0; a < sourceList.size(); a++) {
+                    source_title_length = 0;
 
+                    for (int a = 0; a < sourceList.size(); a++) {
 
                         final NewsFeed.Source source = sourceList.get(a);
 
-                        RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item2, null);
+                        RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -760,13 +780,14 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                 MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                             }
                         });
-                        TextView iv_source = (TextView) ll_souce_view.findViewById(R.id.iv_source);
-                        iv_source.setBackgroundColor(new Color().parseColor("#4fb5ea"));
-                        iv_source.setText(a + 1 + "");
+                        ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
+                        ImageView iv_combine_line_top = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line_top);
+                        TextView tv_devider_line = (TextView) ll_souce_view.findViewById(R.id.tv_devider_line);
                         ImageView iv_combine_line = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line);
 
-                        setLineVisibility(sourceList, iv_combine_line, contentSize);
+                        setLineVisibility(sourceList, iv_combine_line, tv_devider_line, contentSize);
+
 
                         if (source != null) {
 
@@ -780,21 +801,33 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                             if (source_name != null) {
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {
-                                    source_name_font = "<font color =\"#7d7d7d\">" + source.getUser() + "</font>" + ": ";
+                                    source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
                                     finalText = source_name_font + source_title;
                                     tv_news_source.setText(Html.fromHtml(finalText));
                                 } else {
-                                    source_name_font = "<font color =\"#7d7d7d\">" + source_name + "</font>" + ": ";
+                                    source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
                                     finalText = source_name_font + source_title;
                                     tv_news_source.setText(Html.fromHtml(finalText));
                                 }
 
                             } else {
-                                String anonyStr = "<font color =\"#7d7d7d\">" + "匿名报道:" + "</font>" + ": ";
+                                String anonyStr = "<font color =\"#7d7d7d\">" + "<big>" + "匿名报道:" + "</big>" + "</font>" + ": ";
                                 finalText = anonyStr + source_title;
                                 tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
+                            int i = source.getTitle().length();
+
+                            if (a < 3) {
+                                if (i > 15) {
+                                    source_title_length += 2;
+                                } else {
+                                    source_title_length += 1;
+                                }
+                            }
+
+                            //设置观点view的布局
+                            setIvCombineLineParams(iv_combine_line, source.getTitle().length());
                         }
 
                         if (contentSize < 3) {
@@ -802,7 +835,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                             contentSize++;
                         }
                     }
+
+                    setContentParams(holder.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER);
                 }
+
+                //大图卡片
             } else if ("1".equals(feed.getSpecial())) {
 
                 if (convertView == null) {
@@ -936,6 +973,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
+                //多图卡片
             } else if ("9".equals(feed.getSpecial())) {
 
                 images = feed.getImgUrl_ex();
@@ -956,6 +994,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
                     holder3.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
+                    holder3.cv_opinions = (CircleView) convertView.findViewById(R.id.cv_opinions);
                     holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                 } else {
@@ -971,6 +1010,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+                    holder3.cv_opinions = (CircleView) convertView.findViewById(R.id.cv_opinions);
                     holder3.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
                     holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
@@ -1004,6 +1044,12 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 });
 
+                holder3.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
+                holder3.cv_opinions.setText("观点");
+                holder3.cv_opinions.setTextColor(Color.WHITE);
+                holder3.cv_opinions.setTextSize(12);
+
+
                 if (feed.getCategory() != null) {
                     holder3.tv_news_category.setText(feed.getCategory());
                     holder3.tv_news_category.setFontSpacing(5);
@@ -1011,7 +1057,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
-                holder3.tv_interests.setText(feed.getOtherNum() + "家观点");
+                holder3.tv_interests.setText(feed.getOtherNum());
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1097,17 +1143,17 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 if (sourceList != null && sourceList.size() > 0) {
 
                     for (int a = 0; a < sourceList.size(); a++) {
-
+                        source_title_length = 0;
 
                         final NewsFeed.Source source = sourceList.get(a);
 
-                        LinearLayout ll_souce_view = (LinearLayout) View.inflate(mContext, R.layout.lv_source_item, null);
+                        RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 
                                 Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                intent.putExtra("url", source.getUrl());
+                                intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
                                 //umeng statistic onclick url below the head news
                                 HashMap<String, String> _MobMap = new HashMap<>();
@@ -1117,6 +1163,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         });
                         ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
+                        ImageView iv_combine_line_top = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line_top);
+                        TextView tv_devider_line = (TextView) ll_souce_view.findViewById(R.id.tv_devider_line);
+                        ImageView iv_combine_line = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line);
+
+//                        setLineVisibility(sourceList, iv_combine_line,tv_devider_line ,contentSize);
 
                         if (source != null) {
 
@@ -1131,22 +1182,35 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {
 
-                                    source_name_font = "<font color =\"#7d7d7d\">" + source.getUser() + "</font>" + ": ";
+                                    source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
                                     finalText = source_name_font + source_title;
                                     tv_news_source.setText(Html.fromHtml(finalText));
                                 } else {
-                                    source_name_font = "<font color =\"#7d7d7d\">" + source_name + "</font>" + ": ";
+                                    source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
                                     finalText = source_name_font + source_title;
                                     tv_news_source.setText(Html.fromHtml(finalText));
                                 }
 
-                                TextUtil.setResourceSiteIcon(iv_source, source_name);
+//                                TextUtil.setResourceSiteIcon(iv_source, source_name);
 
                             } else {
-                                String anonyStr = "<font color =\"#7d7d7d\">" + "匿名报道:" + "</font>" + ": ";
+                                String anonyStr = "<font color =\"#7d7d7d\">" + "<big>" + "匿名报道:" + "</big>" + "</font>" + ": ";
                                 finalText = anonyStr + source_title;
                                 tv_news_source.setText(Html.fromHtml(finalText));
                             }
+
+                            int i = source.getTitle().length();
+
+                            if (a < 6) {
+                                if (i > 15) {
+                                    source_title_length += 2;
+                                } else {
+                                    source_title_length += 1;
+                                }
+                            }
+
+                            //设置观点view的布局
+                            setIvCombineLineParams(iv_combine_line, source.getTitle().length());
 
                         }
 
@@ -1155,6 +1219,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                             contentSize2++;
                         }
                     }
+
+                    setContentParams(holder3.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER3);
                 }
 
             }
@@ -1183,11 +1249,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     }
 
-    private void setContentParams(LinearLayout ll_source_content, int i) {
+    private void setContentParams(LinearLayout ll_source_content, int i, int length, int type) {
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.BELOW, R.id.rl_title_content);
-        params.setMargins(30, 24, 20, 20);
+        params.addRule(RelativeLayout.BELOW, R.id.ll_view_content);
+        params.setMargins(24, 0, 0, 20);
 
         switch (i) {
             case 0:
@@ -1195,19 +1261,85 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(mContext, 45);
+                params.height = DensityUtil.dip2px(mContext, 80);
                 break;
 
             case 2:
-                params.height = DensityUtil.dip2px(mContext, 95);
+                if (length == 4) {
+                    params.height = DensityUtil.dip2px(mContext, 130);
+                } else {
+                    params.height = DensityUtil.dip2px(mContext, 110);
+                }
                 break;
 
             case 3:
-                params.height = DensityUtil.dip2px(mContext, 140);
+
+                if (length == 6) {
+                    params.height = DensityUtil.dip2px(mContext, 210);
+                } else if (length == 3) {
+                    params.height = DensityUtil.dip2px(mContext, 150);
+                } else {
+                    params.height = DensityUtil.dip2px(mContext, 180);
+                }
+
+                break;
+
+            case 4:
+                if (type == TYPE_VIEWHOLDER3) {
+                    params.height = DensityUtil.dip2px(mContext, 280);
+                } else {
+                    if (length == 6) {
+                        params.height = DensityUtil.dip2px(mContext, 210);
+                    } else if (length == 3 || length == 4) {
+                        params.height = DensityUtil.dip2px(mContext, 150);
+                    } else {
+                        params.height = DensityUtil.dip2px(mContext, 180);
+                    }
+                }
+                break;
+
+            case 5:
+                if (type == TYPE_VIEWHOLDER3) {
+                    params.height = DensityUtil.dip2px(mContext, 320);
+                } else {
+                    if (length == 6) {
+                        params.height = DensityUtil.dip2px(mContext, 210);
+                    } else if (length == 3 || length == 4) {
+                        params.height = DensityUtil.dip2px(mContext, 150);
+                    } else {
+                        params.height = DensityUtil.dip2px(mContext, 180);
+                    }
+                }
+                break;
+
+            case 6:
+                if (type == TYPE_VIEWHOLDER3) {
+                    params.height = DensityUtil.dip2px(mContext, 370);
+                } else {
+                    if (length == 6) {
+                        params.height = DensityUtil.dip2px(mContext, 210);
+                    } else if (length == 3 || length == 4) {
+                        params.height = DensityUtil.dip2px(mContext, 150);
+                    } else {
+                        params.height = DensityUtil.dip2px(mContext, 180);
+                    }
+                }
                 break;
 
             default:
-                params.height = DensityUtil.dip2px(mContext, 140);
+
+                if (type == TYPE_VIEWHOLDER3) {
+                    params.height = DensityUtil.dip2px(mContext, 410);
+                } else {
+                    if (length == 6) {
+                        params.height = DensityUtil.dip2px(mContext, 210);
+                    } else if (length == 3 || length == 4) {
+                        params.height = DensityUtil.dip2px(mContext, 150);
+                    } else {
+                        params.height = DensityUtil.dip2px(mContext, 180);
+                    }
+                }
+
                 break;
 
         }
@@ -1216,28 +1348,46 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     }
 
-    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line, int a) {
+    private void setIvCombineLineParams(ImageView iv_combine_line_top, int length) {
+
+        ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
+
+        if (length > 15) {
+            params.height = 85;
+        } else {
+            params.height = 43;
+        }
+
+        iv_combine_line_top.setLayoutParams(params);
+
+    }
+
+    private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line, TextView tv_devider_line, int a) {
 
         switch (sourceList.size()) {
             case 1:
                 iv_combine_line.setVisibility(View.GONE);
+                tv_devider_line.setVisibility(View.GONE);
                 break;
 
             case 2:
                 if (a == 1) {
                     iv_combine_line.setVisibility(View.GONE);
+                    tv_devider_line.setVisibility(View.GONE);
                 }
                 break;
 
             case 3:
                 if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
+                    tv_devider_line.setVisibility(View.GONE);
                 }
                 break;
 
             default:
                 if (a >= 2) {
                     iv_combine_line.setVisibility(View.GONE);
+                    tv_devider_line.setVisibility(View.GONE);
                 }
                 break;
 
@@ -1250,13 +1400,18 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ImageView iv_title_img;
         TextView tv_title;
         LetterSpacingTextView tv_news_category;
+        ImageView img_source_sina;
+        ImageView img_source_baidu;
+        ImageView img_source_zhihu;
+        ImageView img_source_biimgs;
+        ImageView img_source_comment;
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
         RelativeLayout rl_title_content;
         TextViewExtend tv_interests;
         RelativeLayout rl_bottom_mark;
-        LinearLayout ll_top_line;
         LinearLayout ll_time_item;
+        CircleView cv_opinions;
         TextView tv_date;
         TextView tv_weekday;
 
@@ -1287,6 +1442,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         LinearLayout ll_source_interest;
         TextViewExtend tv_interests;
         LinearLayout ll_time_item;
+        CircleView cv_opinions;
         TextView tv_date;
         TextView tv_weekday;
         RelativeLayout rl_bottom_mark;

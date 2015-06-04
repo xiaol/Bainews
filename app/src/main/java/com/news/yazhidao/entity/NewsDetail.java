@@ -74,6 +74,9 @@ public class NewsDetail implements Serializable{
         public String desText;
         public String paragraphIndex;
         public String type;
+        public String up;
+        public String down;
+        public String comments_count;
         public String uuid;
         public String userIcon;
         public String sourceUrl;
