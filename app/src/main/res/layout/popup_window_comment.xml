@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/Gray"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/close_imageView"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bg_date_close" />
+
+    <com.news.yazhidao.widget.InputBar.InputBar
+        android:id="@+id/input_bar_view"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <ListView
+        android:id="@+id/comment_list_view"
+        android:layout_marginTop="100dp"
+        android:layout_above="@+id/input_bar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include
+        android:id="@+id/voice_record_layout_wins"
+        layout="@layout/part_voice_record_wins2"
+        android:visibility="invisible" />
+</RelativeLayout>

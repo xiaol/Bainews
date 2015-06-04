@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="@color/new_light_gray"
+    android:layout_alignParentBottom="true"
+    android:id="@+id/gray_bg"
+    android:focusable="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:focusableInTouchMode="true">
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/input_type_record"
+        android:id="@+id/switch_button"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="发送"
+        android:textColor="@color/new_yellow"
+        android:gravity="center"
+        android:textSize="@dimen/textsize_twenty"
+        android:layout_margin="@dimen/common_padding_five" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/send_button"
+        android:layout_toRightOf="@+id/switch_button"
+        android:text="按住开始录音"
+        android:id="@+id/record_button"
+        android:textColor="@color/new_yellow"
+        android:background="@drawable/comment_button_bg"
+        android:gravity="center"
+        android:textSize="@dimen/textsize_twelve"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/send_button"
+        android:layout_toRightOf="@+id/switch_button"
+        android:id="@+id/text_field"
+        android:lines="1"
+        android:singleLine="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:hint="说点什么"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textsize_fifteen"
+        android:focusableInTouchMode="true"
+        android:background="@drawable/input_view_bg"
+        android:textColorHint="@color/LightGray"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
+
+</RelativeLayout>
+
+
+
+
