@@ -8,6 +8,7 @@ import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
+import com.news.yazhidao.utils.manager.AliYunOssManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.apache.http.NameValuePair;
@@ -32,10 +33,10 @@ public class UploadCommentRequest {
 
 
     /**
-     * 用于上传用户评论，评论可以段落评论，也可以是全文的评论，根据type来决定，
+     * 用于上传用户评论，评论可以段落评论，也可以是全文的评论，根据type来决定
      * @param mContext
      * @param sourceUrl 新闻源的url
-     * @param comment 用户的评论，可以是文本也可以是语音（语音地址url），
+     * @param comment 用户的评论，可以是文本也可以是语音，如果是语音的话，则此参数为语音文件的绝对路径
      * @param paragraphIndex 如果是段落评论的话，此参数表示被评论的段落索引，如果是全文评论，则需指定该值为-1
      * @param type 评论的类型
      * @param listener 上传结果回调
@@ -47,6 +48,10 @@ public class UploadCommentRequest {
     public static void uploadComment(Context mContext,String sourceUrl,String comment,String paragraphIndex,String type,final UploadCommentListener listener){
         final NetworkRequest request=new NetworkRequest(HttpConstant.URL_GET_NEWS_CONTENT, NetworkRequest.RequestMethod.POST);
         List<NameValuePair> pairs=new ArrayList<>();
+        //如果是语音评论，则须上传到阿里云的OSS
+        if(SPEECH_PARAGRAPH.equals(type)||SPEECH_DOC.equals(type)){
+           comment= AliYunOssManager.getInstance(mContext).uploadSpeechFile(comment);
+        }
         //此处默认用户是已经登录过的
         User user = SharedPreManager.getUser(mContext);
         pairs.add(new BasicNameValuePair("sourceUrl",sourceUrl));
@@ -57,7 +62,7 @@ public class UploadCommentRequest {
         pairs.add(new BasicNameValuePair("userIcon",user.getUserIcon()));
         pairs.add(new BasicNameValuePair("userName",user.getUserName()));
         pairs.add(new BasicNameValuePair("userId",user.getUserId()));
-        pairs.add(new BasicNameValuePair("platformType",user.getPlatformType()));
+        pairs.add(new BasicNameValuePair("platformType", user.getPlatformType()));
 
         request.setParams(pairs);
         request.setCallback(new StringCallback() {
@@ -81,7 +86,7 @@ public class UploadCommentRequest {
                 }
             }
         });
-        request.execute();;
+        request.execute();
     }
 
 }

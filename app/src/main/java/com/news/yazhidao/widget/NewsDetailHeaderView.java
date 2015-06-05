@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
@@ -11,19 +10,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +31,7 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.TextUtils;
+import com.news.yazhidao.pages.NewsDetailAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -110,13 +105,8 @@ public class NewsDetailHeaderView extends FrameLayout {
     //当前文章隐藏的位置
     private int _CurrentPos = 0;
 
-    private View popupWindowView;
-    private PopupWindow popupWindow;
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
-    private MyAdapter adapter;
-    private String my_desText;
-
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -319,7 +309,9 @@ public class NewsDetailHeaderView extends FrameLayout {
                     tv_comment_count.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            showPopupWindow(tv_comment_count);
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
+                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                                    | Gravity.CENTER, 0, 0);
                         }
                     });
                     TextView tv_comment_content = (TextView) rl_para.findViewById(R.id.tv_comment_content);
@@ -468,34 +460,6 @@ public class NewsDetailHeaderView extends FrameLayout {
             }
         }
 
-    }
-
-    private void showPopupWindow(TextView rl_comment) {
-
-        popupWindowView = View.inflate(mContext, R.layout.rl_popupwindow, null);
-        ListView lv_comments = (ListView) popupWindowView.findViewById(R.id.lv_comments);
-        lv_comments.setAdapter(adapter);
-
-        popupWindow = new PopupWindow(popupWindowView, LayoutParams.FILL_PARENT, 1000, true);
-        //必须要有这句否则弹出popupWindow后监听不到Back键
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.showAtLocation(rl_comment, Gravity.NO_GRAVITY, 0, 300);
-        //让popupWindow获得焦点
-        popupWindow.setFocusable(true);
-        //设置动画
-        popupWindow.setAnimationStyle(R.style.popupWindowAnimation);
-        popupWindow.update();
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            popupWindow.dismiss();
-        }
-
-        return super.onKeyDown(keyCode, event);
     }
 
     //修改新闻内容
@@ -703,31 +667,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
         } else {
             mNewsDetailRelate.setVisibility(GONE);
-        }
-    }
-
-    private class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return points.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-
-            return null;
         }
     }
 

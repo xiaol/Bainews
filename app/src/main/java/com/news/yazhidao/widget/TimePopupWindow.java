@@ -250,7 +250,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         mCurrentType = currentType;
         if (mCurrentTimeFeed == null) {
             mCurrentTimeFeed = new TimeFeed();
-            if (mCurrentType.equals("0"))
+            if (mCurrentType != null && mCurrentType.equals("0"))
                 mCurrentTimeFeed.setNext_update_type("1");
             else
                 mCurrentTimeFeed.setNext_update_type("0");
@@ -272,7 +272,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         } else {
             mStrSelectedDate = mCurrentDate;
         }
-        if(mCurrentTimeFeed.getHistory_date()!=null) {
+        if (mCurrentTimeFeed.getHistory_date() != null) {
             ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
             Log.i("tag", "i===" + mStrSelectedDate);
             for (int i = 0; i < arrTimeList.size(); i++) {
