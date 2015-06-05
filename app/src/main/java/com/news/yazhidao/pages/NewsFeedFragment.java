@@ -659,6 +659,41 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 //                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
+                //百度百科
+                if("0".equals(feed.getIsBaikeFlag())){
+                    holder.img_source_baidu.setVisibility(View.GONE);
+                }else{
+                    holder.img_source_baidu.setVisibility(View.VISIBLE);
+                }
+
+                //评论
+                if("0".equals(feed.getIsCommentsFlag())){
+                    holder.img_source_comment.setVisibility(View.GONE);
+                }else{
+                    holder.img_source_comment.setVisibility(View.VISIBLE);
+                }
+
+                //图片墙
+                if("0".equals(feed.getIsImgWallFlag())){
+                    holder.img_source_biimgs.setVisibility(View.GONE);
+                }else{
+                    holder.img_source_biimgs.setVisibility(View.VISIBLE);
+                }
+
+                //微博
+                if("0".equals(feed.getIsWeiboFlag())){
+                    holder.img_source_sina.setVisibility(View.GONE);
+                }else{
+                    holder.img_source_sina.setVisibility(View.VISIBLE);
+                }
+
+                //知乎
+                if("0".equals(feed.getIsZhihuFlag())){
+                    holder.img_source_zhihu.setVisibility(View.GONE);
+                }else{
+                    holder.img_source_zhihu.setVisibility(View.VISIBLE);
+                }
+
                 holder.tv_interests.setText(feed.getOtherNum());
 
                 holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
@@ -1353,9 +1388,28 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
 
         if (length > 15) {
-            params.height = 85;
+            if(GlobalParams.screenHeight == 1280) {
+                params.height = 85;
+            }else if(GlobalParams.screenHeight == 1776){
+                params.height = 130;
+            }else if(GlobalParams.screenHeight == 1800){
+                params.height = 110;
+            }else{
+                params.height = 85;
+
+            }
+
         } else {
-            params.height = 43;
+            if(GlobalParams.screenHeight == 1280) {
+                params.height = 43;
+            }else if(GlobalParams.screenHeight == 1776){
+                params.height = 70;
+            }else if(GlobalParams.screenHeight == 1800){
+                params.height = 55;
+            }else{
+                params.height = 43;
+
+            }
         }
 
         iv_combine_line_top.setLayoutParams(params);
