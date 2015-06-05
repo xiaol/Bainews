@@ -309,7 +309,7 @@ public class InputBar extends FrameLayout {
 
         mRecordState = RECORD_ED;
 
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "YuYan" + File.separator + "Amr" + File.separator + mFileName + ".amr";
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "TouTiaoBaiJia" + File.separator + "Amr" + File.separator + mFileName + ".amr";
         MediaPlayer mp = MediaPlayer.create(mActivity, Uri.parse(filePath));
         int duration = mp.getDuration();
         mp.release();
