@@ -72,5 +72,13 @@
         android:layout_toLeftOf="@+id/rl_praise"
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true" />
-
+    <com.news.yazhidao.widget.SpeechView
+        android:id="@+id/mSpeechView"
+        android:layout_width="100dp"
+        android:layout_toRightOf="@+id/iv_user_icon"
+        android:layout_below="@+id/tv_user_name"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        />
 </RelativeLayout>

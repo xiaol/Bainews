@@ -20,11 +20,12 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
 import com.news.yazhidao.widget.InputBar.InputBarType;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -122,7 +123,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     public void submitThisMessage(InputBarType argType, String argContent) {
         mrlRecord.setVisibility(View.INVISIBLE);
         NewsDetail.Point point = marrPoints.get(0);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, point.type, new UploadCommentListener() {
+        String type = UploadCommentRequest.TEXT_PARAGRAPH;
+        if (argType == InputBarType.eRecord) {
+            type = UploadCommentRequest.SPEECH_PARAGRAPH;
+        }
+        Logger.i("jigang", type + "----url==" + argContent);
+        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, new UploadCommentListener() {
             @Override
             public void success() {
                 Log.i("tag", "111");
@@ -229,15 +235,11 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final Holder holder;
-            NewsDetail.Point point = marrPoint.get(position);
             if (convertView == null) {
                 holder = new Holder();
-                if (point.type.equals("text_paragraph")) {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
-                    holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-                } else {
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
-                }
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
+                holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
+                holder.mSpeechView = (SpeechView) convertView.findViewById(R.id.mSpeechView);
                 holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.ivHeadIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
@@ -247,17 +249,23 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
+                ImageManager.getInstance(mContext).DisplayImage(point.userIcon,holder.ivHeadIcon,false);
             else
-                holder.ivHeadIcon.setBackgroundResource(R.drawable.ic_comment_para);
+                holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);
             holder.tvPraiseCount.setText(point.up);
             holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             if (point.type.equals("text_paragraph")) {
                 holder.tvContent.setText(point.srcText);
+                holder.tvContent.setVisibility(View.VISIBLE);
+                holder.mSpeechView.setVisibility(View.GONE);
             } else {
-
+                Logger.i("jigang", "--" + holder.mSpeechView + ",--" + point.srcText);
+                holder.mSpeechView.setUrl(point.srcText);
+                holder.mSpeechView.setVisibility(View.VISIBLE);
+                holder.tvContent.setVisibility(View.GONE);
             }
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -276,5 +284,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
+        SpeechView mSpeechView;
     }
 }

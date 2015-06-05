@@ -23,8 +23,9 @@ public class AMRAudioRecorder implements Callback {
     private static final int RECORDER_STOP = 1;
     boolean isRecord = false;
     int bufferSizeInBytes = 0;
-
+private Context mContext;
     public AMRAudioRecorder(Context myContext, String argFileName, String argPath) {
+        this.mContext=myContext;
         m_strFileName = argFileName;
         m_strPath = argPath;
     }
@@ -45,7 +46,7 @@ public class AMRAudioRecorder implements Callback {
 
         mediaRecorder.setAudioSamplingRate(8000);
         //创建一个临时的音频输出文件
-        audioFile = new File(FileUtils.getDirectory(Environment.getExternalStorageDirectory().getAbsolutePath()) + m_strPath + m_strFileName + ".amr");
+        audioFile = new File(FileUtils.getSaveDir(mContext)+File.separator+m_strFileName+".amr");
         Log.i("---", "audioFile.getAbsolutePath()---" + audioFile.getAbsolutePath());
         //第4步：指定音频输出文件
         mediaRecorder.setOutputFile(audioFile.getAbsolutePath());

@@ -73,7 +73,7 @@ public class AliYunOssManager {
                 return filePath;
             }
             InputStream inputStream = new FileInputStream(new File(filePath));
-            final OSSData ossData = ossService.getOssData(sampleBucket, DateUtil.getCurrentDate()+"/"+filePath);
+            final OSSData ossData = ossService.getOssData(sampleBucket, DateUtil.getCurrentDate()+"/"+filePath.substring(filePath.lastIndexOf("/")+1));
             ossData.setData(TextUtil.toByteArray(inputStream), "raw"); // 指定需要上传的数据和它的类型
             ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
             ossData.uploadInBackground(new SaveCallback() {
@@ -81,12 +81,6 @@ public class AliYunOssManager {
                 public void onSuccess(String objectKey) {
                     retryTime=0;
                     Log.e("jigang", "objKey=" + objectKey);
-                    String url = ossData.getResourceURL("QK8FahuiSCpzlWG8", Integer.MAX_VALUE);
-                    try {
-                        Log.e("jigang", "--------url=" + url);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
 
                 @Override
