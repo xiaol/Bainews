@@ -311,7 +311,6 @@ public class InputBar extends FrameLayout {
         mRecordState = RECORD_ED;
 
         String filePath = FileUtils.getSaveDir(mContext)  + File.separator + mFileName + ".amr";
-        Logger.i("jigang","path==="+filePath);
         MediaPlayer mp = MediaPlayer.create(mActivity, Uri.parse(filePath));
         int duration = mp.getDuration();
         mp.release();
