@@ -3,21 +3,27 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -103,6 +109,11 @@ public class NewsDetailHeaderView extends FrameLayout {
     //当前文章隐藏的位置
     private int _CurrentPos = 0;
 
+    private View popupWindowView;
+    private PopupWindow popupWindow;
+    private boolean add_flag = false;
+    private ArrayList<NewsDetail.Point> points;
+    private MyAdapter adapter;
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -154,6 +165,8 @@ public class NewsDetailHeaderView extends FrameLayout {
         MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
         MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
         mImageWall = (ImageWallView) mRootView.findViewById(R.id.mImageWall);
+
+
     }
 
     public void setContentViewHeight(int pHeight) {
@@ -181,6 +194,9 @@ public class NewsDetailHeaderView extends FrameLayout {
             } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
+
+            points = pNewsDetail.point;
+
             mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
             mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
@@ -276,38 +292,86 @@ public class NewsDetailHeaderView extends FrameLayout {
                 _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder = new StringBuilder();
                 for (int i = 0; i < _Split.length; i++) {
-                    final LetterSpacingTextView _TextVE = new LetterSpacingTextView(mContext);
-                    _TextVE.setFontSpacing(LetterSpacingTextView.NORMALBIG);
-                    _TextVE.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
-                    _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                    _TextVE.setTextColor(getResources().getColor(R.color.black));
-                    _TextVE.setText(_Split[i]);
-                    _TextVE.setTag(i);
-                    _TextVE.setOnLongClickListener(new OnLongClickListener() {
+
+                    //段落和评论布局
+                    RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
+                    final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
+                    final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
+                    rl_comment.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                    TextView tv_praise_count = (TextView) rl_para.findViewById(R.id.tv_praise_count);
+                    RoundedImageView iv_user_icon = (RoundedImageView) rl_para.findViewById(R.id.iv_user_icon);
+                    ImageView iv_add_comment = (ImageView) rl_para.findViewById(R.id.iv_add_comment);
+                    iv_add_comment.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                    final TextView tv_comment_count = (TextView) rl_para.findViewById(R.id.tv_comment_count);
+                    tv_comment_count.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showPopupWindow(tv_comment_count);
+                        }
+                    });
+                    TextView tv_comment_content = (TextView) rl_para.findViewById(R.id.tv_comment_content);
+
+                    lstv_para_content.setFontSpacing(LetterSpacingTextView.NORMALBIG);
+                    lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
+                    lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    lstv_para_content.setTextColor(getResources().getColor(R.color.black));
+                    lstv_para_content.setText(_Split[i]);
+                    lstv_para_content.setTag(i);
+                    lstv_para_content.setOnLongClickListener(new OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
 
                             mNewsDeatailTitleLayout.setVisibility(View.GONE);
                             mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
-                            mNewsDetailEdittext.setText(_TextVE.getText());
+                            mNewsDetailEdittext.setText(lstv_para_content.getText());
                             EDIT_POSITION = DETAIL;
-                            tag = (int) _TextVE.getTag();
+                            tag = (int) lstv_para_content.getTag();
 
                             return true;
                         }
                     });
-                    LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    _LayoutParams.setMargins(0, 0, 0, DensityUtil.dip2px(mContext, 22));
-                    _TextVE.setLayoutParams(_LayoutParams);
-                    if (i >= 2 && _StringBuilder.append(_Split[i]).length() > 200) {
-                        _TextVE.setVisibility(GONE);
+
+                    if (points != null && points.size() > 0 && !add_flag) {
+                        for (int a = 0; a < points.size(); a++) {
+                            NewsDetail.Point point = points.get(a);
+
+                            if (i == Integer.parseInt(point.paragraphIndex)) {
+
+                                tv_praise_count.setText(point.up);
+                                tv_comment_count.setText(point.comments_count);
+                                if ("text_paragraph".equals(point.type)) {
+                                    tv_comment_content.setText(point.srcText);
+                                }
+
+                                add_flag = true;
+
+                            } else {
+                                rl_comment.setVisibility(View.GONE);
+                            }
+                        }
+                    } else {
+                        rl_comment.setVisibility(View.GONE);
+                    }
+
+                    if (_StringBuilder.append(_Split[i]).length() > 200) {
+                        rl_para.setVisibility(GONE);
                         if (_CurrentPos == 0) {
                             _CurrentPos = i;
                         }
                     }
-                    mNewsDetailHeaderContentParent.addView(_TextVE);
+                    mNewsDetailHeaderContentParent.addView(rl_para);
                 }
-                if (_CurrentPos < 2) {
+
+
+                if (_CurrentPos < 1) {
                     mNewsDetailHeaderPulldown.setVisibility(GONE);
                 }
             }
@@ -349,10 +413,9 @@ public class NewsDetailHeaderView extends FrameLayout {
                 mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
 
 
-//            设置编辑后的新闻
+            //设置编辑后的新闻
             int versionCode = DeviceInfoUtil.getApkVersionCode(mContext);
             if (versionCode > 7) {
-                ArrayList<NewsDetail.Point> points = pNewsDetail.point;
                 if (points != null && points.size() > 0) {
                     for (int i = 0; i < points.size(); i++) {
                         NewsDetail.Point point = points.get(i);
@@ -392,6 +455,34 @@ public class NewsDetailHeaderView extends FrameLayout {
             }
         }
 
+    }
+
+    private void showPopupWindow(TextView rl_comment) {
+
+        popupWindowView = View.inflate(mContext, R.layout.rl_popupwindow, null);
+        ListView lv_comments = (ListView) popupWindowView.findViewById(R.id.lv_comments);
+        lv_comments.setAdapter(adapter);
+
+        popupWindow = new PopupWindow(popupWindowView, LayoutParams.FILL_PARENT, 1000, true);
+        //必须要有这句否则弹出popupWindow后监听不到Back键
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.showAtLocation(rl_comment, Gravity.NO_GRAVITY, 0, 300);
+        //让popupWindow获得焦点
+        popupWindow.setFocusable(true);
+        //设置动画
+        popupWindow.setAnimationStyle(R.style.popupWindowAnimation);
+        popupWindow.update();
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            popupWindow.dismiss();
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     //修改新闻内容
@@ -602,30 +693,34 @@ public class NewsDetailHeaderView extends FrameLayout {
         }
     }
 
+    private class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return points.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+
+            return null;
+        }
+    }
+
     private List<HashMap<String, String>> composeMatch(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
-//                        for (int i = 0; i < 10000; i++) {
         getMatched(resultList, minor, "2-3-2");
-//                                for (int j = 0; j < 10000; j++) {
-//
-//                                    if (get2Matched(resultList, minor, j) != -1) {
-//                                        for (int l = 0; l < 10000; l++) {
-//                                            if (get3Matched(resultList, minor, l) != -1) {
-//                                return resultList;
-//                                            }else{
-//                                                break;
-//                                            }
-//
-//                                        }
-//                                    }else{
-//                                        break;
-//                                    }
-//                                }
-//                            } else {
-//                                break;
-//                            }
-//
-//                        }
-        Log.i("","--------------- "+resultList);
+        Log.i("", "--------------- " + resultList);
         return resultList;
     }
 
@@ -701,8 +796,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                     if (Math.abs(scaledh1 - scaledh2) < stepcnst) {
                         if ((scaledh2 < scaledh1 && scaledh2 * ratio >= scaledh1) || (scaledh1 < scaledh2 && scaledh1 * ratio >= scaledh2)) {
 
-                            int scaledh = Math.max(scaledh2,scaledh1);
-                                m2 = m;
+                            int scaledh = Math.max(scaledh2, scaledh1);
+                            m2 = m;
                             m2.put("units", "2");
                             m2.put("position", "2");
                             m2.put("scaledh", "" + scaledh);
@@ -711,11 +806,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                             m1.put("position", "1");
                             m1.put("scaledh", "" + scaledh);
                             m1.put("scaledw", "" + scaledw1);
-                                maps.add(m1);
-                                maps.add(m2);
-                                source.remove(m2);
-                                source.remove(m1);
-                                return getMatched(maps,source,sq)+(th++);
+                            maps.add(m1);
+                            maps.add(m2);
+                            source.remove(m2);
+                            source.remove(m1);
+                            return getMatched(maps, source, sq) + (th++);
 
                         } else {
                             scaledh1 = 0;
@@ -762,8 +857,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                 int scaledh2 = 0;
 
 
-                    scaledh1 = hhead * scaledw1 / whead;
-                    m1 = first;
+                scaledh1 = hhead * scaledw1 / whead;
+                m1 = first;
                 List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
                 HashMap<String, String> m2 = null;
                 float ratio2 = 1f;
@@ -789,8 +884,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                         int scaledh3 = 0;
 
 
-                            scaledh2 = h * scaledw2 / w;
-                            m2 = m;
+                        scaledh2 = h * scaledw2 / w;
+                        m2 = m;
 
                         HashMap<String, String> m3 = null;
                         for (HashMap<String, String> mm : list2) {
@@ -808,29 +903,29 @@ public class NewsDetailHeaderView extends FrameLayout {
                                 if (((scaledh2 - scaledh1 < 0 && scaledh2 * ratio1 >= scaledh1) || (scaledh1 - scaledh2 < 0 && scaledh1 * ratio1 >= scaledh2)) && ((scaledh2 - scaledh3 < 0 && scaledh2 * ratio1 >= scaledh3) || (scaledh3 - scaledh2 < 0 && scaledh3 * ratio1 >= scaledh2))) {
 
 
-                                    int scaledh = Math.max(Math.max(scaledh2,scaledh1),Math.max(scaledh2,scaledh3));
-                                        m3 = mm;
-                                        m3.put("units", "3");
-                                        m3.put("position", "3");
-                                        m3.put("scaledh", "" + scaledh);
-                                        m3.put("scaledw", "" + scaledw3);
-                                        m2.put("units", "3");
-                                        m2.put("position", "2");
-                                        m2.put("scaledh", "" + scaledh);
-                                        m2.put("scaledw", "" + scaledw2);
-                                        m1.put("units", "3");
-                                        m1.put("position", "1");
-                                        m1.put("scaledh", "" + scaledh);
-                                        m1.put("scaledw", "" + scaledw1);
-                                        maps.add(m1);
-                                        maps.add(m2);
-                                        maps.add(m3);
-                                        source.remove(m3);
-                                        source.remove(m2);
-                                        source.remove(m1);
+                                    int scaledh = Math.max(Math.max(scaledh2, scaledh1), Math.max(scaledh2, scaledh3));
+                                    m3 = mm;
+                                    m3.put("units", "3");
+                                    m3.put("position", "3");
+                                    m3.put("scaledh", "" + scaledh);
+                                    m3.put("scaledw", "" + scaledw3);
+                                    m2.put("units", "3");
+                                    m2.put("position", "2");
+                                    m2.put("scaledh", "" + scaledh);
+                                    m2.put("scaledw", "" + scaledw2);
+                                    m1.put("units", "3");
+                                    m1.put("position", "1");
+                                    m1.put("scaledh", "" + scaledh);
+                                    m1.put("scaledw", "" + scaledw1);
+                                    maps.add(m1);
+                                    maps.add(m2);
+                                    maps.add(m3);
+                                    source.remove(m3);
+                                    source.remove(m2);
+                                    source.remove(m1);
 
-                                        return getMatched(maps,source,sq)+th++;
-                                   } else {
+                                    return getMatched(maps, source, sq) + th++;
+                                } else {
                                     scaledh1 = 0;
                                     m1 = null;
                                     scaledh2 = 0;
@@ -848,4 +943,5 @@ public class NewsDetailHeaderView extends FrameLayout {
         }
         return -1;
     }
+
 }
