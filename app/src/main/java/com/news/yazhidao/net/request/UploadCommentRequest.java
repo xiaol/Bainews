@@ -71,14 +71,13 @@ public class UploadCommentRequest {
         request.setCallback(new StringCallback() {
             @Override
             public void success(String result) {
-                Logger.e("jiang","up----"+result);
-                if(result.contains("200")){
+                if(result != null && result.contains("200")){
                     if(listener!=null){
                         listener.success();
                     }
                 }else{
                     if(listener!=null){
-                        listener.success();
+                        listener.failed();
                     }
                 }
             }

@@ -312,6 +312,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                             CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
                             window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                                     | Gravity.CENTER, 0, 0);
+
                         }
                     });
                     TextView tv_comment_content = (TextView) rl_para.findViewById(R.id.tv_comment_content);
