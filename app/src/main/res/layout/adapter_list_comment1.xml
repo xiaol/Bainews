@@ -11,8 +11,7 @@
         app:border_color="@color/black"
         app:border_width="1dp"
         app:corner_radius="20dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/ic_comment_para" />
+        android:layout_margin="10dp" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_user_name"

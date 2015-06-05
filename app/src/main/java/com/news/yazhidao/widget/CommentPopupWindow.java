@@ -240,6 +240,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 }
                 holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
+                holder.ivHeadIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
@@ -249,6 +250,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             }
             if (point.userIcon != null && !point.userIcon.equals(""))
                 ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
+            else
+                holder.ivHeadIcon.setBackgroundResource(R.drawable.ic_comment_para);
             holder.tvName.setText(point.userName);
             holder.tvPraiseCount.setText(point.up);
             holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
