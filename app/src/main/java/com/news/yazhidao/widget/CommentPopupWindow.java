@@ -22,10 +22,10 @@ import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
 import com.news.yazhidao.widget.InputBar.InputBarType;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -235,14 +235,11 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final Holder holder;
-            NewsDetail.Point point = marrPoint.get(position);
-            Logger.i("jigang","speech----"+point.desText+","+point.srcText);
             if (convertView == null) {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.mSpeechView = (SpeechView) convertView.findViewById(R.id.mSpeechView);
-
                 holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.ivHeadIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
@@ -252,8 +249,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
+                ImageManager.getInstance(mContext).DisplayImage(point.userIcon,holder.ivHeadIcon,false);
             else
                 holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);
