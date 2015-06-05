@@ -28,7 +28,7 @@
         android:layout_width="250dp"
         android:layout_toRightOf="@+id/iv_user_icon"
         android:layout_below="@+id/tv_user_name"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
         android:maxLines="2"
@@ -36,21 +36,41 @@
         android:textSize="14sp"
         android:textColor="#9c9c9c" />
 
-    <ImageView
-        android:id="@+id/iv_praise"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+    <RelativeLayout
+        android:id="@+id/rl_praise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/bg_normal_praise"
-        android:layout_alignParentRight="true" />
+        android:layout_marginLeft="10dp">
+
+        <ImageView
+            android:id="@+id/iv_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/bg_normal_praise" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_praise_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textSize="12sp"
+            android:textColor="@color/red"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/iv_praise" />
+    </RelativeLayout>
+
 
     <com.news.yazhidao.widget.TextViewExtend
         android:layout_width="1dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:background="#9c9c9c"
-        android:layout_toLeftOf="@+id/iv_praise"
+        android:layout_alignTop="@+id/rl_praise"
+        android:layout_alignBottom="@+id/rl_praise"
+        android:layout_toLeftOf="@+id/rl_praise"
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true" />
 

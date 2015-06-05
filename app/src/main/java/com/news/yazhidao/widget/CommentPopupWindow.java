@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
         mlvComment.setAdapter(mCommentAdapter);
+        mlvComment.setVisibility(View.GONE);
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         //设置SelectPicPopupWindow的View
@@ -118,7 +120,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     @Override
     public void submitThisMessage(InputBarType argType, String argContent) {
-        mrlRecord.setVisibility(View.INVISIBLE);
+//        mrlRecord.setVisibility(View.INVISIBLE);
+        Log.i("tag",argContent);
     }
 
     @Override
@@ -224,25 +227,34 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder = new Holder();
                 if (point.type.equals("text_paragraph")) {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
-                    holder.Content = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
+                    holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 } else {
                     convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
                 }
                 holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
+                holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
+            if (point.userIcon != null && !point.userIcon.equals(""))
+                ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
             holder.tvName.setText(point.userName);
+            holder.tvPraiseCount.setText(point.up);
             holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             if (point.type.equals("text_paragraph")) {
-                holder.Content.setText(point.srcText);
+                holder.tvContent.setText(point.srcText);
             } else {
 
             }
+            holder.ivPraise.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             return convertView;
         }
     }
@@ -251,7 +263,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     class Holder {
         RoundedImageView ivHeadIcon;
         TextViewExtend tvName;
-        TextViewExtend Content;
+        TextViewExtend tvContent;
+        TextViewExtend tvPraiseCount;
         ImageView ivPraise;
     }
 }

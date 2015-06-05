@@ -3,11 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="@color/new_light_gray"
-    android:layout_alignParentBottom="true"
     android:id="@+id/gray_bg"
     android:focusable="true"
-    android:clipChildren="false"
-    android:clipToPadding="false"
     android:focusableInTouchMode="true">
 
     <com.news.yazhidao.widget.TextViewExtend

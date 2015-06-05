@@ -345,9 +345,9 @@ public class InputBar extends FrameLayout {
     }
 
     private void removeTextFieldFirstRespond() {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        mTextField.setCursorVisible(false);//失去光标
-        imm.hideSoftInputFromWindow(this.getWindowToken(), 0);
+        InputMethodManager inputManager = (InputMethodManager)
+                mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(mRootView.getWindowToken(), 0);
         mTextField.clearFocus();
         mKeypadIsShown = false;
     }
@@ -358,7 +358,11 @@ public class InputBar extends FrameLayout {
             ToastUtil.toastLong("还没写呢");
             return;
         }
-        removeTextFieldFirstRespond();
+        InputMethodManager inputManager = (InputMethodManager)
+                mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(mRootView.getWindowToken(), 0);
+        mTextField.clearFocus();
+        mKeypadIsShown = false;
 //        String message = mTextField.getText().toString();
         if (mDelegate != null)
             mDelegate.submitThisMessage(m_eCurType, strPureText);
