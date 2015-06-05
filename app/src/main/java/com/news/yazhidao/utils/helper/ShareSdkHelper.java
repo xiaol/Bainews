@@ -79,6 +79,7 @@ public class ShareSdkHelper {
                                 @Override
                                 public void run() {
                                     mUserLoginPopupStateListener.close();
+
                                     mUserLoginListener.userLogin(platform.getName(), platform.getDb());
                                 }
                             });
