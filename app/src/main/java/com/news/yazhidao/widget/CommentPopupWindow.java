@@ -76,7 +76,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mInputBar = (InputBar) mMenuView.findViewById(R.id.input_bar_view);
         mInputBar.setActivityAndHandler(m_pContext, mHandler);
         mInputBar.setDelegate(this);
-        mInputBar.setFocusable(true);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
         mlvComment.setAdapter(mCommentAdapter);

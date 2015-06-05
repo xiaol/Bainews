@@ -56,6 +56,7 @@ public class UploadCommentRequest {
         User user = SharedPreManager.getUser(mContext);
         pairs.add(new BasicNameValuePair("sourceUrl",sourceUrl));
         pairs.add(new BasicNameValuePair("srcText",comment));
+        pairs.add(new BasicNameValuePair("desText",""));
         pairs.add(new BasicNameValuePair("paragraphIndex",paragraphIndex));
         pairs.add(new BasicNameValuePair("type",type));
         pairs.add(new BasicNameValuePair("uuid",user.getUuid()));
@@ -68,13 +69,13 @@ public class UploadCommentRequest {
         request.setCallback(new StringCallback() {
             @Override
             public void success(String result) {
-                if(result.contains("200")){
+                if(result != null && result.contains("200")){
                     if(listener!=null){
                         listener.success();
                     }
                 }else{
                     if(listener!=null){
-                        listener.success();
+                        listener.failed();
                     }
                 }
             }
