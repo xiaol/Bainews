@@ -25,7 +25,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class ViewWall {
     public static final int STYLE_7_232 = R.layout.wall_7_232;
-    public static final int STYLE_9 = R.layout.wall_9_grid;
+    public static final int STYLE_9 = R.layout.wall_9;
     public int layoutid;
 
     /**
@@ -87,31 +87,29 @@ public class ViewWall {
         ImageLoader.getInstance().init(config);
 
 
-        int i;
+        int i;int bal = 0;
         for (i = 0; i < urls.size(); i++) {
 
             if (ids.length >= i + 1) {
-                View picwallview = ((ImageView) view.findViewById(ids[i]));
+                View picwallview = ((ImageView) view.findViewById(ids[i+bal]));
                 if (picwallview != null) {
                     picwallview.setVisibility(View.VISIBLE);
                 } else {
-
+                    i--;
+                    bal++;
                     continue;
                 }
 
-            } else {
-                if (i <= 5) {
-
-                    view.findViewById(R.id.row3).setVisibility(View.GONE);
-                }
-                if (i <= 2) {
-                    view.findViewById(R.id.row2).setVisibility(View.GONE);
-                }
-                break;
+            }
+            if(urls.get(i).containsKey("scaledh")) {
+                ((View) ((ImageView) view.findViewById(ids[i + bal])).getParent()).getLayoutParams().height = Integer.parseInt(urls.get(i).get("scaledh"));
+                ((ImageView) view.findViewById(ids[i + bal])).getLayoutParams().height = Integer.parseInt(urls.get(i).get("scaledh"));
+                ((ImageView) view.findViewById(ids[i + bal])).getLayoutParams().width = Integer.parseInt(urls.get(i).get("scaledw"));
+                ((ImageView) view.findViewById(ids[i + bal])).invalidate();
             }
             final int j = i;
             ImageLoader.getInstance().displayImage(urls.get(i).get("img"),
-                    ((ImageView) view.findViewById(ids[i])),
+                    ((ImageView) view.findViewById(ids[i+bal])),
                     new ImageLoadingListener() {
 
                         @Override
@@ -148,7 +146,7 @@ public class ViewWall {
                         }
                     });
 
-            ((ImageView) view.findViewById(ids[i]))
+            ((ImageView) view.findViewById(ids[i+bal]))
                     .setOnClickListener(new OnClickListener() {
 
                         @Override
@@ -210,11 +208,11 @@ public class ViewWall {
 
 
         }
-        if (i - 1 <= 5) {
+        if (i - 1 <= 3) {
 
             view.findViewById(R.id.row3).setVisibility(View.GONE);
         }
-        if (i - 1 <= 2) {
+        if (i - 1 <= 1) {
             view.findViewById(R.id.row2).setVisibility(View.GONE);
         }
     }

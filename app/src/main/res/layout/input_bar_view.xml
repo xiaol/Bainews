@@ -26,7 +26,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:text="发送"
-        android:textColor="@color/new_yellow"
+        android:textColor="@color/white"
         android:gravity="center"
         android:textSize="@dimen/textsize_twenty"
         android:layout_margin="@dimen/common_padding_five" />
@@ -39,7 +39,7 @@
         android:layout_toRightOf="@+id/switch_button"
         android:text="按住开始录音"
         android:id="@+id/record_button"
-        android:textColor="@color/new_yellow"
+        android:textColor="@color/white"
         android:background="@drawable/comment_button_bg"
         android:gravity="center"
         android:textSize="@dimen/textsize_twelve"

@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
@@ -60,6 +59,8 @@ public class HomeAty extends BaseActivity {
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(pager);
 
+        GlobalParams.tabs = tabs;
+
         final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
@@ -95,7 +96,7 @@ public class HomeAty extends BaseActivity {
             mLastPressedBackKeyTime = pressedBackKeyTime;
         }
 
-        return true;
+        return super.onKeyDown(keyCode,event);
     }
 
     private void changeColor(int newColor) {

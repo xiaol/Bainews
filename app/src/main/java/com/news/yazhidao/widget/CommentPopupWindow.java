@@ -16,11 +16,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.TimeFeed;
+import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
 import com.news.yazhidao.widget.InputBar.InputBarType;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -47,10 +48,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private double mRecordVolume;// 麦克风获取的音量值
     private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
     private ImageView mivRecord;
+    private ArrayList<NewsDetail.Point> marrPoints;
 
-    public CommentPopupWindow(Activity context) {
+    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points) {
         super(context);
         m_pContext = context;
+        marrPoints = points;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_comment, null);
@@ -74,6 +77,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
         mlvComment.setAdapter(mCommentAdapter);
+        mCommentAdapter.setData(marrPoints);
+        mCommentAdapter.notifyDataSetChanged();
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -185,20 +190,20 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
-        ArrayList<String> marrStrHistoryDate;
+        ArrayList<NewsDetail.Point> marrPoint;
 
         DateAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(TimeFeed timeFeed) {
-            if (timeFeed != null)
-                marrStrHistoryDate = timeFeed.getHistory_date();
+        public void setData(ArrayList<NewsDetail.Point> arrPoint) {
+            if (arrPoint != null)
+                marrPoint = arrPoint;
         }
 
         @Override
         public int getCount() {
-            return marrStrHistoryDate == null ? 0 : marrStrHistoryDate.size();
+            return marrPoint == null ? 0 : marrPoint.size();
         }
 
         @Override
@@ -214,18 +219,29 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             final Holder holder;
+            NewsDetail.Point point = marrPoint.get(position);
             if (convertView == null) {
                 holder = new Holder();
-//                if (Integer.valueOf(mCurrentTimeFeed.getNext_update_type()) == 0)
-//                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date1, null, false);
-//                else
-//                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
-//                holder.tvDate = (TextViewExtend) convertView.findViewById(R.id.tv_date);
-//                holder.ivMorning = (ImageView) convertView.findViewById(R.id.iv_date_morning);
-//                holder.ivNight = (ImageView) convertView.findViewById(R.id.iv_date_night);
-//                convertView.setTag(holder);
+                if (point.type.equals("text_paragraph")) {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
+                    holder.Content = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
+                } else {
+                    convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_date2, null, false);
+                }
+                holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
+                holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
+                holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
+                convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
+            }
+            ImageLoader.getInstance().displayImage(point.userIcon, holder.ivHeadIcon);
+            holder.tvName.setText(point.userName);
+            holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
+            if (point.type.equals("text_paragraph")) {
+                holder.Content.setText(point.srcText);
+            } else {
+
             }
             return convertView;
         }
@@ -233,8 +249,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
 
     class Holder {
-        TextViewExtend tvDate;
-        ImageView ivMorning;
-        ImageView ivNight;
+        RoundedImageView ivHeadIcon;
+        TextViewExtend tvName;
+        TextViewExtend Content;
+        ImageView ivPraise;
     }
 }

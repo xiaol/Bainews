@@ -1,10 +1,13 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,6 +40,8 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
+import com.news.yazhidao.widget.imagewall.BitmapUtil;
+import com.news.yazhidao.widget.imagewall.ViewWall;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -44,6 +49,12 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import app.base.task.BackRunnable;
+import app.base.task.CallbackRunnable;
+import app.base.task.Compt;
 
 
 public class NewsDetailAty extends SwipeBackActivity {
@@ -76,7 +87,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
-        mSource =getIntent().getStringExtra(NewsFeedFragment.KEY_NEWS_SOURCE);
+        mSource = getIntent().getStringExtra(NewsFeedFragment.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
 
@@ -101,8 +112,8 @@ public class NewsDetailAty extends SwipeBackActivity {
         _Request.setCallback(new JsonCallback<NewsDetail>() {
 
             @Override
-            public void success(NewsDetail result) {
-                if(result != null) {
+            public void success(final NewsDetail result) {
+                if (result != null) {
                     headerView.setDetailData(result, new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                         @Override
                         public void onclickPullUp(int height) {
@@ -115,7 +126,10 @@ public class NewsDetailAty extends SwipeBackActivity {
                     if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
                         msgvNewsDetail.setSelection(1);
                     }
-                }else{
+
+                } else
+
+                {
                     ToastUtil.toastShort("新闻的内容为空，无法打开");
                     NewsDetailAty.this.finish();
                 }
@@ -126,14 +140,26 @@ public class NewsDetailAty extends SwipeBackActivity {
 
             }
 
+
+
             @Override
             public void failed(MyAppException exception) {
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
             }
-        }.setReturnType(new TypeToken<NewsDetail>() {
-        }.getType()));
+        }
+
+                .
+
+                        setReturnType(new TypeToken<NewsDetail>() {
+                                }
+
+                                        .
+
+                                                getType()
+
+                        ));
         _Request.execute();
     }
 
@@ -206,8 +232,8 @@ public class NewsDetailAty extends SwipeBackActivity {
     public void finish() {
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if(NewsFeedFragment.VALUE_NEWS_NOTIFICATION.equals(mSource)){
-            Intent intent= new Intent(this,HomeAty.class);
+        if (NewsFeedFragment.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+            Intent intent = new Intent(this, HomeAty.class);
             startActivity(intent);
         }
     }

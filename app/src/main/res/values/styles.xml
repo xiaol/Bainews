@@ -80,4 +80,9 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <style name="popupWindowAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/enter</item>
+        <item name="android:windowExitAnimation">@anim/exit</item>
+    </style>
 </resources>
