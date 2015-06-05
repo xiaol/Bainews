@@ -20,7 +20,9 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.AliYunOssManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
 import com.news.yazhidao.widget.InputBar.InputBarType;
@@ -123,7 +125,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     public void submitThisMessage(InputBarType argType, String argContent) {
         mrlRecord.setVisibility(View.INVISIBLE);
         NewsDetail.Point point = marrPoints.get(0);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, point.type, new UploadCommentListener() {
+        String type=UploadCommentRequest.TEXT_PARAGRAPH;
+        if(argType==InputBarType.eRecord){
+            type=UploadCommentRequest.SPEECH_PARAGRAPH;
+        }
+        Logger.i("jigang",type+"----url=="+argContent);
+        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, new UploadCommentListener() {
             @Override
             public void success() {
                 Log.i("tag", "111");

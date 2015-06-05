@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,6 +23,8 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.pages.NewsDetailAty;
 import com.news.yazhidao.utils.AMRAudioRecorder;
+import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LoginPopupWindow;
@@ -130,6 +131,7 @@ public class InputBar extends FrameLayout {
         mRecordButton.setOnTouchListener(mRecordTouchEvent);
         mTextField.setOnEditorActionListener(mTextFieldListener);
         mTextField.setOnFocusChangeListener(mTextFieldFocusChangeListener);
+        this.mFileName=System.currentTimeMillis()+"";
     }
 
     public void startReply() {
@@ -284,7 +286,7 @@ public class InputBar extends FrameLayout {
             mRecorder.stopRecorder();
             mRecorder = null;
         }
-        mRecorder = new AMRAudioRecorder(mActivity, mFileName, "/YuYan/Amr/");
+        mRecorder = new AMRAudioRecorder(mActivity, mFileName, null);
         mRecorder.startRecorder();
 
         if (mDelegate != null)
@@ -308,7 +310,8 @@ public class InputBar extends FrameLayout {
 
         mRecordState = RECORD_ED;
 
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "YuYan" + File.separator + "Amr" + File.separator + mFileName + ".amr";
+        String filePath = FileUtils.getSaveDir(mContext)  + File.separator + mFileName + ".amr";
+        Logger.i("jigang","path==="+filePath);
         MediaPlayer mp = MediaPlayer.create(mActivity, Uri.parse(filePath));
         int duration = mp.getDuration();
         mp.release();

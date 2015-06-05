@@ -8,6 +8,7 @@ import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.AliYunOssManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
@@ -52,10 +53,12 @@ public class UploadCommentRequest {
         if(SPEECH_PARAGRAPH.equals(type)||SPEECH_DOC.equals(type)){
            comment= AliYunOssManager.getInstance(mContext).uploadSpeechFile(comment);
         }
+        Logger.i("jigang","-+++--"+comment);
         //此处默认用户是已经登录过的
         User user = SharedPreManager.getUser(mContext);
         pairs.add(new BasicNameValuePair("sourceUrl",sourceUrl));
         pairs.add(new BasicNameValuePair("srcText",comment));
+        pairs.add(new BasicNameValuePair("desText",""));
         pairs.add(new BasicNameValuePair("paragraphIndex",paragraphIndex));
         pairs.add(new BasicNameValuePair("type",type));
         pairs.add(new BasicNameValuePair("uuid",user.getUuid()));
@@ -68,6 +71,7 @@ public class UploadCommentRequest {
         request.setCallback(new StringCallback() {
             @Override
             public void success(String result) {
+                Logger.e("jiang","up----"+result);
                 if(result.contains("200")){
                     if(listener!=null){
                         listener.success();
