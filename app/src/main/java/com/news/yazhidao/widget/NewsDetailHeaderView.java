@@ -42,6 +42,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.imagewall.BitmapUtil;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
@@ -114,6 +115,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
     private MyAdapter adapter;
+    private String my_desText;
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -246,7 +248,10 @@ public class NewsDetailHeaderView extends FrameLayout {
                         case DETAIL:
                             type = DETAIL;
                             if (tag <= mNewsDetailHeaderContentParent.getChildCount()) {
-                                LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(tag);
+
+                                RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(tag);
+                                LetterSpacingTextView tv = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
+
                                 srcText = _Split[tag];
                                 if (tv != null) {
                                     tv.setText(mNewsDetailEdittext.getText());
@@ -292,7 +297,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                 _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder = new StringBuilder();
                 for (int i = 0; i < _Split.length; i++) {
-
+                    add_flag = false;
                     //段落和评论布局
                     RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
                     final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
@@ -304,7 +309,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                     });
                     TextView tv_praise_count = (TextView) rl_para.findViewById(R.id.tv_praise_count);
                     RoundedImageView iv_user_icon = (RoundedImageView) rl_para.findViewById(R.id.iv_user_icon);
-                    ImageView iv_add_comment = (ImageView) rl_para.findViewById(R.id.iv_add_comment);
+                    final ImageView iv_add_comment = (ImageView) rl_para.findViewById(R.id.iv_add_comment);
                     iv_add_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -339,22 +344,28 @@ public class NewsDetailHeaderView extends FrameLayout {
                         }
                     });
 
-                    if (points != null && points.size() > 0 && !add_flag) {
+                    if (points != null && points.size() > 0) {
                         for (int a = 0; a < points.size(); a++) {
-                            NewsDetail.Point point = points.get(a);
+                            if(!add_flag) {
+                                NewsDetail.Point point = points.get(a);
 
-                            if (i == Integer.parseInt(point.paragraphIndex)) {
+                                if (i == Integer.parseInt(point.paragraphIndex)) {
 
-                                tv_praise_count.setText(point.up);
-                                tv_comment_count.setText(point.comments_count);
-                                if ("text_paragraph".equals(point.type)) {
-                                    tv_comment_content.setText(point.srcText);
+                                    tv_praise_count.setText(point.up);
+                                    tv_comment_count.setText(point.comments_count);
+                                    if ("text_paragraph".equals(point.type)) {
+                                        tv_comment_content.setText(point.srcText);
+                                    }
+
+                                    if(!"".equals(point.userIcon)){
+                                        ImageLoaderHelper.dispalyImage(mContext,point.userIcon,iv_add_comment);
+                                    }
+
+                                    add_flag = true;
+
+                                } else {
+                                    rl_comment.setVisibility(View.GONE);
                                 }
-
-                                add_flag = true;
-
-                            } else {
-                                rl_comment.setVisibility(View.GONE);
                             }
                         }
                     } else {
@@ -435,14 +446,16 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         mNewsDetailHeaderContentParent.removeViewAt(index);
 //                                        v.setVisibility(View.GONE);
                                     } else {
-                                        LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(index);
+                                        RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
+                                        LetterSpacingTextView tv = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
                                         tv.setText("");
                                         tv.setVisibility(View.GONE);
                                     }
                                 }
                             } else {
                                 if (point.paragraphIndex != null && !"".equals(point.paragraphIndex)) {
-                                    TextView tv_para = (TextView) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
+                                    RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
+                                    LetterSpacingTextView tv_para = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
                                     if (tv_para != null) {
                                         tv_para.setText(point.desText);
                                     }

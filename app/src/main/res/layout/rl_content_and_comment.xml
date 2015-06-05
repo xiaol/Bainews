@@ -35,7 +35,7 @@
                 android:layout_width="51dp"
                 android:layout_height="25dp"
                 android:paddingLeft="20dp"
-                android:paddingTop="4dp"
+                android:paddingTop="2dp"
                 android:textColor="@color/red"
                 android:textSize="10sp"
                 android:background="@drawable/bg_add_praise"
@@ -63,7 +63,7 @@
                 android:id="@+id/iv_add_comment"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
-                android:background="@drawable/add_comment"
+                android:background="@drawable/bg_selector_add_comment"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 />
@@ -89,7 +89,6 @@
                 android:layout_below="@id/iv_add_comment"
                 android:textSize="15sp"
                 android:textColor="#32bfcd"
-                android:text="烦恼金额快呢娇女奇偶v那今晚女警为女噢v另外V领 而我方农网女我"
                 />
 
 
