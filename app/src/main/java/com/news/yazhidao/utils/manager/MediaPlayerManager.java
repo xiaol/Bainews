@@ -13,6 +13,7 @@ public class MediaPlayerManager {
     private static MediaPlayer mMediaPlayer=new MediaPlayer();
     public static void setData(String path,MediaPlayer.OnCompletionListener listener){
         try {
+            mMediaPlayer.reset();
             mMediaPlayer.setDataSource(path);
             mMediaPlayer.prepare();
             if(listener!=null){

@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -22,18 +21,19 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.pages.NewsDetailAty;
+import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.utils.AMRAudioRecorder;
 import com.news.yazhidao.utils.FileUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.LoginPopupWindow;
+import com.news.yazhidao.widget.LoginModePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import cn.sharesdk.framework.PlatformDb;
 
 
 /**
@@ -190,8 +190,21 @@ public class InputBar extends FrameLayout {
                 case MotionEvent.ACTION_DOWN:
                     //登录
                     if (SharedPreManager.getUser(mContext) == null) {
-                        LoginPopupWindow window = new LoginPopupWindow(mContext);
-                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                        LoginPopupWindow window = new LoginPopupWindow(mContext);
+//                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                | Gravity.CENTER, 0, 0);
+                        final LoginModePopupWindow window = new LoginModePopupWindow(mContext, new UserLoginListener() {
+                            @Override
+                            public void userLogin(String platform, PlatformDb platformDb) {
+
+                            }
+
+                            @Override
+                            public void userLogout() {
+
+                            }
+                        }, null);
+                        window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
                                 | Gravity.CENTER, 0, 0);
                         removeTextFieldFirstRespond();
                         return false;
@@ -251,8 +264,18 @@ public class InputBar extends FrameLayout {
             if (hasFocus) {
                 //登录
                 if (SharedPreManager.getUser(mContext) == null) {
-                    LoginPopupWindow window = new LoginPopupWindow(mContext);
-                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                    final LoginModePopupWindow window = new LoginModePopupWindow(mContext, new UserLoginListener() {
+                        @Override
+                        public void userLogin(String platform, PlatformDb platformDb) {
+
+                        }
+
+                        @Override
+                        public void userLogout() {
+
+                        }
+                    }, null);
+                    window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
                             | Gravity.CENTER, 0, 0);
                     removeTextFieldFirstRespond();
                     return;
