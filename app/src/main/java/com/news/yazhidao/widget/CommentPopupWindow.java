@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.listener.UploadCommentListener;
+import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
@@ -74,11 +76,10 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mInputBar = (InputBar) mMenuView.findViewById(R.id.input_bar_view);
         mInputBar.setActivityAndHandler(m_pContext, mHandler);
         mInputBar.setDelegate(this);
-
+        mInputBar.setFocusable(true);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
         mlvComment.setAdapter(mCommentAdapter);
-        mlvComment.setVisibility(View.GONE);
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         //设置SelectPicPopupWindow的View
@@ -120,8 +121,20 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     @Override
     public void submitThisMessage(InputBarType argType, String argContent) {
-//        mrlRecord.setVisibility(View.INVISIBLE);
-        Log.i("tag",argContent);
+        mrlRecord.setVisibility(View.INVISIBLE);
+        NewsDetail.Point point = marrPoints.get(0);
+        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, point.type, new UploadCommentListener() {
+            @Override
+            public void success() {
+                Log.i("tag", "111");
+            }
+
+            @Override
+            public void failed() {
+                Log.i("tag", "222");
+            }
+        });
+        Log.i("tag", argContent);
     }
 
     @Override
@@ -153,11 +166,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         switch (msg.what) {
             case InputBar.RECORD_NO:// 不在录音
                 if (mInputBar.getRecordState() == InputBar.RECORD_ING) {
-                    // 停止动画效果
-                    // stopRecordLightAnimation();
-                    // 修改录音状态
-//                        mRecordState = RECORD_ED;
-
                     // 停止录音
                     mInputBar.finishRecord();
                     // 初始化录音音量

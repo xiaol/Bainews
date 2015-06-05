@@ -10,18 +10,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -108,11 +104,8 @@ public class NewsDetailHeaderView extends FrameLayout {
     //当前文章隐藏的位置
     private int _CurrentPos = 0;
 
-    private View popupWindowView;
-    private PopupWindow popupWindow;
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
-    private MyAdapter adapter;
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -458,16 +451,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            popupWindow.dismiss();
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
     //修改新闻内容
     private void modifyNewsContent(NewsDetail pNewsDetail, int type, String srcText, String desText, int edit_position) {
         String url = HttpConstant.URL_GET_NEWS_CONTENT;
@@ -673,31 +656,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
         } else {
             mNewsDetailRelate.setVisibility(GONE);
-        }
-    }
-
-    private class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return points.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-
-            return null;
         }
     }
 

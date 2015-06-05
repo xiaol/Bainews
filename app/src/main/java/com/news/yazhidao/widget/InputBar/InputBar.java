@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,8 +22,11 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.pages.NewsDetailAty;
 import com.news.yazhidao.utils.AMRAudioRecorder;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.File;
@@ -170,7 +174,7 @@ public class InputBar extends FrameLayout {
                 mTextField.setVisibility(View.GONE);
                 InputMethodManager inputManager = (InputMethodManager)
                         mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(mRootView.getWindowToken(), 0);
+                inputManager.hideSoftInputFromWindow(InputBar.this.getWindowToken(), 0);
             }
         }
     };
@@ -182,12 +186,13 @@ public class InputBar extends FrameLayout {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     //登录
-//                    if (TSMyDataMgr.getInstance().IsLogedIn() == false) {
-//                        Intent intent1 = new Intent(AppConfigure.NOTIF_NEED_LOGIN);
-//                        mContext.sendBroadcast(intent1);
-//
-//                        return false;
-//                    }
+                    if (SharedPreManager.getUser(mContext) == null) {
+                        LoginPopupWindow window = new LoginPopupWindow(mContext);
+                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                                | Gravity.CENTER, 0, 0);
+                        removeTextFieldFirstRespond();
+                        return false;
+                    }
                     mfCurDuration = 0;
                     isLong = false;
                     startRecord();
@@ -242,12 +247,13 @@ public class InputBar extends FrameLayout {
         public void onFocusChange(View v, boolean hasFocus) {
             if (hasFocus) {
                 //登录
-//                if (TSMyDataMgr.getInstance().IsLogedIn() == false) {
-//                    Intent intent1 = new Intent(AppConfigure.NOTIF_NEED_LOGIN);
-//                    mContext.sendBroadcast(intent1);
-//                    removeTextFieldFirstRespond();
-//                    return;
-//                }
+                if (SharedPreManager.getUser(mContext) == null) {
+                    LoginPopupWindow window = new LoginPopupWindow(mContext);
+                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                            | Gravity.CENTER, 0, 0);
+                    removeTextFieldFirstRespond();
+                    return;
+                }
                 mKeypadIsShown = true;
                 mTextField.setCursorVisible(true);//显示光标
             }
@@ -347,7 +353,7 @@ public class InputBar extends FrameLayout {
     private void removeTextFieldFirstRespond() {
         InputMethodManager inputManager = (InputMethodManager)
                 mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(mRootView.getWindowToken(), 0);
+        inputManager.hideSoftInputFromWindow(this.getWindowToken(), 0);
         mTextField.clearFocus();
         mKeypadIsShown = false;
     }
@@ -358,11 +364,7 @@ public class InputBar extends FrameLayout {
             ToastUtil.toastLong("还没写呢");
             return;
         }
-        InputMethodManager inputManager = (InputMethodManager)
-                mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(mRootView.getWindowToken(), 0);
-        mTextField.clearFocus();
-        mKeypadIsShown = false;
+        removeTextFieldFirstRespond();
 //        String message = mTextField.getText().toString();
         if (mDelegate != null)
             mDelegate.submitThisMessage(m_eCurType, strPureText);
