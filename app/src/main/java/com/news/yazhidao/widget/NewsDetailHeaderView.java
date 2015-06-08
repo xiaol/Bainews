@@ -9,9 +9,9 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -31,13 +31,11 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.TextUtils;
-import com.news.yazhidao.pages.NewsDetailAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.imagewall.BitmapUtil;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
@@ -105,8 +103,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     //当前文章隐藏的位置
     private int _CurrentPos = 0;
 
-    private boolean add_flag = false;
-    private ArrayList<NewsDetail.Point> points;
+
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -157,8 +154,6 @@ public class NewsDetailHeaderView extends FrameLayout {
         MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
         MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
         mImageWall = (ImageWallView) mRootView.findViewById(R.id.mImageWall);
-
-
     }
 
     public void setContentViewHeight(int pHeight) {
@@ -186,9 +181,6 @@ public class NewsDetailHeaderView extends FrameLayout {
             } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
-
-            points = pNewsDetail.point;
-
             mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
             mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
@@ -238,10 +230,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                         case DETAIL:
                             type = DETAIL;
                             if (tag <= mNewsDetailHeaderContentParent.getChildCount()) {
-
-                                RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(tag);
-                                LetterSpacingTextView tv = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
-
+                                LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(tag);
                                 srcText = _Split[tag];
                                 if (tv != null) {
                                     tv.setText(mNewsDetailEdittext.getText());
@@ -287,99 +276,38 @@ public class NewsDetailHeaderView extends FrameLayout {
                 _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder = new StringBuilder();
                 for (int i = 0; i < _Split.length; i++) {
-                    add_flag = false;
-                    //段落和评论布局
-                    RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
-                    final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
-                    final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
-                    rl_comment.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
-                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                    | Gravity.CENTER, 0, 0);
-
-                        }
-                    });
-                    TextView tv_praise_count = (TextView) rl_para.findViewById(R.id.tv_praise_count);
-                    RoundedImageView iv_user_icon = (RoundedImageView) rl_para.findViewById(R.id.iv_user_icon);
-                    final ImageView iv_add_comment = (ImageView) rl_para.findViewById(R.id.iv_add_comment);
-                    iv_add_comment.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
-                    final TextView tv_comment_count = (TextView) rl_para.findViewById(R.id.tv_comment_count);
-                    tv_comment_count.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-
-                        }
-                    });
-                    TextView tv_comment_content = (TextView) rl_para.findViewById(R.id.tv_comment_content);
-
-                    lstv_para_content.setFontSpacing(LetterSpacingTextView.NORMALBIG);
-                    lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
-                    lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                    lstv_para_content.setTextColor(getResources().getColor(R.color.black));
-                    lstv_para_content.setText(_Split[i]);
-                    lstv_para_content.setTag(i);
-                    lstv_para_content.setOnLongClickListener(new OnLongClickListener() {
+                    final LetterSpacingTextView _TextVE = new LetterSpacingTextView(mContext);
+                    _TextVE.setFontSpacing(LetterSpacingTextView.NORMALBIG);
+                    _TextVE.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
+                    _TextVE.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    _TextVE.setTextColor(getResources().getColor(R.color.black));
+                    _TextVE.setText(_Split[i]);
+                    _TextVE.setTag(i);
+                    _TextVE.setOnLongClickListener(new OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
 
                             mNewsDeatailTitleLayout.setVisibility(View.GONE);
                             mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
-                            mNewsDetailEdittext.setText(lstv_para_content.getText());
+                            mNewsDetailEdittext.setText(_TextVE.getText());
                             EDIT_POSITION = DETAIL;
-                            tag = (int) lstv_para_content.getTag();
+                            tag = (int) _TextVE.getTag();
 
                             return true;
                         }
                     });
-
-                    if (points != null && points.size() > 0) {
-                        for (int a = 0; a < points.size(); a++) {
-                            if(!add_flag) {
-                                NewsDetail.Point point = points.get(a);
-
-                                if (i == Integer.parseInt(point.paragraphIndex)) {
-
-                                    tv_praise_count.setText(point.up);
-                                    tv_comment_count.setText(point.comments_count);
-                                    if ("text_paragraph".equals(point.type)) {
-                                        tv_comment_content.setText(point.srcText);
-                                    }
-
-                                    if(!"".equals(point.userIcon)){
-                                        ImageLoaderHelper.dispalyImage(mContext,point.userIcon,iv_add_comment);
-                                    }
-
-                                    add_flag = true;
-
-                                } else {
-                                    rl_comment.setVisibility(View.GONE);
-                                }
-                            }
-                        }
-                    } else {
-                        rl_comment.setVisibility(View.GONE);
-                    }
-
-                    if (_StringBuilder.append(_Split[i]).length() > 200) {
-                        rl_para.setVisibility(GONE);
+                    LinearLayout.LayoutParams _LayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    _LayoutParams.setMargins(0, 0, 0, DensityUtil.dip2px(mContext, 22));
+                    _TextVE.setLayoutParams(_LayoutParams);
+                    if (i >= 2 && _StringBuilder.append(_Split[i]).length() > 200) {
+                        _TextVE.setVisibility(GONE);
                         if (_CurrentPos == 0) {
                             _CurrentPos = i;
                         }
                     }
-                    mNewsDetailHeaderContentParent.addView(rl_para);
+                    mNewsDetailHeaderContentParent.addView(_TextVE);
                 }
-
-
-                if (_CurrentPos < 1) {
+                if (_CurrentPos < 2) {
                     mNewsDetailHeaderPulldown.setVisibility(GONE);
                 }
             }
@@ -421,9 +349,10 @@ public class NewsDetailHeaderView extends FrameLayout {
                 mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
 
 
-            //设置编辑后的新闻
+//            设置编辑后的新闻
             int versionCode = DeviceInfoUtil.getApkVersionCode(mContext);
             if (versionCode > 7) {
+                ArrayList<NewsDetail.Point> points = pNewsDetail.point;
                 if (points != null && points.size() > 0) {
                     for (int i = 0; i < points.size(); i++) {
                         NewsDetail.Point point = points.get(i);
@@ -443,16 +372,14 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         mNewsDetailHeaderContentParent.removeViewAt(index);
 //                                        v.setVisibility(View.GONE);
                                     } else {
-                                        RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
-                                        LetterSpacingTextView tv = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
+                                        LetterSpacingTextView tv = (LetterSpacingTextView) mNewsDetailHeaderContentParent.getChildAt(index);
                                         tv.setText("");
                                         tv.setVisibility(View.GONE);
                                     }
                                 }
                             } else {
                                 if (point.paragraphIndex != null && !"".equals(point.paragraphIndex)) {
-                                    RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
-                                    LetterSpacingTextView tv_para = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
+                                    TextView tv_para = (TextView) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
                                     if (tv_para != null) {
                                         tv_para.setText(point.desText);
                                     }
@@ -676,8 +603,29 @@ public class NewsDetailHeaderView extends FrameLayout {
     }
 
     private List<HashMap<String, String>> composeMatch(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
+//                        for (int i = 0; i < 10000; i++) {
         getMatched(resultList, minor, "2-3-2");
-        Log.i("", "--------------- " + resultList);
+//                                for (int j = 0; j < 10000; j++) {
+//
+//                                    if (get2Matched(resultList, minor, j) != -1) {
+//                                        for (int l = 0; l < 10000; l++) {
+//                                            if (get3Matched(resultList, minor, l) != -1) {
+//                                return resultList;
+//                                            }else{
+//                                                break;
+//                                            }
+//
+//                                        }
+//                                    }else{
+//                                        break;
+//                                    }
+//                                }
+//                            } else {
+//                                break;
+//                            }
+//
+//                        }
+
         return resultList;
     }
 
@@ -710,8 +658,9 @@ public class NewsDetailHeaderView extends FrameLayout {
         int th = 0;
 
         int which = 0;
-        int stepcnst = 60;
-        float ratio = 1.f;
+
+        int stepcnst = 50;
+        float ratio = 1.8f;
         float constW = 0;
         for (int i = stepcnst; i < GlobalParams.screenWidth; i += stepcnst) {
             if (i >= GlobalParams.screenWidth - 1) {
@@ -741,7 +690,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                 }
                 List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
                 for (HashMap<String, String> m : list2) {
-                    if (first.get("img").toString().equals(m.get("img").toString())) {
+                    try {
+                        if (first.get("img").toString().equals(m.get("img").toString())) {
+                            continue;
+                        }
+                    } catch (Exception e) {
                         continue;
                     }
                     int w = Integer.parseInt(m.get("w").toString());
@@ -767,8 +720,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                             maps.add(m2);
                             source.remove(m2);
                             source.remove(m1);
-                            return getMatched(maps, source, sq) + (th++);
-
+                            try {
+                                return getMatched(maps, source, sq) + (th++);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
                         } else {
                             scaledh1 = 0;
                             scaledh2 = 0;
@@ -787,7 +743,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
         int th = 0;
 
-        float ratio1 = 1.5f;
+        float ratio1 = 2f;
         int which = 0;
         float constW = 0;
         int stepcnst = 80;
@@ -820,10 +776,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                 HashMap<String, String> m2 = null;
                 float ratio2 = 1f;
                 for (HashMap<String, String> m : list2) {
-                    if (first.get("img").toString().equals(m.get("img").toString())) {
+                    try {
+                        if (first.get("img").toString().equals(m.get("img").toString())) {
+                            continue;
+                        }
+                    } catch (Exception e) {
                         continue;
                     }
-
                     int w = Integer.parseInt(m.get("w").toString());
                     int h = Integer.parseInt(m.get("h").toString());
 
@@ -846,10 +805,14 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                         HashMap<String, String> m3 = null;
                         for (HashMap<String, String> mm : list2) {
-                            if (m.get("img").toString().equals(mm.get("img").toString())) {
-                                continue;
-                            }
-                            if (m1.get("img").toString().equals(mm.get("img").toString())) {
+                            try {
+                                if (m != null && mm != null && m.get("img").toString().equals(mm.get("img").toString())) {
+                                    continue;
+                                }
+                                if (m1 != null && mm != null && m1.get("img").toString().equals(mm.get("img").toString())) {
+                                    continue;
+                                }
+                            } catch (Exception e) {
                                 continue;
                             }
                             int w3 = Integer.parseInt(mm.get("w").toString());
@@ -900,5 +863,4 @@ public class NewsDetailHeaderView extends FrameLayout {
         }
         return -1;
     }
-
 }
