@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.alibaba.sdk.android.oss.callback.GetBytesCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
@@ -36,6 +37,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class SpeechView extends LinearLayout implements View.OnClickListener {
     private static final int DOWNLOAD_COMPLETE = 1;
+    private final View mWaveWrapper;
     private boolean isPlay;
     private boolean isPlayComplete;
     private Context mContext;
@@ -44,7 +46,7 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
     //语音url
     private String mUrl;
     //语音的时长
-    private int mDuration;
+    private TextView mDuration;
     private Handler mHandler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -84,6 +86,8 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         this.mContext = context;
         View view = View.inflate(context, R.layout.speech_layout, this);
         mWave = (ImageView) view.findViewById(R.id.mWave);
+        mDuration=(TextView)view.findViewById(R.id.mDuration);
+        mWaveWrapper=view.findViewById(R.id.mWaveWrapper);
         setOnClickListener(this);
     }
 
@@ -92,10 +96,15 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
     }
 
     public void setDuration(int duration) {
+        if(duration<=0||duration>30){
+            return;
+        }
+        mDuration.setText(duration+"\"");
         int screenWidth = getScreenWidth();
-        int newWidth = (int) (screenWidth * 0.7 * duration / 30);
-        LayoutParams params = new LayoutParams(newWidth, DensityUtil.dip2px(mContext, 30));
-        this.setLayoutParams(params);
+        int newWidth=(screenWidth-DensityUtil.dip2px(mContext,130))*duration/30;
+        Logger.i("jigang","--newWidth--"+newWidth);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(newWidth, DensityUtil.dip2px(mContext, 30));
+        mWaveWrapper.setLayoutParams(params);
     }
 
 

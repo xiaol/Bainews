@@ -120,7 +120,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     @Override
-    public void submitThisMessage(InputBarType argType, String argContent) {
+    public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
         NewsDetail.Point point = marrPoints.get(0);
         String type = UploadCommentRequest.TEXT_PARAGRAPH;
@@ -128,7 +128,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
         }
         Logger.i("jigang", type + "----url==" + argContent);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, new UploadCommentListener() {
+        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type,speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
                 Log.i("tag", "111");
@@ -262,8 +262,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.tvContent.setVisibility(View.VISIBLE);
                 holder.mSpeechView.setVisibility(View.GONE);
             } else {
-                Logger.i("jigang", "--" + holder.mSpeechView + ",--" + point.srcText);
+                Logger.i("jigang", point.srcTextTime+"--" + point.srcText);
                 holder.mSpeechView.setUrl(point.srcText);
+                holder.mSpeechView.setDuration(point.srcTextTime);
                 holder.mSpeechView.setVisibility(View.VISIBLE);
                 holder.tvContent.setVisibility(View.GONE);
             }
