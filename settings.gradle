@@ -1,4 +1,0 @@
-include ':app', ':jazzylistviewlibrary', ':library_pageslidingtabstrip'
-include ':app', ':sharesdk_mainlib'
-include ':library'
-include ':sharesdk_onekeyshare'
