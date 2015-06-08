@@ -91,7 +91,6 @@ public class HomeAty extends BaseActivity {
                 finish();
             } else {
                 ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-                //ToastUtil.toastLong(R.string.press_back_again_exit);
             }
             mLastPressedBackKeyTime = pressedBackKeyTime;
         }

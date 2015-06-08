@@ -293,11 +293,20 @@ public class NewsDetailHeaderView extends FrameLayout {
                     RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
                     final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
                     final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
+                    rl_para.setTag(i);
                     rl_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ArrayList<NewsDetail.Point> point_para = new ArrayList<NewsDetail.Point>();
+                            RelativeLayout rl_aa = (RelativeLayout) rl_comment.getParent();
+                            int para_index = (int) rl_aa.getTag();
+                            for (int m = 0;m < points.size();m ++){
+                                if(para_index == Integer.parseInt(points.get(m).paragraphIndex)){
+                                    point_para.add(points.get(m));
+                                }
+                            }
 
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para);
                             window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                                     | Gravity.CENTER, 0, 0);
 
@@ -355,11 +364,12 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         tv_comment_content.setText(point.srcText);
                                     }
 
-                                    if (!"".equals(point.userIcon)) {
-                                        ImageLoaderHelper.dispalyImage(mContext, point.userIcon, iv_add_comment);
+                                    if (point.userIcon != null && !"".equals(point.userIcon)) {
+                                        ImageLoaderHelper.dispalyImage(mContext, point.userIcon, iv_user_icon);
                                     }
 
                                     add_flag = true;
+                                    rl_comment.setVisibility(View.VISIBLE);
 
                                 } else {
                                     rl_comment.setVisibility(View.GONE);

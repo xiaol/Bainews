@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
@@ -136,6 +138,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private boolean refresh_flag = false;
     private boolean top_flag = false;
     private boolean bottom_flag = false;
+    private static long mLastPressedBackKeyTime;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
@@ -1653,5 +1656,20 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         }
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == event.KEYCODE_BACK) {
+
+            long pressedBackKeyTime = System.currentTimeMillis();
+            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
+                getActivity().finish();
+            } else {
+                ToastUtil.showToastWithIcon("再按一次退出应用", R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+            }
+            mLastPressedBackKeyTime = pressedBackKeyTime;
+
+        }
+        return true;
+    }
 
 }
