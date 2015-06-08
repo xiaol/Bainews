@@ -625,7 +625,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 //                            }
 //
 //                        }
-        Log.i("","--------------- "+resultList);
+
         return resultList;
     }
 
@@ -658,8 +658,8 @@ public class NewsDetailHeaderView extends FrameLayout {
         int th = 0;
 
         int which = 0;
-        int stepcnst = 60;
-        float ratio = 1.f;
+        int stepcnst = 50;
+        float ratio = 1.8f;
         float constW = 0;
         for (int i = stepcnst; i < GlobalParams.screenWidth; i += stepcnst) {
             if (i >= GlobalParams.screenWidth - 1) {
@@ -715,8 +715,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                                 maps.add(m2);
                                 source.remove(m2);
                                 source.remove(m1);
-                                return getMatched(maps,source,sq)+(th++);
-
+                            try {
+                                return getMatched(maps, source, sq) + (th++);
+                            }catch(Exception ex){
+                                ex.printStackTrace();
+                            }
                         } else {
                             scaledh1 = 0;
                             scaledh2 = 0;
@@ -735,7 +738,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
         int th = 0;
 
-        float ratio1 = 1.5f;
+        float ratio1 = 2f;
         int which = 0;
         float constW = 0;
         int stepcnst = 80;
@@ -794,10 +797,10 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                         HashMap<String, String> m3 = null;
                         for (HashMap<String, String> mm : list2) {
-                            if (m.get("img").toString().equals(mm.get("img").toString())) {
+                            if (m.get("img")!=null&&mm.get("img")!=null&&m.get("img").toString().equals(mm.get("img").toString())) {
                                 continue;
                             }
-                            if (m1.get("img").toString().equals(mm.get("img").toString())) {
+                            if (m1.get("img")!=null&&mm.get("img")!=null&&m1.get("img").toString().equals(mm.get("img").toString())) {
                                 continue;
                             }
                             int w3 = Integer.parseInt(mm.get("w").toString());
