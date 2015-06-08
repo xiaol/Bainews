@@ -690,7 +690,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                 }
                 List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
                 for (HashMap<String, String> m : list2) {
-                    if (first.get("img").toString().equals(m.get("img").toString())) {
+                    try {
+                        if (first.get("img").toString().equals(m.get("img").toString())) {
+                            continue;
+                        }
+                    } catch (Exception e) {
                         continue;
                     }
                     int w = Integer.parseInt(m.get("w").toString());
@@ -702,8 +706,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                     if (Math.abs(scaledh1 - scaledh2) < stepcnst) {
                         if ((scaledh2 < scaledh1 && scaledh2 * ratio >= scaledh1) || (scaledh1 < scaledh2 && scaledh1 * ratio >= scaledh2)) {
 
-                            int scaledh = Math.max(scaledh2,scaledh1);
-                                m2 = m;
+                            int scaledh = Math.max(scaledh2, scaledh1);
+                            m2 = m;
                             m2.put("units", "2");
                             m2.put("position", "2");
                             m2.put("scaledh", "" + scaledh);
@@ -712,13 +716,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                             m1.put("position", "1");
                             m1.put("scaledh", "" + scaledh);
                             m1.put("scaledw", "" + scaledw1);
-                                maps.add(m1);
-                                maps.add(m2);
-                                source.remove(m2);
-                                source.remove(m1);
+                            maps.add(m1);
+                            maps.add(m2);
+                            source.remove(m2);
+                            source.remove(m1);
                             try {
                                 return getMatched(maps, source, sq) + (th++);
-                            }catch(Exception ex){
+                            } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
                         } else {
@@ -742,7 +746,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         float ratio1 = 2f;
         int which = 0;
         float constW = 0;
-        int stepcnst = 50;
+        int stepcnst = 80;
 
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
         HashMap<String, String> m1 = null;
@@ -766,16 +770,19 @@ public class NewsDetailHeaderView extends FrameLayout {
                 int scaledh2 = 0;
 
 
-                    scaledh1 = hhead * scaledw1 / whead;
-                    m1 = first;
+                scaledh1 = hhead * scaledw1 / whead;
+                m1 = first;
                 List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
                 HashMap<String, String> m2 = null;
                 float ratio2 = 1f;
                 for (HashMap<String, String> m : list2) {
-                    if (first.get("img").toString().equals(m.get("img").toString())) {
+                    try {
+                        if (first.get("img").toString().equals(m.get("img").toString())) {
+                            continue;
+                        }
+                    } catch (Exception e) {
                         continue;
                     }
-
                     int w = Integer.parseInt(m.get("w").toString());
                     int h = Integer.parseInt(m.get("h").toString());
 
@@ -793,15 +800,19 @@ public class NewsDetailHeaderView extends FrameLayout {
                         int scaledh3 = 0;
 
 
-                            scaledh2 = h * scaledw2 / w;
-                            m2 = m;
+                        scaledh2 = h * scaledw2 / w;
+                        m2 = m;
 
                         HashMap<String, String> m3 = null;
                         for (HashMap<String, String> mm : list2) {
-                            if (m.get("img")!=null&&mm.get("img")!=null&&m.get("img").toString().equals(mm.get("img").toString())) {
-                                continue;
-                            }
-                            if (m1.get("img")!=null&&mm.get("img")!=null&&m1.get("img").toString().equals(mm.get("img").toString())) {
+                            try {
+                                if (m != null && mm != null && m.get("img").toString().equals(mm.get("img").toString())) {
+                                    continue;
+                                }
+                                if (m1 != null && mm != null && m1.get("img").toString().equals(mm.get("img").toString())) {
+                                    continue;
+                                }
+                            } catch (Exception e) {
                                 continue;
                             }
                             int w3 = Integer.parseInt(mm.get("w").toString());
@@ -812,29 +823,29 @@ public class NewsDetailHeaderView extends FrameLayout {
                                 if (((scaledh2 - scaledh1 < 0 && scaledh2 * ratio1 >= scaledh1) || (scaledh1 - scaledh2 < 0 && scaledh1 * ratio1 >= scaledh2)) && ((scaledh2 - scaledh3 < 0 && scaledh2 * ratio1 >= scaledh3) || (scaledh3 - scaledh2 < 0 && scaledh3 * ratio1 >= scaledh2))) {
 
 
-                                    int scaledh = Math.max(Math.max(scaledh2,scaledh1),Math.max(scaledh2,scaledh3));
-                                        m3 = mm;
-                                        m3.put("units", "3");
-                                        m3.put("position", "3");
-                                        m3.put("scaledh", "" + scaledh);
-                                        m3.put("scaledw", "" + scaledw3);
-                                        m2.put("units", "3");
-                                        m2.put("position", "2");
-                                        m2.put("scaledh", "" + scaledh);
-                                        m2.put("scaledw", "" + scaledw2);
-                                        m1.put("units", "3");
-                                        m1.put("position", "1");
-                                        m1.put("scaledh", "" + scaledh);
-                                        m1.put("scaledw", "" + scaledw1);
-                                        maps.add(m1);
-                                        maps.add(m2);
-                                        maps.add(m3);
-                                        source.remove(m3);
-                                        source.remove(m2);
-                                        source.remove(m1);
+                                    int scaledh = Math.max(Math.max(scaledh2, scaledh1), Math.max(scaledh2, scaledh3));
+                                    m3 = mm;
+                                    m3.put("units", "3");
+                                    m3.put("position", "3");
+                                    m3.put("scaledh", "" + scaledh);
+                                    m3.put("scaledw", "" + scaledw3);
+                                    m2.put("units", "3");
+                                    m2.put("position", "2");
+                                    m2.put("scaledh", "" + scaledh);
+                                    m2.put("scaledw", "" + scaledw2);
+                                    m1.put("units", "3");
+                                    m1.put("position", "1");
+                                    m1.put("scaledh", "" + scaledh);
+                                    m1.put("scaledw", "" + scaledw1);
+                                    maps.add(m1);
+                                    maps.add(m2);
+                                    maps.add(m3);
+                                    source.remove(m3);
+                                    source.remove(m2);
+                                    source.remove(m1);
 
-                                        return getMatched(maps,source,sq)+th++;
-                                   } else {
+                                    return getMatched(maps, source, sq) + th++;
+                                } else {
                                     scaledh1 = 0;
                                     m1 = null;
                                     scaledh2 = 0;
