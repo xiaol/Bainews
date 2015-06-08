@@ -107,6 +107,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
+
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -343,7 +344,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                     if (points != null && points.size() > 0) {
                         for (int a = 0; a < points.size(); a++) {
-                            if(!add_flag) {
+                            if (!add_flag) {
                                 NewsDetail.Point point = points.get(a);
 
                                 if (i == Integer.parseInt(point.paragraphIndex)) {
@@ -354,8 +355,8 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         tv_comment_content.setText(point.srcText);
                                     }
 
-                                    if(!"".equals(point.userIcon)){
-                                        ImageLoaderHelper.dispalyImage(mContext,point.userIcon,iv_add_comment);
+                                    if (!"".equals(point.userIcon)) {
+                                        ImageLoaderHelper.dispalyImage(mContext, point.userIcon, iv_add_comment);
                                     }
 
                                     add_flag = true;
@@ -565,8 +566,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                             m.put("w", "" + op.outWidth);
                             m.put("h", "" + op.outHeight);
-
-
                         }
 
 
