@@ -1,0 +1,4 @@
+include ':jazzylistviewlibrary', ':library_pageslidingtabstrip'
+include ':sharesdk_mainlib'
+include ':library'
+include ':sharesdk_onekeyshare'
