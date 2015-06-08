@@ -1,13 +1,10 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,8 +37,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
-import com.news.yazhidao.widget.imagewall.BitmapUtil;
-import com.news.yazhidao.widget.imagewall.ViewWall;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -49,12 +44,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import app.base.task.BackRunnable;
-import app.base.task.CallbackRunnable;
-import app.base.task.Compt;
 
 
 public class NewsDetailAty extends SwipeBackActivity {
@@ -206,7 +195,6 @@ public class NewsDetailAty extends SwipeBackActivity {
                                 mivBack.setVisibility(View.VISIBLE);
                             }
                         }
-                        Logger.i("xxx", _DeltaY + "");
                         break;
                     default:
                         break;

@@ -295,6 +295,11 @@ public class NewsDetailHeaderView extends FrameLayout {
                     rl_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
+                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                                    | Gravity.CENTER, 0, 0);
+
                         }
                     });
                     TextView tv_praise_count = (TextView) rl_para.findViewById(R.id.tv_praise_count);
@@ -303,15 +308,14 @@ public class NewsDetailHeaderView extends FrameLayout {
                     iv_add_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
                         }
                     });
                     final TextView tv_comment_count = (TextView) rl_para.findViewById(R.id.tv_comment_count);
                     tv_comment_count.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
-                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                    | Gravity.CENTER, 0, 0);
+
 
                         }
                     });
