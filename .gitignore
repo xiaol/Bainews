@@ -33,9 +33,5 @@ proguard/
 *.ipr
 *~
 *.swp
-/settings.gradle
-/build.gradle
-/gradle.properties
-/gradlew
-/gradlew.bat
+
 /.idea
