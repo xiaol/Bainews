@@ -25,6 +25,10 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NEWSDETAIL_DOUBAI="bainews_newsdetail_doubai";
     //用户在详情页中点击展开全文
     public static final String US_BAINEWS_NEWSDETAIL_CLICK_PULLDOWN="bainews_newsdetail_click_pulldown";
+    //用户收到推送消息通知
+    public static final String US_BAINEWS_NOTIFICATION_RECEIVED="notification_receive";
+    //用户收到推送消息并打开通知
+    public static final String US_BAINEWS_NOTIFICATION_OPENED="notification_open";
 
     public static final String FILE_USER="user";
     public static final String FILE_JPUSH="jpush";

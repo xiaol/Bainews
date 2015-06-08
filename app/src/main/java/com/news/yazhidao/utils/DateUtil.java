@@ -2,6 +2,7 @@ package com.news.yazhidao.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Ariesy on 4/27/15.
@@ -266,4 +267,13 @@ public class DateUtil {
         return a;
     }
 
+    /**
+     * 获取当前系统的时间  格式:20150604
+     * @return
+     */
+    public static String getCurrentDate() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        return format.format(date);
+    }
 }

@@ -23,10 +23,56 @@ public class NewsFeed implements Serializable{
     private String root_class;
     private String category;
     private String special;
+    private String isWeiboFlag;
+    private String isBaikeFlag;
+    private String isZhihuFlag;
+    private String isImgWallFlag;
+    private String isCommentsFlag;
     private String[] imgUrl_ex;
     private boolean time_flag;
     private boolean top_flag;
     private boolean bottom_flag;
+
+
+    public String getIsCommentsFlag() {
+        return isCommentsFlag;
+    }
+
+    public void setIsCommentsFlag(String isCommentsFlag) {
+        this.isCommentsFlag = isCommentsFlag;
+    }
+
+    public String getIsWeiboFlag() {
+        return isWeiboFlag;
+    }
+
+    public void setIsWeiboFlag(String isWeiboFlag) {
+        this.isWeiboFlag = isWeiboFlag;
+    }
+
+    public String getIsBaikeFlag() {
+        return isBaikeFlag;
+    }
+
+    public void setIsBaikeFlag(String isBaikeFlag) {
+        this.isBaikeFlag = isBaikeFlag;
+    }
+
+    public String getIsZhihuFlag() {
+        return isZhihuFlag;
+    }
+
+    public void setIsZhihuFlag(String isZhihuFlag) {
+        this.isZhihuFlag = isZhihuFlag;
+    }
+
+    public String getIsImgWallFlag() {
+        return isImgWallFlag;
+    }
+
+    public void setIsImgWallFlag(String isImgWallFlag) {
+        this.isImgWallFlag = isImgWallFlag;
+    }
 
     public String[] getImgUrl_ex() {
         return imgUrl_ex;

@@ -62,7 +62,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogin.setOnClickListener(this);
         mHomeChatWrapper.setOnClickListener(this);
         //判断用户是否登录，并且登录有效
-        User user = SharedPreManager.getUser();
+        User user = SharedPreManager.getUser(mContext);
         if (user != null) {
             mHomeLogin.setOnClickListener(null);
             mHomeLogin.setText(user.getUserName());

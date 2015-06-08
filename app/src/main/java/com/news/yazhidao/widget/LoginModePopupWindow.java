@@ -72,7 +72,9 @@ private long mFirstClickTime;
         switch (v.getId()){
             case R.id.mLoginModeCancel:
                 this.dismiss();
-                mUserLoginPopupStateListener.close();
+                if(mUserLoginPopupStateListener!=null){
+                    mUserLoginPopupStateListener.close();
+                }
                 break;
             case R.id.mLoginModeWeibo:
                 if(System.currentTimeMillis()-mFirstClickTime<2000){

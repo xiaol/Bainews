@@ -45,12 +45,12 @@
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mHomeAtyLeftMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="18sp"
-            android:background="@drawable/ic_time" />
+            android:textSize="14sp"
+            android:background="@drawable/bg_time_log" />
     </FrameLayout>
 
     <FrameLayout

@@ -39,6 +39,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class ShareSdkHelper {
     private static final String TAG = "ShareSdkHelper";
+    private static Context mContext;
     private static Handler mHandler=new Handler();
     private static UserLoginListener mUserLoginListener;
     private static UserLoginPopupStateListener mUserLoginPopupStateListener;
@@ -70,7 +71,7 @@ public class ShareSdkHelper {
                         SharedPreManager.saveUser(user);
                         String jPushId = SharedPreManager.getJPushId();
                         if(!TextUtils.isEmpty(jPushId)){
-                            UploadJpushidRequest.uploadJpushId(jPushId);
+                            UploadJpushidRequest.uploadJpushId(mContext,jPushId);
                         }
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
                         if (mUserLoginListener != null) {
@@ -78,6 +79,7 @@ public class ShareSdkHelper {
                                 @Override
                                 public void run() {
                                     mUserLoginPopupStateListener.close();
+
                                     mUserLoginListener.userLogin(platform.getName(), platform.getDb());
                                 }
                             });
@@ -107,13 +109,14 @@ public class ShareSdkHelper {
 
     /**
      * sharesdk 授权认证
-     *  @param mContext
+     *  @param context
      * @param platform
      * @param loginListener
      * @param userLoginPopupStateListener
      */
-    public static void authorize(Context mContext, String platform, UserLoginListener loginListener, UserLoginPopupStateListener userLoginPopupStateListener) {
+    public static void authorize(Context context, String platform, UserLoginListener loginListener, UserLoginPopupStateListener userLoginPopupStateListener) {
 //        mProgressDialog.show();
+        mContext=context;
         mUserLoginListener = loginListener;
         mUserLoginPopupStateListener=userLoginPopupStateListener;
         Platform _Plateform = ShareSDK.getPlatform(mContext, platform);
