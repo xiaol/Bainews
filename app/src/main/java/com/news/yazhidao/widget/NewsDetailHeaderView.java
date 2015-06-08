@@ -742,7 +742,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         float ratio1 = 2f;
         int which = 0;
         float constW = 0;
-        int stepcnst = 60;
+        int stepcnst = 50;
 
         List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>(source);
         HashMap<String, String> m1 = null;
