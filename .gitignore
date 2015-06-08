@@ -33,3 +33,5 @@ proguard/
 *.ipr
 *~
 *.swp
+
+/.idea
