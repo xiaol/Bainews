@@ -115,7 +115,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注","今日"};
+        private final String[] TITLES = {"关注","谷歌今日焦点"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

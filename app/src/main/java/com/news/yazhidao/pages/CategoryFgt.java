@@ -63,7 +63,7 @@ public class CategoryFgt extends Fragment {
 
         switch (position) {
             case 0:
-                GlobalParams.tabs.updateSelection2(1, "今日");
+                GlobalParams.tabs.updateSelection2(1, "谷歌今日焦点");
                 break;
             case 1:
                 GlobalParams.tabs.updateSelection2(1, "实事");

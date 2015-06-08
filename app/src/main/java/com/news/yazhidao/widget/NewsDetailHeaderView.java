@@ -107,7 +107,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
-
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -370,7 +369,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                                     add_flag = true;
                                     rl_comment.setVisibility(View.VISIBLE);
-
                                 } else {
                                     rl_comment.setVisibility(View.GONE);
                                 }
