@@ -18,11 +18,13 @@ import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
 import com.news.yazhidao.widget.InputBar.InputBarType;
@@ -125,13 +127,18 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         NewsDetail.Point point = marrPoints.get(0);
         NewsDetail newsDetail = new NewsDetail();
         NewsDetail.Point newPoint = newsDetail.new Point();
-        newPoint.srcText = argContent;
-        String type = UploadCommentRequest.TEXT_PARAGRAPH;
-        newPoint.type = type;
+        String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
-            newPoint.type = type;
+            newPoint.desText = argContent;
+        } else {
+            type = UploadCommentRequest.TEXT_PARAGRAPH;
+            newPoint.srcText = argContent;
         }
+        User user = SharedPreManager.getUser(m_pContext);
+        newPoint.userIcon = user.getUserIcon();
+        newPoint.userName = user.getUserName();
+        newPoint.type = type;
         marrPoints.add(newPoint);
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
