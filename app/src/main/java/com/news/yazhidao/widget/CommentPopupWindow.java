@@ -54,7 +54,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private ImageView mivRecord;
     private ArrayList<NewsDetail.Point> marrPoints;
 
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points) {
+    public CommentPopupWindow(final Activity context, ArrayList<NewsDetail.Point> points) {
         super(context);
         m_pContext = context;
         marrPoints = points;

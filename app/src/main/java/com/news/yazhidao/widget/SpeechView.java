@@ -101,8 +101,11 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         }
         mDuration.setText(duration+"\"");
         int screenWidth = getScreenWidth();
-        int newWidth=(screenWidth-DensityUtil.dip2px(mContext,130))*duration/30;
-        Logger.i("jigang","--newWidth--"+newWidth);
+        if(duration<8){
+            duration=8;
+        }
+        int newWidth= (int) (screenWidth*0.62f*duration/30);
+        Logger.i("jigang",newWidth+"--newWidth--"+newWidth);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(newWidth, DensityUtil.dip2px(mContext, 30));
         mWaveWrapper.setLayoutParams(params);
     }
