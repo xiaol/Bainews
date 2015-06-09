@@ -47,11 +47,24 @@
         android:layout_alignParentBottom="true"
         android:background="@color/Gray">
 
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:text="发送"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textsize_sixteen"
+            android:gravity="center" />
+
         <EditText
             android:id="@+id/edit_feedback"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/send_button"
             android:hint="友情提示：请写下你的反馈意见"
             android:layout_margin="10dp"
             android:paddingTop="0dp"
@@ -60,6 +73,7 @@
             android:paddingRight="5dp"
             android:background="@drawable/white_feedback_solid"
             android:textColor="@color/new_tip_text" />
+
     </RelativeLayout>
 
     <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView

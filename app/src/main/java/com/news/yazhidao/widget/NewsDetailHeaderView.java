@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -305,8 +306,13 @@ public class NewsDetailHeaderView extends FrameLayout {
                                     point_para.add(points.get(m));
                                 }
                             }
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
+                            window.setFocusable(true);
+                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+//                            window.setBackgroundDrawable(new BitmapDrawable());
+                            //防止虚拟软键盘被弹出菜单遮住、
+                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
 
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para);
                             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                             window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                                     | Gravity.CENTER, 0, 0);
