@@ -120,15 +120,23 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     @Override
-    public void submitThisMessage(InputBarType argType, String argContent) {
+    public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
         NewsDetail.Point point = marrPoints.get(0);
+        NewsDetail newsDetail = new NewsDetail();
+        NewsDetail.Point newPoint = newsDetail.new Point();
+        newPoint.srcText = argContent;
         String type = UploadCommentRequest.TEXT_PARAGRAPH;
+        newPoint.type = type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
+            newPoint.type = type;
         }
+        marrPoints.add(newPoint);
+        mCommentAdapter.setData(marrPoints);
+        mCommentAdapter.notifyDataSetChanged();
         Logger.i("jigang", type + "----url==" + argContent);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, new UploadCommentListener() {
+        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
                 Log.i("tag", "111");
@@ -251,7 +259,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             }
             NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageManager.getInstance(mContext).DisplayImage(point.userIcon,holder.ivHeadIcon,false);
+                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false);
             else
                 holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);
@@ -262,8 +270,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.tvContent.setVisibility(View.VISIBLE);
                 holder.mSpeechView.setVisibility(View.GONE);
             } else {
-                Logger.i("jigang", "--" + holder.mSpeechView + ",--" + point.srcText);
+                Logger.i("jigang", point.srcTextTime + "--" + point.srcText);
                 holder.mSpeechView.setUrl(point.srcText);
+                holder.mSpeechView.setDuration(point.srcTextTime);
                 holder.mSpeechView.setVisibility(View.VISIBLE);
                 holder.tvContent.setVisibility(View.GONE);
             }

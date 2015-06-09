@@ -17,13 +17,13 @@
             android:id="@+id/col11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             ></ImageView>
 
         <ImageView android:visibility="gone"
             android:id="@+id/col12"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_marginTop="3dip"
             android:layout_marginBottom="3dip"
             android:scaleType="fitXY"

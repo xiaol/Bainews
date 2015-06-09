@@ -357,7 +357,7 @@ public class InputBar extends FrameLayout {
 
 
         if (mDelegate != null)
-            mDelegate.submitThisMessage(m_eCurType, filePath);
+            mDelegate.submitThisMessage(m_eCurType, filePath,duration);
     }
 
     private void cancalRecord() {
@@ -393,7 +393,7 @@ public class InputBar extends FrameLayout {
         removeTextFieldFirstRespond();
 //        String message = mTextField.getText().toString();
         if (mDelegate != null)
-            mDelegate.submitThisMessage(m_eCurType, strPureText);
+            mDelegate.submitThisMessage(m_eCurType, strPureText,-1);
         mTextField.setText("");
     }
 
