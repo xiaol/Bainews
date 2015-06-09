@@ -54,7 +54,7 @@
     </array>
 
     <string-array name="category_list_name">
-        <item>今日</item>
+        <item>谷歌今日焦点</item>
         <item>时事</item>
         <item>娱乐</item>
         <item>科技</item>

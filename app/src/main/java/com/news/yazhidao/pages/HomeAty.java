@@ -91,7 +91,6 @@ public class HomeAty extends BaseActivity {
                 finish();
             } else {
                 ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-                //ToastUtil.toastLong(R.string.press_back_again_exit);
             }
             mLastPressedBackKeyTime = pressedBackKeyTime;
         }
@@ -116,7 +115,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注","今日"};
+        private final String[] TITLES = {"关注","谷歌今日焦点"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

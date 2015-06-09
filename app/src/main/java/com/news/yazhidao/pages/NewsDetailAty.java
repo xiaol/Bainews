@@ -130,25 +130,14 @@ public class NewsDetailAty extends SwipeBackActivity {
             }
 
 
-
             @Override
             public void failed(MyAppException exception) {
                 mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                 mNewsDetailProgressWheel.stopSpinning();
                 mNewsDetailProgressWheel.setVisibility(View.GONE);
             }
-        }
-
-                .
-
-                        setReturnType(new TypeToken<NewsDetail>() {
-                                }
-
-                                        .
-
-                                                getType()
-
-                        ));
+        }.setReturnType(new TypeToken<NewsDetail>() {
+        }.getType()));
         _Request.execute();
     }
 

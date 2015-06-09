@@ -291,13 +291,21 @@ public class NewsDetailHeaderView extends FrameLayout {
                 for (int i = 0; i < _Split.length; i++) {
                     add_flag = false;
                     //段落和评论布局
-                    RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
+                    final RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
                     final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
                     final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
+                    rl_para.setTag(i);
                     rl_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            ArrayList<NewsDetail.Point> point_para = new ArrayList<NewsDetail.Point>();
+                            RelativeLayout rl_aa = (RelativeLayout) rl_comment.getParent();
+                            int para_index = (int) rl_aa.getTag();
+                            for (int m = 0; m < points.size(); m++) {
+                                if (para_index == Integer.parseInt(points.get(m).paragraphIndex)) {
+                                    point_para.add(points.get(m));
+                                }
+                            }
                             CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
                             window.setFocusable(true);
                             //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
@@ -353,7 +361,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                     if (points != null && points.size() > 0) {
                         for (int a = 0; a < points.size(); a++) {
-                            if(!add_flag) {
+                            if (!add_flag) {
                                 NewsDetail.Point point = points.get(a);
 
                                 if (i == Integer.parseInt(point.paragraphIndex)) {
@@ -364,12 +372,12 @@ public class NewsDetailHeaderView extends FrameLayout {
                                         tv_comment_content.setText(point.srcText);
                                     }
 
-                                    if(!"".equals(point.userIcon)){
-                                        ImageLoaderHelper.dispalyImage(mContext,point.userIcon,iv_add_comment);
+                                    if (point.userIcon != null && !"".equals(point.userIcon)) {
+                                        ImageLoaderHelper.dispalyImage(mContext, point.userIcon, iv_user_icon);
                                     }
 
                                     add_flag = true;
-
+                                    rl_comment.setVisibility(View.VISIBLE);
                                 } else {
                                     rl_comment.setVisibility(View.GONE);
                                 }
@@ -575,8 +583,6 @@ public class NewsDetailHeaderView extends FrameLayout {
 
                             m.put("w", "" + op.outWidth);
                             m.put("h", "" + op.outHeight);
-
-
                         }
 
 
@@ -686,29 +692,8 @@ public class NewsDetailHeaderView extends FrameLayout {
     }
 
     private List<HashMap<String, String>> composeMatch(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor) {
-//                        for (int i = 0; i < 10000; i++) {
         getMatched(resultList, minor, "2-3-2");
-//                                for (int j = 0; j < 10000; j++) {
-//
-//                                    if (get2Matched(resultList, minor, j) != -1) {
-//                                        for (int l = 0; l < 10000; l++) {
-//                                            if (get3Matched(resultList, minor, l) != -1) {
-//                                return resultList;
-//                                            }else{
-//                                                break;
-//                                            }
-//
-//                                        }
-//                                    }else{
-//                                        break;
-//                                    }
-//                                }
-//                            } else {
-//                                break;
-//                            }
-//
-//                        }
-
+        Log.i("", "--------------- " + resultList);
         return resultList;
     }
 
@@ -741,7 +726,6 @@ public class NewsDetailHeaderView extends FrameLayout {
         int th = 0;
 
         int which = 0;
-
         int stepcnst = 50;
         float ratio = 1.8f;
         float constW = 0;
@@ -826,7 +810,7 @@ public class NewsDetailHeaderView extends FrameLayout {
     private int get3Matched(List<HashMap<String, String>> maps, List source, String sq) {
         int th = 0;
 
-        float ratio1 = 2f;
+        float ratio1 = 1.5f;
         int which = 0;
         float constW = 0;
         int stepcnst = 80;
