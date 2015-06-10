@@ -55,11 +55,15 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
     private ImageView mivRecord;
     private ArrayList<NewsDetail.Point> marrPoints;
+    private IUpdateCommentCount mIUpdateCommentCount;
+    private int miCount, mParagraphIndex;
 
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points) {
+    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, IUpdateCommentCount updateCommentCount) {
         super(context);
         m_pContext = context;
         marrPoints = points;
+        mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
+        mIUpdateCommentCount = updateCommentCount;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_comment, null);
@@ -116,6 +120,11 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         });
     }
 
+    @Override
+    public void dismiss() {
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex);
+        super.dismiss();
+    }
 
     private void loadData() {
 
@@ -146,6 +155,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
+                miCount += 1;
                 Log.i("tag", "111");
             }
 
@@ -301,5 +311,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
         SpeechView mSpeechView;
+    }
+
+    public interface IUpdateCommentCount {
+        void updateCommentCount(int count, int paragraphIndex);
     }
 }
