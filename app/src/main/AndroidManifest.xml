@@ -145,7 +145,6 @@
         <activity
             android:name=".pages.NewsDetailAty"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"
             android:theme="@style/SwipeBackTheme"></activity>
         <receiver
             android:name=".receiver.MessageJPushReceiver"
