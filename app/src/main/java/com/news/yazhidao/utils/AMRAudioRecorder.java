@@ -23,7 +23,7 @@ public class AMRAudioRecorder implements Callback {
     private static final int RECORDER_STOP = 1;
     boolean isRecord = false;
     int bufferSizeInBytes = 0;
-private Context mContext;
+    private Context mContext;
     public AMRAudioRecorder(Context myContext, String argFileName, String argPath) {
         this.mContext=myContext;
         m_strFileName = argFileName;

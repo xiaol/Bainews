@@ -32,15 +32,10 @@ import com.news.yazhidao.widget.InputBar.InputBarType;
 import java.util.ArrayList;
 
 
-//m_ppopupWindow = new TSHeadPortraitPopupWindow(m_pActivity, m_pUserData.getM_strPhotoUrl());
-//        m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
-//        m_ppopupWindow.showAtLocation(m_pActivity.getWindow().getDecorView(), Gravity.CENTER
-//        | Gravity.CENTER, 0, 0);
-
 /**
  * Created by h.yuan on 2015/3/23.
  */
-public class CommentPopupWindow extends PopupWindow implements InputBarDelegate, Handler.Callback {
+public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate, Handler.Callback {
 
     private ImageView mivClose;
     private View mMenuView;
@@ -58,7 +53,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
 
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, IUpdateCommentCount updateCommentCount) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, IUpdateCommentCount updateCommentCount) {
         super(context);
         m_pContext = context;
         marrPoints = points;
@@ -66,7 +61,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mIUpdateCommentCount = updateCommentCount;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mMenuView = inflater.inflate(R.layout.popup_window_comment, null);
+        mMenuView = inflater.inflate(R.layout.ll_comment_inputbar, null);
         mCommentAdapter = new DateAdapter(m_pContext);
         mHandler = new Handler(this);
         findHeadPortraitImageViews();
@@ -83,23 +78,18 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mInputBar = (InputBar) mMenuView.findViewById(R.id.input_bar_view);
         mInputBar.setActivityAndHandler(m_pContext, mHandler);
         mInputBar.setDelegate(this);
-        mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
-        mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
-        mlvComment.setAdapter(mCommentAdapter);
-        mCommentAdapter.setData(marrPoints);
-        mCommentAdapter.notifyDataSetChanged();
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //设置SelectPicPopupWindow弹出窗体动画效果
 //        this.setAnimationStyle(R.style.DialogAnimation);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        ColorDrawable dw = new ColorDrawable(0x11000000);
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
@@ -112,13 +102,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 //                return true;
 //            }
 //        });
-        mivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
     }
+
 
     @Override
     public void dismiss() {
