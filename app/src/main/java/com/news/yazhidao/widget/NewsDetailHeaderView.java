@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -165,6 +166,7 @@ public class NewsDetailHeaderView extends FrameLayout {
         this.mContentHeight = pHeight;
     }
 
+
     /**
      * 获取新闻内容展示的view
      *
@@ -306,6 +308,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                             }
 
                             CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para);
+                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                             window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                                     | Gravity.CENTER, 0, 0);
 
