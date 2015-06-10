@@ -17,6 +17,7 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class AliYunOssManager {
                 @Override
                 public void onSuccess(String objectKey) {
                     retryTime=0;
-                    Log.e("jigang", "objKey=" + objectKey);
+                    Log.e("jigang", "upload speech file success,objKey=" + objectKey);
                 }
 
                 @Override
@@ -90,6 +91,7 @@ public class AliYunOssManager {
 
                 @Override
                 public void onFailure(String objectKey, OSSException ossException) {
+                    Logger.e("jigang","upload speech fail==="+ossException.getMessage());
                     if(retryTime++<=3){
                         uploadSpeechFile(filePath);
                     }
