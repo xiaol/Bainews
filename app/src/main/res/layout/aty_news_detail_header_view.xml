@@ -22,8 +22,23 @@
             android:id="@+id/mImageWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_grag_line_top_bottom"
-            />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_grag_line_top_bottom" />
+
+        <RelativeLayout
+            android:id="@+id/rl_article_comments"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="340dp"
+                android:id="@+id/lv_article_comments" />
+
+
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/baike_linerLayout"
             android:layout_width="match_parent"
@@ -31,7 +46,6 @@
             android:background="@drawable/bg_grag_line_top_bottom"
             android:layout_marginTop="@dimen/news_detail_layout_margin_top"
             android:orientation="vertical" />
-
 
 
         <LinearLayout
@@ -43,12 +57,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_zhihu"
-                android:layout_marginLeft="@dimen/news_detail_item_margin_left"
-                android:layout_marginRight="@dimen/news_detail_item_margin_left"
-                android:layout_marginTop="@dimen/news_detail_item_margin_top" />
+                android:layout_width="30dp"
+                android:layout_height="71dp"
+                android:background="@drawable/bg_ex_read_zhihu"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                 />
 
             <LinearLayout
                 android:id="@+id/zhihu_item_linerLayout"
@@ -110,6 +124,7 @@
                 </LinearLayout>
             </com.news.yazhidao.widget.CustomHorizontalScrollView>
         </LinearLayout>
+
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailRelate"
             android:layout_marginTop="@dimen/news_detail_layout_margin_top"
