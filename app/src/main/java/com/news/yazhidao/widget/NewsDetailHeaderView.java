@@ -29,6 +29,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -41,6 +42,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.imagewall.BitmapUtil;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
 import com.news.yazhidao.widget.imagewall.ViewWall;
@@ -502,8 +504,10 @@ public class NewsDetailHeaderView extends FrameLayout {
             params.add(new BasicNameValuePair("type", "content"));
         }
         params.add(new BasicNameValuePair("uuid", "11111"));
-        params.add(new BasicNameValuePair("userIcon", ""));
-        params.add(new BasicNameValuePair("userName", "ariesy"));
+        User user = SharedPreManager.getUser(mContext);
+        params.add(new BasicNameValuePair("userId",user==null?"":user.getUserId()));
+        params.add(new BasicNameValuePair("userIcon", user==null?"":user.getUserIcon()));
+        params.add(new BasicNameValuePair("userName", user==null?"":user.getUserName()));
         request.setParams(params);
         request.setCallback(new JsonCallback<Object>() {
 

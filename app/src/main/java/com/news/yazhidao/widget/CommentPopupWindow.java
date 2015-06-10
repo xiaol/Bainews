@@ -24,6 +24,7 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.MediaPlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
@@ -116,6 +117,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         });
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        //退出评论页面时，关闭正在播放的语音评论
+        MediaPlayerManager.getInstance().stop();
+    }
 
     private void loadData() {
 
