@@ -310,6 +310,9 @@ public class FileUtils {
      */
     public static File getSavePath(Context mContext, String name) {
         File file = null;
+        if(!name.endsWith(".amr")){
+            name+=".amr";
+        }
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
             file = new File(Environment.getExternalStorageDirectory().toString());
@@ -326,7 +329,7 @@ public class FileUtils {
                 }
             }
         }
-        return new File(file, name + ".mp3");
+        return new File(file, name);
     }
 
     /**

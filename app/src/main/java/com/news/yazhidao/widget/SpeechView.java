@@ -112,11 +112,27 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         if (TextUtils.isEmpty(mUrl)) {
             return;
         }
+        //如果是刚录制完的语音文件则直接播放
+        if(!mUrl.contains("http:")){
+            MediaPlayerManager.getInstance().setData(SpeechView.this, mHandler, mUrl);
+            startAnimation();
+            return;
+        }else {
+            //如果请求的语音在本地有，则走如下逻辑
+            String name=mUrl.substring(mUrl.lastIndexOf("/")+1);
+            File savePath = FileUtils.getSavePath(mContext, name);
+            Logger.i("jigang", "local have path===" + savePath);
+            if(savePath.exists()){
+                MediaPlayerManager.getInstance().setData(SpeechView.this, mHandler, savePath.getPath());
+                startAnimation();
+                return;
+            }
+        }
         //如果已经存在改语音文件，则直接播放
         boolean existFile = FileUtils.isExistFile(mContext, mUrl);
         if (existFile) {
             String filePath = FileUtils.getFilePath(mContext, mUrl);
-            Log.e("jigang", "----filepath--" + filePath + ",,");
+            Log.e("jigang", "----filepath--" + filePath );
             MediaPlayerManager.getInstance().setData(SpeechView.this, mHandler, filePath);
             startAnimation();
 

@@ -64,8 +64,7 @@ import app.base.task.Compt;
 /**
  * Created by h.yuan on 2015/3/23.
  */
-public class NewsDetailHeaderView extends FrameLayout {
-
+public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWindow.IUpdateCommentCount {
 
     public static interface HeaderVeiwPullUpListener {
         void onclickPullUp(int height);
@@ -111,6 +110,7 @@ public class NewsDetailHeaderView extends FrameLayout {
 
     private boolean add_flag = false;
     private ArrayList<NewsDetail.Point> points;
+
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
@@ -161,7 +161,10 @@ public class NewsDetailHeaderView extends FrameLayout {
         MnewsDetailButtonConfirm = (Button) mRootView.findViewById(R.id.MnewsDetailButtonConfirm);
         MnewsDetailButtonCancel = (Button) mRootView.findViewById(R.id.MnewsDetailButtonCancel);
         mImageWall = (ImageWallView) mRootView.findViewById(R.id.mImageWall);
+    }
 
+    @Override
+    public void updateCommentCount(int count, int paragraphIndex) {
 
     }
 
@@ -308,7 +311,7 @@ public class NewsDetailHeaderView extends FrameLayout {
                                     point_para.add(points.get(m));
                                 }
                             }
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points);
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, points, NewsDetailHeaderView.this);
                             window.setFocusable(true);
                             //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
 //                            window.setBackgroundDrawable(new BitmapDrawable());

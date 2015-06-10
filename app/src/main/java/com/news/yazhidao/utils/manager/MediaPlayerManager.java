@@ -33,6 +33,9 @@ public class MediaPlayerManager {
     private boolean mIsSecondClickStop;
     public  void setData(SpeechView speechView, final Handler mHandler, String path){
         try {
+            if(mSpeechView!=null){
+                mSpeechView.stopAnimation();
+            }
             //说明是第一次点击语音
             if(mUrl==null){
                 mMediaPlayer.reset();
@@ -55,9 +58,7 @@ public class MediaPlayerManager {
                     }
                 }else{
                     mIsSecondClickStop=false;
-                    if(mSpeechView!=null){
-                        mSpeechView.stopAnimation();
-                    }
+
                     Message msg= Message.obtain();
                     msg.what= SpeechView.PLAY_COMPLETED;
                     mHandler.sendMessage(msg);
