@@ -48,6 +48,8 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import com.lostip.sdk.ad.custom.AdCocoaAPI;
+import com.lostip.sdk.ad.custom.AdCocoaDetail;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
@@ -64,6 +66,8 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.adcoco.AdcocoUtil;
+import com.news.yazhidao.utils.adcoco.AdcocoUtil.AdcocoNewsDetail;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
@@ -311,7 +315,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         setupJazziness(mCurrentTransitionEffect);
         loadData();
-
+        AdcocoUtil.setup(getActivity());
         return rootView;
     }
 
@@ -339,7 +343,14 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 }
                 mMiddleNewsArr.add(_NewsFeed);
+
+                try {
+//                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
                 mDownNewsArr.remove(mDownNewsArr.size() - 1);
+
                 if (miCurrentCount < miTotalCount)
                     miCurrentCount++;
                 mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
@@ -351,6 +362,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
             }
+        }
+        try {
+//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
+        }catch(Exception e){
+            e.printStackTrace();
         }
         //更新ui
         list_adapter.notifyDataSetChanged();
@@ -396,6 +412,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                                 }
                                 mMiddleNewsArr.add(0, _NewsFeed);
+                                try {
+//                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
                                 mUpNewsArr.remove(mUpNewsArr.size() - 1);
                                 GlobalParams.split_index_bottom++;
                                 lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -546,8 +567,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         @Override
         public int getCount() {
-            if (mMiddleNewsArr != null && mMiddleNewsArr.size() > 0)
-                return mMiddleNewsArr.size();
+            if (mMiddleNewsArr != null && mMiddleNewsArr.size() > 0) {
+
+
+                    return mMiddleNewsArr.size();
+            }
             return 0;
         }
 
@@ -563,6 +587,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             contentSize = 0;
             contentSize2 = 0;
 
@@ -577,11 +602,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
 
+
             if ("400".equals(feed.getSpecial())) {
                 //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
                     convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
+
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                     holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
                     holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
@@ -600,7 +627,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                     holder.cv_opinions = (CircleView) convertView.findViewById(R.id.cv_opinions);
                     convertView.setTag(holder);
-                } else {
+                } else
+
+                {
                     if (convertView.getTag() != null && ViewHolder.class == convertView.getTag().getClass()) {
                         holder = (ViewHolder) convertView.getTag();
                         holder.ll_source_content.removeAllViews();
@@ -629,30 +658,44 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         convertView.setTag(holder);
                     }
                 }
-
+//                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 String title = feed.getTitle();
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
 //                holder.tv_title.setFontSpacing(3);
 
-                holder.tv_interests.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
-                        intent.putExtra(KEY_URL, feed.getSourceUrl());
-                        intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                        startActivity(intent);
-                        //uemng statistic view the head news
-                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                    }
-                });
+                holder.tv_interests.setOnClickListener(new View.OnClickListener()
 
-                holder.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
+                                                       {
+                                                           @Override
+                                                           public void onClick(View v) {
+                                                               Intent intent = new Intent(mContext, NewsDetailAty.class);
+                                                               intent.putExtra(KEY_URL, feed.getSourceUrl());
+                                                               intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                                                               startActivity(intent);
+                                                               //uemng statistic view the head news
+                                                               MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                                                           }
+                                                       }
+
+                );
+
+                holder.cv_opinions.setBackgroundColor(new
+
+                                Color()
+
+                                .
+
+                                        parseColor("#50b5eb")
+
+                );
                 holder.cv_opinions.setText("观点");
                 holder.cv_opinions.setTextColor(Color.WHITE);
                 holder.cv_opinions.setTextSize(12);
 
-                if (feed.getCategory() != null) {
+                if (feed.getCategory() != null)
+
+                {
                     holder.tv_news_category.setText(feed.getCategory());
                     holder.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGroundRight(holder.tv_news_category, feed.getCategory());
@@ -660,61 +703,111 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 //百度百科
-                if("0".equals(feed.getIsBaikeFlag())){
+                if ("0".
+
+                        equals(feed.getIsBaikeFlag()
+
+                        ))
+
+                {
                     holder.img_source_baidu.setVisibility(View.GONE);
-                }else{
+                } else
+
+                {
                     holder.img_source_baidu.setVisibility(View.VISIBLE);
                 }
 
                 //评论
-                if("0".equals(feed.getIsCommentsFlag())){
+                if ("0".
+
+                        equals(feed.getIsCommentsFlag()
+
+                        ))
+
+                {
                     holder.img_source_comment.setVisibility(View.GONE);
-                }else{
+                } else
+
+                {
                     holder.img_source_comment.setVisibility(View.VISIBLE);
                 }
 
                 //图片墙
-                if("0".equals(feed.getIsImgWallFlag())){
+                if ("0".
+
+                        equals(feed.getIsImgWallFlag()
+
+                        ))
+
+                {
                     holder.img_source_biimgs.setVisibility(View.GONE);
-                }else{
+                } else
+
+                {
                     holder.img_source_biimgs.setVisibility(View.VISIBLE);
                 }
 
                 //微博
-                if("0".equals(feed.getIsWeiboFlag())){
+                if ("0".
+
+                        equals(feed.getIsWeiboFlag()
+
+                        ))
+
+                {
                     holder.img_source_sina.setVisibility(View.GONE);
-                }else{
+                } else
+
+                {
                     holder.img_source_sina.setVisibility(View.VISIBLE);
                 }
 
                 //知乎
-                if("0".equals(feed.getIsZhihuFlag())){
+                if ("0".
+
+                        equals(feed.getIsZhihuFlag()
+
+                        ))
+
+                {
                     holder.img_source_zhihu.setVisibility(View.GONE);
-                }else{
+                } else
+
+                {
                     holder.img_source_zhihu.setVisibility(View.VISIBLE);
                 }
 
                 holder.tv_interests.setText(feed.getOtherNum());
 
-                holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
-                        intent.putExtra(KEY_URL, feed.getSourceUrl());
-                        startActivity(intent);
-                        //uemng statistic view the head news
-                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                    }
-                });
+                holder.rl_title_content.setOnClickListener(new View.OnClickListener()
+
+                                                           {
+                                                               @Override
+                                                               public void onClick(View v) {
+                                                                   Intent intent = new Intent(mContext, NewsDetailAty.class);
+                                                                   intent.putExtra(KEY_URL, feed.getSourceUrl());
+                                                                   startActivity(intent);
+                                                                   //uemng statistic view the head news
+                                                                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                                                               }
+                                                           }
+
+                );
                 //点击其他观点的点击事件
-                holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //uemng statistic click other viewpoint
-                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
-                    }
-                });
-                if (feed != null && feed.getOtherNum() != null) {
+                holder.ll_source_interest.setOnClickListener(new View.OnClickListener()
+
+                                                             {
+                                                                 @Override
+                                                                 public void onClick(View v) {
+                                                                     //uemng statistic click other viewpoint
+                                                                     MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                                                                 }
+                                                             }
+
+                );
+                if (feed != null && feed.getOtherNum() != null)
+
+                {
                     if (Integer.parseInt(feed.getOtherNum()) == 0) {
                         holder.ll_source_interest.setVisibility(View.GONE);
                     } else {
@@ -723,11 +816,15 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 //如果是最后一条新闻显示阅读更多布局
-                if (feed.isBottom_flag()) {
+                if (feed.isBottom_flag())
+
+                {
                     holder.rl_bottom_mark.setVisibility(View.VISIBLE);
                 }
 
-                if (feed.isTime_flag()) {
+                if (feed.isTime_flag())
+
+                {
                     holder.ll_time_item.setVisibility(View.VISIBLE);
 
                     if (mCurrentDate == null) {
@@ -777,15 +874,25 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 }
 
-                holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
-                    }
-                });
+                holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener()
+
+                                                         {
+                                                             @Override
+                                                             public void onClick(View v) {
+                                                                 lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
+                                                             }
+                                                         }
+
+                );
 
 
-                if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
+                if (feed.getImgUrl() != null && !("".
+
+                        equals(feed.getImgUrl()
+
+                        )))
+
+                {
                     ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
                 }
 
@@ -794,7 +901,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
                 //解析新闻来源观点数据
-                if (sourceList != null && sourceList.size() > 0) {
+                if (sourceList != null && sourceList.size() > 0)
+
+                {
                     source_title_length = 0;
 
                     for (int a = 0; a < sourceList.size(); a++) {
@@ -875,7 +984,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 //大图卡片
-            } else if ("1".equals(feed.getSpecial())) {
+            } else if ("1".
+
+                    equals(feed.getSpecial()
+
+                    ))
+
+            {
 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
@@ -1009,7 +1124,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 });
                 //多图卡片
-            } else if ("9".equals(feed.getSpecial())) {
+            } else if ("9".
+
+                    equals(feed.getSpecial()
+
+                    ))
+
+            {
 
                 images = feed.getImgUrl_ex();
 
@@ -1261,7 +1382,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             }
 
             //下拉时给显示的item添加动画
-            if (position == 0 && mIsNeedAnim) {
+            if (position == 0 && mIsNeedAnim)
+
+            {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.aty_list_item_in));
                 return convertView;
@@ -1279,8 +1402,23 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 //                animator.start();
 //
 //            }
+
+//            if(feed instanceof AdcocoNewsDetail){
+//                convertView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        AdCocoaAPI.clickAd(view.getContext(),((AdCocoaDetail)((AdcocoNewsDetail) feed).addetail));
+//                    }
+//                });
+//
+//            }else{
+//                convertView.setOnClickListener(null);
+//            }
+
             return convertView;
         }
+
+
 
     }
 
@@ -1388,25 +1526,25 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
 
         if (length > 15) {
-            if(GlobalParams.screenHeight == 1280) {
+            if (GlobalParams.screenHeight == 1280) {
                 params.height = 85;
-            }else if(GlobalParams.screenHeight == 1776){
+            } else if (GlobalParams.screenHeight == 1776) {
                 params.height = 130;
-            }else if(GlobalParams.screenHeight == 1800){
+            } else if (GlobalParams.screenHeight == 1800) {
                 params.height = 110;
-            }else{
+            } else {
                 params.height = 85;
 
             }
 
         } else {
-            if(GlobalParams.screenHeight == 1280) {
+            if (GlobalParams.screenHeight == 1280) {
                 params.height = 43;
-            }else if(GlobalParams.screenHeight == 1776){
+            } else if (GlobalParams.screenHeight == 1776) {
                 params.height = 70;
-            }else if(GlobalParams.screenHeight == 1800){
+            } else if (GlobalParams.screenHeight == 1800) {
                 params.height = 55;
-            }else{
+            } else {
                 params.height = 43;
 
             }
