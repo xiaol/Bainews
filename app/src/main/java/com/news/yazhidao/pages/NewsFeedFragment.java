@@ -316,6 +316,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         setupJazziness(mCurrentTransitionEffect);
         loadData();
         AdcocoUtil.setup(getActivity());
+        try {
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         return rootView;
     }
 
@@ -344,11 +349,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
                 mMiddleNewsArr.add(_NewsFeed);
 
-                try {
-//                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+
+
                 mDownNewsArr.remove(mDownNewsArr.size() - 1);
 
                 if (miCurrentCount < miTotalCount)
@@ -364,7 +366,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             }
         }
         try {
-//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -413,7 +415,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                 }
                                 mMiddleNewsArr.add(0, _NewsFeed);
                                 try {
-//                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size());
+                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
                                 }catch(Exception e){
                                     e.printStackTrace();
                                 }
@@ -604,6 +606,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
 
             if ("400".equals(feed.getSpecial())) {
+                AdcocoUtil.update();
                 //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -658,7 +661,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         convertView.setTag(holder);
                     }
                 }
-//                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 String title = feed.getTitle();
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
