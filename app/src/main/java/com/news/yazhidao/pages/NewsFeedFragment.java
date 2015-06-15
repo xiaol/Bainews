@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,9 +67,9 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil.AdcocoNewsDetail;
-import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.adcoco.AdcocoUtil.AdcocoNewsDetail;import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
@@ -140,6 +141,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private boolean refresh_flag = false;
     private boolean top_flag = false;
     private boolean bottom_flag = false;
+    private static long mLastPressedBackKeyTime;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
@@ -625,6 +627,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
                     holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                     holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                    holder.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
                     holder.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
                     holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
@@ -647,6 +650,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                         holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
                         holder.img_source_baidu = (ImageView) convertView.findViewById(R.id.img_source_baidu);
+                        holder.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
                         holder.img_source_zhihu = (ImageView) convertView.findViewById(R.id.img_source_zhihu);
                         holder.img_source_biimgs = (ImageView) convertView.findViewById(R.id.img_source_biimgs);
                         holder.img_source_comment = (ImageView) convertView.findViewById(R.id.img_source_comment);
@@ -908,6 +912,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 {
                     source_title_length = 0;
+                    holder.ll_view_content.setVisibility(View.VISIBLE);
 
                     for (int a = 0; a < sourceList.size(); a++) {
 
@@ -984,6 +989,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
 
                     setContentParams(holder.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER);
+                }else{
+                    setContentParams(holder.ll_source_content, 0, source_title_length, TYPE_VIEWHOLDER);
+                    holder.ll_view_content.setVisibility(View.GONE);
                 }
 
                 //大图卡片
@@ -1008,11 +1016,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder2.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     convertView.setTag(holder2);
                 } else {
-//                    if (ViewHolder2.class == convertView.getTag().getClass()) {
-//                        holder2 = (ViewHolder2) convertView.getTag();
-//                        holder2.ll_bottom_item.setVisibility(View.GONE);
-//                        holder2.rl_top_mark.setVisibility(View.GONE);
-//                    } else {
                     holder2 = new ViewHolder2();
                     convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
                     holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
@@ -1602,6 +1605,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ImageView img_source_comment;
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
+        LinearLayout ll_view_content;
         RelativeLayout rl_title_content;
         TextViewExtend tv_interests;
         RelativeLayout rl_bottom_mark;
@@ -1794,5 +1798,20 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         }
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // TODO Auto-generated method stub
+        if (keyCode == event.KEYCODE_BACK) {
+
+            long pressedBackKeyTime = System.currentTimeMillis();
+            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
+                getActivity().finish();
+            } else {
+                ToastUtil.showToastWithIcon("再按一次退出应用", R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+            }
+            mLastPressedBackKeyTime = pressedBackKeyTime;
+
+        }
+        return true;
+    }
 
 }

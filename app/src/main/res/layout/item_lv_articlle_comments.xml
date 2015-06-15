@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_para"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
+
+    <com.news.yazhidao.widget.LetterSpacingTextView
+        android:id="@+id/lstv_para_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/rl_comment"
+        android:layout_below="@+id/lstv_para_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.news.yazhidao.widget.RoundedImageView
+            android:id="@+id/iv_user_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_comment_para"
+            app:border_color="@color/black"
+            app:border_width="1dp"
+            app:corner_radius="20dp" />
+
+        <TextView
+            android:id="@+id/tv_comment_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@+id/iv_user_icon"
+            android:textSize="15sp"
+            android:textColor="#32bfcd" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/iv_praise"
+            android:background="@drawable/bg_normal_praise"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            />
+
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

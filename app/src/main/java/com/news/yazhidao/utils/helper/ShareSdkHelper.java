@@ -121,7 +121,7 @@ public class ShareSdkHelper {
         mUserLoginPopupStateListener=userLoginPopupStateListener;
         Platform _Plateform = ShareSDK.getPlatform(mContext, platform);
         //判断指定平台是否已经完成授权
-        if (_Plateform.isValid()) {
+        if (_Plateform.isValid()&&SharedPreManager.getUser(context)!=null) {
             String userId = _Plateform.getDb().getUserId();
             if (userId != null) {
                 if (mUserLoginListener != null) {

@@ -52,7 +52,7 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
 
     private PullToRefreshExpandableListView mlvFeedBack;
     private TSPrivateChatMessageAdapter mAdapter;
-    private TextViewExtend mTitleView;
+    private TextViewExtend mTitleView, mSendView;
     private RelativeLayout mFeedbackTip;
     private ExpandableListView mlvActual;
     private ArrayList<FeedBack> marrFeedBack;
@@ -72,10 +72,12 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
         intentfilter.addAction("FeedBackMessage");
         registerReceiver(mReceiver, intentfilter);
     }
+
     @Override
     protected boolean translucentStatus() {
         return false;
     }
+
     @Override
     protected void setContentView() {
 
@@ -93,7 +95,13 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
 
         mAdapter = new TSPrivateChatMessageAdapter(this);
         mTitleView = (TextViewExtend) findViewById(R.id.nav_title_view);
-
+        mSendView = (TextViewExtend) findViewById(R.id.send_button);
+        mSendView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage(v);
+            }
+        });
         mlvFeedBack = (PullToRefreshExpandableListView) findViewById(R.id.private_chat_message_list_view);//得到ListView对象的引用 /*为ListView设置Adapter来绑定数据*/
         mlvActual = mlvFeedBack.getRefreshableView();
         mlvActual.setAdapter(mAdapter);
@@ -128,60 +136,63 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (mIsSend && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    /*隐藏软键盘*/
-                    InputMethodManager imm = (InputMethodManager) v
-                            .getContext().getSystemService(
-                                    Context.INPUT_METHOD_SERVICE);
-                    if (imm.isActive()) {
-                        imm.hideSoftInputFromWindow(
-                                v.getApplicationWindowToken(), 0);
-                    }
-                    mIsSend = false;
-                    Message message;
-                    message = new Message(mReceiverId, mJPushId, metFeedBack.getText().toString(), "text");
-                    SendMessageRequest.sendMessage(message, FeedBackActivity.this);
-                    int size = marrFeedBack.size();
-                    String millis;
-                    if (size > 0)
-                        millis = marrFeedBack.get(size - 1).updateTime;
-                    else
-                        millis = String.valueOf(System.currentTimeMillis());
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Long lastTime = 0l;
-                    try {
-                        lastTime = df.parse(millis).getTime();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if ((System.currentTimeMillis() - lastTime) > 15 * 60 * 1000) {
-                        FeedBack mFeedBack = new FeedBack();
-                        try {
-                            Date date = new Date();
-                            String strDate = df.format(date);
-                            mFeedBack.updateTime = strDate;
-                            Log.i("tag", strDate);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        ArrayList<FeedBack.Content> contents = new ArrayList<>();
-                        FeedBack.Content content = mFeedBack.new Content();
-                        content.content = metFeedBack.getText().toString();
-                        content.type = "0";
-                        contents.add(content);
-                        mFeedBack.content = contents;
-                        marrFeedBack.add(mFeedBack);
-                    } else {
-                        FeedBack.Content content = marrFeedBack.get(size - 1).new Content();
-                        content.content = metFeedBack.getText().toString();
-                        content.type = "0";
-                        marrFeedBack.get(size - 1).content.add(content);
-                    }
-                    refreshUI();
+                    sendMessage(v);
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    private void sendMessage(View v) {
+        InputMethodManager imm = (InputMethodManager)
+                v.getContext().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(
+                    v.getApplicationWindowToken(), 0);
+        }
+        mIsSend = false;
+        Message message;
+        message = new Message(mReceiverId, mJPushId, metFeedBack.getText().toString(), "text");
+        SendMessageRequest.sendMessage(message, FeedBackActivity.this);
+        int size = marrFeedBack.size();
+        String millis;
+        if (size > 0)
+            millis = marrFeedBack.get(size - 1).updateTime;
+        else
+            millis = String.valueOf(System.currentTimeMillis());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Long lastTime = 0l;
+        try {
+            lastTime = df.parse(millis).getTime();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if ((System.currentTimeMillis() - lastTime) > 15 * 60 * 1000) {
+            FeedBack mFeedBack = new FeedBack();
+            try {
+                Date date = new Date();
+                String strDate = df.format(date);
+                mFeedBack.updateTime = strDate;
+                Log.i("tag", strDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ArrayList<FeedBack.Content> contents = new ArrayList<>();
+            FeedBack.Content content = mFeedBack.new Content();
+            content.content = metFeedBack.getText().toString();
+            content.type = "0";
+            contents.add(content);
+            mFeedBack.content = contents;
+            marrFeedBack.add(mFeedBack);
+        } else {
+            FeedBack.Content content = marrFeedBack.get(size - 1).new Content();
+            content.content = metFeedBack.getText().toString();
+            content.type = "0";
+            marrFeedBack.get(size - 1).content.add(content);
+        }
+        refreshUI();
     }
 
     @Override

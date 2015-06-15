@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <include
+        android:id="@+id/voice_record_layout_wins"
+        layout="@layout/part_voice_record_wins2"
+        android:visibility="invisible" />
+
+    <com.news.yazhidao.widget.InputBar.InputBar
+        android:id="@+id/input_bar_view"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+</RelativeLayout>
