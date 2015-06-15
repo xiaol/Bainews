@@ -218,8 +218,9 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 lv_article_comments.setVisibility(View.GONE);
             }
 
+
             sv_article_comment.setUrl("http://data.deeporiginalx.com/20150610/1433920252293.amr");
-            sv_article_comment.setDuration(4);
+            sv_article_comment.setDuration(10);
 
             mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
@@ -293,17 +294,18 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             tv_add_comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext,points,NewsDetailHeaderView.this);
-                    window.setFocusable(true);
-                    //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                            window.setBackgroundDrawable(new BitmapDrawable());
-                    //防止虚拟软键盘被弹出菜单遮住、
-                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    if(points.size() > 0) {
+                        InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points, NewsDetailHeaderView.this);
+                        window.setFocusable(true);
+                        //防止虚拟软键盘被弹出菜单遮住、
+                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
 
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                            | Gravity.CENTER, 0, GlobalParams.screenHeight);
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                                | Gravity.CENTER, 0, GlobalParams.screenHeight);
+                    }else{
+
+                    }
                 }
             });
 
