@@ -24,6 +24,7 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.manager.MediaPlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
 import com.news.yazhidao.widget.InputBar.InputBarDelegate;
@@ -32,10 +33,6 @@ import com.news.yazhidao.widget.InputBar.InputBarType;
 import java.util.ArrayList;
 
 
-//m_ppopupWindow = new TSHeadPortraitPopupWindow(m_pActivity, m_pUserData.getM_strPhotoUrl());
-//        m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
-//        m_ppopupWindow.showAtLocation(m_pActivity.getWindow().getDecorView(), Gravity.CENTER
-//        | Gravity.CENTER, 0, 0);
 
 /**
  * Created by h.yuan on 2015/3/23.
@@ -122,8 +119,10 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     @Override
     public void dismiss() {
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex);
         super.dismiss();
+        //退出评论页面时，关闭正在播放的语音评论
+        MediaPlayerManager.getInstance().stop();
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex);
     }
 
     private void loadData() {
@@ -139,7 +138,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
-            newPoint.desText = argContent;
+            newPoint.srcText = argContent;
+            newPoint.srcTextTime=speechDuration/1000;
         } else {
             type = UploadCommentRequest.TEXT_PARAGRAPH;
             newPoint.srcText = argContent;
@@ -151,7 +151,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         marrPoints.add(newPoint);
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
-        Logger.i("jigang", type + "----url==" + argContent);
+        Logger.i("jigang", type + "----url==" + argContent+"-------duration==="+speechDuration);
         UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
@@ -287,7 +287,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.tvContent.setVisibility(View.VISIBLE);
                 holder.mSpeechView.setVisibility(View.GONE);
             } else {
-                Logger.i("jigang", point.srcTextTime + "--" + point.srcText);
+                Logger.i("jigang", point.srcTextTime + "--adapter--" + point.srcText);
                 holder.mSpeechView.setUrl(point.srcText);
                 holder.mSpeechView.setDuration(point.srcTextTime);
                 holder.mSpeechView.setVisibility(View.VISIBLE);

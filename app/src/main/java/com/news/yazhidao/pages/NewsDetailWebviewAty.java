@@ -13,15 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 /**
  * Created by fengjigang on 15/3/27.
  */
-public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnClickListener {
+public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "NewsDetailWebviewAty";
     private WebView mNewsSourcesiteWebview;
     private String mNewsUrl;
@@ -38,6 +38,7 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
     private int mClickNum=0;
     private ProgressBar mNewsSourcesiteProgress;
     private SwipeBackLayout mSwipeBackLayout;
+    private View mLeftBack;
 
     @Override
     protected boolean translucentStatus() {
@@ -52,7 +53,8 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
         mNewsSourcesiteLeftBack.setOnClickListener(this);
         mNewsSourcesiteUrl=(TextView)findViewById(R.id.mNewsSourcesiteUrl);
         mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
-
+        mLeftBack=findViewById(R.id.mLeftBack);
+        mLeftBack.setOnClickListener(this);
 
         mNewsSourcesiteFooterPraise=findViewById(R.id.mNewsSourcesiteFooterPraise);
         mNewsSourcesiteFooterPraise.setOnClickListener(this);
@@ -96,6 +98,9 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
             case R.id.mNewsSourcesiteFooterShare:
                 ToastUtil.toastShort("点击了分享");
                 break;
+            case R.id.mLeftBack:
+                finish();
+                break;
             default:
                 break;
         }
@@ -127,8 +132,6 @@ public class NewsDetailWebviewAty extends SwipeBackActivity implements View.OnCl
 
     @Override
     protected void initializeViews() {
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
         mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
