@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+﻿apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
@@ -16,6 +16,7 @@ android {
     productFlavors {
 
 //        yingyongbao {}
+	adcoco {}
         xiaomi {}
         c360 {}
 //        baidu {}
@@ -86,4 +87,5 @@ dependencies {
     compile files('libs/jpush-sdk-release1.7.4.jar')
     compile project(':library_pageslidingtabstrip')
     compile files('libs/task.jar')
+    compile files('libs/lostip_customUI.jar')
 }

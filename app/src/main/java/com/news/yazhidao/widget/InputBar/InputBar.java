@@ -31,7 +31,6 @@ import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.File;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import cn.sharesdk.framework.PlatformDb;
 
@@ -132,7 +131,7 @@ public class InputBar extends FrameLayout {
         mRecordButton.setOnTouchListener(mRecordTouchEvent);
         mTextField.setOnEditorActionListener(mTextFieldListener);
         mTextField.setOnFocusChangeListener(mTextFieldFocusChangeListener);
-        this.mFileName=System.currentTimeMillis()+"";
+        this.mFileName = System.currentTimeMillis() + "";
     }
 
     public void startReply() {
@@ -181,7 +180,7 @@ public class InputBar extends FrameLayout {
             }
         }
     };
-
+    Thread thread;
     OnTouchListener mRecordTouchEvent = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -212,20 +211,43 @@ public class InputBar extends FrameLayout {
                     mfCurDuration = 0;
                     isLong = false;
                     startRecord();
-                    TimerTask task = new TimerTask() {
+                    thread = new Thread() {
+                        @Override
                         public void run() {
-                            mfCurDuration += 0.1;
-                            mRecordState = RECORD_ING;
-                            mRecordVolume = mRecorder.getAmplitude();
-                            mHandler.sendEmptyMessage(RECORD_ING);
-                            if (mfCurDuration > 29.5)//如果大于30秒
-                            {
-                                mHandler.sendEmptyMessage(RECORD_NO);
+                            try {
+                                while (true) {
+                                    Log.i("tag", "tag111111111");
+                                    mfCurDuration += 0.1;
+                                    mRecordState = RECORD_ING;
+                                    mRecordVolume = mRecorder.getAmplitude();
+                                    mHandler.sendEmptyMessage(RECORD_ING);
+                                    if (mfCurDuration > 29.5)//如果大于30秒
+                                    {
+                                        mHandler.sendEmptyMessage(RECORD_NO);
+                                    }
+                                    thread.sleep(100);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
                     };
-                    mCheckRecordTimer = new Timer(true);
-                    mCheckRecordTimer.schedule(task, 100, 100); //延时100ms后执行，100ms执行一次
+                    thread.start();
+//                    TimerTask task = new TimerTask() {
+//                        public void run() {
+//                            mfCurDuration += 0.05;
+//                            mRecordState = RECORD_ING;
+//                            mRecordVolume = mRecorder.getAmplitude();
+//                            mHandler.sendEmptyMessage(RECORD_ING);
+//                            if (mfCurDuration > 29.5)//如果大于30秒
+//                            {
+//                                mHandler.sendEmptyMessage(RECORD_NO);
+//                            }
+//                        }
+//                    };
+//                    mCheckRecordTimer = new Timer(true);
+//                    mCheckRecordTimer.schedule(task, 0, 50);
+                    //延时100ms后执行，100ms执行一次
                     break;
 
                 case MotionEvent.ACTION_MOVE: {
@@ -323,22 +345,21 @@ public class InputBar extends FrameLayout {
     }
 
     public void finishRecord() {
+        if (thread != null) {
+            thread.interrupt();
+            thread = null;
+        }
         if (mCheckRecordTimer != null)
             mCheckRecordTimer.cancel();
-
         if (mRecorder != null)
             mRecorder.stopRecorder();
-
         if (mRecordState == RECORD_ED)
             return;
-
         mRecordState = RECORD_ED;
-
-        String filePath = FileUtils.getSaveDir(mContext)  + File.separator + mFileName + ".amr";
+        String filePath = FileUtils.getSaveDir(mContext) + File.separator + mFileName + ".amr";
         MediaPlayer mp = MediaPlayer.create(mActivity, Uri.parse(filePath));
         int duration = mp.getDuration();
         mp.release();
-
         if (duration < 2000) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("啊哦");
@@ -354,10 +375,8 @@ public class InputBar extends FrameLayout {
 
             return;
         }
-
-
         if (mDelegate != null)
-            mDelegate.submitThisMessage(m_eCurType, filePath,duration);
+            mDelegate.submitThisMessage(m_eCurType, filePath, duration);
     }
 
     private void cancalRecord() {
@@ -393,7 +412,7 @@ public class InputBar extends FrameLayout {
         removeTextFieldFirstRespond();
 //        String message = mTextField.getText().toString();
         if (mDelegate != null)
-            mDelegate.submitThisMessage(m_eCurType, strPureText,-1);
+            mDelegate.submitThisMessage(m_eCurType, strPureText, -1);
         mTextField.setText("");
     }
 
