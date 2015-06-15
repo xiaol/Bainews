@@ -1,4 +1,4 @@
-﻿apply plugin: 'com.android.application'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
@@ -16,7 +16,6 @@ android {
     productFlavors {
 
 //        yingyongbao {}
-	adcoco {}
         xiaomi {}
         c360 {}
 //        baidu {}
