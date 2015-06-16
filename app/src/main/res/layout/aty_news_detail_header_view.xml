@@ -34,10 +34,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="340dp"
-                android:id="@+id/lv_article_comments"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                />
+                android:id="@+id/lv_article_comments" />
 
 
         </RelativeLayout>
@@ -64,17 +61,36 @@
                 android:layout_height="71dp"
                 android:background="@drawable/bg_ex_read_zhihu"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="10dp"
-                 />
+                android:layout_marginRight="10dp" />
 
-            <LinearLayout
-                android:id="@+id/zhihu_item_linerLayout"
-                android:layout_marginBottom="-2dp"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/zhihu_item_linerLayout"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_below="@+id/zhihu_item_linerLayout"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="23dp"
+                    android:layout_marginBottom="15dp"
+                    android:id="@+id/iv_show_all_zhihu_views"
+                    android:layout_width="19dp"
+                    android:layout_height="10dp"
+                    android:background="@drawable/ic_pull_to_all"
+                    />
+
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
