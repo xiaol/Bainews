@@ -123,10 +123,10 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
         NewsDetail.Point newPoint = newsDetail.new Point();
         String type;
         if (argType == InputBarType.eRecord) {
-            type = UploadCommentRequest.SPEECH_PARAGRAPH;
+            type = UploadCommentRequest.SPEECH_DOC;
             newPoint.desText = argContent;
         } else {
-            type = UploadCommentRequest.TEXT_PARAGRAPH;
+            type = UploadCommentRequest.TEXT_DOC;
             newPoint.srcText = argContent;
         }
         User user = SharedPreManager.getUser(m_pContext);

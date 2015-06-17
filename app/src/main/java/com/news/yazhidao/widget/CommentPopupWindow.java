@@ -286,7 +286,11 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.tvContent.setText(point.srcText);
                 holder.tvContent.setVisibility(View.VISIBLE);
                 holder.mSpeechView.setVisibility(View.GONE);
-            } else {
+            } else if (point.type.equals("text_doc")) {
+                holder.tvContent.setText(point.srcText);
+                holder.tvContent.setVisibility(View.VISIBLE);
+                holder.mSpeechView.setVisibility(View.GONE);
+            }else {
                 Logger.i("jigang", point.srcTextTime + "--adapter--" + point.srcText);
                 holder.mSpeechView.setUrl(point.srcText);
                 holder.mSpeechView.setDuration(point.srcTextTime);
