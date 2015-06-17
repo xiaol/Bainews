@@ -18,6 +18,7 @@ android {
 //        yingyongbao {}
         xiaomi {}
         c360 {}
+        adcoco{}
 //        baidu {}
 //        anzhi {}
 //        wandoujia {}

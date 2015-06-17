@@ -11,6 +11,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 
+import com.news.yazhidao.utils.Logger;
+
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -34,9 +36,9 @@ public class CustomShareAdapter extends AuthorizeAdapter implements OnClickListe
     private boolean stopFinish;
 
     public void onCreate() {
+        Logger.e("jigang","----adapter------oncreate");
         // 隐藏标题栏右部的ShareSDK Logo
         hideShareSDKLogo();
-
         String platName = getPlatformName();
         if (SinaWeibo.NAME.equals(platName)
                 || SinaWeibo.NAME.equals(platName)) {
