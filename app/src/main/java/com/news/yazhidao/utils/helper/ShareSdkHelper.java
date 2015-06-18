@@ -54,6 +54,10 @@ public class ShareSdkHelper {
                 String gender = platformDb.getUserGender();
                 String iconURL = platformDb.getUserIcon();
                 String token = platformDb.getToken();
+                //关注官方微博
+                if(SinaWeibo.NAME.equals(platformDb.getPlatformNname())){
+                    platform.followFriend("头条百家");
+                }
                 Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token);
                 Log.i("jigang", "share complete uuid=" + DeviceInfoUtil.getUUID());
                 Log.i("jigang", "share complete userId=" + platformDb.getUserId());
@@ -79,7 +83,6 @@ public class ShareSdkHelper {
                                 @Override
                                 public void run() {
                                     mUserLoginPopupStateListener.close();
-
                                     mUserLoginListener.userLogin(platform.getName(), platform.getDb());
                                 }
                             });
