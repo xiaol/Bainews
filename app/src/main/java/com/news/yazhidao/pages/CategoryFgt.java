@@ -52,7 +52,7 @@ public class CategoryFgt extends Fragment {
                 GlobalParams.currentCatePos = position;
                 Intent intent = new Intent("sendposition");
                 GlobalParams.context.sendBroadcast(intent);
-                if(GlobalParams.tabs != null) {
+                if (GlobalParams.tabs != null) {
                     setTabTitle(position);
                 }
             }
@@ -66,7 +66,7 @@ public class CategoryFgt extends Fragment {
                 GlobalParams.tabs.updateSelection2(1, "谷歌今日焦点");
                 break;
             case 1:
-                GlobalParams.tabs.updateSelection2(1, "实事");
+                GlobalParams.tabs.updateSelection2(1, "时事");
                 break;
             case 2:
                 GlobalParams.tabs.updateSelection2(1, "娱乐");

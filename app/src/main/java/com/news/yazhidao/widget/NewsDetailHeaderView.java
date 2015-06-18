@@ -67,18 +67,28 @@ import app.base.task.Compt;
 /**
  * Created by h.yuan on 2015/3/23.
  */
-public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWindow.IUpdateCommentCount,InputbarPopupWindow.IUpdateCommentCount {
+public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWindow.IUpdateCommentCount, InputbarPopupWindow.IUpdateCommentCount {
 
     public static interface HeaderVeiwPullUpListener {
         void onclickPullUp(int height);
     }
 
+    //文本类型段落评论
+    public static final String TEXT_PARAGRAPH="text_paragraph";
+    //文本类型全文评论
+    public static final String TEXT_DOC="text_doc";
+    //语音类型段落评论
+    public static final String SPEECH_PARAGRAPH="speech_paragraph";
+    //语音类型全文评论
+    public static final String SPEECH_DOC="speech_doc";
+
     //当前新闻内容的高度
     private int mContentHeight;
     private View mRootView;
     private Context mContext;
+    private int speechCount;
     private RelativeLayout rl_article_comments;
-    private ListView lv_article_comments;
+    private ShowAllListview lv_article_comments;
     private TextViewExtend tv_add_comment;
     private MyAdapter adapter;
     private LinearLayout mllBaiKe, mllZhiHu, mllZhiHuItem, mllSina, mllSinaItem, mllDouBan;
@@ -90,6 +100,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private TextView mNewsDetailHeaderTemperature;
     private ImageView iv_user_icon_article_comment;
     private SpeechView sv_article_comment;
+    private RelativeLayout rl_speech_view;
     private LetterSpacingTextView mNewsDetailHeaderDesc;
     private LinearLayout mNewsDetailHeaderContentParent;
     private TextView mNewsDetailHeaderSourceName;
@@ -103,7 +114,9 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private Button MnewsDetailButtonCancel;
     private String[] _Split;
     private ArrayList<NewsDetail.Point> marrPoint = new ArrayList<NewsDetail.Point>();
+    private ArrayList<NewsDetail.Point> paraPoint = new ArrayList<NewsDetail.Point>();
     private ImageView iv_show_all_zhihu_views;
+    private String sourceUrl;
 
     private static int EDIT_POSITION;
     private static final int TITLE = 1;
@@ -120,7 +133,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private int _CurrentPos = 0;
 
     private boolean add_flag = false;
-    private ArrayList<NewsDetail.Point> points;
+    private ArrayList<NewsDetail.Point> points = new ArrayList<NewsDetail.Point>();
 
     public NewsDetailHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -149,7 +162,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
     private void findViews() {
         rl_article_comments = (RelativeLayout) mRootView.findViewById(R.id.rl_article_comments);
-        lv_article_comments = (ListView) mRootView.findViewById(R.id.lv_article_comments);
+        lv_article_comments = (ShowAllListview) mRootView.findViewById(R.id.lv_article_comments);
         mllBaiKe = (LinearLayout) mRootView.findViewById(R.id.baike_linerLayout);
         mllZhiHu = (LinearLayout) mRootView.findViewById(R.id.zhihu_linerLayout);
         mllZhiHuItem = (LinearLayout) mRootView.findViewById(R.id.zhihu_item_linerLayout);
@@ -164,6 +177,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         mNewsDetailHeaderTitle = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
         mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
         mNewsDetailHeaderTemperature = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
+        rl_speech_view = (RelativeLayout) mRootView.findViewById(R.id.rl_speech_view);
         iv_user_icon_article_comment = (ImageView) mRootView.findViewById(R.id.iv_user_icon_article_comment);
         sv_article_comment = (SpeechView) mRootView.findViewById(R.id.sv_article_comment);
         mNewsDetailHeaderDesc = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
@@ -183,13 +197,13 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
     @Override
     public void updateCommentCount(int count, int paragraphIndex) {
-        if(mNewsDetailHeaderContentParent != null) {
+        if (mNewsDetailHeaderContentParent != null) {
             RelativeLayout rl_para = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(paragraphIndex);
             TextView tv_comment_count = (TextView) rl_para.findViewById(R.id.tv_comment_count);
             int origin_count = 0;
-            if(tv_comment_count != null) {
+            if (tv_comment_count != null) {
                 origin_count = Integer.parseInt(tv_comment_count.getText().toString());
-                tv_comment_count.setText(origin_count + count +"");
+                tv_comment_count.setText(origin_count + count + "");
             }
 
         }
@@ -215,7 +229,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
      *
      * @param pNewsDetail
      */
-    private void inflateDataToNewsheader(final NewsDetail pNewsDetail, final HeaderVeiwPullUpListener listener) {
+    private void inflateDataToNewsheader(final NewsDetail pNewsDetail, final String sourceUrl, final HeaderVeiwPullUpListener listener) {
         if (pNewsDetail != null) {
             if (TextUtils.isValidate(pNewsDetail.imgUrl)) {
                 ImageManager.getInstance(mContext).DisplayImage(pNewsDetail.imgUrl, mNewsDetailHeaderImg, true);
@@ -224,19 +238,48 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             }
 
             points = pNewsDetail.point;
-            marrPoint = points;
-            if(marrPoint.size() > 0) {
+            this.sourceUrl = sourceUrl;
+
+            //提取全文评论列表
+            for(int i = 0;i< points.size();i++){
+                NewsDetail.Point point = points.get(i);
+
+                if(TEXT_DOC.equals(point.type) || SPEECH_DOC.equals(point.type)){
+                    marrPoint.add(point);
+                }
+            }
+
+            //提取段落评论列表
+            for(int i = 0;i< points.size();i++){
+                NewsDetail.Point point = points.get(i);
+
+                if(TEXT_PARAGRAPH.equals(point.type) || SPEECH_PARAGRAPH.equals(point.type)){
+                    paraPoint.add(point);
+                }
+            }
+
+//            marrPoint = points;
+            if (marrPoint.size() > 0) {
                 adapter = new MyAdapter();
                 lv_article_comments.setAdapter(adapter);
 
-                setLvContentParams(marrPoint.size(),lv_article_comments);
-            }else{
+//                setLvContentParams(marrPoint.size(), lv_article_comments);
+            } else {
                 lv_article_comments.setVisibility(View.GONE);
             }
 
+            //判断是否显示语音弹幕
+            if(pNewsDetail.isdoc == false){
+                rl_speech_view.setVisibility(View.GONE);
+            }else{
+                sv_article_comment.setUrl(pNewsDetail.docUrl);
+                sv_article_comment.setDuration(Integer.parseInt(pNewsDetail.docTime));
+            }
 
-            sv_article_comment.setUrl("http://data.deeporiginalx.com/20150610/1433920252293.amr");
-            sv_article_comment.setDuration(10);
+            //获取语音弹幕用户头像
+            if(pNewsDetail.docUserIcon != null && !"".equals(pNewsDetail.docUserIcon)){
+                ImageLoaderHelper.dispalyImage(mContext,pNewsDetail.docUserIcon,iv_user_icon_article_comment);
+            }
 
             mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
             mNewsDetailHeaderTitle.setText(pNewsDetail.title);
@@ -310,18 +353,14 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             tv_add_comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(points.size() > 0) {
-                        InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points, NewsDetailHeaderView.this);
-                        window.setFocusable(true);
-                        //防止虚拟软键盘被弹出菜单遮住、
-                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+                    InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points,sourceUrl, NewsDetailHeaderView.this);
+                    window.setFocusable(true);
+                    //防止虚拟软键盘被弹出菜单遮住、
+                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
 
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, GlobalParams.screenHeight);
-                    }else{
-
-                    }
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                            | Gravity.CENTER, 0, GlobalParams.screenHeight);
                 }
             });
 
@@ -389,7 +428,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                     iv_add_comment.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext,points,NewsDetailHeaderView.this);
+                            InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points,sourceUrl, NewsDetailHeaderView.this);
                             window.setFocusable(true);
                             //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
 //                            window.setBackgroundDrawable(new BitmapDrawable());
@@ -432,16 +471,17 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         }
                     });
 
-                    if (points != null && points.size() > 0) {
-                        for (int a = 0; a < points.size(); a++) {
+                    if (paraPoint != null && paraPoint.size() > 0) {
+
+                        for (int a = 0; a < paraPoint.size(); a++) {
                             if (!add_flag) {
-                                NewsDetail.Point point = points.get(a);
+                                NewsDetail.Point point = paraPoint.get(a);
 
                                 if (i == Integer.parseInt(point.paragraphIndex)) {
 
                                     tv_praise_count.setText(point.up);
                                     tv_comment_count.setText(point.comments_count);
-                                    if ("text_paragraph".equals(point.type)) {
+                                    if (TEXT_PARAGRAPH.equals(point.type)) {
                                         tv_comment_content.setText(point.srcText);
                                     }
 
@@ -558,11 +598,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
     }
 
-    private void setLvContentParams(int size,ListView listView) {
+    private void setLvContentParams(int size, ListView listView) {
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
 
-        switch (size){
+        switch (size) {
             case 1:
                 params.height = 100;
                 break;
@@ -608,9 +648,9 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         }
         params.add(new BasicNameValuePair("uuid", "11111"));
         User user = SharedPreManager.getUser(mContext);
-        params.add(new BasicNameValuePair("userId",user==null?"":user.getUserId()));
-        params.add(new BasicNameValuePair("userIcon", user==null?"":user.getUserIcon()));
-        params.add(new BasicNameValuePair("userName", user==null?"":user.getUserName()));
+        params.add(new BasicNameValuePair("userId", user == null ? "" : user.getUserId()));
+        params.add(new BasicNameValuePair("userIcon", user == null ? "" : user.getUserIcon()));
+        params.add(new BasicNameValuePair("userName", user == null ? "" : user.getUserName()));
         request.setParams(params);
         request.setCallback(new JsonCallback<Object>() {
 
@@ -628,11 +668,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         request.execute();
     }
 
-    public void setDetailData(final NewsDetail pNewsDetail, HeaderVeiwPullUpListener listener) {
+    public void setDetailData(final NewsDetail pNewsDetail,String sourceUrl, HeaderVeiwPullUpListener listener) {
         if (pNewsDetail == null) {
             return;
         }
-        inflateDataToNewsheader(pNewsDetail, listener);
+        inflateDataToNewsheader(pNewsDetail,sourceUrl, listener);
         if (pNewsDetail != null) {
             ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.baike;
             if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
@@ -715,7 +755,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             }
             final ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
             if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
-                if(pArrZhiHu.size() > 3) {
+                if (pArrZhiHu.size() > 3) {
                     for (int i = 0; i < 3; i++) {
                         final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
                         ZhiHuView zhiHuView = new ZhiHuView(mContext);
@@ -732,7 +772,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         });
                         mllZhiHuItem.addView(zhiHuView);
                     }
-                }else{
+                } else {
                     for (int i = 0; i < pArrZhiHu.size(); i++) {
                         final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
                         ZhiHuView zhiHuView = new ZhiHuView(mContext);
@@ -761,7 +801,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 public void onClick(View v) {
                     mllZhiHuItem.removeAllViews();
                     iv_show_all_zhihu_views.setVisibility(View.GONE);
-                    if(pArrZhiHu != null && pArrZhiHu.size() > 0) {
+                    if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
                         for (int i = 0; i < pArrZhiHu.size(); i++) {
                             final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
                             ZhiHuView zhiHuView = new ZhiHuView(mContext);
@@ -1087,11 +1127,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
         @Override
         public int getCount() {
-            if(marrPoint.size() == 0){
+            if (marrPoint.size() == 0) {
                 return 0;
-            }else if(marrPoint.size() < 5){
+            } else if (marrPoint.size() < 5) {
                 return marrPoint.size();
-            }else{
+            } else {
                 return 5;
             }
         }
@@ -1129,9 +1169,13 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             else
                 holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);
-            holder.tvPraiseCount.setText(point.up);
+            if(point.up != null) {
+                holder.tvPraiseCount.setText(point.up);
+            }else {
+                holder.tvPraiseCount.setText("0");
+            }
             holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
-            if (point.type.equals("text_paragraph")) {
+            if (point.type.equals(TEXT_DOC)) {
                 holder.tvContent.setText(point.srcText);
                 holder.tvContent.setVisibility(View.VISIBLE);
                 holder.mSpeechView.setVisibility(View.GONE);

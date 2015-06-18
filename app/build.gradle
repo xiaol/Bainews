@@ -8,8 +8,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 89
-        versionName "0.8.8.1"
+        versionCode 91
+        versionName "0.8.9.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -17,6 +17,7 @@ android {
 
 //        yingyongbao {}
         xiaomi {}
+        adcoco{}
         c360 {}
 //        baidu {}
 //        anzhi {}

@@ -114,6 +114,28 @@ public class ImageUtils {
     }
 
     /**
+     * 高和宽等比例缩放
+     *
+     * @param bm
+     * @param newHeight
+     * @return
+     */
+    public static Bitmap zoomBitmapWithHeight(Bitmap bm, int newHeight) {
+        // 获得图片的宽高
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        // 计算缩放比例
+        float scaleHeight = ((float) newHeight) / height;
+
+        // 取得想要缩放的matrix参数
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleHeight, scaleHeight);//横竖都按照水平方向来缩放
+        // 得到新的图片bitmap
+        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+        return newbm;
+    }
+
+    /**
      * 截取高度
      *
      * @param bm
@@ -124,6 +146,10 @@ public class ImageUtils {
         boolean flag = false;
         Bitmap bitmap_big = zoomBitmap(bm, screenWidth);
 
+        if(bitmap_big.getHeight() < screenHeight * 0.4){
+            bitmap_big = zoomBitmapWithHeight(bitmap_big,(int)(screenHeight * 0.4));
+        }
+
         int newHeight = bitmap_big.getHeight();
         int standardHeight = DensityUtil.dip2px(GlobalParams.context,450);
 
@@ -133,12 +159,14 @@ public class ImageUtils {
 
         if (type == 1) {
             //textviewextend
-            if (newHeight > screenHeight * 0.27) {
-                newHeight = (int) (screenHeight * 0.27);
+            if (newHeight > screenHeight * 0.4) {
+                newHeight = (int) (screenHeight * 0.4);
             }
         } else if (type == 2) {
             //textviewvertical
             if (newHeight > screenHeight * 0.4) {
+                newHeight = (int) (screenHeight * 0.4);
+            }else{
                 newHeight = (int) (screenHeight * 0.4);
             }
 
@@ -149,16 +177,16 @@ public class ImageUtils {
         int shift = DensityUtil.dip2px(GlobalParams.context,100);
 
         if(flag){
-
             if(bitmap_big.getHeight() > shift + newHeight) {
                 bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
             }else{
                 bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
             }
         }else {
-
             bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
         }
+
+
         return bitmap;
     }
 
