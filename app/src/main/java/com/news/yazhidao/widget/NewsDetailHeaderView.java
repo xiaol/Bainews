@@ -890,22 +890,34 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     }
 
     private int getMatched(List<HashMap<String, String>> resultList, List<HashMap<String, String>> minor, String type) {
+        String afterpart;
         int y = 0;
         int i = 0;
         if (type.length() == 0) {
             return 0;
         } else if (type.length() == 1) {
             i = Integer.parseInt(type);
+            if(i==1){
+                return  0;
+            }
             type = "";
+            afterpart = "";
         } else {
             String[] ts = type.split("-");
             i = Integer.parseInt(ts[0]);
             type = type.substring(2);
+            afterpart = "-"+type;
+            if(i==1){
+                return getMatched(resultList,minor,type);
+            }
         }
         if (i == 2) {
             y = get2Matched(resultList, minor, type);
         } else if (i == 3) {
             y = get3Matched(resultList, minor, type);
+        }
+        if(y==-1){
+            return getMatched(resultList,minor,(i-1)+afterpart);
         }
         return y;
     }

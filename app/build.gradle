@@ -19,6 +19,7 @@ android {
         xiaomi {}
         adcoco{}
         c360 {}
+        adcoco{}
 //        baidu {}
 //        anzhi {}
 //        wandoujia {}
