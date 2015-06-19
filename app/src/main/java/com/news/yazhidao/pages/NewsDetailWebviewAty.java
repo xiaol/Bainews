@@ -135,6 +135,8 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
         mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
+        mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
+        mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
         mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
@@ -156,7 +158,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
-                Logger.e(TAG,"xxxx shouldOverrideUrlLoading");
+                Logger.e(TAG, "xxxx shouldOverrideUrlLoading");
                 return true;
             }
 
@@ -173,12 +175,13 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                    Logger.e(TAG, "xxxx onPageFinished");
+                Logger.e(TAG, "xxxx onPageFinished");
 //                if(mProgressDialog!=null&&mProgressDialog.isShowing()){
 //                    mProgressDialog.dismiss();
 //                }
             }
         });
+
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
     }
 

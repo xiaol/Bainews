@@ -3,7 +3,7 @@ package com.news.yazhidao.application;
 import android.app.Application;
 import android.content.Context;
 
-import com.news.yazhidao.BuildConfig;
+import com.readystatesoftware.systembartint.BuildConfig;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.sharesdk.framework.ShareSDK;
