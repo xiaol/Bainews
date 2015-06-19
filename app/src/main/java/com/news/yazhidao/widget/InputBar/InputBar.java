@@ -54,7 +54,7 @@ public class InputBar extends FrameLayout {
     private Context mContext;
     private boolean isLong = false;// 是否滑动到取消录音的距离
     private Activity mActivity;
-    public static final int MAX_TIME = 30;// 最长录音时间
+    public static final int MAX_TIME = 60;// 最长录音时间
     public static final int MIN_TIME = 1;// 最短录音时间
     public static final int RECORD_NO = 1000; // 不在录音
     public static final int RECORD_ING = 1100; // 正在录音
@@ -208,6 +208,12 @@ public class InputBar extends FrameLayout {
                         removeTextFieldFirstRespond();
                         return false;
                     }
+
+                    if (thread != null) {
+                        thread.interrupt();
+                        thread = null;
+                    }
+
                     mfCurDuration = 0;
                     isLong = false;
                     startRecord();
@@ -221,7 +227,7 @@ public class InputBar extends FrameLayout {
                                     mRecordState = RECORD_ING;
                                     mRecordVolume = mRecorder.getAmplitude();
                                     mHandler.sendEmptyMessage(RECORD_ING);
-                                    if (mfCurDuration > 29.5)//如果大于30秒
+                                    if (mfCurDuration > 59.5)//如果大于30秒
                                     {
                                         mHandler.sendEmptyMessage(RECORD_NO);
                                     }

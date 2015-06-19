@@ -51,6 +51,12 @@
         <item>@drawable/bg_category_finance_and_economics</item>
         <item>@drawable/bg_categery_gangtai</item>
         <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_categery_shehui</item>
     </array>
 
     <string-array name="category_list_name">

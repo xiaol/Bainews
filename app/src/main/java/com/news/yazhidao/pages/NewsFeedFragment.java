@@ -49,8 +49,6 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
-import com.lostip.sdk.ad.custom.AdCocoaAPI;
-import com.lostip.sdk.ad.custom.AdCocoaDetail;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
@@ -69,7 +67,7 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil.AdcocoNewsDetail;import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
@@ -319,8 +317,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         loadData();
         AdcocoUtil.setup(getActivity());
         try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
-        }catch(Exception e){
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return rootView;
@@ -352,7 +350,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mMiddleNewsArr.add(_NewsFeed);
 
 
-
                 mDownNewsArr.remove(mDownNewsArr.size() - 1);
 
                 if (miCurrentCount < miTotalCount)
@@ -368,8 +365,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             }
         }
         try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
-        }catch(Exception e){
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //更新ui
@@ -417,8 +414,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                 }
                                 mMiddleNewsArr.add(0, _NewsFeed);
                                 try {
-                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(),-1);
-                                }catch(Exception e){
+                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 mUpNewsArr.remove(mUpNewsArr.size() - 1);
@@ -574,7 +571,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             if (mMiddleNewsArr != null && mMiddleNewsArr.size() > 0) {
 
 
-                    return mMiddleNewsArr.size();
+                return mMiddleNewsArr.size();
             }
             return 0;
         }
@@ -605,7 +602,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
-
 
             if ("400".equals(feed.getSpecial())) {
                 AdcocoUtil.update();
@@ -968,10 +964,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                 tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
-                            int i = source.getTitle().length();
+                            int i = 0;
+
+                            if (source.getUser() != null && !"".equals(source.getUser())) {
+                                i = source.getTitle().length() + source.getUser().length();
+                            } else {
+                                i = source.getSourceSitename().length() + source.getTitle().length();
+                            }
 
                             if (a < 3) {
-                                if (i > 15) {
+                                if (i > 18) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -979,7 +981,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                             }
 
                             //设置观点view的布局
-                            setIvCombineLineParams(iv_combine_line, source.getTitle().length());
+                            setIvCombineLineParams(iv_combine_line, i);
                         }
 
                         if (contentSize < 3) {
@@ -989,18 +991,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
 
                     setContentParams(holder.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER);
-                }else{
+                } else {
                     setContentParams(holder.ll_source_content, 0, source_title_length, TYPE_VIEWHOLDER);
                     holder.ll_view_content.setVisibility(View.GONE);
                 }
 
                 //大图卡片
-            } else if ("1".
-
-                    equals(feed.getSpecial()
-
-                    ))
-
+            } else if ("1".equals(feed.getSpecial()))
             {
 
                 if (convertView == null) {
@@ -1054,7 +1051,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
                 if (feed.isTime_flag()) {
-                    holder2.rl_divider_top.setVisibility(View.GONE);
                     if (mCurrentDate == null) {
                         long time = System.currentTimeMillis();
                         Date date = new Date(time);
@@ -1111,6 +1107,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 if (feed.isTop_flag()) {
                     holder2.rl_top_mark.setVisibility(View.VISIBLE);
+                    holder2.rl_divider_top.setVisibility(View.VISIBLE);
                 }
                 holder2.rl_top_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1130,14 +1127,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 });
                 //多图卡片
-            } else if ("9".
-
-                    equals(feed.getSpecial()
-
-                    ))
-
+            } else if ("9".equals(feed.getSpecial()))
             {
-
                 images = feed.getImgUrl_ex();
 
 
@@ -1361,10 +1352,16 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                 tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
-                            int i = source.getTitle().length();
+                            int i = 0;
+
+                            if (source.getUser() != null && !"".equals(source.getUser())) {
+                                i = source.getTitle().length() + source.getUser().length();
+                            } else {
+                                i = source.getSourceSitename().length() + source.getTitle().length();
+                            }
 
                             if (a < 6) {
-                                if (i > 15) {
+                                if (i > 18) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -1423,7 +1420,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
             return convertView;
         }
-
 
 
     }
@@ -1531,7 +1527,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
 
-        if (length > 15) {
+        if (length > 20) {
             if (GlobalParams.screenHeight == 1280) {
                 params.height = 85;
             } else if (GlobalParams.screenHeight == 1776) {

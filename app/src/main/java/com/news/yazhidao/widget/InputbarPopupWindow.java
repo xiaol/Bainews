@@ -48,16 +48,23 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     private Handler mHandler;
     private double mRecordVolume;// 麦克风获取的音量值
     private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
+    private RelativeLayout rl_inputbar_content;
     private ImageView mivRecord;
+    private String mSourceUrl;
     private ArrayList<NewsDetail.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
 
-    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, IUpdateCommentCount updateCommentCount) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points,String sourceUrl, IUpdateCommentCount updateCommentCount) {
         super(context);
         m_pContext = context;
         marrPoints = points;
-        mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
+        mSourceUrl = sourceUrl;
+        if(marrPoints.size() >0) {
+            mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
+        }else{
+            mParagraphIndex = 0;
+        }
         mIUpdateCommentCount = updateCommentCount;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,6 +76,14 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     }
 
     private void findHeadPortraitImageViews() {
+        rl_inputbar_content = (RelativeLayout) mMenuView.findViewById(R.id.rl_inputbar_content);
+        rl_inputbar_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         //录音动画
         mrlRecord = (RelativeLayout) mMenuView.findViewById(R.id.voice_record_layout_wins);
         mtvVoiceTips = (TextViewExtend) mMenuView.findViewById(R.id.tv_voice_tips);
@@ -118,7 +133,6 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     @Override
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
-        NewsDetail.Point point = marrPoints.get(0);
         NewsDetail newsDetail = new NewsDetail();
         NewsDetail.Point newPoint = newsDetail.new Point();
         String type;
@@ -137,7 +151,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         Logger.i("jigang", type + "----url==" + argContent);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, speechDuration, new UploadCommentListener() {
+        UploadCommentRequest.uploadComment(m_pContext, mSourceUrl, argContent, "0", type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
                 miCount += 1;
@@ -188,7 +202,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
                     // 话筒隐藏
                     mrlRecord.setVisibility(View.INVISIBLE);
                     // 录音达到最大时长，结束录音并发送语音
-                    ToastUtil.toastShort("录音时间不能超过30秒");
+                    ToastUtil.toastShort("录音时间不能超过60秒");
                 }
 
                 break;

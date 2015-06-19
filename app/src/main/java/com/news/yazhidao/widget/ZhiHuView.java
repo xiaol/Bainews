@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -55,16 +54,16 @@ public class ZhiHuView extends FrameLayout {
 
     public void setZhiHuData(NewsDetail.ZhiHu zhiHuData){
         mtvContent.setText(zhiHuData.title);
-        ViewGroup.LayoutParams params = iv_arrow_zhihu.getLayoutParams();
+//        ViewGroup.LayoutParams params = iv_arrow_zhihu.getLayoutParams();
+//
+//        if(zhiHuData.title.length() > 44 && zhiHuData.title.length() < 60){
+//            params.height = 140;
+//        }else if(zhiHuData.title.length() > 75 && zhiHuData.title.length() < 90){
+//            params.height = 200;
+//        }else if(zhiHuData.title.length() > 90){
+//            params.height = 220;
+//        }
 
-        if(zhiHuData.title.length() > 44 && zhiHuData.title.length() < 60){
-            params.height = 140;
-        }else if(zhiHuData.title.length() > 75 && zhiHuData.title.length() < 90){
-            params.height = 200;
-        }else if(zhiHuData.title.length() > 90){
-            params.height = 220;
-        }
-
-        iv_arrow_zhihu.setLayoutParams(params);
+//        iv_arrow_zhihu.setLayoutParams(params);
     }
 }
