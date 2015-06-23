@@ -103,7 +103,7 @@ public class NewsDetailAty extends SwipeBackActivity {
             @Override
             public void success(final NewsDetail result) {
                 if (result != null) {
-                    headerView.setDetailData(result, new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                    headerView.setDetailData(result,getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                         @Override
                         public void onclickPullUp(int height) {
                             msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);

@@ -26,6 +26,14 @@ public class NewsDetail implements Serializable{
 
     public ArrayList<BaiDuBaiKe> baike;
 
+    public boolean isdoc;
+
+    public String docUrl;
+
+    public String docTime;
+
+    public String docUserIcon;
+
     public ArrayList<ZhiHu> zhihu;
 
     public ArrayList<Point> point;

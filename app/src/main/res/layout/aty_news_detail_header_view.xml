@@ -27,13 +27,13 @@
 
         <RelativeLayout
             android:id="@+id/rl_article_comments"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ListView
+            <com.news.yazhidao.widget.ShowAllListview
                 android:layout_width="match_parent"
-                android:layout_height="340dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/lv_article_comments" />
 
 
