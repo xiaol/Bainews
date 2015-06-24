@@ -9,7 +9,10 @@
 package com.news.yazhidao.wxapi;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
+
 import cn.sharesdk.wechat.utils.WXAppExtendObject;
 import cn.sharesdk.wechat.utils.WXMediaMessage;
 import cn.sharesdk.wechat.utils.WechatHandlerActivity;
@@ -47,4 +50,9 @@ public class WXEntryActivity extends WechatHandlerActivity {
 		}
 	}
 
+	@Override
+	protected void onCreate(Bundle bundle) {
+		super.onCreate(bundle);
+		Log.e("jigang", "------cccc");
+	}
 }

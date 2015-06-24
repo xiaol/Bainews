@@ -62,7 +62,7 @@
         android:layout_height="1px"
         android:layout_alignTop="@+id/mNewsSourcesiteFooter"
         android:layout_below="@id/mNewsSourcesiteWebview"
-        android:layout_marginTop="-1px"
+        android:layout_marginTop="0px"
         android:background="@color/news_sourcesite_divider" />
 
     <LinearLayout
