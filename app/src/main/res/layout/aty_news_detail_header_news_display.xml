@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mNewsDetailHeaderWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_grag_line_top_bottom">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/mNewsDetailHeaderImg"
@@ -94,7 +93,7 @@
         <LinearLayout
             android:id="@+id/mNewsDetailHeaderContentParent"
             android:layout_below="@id/mNewsDetailHeaderDesc"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
@@ -109,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:layout_marginBottom="-20dp"
-            android:layout_marginTop="-8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/mNewsDetailHeaderOnclickMore" />
 
         <com.news.yazhidao.widget.TextViewExtend

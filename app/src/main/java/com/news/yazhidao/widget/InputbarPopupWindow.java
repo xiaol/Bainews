@@ -54,15 +54,16 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     private ArrayList<NewsDetail.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
+    private NewsDetail.Point newPoint;
 
-    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points,String sourceUrl, IUpdateCommentCount updateCommentCount) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount) {
         super(context);
         m_pContext = context;
         marrPoints = points;
         mSourceUrl = sourceUrl;
-        if(marrPoints.size() >0) {
+        if (marrPoints.size() > 0) {
             mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
-        }else{
+        } else {
             mParagraphIndex = 0;
         }
         mIUpdateCommentCount = updateCommentCount;
@@ -122,7 +123,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
     @Override
     public void dismiss() {
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex);
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, newPoint);
         super.dismiss();
     }
 
@@ -134,11 +135,11 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
         NewsDetail newsDetail = new NewsDetail();
-        NewsDetail.Point newPoint = newsDetail.new Point();
+        newPoint = newsDetail.new Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_DOC;
-            newPoint.desText = argContent;
+            newPoint.srcText = argContent;
         } else {
             type = UploadCommentRequest.TEXT_DOC;
             newPoint.srcText = argContent;
@@ -151,9 +152,13 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         Logger.i("jigang", type + "----url==" + argContent);
+        newPoint.srcTextTime = speechDuration / 1000;
+
+        dismiss();
         UploadCommentRequest.uploadComment(m_pContext, mSourceUrl, argContent, "0", type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
+
                 miCount += 1;
                 Log.i("tag", "111");
             }
@@ -287,7 +292,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
                 holder.mSpeechView.setVisibility(View.GONE);
             } else {
                 Logger.i("jigang", point.srcTextTime + "--" + point.srcText);
-                holder.mSpeechView.setUrl(point.srcText);
+                holder.mSpeechView.setUrl(point.srcText, false);
                 holder.mSpeechView.setDuration(point.srcTextTime);
                 holder.mSpeechView.setVisibility(View.VISIBLE);
                 holder.tvContent.setVisibility(View.GONE);
@@ -313,6 +318,6 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex);
+        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point newPoint);
     }
 }

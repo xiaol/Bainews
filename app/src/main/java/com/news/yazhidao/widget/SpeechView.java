@@ -77,8 +77,11 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         setOnClickListener(this);
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String url,boolean isAutoPlay) {
         this.mUrl = url;
+        if(isAutoPlay){
+            onClick(this);
+        }
     }
 
     public void setDuration(int duration) {

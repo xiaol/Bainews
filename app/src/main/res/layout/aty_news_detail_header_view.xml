@@ -10,9 +10,8 @@
         android:id="@+id/mNewsDeatailTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_grag_line_top_bottom"
+        android:background="@drawable/bg_grag_line_bottom"
         android:orientation="vertical">
-
 
         <!--新闻详情展示-->
         <include layout="@layout/aty_news_detail_header_news_display" />
@@ -22,20 +21,19 @@
             android:id="@+id/mImageWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:background="@drawable/bg_grag_line_top_bottom" />
 
         <RelativeLayout
             android:id="@+id/rl_article_comments"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <com.news.yazhidao.widget.ShowAllListview
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_grag_line_top_bottom"
                 android:id="@+id/lv_article_comments" />
-
 
         </RelativeLayout>
 
@@ -43,8 +41,8 @@
             android:id="@+id/baike_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_grag_line_top_bottom"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
             android:orientation="vertical" />
 
 
@@ -52,13 +50,14 @@
             android:id="@+id/zhihu_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_grag_line_top_bottom"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="71dp"
+                android:layout_marginTop="-10dp"
                 android:background="@drawable/bg_ex_read_zhihu"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="10dp" />
@@ -66,8 +65,8 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:layout_marginTop="5dp"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/zhihu_item_linerLayout"
@@ -87,8 +86,7 @@
                     android:id="@+id/iv_show_all_zhihu_views"
                     android:layout_width="19dp"
                     android:layout_height="10dp"
-                    android:background="@drawable/ic_pull_to_all"
-                    />
+                    android:background="@drawable/ic_pull_to_all" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -97,7 +95,7 @@
             android:id="@+id/douban_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_grag_line_top_bottom"
             android:orientation="horizontal">
 
@@ -120,8 +118,8 @@
             android:id="@+id/sina_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_grag_line_top_bottom"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
             android:orientation="horizontal">
 
             <com.news.yazhidao.widget.CustomHorizontalScrollView
@@ -146,10 +144,8 @@
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailRelate"
-            android:layout_marginTop="@dimen/news_detail_layout_margin_top"
             android:background="@drawable/bg_detail_relate"
             android:paddingLeft="16dp"
-            android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:gravity="left"
             android:text="相关观点"
