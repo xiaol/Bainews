@@ -1045,54 +1045,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
-//                if (feed.isTime_flag()) {
-//                    if (mCurrentDate == null) {
-//                        long time = System.currentTimeMillis();
-//                        Date date = new Date(time);
-//                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//                        String currentDate = format.format(date);
-//                        String myDate = DateUtil.getMyDate(currentDate);
-//                        holder2.tv_date.setText(myDate);
-//
-//                        //判断上午还是下午
-//                        String am = DateUtil.getMorningOrAfternoon(time);
-//
-//                        //判断是星期几
-//                        String weekday = "";
-//                        try {
-//                            weekday = DateUtil.dayForWeek(currentDate);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        holder2.tv_weekday.setText(weekday + "|" + am);
-//                    } else {
-//
-//
-//                        String myDate = DateUtil.getMyDate(mCurrentDate);
-//                        holder2.tv_date.setText(myDate);
-//
-//                        String am = "";
-//
-//                        //判断上午还是下午
-//                        if ("0".equals(mCurrentType)) {
-//                            am = "早间";
-//                        } else {
-//                            am = "晚间";
-//                        }
-//
-//                        //判断是星期几
-//                        String weekday = "";
-//                        try {
-//                            weekday = DateUtil.dayForWeek(mCurrentDate);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                        holder2.tv_weekday.setText(weekday + "|" + am);
-//                    }
-//                }
-
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
 //                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder2.iv_title_img);

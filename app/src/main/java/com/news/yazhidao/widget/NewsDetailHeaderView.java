@@ -980,12 +980,9 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 int whead = Integer.parseInt(first.get("w").toString());
                 int hhead = Integer.parseInt(first.get("h").toString());
 
-                if (scaledh1 == 0) {
-
                     scaledh1 = hhead * scaledw1 / whead;
                     m1 = first;
-                }
-                List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(list);
+                List<HashMap<String, String>> list2 = new ArrayList<HashMap<String, String>>(source);
                 for (HashMap<String, String> m : list2) {
                     try {
                         if (first.get("img").toString().equals(m.get("img").toString())) {
@@ -1017,17 +1014,17 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                             maps.add(m2);
                             source.remove(m2);
                             source.remove(m1);
+                            ;
                             try {
                                 return getMatched(maps, source, sq) + (th++);
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
-                        } else {
+                        }else {
                             scaledh1 = 0;
                             scaledh2 = 0;
                             m2 = null;
                             m1 = null;
-                            continue;
                         }
                     }
 
@@ -1140,7 +1137,12 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     source.remove(m3);
                                     source.remove(m2);
                                     source.remove(m1);
-
+                                    scaledh1 = 0;
+                                    m1 = null;
+                                    scaledh2 = 0;
+                                    m2 = null;
+                                    scaledh3 = 0;
+                                    m3 = null;
                                     return getMatched(maps, source, sq) + th++;
                                 } else {
                                     scaledh1 = 0;
@@ -1149,7 +1151,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     m2 = null;
                                     scaledh3 = 0;
                                     m3 = null;
-                                    continue;
                                 }
                             }
                         }
