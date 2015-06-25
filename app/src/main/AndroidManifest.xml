@@ -86,7 +86,7 @@
         </activity>
         <!-- 微信回调activity -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.news.yazhidao.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

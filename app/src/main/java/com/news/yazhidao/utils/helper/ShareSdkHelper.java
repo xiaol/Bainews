@@ -39,6 +39,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class ShareSdkHelper {
     private static final String TAG = "ShareSdkHelper";
+    private static final String WECHAT_CLIENT_NOT_EXIST_EXCEPTION="cn.sharesdk.wechat.utils.WechatClientNotExistException";
     private static Context mContext;
     private static Handler mHandler=new Handler();
     private static UserLoginListener mUserLoginListener;
@@ -99,14 +100,32 @@ public class ShareSdkHelper {
         }
 
         @Override
-        public void onError(Platform platform, int i, Throwable throwable) {
-            Logger.e(TAG, "authorize error-----" + i + ",,," + throwable.getMessage());
+        public void onError(Platform platform, int i, final Throwable throwable) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                if(WECHAT_CLIENT_NOT_EXIST_EXCEPTION.equals(throwable.toString())){
+                    Logger.e(TAG,"000000");
+                    ToastUtil.toastShort("您手机还未安装微信客户端");
+                }
+
+                    mUserLoginPopupStateListener.close();
+                }
+            });
+            throwable.printStackTrace();
+            Logger.e(TAG, "authorize error-----" + i + ",,," + throwable.toString());
         }
 
         @Override
         public void onCancel(Platform platform, int i) {
             Logger.e(TAG, "authorize cancel-----");
-            mUserLoginPopupStateListener.close();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mUserLoginPopupStateListener.close();
+
+                }
+            });
         }
     };
 
