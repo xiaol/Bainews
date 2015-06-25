@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mNewsDetailHeaderWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#dfe6e9"
+    >
 
     <ImageView
         android:id="@+id/mNewsDetailHeaderImg"
@@ -15,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="17dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_below="@id/mNewsDetailHeaderImg">
 
         <com.news.yazhidao.widget.LetterSpacingTextView
@@ -107,7 +109,7 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_marginBottom="-20dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="8dp"
             android:text="@string/mNewsDetailHeaderOnclickMore" />
 
@@ -116,7 +118,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mNewsDetailHeaderPulldown"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="8dp"
             android:textColor="@color/news_detail_sourcename_and_location"
             android:textSize="14sp" />
 
@@ -127,6 +130,7 @@
             android:layout_height="30dp"
             android:gravity="center"
             android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:text="发表评论"
             android:layout_marginTop="25dp"
@@ -134,15 +138,5 @@
             android:textColor="#000000"
             android:background="@drawable/bg_tv_add_comment" />
 
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/mNewsDetailHeaderLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/mNewsDetailHeaderPulldown"
-            android:textColor="@color/news_detail_sourcename_and_location"
-            android:layout_marginTop="32dp"
-            android:paddingBottom="32dp"
-            android:textSize="14sp" />
     </RelativeLayout>
 </RelativeLayout>

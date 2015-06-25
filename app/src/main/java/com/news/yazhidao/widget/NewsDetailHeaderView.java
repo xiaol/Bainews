@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -197,7 +196,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         tv_add_comment = (TextViewExtend) mRootView.findViewById(R.id.tv_add_comment);
 
-        mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
+//        mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
         mNewsDeatailTitleLayout = (LinearLayout) mRootView.findViewById(R.id.mNewsDeatailTitleLayout);
         mNewsDetailEditableLayout = (RelativeLayout) mRootView.findViewById(R.id.mNewsDetailEditableLayout);
         mNewsDetailEdittext = (EditText) mRootView.findViewById(R.id.mNewsDetailEdittext);
@@ -209,7 +208,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     @Override
     public void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point) {
         if (mNewsDetailHeaderContentParent != null) {
-            CardView rl_para = (CardView) mNewsDetailHeaderContentParent.getChildAt(paragraphIndex);
+            RelativeLayout rl_para = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(paragraphIndex);
             TextView tv_comment_count = (TextView) rl_para.findViewById(R.id.tv_comment_count);
             int origin_count = 0;
             if (tv_comment_count != null) {
@@ -421,7 +420,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 for (int i = 0; i < _Split.length; i++) {
                     add_flag = false;
                     //段落和评论布局
-                    final CardView rl_para = (CardView) View.inflate(mContext, R.layout.rl_content_and_comment, null);
+                    final RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
                     final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
                     final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
                     rl_para.setTag(i);
@@ -429,7 +428,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         @Override
                         public void onClick(View v) {
                             ArrayList<NewsDetail.Point> point_para = new ArrayList<NewsDetail.Point>();
-                            CardView rl_aa = (CardView) rl_comment.getParent().getParent();
+                            RelativeLayout rl_aa = (RelativeLayout) rl_comment.getParent().getParent();
                             int para_index = (int) rl_aa.getTag();
                             for (int m = 0; m < points.size(); m++) {
                                 if (points.get(m).paragraphIndex != null && para_index == Integer.parseInt(points.get(m).paragraphIndex)) {
@@ -574,8 +573,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 }
             });
             mNewsDetailHeaderSourceName.setText("摘要来自：棱镜");
-            if (pNewsDetail.ne != null)
-                mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
+//            if (pNewsDetail.ne != null)
+//                mNewsDetailHeaderLocation.setText(pNewsDetail.ne.gpe.size() > 0 ? String.format(mContext.getResources().getString(R.string.mNewsDetailHeaderLocation), pNewsDetail.ne.gpe.get(0)) : "");
 
 
             //设置编辑后的新闻
@@ -600,7 +599,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                         mNewsDetailHeaderContentParent.removeViewAt(index);
 //                                        v.setVisibility(View.GONE);
                                     } else {
-                                        CardView rl_ss = (CardView) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
+                                        RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
                                         LetterSpacingTextView tv = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
                                         tv.setText("");
                                         tv.setVisibility(View.GONE);
@@ -608,7 +607,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                 }
                             } else {
                                 if (point.paragraphIndex != null && !"".equals(point.paragraphIndex)) {
-                                    CardView rl_ss = (CardView) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
+                                    RelativeLayout rl_ss = (RelativeLayout) mNewsDetailHeaderContentParent.getChildAt(Integer.parseInt(point.paragraphIndex));
                                     LetterSpacingTextView tv_para = (LetterSpacingTextView) rl_ss.findViewById(R.id.lstv_para_content);
                                     if (tv_para != null) {
                                         tv_para.setText(point.desText);

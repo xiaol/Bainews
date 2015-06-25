@@ -10,54 +10,82 @@
         android:id="@+id/mNewsDeatailTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_grag_line_bottom"
+        android:background="#ffffff"
         android:orientation="vertical">
 
         <!--新闻详情展示-->
         <include layout="@layout/aty_news_detail_header_news_display" />
+
+        <!--<com.news.yazhidao.widget.TextViewExtend-->
+        <!--android:id="@+id/mNewsDetailHeaderLocation"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_below="@id/mNewsDetailHeaderPulldown"-->
+        <!--android:textColor="@color/news_detail_sourcename_and_location"-->
+        <!--android:layout_marginTop="32dp"-->
+        <!--android:paddingBottom="32dp"-->
+        <!--android:textSize="14sp" />-->
+
+        <RelativeLayout
+            android:id="@+id/rl_article_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#dfe6e9">
+
+            <com.news.yazhidao.widget.ShowAllListview
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:id="@+id/lv_article_comments" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9"
+                />
+        </RelativeLayout>
 
         <com.news.yazhidao.widget.imagewall.ImageWallView
             android:visibility="gone"
             android:id="@+id/mImageWall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_grag_line_top_bottom" />
+            android:background="#dfe6e9"
+            />
 
-        <RelativeLayout
-            android:id="@+id/rl_article_comments"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-            <com.news.yazhidao.widget.ShowAllListview
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_grag_line_top_bottom"
-                android:id="@+id/lv_article_comments" />
-
-        </RelativeLayout>
+            android:layout_height="10dp"
+            android:background="#dfe6e9"
+            />
 
         <LinearLayout
             android:id="@+id/baike_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_marginBottom="10dp"
+            android:background="#ffffff"
             android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#dfe6e9"
+            />
 
 
         <LinearLayout
             android:id="@+id/zhihu_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_grag_line_top_bottom"
+            android:background="#ffffff"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="71dp"
-                android:layout_marginTop="-10dp"
                 android:background="@drawable/bg_ex_read_zhihu"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="10dp" />
@@ -91,12 +119,18 @@
             </RelativeLayout>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#dfe6e9"
+            />
+
         <LinearLayout
             android:id="@+id/douban_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_margin="10dp"
+            android:background="#ffffff"
             android:orientation="horizontal">
 
             <ImageView
@@ -114,12 +148,18 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#dfe6e9"
+            />
+
         <LinearLayout
             android:id="@+id/sina_linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_grag_line_top_bottom"
+            android:layout_margin="10dp"
+            android:background="#ffffff"
             android:orientation="horizontal">
 
             <com.news.yazhidao.widget.CustomHorizontalScrollView
@@ -141,6 +181,12 @@
                 </LinearLayout>
             </com.news.yazhidao.widget.CustomHorizontalScrollView>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#dfe6e9"
+            />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mNewsDetailRelate"
