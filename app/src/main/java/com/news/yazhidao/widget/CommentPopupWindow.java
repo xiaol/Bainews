@@ -19,8 +19,11 @@ import android.widget.RelativeLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.listener.UploadCommentListener;
+import com.news.yazhidao.net.request.PraiseRequest;
 import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.image.ImageManager;
@@ -54,11 +57,14 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private ArrayList<NewsDetail.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
+    private String sourceUrl;
+    private NewsDetail.Point point;
 
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, IUpdateCommentCount updateCommentCount) {
+    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points,String sourceUrl, IUpdateCommentCount updateCommentCount) {
         super(context);
         m_pContext = context;
         marrPoints = points;
+        this.sourceUrl = sourceUrl;
         mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
         mIUpdateCommentCount = updateCommentCount;
         LayoutInflater inflater = (LayoutInflater) context
@@ -122,7 +128,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         super.dismiss();
         //退出评论页面时，关闭正在播放的语音评论
         MediaPlayerManager.getInstance().stop();
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex);
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point);
     }
 
     private void loadData() {
@@ -282,6 +288,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             holder.tvName.setText(point.userName);
             holder.tvPraiseCount.setText(point.up);
             holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
+
+            if ("1".equals(point.isPraiseFlag)) {
+                holder.ivPraise.setBackgroundResource(R.drawable.bg_praised);
+            }else{
+                holder.ivPraise.setBackgroundResource(R.drawable.bg_normal_praise);
+            }
             if (point.type.equals("text_paragraph")) {
                 holder.tvContent.setText(point.srcText);
                 holder.tvContent.setVisibility(View.VISIBLE);
@@ -292,7 +304,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.mSpeechView.setVisibility(View.GONE);
             }else {
                 Logger.i("jigang", point.srcTextTime + "--adapter--" + point.srcText);
-                holder.mSpeechView.setUrl(point.srcText);
+                holder.mSpeechView.setUrl(point.srcText,false);
                 holder.mSpeechView.setDuration(point.srcTextTime);
                 holder.mSpeechView.setVisibility(View.VISIBLE);
                 holder.tvContent.setVisibility(View.GONE);
@@ -301,6 +313,42 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 @Override
                 public void onClick(View v) {
 
+                    holder.ivPraise.setBackgroundResource(R.drawable.bg_praised);
+                    int count = Integer.parseInt(holder.tvPraiseCount.getText().toString());
+                    holder.tvPraiseCount.setText(count + 1 + "");
+
+                    User user = SharedPreManager.getUser(mContext);
+                    String uuid = DeviceInfoUtil.getUUID();
+
+                    NewsDetail.Point point_item = marrPoint.get(position);
+                    if (user != null) {
+                        PraiseRequest.Praise(mContext, user.getUserId(), user.getPlatformType(), uuid, sourceUrl, point_item.commentId, new PraiseListener() {
+                            @Override
+                            public void success() {
+                                ToastUtil.toastLong("success");
+                            }
+
+                            @Override
+                            public void failed() {
+                                ToastUtil.toastLong("fail");
+
+                            }
+                        });
+                    } else {
+                        PraiseRequest.Praise(mContext, "", "", uuid, sourceUrl, point_item.commentId, new PraiseListener() {
+                            @Override
+                            public void success() {
+                                ToastUtil.toastLong("success");
+
+                            }
+
+                            @Override
+                            public void failed() {
+                                ToastUtil.toastLong("fail");
+
+                            }
+                        });
+                    }
                 }
             });
             return convertView;
@@ -318,6 +366,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex);
+        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point);
     }
 }

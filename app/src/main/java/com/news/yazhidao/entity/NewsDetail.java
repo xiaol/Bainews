@@ -88,6 +88,8 @@ public class NewsDetail implements Serializable{
         public String uuid;
         public String userIcon;
         public String sourceUrl;
+        public String isPraiseFlag;
+        public String commentId;
         //语音评论的时长
         public int srcTextTime;
     }

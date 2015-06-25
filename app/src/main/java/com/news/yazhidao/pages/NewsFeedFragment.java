@@ -997,8 +997,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 }
 
                 //大图卡片
-            } else if ("1".equals(feed.getSpecial()))
-            {
+            } else if ("1".equals(feed.getSpecial())) {
 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
@@ -1009,8 +1008,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
                     holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
                     holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
-                    holder2.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
-                    holder2.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     convertView.setTag(holder2);
                 } else {
                     holder2 = new ViewHolder2();
@@ -1026,8 +1023,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder2.fl_news_content.setLayoutParams(layoutParams);
                     holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
                     holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
-                    holder2.tv_date = (TextView) convertView.findViewById(R.id.tv_date);
-                    holder2.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
                     convertView.setTag(holder2);
 //                    }
                 }
@@ -1049,54 +1044,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
-
-                if (feed.isTime_flag()) {
-                    if (mCurrentDate == null) {
-                        long time = System.currentTimeMillis();
-                        Date date = new Date(time);
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                        String currentDate = format.format(date);
-                        String myDate = DateUtil.getMyDate(currentDate);
-                        holder2.tv_date.setText(myDate);
-
-                        //判断上午还是下午
-                        String am = DateUtil.getMorningOrAfternoon(time);
-
-                        //判断是星期几
-                        String weekday = "";
-                        try {
-                            weekday = DateUtil.dayForWeek(currentDate);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        holder2.tv_weekday.setText(weekday + "|" + am);
-                    } else {
-
-
-                        String myDate = DateUtil.getMyDate(mCurrentDate);
-                        holder2.tv_date.setText(myDate);
-
-                        String am = "";
-
-                        //判断上午还是下午
-                        if ("0".equals(mCurrentType)) {
-                            am = "早间";
-                        } else {
-                            am = "晚间";
-                        }
-
-                        //判断是星期几
-                        String weekday = "";
-                        try {
-                            weekday = DateUtil.dayForWeek(mCurrentDate);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        holder2.tv_weekday.setText(weekday + "|" + am);
-                    }
-                }
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
@@ -1127,11 +1074,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 });
                 //多图卡片
-            } else if ("9".equals(feed.getSpecial()))
-            {
+            } else if ("9".equals(feed.getSpecial())) {
                 images = feed.getImgUrl_ex();
-
-
                 holder3 = new ViewHolder3();
 
                 if (images.length == 2) {
@@ -1617,8 +1561,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         ImageView iv_title_img;
         TextViewVertical tv_title;
         TextView tv_news_category;
-        TextView tv_date;
-        TextView tv_weekday;
         FrameLayout fl_news_content;
         LinearLayout ll_bottom_item;
         RelativeLayout rl_top_mark;
@@ -1736,7 +1678,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-
 
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", delta + "");

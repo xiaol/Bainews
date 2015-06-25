@@ -1,104 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_para"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="10dp"
-    >
+    android:layout_marginTop="10dp"
+    card_view:cardCornerRadius="4dp">
 
-    <com.news.yazhidao.widget.LetterSpacingTextView
-        android:id="@+id/lstv_para_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rl_comment"
-        android:layout_below="@+id/lstv_para_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <com.news.yazhidao.widget.LetterSpacingTextView
+            android:id="@+id/lstv_para_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <RelativeLayout
-            android:id="@+id/rl_user_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="12dp"
-            >
+            android:id="@+id/rl_comment"
+            android:layout_below="@+id/lstv_para_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_praise_count"
-                android:layout_width="51dp"
-                android:layout_height="25dp"
-                android:paddingLeft="20dp"
-                android:paddingTop="2dp"
-                android:textColor="@color/red"
-                android:textSize="10sp"
-                android:background="@drawable/bg_add_praise"
-                android:text="23" />
-
-            <com.news.yazhidao.widget.RoundedImageView
-                android:id="@+id/iv_user_icon"
-                android:layout_below="@+id/tv_praise_count"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@drawable/ic_comment_para"
-                app:border_color="@color/black"
-                app:border_width="1dp"
-                app:corner_radius="20dp" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_user_comment"
-            android:layout_toRightOf="@+id/rl_user_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginRight="5dp"
-            android:layout_margin="5dp">
-
-            <ImageView
-                android:id="@+id/iv_add_comment"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:background="@drawable/bg_selector_add_comment"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                />
-
-            <TextView
-                android:id="@+id/tv_comment_count"
-                android:layout_width="40dp"
-                android:layout_height="22dp"
-                android:text="60"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                android:gravity="center"
-                android:layout_toLeftOf="@+id/iv_add_comment"
-                android:layout_marginRight="7dp"
-                android:background="@drawable/bg_comment"
-                />
-
-            <TextView
-                android:id="@+id/tv_comment_content"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:id="@+id/rl_user_icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_below="@id/iv_add_comment"
-                android:textSize="15sp"
-                android:textColor="#32bfcd"
-                />
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="12dp">
 
+                <TextView
+                    android:id="@+id/tv_praise_count"
+                    android:layout_width="51dp"
+                    android:layout_height="25dp"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="2dp"
+                    android:textColor="@color/red"
+                    android:textSize="10sp"
+                    android:background="@drawable/bg_add_praise"
+                    android:text="23" />
+
+                <com.news.yazhidao.widget.RoundedImageView
+                    android:id="@+id/iv_user_icon"
+                    android:layout_below="@+id/tv_praise_count"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/ic_comment_para"
+                    app:border_color="@color/black"
+                    app:border_width="1dp"
+                    app:corner_radius="20dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_user_comment"
+                android:layout_toRightOf="@+id/rl_user_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="5dp"
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_add_comment"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/bg_selector_add_comment"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true" />
+
+                <TextView
+                    android:id="@+id/tv_comment_count"
+                    android:layout_width="40dp"
+                    android:layout_height="22dp"
+                    android:text="60"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:layout_toLeftOf="@+id/iv_add_comment"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/bg_comment" />
+
+                <TextView
+                    android:id="@+id/tv_comment_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_below="@id/iv_add_comment"
+                    android:textSize="15sp"
+                    android:textColor="#32bfcd" />
+
+
+            </RelativeLayout>
 
         </RelativeLayout>
+    </LinearLayout>
 
-    </RelativeLayout>
-
-
-</RelativeLayout>
+</android.support.v7.widget.CardView>
