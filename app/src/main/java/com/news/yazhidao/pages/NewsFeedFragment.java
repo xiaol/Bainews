@@ -130,6 +130,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private View mNewsFeedProgressWheelWrapper;
     private Context mContext;
     private TextViewExtend mtvProgress;
+    private boolean isNewFlag;
     private int miCurrentCount, miTotalCount;
 
     //listview重新布局刷新界面的时候是否需要动画
@@ -603,7 +604,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
 
-            if ("400".equals(feed.getSpecial())) {
+            if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
                 AdcocoUtil.update();
                 //普通卡片
                 if (convertView == null) {
@@ -675,6 +676,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                                                Intent intent = new Intent(mContext, NewsDetailAty.class);
                                                                intent.putExtra(KEY_URL, feed.getSourceUrl());
                                                                intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                                                               intent.putExtra("isnew",isNewFlag);
                                                                startActivity(intent);
                                                                //uemng statistic view the head news
                                                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -696,27 +698,21 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 holder.cv_opinions.setTextColor(Color.WHITE);
                 holder.cv_opinions.setTextSize(12);
 
-                if (feed.getCategory() != null)
+                if (feed.getCategory() != null) {
 
-                {
                     holder.tv_news_category.setText(feed.getCategory());
-                    holder.tv_news_category.setFontSpacing(5);
                     TextUtil.setNewsBackGroundRight(holder.tv_news_category, feed.getCategory());
+                    holder.tv_news_category.setFontSpacing(5);
+
 //                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
+                }else{
+                    holder.tv_news_category.setVisibility(View.GONE);
                 }
 
                 //百度百科
-                if ("0".
-
-                        equals(feed.getIsBaikeFlag()
-
-                        ))
-
-                {
+                if ("0".equals(feed.getIsBaikeFlag()) || feed.getIsBaikeFlag() == null) {
                     holder.img_source_baidu.setVisibility(View.GONE);
-                } else
-
-                {
+                } else {
                     holder.img_source_baidu.setVisibility(View.VISIBLE);
                 }
 
@@ -725,7 +721,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         equals(feed.getIsCommentsFlag()
 
-                        ))
+                        ) || feed.getIsCommentsFlag() == null)
 
                 {
                     holder.img_source_comment.setVisibility(View.GONE);
@@ -740,7 +736,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         equals(feed.getIsImgWallFlag()
 
-                        ))
+                        ) || feed.getIsImgWallFlag() == null)
 
                 {
                     holder.img_source_biimgs.setVisibility(View.GONE);
@@ -755,7 +751,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         equals(feed.getIsWeiboFlag()
 
-                        ))
+                        ) || feed.getIsWeiboFlag() == null)
 
                 {
                     holder.img_source_sina.setVisibility(View.GONE);
@@ -770,7 +766,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                         equals(feed.getIsZhihuFlag()
 
-                        ))
+                        ) || feed.getIsZhihuFlag() == null)
 
                 {
                     holder.img_source_zhihu.setVisibility(View.GONE);
@@ -780,7 +776,11 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder.img_source_zhihu.setVisibility(View.VISIBLE);
                 }
 
-                holder.tv_interests.setText(feed.getOtherNum());
+                if (feed.getOtherNum() == null) {
+                    holder.tv_interests.setText("0");
+                } else {
+                    holder.tv_interests.setText(feed.getOtherNum());
+                }
 
                 holder.rl_title_content.setOnClickListener(new View.OnClickListener()
 
@@ -789,6 +789,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                                                public void onClick(View v) {
                                                                    Intent intent = new Intent(mContext, NewsDetailAty.class);
                                                                    intent.putExtra(KEY_URL, feed.getSourceUrl());
+                                                                   intent.putExtra("isnew",isNewFlag);
                                                                    startActivity(intent);
                                                                    //uemng statistic view the head news
                                                                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
@@ -825,9 +826,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder.rl_bottom_mark.setVisibility(View.VISIBLE);
                 }
 
-                if (feed.isTime_flag())
-
-                {
+                if (feed.isTime_flag()) {
                     holder.ll_time_item.setVisibility(View.VISIBLE);
 
                     if (mCurrentDate == null) {
@@ -1380,12 +1379,12 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(mContext, 80);
+                params.height = DensityUtil.dip2px(mContext, 60);
                 break;
 
             case 2:
                 if (length == 4) {
-                    params.height = DensityUtil.dip2px(mContext, 130);
+                    params.height = DensityUtil.dip2px(mContext, 160);
                 } else {
                     params.height = DensityUtil.dip2px(mContext, 110);
                 }
@@ -1478,8 +1477,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 params.height = 130;
             } else if (GlobalParams.screenHeight == 1800) {
                 params.height = 110;
+            } else if (GlobalParams.screenHeight == 1920) {
+                params.height = 114;
             } else {
-                params.height = 85;
+                params.height = 110;
 
             }
 
@@ -1490,8 +1491,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 params.height = 70;
             } else if (GlobalParams.screenHeight == 1800) {
                 params.height = 55;
+            } else if (GlobalParams.screenHeight == 1920) {
+                params.height = 70;
             } else {
-                params.height = 43;
+                params.height = 70;
 
             }
         }
@@ -1669,7 +1672,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         }
     }
 
-    //获取当前点击分类的新闻
+    //获取当前点击分类的新
     private void loadNewsFeedData(final int position) {
 
         String url = HttpConstant.URL_GET_NEWS_LIST + "?channelId=" + position + "&page=1&limit=50";
@@ -1688,14 +1691,14 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     miTotalCount = result.size();
                     mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
-//                    mMiddleNewsArr = result;
-//                    mDownNewsArr.clear();
-//                    mUpNewsArr.clear();
-//                    miCurrentCount = 3;
-//                    miTotalCount = result.size();
-//                    mtvProgress.setText("3/" + result.size());
-//                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-//                    list_adapter.notifyDataSetChanged();
+                    mMiddleNewsArr = result;
+                    mDownNewsArr.clear();
+                    mUpNewsArr.clear();
+                    miCurrentCount = 3;
+                    miTotalCount = result.size();
+                    mtvProgress.setText("3/" + result.size());
+                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                    list_adapter.notifyDataSetChanged();
                 }
 
                 lv_news.onRefreshComplete();
@@ -1724,8 +1727,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
             if ("sendposition".equals(intent.getAction())) {
                 if (GlobalParams.currentCatePos == 0) {
                     loadNewsData(1);
+                    isNewFlag = false;
                 } else {
                     loadNewsFeedData(GlobalParams.currentCatePos - 1);
+                    isNewFlag = true;
                 }
 
                 mNewsFeedProgressWheel.setVisibility(View.VISIBLE);

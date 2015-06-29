@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.util.TypedValue;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.pages.ChatAty;
@@ -69,7 +71,17 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             mHomeLogout.setVisibility(View.VISIBLE);
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
-            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false);
+            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
+                @Override
+                public void success(Bitmap bitmap) {
+
+                }
+
+                @Override
+                public void failed() {
+
+                }
+            });
         }
     }
 
@@ -169,7 +181,17 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
         mHomeLogout.setVisibility(View.VISIBLE);
-        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false);
+        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
+            @Override
+            public void success(Bitmap bitmap) {
+
+            }
+
+            @Override
+            public void failed() {
+
+            }
+        });
     }
 
     @Override

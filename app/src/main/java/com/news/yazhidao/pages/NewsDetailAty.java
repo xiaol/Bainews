@@ -60,6 +60,7 @@ public class NewsDetailAty extends SwipeBackActivity {
     private String mSource;
     private SwipeBackLayout mSwipeBackLayout;
     private String uuid;
+
     @Override
     protected void setContentView() {
         super.setContentView();
@@ -95,51 +96,74 @@ public class NewsDetailAty extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
+        boolean isnew = getIntent().getBooleanExtra("isnew",false);
+
         GlobalParams.news_detail_url = getIntent().getStringExtra("url");
-//        String picwalldetail = "http://121.41.75.213:9999/news/baijia/fetchContent?url=http://news.163.com/photoview/00AO0001/90611.html";
-        uuid = DeviceInfoUtil.getUUID();
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
-        _Request.setCallback(new JsonCallback<NewsDetail>() {
+            uuid = DeviceInfoUtil.getUUID();
+        if (!isnew) {
+            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
+            _Request.setCallback(new JsonCallback<NewsDetail>() {
 
-            @Override
-            public void success(final NewsDetail result) {
-                if (result != null) {
-                    headerView.setDetailData(result,getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
-                        @Override
-                        public void onclickPullUp(int height) {
-                            msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                @Override
+                public void success(final NewsDetail result) {
+                    if (result != null) {
+                        headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                            @Override
+                            public void onclickPullUp(int height) {
+                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                            }
+                        },false);
+                        mNewsDetailAdapter.setData(result.relate);
+                        mNewsDetailAdapter.notifyDataSetChanged();
+
+                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                            msgvNewsDetail.setSelection(1);
                         }
-                    });
-                    mNewsDetailAdapter.setData(result.relate);
-                    mNewsDetailAdapter.notifyDataSetChanged();
 
-                    if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
-                        msgvNewsDetail.setSelection(1);
+                    } else
+
+                    {
+                        ToastUtil.toastShort("新闻的内容为空，无法打开");
+                        NewsDetailAty.this.finish();
                     }
 
-                } else
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
 
-                {
-                    ToastUtil.toastShort("新闻的内容为空，无法打开");
-                    NewsDetailAty.this.finish();
                 }
 
-                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                mNewsDetailProgressWheel.stopSpinning();
-                mNewsDetailProgressWheel.setVisibility(View.GONE);
 
-            }
+                @Override
+                public void failed(MyAppException exception) {
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+                }
+            }.setReturnType(new TypeToken<NewsDetail>() {
+            }.getType()));
+            _Request.execute();
+        } else {
+                ToastUtil.toastLong("新闻内容无法打开");
+                NewsDetailAty.this.finish();
 
+//            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
+//            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+//
+//                @Override
+//                public void success(final NewsDetailAdd result) {
+//
+//                }
+//
+//
+//                @Override
+//                public void failed(MyAppException exception) {
+//                }
+//            }.setReturnType(new TypeToken<NewsDetail>() {
+//            }.getType()));
+//            _Request.execute();
 
-            @Override
-            public void failed(MyAppException exception) {
-                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                mNewsDetailProgressWheel.stopSpinning();
-                mNewsDetailProgressWheel.setVisibility(View.GONE);
-            }
-        }.setReturnType(new TypeToken<NewsDetail>() {
-        }.getType()));
-        _Request.execute();
+        }
     }
 
 

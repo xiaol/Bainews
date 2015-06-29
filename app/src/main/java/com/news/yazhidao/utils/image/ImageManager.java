@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.ImageUtils;
 
@@ -26,6 +27,8 @@ import java.util.concurrent.Executors;
 
 public class ImageManager {
     private static ImageManager mInstance;
+    private DisplayImageListener listener;
+    private Bitmap loadBitmap;
     MemoryCache memoryCache = new MemoryCache();
     FileCache fileCache;
     private Map<ImageView, String> imageViews = Collections
@@ -47,7 +50,10 @@ public class ImageManager {
     final int stub_id = R.drawable.default_image;
 
     // 最主要的方法
-    public void DisplayImage(String url, ImageView imageView,boolean isPreHandle) {
+    public void DisplayImage(String url, ImageView imageView,boolean isPreHandle,DisplayImageListener listener) {
+
+        this.listener = listener;
+
         imageViews.put(imageView, url);
         // 先从内存缓存中查找
 
@@ -57,10 +63,12 @@ public class ImageManager {
                 bitmap=ImageUtils.zoomBitmap(bitmap, DeviceInfoUtil.getScreenWidth());
             }
             imageView.setImageBitmap(bitmap);
+            listener.success(bitmap);
         }else {
             // 若没有的话则开启新线程加载图片
             queuePhoto(url, imageView,isPreHandle);
             imageView.setImageResource(stub_id);
+
         }
     }
 
@@ -166,7 +174,7 @@ public class ImageManager {
             memoryCache.put(photoToLoad.url, bmp);
             if (imageViewReused(photoToLoad))
                 return;
-            BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad);
+            BitmapDisplayer bd = new BitmapDisplayer(bmp, photoToLoad,listener);
             // 更新的操作放在UI线程中
             Activity a = (Activity) photoToLoad.imageView.getContext();
             a.runOnUiThread(bd);
@@ -190,10 +198,11 @@ public class ImageManager {
     class BitmapDisplayer implements Runnable {
         Bitmap bitmap;
         PhotoToLoad photoToLoad;
-
-        public BitmapDisplayer(Bitmap b, PhotoToLoad p) {
+        DisplayImageListener mListener;
+        public BitmapDisplayer(Bitmap b, PhotoToLoad p, DisplayImageListener listener) {
             bitmap = b;
             photoToLoad = p;
+            this.mListener=listener;
         }
 
         public void run() {
@@ -203,6 +212,7 @@ public class ImageManager {
                 if(photoToLoad.isPreHandle){
                     bitmap=ImageUtils.zoomBitmap(bitmap,DeviceInfoUtil.getScreenWidth());
                 }
+                mListener.success(bitmap);
                 photoToLoad.imageView.setImageBitmap(bitmap);
             }
             else

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_para"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/rl_comment_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <com.news.yazhidao.widget.LetterSpacingTextView
@@ -20,7 +21,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
-            />
+            android:paddingTop="6dp" />
 
         <RelativeLayout
             android:id="@+id/rl_comment"
@@ -106,12 +107,27 @@
             </RelativeLayout>
 
         </RelativeLayout>
-        
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_none_point"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:visibility="gone"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/lstv_para_content"
+            android:background="@drawable/bg_selector_add_comment"
+            android:layout_alignParentRight="true" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_devider"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/rl_comment_content"
+        android:layout_height="10dp"
+        android:background="#dfe6e9" />
 
 </RelativeLayout>

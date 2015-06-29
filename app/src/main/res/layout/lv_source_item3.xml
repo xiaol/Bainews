@@ -11,7 +11,7 @@
         android:layout_width="1dp"
         android:layout_height="15dp"
         android:background="@drawable/source_item_combine_line"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="19dp"
         />
 
 
@@ -20,7 +20,7 @@
         android:layout_below="@+id/iv_combine_line_top"
         android:layout_width="9dp"
         android:layout_height="9dp"
-        android:layout_marginLeft="14dp"
+        android:layout_marginLeft="15dp"
         android:background="@drawable/img_blue_point"
         />
 
@@ -38,7 +38,7 @@
         android:layout_marginRight="13dp"
         android:textColor="#666666"
         android:text="Fay苏"
-        android:textSize="12sp"
+        android:textSize="11sp"
         />
 
     <ImageView
@@ -47,7 +47,7 @@
         android:layout_height="20dp"
         android:layout_below="@id/iv_source"
         android:background="@drawable/source_item_combine_line"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="19dp"
         android:layout_marginTop="-1dp"
         android:layout_marginBottom="-1dp"
         />
@@ -62,6 +62,5 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="32dp"
         />
-
 
 </RelativeLayout>

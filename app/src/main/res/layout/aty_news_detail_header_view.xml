@@ -65,7 +65,6 @@
             android:id="@+id/baike_linerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
             android:orientation="vertical" />
 
@@ -233,6 +232,7 @@
                 android:id="@+id/MnewsDetailButtonConfirm"
                 android:text="确认编辑"
                 android:textSize="22sp" />
+
 
             <Button
                 android:layout_width="0dp"

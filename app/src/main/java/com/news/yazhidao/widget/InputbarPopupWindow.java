@@ -2,6 +2,7 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.Logger;
@@ -280,7 +282,17 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
             }
             NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false);
+                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false,new DisplayImageListener() {
+                    @Override
+                    public void success(Bitmap bitmap) {
+
+                    }
+
+                    @Override
+                    public void failed() {
+
+                    }
+                });
             else
                 holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);

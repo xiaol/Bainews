@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Message;
@@ -32,7 +33,9 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
@@ -104,6 +107,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private ImageView iv_user_icon_article_comment;
     private SpeechView sv_article_comment;
     private RelativeLayout rl_speech_view;
+    private RelativeLayout mNewsDetailHeaderContentWrapper;
     private LetterSpacingTextView mNewsDetailHeaderDesc;
     private LinearLayout mNewsDetailHeaderContentParent;
     private TextView mNewsDetailHeaderSourceName;
@@ -120,6 +124,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private ArrayList<NewsDetail.Point> paraPoint = new ArrayList<NewsDetail.Point>();
     private ImageView iv_show_all_zhihu_views;
     private String sourceUrl;
+    private ImageView tv_cutoff_line;
 
     private static int EDIT_POSITION;
     private static final int TITLE = 1;
@@ -191,10 +196,12 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         iv_user_icon_article_comment = (ImageView) mRootView.findViewById(R.id.iv_user_icon_article_comment);
         sv_article_comment = (SpeechView) mRootView.findViewById(R.id.sv_article_comment);
         mNewsDetailHeaderDesc = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderDesc);//新闻描述
+        mNewsDetailHeaderContentWrapper = (RelativeLayout) mRootView.findViewById(R.id.mNewsDetailHeaderContentWrapper);
         mNewsDetailHeaderContentParent = (LinearLayout) mRootView.findViewById(R.id.mNewsDetailHeaderContentParent);//新闻内容
         mNewsDetailHeaderPulldown = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderPulldown);//点击展开全文
         mNewsDetailHeaderSourceName = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderSourceName);//新闻来源地址
         tv_add_comment = (TextViewExtend) mRootView.findViewById(R.id.tv_add_comment);
+        tv_cutoff_line = (ImageView) mRootView.findViewById(R.id.tv_cutoff_line);
 
 //        mNewsDetailHeaderLocation = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderLocation);//新闻发生的地点
         mNewsDeatailTitleLayout = (LinearLayout) mRootView.findViewById(R.id.mNewsDeatailTitleLayout);
@@ -254,7 +261,28 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private void inflateDataToNewsheader(final NewsDetail pNewsDetail, final String sourceUrl, final HeaderVeiwPullUpListener listener) {
         if (pNewsDetail != null) {
             if (TextUtils.isValidate(pNewsDetail.imgUrl)) {
-                ImageManager.getInstance(mContext).DisplayImage(pNewsDetail.imgUrl, mNewsDetailHeaderImg, true);
+                ImageManager.getInstance(mContext).DisplayImage(pNewsDetail.imgUrl, mNewsDetailHeaderImg, true ,new DisplayImageListener() {
+                    @Override
+                    public void success(Bitmap bitmap) {
+
+                        if(bitmap != null){
+                            int height = bitmap.getHeight();
+
+                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
+                            int left = DensityUtil.dip2px(mContext,8);
+                            int top = DensityUtil.dip2px(mContext,10);
+                            params.setMargins(left,height - top,left,0);
+
+                            mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+                        }
+
+                    }
+
+                    @Override
+                    public void failed() {
+
+                    }
+                });
             } else {
                 mNewsDetailHeaderImg.setVisibility(GONE);
             }
@@ -293,6 +321,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             //判断是否显示语音弹幕
             if (pNewsDetail.isdoc == false) {
                 rl_speech_view.setVisibility(View.GONE);
+                tv_cutoff_line.setVisibility(View.GONE);
+
             } else {
                 sv_article_comment.setUrl(pNewsDetail.docUrl, true);
                 sv_article_comment.setDuration(Integer.parseInt(pNewsDetail.docTime));
@@ -397,7 +427,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             mNewsDetailHeaderTime.setText(pNewsDetail.updateTime);
             mNewsDetailHeaderTemperature.setText(TextUtil.convertTemp(pNewsDetail.root_class));
             mNewsDetailHeaderDesc.setFontSpacing(LetterSpacingTextView.BIG);
-            mNewsDetailHeaderDesc.setText(pNewsDetail.abs);
+            String news_abs = BCConvert.bj2qj(pNewsDetail.abs);
+            mNewsDetailHeaderDesc.setText(news_abs);
             mNewsDetailHeaderDesc.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -411,17 +442,19 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 }
             });
 
-            if (!android.text.TextUtils.isEmpty(pNewsDetail.content)) {
+            if (pNewsDetail.content != null) {
 
                 String news_content = BCConvert.bj2qj(pNewsDetail.content);
 
-                _Split = news_content.split("\n");
+                _Split = pNewsDetail.content.split("\n");
                 StringBuilder _StringBuilder = new StringBuilder();
                 for (int i = 0; i < _Split.length; i++) {
                     add_flag = false;
                     //段落和评论布局
                     final RelativeLayout rl_para = (RelativeLayout) View.inflate(mContext, R.layout.rl_content_and_comment, null);
                     final LetterSpacingTextView lstv_para_content = (LetterSpacingTextView) rl_para.findViewById(R.id.lstv_para_content);
+                    final ImageView iv_none_point = (ImageView) rl_para.findViewById(R.id.iv_none_point);
+
                     final RelativeLayout rl_comment = (RelativeLayout) rl_para.findViewById(R.id.rl_comment);
                     rl_para.setTag(i);
                     rl_comment.setOnClickListener(new OnClickListener() {
@@ -447,6 +480,32 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     | Gravity.CENTER, 0, 0);
                         }
                     });
+
+                    iv_none_point.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ArrayList<NewsDetail.Point> point_para = new ArrayList<NewsDetail.Point>();
+                            RelativeLayout rl_aa = (RelativeLayout) iv_none_point.getParent().getParent();
+                            int para_index = (int) rl_aa.getTag();
+                            for (int m = 0; m < points.size(); m++) {
+                                if (points.get(m).paragraphIndex != null && para_index == Integer.parseInt(points.get(m).paragraphIndex)) {
+                                    point_para.add(points.get(m));
+                                }
+                            }
+                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this);
+                            window.setFocusable(true);
+                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+//                            window.setBackgroundDrawable(new BitmapDrawable());
+                            //防止虚拟软键盘被弹出菜单遮住、
+                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+
+                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+                                    | Gravity.CENTER, 0, 0);
+                        }
+                    });
+
+
                     TextView tv_praise_count = (TextView) rl_para.findViewById(R.id.tv_praise_count);
                     RoundedImageView iv_user_icon = (RoundedImageView) rl_para.findViewById(R.id.iv_user_icon);
                     final ImageView iv_add_comment = (ImageView) rl_para.findViewById(R.id.iv_add_comment);
@@ -496,6 +555,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         }
                     });
 
+                    TextView tv_devider = (TextView) rl_para.findViewById(R.id.tv_devider);
+                    if(i == _Split.length){
+                        tv_devider.setVisibility(View.GONE);
+                    }
+
                     if (paraPoint != null && paraPoint.size() > 0) {
 
                         for (int a = 0; a < paraPoint.size(); a++) {
@@ -516,13 +580,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
                                     add_flag = true;
                                     rl_comment.setVisibility(View.VISIBLE);
+                                    iv_none_point.setVisibility(View.GONE);
                                 } else {
                                     rl_comment.setVisibility(View.GONE);
+                                    iv_none_point.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
                     } else {
                         rl_comment.setVisibility(View.GONE);
+                        iv_none_point.setVisibility(View.VISIBLE);
                     }
 
                     if (_StringBuilder.append(_Split[i]).length() > 200) {
@@ -548,6 +615,14 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         isClickedPullDown = true;
                         for (int i = 0; i < mNewsDetailHeaderContentParent.getChildCount(); i++) {
                             mNewsDetailHeaderContentParent.getChildAt(i).setVisibility(VISIBLE);
+
+                            if(i == mNewsDetailHeaderContentParent.getChildCount()){
+                                TextView tv = (TextView) mNewsDetailHeaderContentParent.getChildAt(i).findViewById(R.id.tv_devider);
+
+                                if(tv != null ){
+                                    tv.setVisibility(View.VISIBLE);
+                                }
+                            }
                         }
                         mNewsDetailHeaderPulldown.setText(R.string.mNewsDetailHeaderOnclickLess);
                         Drawable _DrawableLeft = mContext.getResources().getDrawable(R.drawable.ic_news_detail_listview_pullup);
@@ -693,37 +768,39 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         request.execute();
     }
 
-    public void setDetailData(final NewsDetail pNewsDetail, String sourceUrl, HeaderVeiwPullUpListener listener) {
+    public void setDetailData(final NewsDetail pNewsDetail, String sourceUrl, HeaderVeiwPullUpListener listener,boolean isnew) {
         if (pNewsDetail == null) {
             return;
         }
-        inflateDataToNewsheader(pNewsDetail, sourceUrl, listener);
-        if (pNewsDetail != null) {
-            ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = pNewsDetail.baike;
-            if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
-                for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
-                    final NewsDetail.BaiDuBaiKe pBaiKe = pArrBaiDuBaiKe.get(i);
-                    BaiDuBaiKeView baiDuBaiKeView = new BaiDuBaiKeView(mContext);
-                    baiDuBaiKeView.setBaiDuBaiKeData(pArrBaiDuBaiKe.get(i));
-                    mllBaiKe.addView(baiDuBaiKeView);
-                    baiDuBaiKeView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                            _Intent.putExtra("url", pBaiKe.url);
-                            mContext.startActivity(_Intent);
-                            //add umeng statistic baidubaike
-                            MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_BAIDUBAIKU);
-                        }
-                    });
+        if(!isnew) {
+
+            inflateDataToNewsheader((NewsDetail)pNewsDetail, sourceUrl, listener);
+            if (pNewsDetail != null) {
+                ArrayList<NewsDetail.BaiDuBaiKe> pArrBaiDuBaiKe = ((NewsDetail)pNewsDetail).baike;
+                if (pArrBaiDuBaiKe != null && pArrBaiDuBaiKe.size() > 0) {
+                    for (int i = 0; i < pArrBaiDuBaiKe.size(); i++) {
+                        final NewsDetail.BaiDuBaiKe pBaiKe = pArrBaiDuBaiKe.get(i);
+                        BaiDuBaiKeView baiDuBaiKeView = new BaiDuBaiKeView(mContext);
+                        baiDuBaiKeView.setBaiDuBaiKeData(pArrBaiDuBaiKe.get(i));
+                        mllBaiKe.addView(baiDuBaiKeView);
+                        baiDuBaiKeView.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                _Intent.putExtra("url", pBaiKe.url);
+                                mContext.startActivity(_Intent);
+                                //add umeng statistic baidubaike
+                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_BAIDUBAIKU);
+                            }
+                        });
+                    }
+                } else {
+                    mllBaiKe.setVisibility(GONE);
                 }
-            } else {
-                mllBaiKe.setVisibility(GONE);
-            }
-            //图片墙的相关显示
+                //图片墙的相关显示
 
 
-            if (pNewsDetail.imgWall != null) {
+                if (((NewsDetail)pNewsDetail).imgWall != null) {
 //                if (pNewsDetail.imgWall != null) {
 //
 //
@@ -735,98 +812,69 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 //                if(true){
 //                    return;
 //                }
-                new Compt().putTask(new BackRunnable() {
-                    @Override
-                    public void run() {
-                        for (Map<String, String> m : pNewsDetail.imgWall) {
-                            String url = m.get("img").toString();
+                    new Compt().putTask(new BackRunnable() {
+                        @Override
+                        public void run() {
+                            for (Map<String, String> m : ((NewsDetail)pNewsDetail).imgWall) {
+                                String url = m.get("img").toString();
 
-                            BitmapFactory.Options op = null;
-                            while (op == null)
-                                try {
-                                    op = BitmapUtil.getBitmapFactoryOptions(url);
-                                } catch (Exception e) {
-                                    // TODO Auto-generated catch block
-                                    continue;
-                                }
+                                BitmapFactory.Options op = null;
+                                while (op == null)
+                                    try {
+                                        op = BitmapUtil.getBitmapFactoryOptions(url);
+                                    } catch (Exception e) {
+                                        // TODO Auto-generated catch block
+                                        continue;
+                                    }
 
 
-                            m.put("w", "" + op.outWidth);
-                            m.put("h", "" + op.outHeight);
+                                m.put("w", "" + op.outWidth);
+                                m.put("h", "" + op.outHeight);
+                            }
+
+
+                            List<HashMap<String, String>> resultList = new ArrayList<HashMap<String, String>>();
+                            List<HashMap<String, String>> minor = new ArrayList<HashMap<String, String>>(((NewsDetail)pNewsDetail).imgWall);
+                            this.object = composeMatch(resultList, minor);
+
+
                         }
 
 
-                        List<HashMap<String, String>> resultList = new ArrayList<HashMap<String, String>>();
-                        List<HashMap<String, String>> minor = new ArrayList<HashMap<String, String>>(pNewsDetail.imgWall);
-                        this.object = composeMatch(resultList, minor);
-
-
                     }
+                            , new CallbackRunnable() {
+                        @Override
+                        public boolean run(Message message, boolean b, Activity activity) throws Exception {
 
+                            mImageWall.setVisibility(View.VISIBLE);
+                            mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
+                            return false;
+                        }
+                    }).run();
 
-                }
-                        , new CallbackRunnable() {
-                    @Override
-                    public boolean run(Message message, boolean b, Activity activity) throws Exception {
-
-                        mImageWall.setVisibility(View.VISIBLE);
-                        mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
-                        return false;
-                    }
-                }).run();
-
-            } else {
-                mImageWall.setVisibility(GONE);
-            }
-            final ArrayList<NewsDetail.ZhiHu> pArrZhiHu = pNewsDetail.zhihu;
-            if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
-                if (pArrZhiHu.size() > 3) {
-                    for (int i = 0; i < 3; i++) {
-                        final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
-                        ZhiHuView zhiHuView = new ZhiHuView(mContext);
-                        zhiHuView.setZhiHuData(pArrZhiHu.get(i));
-                        zhiHuView.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                _Intent.putExtra("url", pZhihu.url);
-                                mContext.startActivity(_Intent);
-                                //add umeng statistic zhihu
-                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
-                            }
-                        });
-                        mllZhiHuItem.addView(zhiHuView);
-                    }
                 } else {
-                    for (int i = 0; i < pArrZhiHu.size(); i++) {
-                        final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
-                        ZhiHuView zhiHuView = new ZhiHuView(mContext);
-                        zhiHuView.setZhiHuData(pArrZhiHu.get(i));
-                        zhiHuView.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                _Intent.putExtra("url", pZhihu.url);
-                                mContext.startActivity(_Intent);
-                                //add umeng statistic zhihu
-                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
-                            }
-                        });
-                        mllZhiHuItem.addView(zhiHuView);
-                    }
-                    iv_show_all_zhihu_views.setVisibility(View.GONE);
+                    mImageWall.setVisibility(GONE);
                 }
-            } else {
-                mllZhiHu.setVisibility(GONE);
-            }
-
-
-            iv_show_all_zhihu_views.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mllZhiHuItem.removeAllViews();
-                    iv_show_all_zhihu_views.setVisibility(View.GONE);
-                    if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
+                final ArrayList<NewsDetail.ZhiHu> pArrZhiHu = ((NewsDetail)pNewsDetail).zhihu;
+                if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
+                    if (pArrZhiHu.size() > 3) {
+                        for (int i = 0; i < 3; i++) {
+                            final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
+                            ZhiHuView zhiHuView = new ZhiHuView(mContext);
+                            zhiHuView.setZhiHuData(pArrZhiHu.get(i));
+                            zhiHuView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                    _Intent.putExtra("url", pZhihu.url);
+                                    mContext.startActivity(_Intent);
+                                    //add umeng statistic zhihu
+                                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
+                                }
+                            });
+                            mllZhiHuItem.addView(zhiHuView);
+                        }
+                    } else {
                         for (int i = 0; i < pArrZhiHu.size(); i++) {
                             final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
                             ZhiHuView zhiHuView = new ZhiHuView(mContext);
@@ -843,68 +891,101 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                             });
                             mllZhiHuItem.addView(zhiHuView);
                         }
+                        iv_show_all_zhihu_views.setVisibility(View.GONE);
                     }
+                } else {
+                    mllZhiHu.setVisibility(GONE);
                 }
-            });
 
-            final ArrayList<ArrayList<String>> pArrDouBan = pNewsDetail.douban;
-            if (pArrDouBan != null && pArrDouBan.size() > 0) {
-                for (int i = 0; i < pArrDouBan.size(); i++) {
-                    final ArrayList<String> pDouBan = pArrDouBan.get(i);
-                    TextViewExtend textView = new TextViewExtend(mContext);
-                    textView.setTextColor(getResources().getColor(R.color.douban_item_blue));
-                    textView.setTextSize(19);
-                    textView.setText(pDouBan.get(0));
-                    textView.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                            _Intent.putExtra("url", pDouBan.get(1));
-                            mContext.startActivity(_Intent);
-                            //add umeng statistic douban
-                            MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_DOUBAI);
+
+                iv_show_all_zhihu_views.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mllZhiHuItem.removeAllViews();
+                        iv_show_all_zhihu_views.setVisibility(View.GONE);
+                        if (pArrZhiHu != null && pArrZhiHu.size() > 0) {
+                            for (int i = 0; i < pArrZhiHu.size(); i++) {
+                                final NewsDetail.ZhiHu pZhihu = pArrZhiHu.get(i);
+                                ZhiHuView zhiHuView = new ZhiHuView(mContext);
+                                zhiHuView.setZhiHuData(pArrZhiHu.get(i));
+                                zhiHuView.setOnClickListener(new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                        _Intent.putExtra("url", pZhihu.url);
+                                        mContext.startActivity(_Intent);
+                                        //add umeng statistic zhihu
+                                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_ZHIHU);
+                                    }
+                                });
+                                mllZhiHuItem.addView(zhiHuView);
+                            }
                         }
-                    });
-                    mvDouBanItem.addView(textView);
-                }
-            } else {
-                mllDouBan.setVisibility(GONE);
-            }
-
-            ArrayList<NewsDetail.Weibo> pArrWeibo = pNewsDetail.weibo;
-            if (pArrWeibo != null && pArrWeibo.size() > 0) {
-                for (int i = 0; i < pArrWeibo.size(); i++) {
-                    final NewsDetail.Weibo pWeiBo = pArrWeibo.get(i);
-                    SinaView sinaView = new SinaView(mContext);
-                    sinaView.setSinaData(pArrWeibo.get(i));
-                    mllSinaItem.addView(sinaView);
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) sinaView.getLayoutParams();
-                    if (i == pArrWeibo.size() - 1) {
-                        layoutParams.rightMargin = DensityUtil.dip2px(mContext, 16);
                     }
-                    layoutParams.leftMargin = DensityUtil.dip2px(mContext, 16);
-                    sinaView.setLayoutParams(layoutParams);
-                    if (pWeiBo.isCommentFlag == null || "".equals(pWeiBo.isCommentFlag)) {
-                        sinaView.setOnClickListener(new OnClickListener() {
+                });
+
+                final ArrayList<ArrayList<String>> pArrDouBan = ((NewsDetail)pNewsDetail).douban;
+                if (pArrDouBan != null && pArrDouBan.size() > 0) {
+                    for (int i = 0; i < pArrDouBan.size(); i++) {
+                        final ArrayList<String> pDouBan = pArrDouBan.get(i);
+                        TextViewExtend textView = new TextViewExtend(mContext);
+                        textView.setTextColor(getResources().getColor(R.color.douban_item_blue));
+                        textView.setTextSize(19);
+                        textView.setText(pDouBan.get(0));
+                        textView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                                _Intent.putExtra("url", pWeiBo.url);
+                                _Intent.putExtra("url", pDouBan.get(1));
                                 mContext.startActivity(_Intent);
-                                //add umeng statistic weibo
-                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
+                                //add umeng statistic douban
+                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_DOUBAI);
                             }
                         });
+                        mvDouBanItem.addView(textView);
                     }
+                } else {
+                    mllDouBan.setVisibility(GONE);
                 }
-            } else {
-                mllSina.setVisibility(GONE);
-            }
-        }
-        if (pNewsDetail != null && pNewsDetail.relate != null && pNewsDetail.relate.size() > 0) {
 
-        } else {
-            mNewsDetailRelate.setVisibility(GONE);
+                ArrayList<NewsDetail.Weibo> pArrWeibo = ((NewsDetail)pNewsDetail).weibo;
+                if (pArrWeibo != null && pArrWeibo.size() > 0) {
+                    for (int i = 0; i < pArrWeibo.size(); i++) {
+                        final NewsDetail.Weibo pWeiBo = pArrWeibo.get(i);
+                        SinaView sinaView = new SinaView(mContext);
+                        sinaView.setSinaData(pArrWeibo.get(i));
+                        mllSinaItem.addView(sinaView);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) sinaView.getLayoutParams();
+                        if (i == pArrWeibo.size() - 1) {
+                            layoutParams.rightMargin = DensityUtil.dip2px(mContext, 16);
+                        }
+                        layoutParams.leftMargin = DensityUtil.dip2px(mContext, 16);
+                        sinaView.setLayoutParams(layoutParams);
+                        if (pWeiBo.isCommentFlag == null || "".equals(pWeiBo.isCommentFlag)) {
+                            sinaView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent _Intent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                    _Intent.putExtra("url", pWeiBo.url);
+                                    mContext.startActivity(_Intent);
+                                    //add umeng statistic weibo
+                                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_NEWSDETAIL_WEIBO);
+                                }
+                            });
+                        }
+                    }
+                } else {
+                    mllSina.setVisibility(GONE);
+                }
+            }
+            if (pNewsDetail != null && ((NewsDetail)pNewsDetail).relate != null && ((NewsDetail)pNewsDetail).relate.size() > 0) {
+
+            } else {
+                mNewsDetailRelate.setVisibility(GONE);
+            }
+        }else{
+
+
         }
     }
 
@@ -1204,7 +1285,17 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             }
             final NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false);
+                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false,new DisplayImageListener() {
+                    @Override
+                    public void success(Bitmap bitmap) {
+
+                    }
+
+                    @Override
+                    public void failed() {
+
+                    }
+                });
             else
                 holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
             holder.tvName.setText(point.userName);
