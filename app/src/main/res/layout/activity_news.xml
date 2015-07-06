@@ -93,4 +93,20 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/fl_mOnDestruction"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/iv_ondestruction"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_ondestruct"
+            />
+    </FrameLayout>
+
 </RelativeLayout>

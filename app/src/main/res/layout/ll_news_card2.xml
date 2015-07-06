@@ -11,65 +11,16 @@
         android:layout_height="match_parent"
         android:background="@drawable/bg_feedstream_list_table">
 
-        <LinearLayout
-            android:id="@+id/ll_time_item"
-            android:layout_width="match_parent"
-            android:visibility="gone"
-            android:background="#dfe6e9"
-            android:layout_height="45dp">
-
-            <ImageView
-                android:layout_width="10dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="15dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/image_compass" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="3dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="四月二十三日"
-                    android:textSize="15sp"
-                    android:textColor="#000000" />
-
-                <TextView
-                    android:id="@+id/tv_weekday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="星期三|早间"
-                    android:textSize="13sp"
-                    android:textColor="#000000" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c8cfd2"
-                android:layout_gravity="center_vertical"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp" />
-
-
-        </LinearLayout>
+        <include
+            layout="@layout/ll_time_layout"
+            android:id="@+id/ll_time_item" />
 
         <RelativeLayout
             android:id="@+id/rl_divider"
             android:layout_width="match_parent"
+            android:layout_height="10dp"
             android:layout_below="@+id/ll_time_item"
-            android:background="#dfe6e9"
-            android:layout_height="8dp" />
+            android:background="#dfe6e9" />
 
         <LinearLayout
             android:id="@+id/ll_image_list"
@@ -123,7 +74,7 @@
             android:layout_height="wrap_content"
             android:text="反馈文理分科我离开我吕蒙WMV物品"
             android:textSize="16sp"
-            android:textColor="#7d7d7d" />
+            android:textColor="#000000" />
 
         <LinearLayout
             android:id="@+id/ll_view_content"

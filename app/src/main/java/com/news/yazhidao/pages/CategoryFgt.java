@@ -57,62 +57,19 @@ public class CategoryFgt extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GlobalParams.pager.setCurrentItem(1);
-                GlobalParams.currentCatePos = position;
+                GlobalParams.currentCatePos = Integer.parseInt(marrCategoryName.get(position).getChannel_id());
                 Intent intent = new Intent("sendposition");
                 GlobalParams.context.sendBroadcast(intent);
                 if (GlobalParams.tabs != null) {
-                    setTabTitle(position);
+                    setTabTitle(marrCategoryName,position);
                 }
             }
         });
     }
 
-    private void setTabTitle(int position) {
+    private void setTabTitle(ArrayList<Channel> channelList,int position) {
 
-        switch (position) {
-            case 0:
-                GlobalParams.tabs.updateSelection2(1, "谷歌今日焦点");
-                break;
-            case 1:
-                GlobalParams.tabs.updateSelection2(1, "热门专题");
-                break;
-            case 2:
-                GlobalParams.tabs.updateSelection2(1, "重口味");
-                break;
-            case 3:
-                GlobalParams.tabs.updateSelection2(1, "贵圈乱不乱");
-                break;
-            case 4:
-                GlobalParams.tabs.updateSelection2(1, "反正我信了");
-                break;
-            case 5:
-                GlobalParams.tabs.updateSelection2(1, "Take Ground Gas");
-                break;
-            case 6:
-                GlobalParams.tabs.updateSelection2(1, "直男常备");
-                break;
-            case 7:
-                GlobalParams.tabs.updateSelection2(1, "股往金来");
-                break;
-            case 8:
-                GlobalParams.tabs.updateSelection2(1, "科学嗨起来");
-                break;
-            case 9:
-                GlobalParams.tabs.updateSelection2(1, "高逼格get√");
-                break;
-            case 10:
-                GlobalParams.tabs.updateSelection2(1, "追剧看片schedule");
-                break;
-            case 11:
-                GlobalParams.tabs.updateSelection2(1, "音痴恐惧症");
-                break;
-            case 12:
-                GlobalParams.tabs.updateSelection2(1, "萌师强化班");
-                break;
-            case 13:
-                GlobalParams.tabs.updateSelection2(1, "X星人沦陷区");
-                break;
-        }
+        GlobalParams.tabs.updateSelection2(1, channelList.get(position).getChannel_name());
 
     }
 

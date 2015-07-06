@@ -43,6 +43,7 @@ public class PraiseRequest {
         pairs.add(new BasicNameValuePair("uuid",uuid));
         pairs.add(new BasicNameValuePair("sourceUrl",sourceUrl));
         pairs.add(new BasicNameValuePair("commentId",commentId));
+        pairs.add(new BasicNameValuePair("deviceType","android"));
         request.setParams(pairs);
         request.setCallback(new StringCallback() {
             @Override

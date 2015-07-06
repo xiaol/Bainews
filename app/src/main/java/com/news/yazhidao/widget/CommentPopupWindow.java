@@ -53,6 +53,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private InputBar mInputBar;
     private RelativeLayout mrlRecord;
     private Handler mHandler;
+    private int PARA_FLAG = 0;
+    private int ARTICLE_FLAG = 1;
+    private int comment_flag;
     private double mRecordVolume;// 麦克风获取的音量值
     private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
     private ImageView mivRecord;
@@ -60,13 +63,16 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
     private String sourceUrl;
+    private int paraindex;
     private NewsDetail.Point point;
 
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points,String sourceUrl, IUpdateCommentCount updateCommentCount) {
+    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points,String sourceUrl, IUpdateCommentCount updateCommentCount,int paraindex,int flag) {
         super(context);
         m_pContext = context;
+        this.paraindex = paraindex;
         marrPoints = points;
         this.sourceUrl = sourceUrl;
+        comment_flag = flag;
         if(marrPoints.size() > 0) {
             mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
         }
@@ -132,7 +138,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         super.dismiss();
         //退出评论页面时，关闭正在播放的语音评论
         MediaPlayerManager.getInstance().stop();
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point);
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point,comment_flag);
     }
 
     private void loadData() {
@@ -142,7 +148,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     @Override
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
-        NewsDetail.Point point = marrPoints.get(0);
+        if(marrPoints != null && marrPoints.size() > 0) {
+            NewsDetail.Point point = marrPoints.get(0);
+        }
         NewsDetail newsDetail = new NewsDetail();
         NewsDetail.Point newPoint = newsDetail.new Point();
         String type;
@@ -159,14 +167,16 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         newPoint.userName = user.getUserName();
         newPoint.type = type;
         marrPoints.add(newPoint);
+        point = newPoint;
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
-        Logger.i("jigang", type + "----url==" + argContent+"-------duration==="+speechDuration);
-        UploadCommentRequest.uploadComment(m_pContext, point.sourceUrl, argContent, point.paragraphIndex, type, speechDuration, new UploadCommentListener() {
+        Logger.i("jigang", type + "----url==" + argContent + "-------duration===" + speechDuration);
+        UploadCommentRequest.uploadComment(m_pContext, sourceUrl, argContent, paraindex + "", type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
                 miCount += 1;
                 Log.i("tag", "111");
+                ToastUtil.toastLong("发表成功");
             }
 
             @Override
@@ -380,6 +390,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point);
+        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point,int flag);
     }
 }

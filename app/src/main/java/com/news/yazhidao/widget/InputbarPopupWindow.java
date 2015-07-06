@@ -39,6 +39,9 @@ import java.util.ArrayList;
  */
 public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate, Handler.Callback {
 
+    private int PARA_FLAG = 0;
+    private int ARTICLE_FLAG = 1;
+
     private ImageView mivClose;
     private View mMenuView;
     private Activity m_pContext;
@@ -48,24 +51,27 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     private InputBar mInputBar;
     private RelativeLayout mrlRecord;
     private Handler mHandler;
+
     private double mRecordVolume;// 麦克风获取的音量值
     private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
     private RelativeLayout rl_inputbar_content;
     private ImageView mivRecord;
     private String mSourceUrl;
+    private int comment_flag;
     private ArrayList<NewsDetail.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex;
     private NewsDetail.Point newPoint;
 
-    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount,int flag) {
         super(context);
         m_pContext = context;
         marrPoints = points;
         mSourceUrl = sourceUrl;
-        if (marrPoints.size() > 0) {
+        comment_flag = flag;
+        if (marrPoints != null && marrPoints.size() > 0) {
             mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
-        } else {
+        } else{
             mParagraphIndex = 0;
         }
         mIUpdateCommentCount = updateCommentCount;
@@ -125,7 +131,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
     @Override
     public void dismiss() {
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, newPoint);
+        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, newPoint,comment_flag);
         super.dismiss();
     }
 
@@ -163,6 +169,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
                 miCount += 1;
                 Log.i("tag", "111");
+                ToastUtil.toastLong("发表成功");
             }
 
             @Override
@@ -330,6 +337,6 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point newPoint);
+        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point newPoint,int flag);
     }
 }

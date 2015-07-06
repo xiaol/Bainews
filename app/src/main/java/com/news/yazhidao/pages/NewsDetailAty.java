@@ -26,6 +26,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -42,8 +43,12 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class NewsDetailAty extends SwipeBackActivity {
@@ -96,12 +101,14 @@ public class NewsDetailAty extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
-        boolean isnew = getIntent().getBooleanExtra("isnew",false);
+        boolean isnew = getIntent().getBooleanExtra("isnew", false);
 
         GlobalParams.news_detail_url = getIntent().getStringExtra("url");
-            uuid = DeviceInfoUtil.getUUID();
+        uuid = DeviceInfoUtil.getUUID();
+
         if (!isnew) {
             NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
+
             _Request.setCallback(new JsonCallback<NewsDetail>() {
 
                 @Override
@@ -112,7 +119,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                             public void onclickPullUp(int height) {
                                 msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                             }
-                        },false);
+                        }, false);
                         mNewsDetailAdapter.setData(result.relate);
                         mNewsDetailAdapter.notifyDataSetChanged();
 
@@ -120,9 +127,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                             msgvNewsDetail.setSelection(1);
                         }
 
-                    } else
-
-                    {
+                    } else {
                         ToastUtil.toastShort("新闻的内容为空，无法打开");
                         NewsDetailAty.this.finish();
                     }
@@ -132,7 +137,6 @@ public class NewsDetailAty extends SwipeBackActivity {
                     mNewsDetailProgressWheel.setVisibility(View.GONE);
 
                 }
-
 
                 @Override
                 public void failed(MyAppException exception) {
@@ -144,25 +148,52 @@ public class NewsDetailAty extends SwipeBackActivity {
             }.getType()));
             _Request.execute();
         } else {
-                ToastUtil.toastLong("新闻内容无法打开");
-                NewsDetailAty.this.finish();
+            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
 
-//            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
-//            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
-//
-//                @Override
-//                public void success(final NewsDetailAdd result) {
-//
-//                }
-//
-//
-//                @Override
-//                public void failed(MyAppException exception) {
-//                }
-//            }.setReturnType(new TypeToken<NewsDetail>() {
-//            }.getType()));
-//            _Request.execute();
+            List<NameValuePair> pairs=new ArrayList<>();
 
+            pairs.add(new BasicNameValuePair("url", GlobalParams.news_detail_url));
+            _Request.setParams(pairs);
+
+            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+
+                @Override
+                public void success(final NewsDetailAdd result) {
+                    if (result != null) {
+                        headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                            @Override
+                            public void onclickPullUp(int height) {
+                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                            }
+                        }, true);
+
+                        mNewsDetailAdapter.setData(result.relate);
+                        mNewsDetailAdapter.notifyDataSetChanged();
+
+                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                            msgvNewsDetail.setSelection(1);
+                        }
+
+                    } else {
+                        ToastUtil.toastShort("新闻的内容为空，无法打开");
+                        NewsDetailAty.this.finish();
+                    }
+
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+
+                }
+
+                @Override
+                public void failed(MyAppException exception) {
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+                }
+            }.setReturnType(new TypeToken<NewsDetailAdd>() {
+            }.getType()));
+            _Request.execute();
         }
     }
 

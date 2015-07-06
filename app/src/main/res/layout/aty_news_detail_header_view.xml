@@ -1,249 +1,249 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.nirhart.parallaxscroll.views.ParallaxScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/bg_gray"
-    android:id="@+id/fl_content">
+    android:layout_height="match_parent"
+    app:parallax_factor="1.9"
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/mNewsDeatailTitleLayout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:orientation="vertical">
+        android:background="@color/bg_gray"
+        android:id="@+id/fl_content">
 
-        <!--新闻详情展示-->
-        <include layout="@layout/aty_news_detail_header_news_display" />
-
-        <!--<com.news.yazhidao.widget.TextViewExtend-->
-        <!--android:id="@+id/mNewsDetailHeaderLocation"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_below="@id/mNewsDetailHeaderPulldown"-->
-        <!--android:textColor="@color/news_detail_sourcename_and_location"-->
-        <!--android:layout_marginTop="32dp"-->
-        <!--android:paddingBottom="32dp"-->
-        <!--android:textSize="14sp" />-->
-
-        <RelativeLayout
-            android:id="@+id/rl_article_comments"
+        <LinearLayout
+            android:id="@+id/mNewsDeatailTitleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#dfe6e9">
+            android:background="#ffffff"
+            android:orientation="vertical">
 
-            <com.news.yazhidao.widget.ShowAllListview
+            <!--新闻详情展示-->
+            <include layout="@layout/aty_news_detail_header_news_display" />
+
+            <!--<com.news.yazhidao.widget.TextViewExtend-->
+            <!--android:id="@+id/mNewsDetailHeaderLocation"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_below="@id/mNewsDetailHeaderPulldown"-->
+            <!--android:textColor="@color/news_detail_sourcename_and_location"-->
+            <!--android:layout_marginTop="32dp"-->
+            <!--android:paddingBottom="32dp"-->
+            <!--android:textSize="14sp" />-->
+
+            <RelativeLayout
+                android:id="@+id/rl_article_comments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginTop="10dp"
-                android:id="@+id/lv_article_comments" />
+                android:background="#dfe6e9">
+
+                <com.news.yazhidao.widget.ShowAllListview
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/lv_article_comments" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="#dfe6e9" />
+            </RelativeLayout>
+
+            <com.news.yazhidao.widget.imagewall.ImageWallView
+                android:visibility="gone"
+                android:id="@+id/mImageWall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#dfe6e9" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="#dfe6e9"
-                />
-        </RelativeLayout>
+                android:background="#dfe6e9" />
 
-        <com.news.yazhidao.widget.imagewall.ImageWallView
-            android:visibility="gone"
-            android:id="@+id/mImageWall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#dfe6e9"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
-
-        <LinearLayout
-            android:id="@+id/baike_linerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:orientation="vertical" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/zhihu_linerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="71dp"
-                android:background="@drawable/bg_ex_read_zhihu"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="10dp" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/baike_linerLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
+                android:background="#ffffff"
+                android:orientation="vertical" />
 
-                <LinearLayout
-                    android:id="@+id/zhihu_item_linerLayout"
-                    android:layout_marginBottom="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
 
-                </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/zhihu_linerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_below="@+id/zhihu_item_linerLayout"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="23dp"
-                    android:layout_marginBottom="15dp"
-                    android:id="@+id/iv_show_all_zhihu_views"
-                    android:layout_width="19dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/ic_pull_to_all" />
+                    android:layout_width="30dp"
+                    android:layout_height="71dp"
+                    android:background="@drawable/bg_ex_read_zhihu"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp" />
 
-            </RelativeLayout>
-        </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
+                    <LinearLayout
+                        android:id="@+id/zhihu_item_linerLayout"
+                        android:layout_marginBottom="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/douban_linerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="#ffffff"
-            android:orientation="horizontal">
+                    </LinearLayout>
 
-            <ImageView
-                android:layout_width="wrap_content"
+                    <ImageView
+                        android:layout_below="@+id/zhihu_item_linerLayout"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="23dp"
+                        android:layout_marginBottom="15dp"
+                        android:id="@+id/iv_show_all_zhihu_views"
+                        android:layout_width="19dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/ic_pull_to_all" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
+
+            <LinearLayout
+                android:id="@+id/douban_linerLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="@dimen/news_detail_item_margin_top"
-                android:layout_marginLeft="@dimen/news_detail_item_margin_left"
-                android:background="@drawable/ic_douban" />
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:orientation="horizontal">
 
-            <com.news.yazhidao.widget.WordWrapView
-                android:id="@+id/douban_item_tabLayout"
-                android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="@dimen/news_detail_item_margin_top"
+                    android:layout_marginLeft="@dimen/news_detail_item_margin_left"
+                    android:background="@drawable/ic_douban" />
+
+                <com.news.yazhidao.widget.WordWrapView
+                    android:id="@+id/douban_item_tabLayout"
+                    android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
+
+            <LinearLayout
+                android:id="@+id/sina_linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:orientation="horizontal">
+
+                <com.news.yazhidao.widget.CustomHorizontalScrollView
+                    android:id="@+id/sina_scollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:cacheColorHint="#00000000"
+                    android:overScrollMode="never"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/sina_item_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/news_detail_item_margin_top"
+                        android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </com.news.yazhidao.widget.CustomHorizontalScrollView>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mNewsDetailRelate"
+                android:background="@drawable/bg_detail_relate"
+                android:paddingLeft="16dp"
+                android:paddingBottom="10dp"
+                android:gravity="left"
+                android:text="相关观点"
+                android:textSize="18sp"
+                android:textColor="@color/sina_item_content_gray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
-
-        <LinearLayout
-            android:id="@+id/sina_linearLayout"
+        <RelativeLayout
+            android:id="@+id/mNewsDetailEditableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="#ffffff"
-            android:orientation="horizontal">
+            android:visibility="gone">
 
-            <com.news.yazhidao.widget.CustomHorizontalScrollView
-                android:id="@+id/sina_scollView"
+            <EditText
+                android:id="@+id/mNewsDetailEdittext"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:cacheColorHint="#00000000"
-                android:overScrollMode="never"
-                android:scrollbars="none">
+                android:layout_height="450dp"
+                android:gravity="top"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:text="hello world!"
+                android:textSize="20sp"
+                android:textColor="#7d7d7d"
+                android:background="@drawable/bg_edittext"
+                android:layout_margin="10dp" />
 
-                <LinearLayout
-                    android:id="@+id/sina_item_layout"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_below="@+id/mNewsDetailEdittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/news_detail_item_margin_top"
-                    android:layout_marginBottom="@dimen/news_detail_item_margin_top"
-                    android:orientation="horizontal">
-
-                </LinearLayout>
-            </com.news.yazhidao.widget.CustomHorizontalScrollView>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#dfe6e9"
-            />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/mNewsDetailRelate"
-            android:background="@drawable/bg_detail_relate"
-            android:paddingLeft="16dp"
-            android:paddingBottom="10dp"
-            android:gravity="left"
-            android:text="相关观点"
-            android:textSize="18sp"
-            android:textColor="@color/sina_item_content_gray"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/mNewsDetailEditableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <EditText
-            android:id="@+id/mNewsDetailEdittext"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            android:gravity="top"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:text="hello world!"
-            android:textSize="20sp"
-            android:textColor="#7d7d7d"
-            android:background="@drawable/bg_edittext"
-            android:layout_margin="10dp" />
-
-        <LinearLayout
-            android:layout_below="@+id/mNewsDetailEdittext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:id="@+id/MnewsDetailButtonConfirm"
-                android:text="确认编辑"
-                android:textSize="22sp" />
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:id="@+id/MnewsDetailButtonConfirm"
+                    android:text="确认编辑"
+                    android:textSize="22sp" />
 
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_margin="5dp"
-                android:id="@+id/MnewsDetailButtonCancel"
-                android:text="取消编辑"
-                android:textSize="22sp" />
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:id="@+id/MnewsDetailButtonCancel"
+                    android:text="取消编辑"
+                    android:textSize="22sp" />
 
 
-        </LinearLayout>
-    </RelativeLayout>
-</FrameLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </FrameLayout>
+</com.nirhart.parallaxscroll.views.ParallaxScrollView>

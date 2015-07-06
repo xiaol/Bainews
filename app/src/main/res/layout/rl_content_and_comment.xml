@@ -51,7 +51,7 @@
                     android:textColor="@color/red"
                     android:textSize="10sp"
                     android:background="@drawable/bg_add_praise"
-                    android:text="23" />
+                    android:text="0" />
 
                 <com.news.yazhidao.widget.RoundedImageView
                     android:id="@+id/iv_user_icon"
@@ -86,7 +86,7 @@
                     android:id="@+id/tv_comment_count"
                     android:layout_width="40dp"
                     android:layout_height="22dp"
-                    android:text="60"
+                    android:text="0"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:gravity="center"
@@ -119,6 +119,16 @@
             android:layout_below="@+id/lstv_para_content"
             android:background="@drawable/bg_selector_add_comment"
             android:layout_alignParentRight="true" />
+
+        <com.news.yazhidao.widget.SpeechView
+            android:id="@+id/speechView"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/lstv_para_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content"
+            />
 
 
     </RelativeLayout>
