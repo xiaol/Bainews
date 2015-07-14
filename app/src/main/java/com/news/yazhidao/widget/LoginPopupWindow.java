@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Html;
 import android.util.TypedValue;
@@ -75,7 +74,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
             ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
                 @Override
-                public void success(Bitmap bitmap) {
+                public void success(int width,int height) {
 
                 }
 
@@ -186,7 +185,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogout.setVisibility(View.VISIBLE);
         ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
             @Override
-            public void success(Bitmap bitmap) {
+            public void success(int width,int height) {
 
             }
 

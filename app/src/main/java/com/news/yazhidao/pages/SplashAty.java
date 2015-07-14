@@ -1,7 +1,6 @@
 package com.news.yazhidao.pages;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -184,7 +183,7 @@ public class SplashAty extends BaseActivity {
 //                        ImageLoaderHelper.dispalyImage(SplashAty.this,result.getImgUrl(),iv_splash_background);
                         ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(),iv_splash_background,false,new DisplayImageListener() {
                             @Override
-                            public void success(Bitmap bitmap) {
+                            public void success(int width,int height) {
 
                             }
 

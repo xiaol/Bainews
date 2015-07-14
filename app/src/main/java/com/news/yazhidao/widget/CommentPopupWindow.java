@@ -2,7 +2,6 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -19,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.DisplayImageListener;
@@ -96,6 +96,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mHandler = new Handler(this);
         findHeadPortraitImageViews();
         loadData();
+
+        setViewBgColor(rl_popup);
+
     }
 
     private void findHeadPortraitImageViews() {
@@ -270,6 +273,111 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         return false;
     }
 
+
+    private void setViewBgColor(RelativeLayout tv_comment_content) {
+
+        switch (GlobalParams.currentCatePos) {
+
+            case 0:
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff1652"));
+
+                break;
+
+            case 1:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#ee6270"));
+
+                break;
+
+            case 2:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#6279a3"));
+
+                break;
+
+            case 3:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#f788a2"));
+
+                break;
+
+            case 4:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#37ccd9"));
+
+                break;
+
+            case 5:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#b56f40"));
+
+                break;
+
+            case 6:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#35e4c1"));
+
+                break;
+
+            case 8:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#f633a2"));
+
+                break;
+
+            case 9:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#35a6fb"));
+
+                break;
+
+            case 10:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#e2ab4b"));
+
+                break;
+
+            case 11:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#2bc972"));
+
+                break;
+
+            case 12:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#9153c6"));
+
+                break;
+
+            case 13:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#ffda59"));
+
+                break;
+
+            case 14:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#7174ff"));
+
+                break;
+
+            case 15:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff44b2"));
+
+                break;
+
+            default:
+
+                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff44b2"));
+
+                break;
+
+        }
+
+
+    }
+
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
@@ -320,7 +428,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             if (point.userIcon != null && !point.userIcon.equals(""))
                 ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false, new DisplayImageListener() {
                     @Override
-                    public void success(Bitmap bitmap) {
+                    public void success(int width,int height) {
 
                     }
 

@@ -29,6 +29,8 @@ public class ImageManager {
     private static ImageManager mInstance;
     private DisplayImageListener listener;
     private Bitmap loadBitmap;
+    private int width;
+    private int height;
     MemoryCache memoryCache = new MemoryCache();
     FileCache fileCache;
     private Map<ImageView, String> imageViews = Collections
@@ -62,8 +64,12 @@ public class ImageManager {
             if (isPreHandle) {
                 bitmap=ImageUtils.zoomBitmap(bitmap, DeviceInfoUtil.getScreenWidth());
             }
+
+            width = bitmap.getWidth();
+            height = bitmap.getHeight();
+
             imageView.setImageBitmap(bitmap);
-            listener.success(bitmap);
+            listener.success(width,height);
         }else {
             // 若没有的话则开启新线程加载图片
             queuePhoto(url, imageView,isPreHandle);
@@ -209,10 +215,15 @@ public class ImageManager {
             if (imageViewReused(photoToLoad))
                 return;
             if (bitmap != null){
+
                 if(photoToLoad.isPreHandle){
                     bitmap=ImageUtils.zoomBitmap(bitmap,DeviceInfoUtil.getScreenWidth());
                 }
-                mListener.success(bitmap);
+
+                width = bitmap.getWidth();
+                height = bitmap.getHeight();
+
+                mListener.success(width,height);
                 photoToLoad.imageView.setImageBitmap(bitmap);
             }
             else

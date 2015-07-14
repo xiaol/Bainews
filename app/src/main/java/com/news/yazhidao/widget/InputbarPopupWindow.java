@@ -2,7 +2,6 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -316,7 +315,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
             if (point.userIcon != null && !point.userIcon.equals(""))
                 ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false,new DisplayImageListener() {
                     @Override
-                    public void success(Bitmap bitmap) {
+                    public void success(int width,int height) {
 
                     }
 

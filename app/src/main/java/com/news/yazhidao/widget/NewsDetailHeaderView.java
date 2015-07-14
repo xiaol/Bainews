@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Message;
@@ -553,7 +552,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
                         ImageManager.getInstance(mContext).DisplayImage(url,img,false,new DisplayImageListener() {
                             @Override
-                            public void success(Bitmap bitmap) {
+                            public void success(int width,int height) {
 
                             }
 
@@ -793,18 +792,15 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         if (TextUtils.isValidate(((NewsDetailAdd) pNewsDetail).imgUrl)) {
             ImageManager.getInstance(mContext).DisplayImage(((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
                 @Override
-                public void success(Bitmap bitmap) {
+                public void success(int width,int height) {
 
-                    if (bitmap != null) {
-                        int height = bitmap.getHeight();
 
                         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
-                        int left = DensityUtil.dip2px(mContext, 8);
-                        int top = DensityUtil.dip2px(mContext, 10);
+                        int left = DensityUtil.dip2px(mContext, 4);
+                        int top = DensityUtil.dip2px(mContext, 5);
                         params.setMargins(left, height - top, left, 0);
 
                         mNewsDetailHeaderContentWrapper.setLayoutParams(params);
-                    }
 
                 }
 
@@ -1266,10 +1262,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         if (TextUtils.isValidate(((NewsDetail) pNewsDetail).imgUrl)) {
             ImageManager.getInstance(mContext).DisplayImage(((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
                 @Override
-                public void success(Bitmap bitmap) {
+                public void success(int width,int height) {
 
-                    if (bitmap != null) {
-                        int height = bitmap.getHeight();
 
                         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
                         int left = DensityUtil.dip2px(mContext, 8);
@@ -1277,7 +1271,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         params.setMargins(left, height - top, left, 0);
 
                         mNewsDetailHeaderContentWrapper.setLayoutParams(params);
-                    }
 
                 }
 
@@ -2523,7 +2516,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             if (point != null && point.userIcon != null && !point.userIcon.equals(""))
                 ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false, new DisplayImageListener() {
                     @Override
-                    public void success(Bitmap bitmap) {
+                    public void success(int width,int height) {
 
                     }
 
