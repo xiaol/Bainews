@@ -45,13 +45,13 @@ public class CategoryFgt extends Fragment {
 
     private void initVars() {
 //        marrCategoryName = getResources().getStringArray(R.array.category_list_name);
-
         loadChannelList();
 
     }
 
     private void findViews() {
         mgvCategory = (GridView) rootView.findViewById(R.id.category_gridview);
+        mgvCategory.setColumnWidth((int)(GlobalParams.screenWidth * 0.45));
 //        mgvCategory.setAdapter(mAdapter);
         mgvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,13 +68,10 @@ public class CategoryFgt extends Fragment {
     }
 
     private void setTabTitle(ArrayList<Channel> channelList,int position) {
-
         GlobalParams.tabs.updateSelection2(1, channelList.get(position).getChannel_name());
-
     }
 
     class CategoryAdapter extends BaseAdapter {
-
         Context mContext;
 
         public CategoryAdapter(Context context) {

@@ -27,6 +27,7 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -36,6 +37,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
@@ -65,6 +67,9 @@ public class NewsDetailAty extends SwipeBackActivity {
     private String mSource;
     private SwipeBackLayout mSwipeBackLayout;
     private String uuid;
+    private String userId = "";
+    private String platformType = "";
+    private int position = 0;
 
     @Override
     protected void setContentView() {
@@ -102,12 +107,21 @@ public class NewsDetailAty extends SwipeBackActivity {
     @Override
     protected void loadData() {
         boolean isnew = getIntent().getBooleanExtra("isnew", false);
+        position = getIntent().getIntExtra("position",0);
+
+        User user = SharedPreManager.getUser(NewsDetailAty.this);
+        if(user != null) {
+            userId = user.getUserId();
+            platformType = user.getPlatformType();
+        }
 
         GlobalParams.news_detail_url = getIntent().getStringExtra("url");
         uuid = DeviceInfoUtil.getUUID();
 
+        String url = HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&userId=" + userId + "&platformType=" + platformType;
+
         if (!isnew) {
-            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
+            NetworkRequest _Request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
 
             _Request.setCallback(new JsonCallback<NewsDetail>() {
 
@@ -119,7 +133,20 @@ public class NewsDetailAty extends SwipeBackActivity {
                             public void onclickPullUp(int height) {
                                 msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                             }
-                        }, false);
+                        }, false, new NewsDetailHeaderView.CommentListener(){
+
+                            @Override
+                            public void comment(boolean istrue) {
+                                if(istrue){
+
+                                    Intent intent = new Intent();
+                                    intent.putExtra("position",String.valueOf(position));
+                                    intent.putExtra("isComment","1");
+
+                                    setResult(0, intent);
+                                }
+                            }
+                        });
                         mNewsDetailAdapter.setData(result.relate);
                         mNewsDetailAdapter.notifyDataSetChanged();
 
@@ -165,7 +192,12 @@ public class NewsDetailAty extends SwipeBackActivity {
                             public void onclickPullUp(int height) {
                                 msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                             }
-                        }, true);
+                        }, true,new NewsDetailHeaderView.CommentListener() {
+                            @Override
+                            public void comment(boolean istrue) {
+
+                            }
+                        });
 
                         mNewsDetailAdapter.setData(result.relate);
                         mNewsDetailAdapter.notifyDataSetChanged();
@@ -195,6 +227,13 @@ public class NewsDetailAty extends SwipeBackActivity {
             }.getType()));
             _Request.execute();
         }
+
+
+        Intent intent = new Intent();
+        intent.putExtra("position",String.valueOf(position));
+        intent.putExtra("isComment","0");
+
+        setResult(0, intent);
     }
 
 

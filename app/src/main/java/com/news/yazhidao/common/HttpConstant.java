@@ -6,6 +6,7 @@ package com.news.yazhidao.common;
 public class HttpConstant {
     public static final String URL_GET_NEWS_LIST="http://api.deeporiginalx.com/news/baijia/fetchHome";
     public static final String URL_GET_NEWS_LIST_NEW="http://api.deeporiginalx.com/news/baijia/newsFetchHome";
+    public static final String URL_GET_START_URL="http://api.deeporiginalx.com/news/baijia/startPage";
     public static final String URL_GET_CHANNEL_LIST="http://api.deeporiginalx.com/news/baijia/FetchChannelList";
     public static final String URL_PRAISE="http://api.deeporiginalx.com/news/baijia/praise";
     public static final String URL_GET_NEWS_CONTENT="http://api.deeporiginalx.com/news/baijia/point";

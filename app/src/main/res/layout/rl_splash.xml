@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fl_splash"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/iv_splash_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/bg_base_splash" />
+
+        <TextView
+            android:id="@+id/tv_splash_news"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="今日头条，百家争鸣"
+            android:padding="27dp"
+            android:textColor="@color/white"
+            android:background="#99000000"
+            android:textSize="22sp"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/app_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="180dp" />
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -66,7 +66,7 @@ public class ImageLoaderHelper {
     private static ImageLoaderConfiguration generateConfig(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(context)
-                .memoryCacheExtraOptions(GlobalParams.maxWidth,GlobalParams.maxHeight) // max width, max height，即保存的每个缓存文件的最大长宽
+                .memoryCacheExtraOptions(GlobalParams.screenWidth,GlobalParams.screenHeight)  // max width, max height，即保存的每个缓存文件的最大长宽
                 .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()

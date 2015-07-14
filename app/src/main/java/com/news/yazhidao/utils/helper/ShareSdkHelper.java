@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserLoginListener;
@@ -79,6 +80,11 @@ public class ShareSdkHelper {
                             UploadJpushidRequest.uploadJpushId(mContext,jPushId);
                         }
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
+
+                        Intent intent = new Intent("saveuser");
+                        intent.putExtra("url",user.getUserIcon());
+                        GlobalParams.context.sendBroadcast(intent);
+
                         if (mUserLoginListener != null) {
                             mHandler.post(new Runnable() {
                                 @Override

@@ -22,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,6 +44,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -72,6 +74,7 @@ import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.ProgressWheel;
+import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
@@ -110,6 +113,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private TextView tv_stroke2;
     private LinearLayout ll_no_network;
     private NewsFeedReceiver rt;
+    private UserUrlReceiver userUrlReceiver;
     private boolean isClick = false;
 
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
@@ -151,6 +155,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private ImageLoaderHelper imageLoader;
     private Handler mHandler = new Handler();
+    private View mHomeAtyRightMenuWrapper;
+    private RoundedImageView mHomeAtyRightMenu;
     private int TYPE_VIEWHOLDER = 1;
     private int TYPE_VIEWHOLDER3 = 3;
 
@@ -164,6 +170,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         mContext = getActivity();
         position = getArguments().getInt(ARG_POSITION);
@@ -183,12 +190,18 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         filter.addAction("sendposition");
         mContext.registerReceiver(rt, filter);
 
+        userUrlReceiver = new UserUrlReceiver();
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction("saveuser");
+        mContext.registerReceiver(userUrlReceiver, filter1);
+
     }
 
     @Override
     public void onDestroy() {
         if (rt != null) {
             mContext.unregisterReceiver(rt);
+            mContext.unregisterReceiver(userUrlReceiver);
         }
         super.onDestroy();
     }
@@ -200,12 +213,29 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
         mtvProgress = (TextViewExtend) rootView.findViewById(R.id.mHomeAtyLeftMenu);
         View mHomeAtyLeftMenuWrapper = rootView.findViewById(R.id.mHomeAtyLeftMenuWrapper);
-        View mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
-        final ImageView mHomeAtyRightMenu = (ImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
+        mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
+        mHomeAtyRightMenu = (RoundedImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
+        SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
+        String url = sp.getString("url", "");
+
+        if (!"".equals(url)) {
+            ImageLoaderHelper.dispalyImage(getActivity(), url, mHomeAtyRightMenu);
+        }
+
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginPopupWindow window1 = new LoginPopupWindow(mContext);
+                LoginPopupWindow window1 = new LoginPopupWindow(mContext, new PopupWindow.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss() {
+                        mHomeAtyRightMenu.setImageResource(R.drawable.ic_login);
+                        SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.clear();
+                        editor.commit();
+                    }
+                });
                 window1.showAtLocation(((HomeAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
             }
@@ -272,10 +302,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 if (view.getLastVisiblePosition() == totalItemCount - 1) {
                     if (NetUtil.checkNetWork(mContext)) {
-                        if(isNewFlag){
-                            page ++;
-                            loadNewsFeedData(GlobalParams.currentCatePos,page);
-                        }else {
+                        if (isNewFlag) {
+                            page++;
+                            loadNewsFeedData(GlobalParams.currentCatePos, page);
+                        } else {
                             lv_news.setVisibility(View.VISIBLE);
                             ll_no_network.setVisibility(View.GONE);
                             showNextDownNews();
@@ -370,7 +400,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
                 lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
-            }else{
+            } else {
 
             }
         }
@@ -512,7 +542,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
                 isClick = true;
                 String isMorning = "";
-                if(holder.tv_time != null) {
+                if (holder != null && holder.tv_time != null) {
                     isMorning = DateUtil.getMorningOrAfternoon(System.currentTimeMillis(), holder.tv_time);
                 }
                 if (isMorning != null && isMorning.equals("晚间")) {
@@ -532,6 +562,21 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
     static AlarmManager alarmManager;
     static PendingIntent pendingIntent;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            String isComment = data.getStringExtra("isComment");
+            int position = Integer.parseInt(data.getStringExtra("position"));
+            if ("1".equals(isComment)) {
+
+//                ImageView img_source_comment = (ImageView) ll_content.findViewById(R.id.img_source_comment);
+//                img_source_comment.setVisibility(View.VISIBLE);
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void refreshUI(String date, String type) {
@@ -602,7 +647,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             contentSize = 0;
             contentSize2 = 0;
@@ -694,8 +739,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                                                Intent intent = new Intent(mContext, NewsDetailAty.class);
                                                                intent.putExtra(KEY_URL, feed.getSourceUrl());
                                                                intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                                                               intent.putExtra("isnew",isNewFlag);
-                                                               startActivity(intent);
+                                                               intent.putExtra("position", position);
+                                                               intent.putExtra("isnew", isNewFlag);
+                                                               startActivityForResult(intent, 0);
                                                                //uemng statistic view the head news
                                                                MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                                                            }
@@ -723,29 +769,23 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     holder.tv_news_category.setFontSpacing(5);
 
 //                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
-                }else{
+                } else {
                     holder.tv_news_category.setVisibility(View.GONE);
                 }
 
                 //百度百科
                 if ("0".equals(feed.getIsBaikeFlag()) || feed.getIsBaikeFlag() == null) {
+
+
                     holder.img_source_baidu.setVisibility(View.GONE);
                 } else {
                     holder.img_source_baidu.setVisibility(View.VISIBLE);
                 }
 
                 //评论
-                if ("0".
-
-                        equals(feed.getIsCommentsFlag()
-
-                        ) || feed.getIsCommentsFlag() == null)
-
-                {
+                if ("0".equals(feed.getIsCommentsFlag()) || feed.getIsCommentsFlag() == null) {
                     holder.img_source_comment.setVisibility(View.GONE);
-                } else
-
-                {
+                } else {
                     holder.img_source_comment.setVisibility(View.VISIBLE);
                 }
 
@@ -807,8 +847,9 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                                                public void onClick(View v) {
                                                                    Intent intent = new Intent(mContext, NewsDetailAty.class);
                                                                    intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                                   intent.putExtra("isnew",isNewFlag);
-                                                                   startActivity(intent);
+                                                                   intent.putExtra("isnew", isNewFlag);
+                                                                   intent.putExtra("position", position);
+                                                                   startActivityForResult(intent, 0);
                                                                    //uemng statistic view the head news
                                                                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                                                                }
@@ -827,14 +868,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                                                              }
 
                 );
-                if (feed != null && feed.getOtherNum() != null)
-                {
+                if (feed != null && feed.getOtherNum() != null) {
                     if (Integer.parseInt(feed.getOtherNum()) == 0 || "".equals(feed.getOtherNum())) {
                         holder.ll_source_interest.setVisibility(View.GONE);
                     } else {
                         holder.ll_source_interest.setVisibility(View.VISIBLE);
                     }
-                }else{
+                } else {
                     holder.ll_source_interest.setVisibility(View.GONE);
                 }
 
@@ -855,10 +895,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         String currentDate = format.format(date);
 
                         //填充时间日期
-                        DateUtil.getMyDate(currentDate,holder.tv_month,holder.tv_day);
+                        DateUtil.getMyDate(currentDate, holder.tv_month, holder.tv_day);
 
                         //判断上午还是下午
-                        DateUtil.getMorningOrAfternoon(time,holder.tv_time);
+                        DateUtil.getMorningOrAfternoon(time, holder.tv_time);
 
                         //判断是星期几
                         String weekday = "";
@@ -872,7 +912,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     } else {
 
 
-                        String myDate = DateUtil.getMyDate(mCurrentDate,holder.tv_month,holder.tv_day);
+                        String myDate = DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
 
                         String am = "";
 
@@ -897,15 +937,14 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     }
                 }
 
-                holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener()
-
-                                                         {
+                holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                                                              @Override
                                                              public void onClick(View v) {
-                                                                 lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
+
+                                                                 GlobalParams.pager.setCurrentItem(0);
+
                                                              }
                                                          }
-
                 );
 
 
@@ -1088,7 +1127,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
-                        startActivity(intent);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
@@ -1148,7 +1188,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
-                        startActivity(intent);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
@@ -1159,7 +1200,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
-                        startActivity(intent);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
@@ -1186,7 +1228,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                        startActivity(intent);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
@@ -1197,20 +1240,21 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
-                        startActivity(intent);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
                         //uemng statistic view the head news
                         MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                     }
                 });
 
                 //点击其他观点的点击事件
-                    holder3.ll_source_interest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //uemng statistic click other viewpoint
-                            MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
-                        }
-                    });
+                holder3.ll_source_interest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //uemng statistic click other viewpoint
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                    }
+                });
 
                 if (feed != null && feed.getOtherNum() != null) {
                     if (Integer.parseInt(feed.getOtherNum()) == 0) {
@@ -1238,10 +1282,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                             String currentDate = format.format(date);
 
                             //填充时间日期
-                            DateUtil.getMyDate(currentDate,holder3.tv_month,holder3.tv_day);
+                            DateUtil.getMyDate(currentDate, holder3.tv_month, holder3.tv_day);
 
                             //判断上午还是下午
-                            DateUtil.getMorningOrAfternoon(time,holder3.tv_time);
+                            DateUtil.getMorningOrAfternoon(time, holder3.tv_time);
 
                             //判断是星期几
                             String weekday = "";
@@ -1255,7 +1299,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                         } else {
 
 
-                            String myDate = DateUtil.getMyDate(mCurrentDate,holder3.tv_month,holder3.tv_day);
+                            String myDate = DateUtil.getMyDate(mCurrentDate, holder3.tv_month, holder3.tv_day);
 
                             String am = "";
 
@@ -1757,10 +1801,10 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     }
 
     //获取当前点击分类的新
-    private void loadNewsFeedData(final int position,int page) {
+    private void loadNewsFeedData(final int position, int page) {
 
         mUpNewsArr.clear();
-        if(this.page == 1) {
+        if (this.page == 1) {
             mMiddleNewsArr.clear();
         }
         mDownNewsArr.clear();
@@ -1775,13 +1819,13 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", delta + "");
                 if (result != null && result.size() > 0) {
-                    for(int i = 0;i < result.size();i ++) {
+                    for (int i = 0; i < result.size(); i++) {
                         mMiddleNewsArr.add(result.get(i));
                     }
 
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     list_adapter.notifyDataSetChanged();
-                }else{
+                } else {
                     fl_mOnDestruction.setVisibility(View.VISIBLE);
                     fl_mOnDestruction.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1815,15 +1859,19 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         @Override
         public void onReceive(Context context, Intent intent) {
             if ("sendposition".equals(intent.getAction())) {
-                if (GlobalParams.currentCatePos == 0) {
+                if (GlobalParams.currentCatePos == 15) {
                     loadNewsData(1);
                     isNewFlag = false;
                     mtvProgress.setVisibility(View.VISIBLE);
+                    mHomeAtyRightMenu.setVisibility(View.VISIBLE);
+                    mHomeAtyRightMenuWrapper.setVisibility(View.VISIBLE);
                 } else {
-                    loadNewsFeedData(GlobalParams.currentCatePos,page);
+                    loadNewsFeedData(GlobalParams.currentCatePos, page);
                     isNewFlag = true;
                     page = 1;
                     mtvProgress.setVisibility(View.GONE);
+                    mHomeAtyRightMenu.setVisibility(View.GONE);
+                    mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 }
 
                 mNewsFeedProgressWheel.setVisibility(View.VISIBLE);
@@ -1831,6 +1879,25 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mNewsFeedProgressWheel.spin();
 
                 fl_mOnDestruction.setVisibility(View.GONE);
+            }
+        }
+    }
+
+
+    private class UserUrlReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("saveuser".equals(intent.getAction())) {
+                String url = intent.getStringExtra("url");
+
+                SharedPreferences.Editor e = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE).edit();
+                e.putString("url", url);
+                e.commit();
+
+                if (url != null && !"".equals(url)) {
+                    ImageLoaderHelper.dispalyImage(getActivity(), url, mHomeAtyRightMenu);
+                }
             }
         }
     }

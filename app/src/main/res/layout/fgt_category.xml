@@ -12,9 +12,6 @@
         android:cacheColorHint="#00000000"
         android:fadingEdge="none"
         android:overScrollMode="never"
-        android:verticalSpacing="0dp"
-        android:horizontalSpacing="0dp"
-        android:layout_marginTop="13dp"
-        android:numColumns="2"></GridView>
+        android:numColumns="2"/>
 
 </LinearLayout>

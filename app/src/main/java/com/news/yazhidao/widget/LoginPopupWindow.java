@@ -42,8 +42,10 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     private View mHomeLoginCancel;
     private UserLoginListener mUserLoginListener;
     private View mHomeLogout;
+    private OnDismissListener listener;
 
-    public LoginPopupWindow(Context mContext) {
+    public LoginPopupWindow(Context mContext,OnDismissListener listener) {
+        this.listener = listener;
         this.mContext = mContext;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -143,6 +145,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                     @Override
                     public void onClick(View v) {
                         _DialogBuilder.dismiss();
+                        listener.onDismiss();
                         ShareSdkHelper.logout(mContext);
                         mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
                         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
