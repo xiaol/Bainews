@@ -105,7 +105,9 @@ public class LengjingFgt extends Fragment {
         // Set up customized SubActionButtons for the right center menu
         SubActionButton.Builder lCSubBuilder = new SubActionButton.Builder(getActivity());
 
-        FrameLayout.LayoutParams blueContentParams = new FrameLayout.LayoutParams(36, 36);
+        int buttonContentSize = getResources().getDimensionPixelSize(R.dimen.sub_action_button_content_size);
+
+        FrameLayout.LayoutParams blueContentParams = new FrameLayout.LayoutParams(buttonContentSize, buttonContentSize);
         blueContentParams.setMargins(blueSubActionButtonContentMargin,
                 blueSubActionButtonContentMargin,
                 blueSubActionButtonContentMargin,
@@ -138,8 +140,8 @@ public class LengjingFgt extends Fragment {
                 .addSubActionView(lCSubBuilder.setContentView(lcIcon2, blueContentParams).build())
                 .addSubActionView(lCSubBuilder.setContentView(lcIcon3, blueContentParams).build())
                 .setRadius(redActionMenuRadius)
-                .setStartAngle(-50)
-                .setEndAngle(-130)
+                .setStartAngle(-40)
+                .setEndAngle(-140)
                 .attachTo(leftCenterButton)
                 .build();
 
