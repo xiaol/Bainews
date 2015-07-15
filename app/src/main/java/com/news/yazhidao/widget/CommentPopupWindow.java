@@ -97,7 +97,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         findHeadPortraitImageViews();
         loadData();
 
-        setViewBgColor(rl_popup);
+//        setViewBgColor(rl_popup);
 
     }
 
