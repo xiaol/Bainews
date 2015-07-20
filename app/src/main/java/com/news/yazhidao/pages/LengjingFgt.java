@@ -2,18 +2,25 @@ package com.news.yazhidao.pages;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.Channel;
+import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -24,16 +31,17 @@ import java.util.ArrayList;
 public class LengjingFgt extends Fragment {
 
     private View rootView;
-    private GridView mgvCategory;
+    private ListView lv_lecture;
     private ArrayList<Channel> marrCategoryName;
     private TypedArray marrCategoryDrawable;
     private FloatingActionButton leftCenterButton;
     private FloatingActionButton.LayoutParams starParams;
+    private ArrayList<Album> albumList= new ArrayList<Album>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fgt_category, container, false);
+        rootView = inflater.inflate(R.layout.fgt_category_lengjing, container, false);
         initVars();
         findViews();
         return rootView;
@@ -67,7 +75,8 @@ public class LengjingFgt extends Fragment {
     }
 
     private void findViews() {
-        mgvCategory = (GridView) rootView.findViewById(R.id.category_gridview);
+        lv_lecture = (ListView) rootView.findViewById(R.id.lv_lecture);
+        lv_lecture.setAdapter(new MyAdapter());
 
         // Set up the large red button on the center right side
         // With custom button and content sizes and margins
@@ -117,7 +126,6 @@ public class LengjingFgt extends Fragment {
         FrameLayout.LayoutParams blueParams = new FrameLayout.LayoutParams(blueSubActionButtonSize, blueSubActionButtonSize);
         lCSubBuilder.setLayoutParams(blueParams);
 
-
         ImageView lcIcon1 = new ImageView(getActivity());
         ImageView lcIcon2 = new ImageView(getActivity());
         ImageView lcIcon3 = new ImageView(getActivity());
@@ -127,21 +135,57 @@ public class LengjingFgt extends Fragment {
         lcIcon2.setImageResource(R.drawable.icon_lengjing_url);
         lcIcon3.setImageResource(R.drawable.icon_lengjing_base);
 
-        lcIcon1.setOnClickListener(new View.OnClickListener() {
+        SubActionButton button1 = lCSubBuilder.setContentView(lcIcon1, blueContentParams).build();
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Album album = new Album();
+                album.setSelected(false);
+                album.setAlbum("默认");
 
+                albumList.add(album);
+
+                DiggerPopupWindow window = new DiggerPopupWindow(getActivity(),1 + "",albumList);
+                window.setFocusable(true);
+                window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+            }
+        });
+        SubActionButton button2 = lCSubBuilder.setContentView(lcIcon2, blueContentParams).build();
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Album album = new Album();
+                album.setSelected(false);
+                album.setAlbum("默认");
+
+                albumList.add(album);
+
+                DiggerPopupWindow window = new DiggerPopupWindow(getActivity(),1 + "",albumList);
+                window.setFocusable(true);
+                window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+            }
+        });
+
+        SubActionButton button3 = lCSubBuilder.setContentView(lcIcon3, blueContentParams).build();
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),BaseTagActivity.class);
+                startActivity(intent);
             }
         });
 
         // Build another menu with custom options
         final FloatingActionMenu leftCenterMenu = new FloatingActionMenu.Builder(getActivity())
-                .addSubActionView(lCSubBuilder.setContentView(lcIcon1, blueContentParams).build())
-                .addSubActionView(lCSubBuilder.setContentView(lcIcon2, blueContentParams).build())
-                .addSubActionView(lCSubBuilder.setContentView(lcIcon3, blueContentParams).build())
+                .addSubActionView(button1)
+                .addSubActionView(button2)
+                .addSubActionView(button3)
                 .setRadius(redActionMenuRadius)
-                .setStartAngle(-40)
-                .setEndAngle(-140)
+                .setStartAngle(-140)
+                .setEndAngle(-40)
                 .attachTo(leftCenterButton)
                 .build();
 
@@ -162,6 +206,54 @@ public class LengjingFgt extends Fragment {
                 animation.start();
             }
         });
+
+    }
+
+
+    private class MyAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            convertView = View.inflate(getActivity(),R.layout.item_lv_lecture,null);
+            ImageView iv_lecture = (ImageView) convertView.findViewById(R.id.iv_lecture);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth, (int)(GlobalParams.screenWidth * 0.73));
+            params.setMargins(10,10,10,10);
+
+            iv_lecture.setLayoutParams(params);
+
+            switch (position){
+                case 0:
+                    iv_lecture.setBackgroundResource(R.drawable.img_lecture);
+                    break;
+
+                case 1:
+                    iv_lecture.setBackgroundResource(R.drawable.img_lecture2);
+                    break;
+
+                case 2:
+                    iv_lecture.setBackgroundResource(R.drawable.img_lecture3);
+                    break;
+            }
+
+            return convertView;
+        }
 
     }
 }

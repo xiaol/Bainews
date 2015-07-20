@@ -130,6 +130,7 @@ public class SubActionButton extends FrameLayout {
         public Builder setContentView(View contentView, FrameLayout.LayoutParams contentParams) {
             this.contentView = contentView;
             this.contentParams = contentParams;
+
             return this;
         }
 

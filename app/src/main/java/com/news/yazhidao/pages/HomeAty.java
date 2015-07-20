@@ -32,14 +32,6 @@ public class HomeAty extends BaseActivity {
     @Override
     protected void setContentView() {
 
-        //隐藏状态栏
-//        //定义全屏参数
-//        int flag= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-//        //获得当前窗体对象
-//        Window window = HomeAty.this.getWindow();
-//        //设置当前窗体为全屏显示
-//        window.setFlags(flag, flag);
-
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
     }
@@ -115,7 +107,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注", "谷歌今日焦点", "棱镜"};
+        private final String[] TITLES = {"关注", "谷歌今日焦点","挖掘机"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -136,9 +128,9 @@ public class HomeAty extends BaseActivity {
 
             if (position == 0) {
                 return new CategoryFgt();
-            } else if(position == 1) {
+            } else if (position == 1) {
                 return NewsFeedFragment.newInstance(position);
-            } else if(position ==2){
+            } else if (position == 2) {
                 return new LengjingFgt();
             } else {
                 return null;
