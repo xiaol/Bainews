@@ -42,21 +42,21 @@
     <string name="home_logout">退出登录</string>
     <array name="bg_category_list">
 
-        <item>@drawable/bg_categery_today</item>
-        <item>@drawable/bg_category_true_story</item>
-        <item>@drawable/bg_category_amusement</item>
-        <item>@drawable/bg_category_technology</item>
-        <item>@drawable/bg_category_international</item>
-        <item>@drawable/bg_category_sports</item>
-        <item>@drawable/bg_category_finance_and_economics</item>
-        <item>@drawable/bg_categery_gangtai</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
-        <item>@drawable/bg_categery_shehui</item>
+        <item>@drawable/bg_category_today2</item>
+        <item>@drawable/bg_category_hot</item>
+        <item>@drawable/bg_category_zhongkouwei</item>
+        <item>@drawable/bg_category_guiquan</item>
+        <item>@drawable/bg_category_woxinle</item>
+        <item>@drawable/bg_category_takegas</item>
+        <item>@drawable/bg_category_zhinan</item>
+        <item>@drawable/bg_category_guwangjinlai</item>
+        <item>@drawable/bg_category_kexue</item>
+        <item>@drawable/bg_category_gaobige</item>
+        <item>@drawable/bg_category_zhuiju</item>
+        <item>@drawable/bg_category_yinchi</item>
+        <item>@drawable/bg_category_mengshi</item>
+        <item>@drawable/bg_category_lunxian</item>
+        <item>@drawable/bg_categary_today</item>
     </array>
 
     <string-array name="category_list_name">

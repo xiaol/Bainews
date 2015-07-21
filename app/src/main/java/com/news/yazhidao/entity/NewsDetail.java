@@ -45,6 +45,8 @@ public class NewsDetail implements Serializable{
     //相关新闻
     public ArrayList<Relate> relate;
 
+    public String rc;
+
     public class Relate {
         public String url;
         public String sourceSitename;

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.pages.ChatAty;
@@ -40,8 +41,10 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     private View mHomeLoginCancel;
     private UserLoginListener mUserLoginListener;
     private View mHomeLogout;
+    private OnDismissListener listener;
 
-    public LoginPopupWindow(Context mContext) {
+    public LoginPopupWindow(Context mContext,OnDismissListener listener) {
+        this.listener = listener;
         this.mContext = mContext;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -69,7 +72,17 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             mHomeLogout.setVisibility(View.VISIBLE);
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
-            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false);
+            ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
+                @Override
+                public void success(int width,int height) {
+
+                }
+
+                @Override
+                public void failed() {
+
+                }
+            });
         }
     }
 
@@ -131,6 +144,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                     @Override
                     public void onClick(View v) {
                         _DialogBuilder.dismiss();
+                        listener.onDismiss();
                         ShareSdkHelper.logout(mContext);
                         mHomeUserIcon.setImageResource(R.drawable.ic_user_login_default);
                         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
@@ -169,7 +183,17 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
         mHomeLogout.setVisibility(View.VISIBLE);
-        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false);
+        ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
+            @Override
+            public void success(int width,int height) {
+
+            }
+
+            @Override
+            public void failed() {
+
+            }
+        });
     }
 
     @Override

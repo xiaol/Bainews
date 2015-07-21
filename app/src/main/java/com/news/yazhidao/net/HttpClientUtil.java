@@ -78,7 +78,6 @@ public class HttpClientUtil {
         }
     }
 
-
     private static HttpResponse get(NetworkRequest request) throws MyAppException {
         try {
             HttpClient client = getHttpClient();
@@ -120,12 +119,12 @@ public class HttpClientUtil {
                             "Mozilla/5.0(Linux;U;Android 2.2.1;en-us;Nexus One Build.FRG83) "
                                     + "AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1");
             // 超时设置
-/* 从连接池中取连接的超时时间 */
-            ConnManagerParams.setTimeout(params, 15000);
+            /* 从连接池中取连接的超时时间 */
+            ConnManagerParams.setTimeout(params, 2000);
             /* 连接超时 */
-            HttpConnectionParams.setConnectionTimeout(params, 15000);
+            HttpConnectionParams.setConnectionTimeout(params, 2000);
             /* 请求超时 */
-            HttpConnectionParams.setSoTimeout(params, 15000);
+            HttpConnectionParams.setSoTimeout(params, 2000);
 
             // 设置我们的HttpClient支持HTTP和HTTPS两种模式
             SchemeRegistry schReg = new SchemeRegistry();

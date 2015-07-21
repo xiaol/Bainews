@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.news.yazhidao"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 21
-        versionCode 92
-        versionName "0.9.0"
+        versionCode 98
+        versionName "0.9.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -17,7 +17,7 @@ android {
 
         yingyongbao {}
         xiaomi {}
-//        adcoco{}
+        adcoco{}
         c360 {}
         baidu {}
         wandoujia {}
@@ -88,4 +88,6 @@ dependencies {
     compile files('libs/task.jar')
     compile files('libs/lostip_customUI.jar')
     compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'com.github.nirhart:parallaxscroll:1.0'
+    compile project(':library_action_menu')
 }

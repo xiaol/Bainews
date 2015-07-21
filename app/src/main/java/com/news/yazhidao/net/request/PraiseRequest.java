@@ -3,12 +3,10 @@ package com.news.yazhidao.net.request;
 import android.content.Context;
 
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,14 +33,12 @@ public class PraiseRequest {
         final NetworkRequest request=new NetworkRequest(HttpConstant.URL_PRAISE, NetworkRequest.RequestMethod.POST);
         List<NameValuePair> pairs=new ArrayList<>();
 
-        //此处默认用户是已经登录过的
-        User user = SharedPreManager.getUser(mContext);
-
         pairs.add(new BasicNameValuePair("userId",userId));
         pairs.add(new BasicNameValuePair("platformType",platformType));
         pairs.add(new BasicNameValuePair("uuid",uuid));
         pairs.add(new BasicNameValuePair("sourceUrl",sourceUrl));
         pairs.add(new BasicNameValuePair("commentId",commentId));
+        pairs.add(new BasicNameValuePair("deviceType","android"));
         request.setParams(pairs);
         request.setCallback(new StringCallback() {
             @Override

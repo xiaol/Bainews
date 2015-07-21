@@ -26,6 +26,8 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -35,6 +37,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
 import com.news.yazhidao.widget.ProgressWheel;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
@@ -42,8 +45,12 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class NewsDetailAty extends SwipeBackActivity {
@@ -60,6 +67,10 @@ public class NewsDetailAty extends SwipeBackActivity {
     private String mSource;
     private SwipeBackLayout mSwipeBackLayout;
     private String uuid;
+    private String userId = "";
+    private String platformType = "";
+    private int position = 0;
+
     @Override
     protected void setContentView() {
         super.setContentView();
@@ -95,51 +106,134 @@ public class NewsDetailAty extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
+        boolean isnew = getIntent().getBooleanExtra("isnew", false);
+        position = getIntent().getIntExtra("position",0);
+
+        User user = SharedPreManager.getUser(NewsDetailAty.this);
+        if(user != null) {
+            userId = user.getUserId();
+            platformType = user.getPlatformType();
+        }
+
         GlobalParams.news_detail_url = getIntent().getStringExtra("url");
-//        String picwalldetail = "http://121.41.75.213:9999/news/baijia/fetchContent?url=http://news.163.com/photoview/00AO0001/90611.html";
         uuid = DeviceInfoUtil.getUUID();
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&uuid=" + uuid, NetworkRequest.RequestMethod.GET);
-        _Request.setCallback(new JsonCallback<NewsDetail>() {
 
-            @Override
-            public void success(final NewsDetail result) {
-                if (result != null) {
-                    headerView.setDetailData(result,getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
-                        @Override
-                        public void onclickPullUp(int height) {
-                            msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+        String url = HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&userId=" + userId + "&platformType=" + platformType;
+
+        if (!isnew) {
+            NetworkRequest _Request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+
+            _Request.setCallback(new JsonCallback<NewsDetail>() {
+
+                @Override
+                public void success(final NewsDetail result) {
+                    if (result != null) {
+                        headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                            @Override
+                            public void onclickPullUp(int height) {
+                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                            }
+                        }, false, new NewsDetailHeaderView.CommentListener(){
+
+                            @Override
+                            public void comment(boolean istrue) {
+                                if(istrue){
+
+                                    Intent intent = new Intent();
+                                    intent.putExtra("position",String.valueOf(position));
+                                    intent.putExtra("isComment","1");
+
+                                    setResult(0, intent);
+                                }
+                            }
+                        });
+                        mNewsDetailAdapter.setData(result.relate);
+                        mNewsDetailAdapter.notifyDataSetChanged();
+
+                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                            msgvNewsDetail.setSelection(1);
                         }
-                    });
-                    mNewsDetailAdapter.setData(result.relate);
-                    mNewsDetailAdapter.notifyDataSetChanged();
 
-                    if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
-                        msgvNewsDetail.setSelection(1);
+                    } else {
+                        ToastUtil.toastShort("新闻的内容为空，无法打开");
+                        NewsDetailAty.this.finish();
                     }
 
-                } else
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
 
-                {
-                    ToastUtil.toastShort("新闻的内容为空，无法打开");
-                    NewsDetailAty.this.finish();
                 }
 
-                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                mNewsDetailProgressWheel.stopSpinning();
-                mNewsDetailProgressWheel.setVisibility(View.GONE);
+                @Override
+                public void failed(MyAppException exception) {
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+                }
+            }.setReturnType(new TypeToken<NewsDetail>() {
+            }.getType()));
+            _Request.execute();
+        } else {
+            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
 
-            }
+            List<NameValuePair> pairs=new ArrayList<>();
+
+            pairs.add(new BasicNameValuePair("url", GlobalParams.news_detail_url));
+            _Request.setParams(pairs);
+
+            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+
+                @Override
+                public void success(final NewsDetailAdd result) {
+                    if (result != null) {
+                        headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                            @Override
+                            public void onclickPullUp(int height) {
+                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                            }
+                        }, true,new NewsDetailHeaderView.CommentListener() {
+                            @Override
+                            public void comment(boolean istrue) {
+
+                            }
+                        });
+
+                        mNewsDetailAdapter.setData(result.relate);
+                        mNewsDetailAdapter.notifyDataSetChanged();
+
+                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                            msgvNewsDetail.setSelection(1);
+                        }
+
+                    } else {
+                        ToastUtil.toastShort("新闻的内容为空，无法打开");
+                        NewsDetailAty.this.finish();
+                    }
+
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+
+                }
+
+                @Override
+                public void failed(MyAppException exception) {
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                    mNewsDetailProgressWheel.stopSpinning();
+                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+                }
+            }.setReturnType(new TypeToken<NewsDetailAdd>() {
+            }.getType()));
+            _Request.execute();
+        }
 
 
-            @Override
-            public void failed(MyAppException exception) {
-                mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                mNewsDetailProgressWheel.stopSpinning();
-                mNewsDetailProgressWheel.setVisibility(View.GONE);
-            }
-        }.setReturnType(new TypeToken<NewsDetail>() {
-        }.getType()));
-        _Request.execute();
+        Intent intent = new Intent();
+        intent.putExtra("position",String.valueOf(position));
+        intent.putExtra("isComment","0");
+
+        setResult(0, intent);
     }
 
 

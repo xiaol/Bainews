@@ -1,5 +1,7 @@
 package com.news.yazhidao.utils;
 
+import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.Date;
 public class DateUtil {
 
     //判断是上午还是下午
-    public static String getMorningOrAfternoon(long time) {
+    public static String getMorningOrAfternoon(long time,TextView tv_time) {
         Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
 
@@ -22,11 +24,14 @@ public class DateUtil {
         } else {
             am = "早间";
         }
+
+        tv_time.setText(am);
+
         return am;
     }
 
     //获取当前日期 转换为中文形式日期
-    public static String getMyDate(String currentDate) {
+    public static String getMyDate(String currentDate,TextView tv_month,TextView tv_day) {
 
         int month = 0;
         int day = 0;
@@ -38,51 +43,51 @@ public class DateUtil {
 
         switch (month) {
             case 1:
-                currMonth = "一月";
+                currMonth = "01";
                 break;
 
             case 2:
-                currMonth = "二月";
+                currMonth = "02";
                 break;
 
             case 3:
-                currMonth = "三月";
+                currMonth = "03";
                 break;
 
             case 4:
-                currMonth = "四月";
+                currMonth = "04";
                 break;
 
             case 5:
-                currMonth = "五月";
+                currMonth = "05";
                 break;
 
             case 6:
-                currMonth = "六月";
+                currMonth = "06";
                 break;
 
             case 7:
-                currMonth = "七月";
+                currMonth = "07";
                 break;
 
             case 8:
-                currMonth = "八月";
+                currMonth = "08";
                 break;
 
             case 9:
-                currMonth = "九月";
+                currMonth = "09";
                 break;
 
             case 10:
-                currMonth = "十月";
+                currMonth = "10";
                 break;
 
             case 11:
-                currMonth = "十一月";
+                currMonth = "11";
                 break;
 
             case 12:
-                currMonth = "十二月";
+                currMonth = "12";
                 break;
 
         }
@@ -90,132 +95,133 @@ public class DateUtil {
         switch (day) {
 
             case 1:
-                currDay = "一日";
+                currDay = "01";
                 break;
 
             case 2:
-                currDay = "二日";
+                currDay = "02";
                 break;
 
             case 3:
-                currDay = "三日";
+                currDay = "03";
                 break;
 
             case 4:
-                currDay = "四日";
+                currDay = "04";
                 break;
 
             case 5:
-                currDay = "五日";
+                currDay = "05";
                 break;
 
             case 6:
-                currDay = "六日";
+                currDay = "06";
                 break;
 
             case 7:
-                currDay = "七日";
+                currDay = "07";
                 break;
 
             case 8:
-                currDay = "八日";
+                currDay = "08";
                 break;
 
             case 9:
-                currDay = "九日";
+                currDay = "09";
                 break;
 
             case 10:
-                currDay = "十日";
+                currDay = "10";
                 break;
 
             case 11:
-                currDay = "十一日";
+                currDay = "11";
                 break;
 
             case 12:
-                currDay = "十二日";
+                currDay = "12";
                 break;
 
             case 13:
-                currDay = "十三日";
+                currDay = "13";
                 break;
 
             case 14:
-                currDay = "十四日";
+                currDay = "14";
                 break;
 
             case 15:
-                currDay = "十五日";
+                currDay = "15";
                 break;
 
             case 16:
-                currDay = "十六日";
+                currDay = "16";
                 break;
 
             case 17:
-                currDay = "十七日";
+                currDay = "17";
                 break;
 
             case 18:
-                currDay = "十八日";
+                currDay = "18";
                 break;
 
             case 19:
-                currDay = "十九日";
+                currDay = "19";
                 break;
 
             case 20:
-                currDay = "二十日";
+                currDay = "20";
                 break;
 
             case 21:
-                currDay = "二十一日";
+                currDay = "21";
                 break;
 
             case 22:
-                currDay = "二十二日";
+                currDay = "22";
                 break;
 
             case 23:
-                currDay = "二十三日";
+                currDay = "23";
                 break;
 
             case 24:
-                currDay = "二十四日";
+                currDay = "24";
                 break;
 
             case 25:
-                currDay = "二十五日";
+                currDay = "25";
                 break;
 
             case 26:
-                currDay = "二十六日";
+                currDay = "26";
                 break;
 
             case 27:
-                currDay = "二十七日";
+                currDay = "27";
                 break;
 
             case 28:
-                currDay = "二十八日";
+                currDay = "28";
                 break;
 
             case 29:
-                currDay = "二十九日";
+                currDay = "29";
                 break;
 
             case 30:
-                currDay = "三十日";
+                currDay = "30";
                 break;
 
             case 31:
-                currDay = "三十一日";
+                currDay = "31";
                 break;
 
 
         }
-
+        tv_month.setText(currMonth);
+        tv_day.setText(currDay);
         String aaa = currMonth + currDay;
         return aaa;
     }

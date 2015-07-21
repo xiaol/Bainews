@@ -85,7 +85,7 @@ public class HomeAty extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             long pressedBackKeyTime = System.currentTimeMillis();
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
@@ -95,7 +95,7 @@ public class HomeAty extends BaseActivity {
             mLastPressedBackKeyTime = pressedBackKeyTime;
         }
 
-        return super.onKeyDown(keyCode,event);
+        return super.onKeyDown(keyCode, event);
     }
 
     private void changeColor(int newColor) {
@@ -115,7 +115,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注","谷歌今日焦点"};
+        private final String[] TITLES = {"关注", "谷歌今日焦点", "棱镜"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -134,10 +134,14 @@ public class HomeAty extends BaseActivity {
         @Override
         public Fragment getItem(int position) {
 
-            if(position == 0){
+            if (position == 0) {
                 return new CategoryFgt();
-            }else{
+            } else if(position == 1) {
                 return NewsFeedFragment.newInstance(position);
+            } else if(position ==2){
+                return new LengjingFgt();
+            } else {
+                return null;
             }
 
         }

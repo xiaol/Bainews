@@ -13,9 +13,17 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.Channel;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.widget.LetterSpacingTextView;
+
+import java.util.ArrayList;
 
 
 public class CategoryFgt extends Fragment {
@@ -23,7 +31,7 @@ public class CategoryFgt extends Fragment {
     private View rootView;
     private GridView mgvCategory;
     private CategoryAdapter mAdapter;
-    private String[] marrCategoryName;
+    private ArrayList<Channel> marrCategoryName;
     private TypedArray marrCategoryDrawable;
 
     @Override
@@ -36,81 +44,43 @@ public class CategoryFgt extends Fragment {
     }
 
     private void initVars() {
-        marrCategoryName = getResources().getStringArray(R.array.category_list_name);
-        marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
-        mAdapter = new CategoryAdapter(getActivity());
-        mAdapter.setData(marrCategoryName, marrCategoryDrawable);
+//        marrCategoryName = getResources().getStringArray(R.array.category_list_name);
+        loadChannelList();
+
     }
 
     private void findViews() {
         mgvCategory = (GridView) rootView.findViewById(R.id.category_gridview);
-        mgvCategory.setAdapter(mAdapter);
+        mgvCategory.setColumnWidth((int)(GlobalParams.screenWidth * 0.45));
+//        mgvCategory.setAdapter(mAdapter);
         mgvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GlobalParams.pager.setCurrentItem(1);
-                GlobalParams.currentCatePos = position;
+                GlobalParams.currentCatePos = Integer.parseInt(marrCategoryName.get(position).getChannel_id());
                 Intent intent = new Intent("sendposition");
                 GlobalParams.context.sendBroadcast(intent);
                 if (GlobalParams.tabs != null) {
-                    setTabTitle(position);
+                    setTabTitle(marrCategoryName,position);
                 }
             }
         });
     }
 
-    private void setTabTitle(int position) {
-
-        switch (position) {
-            case 0:
-                GlobalParams.tabs.updateSelection2(1, "谷歌今日焦点");
-                break;
-            case 1:
-                GlobalParams.tabs.updateSelection2(1, "时事");
-                break;
-            case 2:
-                GlobalParams.tabs.updateSelection2(1, "娱乐");
-                break;
-            case 3:
-                GlobalParams.tabs.updateSelection2(1, "科技");
-                break;
-            case 4:
-                GlobalParams.tabs.updateSelection2(1, "国际");
-                break;
-            case 5:
-                GlobalParams.tabs.updateSelection2(1, "体育");
-                break;
-            case 6:
-                GlobalParams.tabs.updateSelection2(1, "财经");
-                break;
-            case 7:
-                GlobalParams.tabs.updateSelection2(1, "港台");
-                break;
-            case 8:
-                GlobalParams.tabs.updateSelection2(1, "社会");
-                break;
-        }
-
+    private void setTabTitle(ArrayList<Channel> channelList,int position) {
+        GlobalParams.tabs.updateSelection2(1, channelList.get(position).getChannel_name());
     }
 
     class CategoryAdapter extends BaseAdapter {
-
         Context mContext;
-        String[] marrCategoryName;
-        TypedArray marrCategoryDrawable;
 
         public CategoryAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(String[] categoryName, TypedArray categoryDrawable) {
-            marrCategoryName = categoryName;
-            marrCategoryDrawable = categoryDrawable;
-        }
-
         @Override
         public int getCount() {
-            return marrCategoryName.length;
+            return marrCategoryName.size();
         }
 
         @Override
@@ -138,7 +108,7 @@ public class CategoryFgt extends Fragment {
                 holder = (Holder) convertView.getTag();
             }
             holder.ivBgIcon.setBackgroundResource(marrCategoryDrawable.getResourceId(position, 0));
-            holder.tvName.setText(marrCategoryName[position]);
+            holder.tvName.setText(marrCategoryName.get(position).getChannel_name());
             return convertView;
         }
     }
@@ -146,6 +116,28 @@ public class CategoryFgt extends Fragment {
     class Holder {
         ImageView ivBgIcon;
         LetterSpacingTextView tvName;
+    }
+
+    private void loadChannelList() {
+
+        String url = HttpConstant.URL_GET_CHANNEL_LIST;
+        final long start = System.currentTimeMillis();
+        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        request.setCallback(new JsonCallback<ArrayList<Channel>>() {
+
+            public void success(ArrayList<Channel> result) {
+                marrCategoryName = result;
+                marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
+                mAdapter = new CategoryAdapter(getActivity());
+                mgvCategory.setAdapter(mAdapter);
+            }
+
+            public void failed(MyAppException exception) {
+
+            }
+        }.setReturnType(new TypeToken<ArrayList<Channel>>() {
+        }.getType()));
+        request.execute();
     }
 
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_time_item"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:visibility="gone"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="8dp"
+            android:layout_height="1dp"
+            android:background="#dadada"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="05"
+            android:textSize="40sp"
+            android:textColor="#2b2b2b"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:gravity="center" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/img_black_point"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40"
+            android:textSize="40sp"
+            android:textColor="#2b2b2b"
+            android:gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:id="@+id/tv_weekday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="周六"
+            android:textSize="11sp"
+            android:textColor="#2b2b2b"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="晚间"
+            android:textSize="11sp"
+            android:textColor="#2b2b2b"
+            android:layout_marginLeft="7dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dadada"
+            android:layout_gravity ="center_vertical"
+            android:layout_marginLeft="8dp" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

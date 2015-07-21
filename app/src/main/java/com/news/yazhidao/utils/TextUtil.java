@@ -138,6 +138,8 @@ public class TextUtil {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_right_guonei);
         } else if ("娱乐".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_right_yule);
+        } else{
+            tv_news_category.setBackgroundResource(R.drawable.bg_category_right_keji);
         }
     }
 
