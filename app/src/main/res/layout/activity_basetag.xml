@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.news.yazhidao.widget.CloudTagManager
+        android:id="@+id/keywordsFlow"
+        android:layout_width="fill_parent"
+        android:layout_height="450dip"
+        android:background="@drawable/state_bg_1" >
+    </com.news.yazhidao.widget.CloudTagManager>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/btnIn"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="飞入" >
+        </Button>
+
+        <Button
+            android:id="@+id/btnOut"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="飞出" >
+        </Button>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -553,7 +553,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                 mTotalTime = 1000 * 60 * 60 * 12;
                 mLastTime = System.currentTimeMillis();
                 mUpdateTime = 24894000;
-                Logger.e("tag", exception.getMessage());
             }
         }.setReturnType(new TypeToken<TimeFeed>() {
         }.getType()));
