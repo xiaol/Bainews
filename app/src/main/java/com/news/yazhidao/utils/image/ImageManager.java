@@ -69,7 +69,8 @@ public class ImageManager {
             height = bitmap.getHeight();
 
             imageView.setImageBitmap(bitmap);
-            listener.success(width,height);
+            if(listener!=null)
+                listener.success(width,height);
         }else {
             // 若没有的话则开启新线程加载图片
             queuePhoto(url, imageView,isPreHandle);
@@ -222,8 +223,8 @@ public class ImageManager {
 
                 width = bitmap.getWidth();
                 height = bitmap.getHeight();
-
-                mListener.success(width,height);
+                if(mListener!=null)
+                    mListener.success(width,height);
                 photoToLoad.imageView.setImageBitmap(bitmap);
             }
             else

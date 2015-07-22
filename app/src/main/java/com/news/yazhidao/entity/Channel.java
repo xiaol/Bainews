@@ -5,11 +5,12 @@ import java.io.Serializable;
 /**
  * Created by Berkeley on 6/18/15.
  */
-public class Channel implements Serializable{
+public class Channel implements Serializable {
 
     private String channel_id;
     private String channel_name;
     private String channel_des;
+    private String channel_android_img;
 
     public String getChannel_id() {
         return channel_id;
@@ -33,5 +34,13 @@ public class Channel implements Serializable{
 
     public void setChannel_des(String channel_des) {
         this.channel_des = channel_des;
+    }
+
+    public String getChannel_android_img() {
+        return channel_android_img;
+    }
+
+    public void setChannel_android_img(String channel_android_img) {
+        this.channel_android_img = channel_android_img;
     }
 }

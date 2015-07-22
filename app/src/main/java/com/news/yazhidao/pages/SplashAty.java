@@ -225,6 +225,6 @@ public class SplashAty extends BaseActivity {
             timer.cancel();
             timer = null;
         }
-        super.onDestroy();
+        super.onStop();
     }
 }
