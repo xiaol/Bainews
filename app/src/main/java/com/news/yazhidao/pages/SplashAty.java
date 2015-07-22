@@ -73,9 +73,9 @@ public class SplashAty extends BaseActivity {
     @Override
     protected void setContentView() {
 
-        anim_fade_out = AnimationUtils.loadAnimation(SplashAty.this,R.anim.alpha_out);
+        anim_fade_out = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_out);
         anim_fade_out.setFillAfter(true);
-        anim_fade_in = AnimationUtils.loadAnimation(SplashAty.this,R.anim.alpha_in);
+        anim_fade_in = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_in);
         anim_fade_in.setFillAfter(true);
 
         timer = new Timer();
@@ -90,10 +90,9 @@ public class SplashAty extends BaseActivity {
         rl_splash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SplashAty.this,HomeAty.class);
+                Intent intent = new Intent(SplashAty.this, HomeAty.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.animation_alpha_in,R.anim.slide_out);
-
+                overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
                 SplashAty.this.finish();
             }
         });
@@ -152,7 +151,7 @@ public class SplashAty extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(NetUtil.checkNetWork(SplashAty.this)) {
+                if (NetUtil.checkNetWork(SplashAty.this)) {
                     if (splashInfo == null) {
                         Message message = new Message();
                         message.what = 1;
@@ -160,30 +159,30 @@ public class SplashAty extends BaseActivity {
                     }
                 }
             }
-        },4000);
+        }, 4000);
 
         String url = HttpConstant.URL_GET_START_URL;
         request = new NetworkRequest(url, NetworkRequest.RequestMethod.POST);
-        List<NameValuePair> pairs=new ArrayList<>();
+        List<NameValuePair> pairs = new ArrayList<>();
         request.setParams(pairs);
         request.setCallback(new JsonCallback<StartUrl>() {
 
             public void success(StartUrl result) {
-                if(result != null){
+                if (result != null) {
 
                     splashInfo = result;
 
-                    if(result.getTitle() != null) {
+                    if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
                     } else {
                         tv_splash_news.setText("今日头条，百家争鸣");
                     }
 
-                    if(result.getImgUrl() != null){
+                    if (result.getImgUrl() != null) {
 //                        ImageLoaderHelper.dispalyImage(SplashAty.this,result.getImgUrl(),iv_splash_background);
-                        ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(),iv_splash_background,false,new DisplayImageListener() {
+                        ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(), iv_splash_background, false, new DisplayImageListener() {
                             @Override
-                            public void success(int width,int height) {
+                            public void success(int width, int height) {
 
                             }
 
@@ -192,7 +191,7 @@ public class SplashAty extends BaseActivity {
 
                             }
                         });
-                    }else{
+                    } else {
 
                     }
                 }
@@ -218,5 +217,14 @@ public class SplashAty extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        super.onDestroy();
     }
 }
