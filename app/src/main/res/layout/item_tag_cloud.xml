@@ -9,10 +9,9 @@
         android:id="@+id/tv_tag"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:text="你的兴趣爱好"
+        android:gravity="center"
+        android:text="大家都在关注的话题"
         android:textSize="15sp"
-        android:paddingLeft="8dp"
         android:background="@color/white"
         android:textColor="#b5b5b5"
         />
@@ -22,7 +21,7 @@
         android:layout_below="@+id/tv_tag"
         android:id="@+id/keywordsFlow"
         android:layout_width="fill_parent"
-        android:layout_height="270dip"
+        android:layout_height="360dip"
         android:background="@color/white"/>
 
     <Button
@@ -31,7 +30,7 @@
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/keywordsFlow"
         android:text="换一批"
         android:textColor="#999999"
@@ -49,6 +48,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textColor="#80c3fd"
+        android:visibility="gone"
         android:textSize="23sp"
         android:layout_marginBottom="130dp"
         android:text="开始体验"/>

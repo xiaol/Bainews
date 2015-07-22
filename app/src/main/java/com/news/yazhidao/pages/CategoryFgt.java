@@ -127,7 +127,9 @@ public class CategoryFgt extends Fragment {
 
             public void success(ArrayList<Channel> result) {
                 marrCategoryName = result;
-                marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
+                if(isAdded()) {
+                    marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
+                }
                 mAdapter = new CategoryAdapter(getActivity());
                 mgvCategory.setAdapter(mAdapter);
             }

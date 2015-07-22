@@ -3,10 +3,10 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.text.TextUtils.TruncateAt;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -18,6 +18,8 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.news.yazhidao.R;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -45,6 +47,8 @@ public class CloudTagManager extends FrameLayout implements
 	public static final int CENTER_TO_LOCATION = 3;
 	/** 位移动画类型：从坐标点移动到中心点。 */
 	public static final int LOCATION_TO_CENTER = 4;
+    /** TextView 背景边距 */
+    public static final int MARGIN_BACKGROUND = 50;
 	public static final long ANIM_DURATION = 800l;
 	public static final int MAX = 36;
 	public static final int TEXT_SIZE_MAX = 25;
@@ -187,44 +191,40 @@ public class CloudTagManager extends FrameLayout implements
 				&& vecKeywords.size() > 0 && enableShow) {
 			enableShow = false;
 			lastStartAnimationTime = System.currentTimeMillis();
-			int xCenter = width >> 1, yCenter = height >> 1;
+			int xCenter = width/2, yCenter = height/2;
 			int size = vecKeywords.size();
 			int xItem = width / size, yItem = height / size;
 			LinkedList<Integer> listX = new LinkedList<Integer>(), listY = new LinkedList<Integer>();
 			for (int i = 0; i < size; i++) {
 				// 准备随机候选数，分别对应x/y轴位置
 				listX.add(i * xItem); //水平上不重叠
-				listY.add(i * yItem + (yItem >> 2)); //垂直方向允许重叠1/4高度
+				listY.add(i * yItem); //垂直方向允许重叠1/4高度
+//				listY.add(i * yItem + (yItem >> 2)); //垂直方向允许重叠1/4高度
 			}
 			LinkedList<TextView> listTxtTop = new LinkedList<TextView>();
 			LinkedList<TextView> listTxtBottom = new LinkedList<TextView>();
 			for (int i = 0; i < size; i++) {
 				String keyword = vecKeywords.get(i);
-				// 随机颜色
-				int ranColor = 0xff000000 | random.nextInt(0x0077ffff);
 				// 随机位置，糙值
 				int xy[] = randomXY(random, listX, listY, xItem);
 				// 随机字体大小
-				int txtSize = TEXT_SIZE_MIN
-						+ random.nextInt(TEXT_SIZE_MAX - TEXT_SIZE_MIN + 1);
+				int txtSize = TEXT_SIZE_MIN + random.nextInt(TEXT_SIZE_MAX - TEXT_SIZE_MIN + 1);
 				// 实例化TextView
 				final TextView txt = new TextView(getContext());
-				txt.setLayoutParams(new LayoutParams(480, 30));
+				txt.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 				txt.setOnClickListener(itemClickListener);
-				txt.setText(keyword);
-				// txt.setTextColor(ranColor);
-				// txt.setTextSize(TypedValue.COMPLEX_UNIT_SP, txtSize);
+				txt.setText("#" + keyword + "#");
 				// txt.setShadowLayer(2, 2, 2, 0xff696969);
-				txt.setTextColor(cr[random.nextInt(cr.length)]);
-				txt.setTextSize(textSize[random.nextInt(textSize.length)]);
-				txt.setGravity(Gravity.CENTER);
-				txt.setEllipsize(TruncateAt.MIDDLE);
+//				txt.setTextColor(cr[random.nextInt(cr.length)]);
+				txt.setTextColor(Color.WHITE);
+                txt.setGravity(Gravity.CENTER_VERTICAL);
+                setTextviewBg(txt,i);
 				txt.setSingleLine(true);
 				// txt.setEms(10);
 
 				// 获取文本长度
 				Paint paint = txt.getPaint();
-				int strWidth = (int) Math.ceil(paint.measureText(keyword));
+				int strWidth = (int) Math.ceil(paint.measureText(keyword)) + MARGIN_BACKGROUND;
 				System.out.println("文本内容 ： " + keyword + ",文本长度 ：" + strWidth);
 				xy[IDX_TXT_LENGTH] = strWidth;
 				// 第一次修正:修正x坐标
@@ -251,7 +251,46 @@ public class CloudTagManager extends FrameLayout implements
 		return false;
 	}
 
-	/** 修正TextView的Y坐标将将其添加到容器上。 */
+    private void setTextviewBg(TextView txt, int i) {
+
+        switch (i){
+            case 0:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_blue);
+                break;
+
+            case 1:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_gray);
+                break;
+
+            case 2:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_green);
+                break;
+
+            case 3:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_light_blue);
+                break;
+
+            case 4:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_light_pink);
+                break;
+
+            case 5:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_light_yellow);
+                break;
+
+            case 6:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_lightgreen);
+                break;
+
+            case 7:
+                txt.setBackgroundResource(R.drawable.bg_tag_news_pink);
+                break;
+
+        }
+
+    }
+
+    /** 修正TextView的Y坐标将将其添加到容器上。 */
 	private void attach2Screen(LinkedList<TextView> listTxt, int xCenter,
 			int yCenter, int yItem) {
 		int size = listTxt.size();
@@ -297,9 +336,7 @@ public class CloudTagManager extends FrameLayout implements
 				// 已经调整过前i个需要再次排序
 				sortXYList(listTxt, i + 1);
 			}
-			LayoutParams layParams = new LayoutParams(
-					LayoutParams.WRAP_CONTENT,
-					LayoutParams.WRAP_CONTENT);
+			LayoutParams layParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 			layParams.gravity = Gravity.LEFT | Gravity.TOP;
 			layParams.leftMargin = iXY[IDX_X];
 			layParams.topMargin = iXY[IDX_Y];
@@ -351,8 +388,7 @@ public class CloudTagManager extends FrameLayout implements
 	 *   
 	 * @param endIdx  
 	 *            起始位置。  
-	 * @param txtArr  待排序的数组。
-	 *   
+	 *
 	 */
 	private void sortXYList(LinkedList<TextView> listTxt, int endIdx) {
 		for (int i = 0; i < endIdx; i++) {
