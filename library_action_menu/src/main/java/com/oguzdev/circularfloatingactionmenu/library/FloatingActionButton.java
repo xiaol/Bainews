@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 /**
  * An alternative Floating Action Button implementation that can be independently placed in
@@ -49,7 +50,7 @@ public class FloatingActionButton extends FrameLayout {
     public FloatingActionButton(Context context, ViewGroup.LayoutParams layoutParams, int theme,
                                 Drawable backgroundDrawable, int position, View contentView,
                                 FrameLayout.LayoutParams contentParams,
-                                boolean systemOverlay) {
+                                boolean systemOverlay,LinearLayout view) {
         super(context);
         this.systemOverlay = systemOverlay;
 
@@ -73,7 +74,7 @@ public class FloatingActionButton extends FrameLayout {
         }
         setClickable(true);
 
-        attach(layoutParams);
+        attach(layoutParams,view);
     }
 
     /**
@@ -166,7 +167,7 @@ public class FloatingActionButton extends FrameLayout {
      * Attaches it to the content view with specified LayoutParams.
      * @param layoutParams
      */
-    public void attach(ViewGroup.LayoutParams layoutParams) {
+    public void attach(ViewGroup.LayoutParams layoutParams,LinearLayout view) {
         if(systemOverlay) {
             try {
                 getWindowManager().addView(this, layoutParams);
@@ -177,6 +178,7 @@ public class FloatingActionButton extends FrameLayout {
             }
         }
         else {
+
             ((ViewGroup) getActivityContentView()).addView(this, layoutParams);
         }
     }
@@ -184,13 +186,13 @@ public class FloatingActionButton extends FrameLayout {
     /**
      * Detaches it from the container view.
      */
-    public void detach() {
+    public void detach(LinearLayout view) {
         if(systemOverlay) {
             getWindowManager().removeView(this);
-        }
-        else {
+        }else{
             ((ViewGroup) getActivityContentView()).removeView(this);
         }
+
     }
 
     /**
@@ -232,6 +234,7 @@ public class FloatingActionButton extends FrameLayout {
         private View contentView;
         private LayoutParams contentParams;
         private boolean systemOverlay;
+        private LinearLayout view;
 
         public Builder(Context context) {
             this.context = context;
@@ -254,6 +257,11 @@ public class FloatingActionButton extends FrameLayout {
 
         public Builder setTheme(int theme) {
             this.theme = theme;
+            return this;
+        }
+
+        public Builder setView(LinearLayout view) {
+            this.view = view;
             return this;
         }
 
@@ -294,7 +302,7 @@ public class FloatingActionButton extends FrameLayout {
                                            position,
                                            contentView,
                                            contentParams,
-                    systemOverlay);
+                    systemOverlay,view);
         }
 
         public static WindowManager.LayoutParams getDefaultSystemWindowParams(Context context) {

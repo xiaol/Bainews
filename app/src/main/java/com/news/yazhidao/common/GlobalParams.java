@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 /**
  * Created by Berkeley on 4/10/15.
@@ -23,5 +25,7 @@ public class GlobalParams {
     public static ViewPager pager;
     public static PagerSlidingTabStrip tabs;
     public static String news_detail_url;
+    public static FloatingActionMenu leftCenterMenu;
+    public static FloatingActionButton leftCenterButton;
 
 }
