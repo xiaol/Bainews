@@ -46,7 +46,7 @@ public class HomeAty extends BaseActivity {
     private FloatingActionButton leftCenterButton;
     private FloatingActionButton.LayoutParams starParams;
     private FloatingActionMenu leftCenterMenu;
-    private ArrayList<Album> albumList= new ArrayList<Album>();
+    private ArrayList<Album> albumList = new ArrayList<Album>();
 
     @Override
     protected void setContentView() {
@@ -78,12 +78,13 @@ public class HomeAty extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if(position == 2){
-                    if(leftCenterButton != null) {
+                if (position == 2) {
+                    if (leftCenterButton != null) {
                         leftCenterButton.attach(starParams, null);
                     }
-                }else{
-                    if(leftCenterButton != null) {
+                } else {
+                    leftCenterMenu.close(true);
+                    if (leftCenterButton != null) {
                         leftCenterButton.detach(null);
                     }
                 }
@@ -169,13 +170,16 @@ public class HomeAty extends BaseActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                albumList.clear();
+
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this,1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this, 1 + "", albumList,1);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -186,13 +190,16 @@ public class HomeAty extends BaseActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                albumList.clear();
+
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this,1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this, 1 + "", albumList,2);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -203,7 +210,7 @@ public class HomeAty extends BaseActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeAty.this,BaseTagActivity.class);
+                Intent intent = new Intent(HomeAty.this, BaseTagActivity.class);
                 startActivity(intent);
             }
         });
@@ -278,7 +285,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注", "谷歌今日焦点","挖掘机"};
+        private final String[] TITLES = {"关注", "谷歌今日焦点", "挖掘机"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

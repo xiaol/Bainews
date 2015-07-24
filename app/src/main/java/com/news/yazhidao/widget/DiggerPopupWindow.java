@@ -41,13 +41,16 @@ public class DiggerPopupWindow extends PopupWindow {
     private EditText et_content;
     private GridView gv_album;
     private HorizontalScrollView album_scollView;
+    private LinearLayout ll_digger_source;
+    private int position;
     private LinearLayout album_item_layout;
     private ArrayList<Album> albumList;
     private int viewcount = 0;
 
-    public DiggerPopupWindow(Activity context, String itemCount, ArrayList<Album> list) {
+    public DiggerPopupWindow(Activity context, String itemCount, ArrayList<Album> list,int position) {
         super(context);
         m_pContext = context;
+        this.position = position;
         if (albumList != null) {
             albumList.clear();
         }
@@ -72,9 +75,11 @@ public class DiggerPopupWindow extends PopupWindow {
     private void findHeadPortraitImageViews() {
 
         viewcount = 0;
-
         mMenuView = View.inflate(m_pContext, R.layout.popup_window_add_digger, null);
-
+        ll_digger_source = (LinearLayout) mMenuView.findViewById(R.id.ll_digger_source);
+        if(position == 2){
+            ll_digger_source.setVisibility(View.GONE);
+        }
         tv_cancel = (TextView) mMenuView.findViewById(R.id.tv_cancel);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +163,7 @@ public class DiggerPopupWindow extends PopupWindow {
 
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
                             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
+                            ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
                             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
                             tvName.setTextSize(16);
                             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);

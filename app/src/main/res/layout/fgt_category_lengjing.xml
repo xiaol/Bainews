@@ -2,14 +2,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/ll_rootview"
+    android:orientation="vertical"
     android:background="#dfe6e9">
 
-    <ListView
-        android:id="@+id/lv_lecture"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        </ListView>
-
+    <ImageView
+        android:id="@+id/iv_lecture"
+        android:layout_width="283dp"
+        android:layout_height="173dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/iv_lecture"
+        />
 
 </LinearLayout>
