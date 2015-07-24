@@ -2,24 +2,36 @@ package com.news.yazhidao.pages;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.Channel;
+import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -36,8 +48,17 @@ public class LengjingFgt extends Fragment {
     private TypedArray marrCategoryDrawable;
     private FloatingActionButton leftCenterButton;
     private FloatingActionButton.LayoutParams starParams;
-    private ArrayList<Album> albumList= new ArrayList<Album>();
-
+    private ArrayList<Album> albumList = new ArrayList<Album>();
+    //个人专辑列表
+    private GridView mSpecialGv;
+    private MySpecialLvAdatpter mSpecialLvAdatpter;
+    private ArrayList<DigSpecial> mSpecialDatas;
+    private Activity mActivity;
+    public LengjingFgt(){}
+    @SuppressLint("ValidFragment")
+    public LengjingFgt(Activity mActivity){
+        this.mActivity = mActivity;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,16 +69,18 @@ public class LengjingFgt extends Fragment {
     }
 
     private void initVars() {
-
+        mSpecialDatas = new ArrayList();
+        mSpecialDatas.add(new DigSpecial("默认", "3", "这是一个神奇的网站."));
+        mSpecialDatas.add(new DigSpecial("我喜欢的", "1", "这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站.这是一个神奇的网站这是一个神奇的网站这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站."));
+        mSpecialDatas.add(new DigSpecial("很黄很暴力", "2", "这是一个神奇的网站,这是一个神奇的网站."));
+        mSpecialLvAdatpter = new MySpecialLvAdatpter();
     }
 
     @Override
     public void onStop() {
-
         if (leftCenterButton != null) {
             leftCenterButton.setVisibility(View.GONE);
         }
-
         super.onStop();
     }
 
@@ -77,7 +100,18 @@ public class LengjingFgt extends Fragment {
     private void findViews() {
         lv_lecture = (ListView) rootView.findViewById(R.id.lv_lecture);
         lv_lecture.setAdapter(new MyAdapter());
-
+        //专辑显示列表
+        mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
+        mSpecialGv.setAdapter(mSpecialLvAdatpter);
+        mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DigSpecial digSpecial = mSpecialDatas.get(position);
+                Intent specialAty = new Intent(getActivity(),SpecialListAty.class);
+                specialAty.putExtra(SpecialListAty.SPECIAL_ATY_TITLE,digSpecial.getTitle());
+                startActivity(specialAty);
+            }
+        });
         // Set up the large red button on the center right side
         // With custom button and content sizes and margins
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
@@ -145,7 +179,7 @@ public class LengjingFgt extends Fragment {
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(getActivity(),1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -162,7 +196,7 @@ public class LengjingFgt extends Fragment {
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(getActivity(),1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -173,7 +207,7 @@ public class LengjingFgt extends Fragment {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),BaseTagActivity.class);
+                Intent intent = new Intent(getActivity(), BaseTagActivity.class);
                 startActivity(intent);
             }
         });
@@ -209,8 +243,33 @@ public class LengjingFgt extends Fragment {
 
     }
 
+    /**
+     * 打开新闻挖掘的标题和url编辑界面
+     * @param newsTitle
+     * @param newsUrl
+     */
+    public void openEditWindow(String newsTitle,String newsUrl){
+        Album album = new Album();
+        album.setSelected(true);
+        album.setAlbum("默认");
+        albumList.add(album);
+        Log.e("jigang","++++"+mActivity);
+        DiggerPopupWindow window = new DiggerPopupWindow(this,mActivity, 1 + "", albumList);
+        window.setDigNewsTitleAndUrl(newsTitle,newsUrl);
+        window.setFocusable(true);
+        window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
+                | Gravity.CENTER, 0, 0);
+    }
 
-    private class MyAdapter extends BaseAdapter{
+    /**
+     * 更新专辑列表数据
+     */
+    public void updateSpecialList(){
+        Log.e("jigang","update gaga");
+        mSpecialDatas.get(0).setCount("1");
+        mSpecialLvAdatpter.notifyDataSetChanged();
+    }
+    private class MyAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -230,15 +289,15 @@ public class LengjingFgt extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            convertView = View.inflate(getActivity(),R.layout.item_lv_lecture,null);
+            convertView = View.inflate(getActivity(), R.layout.item_lv_lecture, null);
             ImageView iv_lecture = (ImageView) convertView.findViewById(R.id.iv_lecture);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth, (int)(GlobalParams.screenWidth * 0.73));
-            params.setMargins(10,10,10,10);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth, (int) (GlobalParams.screenWidth * 0.73));
+            params.setMargins(10, 10, 10, 10);
 
             iv_lecture.setLayoutParams(params);
 
-            switch (position){
+            switch (position) {
                 case 0:
                     iv_lecture.setBackgroundResource(R.drawable.img_lecture);
                     break;
@@ -256,4 +315,65 @@ public class LengjingFgt extends Fragment {
         }
 
     }
+
+    /**
+     * 个人专辑列表适配器
+     */
+    public class MySpecialLvAdatpter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return mSpecialDatas == null ? 0 : mSpecialDatas.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mSpecialDatas.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            MySpecialHolder holder;
+            if (convertView == null) {
+                holder = new MySpecialHolder();
+                convertView = View.inflate(getActivity(), R.layout.fgt_special_listview_item, null);
+                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (426.0f / 1280 * DeviceInfoUtil.getScreenHeight())));
+                holder.mSpecialTitleContainer = convertView.findViewById(R.id.mSpecialTitleContainer);
+                holder.mSpecialTitle = (TextView) convertView.findViewById(R.id.mSpecialTitle);
+                holder.mSpecialCount = (TextView) convertView.findViewById(R.id.mSpecialCount);
+                holder.mSpecialDesc = (TextView) convertView.findViewById(R.id.mSpecialDesc);
+                convertView.setTag(holder);
+            } else {
+                holder = (MySpecialHolder) convertView.getTag();
+            }
+            DigSpecial digSpecial = mSpecialDatas.get(position);
+            holder.mSpecialTitle.setText(digSpecial.getTitle());
+            holder.mSpecialCount.setText(digSpecial.getCount());
+            holder.mSpecialDesc.setText(digSpecial.getDesc());
+
+            //设置title父容器的宽度
+            Rect rect = new Rect();
+            holder.mSpecialTitle.getPaint().getTextBounds(digSpecial.getTitle(), 0, digSpecial.getTitle().length(), rect);
+            holder.mSpecialTitleContainer.setLayoutParams(new LinearLayout.LayoutParams(rect.width() + DensityUtil.dip2px(getActivity(), 40), ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            //如果没有背景图片的话,设置整个item背景色.
+            if (position != 0) {
+                convertView.setBackgroundResource(TextUtil.getSpecialBgPic(position));
+            }
+            return convertView;
+        }
+    }
+
+    static class MySpecialHolder {
+        View mSpecialTitleContainer;
+        TextView mSpecialTitle;
+        TextView mSpecialCount;
+        TextView mSpecialDesc;
+    }
+
 }

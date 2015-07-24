@@ -32,6 +32,7 @@
             android:textSize="20sp"
             android:textColor="#7d7d7d"
             android:background="@drawable/bg_edittext"
+            android:hint="挖点东西吧..."
             android:layout_marginTop="10dp"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp" />
@@ -64,9 +65,12 @@
             <TextView
                 android:id="@+id/tv_source_url"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:lines="1"
+                android:ellipsize="end"
                 android:text="http://www.baidu.com"
                 android:textSize="18sp" />
 

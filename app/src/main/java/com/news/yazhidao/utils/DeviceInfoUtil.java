@@ -1,6 +1,7 @@
 package com.news.yazhidao.utils;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.WindowManager;
 
 import com.news.yazhidao.application.YaZhiDaoApplication;
@@ -333,5 +335,55 @@ public class DeviceInfoUtil {
 
         }
         return false;
+    }
+
+    /**
+     * 判断是否是魅族系统
+     * @return
+     */
+    public static boolean isFlyme() {
+        try {
+            // Invoke Build.hasSmartBar()
+            final Method method = Build.class.getMethod("hasSmartBar");
+            return method != null;
+        } catch (final Exception e) {
+            return false;
+        }
+    }
+    public static int getDpi(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        int height = 0;
+        @SuppressWarnings("rawtypes")
+        Class c;
+        try {
+            c = Class.forName("android.view.Display");
+            @SuppressWarnings("unchecked")
+            Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
+            method.invoke(display, dm);
+            height = dm.heightPixels;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return height;
+    }
+    public static int[] getScreenWH(Context poCotext) {
+        WindowManager wm = (WindowManager) poCotext
+                .getSystemService(Context.WINDOW_SERVICE);
+        int width = wm.getDefaultDisplay().getWidth();
+        int height = wm.getDefaultDisplay().getHeight();
+        return new int[] { width, height };
+    }
+
+    /**
+     * 获取非魅族手机底部虚拟键的高度
+     * @param poCotext
+     * @return
+     */
+    public static int getVrtualBtnHeight(Context poCotext) {
+        int location[] = getScreenWH(poCotext);
+        int realHeiht = getDpi((Activity) poCotext);
+        int virvalHeight = realHeiht - location[1];
+        return virvalHeight;
     }
 }

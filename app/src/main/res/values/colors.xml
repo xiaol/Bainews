@@ -140,4 +140,11 @@
     <color name="banana">#ffd800</color>
     <color name="tab_blue">#4fb5ea</color>
     <color name="tabtextcolor">#007ed7</color>
+
+    <!--digger-->
+    <color name="dig_title_undone">#94bdc1</color>
+    <color name="dig_title_doing">#f6aa32</color>
+    <color name="dig_title_done">#0dd2ab</color>
+    <color name="dig_special_title">#a0a0a0</color>
+
 </resources>

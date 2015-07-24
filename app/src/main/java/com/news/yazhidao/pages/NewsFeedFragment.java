@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -64,6 +65,7 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.receiver.TimeoOutAlarmReceiver;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -214,6 +216,26 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         mtvProgress = (TextViewExtend) rootView.findViewById(R.id.mHomeAtyLeftMenu);
         View mHomeAtyLeftMenuWrapper = rootView.findViewById(R.id.mHomeAtyLeftMenuWrapper);
         mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
+        //如果系统版本在4.4以上的话,需要使用沉浸式,所以要把左下角的时间按钮和登陆按钮上移
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            int height = 20;
+            if(DeviceInfoUtil.isFlyme()){
+                height = DensityUtil.dip2px(getActivity(),30);
+            }else{
+                height = (height == 0) ? DensityUtil.dip2px(getActivity(),20):DeviceInfoUtil.getVrtualBtnHeight(getActivity());
+            }
+
+            RelativeLayout.LayoutParams leftMenuParams =new RelativeLayout.LayoutParams(DensityUtil.dip2px(getActivity(),80),DensityUtil.dip2px(getActivity(),50));
+            leftMenuParams.setMargins(DensityUtil.dip2px(getActivity(), 20), DensityUtil.dip2px(getActivity(), 20), DensityUtil.dip2px(getActivity(), 20), height);
+            leftMenuParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            leftMenuParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            mHomeAtyLeftMenuWrapper.setLayoutParams(leftMenuParams);
+            RelativeLayout.LayoutParams rightMenuParams =new RelativeLayout.LayoutParams(DensityUtil.dip2px(getActivity(),50),DensityUtil.dip2px(getActivity(),50));
+            rightMenuParams.setMargins(DensityUtil.dip2px(getActivity(),20),DensityUtil.dip2px(getActivity(),20),DensityUtil.dip2px(getActivity(),20),height);
+            rightMenuParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            rightMenuParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            mHomeAtyRightMenuWrapper.setLayoutParams(rightMenuParams);
+        }
         mHomeAtyRightMenu = (RoundedImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
         SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
         String url = sp.getString("url", "");

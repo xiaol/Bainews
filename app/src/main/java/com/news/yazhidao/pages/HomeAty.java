@@ -1,11 +1,15 @@
 package com.news.yazhidao.pages;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 
@@ -13,6 +17,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
@@ -28,12 +33,33 @@ public class HomeAty extends BaseActivity {
     private int currentColor;
     private SystemBarTintManager mTintManager;
     private long mLastPressedBackKeyTime;
+    //Viewpager 索引默认是1
+    private int mViewPagerIndex = 1;
+    //棱镜界面对应的fragment
+    private LengjingFgt mLengJingFgt;
 
     @Override
     protected void setContentView() {
-
+        mLengJingFgt =new LengjingFgt(this);
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
+        //判断是否是别的app分享进来的
+        Intent intent = getIntent();
+        final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String type = intent.getType();
+        if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
+            Log.e("jigang", type + "-----data=" + data);
+            //把页面设置在挖掘机
+            mViewPagerIndex = 2;
+
+            //在LengJingFgt 中打开编辑页面,延时防止crash
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mLengJingFgt.openEditWindow(TextUtil.getNewsTitle(data), TextUtil.getNewsUrl(data));
+                }
+            }, 800);
+        }
     }
 
     @Override
@@ -57,7 +83,7 @@ public class HomeAty extends BaseActivity {
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         GlobalParams.pager = pager;
-        pager.setCurrentItem(1);
+        pager.setCurrentItem(mViewPagerIndex);
         changeColor(getResources().getColor(R.color.tab_blue));
 
     }
@@ -66,7 +92,6 @@ public class HomeAty extends BaseActivity {
     protected void loadData() {
 
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -131,7 +156,7 @@ public class HomeAty extends BaseActivity {
             } else if (position == 1) {
                 return NewsFeedFragment.newInstance(position);
             } else if (position == 2) {
-                return new LengjingFgt();
+                return mLengJingFgt;
             } else {
                 return null;
             }

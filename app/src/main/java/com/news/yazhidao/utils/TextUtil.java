@@ -1,7 +1,9 @@
 package com.news.yazhidao.utils;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +17,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by fengjigang on 15/1/27.
@@ -304,5 +309,89 @@ public class TextUtil {
                 c[i] = (char) (c[i] - 65248);
         }
         return new String(c);
+    }
+    /**
+     * 随机产生一个颜色值给专辑做背景色
+     */
+    public static int getRandomColor4Special(Context mContext){
+        String[] colorArr = mContext.getResources().getStringArray(R.array.bg_special_colors);
+        Random random = new Random();
+        int index = random.nextInt(colorArr.length);
+        return Color.parseColor(colorArr[index]);
+    }
+
+    /**
+     * 专辑列表获取对应的背景
+     * @return
+     */
+    public static int getSpecialBgPic(int positon){
+        positon = positon % 8;
+        int resource = R.drawable.bg_special1;
+        switch (positon){
+            case 1:
+                resource = R.drawable.bg_special1;
+                break;
+            case 2:
+                resource = R.drawable.bg_special2;
+                break;
+            case 3:
+                resource = R.drawable.bg_special3;
+                break;
+            case 4:
+                resource = R.drawable.bg_special4;
+                break;
+            case 5:
+                resource = R.drawable.bg_special5;
+                break;
+            case 6:
+                resource = R.drawable.bg_special6;
+                break;
+            case 7:
+                resource = R.drawable.bg_special7;
+                break;
+            case 8:
+                resource = R.drawable.bg_special8;
+                break;
+        }
+        return resource;
+    }
+    /**
+     * 获取别的app分享进来的新闻链接中的url
+     * @param data
+     */
+    public static String  getNewsTitle(String data) {
+        String regEx4Title = "[\\((][\\s\\S]*[\\))]";
+        String regEx4Url = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?";
+        //去除多余文字
+        Pattern patternTitle = Pattern.compile(regEx4Title);
+        Matcher matcherTitle = patternTitle.matcher(data);
+        while (matcherTitle.find()) {
+            data = data.replace(matcherTitle.group(),"");
+        }
+        data = data.replace("【","").replace("】", "");
+
+        //去除多余的url
+
+        Pattern patternUrl = Pattern.compile(regEx4Url);
+        Matcher matcherUrl = patternUrl.matcher(data);
+        while (matcherUrl.find()){
+            data = data.replace(matcherUrl.group(),"");
+        }
+        return data.replace("\n","");
+    }
+
+    /**
+     * 获取别的app分享进来的新闻链接中的标题
+     * @param data
+     * @return
+     */
+    public static String getNewsUrl(String data) {
+        String regEx4Url = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?";
+        Pattern pattern = Pattern.compile(regEx4Url);
+        Matcher matcher = pattern.matcher(data);
+        if (matcher.find()){
+            data = matcher.group();
+        }
+        return data;
     }
 }

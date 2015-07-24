@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	<corners android:radius="2dp" />
-	<solid android:color="@color/dialog_bg" />
+	<solid android:color="@color/bg_home_login_header" />
 </shape>
