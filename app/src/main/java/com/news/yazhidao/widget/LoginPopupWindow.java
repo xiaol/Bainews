@@ -135,7 +135,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(mContext);
         _DialogBuilder.withMessage("退出后，就不能参与评论了")
                 .withDuration(400)
-                .withIcon(R.drawable.app_icon)
+                .withIcon(R.drawable.app_icon_version2)
                 .withTitle("退出登录")
                 .withEffect(Effectstype.Sidefill)
                 .withButton1Text("OK")

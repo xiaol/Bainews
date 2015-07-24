@@ -238,8 +238,6 @@ public class HomeAty extends BaseActivity {
             }
         });
 
-//        leftCenterButton.detach();
-
     }
 
     @Override
