@@ -24,7 +24,7 @@ public class NotificationHelper {
         if(mNotification==null){
             mNotification=new Notification();
         }
-        mNotification.icon= R.drawable.app_icon;
+        mNotification.icon= R.drawable.app_icon_version2;
         mNotification.tickerText="头条百家有人反馈消息啦!";
         mNotification.defaults=mNotification.DEFAULT_ALL;
         mNotification.flags |= mNotification.FLAG_AUTO_CANCEL;//点击通知后自动清除通知

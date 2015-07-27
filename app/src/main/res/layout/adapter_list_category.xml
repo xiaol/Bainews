@@ -2,21 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mNewsDetailHeaderWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_bg_icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:scaleType="centerCrop"/>
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop" />
 
     <com.news.yazhidao.widget.LetterSpacingTextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingBottom="15dp"
         android:textColor="@color/white"
         android:textSize="14sp" />
+
+    <com.news.yazhidao.widget.LetterSpacingTextView
+        android:id="@+id/tv_des"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="30dp"
+        android:textColor="#afb2bb"
+        android:textSize="12sp" />
+
 </RelativeLayout>

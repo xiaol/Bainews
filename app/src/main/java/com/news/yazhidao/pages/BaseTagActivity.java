@@ -1,5 +1,7 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -8,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.widget.CloudTagManager;
 
 import java.util.Random;
@@ -16,27 +17,25 @@ import java.util.Random;
 /**
  * Created by Berkeley on 7/20/15.
  */
-public class BaseTagActivity extends BaseActivity implements View.OnClickListener{
+public class BaseTagActivity extends Activity implements View.OnClickListener {
 
-    public static final String[] keywords = { "下雨啦", "墨迹天气", "豆瓣", "Diablo3",
-            "魔兽争霸", "Dota", "音乐", "崔健", "九月", "十二", "五月天", "夏天的故事", "我是一只大袋鼠",
-            "星巴克", "乐知天命" };
+    public static final String[] keywords = {"下雨啦", "墨迹天气", "豆瓣", "Diablo3",
+            "魔兽争霸", "Dota", "我是一只大袋鼠", "崔健"};
+
+    //    , "九月", "十二", "五月天", "夏天的故事", "哈哈",
+//            "星巴克", "乐知天命"
     private CloudTagManager keywordsFlow;
-    private Button btnIn, btnOut;
+    private Button btnchange, btnexperence;
     private GestureDetector gestureDetector;
 
     @Override
-    protected void setContentView() {
-        setContentView(R.layout.activity_basetag);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
 
-    @Override
-    protected void initializeViews() {
-
-        btnIn = (Button) findViewById(R.id.btnIn);
-        btnOut = (Button) findViewById(R.id.btnOut);
-        btnIn.setOnClickListener(BaseTagActivity.this);
-        btnOut.setOnClickListener(BaseTagActivity.this);
+        setContentView(R.layout.item_tag_cloud);
+        btnchange = (Button) findViewById(R.id.btnchange);
+        btnexperence = (Button) findViewById(R.id.btnexperence);
+        btnchange.setOnClickListener(BaseTagActivity.this);
+        btnexperence.setOnClickListener(BaseTagActivity.this);
         keywordsFlow = (CloudTagManager) findViewById(R.id.keywordsFlow);
         keywordsFlow.setDuration(800l);
         keywordsFlow.setOnItemClickListener(BaseTagActivity.this);
@@ -46,11 +45,7 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
 
         gestureDetector = new GestureDetector(new DefaultGestureDetector());
 
-    }
-
-    @Override
-    protected void loadData() {
-
+        super.onCreate(savedInstanceState);
     }
 
     private static void feedKeywordsFlow(CloudTagManager keywordsFlow,
@@ -63,13 +58,12 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == btnIn) {
-            flyIn();
-        } else if (v == btnOut) {
+        if (v == btnchange) {
             flyOut();
+        } else if (v == btnexperence) {
         } else if (v instanceof TextView) {
             String keyword = ((TextView) v).getText().toString();
-            Toast.makeText(this, keyword, 0).show();
+            Toast.makeText(this, keyword, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -86,21 +80,8 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
             final int FLING_MIN_VELOCITY = 100;//x或者y轴上的移动速度(像素/秒)
             Random random = new Random();
 
-            if (random.nextInt(2) == 0) {
-                flyIn();
-            } else {
-                flyOut();
-            }
-            //			if ((e1.getX() - e2.getX()) > FLING_MIN_DISTANCE
-            //					&& Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-            //			} else if ((e2.getX() - e1.getX()) > FLING_MIN_DISTANCE
-            //					&& Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-            //			} else if ((e1.getY() - e2.getY()) > FLING_MIN_DISTANCE
-            //					&& Math.abs(velocityY) > FLING_MIN_VELOCITY) {
-            //			} else if ((e2.getY() - e1.getY()) > FLING_MIN_DISTANCE
-            //					&& Math.abs(velocityY) > FLING_MIN_VELOCITY) {
-            //			} else {
-            //			}
+            flyOut();
+
             return false;
         }
     }

@@ -2,16 +2,17 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -21,6 +22,7 @@ import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 
 import java.util.ArrayList;
@@ -29,10 +31,10 @@ import java.util.ArrayList;
 public class CategoryFgt extends Fragment {
 
     private View rootView;
-    private GridView mgvCategory;
+    private ListView mlvCategory;
     private CategoryAdapter mAdapter;
-    private ArrayList<Channel> marrCategoryName;
-    private TypedArray marrCategoryDrawable;
+    private ArrayList<Channel> marrCategory;
+    private int mScreenWidth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,43 +46,48 @@ public class CategoryFgt extends Fragment {
     }
 
     private void initVars() {
-//        marrCategoryName = getResources().getStringArray(R.array.category_list_name);
+        mAdapter = new CategoryAdapter(getActivity());
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        mScreenWidth = wm.getDefaultDisplay().getWidth();
         loadChannelList();
-
     }
 
     private void findViews() {
-        mgvCategory = (GridView) rootView.findViewById(R.id.category_gridview);
-        mgvCategory.setColumnWidth((int)(GlobalParams.screenWidth * 0.45));
-//        mgvCategory.setAdapter(mAdapter);
-        mgvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mlvCategory = (ListView) rootView.findViewById(R.id.category_listview);
+        mlvCategory.setAdapter(mAdapter);
+        mlvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GlobalParams.pager.setCurrentItem(1);
-                GlobalParams.currentCatePos = Integer.parseInt(marrCategoryName.get(position).getChannel_id());
+                GlobalParams.currentCatePos = Integer.parseInt(marrCategory.get(position).getChannel_id());
                 Intent intent = new Intent("sendposition");
                 GlobalParams.context.sendBroadcast(intent);
                 if (GlobalParams.tabs != null) {
-                    setTabTitle(marrCategoryName,position);
+                    setTabTitle(marrCategory, position);
                 }
             }
         });
     }
 
-    private void setTabTitle(ArrayList<Channel> channelList,int position) {
+    private void setTabTitle(ArrayList<Channel> channelList, int position) {
         GlobalParams.tabs.updateSelection2(1, channelList.get(position).getChannel_name());
     }
 
     class CategoryAdapter extends BaseAdapter {
         Context mContext;
+        ArrayList<Channel> arrCategory;
 
         public CategoryAdapter(Context context) {
             mContext = context;
         }
 
+        public void setData(ArrayList<Channel> Category) {
+            arrCategory = Category;
+        }
+
         @Override
         public int getCount() {
-            return marrCategoryName.size();
+            return marrCategory == null ? 0 : marrCategory.size();
         }
 
         @Override
@@ -102,13 +109,22 @@ public class CategoryFgt extends Fragment {
                 holder.ivBgIcon = (ImageView) convertView.findViewById(R.id.iv_bg_icon);
                 holder.tvName = (LetterSpacingTextView) convertView.findViewById(R.id.tv_name);
                 holder.tvName.setFontSpacing(5);
-                holder.tvName.setTextSize(16);
+                holder.tvDes = (LetterSpacingTextView) convertView.findViewById(R.id.tv_des);
+                holder.tvDes.setFontSpacing(5);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.ivBgIcon.getLayoutParams();
+                layoutParams.width = mScreenWidth;
+                layoutParams.height = (int) (mScreenWidth / 3.0f);
+                holder.ivBgIcon.setLayoutParams(layoutParams);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            holder.ivBgIcon.setBackgroundResource(marrCategoryDrawable.getResourceId(position, 0));
-            holder.tvName.setText(marrCategoryName.get(position).getChannel_name());
+            Channel channel = marrCategory.get(position);
+            if (channel != null) {
+                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
+                holder.tvName.setText(channel.getChannel_name());
+                holder.tvDes.setText(channel.getChannel_des());
+            }
             return convertView;
         }
     }
@@ -116,20 +132,18 @@ public class CategoryFgt extends Fragment {
     class Holder {
         ImageView ivBgIcon;
         LetterSpacingTextView tvName;
+        LetterSpacingTextView tvDes;
     }
 
     private void loadChannelList() {
-
         String url = HttpConstant.URL_GET_CHANNEL_LIST;
-        final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<Channel>>() {
 
             public void success(ArrayList<Channel> result) {
-                marrCategoryName = result;
-                marrCategoryDrawable = getResources().obtainTypedArray(R.array.bg_category_list);
-                mAdapter = new CategoryAdapter(getActivity());
-                mgvCategory.setAdapter(mAdapter);
+                marrCategory = result;
+                mAdapter.setData(marrCategory);
+                mAdapter.notifyDataSetChanged();
             }
 
             public void failed(MyAppException exception) {

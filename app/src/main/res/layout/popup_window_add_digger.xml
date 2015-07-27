@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="17dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="23dp"
             android:text="取消"
             android:textColor="@color/white"
             android:textSize="16sp" />
@@ -25,32 +25,34 @@
             android:id="@+id/et_content"
             android:layout_below="@+id/tv_cancel"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="125dp"
             android:gravity="top"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:textSize="20sp"
+            android:paddingLeft="21dp"
+            android:paddingRight="21dp"
+            android:paddingTop="30dp"
+            android:paddingBottom="30dp"
+            android:textSize="16sp"
             android:textColor="#7d7d7d"
-            android:background="@drawable/bg_edittext"
             android:hint="挖点东西吧..."
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp" />
+            android:background="@drawable/bg_edittext"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginLeft="23dp" />
 
         <TextView
             android:id="@+id/tv_devider"
             android:layout_below="@+id/et_content"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginLeft="23dp"
             android:background="#dadada" />
 
         <LinearLayout
             android:id="@+id/ll_digger_source"
             android:layout_below="@+id/tv_devider"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginLeft="23dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -72,32 +74,39 @@
                 android:lines="1"
                 android:ellipsize="end"
                 android:text="http://www.baidu.com"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 
-        <com.news.yazhidao.widget.NewsGridView
-            android:id="@+id/gv_album"
-            android:layout_below="@+id/ll_digger_source"
+        <HorizontalScrollView
+            android:id="@+id/album_scollView"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_digger_source"
             android:cacheColorHint="#00000000"
-            android:fadingEdge="none"
             android:overScrollMode="never"
-            android:numColumns="2" />
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/album_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/news_detail_item_margin_top"
+                android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <TextView
             android:id="@+id/tv_confirm"
-            android:layout_below="@+id/gv_album"
+            android:layout_below="@+id/album_scollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="17dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="23dp"
             android:textColor="@color/white"
-            android:layout_marginBottom="25dp"
             android:text="确定"
             android:textSize="16sp" />
     </RelativeLayout>

@@ -59,6 +59,8 @@ public class LengjingFgt extends Fragment {
     public LengjingFgt(Activity mActivity){
         this.mActivity = mActivity;
     }
+    private LinearLayout ll_root;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,14 +89,6 @@ public class LengjingFgt extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onStart() {
-        if (leftCenterButton != null) {
-            leftCenterButton.setVisibility(View.VISIBLE);
-        }
-        super.onStart();
     }
 
     private void findViews() {
@@ -179,7 +173,7 @@ public class LengjingFgt extends Fragment {
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList,1);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -196,7 +190,7 @@ public class LengjingFgt extends Fragment {
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList,2);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -254,7 +248,7 @@ public class LengjingFgt extends Fragment {
         album.setAlbum("默认");
         albumList.add(album);
         Log.e("jigang","++++"+mActivity);
-        DiggerPopupWindow window = new DiggerPopupWindow(this,mActivity, 1 + "", albumList);
+        DiggerPopupWindow window = new DiggerPopupWindow(this,mActivity, 1 + "", albumList,1);
         window.setDigNewsTitleAndUrl(newsTitle,newsUrl);
         window.setFocusable(true);
         window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
@@ -375,5 +369,6 @@ public class LengjingFgt extends Fragment {
         TextView mSpecialCount;
         TextView mSpecialDesc;
     }
+
 
 }
