@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,8 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
-import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.pages.LengjingFgt;
+import com.news.yazhidao.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -28,9 +30,10 @@ import java.util.ArrayList;
 /**
  * Created by ariesy on 2015/7/16.
  */
-public class DiggerPopupWindow extends PopupWindow {
+public class DiggerPopupWindow extends PopupWindow implements View.OnClickListener {
 
     private Activity m_pContext;
+    private LengjingFgt mLengJingFgt;
     private View mMenuView;
     private int itemCount;
     private AlbumAdapter adapter;
@@ -41,13 +44,17 @@ public class DiggerPopupWindow extends PopupWindow {
     private EditText et_content;
     private GridView gv_album;
     private HorizontalScrollView album_scollView;
+    private LinearLayout ll_digger_source;
+    private int position;
     private LinearLayout album_item_layout;
     private ArrayList<Album> albumList;
     private int viewcount = 0;
 
-    public DiggerPopupWindow(Activity context, String itemCount, ArrayList<Album> list) {
+    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list,int position) {
         super(context);
         m_pContext = context;
+        this.mLengJingFgt = lengjingFgt;
+        this.position = position;
         if (albumList != null) {
             albumList.clear();
         }
@@ -69,12 +76,16 @@ public class DiggerPopupWindow extends PopupWindow {
 
     }
 
+
+
     private void findHeadPortraitImageViews() {
 
         viewcount = 0;
-
         mMenuView = View.inflate(m_pContext, R.layout.popup_window_add_digger, null);
-
+        ll_digger_source = (LinearLayout) mMenuView.findViewById(R.id.ll_digger_source);
+        if(position == 2){
+            ll_digger_source.setVisibility(View.GONE);
+        }
         tv_cancel = (TextView) mMenuView.findViewById(R.id.tv_cancel);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +95,7 @@ public class DiggerPopupWindow extends PopupWindow {
         });
         tv_source_url = (TextView) mMenuView.findViewById(R.id.tv_source_url);
         tv_confirm = (TextView) mMenuView.findViewById(R.id.tv_confirm);
+        tv_confirm.setOnClickListener(this);
         et_content = (EditText) mMenuView.findViewById(R.id.et_content);
         album_scollView = (HorizontalScrollView) mMenuView.findViewById(R.id.album_scollView);
         album_item_layout = (LinearLayout) mMenuView.findViewById(R.id.album_item_layout);
@@ -158,6 +170,7 @@ public class DiggerPopupWindow extends PopupWindow {
 
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
                             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
+                            ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
                             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
                             tvName.setTextSize(16);
                             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
@@ -234,16 +247,25 @@ public class DiggerPopupWindow extends PopupWindow {
     private void loadData() {
 
     }
-
-    public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point, int flag, boolean isPraiseFlag);
+    public void setDigNewsTitleAndUrl(String title,String url){
+        et_content.setText(title);
+        et_content.setSelection(title.length());
+        tv_source_url.setText(url);
     }
 
-
-    public interface IUpdatePraiseCount {
-        void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_confirm:
+            if(TextUtils.isEmpty(et_content.getText().toString())){
+                ToastUtil.toastShort("亲,挖掘内容不能为空!");
+            }else{
+                mLengJingFgt.updateSpecialList();
+                this.dismiss();
+            }
+                break;
+        }
     }
-
 
     class AlbumAdapter extends BaseAdapter {
         Context mContext;

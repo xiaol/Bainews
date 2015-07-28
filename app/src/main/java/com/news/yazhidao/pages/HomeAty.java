@@ -5,10 +5,13 @@ import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,6 +23,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
@@ -42,17 +46,38 @@ public class HomeAty extends BaseActivity {
     private int currentColor;
     private SystemBarTintManager mTintManager;
     private long mLastPressedBackKeyTime;
+    //Viewpager 索引默认是1
+    private int mViewPagerIndex = 1;
+    //棱镜界面对应的fragment
+    private LengjingFgt mLengJingFgt;
 
     private FloatingActionButton leftCenterButton;
     private FloatingActionButton.LayoutParams starParams;
     private FloatingActionMenu leftCenterMenu;
-    private ArrayList<Album> albumList= new ArrayList<Album>();
+    private ArrayList<Album> albumList = new ArrayList<Album>();
 
     @Override
     protected void setContentView() {
-
+        mLengJingFgt =new LengjingFgt(this);
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
+        //判断是否是别的app分享进来的
+        Intent intent = getIntent();
+        final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String type = intent.getType();
+        if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
+            Log.e("jigang", type + "-----data=" + data);
+            //把页面设置在挖掘机
+            mViewPagerIndex = 2;
+
+            //在LengJingFgt 中打开编辑页面,延时防止crash
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mLengJingFgt.openEditWindow(TextUtil.getNewsTitle(data), TextUtil.getNewsUrl(data));
+                }
+            }, 800);
+        }
     }
 
     @Override
@@ -79,12 +104,13 @@ public class HomeAty extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if(position == 2){
-                    if(leftCenterButton != null) {
+                if (position == 2) {
+                    if (leftCenterButton != null) {
                         leftCenterButton.attach(starParams, null);
                     }
-                }else{
-                    if(leftCenterButton != null) {
+                } else {
+                    leftCenterMenu.close(true);
+                    if (leftCenterButton != null) {
                         leftCenterButton.detach(null);
                     }
                 }
@@ -103,6 +129,7 @@ public class HomeAty extends BaseActivity {
                 .getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         GlobalParams.pager = pager;
+        pager.setCurrentItem(mViewPagerIndex);
         changeColor(getResources().getColor(R.color.tab_blue));
         pager.setCurrentItem(1);
 
@@ -170,13 +197,16 @@ public class HomeAty extends BaseActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                albumList.clear();
+
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this,1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,1);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -187,13 +217,16 @@ public class HomeAty extends BaseActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                albumList.clear();
+
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(HomeAty.this,1 + "",albumList);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,2);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -204,7 +237,7 @@ public class HomeAty extends BaseActivity {
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeAty.this,BaseTagActivity.class);
+                Intent intent = new Intent(HomeAty.this, BaseTagActivity.class);
                 startActivity(intent);
             }
         });
@@ -246,7 +279,6 @@ public class HomeAty extends BaseActivity {
 
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -282,7 +314,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注", "谷歌今日焦点","挖掘机"};
+        private final String[] TITLES = {"关注", "谷歌今日焦点", "挖掘机"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -311,7 +343,7 @@ public class HomeAty extends BaseActivity {
             } else if (position == 1) {
                 return NewsFeedFragment.newInstance(position);
             } else if (position == 2) {
-                return new LengjingFgt();
+                return mLengJingFgt;
             } else {
                 return null;
             }

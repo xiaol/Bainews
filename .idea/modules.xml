@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
+      <module fileurl="file://$PROJECT_DIR$/BaiNews.iml" filepath="$PROJECT_DIR$/BaiNews.iml" />
+=======
       <module fileurl="file://$PROJECT_DIR$/Bainews.iml" filepath="$PROJECT_DIR$/Bainews.iml" />
       <module fileurl="file://$PROJECT_DIR$/Bainews.iml" filepath="$PROJECT_DIR$/Bainews.iml" />
+>>>>>>> 21aa3b686615144f21df97d8853499160442f3ee
       <module fileurl="file://$PROJECT_DIR$/ParallaxScroll/ParallaxScroll.iml" filepath="$PROJECT_DIR$/ParallaxScroll/ParallaxScroll.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
@@ -13,7 +17,10 @@
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_action_menu/library_action_menu.iml" filepath="$PROJECT_DIR$/library_action_menu/library_action_menu.iml" />
       <module fileurl="file://$PROJECT_DIR$/library_action_menu/library_action_menu.iml" filepath="$PROJECT_DIR$/library_action_menu/library_action_menu.iml" />
+<<<<<<< HEAD
+=======
       <module fileurl="file://$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" filepath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" />
+>>>>>>> 21aa3b686615144f21df97d8853499160442f3ee
       <module fileurl="file://$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" filepath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
@@ -22,4 +29,3 @@
     </modules>
   </component>
 </project>
-

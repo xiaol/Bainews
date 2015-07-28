@@ -70,4 +70,21 @@
         <item>港台</item>
         <item>社会</item>
     </string-array>
+
+    <!--个人专辑中默认的背景色-->
+    <string-array name="bg_special_colors">
+        <item name="item1">#ee6270</item>
+        <item name="item2">#6279a3</item>
+        <item name="item3">#f788a2</item>
+        <item name="item4">#37ccd9</item>
+        <item name="item5">#b56f40</item>
+        <item name="item6">#f6aa32</item>
+        <item name="item7">#35a6fb</item>
+        <item name="item8">#e2ab4b</item>
+        <item name="item9">#2bc972</item>
+        <item name="item10">#9153c6</item>
+        <item name="item11">#ffda59</item>
+        <item name="item12">#7174ff</item>
+        <item name="item13">#ff44b2</item>
+    </string-array>
 </resources>

@@ -1,15 +1,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/ll_rootview"
-    android:background="#dfe6e9">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#dfe6e9"
+              android:padding="8dp"
+    >
 
     <ListView
         android:id="@+id/lv_lecture"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+    </ListView>
 
-        </ListView>
+    <GridView
+        android:id="@+id/mSpecialLv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:numColumns="2"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="8dp"
+        />
 
 
 </LinearLayout>

@@ -33,7 +33,7 @@
             android:paddingBottom="30dp"
             android:textSize="16sp"
             android:textColor="#7d7d7d"
-            android:hint="输入关键字或者链接"
+            android:hint="挖点东西吧..."
             android:background="@drawable/bg_edittext"
             android:layout_marginTop="40dp"
             android:layout_marginRight="23dp"
@@ -67,9 +67,12 @@
             <TextView
                 android:id="@+id/tv_source_url"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:lines="1"
+                android:ellipsize="end"
                 android:text="http://www.baidu.com"
                 android:textSize="14sp" />
 

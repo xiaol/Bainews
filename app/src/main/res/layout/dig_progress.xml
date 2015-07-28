@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp"
+              android:background="#e3eeef"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/containerStep1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_done_line"
+                android:visibility="invisible"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+
+                android:id="@+id/step1Icon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:background="@drawable/ic_doing1"
+                />
+
+            <View
+                android:id="@+id/step1RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step1Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="挖趴微博"
+            android:textColor="@color/dig_title_doing"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/containerStep2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:id="@+id/step2LeftLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+                android:id="@+id/step2Icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_step2"
+                />
+
+            <View
+                android:id="@+id/step2RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step2Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="谷歌查找"
+            android:textColor="@color/dig_title_undone"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/containerStep3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:id="@+id/step3LeftLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+                android:id="@+id/step3Icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_step3"
+                />
+
+            <View
+                android:id="@+id/step3RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step3Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="知乎解答"
+            android:textColor="@color/dig_title_undone"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/containerStep4"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:id="@+id/step4LeftLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+                android:id="@+id/step4Icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_step4"
+                />
+
+            <View
+                android:id="@+id/step4RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step4Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="图片匹配"
+            android:textColor="@color/dig_title_undone"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/containerStep5"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:id="@+id/step5LeftLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+                android:id="@+id/step5Icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_step5"
+                />
+
+            <View
+                android:id="@+id/step5RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@color/dig_title_undone"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step5Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="门户评说"
+            android:textColor="@color/dig_title_undone"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/containerStep6"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+
+            <View
+                android:id="@+id/step6LeftLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                />
+
+            <com.news.yazhidao.widget.digger.DigCircleImage
+                android:id="@+id/step6Icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/ic_step6"
+                />
+
+            <View
+                android:id="@+id/step6RightLine"
+                android:layout_width="0dp"
+                android:layout_height="1px"
+                android:layout_weight="1"
+                android:background="@drawable/ic_undone_line"
+                android:visibility="invisible"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/step6Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="观点融合"
+            android:textColor="@color/dig_title_undone"
+            android:textSize="11sp"
+            />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
