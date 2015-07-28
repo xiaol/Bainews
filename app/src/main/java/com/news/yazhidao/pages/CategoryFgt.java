@@ -113,7 +113,7 @@ public class CategoryFgt extends Fragment {
                 holder.tvDes.setFontSpacing(5);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.ivBgIcon.getLayoutParams();
                 layoutParams.width = mScreenWidth;
-                layoutParams.height = (int) (mScreenWidth / 3.0f);
+                layoutParams.height = (int) (mScreenWidth * 7 / 27.0f);
                 holder.ivBgIcon.setLayoutParams(layoutParams);
                 convertView.setTag(holder);
             } else {
