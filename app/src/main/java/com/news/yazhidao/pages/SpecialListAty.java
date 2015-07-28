@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.entity.DigSpecial;
 import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -28,7 +30,8 @@ public class SpecialListAty extends BaseActivity {
 
     private ListView mSpecialLv;
     private TextView mCommonHeaderTitle;
-    public static final String SPECIAL_ATY_TITLE = "special_aty_title";
+    public static final String KEY_DIG_SPECIAL_INTENT = "key_dig_special_intent";
+    public static final String KEY_DIG_SPECIAL_BUNDLE = "key_dig_special_bundle";
     private ImageView mCommonHeaderLeftBack;
     private SpecialLvAdapter mSpecialLvAdapter;
     private ArrayList<DigSpecialItem> mSpecialLvDatas ;
@@ -48,10 +51,12 @@ public class SpecialListAty extends BaseActivity {
     protected void initializeViews() {
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
-        String mTitle = getIntent().getStringExtra(SPECIAL_ATY_TITLE);
+        Bundle bundle = getIntent().getBundleExtra(KEY_DIG_SPECIAL_INTENT);
+        DigSpecial special = (DigSpecial) bundle.getSerializable(KEY_DIG_SPECIAL_BUNDLE);
+        mSpecialLvDatas = special.getSpecialItems();
 
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
-        mCommonHeaderTitle.setText(mTitle);
+        mCommonHeaderTitle.setText(special.getTitle());
         mCommonHeaderLeftBack = (ImageView)findViewById(R.id.mCommonHeaderLeftBack);
         mCommonHeaderLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,11 +69,6 @@ public class SpecialListAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        mSpecialLvDatas = new ArrayList<>();
-        mSpecialLvDatas.add(new DigSpecialItem("这是一个神奇的网站.","htttp://www.baidu.com",1));
-        mSpecialLvDatas.add(new DigSpecialItem("默认","htttp://www.baidu.com",3));
-        mSpecialLvDatas.add(new DigSpecialItem("这是一个神奇的网站.","htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com",6));
-        mSpecialLvDatas.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.","htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com",7));
         mSpecialLvAdapter = new SpecialLvAdapter();
         mSpecialLv.setAdapter(mSpecialLvAdapter);
     }

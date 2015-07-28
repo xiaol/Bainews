@@ -48,6 +48,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private int position;
     private LinearLayout album_item_layout;
     private ArrayList<Album> albumList;
+    private Album mNewAddSpecial;
     private int viewcount = 0;
 
     public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list,int position) {
@@ -167,6 +168,12 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     @Override
                     public void add(Album album) {
                         if (album != null) {
+                            //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
+                            for (Album item :albumList){
+                                item.setSelected(false);
+                            }
+                            mNewAddSpecial = album;
+                            albumList.add(album);
 
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
                             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
@@ -257,10 +264,19 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_confirm:
-            if(TextUtils.isEmpty(et_content.getText().toString())){
+                String inputTitle = et_content.getText().toString();
+            if(TextUtils.isEmpty(inputTitle)){
                 ToastUtil.toastShort("亲,挖掘内容不能为空!");
             }else{
-                mLengJingFgt.updateSpecialList();
+                //判断用户选择的是哪一个专辑
+                int index = 0;
+                for (;index < albumList.size(); index++){
+                    if (albumList.get(index).isSelected()){
+                        break;
+                    }
+                }
+
+                mLengJingFgt.updateSpecialList(index,inputTitle,mNewAddSpecial);
                 this.dismiss();
             }
                 break;
@@ -338,6 +354,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         @Override
                         public void add(Album album) {
                             if (album != null) {
+                                //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
+                                for (Album item :albumList){
+                                    item.setSelected(false);
+                                }
+                                mNewAddSpecial = album;
                                 albumList.add(album);
                                 adapter.notifyDataSetChanged();
                             }

@@ -1,6 +1,7 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.BgAlbum;
+import com.news.yazhidao.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -63,11 +65,17 @@ public class AddAlbumPopupWindow extends PopupWindow {
         tv_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                album.setAlbum(et_name.getText().toString());
-                album.setDescription(et_des.getText().toString());
-                album.setSelected(true);
+            String inputTitle = et_name.getText().toString();
+                if (TextUtils.isEmpty(inputTitle)){
+                    ToastUtil.toastShort("专辑名称不能为空!");
+                }else{
+                    album.setAlbum(inputTitle);
+                    album.setDescription(et_des.getText().toString());
+                    album.setSelected(true);
+                    dismiss();
 
-                dismiss();
+                }
+
             }
         });
         et_name = (EditText) mMenuView.findViewById(R.id.et_name);
@@ -142,7 +150,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
     public void dismiss() {
         super.dismiss();
         if(album != null) {
-            listener.add(album);
+            if(listener !=null ){
+                listener.add(album);
+            }
         }
 
     }
@@ -152,7 +162,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
         for(int i = 0 ;i < 8;i ++){
             BgAlbum ba = new BgAlbum();
-            ba.setSelected(false);
+            ba.setSelected(i == 0);
             setId(ba,i);
             ids.add(ba);
         }

@@ -29,9 +29,9 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -53,6 +53,7 @@ public class LengjingFgt extends Fragment {
     private GridView mSpecialGv;
     private MySpecialLvAdatpter mSpecialLvAdatpter;
     private ArrayList<DigSpecial> mSpecialDatas;
+    private ArrayList<DigSpecialItem> mSpecialItems;
     private Activity mActivity;
     public LengjingFgt(){}
     @SuppressLint("ValidFragment")
@@ -71,10 +72,21 @@ public class LengjingFgt extends Fragment {
     }
 
     private void initVars() {
+        //TODO 此处是测试数据
         mSpecialDatas = new ArrayList();
-        mSpecialDatas.add(new DigSpecial("默认", "3", "这是一个神奇的网站."));
-        mSpecialDatas.add(new DigSpecial("我喜欢的", "1", "这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站.这是一个神奇的网站这是一个神奇的网站这是一个神奇的网站,这是一个神奇的网站这是一个神奇的网站."));
-        mSpecialDatas.add(new DigSpecial("很黄很暴力", "2", "这是一个神奇的网站,这是一个神奇的网站."));
+        ArrayList<DigSpecialItem> items1 = new ArrayList<>();
+        items1.add(new DigSpecialItem("这是一个神奇的网站.","htttp://www.baidu.com",1));
+        items1.add(new DigSpecialItem("默认","htttp://www.baidu.com",3));
+        items1.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.","htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com",7));
+        mSpecialDatas.add(new DigSpecial("默认","这是一个神奇的app",R.drawable.bg_special_list_item_default,items1));
+
+        ArrayList<DigSpecialItem> items2 = new ArrayList<>();
+        items2.add(new DigSpecialItem("这是一个神奇的网站.","htttp://www.baidu.com",2));
+        items2.add(new DigSpecialItem("这是一个神奇的网站.","htttp://www.baidu.com",2));
+        items2.add(new DigSpecialItem("默认","htttp://www.baidu.com",5));
+        items2.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.","htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com",6));
+        mSpecialDatas.add(new DigSpecial("最爱的", "这是一个神奇的app,这是一个神奇的app,这是一个神奇的app", R.drawable.bg_special_list_item_default,items2));
+
         mSpecialLvAdatpter = new MySpecialLvAdatpter();
     }
 
@@ -102,7 +114,9 @@ public class LengjingFgt extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DigSpecial digSpecial = mSpecialDatas.get(position);
                 Intent specialAty = new Intent(getActivity(),SpecialListAty.class);
-                specialAty.putExtra(SpecialListAty.SPECIAL_ATY_TITLE,digSpecial.getTitle());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(SpecialListAty.KEY_DIG_SPECIAL_BUNDLE,digSpecial);
+                specialAty.putExtra(SpecialListAty.KEY_DIG_SPECIAL_INTENT,bundle);
                 startActivity(specialAty);
             }
         });
@@ -170,9 +184,8 @@ public class LengjingFgt extends Fragment {
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
-
                 albumList.add(album);
-
+                Log.e("jigang","----2albumList size ="+albumList.size());
                 DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList,1);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
@@ -187,9 +200,8 @@ public class LengjingFgt extends Fragment {
                 Album album = new Album();
                 album.setSelected(false);
                 album.setAlbum("默认");
-
                 albumList.add(album);
-
+                Log.e("jigang", "----2albumList size =" + albumList.size());
                 DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, getActivity(), 1 + "", albumList,2);
                 window.setFocusable(true);
                 window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
@@ -257,11 +269,36 @@ public class LengjingFgt extends Fragment {
 
     /**
      * 更新专辑列表数据
+     * @param specialIndex 专辑索引
+     * @param inputTitle
+     * @param mNewAddSpecial
      */
-    public void updateSpecialList(){
-        Log.e("jigang","update gaga");
-        mSpecialDatas.get(0).setCount("1");
-        mSpecialLvAdatpter.notifyDataSetChanged();
+    public void updateSpecialList(int specialIndex, String inputTitle, Album mNewAddSpecial){
+        Log.e("jigang", "update gaga");
+        //判断是否是心添加的专辑
+        if(specialIndex >= mSpecialDatas.size()){
+            //添加一个新的专辑
+            ArrayList<DigSpecialItem> items1 = new ArrayList<>();
+            items1.add(new DigSpecialItem(inputTitle,"",1));
+            mSpecialDatas.add(new DigSpecial(mNewAddSpecial.getAlbum(),mNewAddSpecial.getDescription(),Integer.valueOf(mNewAddSpecial.getId()),items1));
+            mSpecialLvAdatpter.notifyDataSetChanged();
+        }else {
+            //修改专辑数据
+            DigSpecial digSpecial = mSpecialDatas.get(specialIndex);
+            ArrayList<DigSpecialItem> items = digSpecial.getSpecialItems();
+            items.add(new DigSpecialItem(inputTitle, "", 1));
+            digSpecial.setSpecialItems(items);
+            mSpecialLvAdatpter.notifyDataSetChanged();
+
+        }
+    }
+
+    /**
+     * 获取专辑列表数据
+     * @return
+     */
+    public ArrayList<DigSpecial> getSpecialDatas(){
+        return mSpecialDatas;
     }
     private class MyAdapter extends BaseAdapter {
 
@@ -347,7 +384,7 @@ public class LengjingFgt extends Fragment {
             }
             DigSpecial digSpecial = mSpecialDatas.get(position);
             holder.mSpecialTitle.setText(digSpecial.getTitle());
-            holder.mSpecialCount.setText(digSpecial.getCount());
+            holder.mSpecialCount.setText(digSpecial.getSpecialItems().size()+"");
             holder.mSpecialDesc.setText(digSpecial.getDesc());
 
             //设置title父容器的宽度
@@ -355,10 +392,6 @@ public class LengjingFgt extends Fragment {
             holder.mSpecialTitle.getPaint().getTextBounds(digSpecial.getTitle(), 0, digSpecial.getTitle().length(), rect);
             holder.mSpecialTitleContainer.setLayoutParams(new LinearLayout.LayoutParams(rect.width() + DensityUtil.dip2px(getActivity(), 40), ViewGroup.LayoutParams.WRAP_CONTENT));
 
-            //如果没有背景图片的话,设置整个item背景色.
-            if (position != 0) {
-                convertView.setBackgroundResource(TextUtil.getSpecialBgPic(position));
-            }
             return convertView;
         }
     }

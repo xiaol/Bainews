@@ -23,6 +23,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.entity.DigSpecial;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.utils.ToastUtil;
@@ -199,12 +200,14 @@ public class HomeAty extends BaseActivity {
 
                 albumList.clear();
 
-                Album album = new Album();
-                album.setSelected(false);
-                album.setAlbum("默认");
-
-                albumList.add(album);
-
+                Log.e("jigang", "----1albumList size =" + albumList.size());
+                ArrayList<DigSpecial> specialDatas = mLengJingFgt.getSpecialDatas();
+                for (int i = 0;i < specialDatas.size();i++){
+                    Album album = new Album();
+                    album.setSelected(i == 0);
+                    album.setAlbum(specialDatas.get(i).getTitle());
+                    albumList.add(album);
+                }
                 DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,1);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
@@ -224,6 +227,7 @@ public class HomeAty extends BaseActivity {
                 album.setAlbum("默认");
 
                 albumList.add(album);
+                Log.e("jigang", "----2albumList size =" + albumList.size());
 
                 DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,2);
                 window.setFocusable(true);

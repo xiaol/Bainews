@@ -1,10 +1,12 @@
 package com.news.yazhidao.entity;
 
+import java.io.Serializable;
+
 /**
  * 专辑展示中的实体
  * Created by fengjigang on 15/7/23.
  */
-public class DigSpecialItem {
+public class DigSpecialItem implements Serializable {
     private String title;
     private String url;
     private int progress;

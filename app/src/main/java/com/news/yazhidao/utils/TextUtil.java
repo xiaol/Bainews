@@ -3,7 +3,6 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -326,31 +325,31 @@ public class TextUtil {
      */
     public static int getSpecialBgPic(int positon){
         positon = positon % 8;
-        int resource = R.drawable.bg_special1;
+        int resource = R.drawable.bg_album1;
         switch (positon){
             case 1:
-                resource = R.drawable.bg_special1;
+                resource = R.drawable.bg_album1;
                 break;
             case 2:
-                resource = R.drawable.bg_special2;
+                resource = R.drawable.bg_album2;
                 break;
             case 3:
-                resource = R.drawable.bg_special3;
+                resource = R.drawable.bg_album3;
                 break;
             case 4:
-                resource = R.drawable.bg_special4;
+                resource = R.drawable.bg_album4;
                 break;
             case 5:
-                resource = R.drawable.bg_special5;
+                resource = R.drawable.bg_album5;
                 break;
             case 6:
-                resource = R.drawable.bg_special6;
+                resource = R.drawable.bg_album6;
                 break;
             case 7:
-                resource = R.drawable.bg_special7;
+                resource = R.drawable.bg_album7;
                 break;
             case 8:
-                resource = R.drawable.bg_special8;
+                resource = R.drawable.bg_album8;
                 break;
         }
         return resource;
