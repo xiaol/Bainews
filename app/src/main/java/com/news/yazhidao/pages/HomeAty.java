@@ -62,7 +62,8 @@ public class HomeAty extends BaseActivity {
         //pagesliding
         mTintManager = new SystemBarTintManager(HomeAty.this);
         // enable status bar tint
-        mTintManager.setStatusBarTintEnabled(false);
+        mTintManager.setStatusBarTintEnabled(true);
+        mTintManager.setNavigationBarTintEnabled(true);
         adapter = new MyPagerAdapter(getSupportFragmentManager());
 
         pager = (ViewPager) findViewById(R.id.pager);
@@ -272,6 +273,9 @@ public class HomeAty extends BaseActivity {
 
         tabs.setBackgroundColor(newColor);
         mTintManager.setTintColor(newColor);
+        // 设置一个颜色给系统栏
+        // 设置一个样式背景给导航栏
+        mTintManager.setNavigationBarTintResource(R.color.black);
         // change ActionBar color just if an ActionBar is available
         currentColor = newColor;
     }
