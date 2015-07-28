@@ -1,9 +1,11 @@
 package com.news.yazhidao.widget;
 
-import android.content.Context;
+import android.app.Activity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
  */
 public class AddAlbumPopupWindow extends PopupWindow {
 
-    private Context m_pContext;
+    private Activity m_pContext;
     private View mMenuView;
     private ArrayList<Album> albumList;
     private ArrayList<BgAlbum> ids;
@@ -40,8 +42,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private HorizontalScrollView bg_album_scollView;
     private LinearLayout bg_album_item_layout;
     private int viewcount = 0;
+    private boolean flag = false;
 
-    public AddAlbumPopupWindow(Context context,AddAlbumListener listener) {
+    public AddAlbumPopupWindow(Activity context,AddAlbumListener listener) {
         super(context);
         this.listener = listener;
         m_pContext = context;
@@ -52,11 +55,28 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private void findHeadPortraitImageViews() {
 
         mMenuView = View.inflate(m_pContext, R.layout.rl_add_album,null);
+        mMenuView.setFocusableInTouchMode(true);
+        mMenuView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    dismiss();
+                    flag = false;
+                    return true;
+
+                }
+                return false;
+            }
+
+        });
 
         tv_cancel = (TextView) mMenuView.findViewById(R.id.tv_cancel);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag = false;
                 dismiss();
             }
         });
@@ -72,8 +92,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     album.setAlbum(inputTitle);
                     album.setDescription(et_des.getText().toString());
                     album.setSelected(true);
+                    m_pContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    flag = true;
                     dismiss();
-
                 }
 
             }
@@ -148,12 +169,13 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
     @Override
     public void dismiss() {
-        super.dismiss();
-        if(album != null) {
+        String inputTitle = et_name.getText().toString();
+        if(album != null && inputTitle != null && !"".equals(inputTitle) && flag) {
             if(listener !=null ){
                 listener.add(album);
             }
         }
+        super.dismiss();
 
     }
 

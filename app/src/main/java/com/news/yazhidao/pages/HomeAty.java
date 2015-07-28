@@ -59,7 +59,7 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void setContentView() {
-        mLengJingFgt =new LengjingFgt(this);
+        mLengJingFgt = new LengjingFgt(this);
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
         //判断是否是别的app分享进来的
@@ -83,7 +83,11 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        addMenu();
+        if(leftCenterButton == null) {
+            addMenu();
+        }else{
+            ToastUtil.toastLong("adsfefvrefve");
+        }
 
         //pagesliding
         mTintManager = new SystemBarTintManager(HomeAty.this);
@@ -99,7 +103,6 @@ public class HomeAty extends BaseActivity {
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -107,11 +110,12 @@ public class HomeAty extends BaseActivity {
 
                 if (position == 2) {
                     if (leftCenterButton != null) {
+                        leftCenterButton.detach(null);
                         leftCenterButton.attach(starParams, null);
                     }
                 } else {
-                    leftCenterMenu.close(true);
                     if (leftCenterButton != null) {
+                        leftCenterMenu.close(true);
                         leftCenterButton.detach(null);
                     }
                 }
@@ -132,7 +136,6 @@ public class HomeAty extends BaseActivity {
         GlobalParams.pager = pager;
         pager.setCurrentItem(mViewPagerIndex);
         changeColor(getResources().getColor(R.color.tab_blue));
-        pager.setCurrentItem(1);
 
     }
 
@@ -203,13 +206,14 @@ public class HomeAty extends BaseActivity {
 
                 Log.e("jigang", "----1albumList size =" + albumList.size());
                 ArrayList<DigSpecial> specialDatas = mLengJingFgt.getSpecialDatas();
-                for (int i = 0;i < specialDatas.size();i++){
+                for (int i = 0; i < specialDatas.size(); i++) {
                     Album album = new Album();
                     album.setSelected(i == 0);
                     album.setAlbum(specialDatas.get(i).getTitle());
                     albumList.add(album);
                 }
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,1);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1);
+
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -230,7 +234,7 @@ public class HomeAty extends BaseActivity {
                 albumList.add(album);
                 Log.e("jigang", "----2albumList size =" + albumList.size());
 
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt,HomeAty.this, 1 + "", albumList,2);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -282,6 +286,8 @@ public class HomeAty extends BaseActivity {
     protected void loadData() {
 
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

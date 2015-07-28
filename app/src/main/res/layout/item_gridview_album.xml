@@ -11,8 +11,8 @@
 
         <ImageView
             android:id="@+id/iv_bg_icon"
-            android:layout_width="150dp"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:layout_marginLeft="23dp"
             android:background="@drawable/bg_album4" />
@@ -45,8 +45,8 @@
 
     <RelativeLayout
         android:id="@+id/rl_add_album"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         android:layout_marginLeft="13dp"
         android:layout_marginRight="13dp"

@@ -2,12 +2,13 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -50,8 +51,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private ArrayList<Album> albumList;
     private Album mNewAddSpecial;
     private int viewcount = 0;
+    private int width;
+    private int height;
+    private InputMethodManager imm;
 
-    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list,int position) {
+    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position) {
         super(context);
         m_pContext = context;
         this.mLengJingFgt = lengjingFgt;
@@ -59,9 +63,12 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         if (albumList != null) {
             albumList.clear();
         }
+
         if (itemCount != null) {
             this.itemCount = Integer.parseInt(itemCount);
         }
+
+        imm = (InputMethodManager) m_pContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         albumList = new ArrayList<Album>();
 
@@ -71,22 +78,40 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             }
         }
 
+        width = GlobalParams.screenWidth;
+        height = GlobalParams.screenHeight;
+
         findHeadPortraitImageViews();
         loadData();
 
 
     }
 
-
-
     private void findHeadPortraitImageViews() {
 
         viewcount = 0;
         mMenuView = View.inflate(m_pContext, R.layout.popup_window_add_digger, null);
+        mMenuView.setFocusableInTouchMode(true);
+        mMenuView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    dismiss();
+                    return true;
+
+                }
+                return false;
+            }
+
+        });
+
         ll_digger_source = (LinearLayout) mMenuView.findViewById(R.id.ll_digger_source);
-        if(position == 2){
+        if (position == 2) {
             ll_digger_source.setVisibility(View.GONE);
         }
+
         tv_cancel = (TextView) mMenuView.findViewById(R.id.tv_cancel);
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,17 +119,20 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 dismiss();
             }
         });
+
+
         tv_source_url = (TextView) mMenuView.findViewById(R.id.tv_source_url);
         tv_confirm = (TextView) mMenuView.findViewById(R.id.tv_confirm);
         tv_confirm.setOnClickListener(this);
         et_content = (EditText) mMenuView.findViewById(R.id.et_content);
         album_scollView = (HorizontalScrollView) mMenuView.findViewById(R.id.album_scollView);
         album_item_layout = (LinearLayout) mMenuView.findViewById(R.id.album_item_layout);
-//        gv_album.setSelector(null);
-
 
         for (int i = 0; i < albumList.size(); i++) {
             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
+
+            layout.setLayoutParams(params);
             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
             tvName.setTextSize(16);
@@ -118,18 +146,16 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     int tag = (int) rl_album.getTag();
                     Album album = albumList.get(tag);
 
-                    boolean isSelected = album.isSelected();
-                    if (isSelected) {
-                        iv_selected.setVisibility(View.INVISIBLE);
-                        album.setSelected(false);
-                    } else {
-                        iv_selected.setVisibility(View.VISIBLE);
-                        album.setSelected(true);
-                    }
+                    iv_selected.setVisibility(View.VISIBLE);
+                    album.setSelected(true);
 
                     for (int i = 0; i < albumList.size(); i++) {
                         if (i != tag) {
+                            RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
+                            ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                            iv_selected.setVisibility(View.GONE);
                             albumList.get(i).setSelected(false);
+
                         }
                     }
                 }
@@ -152,13 +178,13 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
 
         RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
+        layout_add.setLayoutParams(params);
+
         final RelativeLayout rl_album = (RelativeLayout) layout_add.findViewById(R.id.rl_album);
         final RelativeLayout rl_add_album = (RelativeLayout) layout_add.findViewById(R.id.rl_add_album);
         rl_album.setVisibility(View.GONE);
         rl_add_album.setVisibility(View.VISIBLE);
-
-        int width = (int) (GlobalParams.screenWidth * 300 / 720);
-        int height = (int) (GlobalParams.screenHeight * 400 / 1280);
 
         rl_add_album.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,13 +195,16 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     public void add(Album album) {
                         if (album != null) {
                             //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
-                            for (Album item :albumList){
+                            for (Album item : albumList) {
                                 item.setSelected(false);
                             }
                             mNewAddSpecial = album;
                             albumList.add(album);
 
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
+
+                            layout.setLayoutParams(params);
                             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
                             ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
                             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
@@ -184,23 +213,31 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
                             rl_album.setTag(viewcount);
 
+                            for (int i = 0; i < albumList.size(); i++) {
+                                if (i != viewcount) {
+                                    RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
+                                    ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
+                                    iv_selected_temp.setVisibility(View.GONE);
+                                    albumList.get(i).setSelected(false);
+
+                                }
+                            }
+
                             rl_album.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     int tag = (int) rl_album.getTag();
                                     Album album = albumList.get(tag);
 
-                                    boolean isSelected = album.isSelected();
-                                    if (isSelected) {
-                                        iv_selected.setVisibility(View.INVISIBLE);
-                                        album.setSelected(false);
-                                    } else {
-                                        iv_selected.setVisibility(View.VISIBLE);
-                                        album.setSelected(true);
-                                    }
+                                    iv_selected.setVisibility(View.VISIBLE);
+                                    album.setSelected(true);
 
                                     for (int i = 0; i < albumList.size(); i++) {
                                         if (i != tag) {
+                                            albumList.get(i).setSelected(false);
+                                            RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
+                                            ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                            iv_selected.setVisibility(View.GONE);
                                             albumList.get(i).setSelected(false);
                                         }
                                     }
@@ -215,7 +252,9 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                 iv_selected.setVisibility(View.INVISIBLE);
                             }
 
-                            album_item_layout.addView(layout,viewcount);
+                            imm.hideSoftInputFromWindow(mMenuView.getWindowToken(), 0);
+
+                            album_item_layout.addView(layout, viewcount);
                             albumList.add(album);
                             viewcount++;
                         }
@@ -238,12 +277,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
 
-        //设置SelectPicPopupWindow弹出窗体动画效果
-//        this.setAnimationStyle(R.style.DialogAnimation);
-        //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
-        //设置SelectPicPopupWindow弹出窗体的背景
-        this.setBackgroundDrawable(dw);
+//        //实例化一个ColorDrawable颜色为半透明
+//        ColorDrawable dw = new ColorDrawable(0x0000000);
+//        //设置SelectPicPopupWindow弹出窗体的背景
+//        this.setBackgroundDrawable(dw);
     }
 
     @Override
@@ -254,7 +291,8 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private void loadData() {
 
     }
-    public void setDigNewsTitleAndUrl(String title,String url){
+
+    public void setDigNewsTitleAndUrl(String title, String url) {
         et_content.setText(title);
         et_content.setSelection(title.length());
         tv_source_url.setText(url);
@@ -262,23 +300,23 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tv_confirm:
                 String inputTitle = et_content.getText().toString();
-            if(TextUtils.isEmpty(inputTitle)){
-                ToastUtil.toastShort("亲,挖掘内容不能为空!");
-            }else{
-                //判断用户选择的是哪一个专辑
-                int index = 0;
-                for (;index < albumList.size(); index++){
-                    if (albumList.get(index).isSelected()){
-                        break;
+                if (TextUtils.isEmpty(inputTitle)) {
+                    ToastUtil.toastShort("亲,挖掘内容不能为空!");
+                } else {
+                    //判断用户选择的是哪一个专辑
+                    int index = 0;
+                    for (; index < albumList.size(); index++) {
+                        if (albumList.get(index).isSelected()) {
+                            break;
+                        }
                     }
-                }
 
-                mLengJingFgt.updateSpecialList(index,inputTitle,mNewAddSpecial);
-                this.dismiss();
-            }
+                    mLengJingFgt.updateSpecialList(index, inputTitle, mNewAddSpecial);
+                    this.dismiss();
+                }
                 break;
         }
     }
@@ -355,7 +393,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         public void add(Album album) {
                             if (album != null) {
                                 //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
-                                for (Album item :albumList){
+                                for (Album item : albumList) {
                                     item.setSelected(false);
                                 }
                                 mNewAddSpecial = album;
