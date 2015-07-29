@@ -64,5 +64,6 @@
     <dimen name="radius_medium">72dp</dimen>
     <dimen name="action_button_margin">12dp</dimen>
     <dimen name="action_button_size">20dp</dimen>
+    <dimen name="btn_marginbottom">30dp</dimen>
 
 </resources>

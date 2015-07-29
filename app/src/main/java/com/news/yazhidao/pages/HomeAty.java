@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -18,14 +19,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.entity.DigSpecial;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -56,12 +59,16 @@ public class HomeAty extends BaseActivity {
     private FloatingActionButton.LayoutParams starParams;
     private FloatingActionMenu leftCenterMenu;
     private ArrayList<Album> albumList = new ArrayList<Album>();
+    private LinearLayout ll_darker_layer;
 
     @Override
     protected void setContentView() {
+
         mLengJingFgt = new LengjingFgt(this);
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
+
+        ll_darker_layer = (LinearLayout) findViewById(R.id.ll_darker_layer);
         //判断是否是别的app分享进来的
         Intent intent = getIntent();
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -83,9 +90,9 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        if(leftCenterButton == null) {
+        if (leftCenterButton == null) {
             addMenu();
-        }else{
+        } else {
             ToastUtil.toastLong("adsfefvrefve");
         }
 
@@ -144,6 +151,7 @@ public class HomeAty extends BaseActivity {
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
         int imgSize = getResources().getDimensionPixelSize(R.dimen.img_size);
         int redActionButtonMargin = getResources().getDimensionPixelOffset(R.dimen.action_button_margin);
+        int buttonMargin = getResources().getDimensionPixelOffset(R.dimen.btn_marginbottom);
         int redActionButtonContentSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_size);
         int redActionButtonContentMargin = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_margin);
         int redActionMenuRadius = getResources().getDimensionPixelSize(R.dimen.red_action_menu_radius);
@@ -154,10 +162,23 @@ public class HomeAty extends BaseActivity {
         fabIconStar.setImageDrawable(getResources().getDrawable(R.drawable.icon_lengjing_digger));
 
         starParams = new FloatingActionButton.LayoutParams(redActionButtonSize, redActionButtonSize);
-        starParams.setMargins(redActionButtonMargin,
-                redActionButtonMargin,
-                redActionButtonMargin,
-                redActionButtonMargin);
+
+
+        //如果系统版本在4.4以上的话,需要使用沉浸式,所以要把左下角的时间按钮和登陆按钮上移
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (DeviceInfoUtil.isFlyme()) {
+                starParams.setMargins(redActionButtonMargin,
+                        redActionButtonMargin,
+                        redActionButtonMargin,
+                        buttonMargin);
+            } else {
+                starParams.setMargins(redActionButtonMargin,
+                        redActionButtonMargin,
+                        redActionButtonMargin,
+                        redActionButtonMargin);
+            }
+
+        }
         fabIconStar.setLayoutParams(starParams);
 
         FloatingActionButton.LayoutParams fabIconStarParams = new FloatingActionButton.LayoutParams(redActionButtonContentSize, redActionButtonContentSize);
@@ -269,6 +290,8 @@ public class HomeAty extends BaseActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 135);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconStar, pvhR);
                 animation.start();
+
+                ll_darker_layer.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -277,6 +300,8 @@ public class HomeAty extends BaseActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconStar, pvhR);
                 animation.start();
+
+                ll_darker_layer.setVisibility(View.GONE);
             }
         });
 
@@ -286,7 +311,6 @@ public class HomeAty extends BaseActivity {
     protected void loadData() {
 
     }
-
 
 
     @Override
