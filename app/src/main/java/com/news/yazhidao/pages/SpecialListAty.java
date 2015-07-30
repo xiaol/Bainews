@@ -32,7 +32,7 @@ public class SpecialListAty extends BaseActivity {
     private TextView mCommonHeaderTitle;
     public static final String KEY_DIG_SPECIAL_INTENT = "key_dig_special_intent";
     public static final String KEY_DIG_SPECIAL_BUNDLE = "key_dig_special_bundle";
-    private ImageView mCommonHeaderLeftBack;
+    private View mCommonHeaderLeftBack;
     private SpecialLvAdapter mSpecialLvAdapter;
     private ArrayList<DigSpecialItem> mSpecialLvDatas ;
     private int mScreenWidth;
@@ -44,7 +44,6 @@ public class SpecialListAty extends BaseActivity {
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_special_layout);
-        overridePendingTransition(R.anim.aty_right_enter, R.anim.aty_no_ani);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class SpecialListAty extends BaseActivity {
 
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
         mCommonHeaderTitle.setText(special.getTitle());
-        mCommonHeaderLeftBack = (ImageView)findViewById(R.id.mCommonHeaderLeftBack);
+        mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
         mCommonHeaderLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,11 +72,6 @@ public class SpecialListAty extends BaseActivity {
         mSpecialLv.setAdapter(mSpecialLvAdapter);
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, R.anim.aty_left_exit);
-    }
 
     /**
      * 列表适配器

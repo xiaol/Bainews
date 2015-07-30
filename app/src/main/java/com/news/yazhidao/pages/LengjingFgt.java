@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,13 +23,11 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
-import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.entity.DigSpecial;
 import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -39,16 +36,11 @@ public class LengjingFgt extends Fragment {
 
     private View rootView;
     private ListView lv_lecture;
-    private ArrayList<Channel> marrCategoryName;
-    private TypedArray marrCategoryDrawable;
-    private FloatingActionButton leftCenterButton;
-    private FloatingActionButton.LayoutParams starParams;
     private ArrayList<Album> albumList = new ArrayList<Album>();
     //个人专辑列表
     private GridView mSpecialGv;
     private MySpecialLvAdatpter mSpecialLvAdatpter;
     private ArrayList<DigSpecial> mSpecialDatas;
-    private ArrayList<DigSpecialItem> mSpecialItems;
     private Activity mActivity;
 
     public LengjingFgt() {
@@ -58,16 +50,6 @@ public class LengjingFgt extends Fragment {
     public LengjingFgt(Activity mActivity) {
         this.mActivity = mActivity;
     }
-
-    private LinearLayout ll_root;
-    private int redActionButtonSize;
-    private int imgSize;
-    private int redActionButtonMargin;
-    private int redActionButtonContentSize;
-    private int redActionButtonContentMargin;
-    private int redActionMenuRadius;
-    private int blueSubActionButtonSize;
-    private int blueSubActionButtonContentMargin;
 
 
     @Override
@@ -80,16 +62,6 @@ public class LengjingFgt extends Fragment {
     }
 
     private void initVars() {
-
-        // Set up the large red button on the center right side
-        redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
-        imgSize = getResources().getDimensionPixelSize(R.dimen.img_size);
-        redActionButtonMargin = getResources().getDimensionPixelOffset(R.dimen.action_button_margin);
-        redActionButtonContentSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_size);
-        redActionButtonContentMargin = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_margin);
-        redActionMenuRadius = getResources().getDimensionPixelSize(R.dimen.red_action_menu_radius);
-        blueSubActionButtonSize = getResources().getDimensionPixelSize(R.dimen.blue_sub_action_button_size);
-        blueSubActionButtonContentMargin = getResources().getDimensionPixelSize(R.dimen.blue_sub_action_button_content_margin);
 
         //TODO 此处是测试数据
         mSpecialDatas = new ArrayList();
@@ -109,13 +81,6 @@ public class LengjingFgt extends Fragment {
         mSpecialLvAdatpter = new MySpecialLvAdatpter();
     }
 
-    @Override
-    public void onStop() {
-        if (leftCenterButton != null) {
-            leftCenterButton.setVisibility(View.GONE);
-        }
-        super.onStop();
-    }
 
     @Override
     public void onDestroy() {
@@ -184,6 +149,7 @@ public class LengjingFgt extends Fragment {
             //添加一个新的专辑
             ArrayList<DigSpecialItem> items1 = new ArrayList<>();
             items1.add(new DigSpecialItem(inputTitle, "", 1));
+            Log.e("jigang","id----"+mNewAddSpecial.getId());
             mSpecialDatas.add(new DigSpecial(mNewAddSpecial.getAlbum(), mNewAddSpecial.getDescription(), Integer.valueOf(mNewAddSpecial.getId()), items1));
             mSpecialLvAdatpter.notifyDataSetChanged();
         } else {
@@ -302,6 +268,9 @@ public class LengjingFgt extends Fragment {
             holder.mSpecialTitle.getPaint().getTextBounds(digSpecial.getTitle(), 0, digSpecial.getTitle().length(), rect);
             holder.mSpecialTitleContainer.setLayoutParams(new LinearLayout.LayoutParams(rect.width() + DensityUtil.dip2px(getActivity(), 40), ViewGroup.LayoutParams.WRAP_CONTENT));
 
+
+            //设置专辑背景图片
+            convertView.setBackgroundResource(digSpecial.getBgDrawable());
             return convertView;
         }
     }

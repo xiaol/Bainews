@@ -69,7 +69,10 @@ public class SplashAty extends BaseActivity {
         }
     };
 
-
+    @Override
+    protected boolean isNeedAnimation() {
+        return false;
+    }
     @Override
     protected void setContentView() {
 

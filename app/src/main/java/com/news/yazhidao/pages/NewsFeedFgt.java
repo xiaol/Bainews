@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -65,7 +64,6 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.receiver.TimeoOutAlarmReceiver;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -91,7 +89,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
+public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
 
     private static final String ARG_POSITION = "position";
     private int position;
@@ -162,8 +160,8 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
     private int TYPE_VIEWHOLDER = 1;
     private int TYPE_VIEWHOLDER3 = 3;
 
-    public static NewsFeedFragment newInstance(int position) {
-        NewsFeedFragment f = new NewsFeedFragment();
+    public static NewsFeedFgt newInstance(int position) {
+        NewsFeedFgt f = new NewsFeedFgt();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -216,26 +214,6 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
         mtvProgress = (TextViewExtend) rootView.findViewById(R.id.mHomeAtyLeftMenu);
         View mHomeAtyLeftMenuWrapper = rootView.findViewById(R.id.mHomeAtyLeftMenuWrapper);
         mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
-        //如果系统版本在4.4以上的话,需要使用沉浸式,所以要把左下角的时间按钮和登陆按钮上移
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-            int height = 20;
-            if(DeviceInfoUtil.isFlyme()){
-                height = DensityUtil.dip2px(getActivity(),30);
-            }else{
-                height = (height == 0) ? DensityUtil.dip2px(getActivity(),20):DeviceInfoUtil.getVrtualBtnHeight(getActivity());
-            }
-
-            RelativeLayout.LayoutParams leftMenuParams =new RelativeLayout.LayoutParams(DensityUtil.dip2px(getActivity(),80),DensityUtil.dip2px(getActivity(),50));
-            leftMenuParams.setMargins(DensityUtil.dip2px(getActivity(), 20), DensityUtil.dip2px(getActivity(), 20), DensityUtil.dip2px(getActivity(), 20), height);
-            leftMenuParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            leftMenuParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            mHomeAtyLeftMenuWrapper.setLayoutParams(leftMenuParams);
-            RelativeLayout.LayoutParams rightMenuParams =new RelativeLayout.LayoutParams(DensityUtil.dip2px(getActivity(),50),DensityUtil.dip2px(getActivity(),50));
-            rightMenuParams.setMargins(DensityUtil.dip2px(getActivity(),20),DensityUtil.dip2px(getActivity(),20),DensityUtil.dip2px(getActivity(),20),height);
-            rightMenuParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            rightMenuParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            mHomeAtyRightMenuWrapper.setLayoutParams(rightMenuParams);
-        }
         mHomeAtyRightMenu = (RoundedImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
         SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
         String url = sp.getString("url", "");
@@ -270,7 +248,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
                     mCurrentTime = System.currentTimeMillis();
                     long updateTime = mUpdateTime - (mCurrentTime - mLastTime);
                     RelativeLayout screenRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.screen_RelativeLayout);
-                    TimePopupWindow m_ppopupWindow = new TimePopupWindow((HomeAty) mContext, null, mCurrentTimeFeed, updateTime, mTotalTime, NewsFeedFragment.this);
+                    TimePopupWindow m_ppopupWindow = new TimePopupWindow((HomeAty) mContext, null, mCurrentTimeFeed, updateTime, mTotalTime, NewsFeedFgt.this);
                     m_ppopupWindow.setDateAndType(mCurrentDate, mCurrentType);
                     m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
                     m_ppopupWindow.showAtLocation(((HomeAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
@@ -537,9 +515,7 @@ public class NewsFeedFragment extends Fragment implements TimePopupWindow.IUpdat
 
             @Override
             public void success(TimeFeed result) {
-
                 isClick = true;
-
                 misRefresh = false;
                 mCurrentTimeFeed = result;
                 mTotalTime = Long.valueOf(mCurrentTimeFeed.getNext_update_freq());

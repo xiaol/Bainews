@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,21 +12,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.entity.DigSpecial;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -67,10 +70,8 @@ public class HomeAty extends BaseActivity {
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
         String type = intent.getType();
         if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
-            Log.e("jigang", type + "-----data=" + data);
             //把页面设置在挖掘机
             mViewPagerIndex = 2;
-
             //在LengJingFgt 中打开编辑页面,延时防止crash
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -99,6 +100,10 @@ public class HomeAty extends BaseActivity {
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        //tabs 需要动态设置高度(4.4要使用沉浸式)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            tabs.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this,30)));
+        }
         tabs.setViewPager(pager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -136,7 +141,6 @@ public class HomeAty extends BaseActivity {
         GlobalParams.pager = pager;
         pager.setCurrentItem(mViewPagerIndex);
         changeColor(getResources().getColor(R.color.tab_blue));
-
     }
 
     private void addMenu() {
@@ -201,10 +205,7 @@ public class HomeAty extends BaseActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 albumList.clear();
-
-                Log.e("jigang", "----1albumList size =" + albumList.size());
                 ArrayList<DigSpecial> specialDatas = mLengJingFgt.getSpecialDatas();
                 for (int i = 0; i < specialDatas.size(); i++) {
                     Album album = new Album();
@@ -232,7 +233,6 @@ public class HomeAty extends BaseActivity {
                 album.setAlbum("默认");
 
                 albumList.add(album);
-                Log.e("jigang", "----2albumList size =" + albumList.size());
 
                 DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2);
                 window.setFocusable(true);
@@ -311,14 +311,26 @@ public class HomeAty extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected boolean translucentStatus() {
+        return true;
+    }
+
+    @Override
+    protected boolean isNeedAnimation() {
+        return false;
+    }
+
+    /**
+     * 设置状态栏和tabbar颜色
+     * @param newColor
+     */
     private void changeColor(int newColor) {
 
         tabs.setBackgroundColor(newColor);
         mTintManager.setTintColor(newColor);
-        // 设置一个颜色给系统栏
-        // 设置一个样式背景给导航栏
-        mTintManager.setNavigationBarTintResource(R.color.black);
         // change ActionBar color just if an ActionBar is available
+        SystemBarTintManager.SystemBarConfig config = mTintManager.getConfig();
         currentColor = newColor;
     }
 
@@ -351,7 +363,7 @@ public class HomeAty extends BaseActivity {
             if (position == 0) {
                 return new CategoryFgt();
             } else if (position == 1) {
-                return NewsFeedFragment.newInstance(position);
+                return NewsFeedFgt.newInstance(position);
             } else if (position == 2) {
                 return mLengJingFgt;
             } else {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 
+import com.news.yazhidao.R;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 
@@ -20,11 +21,14 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (isNeedAnimation()){
+            overridePendingTransition(R.anim.aty_right_enter, R.anim.aty_no_ani);
+        }
         //fixed:Android 4.4 以上通知栏沉浸式，兼容xiaomi 4.1.2 和华为 4.1.2 系统等
         if(translucentStatus()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//              getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             }
         }
         mHelper = new SwipeBackActivityHelper(this);
@@ -47,6 +51,11 @@ public abstract class BaseActivity extends FragmentActivity {
         return true;
     }
 
+    /**
+     * 子类activity是否在进入和退出的时候需要动画
+     * @return
+     */
+    protected boolean isNeedAnimation(){return true;};
     @Override
     protected void onResume() {
         super.onResume();
@@ -60,6 +69,15 @@ public abstract class BaseActivity extends FragmentActivity {
         MobclickAgent.onPause(this);
         JPushInterface.onPause(this);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        if (isNeedAnimation()){
+            overridePendingTransition(0, R.anim.aty_left_exit);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
