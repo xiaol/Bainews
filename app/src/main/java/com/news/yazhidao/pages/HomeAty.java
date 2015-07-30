@@ -59,12 +59,16 @@ public class HomeAty extends BaseActivity {
     private FloatingActionButton.LayoutParams starParams;
     private FloatingActionMenu leftCenterMenu;
     private ArrayList<Album> albumList = new ArrayList<Album>();
+    private LinearLayout ll_darker_layer;
 
     @Override
     protected void setContentView() {
+
         mLengJingFgt = new LengjingFgt(this);
         GlobalParams.context = HomeAty.this;
         setContentView(R.layout.activity_viewpager);
+
+        ll_darker_layer = (LinearLayout) findViewById(R.id.ll_darker_layer);
         //判断是否是别的app分享进来的
         Intent intent = getIntent();
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -84,9 +88,9 @@ public class HomeAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        if(leftCenterButton == null) {
+        if (leftCenterButton == null) {
             addMenu();
-        }else{
+        } else {
             ToastUtil.toastLong("adsfefvrefve");
         }
 
@@ -148,6 +152,7 @@ public class HomeAty extends BaseActivity {
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
         int imgSize = getResources().getDimensionPixelSize(R.dimen.img_size);
         int redActionButtonMargin = getResources().getDimensionPixelOffset(R.dimen.action_button_margin);
+        int buttonMargin = getResources().getDimensionPixelOffset(R.dimen.btn_marginbottom);
         int redActionButtonContentSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_size);
         int redActionButtonContentMargin = getResources().getDimensionPixelSize(R.dimen.red_action_button_content_margin);
         int redActionMenuRadius = getResources().getDimensionPixelSize(R.dimen.red_action_menu_radius);
@@ -159,9 +164,9 @@ public class HomeAty extends BaseActivity {
 
         starParams = new FloatingActionButton.LayoutParams(redActionButtonSize, redActionButtonSize);
         starParams.setMargins(redActionButtonMargin,
-                redActionButtonMargin,
-                redActionButtonMargin,
-                redActionButtonMargin);
+                        redActionButtonMargin,
+                        redActionButtonMargin,
+                        redActionButtonMargin);
         fabIconStar.setLayoutParams(starParams);
 
         FloatingActionButton.LayoutParams fabIconStarParams = new FloatingActionButton.LayoutParams(redActionButtonContentSize, redActionButtonContentSize);
@@ -269,6 +274,8 @@ public class HomeAty extends BaseActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 135);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconStar, pvhR);
                 animation.start();
+
+                ll_darker_layer.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -277,6 +284,8 @@ public class HomeAty extends BaseActivity {
                 PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat(View.ROTATION, 0);
                 ObjectAnimator animation = ObjectAnimator.ofPropertyValuesHolder(fabIconStar, pvhR);
                 animation.start();
+
+                ll_darker_layer.setVisibility(View.GONE);
             }
         });
 
@@ -286,7 +295,6 @@ public class HomeAty extends BaseActivity {
     protected void loadData() {
 
     }
-
 
 
     @Override
