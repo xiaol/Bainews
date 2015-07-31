@@ -1,6 +1,8 @@
 package com.news.yazhidao.widget;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -23,7 +25,10 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.pages.LengjingFgt;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.widget.customdialog.Effectstype;
+import com.news.yazhidao.widget.customdialog.SuperDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -49,17 +54,21 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private int position;
     private LinearLayout album_item_layout;
     private ArrayList<Album> albumList;
-    private Album mNewAddSpecial;
     private int viewcount = 0;
     private int width;
     private int height;
     private InputMethodManager imm;
+    /**
+     * 是否显示剪切中的数据
+     */
+    private boolean isShowClipboardContent = true;
 
-    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position) {
+    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent) {
         super(context);
         m_pContext = context;
         this.mLengJingFgt = lengjingFgt;
         this.position = position;
+        this.isShowClipboardContent = isShowClipboardContent;
         if (albumList != null) {
             albumList.clear();
         }
@@ -84,7 +93,9 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         findHeadPortraitImageViews();
         loadData();
 
-
+        if (isShowClipboardContent) {
+            showClipboardDialog(context);
+        }
     }
 
     private void findHeadPortraitImageViews() {
@@ -198,7 +209,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             for (Album item : albumList) {
                                 item.setSelected(false);
                             }
-                            mNewAddSpecial = album;
                             albumList.add(album);
 
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
@@ -298,11 +308,40 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         tv_source_url.setText(url);
     }
 
+    private void showClipboardDialog(final Context pContext) {
+        ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
+        final ClipData primaryClip = cbm.getPrimaryClip();
+        if (primaryClip.getItemCount()!=0){
+            final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
+            _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
+                    .withDuration(400)
+                    .withIcon(R.drawable.app_icon_version2)
+                    .withTitle("温馨提示")
+                    .withEffect(Effectstype.Sidefill)
+                    .withButton1Text("OK")
+                    .withButton2Text("Cancel")
+                    .setButton1Click(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            _DialogBuilder.dismiss();
+                            et_content.setText(primaryClip.getItemAt(0).getText());
+                        }
+                    }).setButton2Click(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    _DialogBuilder.dismiss();
+                }
+            }).show();
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_confirm:
                 String inputTitle = et_content.getText().toString();
+                String inputUrl = tv_source_url.getText().toString();
                 if (TextUtils.isEmpty(inputTitle)) {
                     ToastUtil.toastShort("亲,挖掘内容不能为空!");
                 } else {
@@ -313,8 +352,9 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             break;
                         }
                     }
-
-                    mLengJingFgt.updateSpecialList(index, inputTitle, mNewAddSpecial);
+                    //通知外面的LengJingFgt 数据发生了变化
+                    Logger.i("jigang", "input url = " + inputUrl);
+                    mLengJingFgt.updateSpecialList(index, inputTitle, inputUrl, albumList.get(index));
                     this.dismiss();
                 }
                 break;
@@ -396,7 +436,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                 for (Album item : albumList) {
                                     item.setSelected(false);
                                 }
-                                mNewAddSpecial = album;
                                 albumList.add(album);
                                 adapter.notifyDataSetChanged();
                             }

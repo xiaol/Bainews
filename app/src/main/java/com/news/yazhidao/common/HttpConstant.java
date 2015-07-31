@@ -18,4 +18,8 @@ public class HttpConstant {
     public static final String URL_SEND_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchIm?";
     public static final String URL_GET_HISTORY_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchImContent?";
     public static final String URL_GET_MESSAGE_LIST = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
+    /**挖掘机创建专辑接口*/
+    public static final String URL_CREATE_DIGGER_ALBUM = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
+    /**往专辑中添加挖掘内容*/
+    public static final String URL_ADD_ITEM_ALBUM = "http://60.28.29.37:8080/search?";
 }

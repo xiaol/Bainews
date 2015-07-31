@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  * 专辑列表页面
  * Created by fengjigang on 15/7/23.
  */
-public class SpecialListAty extends BaseActivity {
+public class AlbumListAty extends BaseActivity {
 
     private ListView mSpecialLv;
     private TextView mCommonHeaderTitle;
@@ -60,7 +61,7 @@ public class SpecialListAty extends BaseActivity {
         mCommonHeaderLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SpecialListAty.this.finish();
+                AlbumListAty.this.finish();
             }
         });
         mSpecialLv = (ListView)findViewById(R.id.mSpecialLv);
@@ -99,13 +100,13 @@ public class SpecialListAty extends BaseActivity {
              SpecialLvHolder holder ;
              if (convertView == null){
                  holder = new SpecialLvHolder();
-                 convertView = View.inflate(SpecialListAty.this.getApplicationContext(),R.layout.aty_special_list_item,null);
+                 convertView = View.inflate(AlbumListAty.this.getApplicationContext(),R.layout.aty_album_list_item,null);
                  convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (250.0f / 1280 * mScreenHeight)));
                  holder.mSpecialItemTopWrapper = convertView.findViewById(R.id.mSpecialItemTopWrapper);
-                 holder.mSpecialItemTopWrapper.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (250.0f / 1280 * mScreenHeight) - DensityUtil.dip2px(SpecialListAty.this,50)));
+                 holder.mSpecialItemTopWrapper.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (250.0f / 1280 * mScreenHeight) - DensityUtil.dip2px(AlbumListAty.this,50)));
                  holder.mSpecialItemIcon = (ImageView) convertView.findViewById(R.id.mSpecialItemIcon);
                  RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int) (156.0f / 720 * mScreenWidth), (int) (120.0f / 1280 * mScreenHeight));
-                 iconParams.setMargins(DensityUtil.dip2px(SpecialListAty.this,8),0,0,0);
+                 iconParams.setMargins(DensityUtil.dip2px(AlbumListAty.this,8),0,0,0);
                  iconParams.addRule(RelativeLayout.CENTER_VERTICAL);
                  holder.mSpecialItemIcon.setLayoutParams(iconParams);
                  holder.mSpecialItemTitle = (TextView) convertView.findViewById(R.id.mSpecialItemTitle);
@@ -118,9 +119,20 @@ public class SpecialListAty extends BaseActivity {
                  holder = (SpecialLvHolder) convertView.getTag();
              }
              DigSpecialItem digSpecialItem = mSpecialLvDatas.get(position);
-             holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(SpecialListAty.this));
+             holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(AlbumListAty.this));
              holder.mSpecialItemTitle.setText(digSpecialItem.getTitle());
-             holder.mSpecialItemUrl.setText(digSpecialItem.getUrl());
+
+             holder.mSpecialItemOnlyOne.setVisibility(View.GONE);
+             holder.mSpecialItemTitle.setVisibility(View.VISIBLE);
+             holder.mSpecialItemUrl.setVisibility(View.VISIBLE);
+             if (TextUtils.isEmpty(digSpecialItem.getUrl())||TextUtils.isEmpty(digSpecialItem.getTitle())){
+                 holder.mSpecialItemOnlyOne.setVisibility(View.VISIBLE);
+                 holder.mSpecialItemTitle.setVisibility(View.GONE);
+                 holder.mSpecialItemUrl.setVisibility(View.GONE);
+                 holder.mSpecialItemOnlyOne.setText(digSpecialItem.getUrl()+digSpecialItem.getTitle());
+                 holder.mSpecialItemOnlyOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+             }
+
              holder.mSpecialItemProgress.setCurrentStep(digSpecialItem.getProgress());
              return convertView;
          }

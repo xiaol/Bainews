@@ -208,6 +208,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Logger.e("jigang","---newsfeed  onCreateView");
+
         final View rootView = inflater.inflate(R.layout.activity_news, container, false);
         ViewCompat.setElevation(rootView, 50);
 

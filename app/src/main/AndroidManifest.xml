@@ -215,7 +215,7 @@
             android:screenOrientation="portrait"
             android:launchMode="singleInstance"/>
 
-        <activity android:name=".pages.SpecialListAty"
+        <activity android:name=".pages.AlbumListAty"
             android:screenOrientation="portrait"
             />
         <!-- 配置Receiver(必须) -->

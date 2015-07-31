@@ -218,7 +218,7 @@ public class HomeAty extends BaseActivity {
                     album.setAlbum(specialDatas.get(i).getTitle());
                     albumList.add(album);
                 }
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true);
 
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
@@ -239,7 +239,7 @@ public class HomeAty extends BaseActivity {
 
                 albumList.add(album);
 
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2);
+                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2,true);
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
@@ -312,8 +312,9 @@ public class HomeAty extends BaseActivity {
                 finish();
             } else {
                 ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+                mLastPressedBackKeyTime = pressedBackKeyTime;
+                return true;
             }
-            mLastPressedBackKeyTime = pressedBackKeyTime;
         }
 
         return super.onKeyDown(keyCode, event);
@@ -367,7 +368,6 @@ public class HomeAty extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             if (position == 0) {
                 return new CategoryFgt();
             } else if (position == 1) {
