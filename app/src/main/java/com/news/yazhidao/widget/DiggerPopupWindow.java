@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -164,7 +165,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         if (i != tag) {
                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
                             ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                            iv_selected.setVisibility(View.GONE);
+                            iv_selected.setVisibility(View.INVISIBLE);
                             albumList.get(i).setSelected(false);
 
                         }
@@ -247,7 +248,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                             albumList.get(i).setSelected(false);
                                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
                                             ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                                            iv_selected.setVisibility(View.GONE);
+                                            iv_selected.setVisibility(View.INVISIBLE);
                                             albumList.get(i).setSelected(false);
                                         }
                                     }
@@ -286,11 +287,12 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
-
-//        //实例化一个ColorDrawable颜色为半透明
-//        ColorDrawable dw = new ColorDrawable(0x0000000);
-//        //设置SelectPicPopupWindow弹出窗体的背景
-//        this.setBackgroundDrawable(dw);
+        //设置SelectPicPopupWindow弹出窗体动画效果
+//        this.setAnimationStyle(R.style.DialogAnimation);
+        //实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        //设置SelectPicPopupWindow弹出窗体的背景
+        this.setBackgroundDrawable(dw);
     }
 
     @Override
@@ -311,7 +313,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private void showClipboardDialog(final Context pContext) {
         ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData primaryClip = cbm.getPrimaryClip();
-        if (primaryClip.getItemCount()!=0){
+        if (primaryClip !=null && primaryClip.getItemCount()!=0){
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)

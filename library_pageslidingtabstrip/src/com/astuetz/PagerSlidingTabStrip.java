@@ -372,10 +372,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
 
         if (tabsContainer.getChildCount() > 0) {
-            tabsContainer
-                    .getChildAt(0)
-                    .getViewTreeObserver()
-                    .addOnGlobalLayoutListener(firstTabGlobalLayoutListener);
+            tabsContainer.getChildAt(0).getViewTreeObserver().addOnGlobalLayoutListener(firstTabGlobalLayoutListener);
         }
         super.onLayout(changed, l, t, r, b);
     }

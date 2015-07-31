@@ -120,6 +120,7 @@ public class CloudTagManager extends FrameLayout implements
 	}
 
 	public boolean feedKeyword(String keyword) {
+
 		boolean result = false;
 		if (vecKeywords.size() < MAX) {
 			result = vecKeywords.add(keyword);
