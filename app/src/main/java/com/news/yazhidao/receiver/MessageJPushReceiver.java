@@ -12,7 +12,7 @@ import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.pages.HomeAty;
 import com.news.yazhidao.pages.NewsDetailAty;
-import com.news.yazhidao.pages.NewsFeedFragment;
+import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.helper.NotificationHelper;
@@ -87,8 +87,8 @@ public class MessageJPushReceiver extends BroadcastReceiver {
                         String news_url = urlObject.getString("news_url");
                         if (!TextUtils.isEmpty(news_url)) {
                             Intent detailIntent = new Intent(context, NewsDetailAty.class);
-                            detailIntent.putExtra(NewsFeedFragment.KEY_URL, news_url);
-                            detailIntent.putExtra(NewsFeedFragment.KEY_NEWS_SOURCE, NewsFeedFragment.VALUE_NEWS_NOTIFICATION);
+                            detailIntent.putExtra(NewsFeedFgt.KEY_URL, news_url);
+                            detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
                             detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(detailIntent);
                         }

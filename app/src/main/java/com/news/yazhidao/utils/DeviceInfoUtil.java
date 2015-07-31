@@ -22,6 +22,7 @@ import android.view.WindowManager;
 
 import com.news.yazhidao.application.YaZhiDaoApplication;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
@@ -51,6 +52,30 @@ public class DeviceInfoUtil {
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics;
+    }
+
+    /**
+     * 获取状态栏的高度
+     * @param mContext
+     * @return
+     */
+    public static int getStatusBarHeight(Context mContext){
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, barHeight = 38;//默认为38，貌似大部分是这样的
+
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            barHeight = mContext.getResources().getDimensionPixelSize(x);
+
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return barHeight;
     }
     /**
      * 获取当前网络状态(wifi)的ip地址

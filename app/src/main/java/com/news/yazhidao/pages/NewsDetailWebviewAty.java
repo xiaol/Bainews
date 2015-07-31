@@ -133,7 +133,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void initializeViews() {
 
-        mNewsUrl=getIntent().getStringExtra(NewsFeedFragment.KEY_URL);
+        mNewsUrl=getIntent().getStringExtra(NewsFeedFgt.KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800

@@ -87,7 +87,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
-        mSource = getIntent().getStringExtra(NewsFeedFragment.KEY_NEWS_SOURCE);
+        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
 
@@ -150,7 +150,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         mNewsDetailAdapter.setData(result.relate);
                         mNewsDetailAdapter.notifyDataSetChanged();
 
-                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                        if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
                             msgvNewsDetail.setSelection(1);
                         }
 
@@ -202,7 +202,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         mNewsDetailAdapter.setData(result.relate);
                         mNewsDetailAdapter.notifyDataSetChanged();
 
-                        if (NewsFeedFragment.VALUE_NEWS_SOURCE.equals(mSource)) {
+                        if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
                             msgvNewsDetail.setSelection(1);
                         }
 
@@ -304,7 +304,7 @@ public class NewsDetailAty extends SwipeBackActivity {
     public void finish() {
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (NewsFeedFragment.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
             Intent intent = new Intent(this, HomeAty.class);
             startActivity(intent);
         }
