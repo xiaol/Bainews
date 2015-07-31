@@ -69,6 +69,14 @@ public class HomeAty extends BaseActivity {
         setContentView(R.layout.activity_viewpager);
 
         ll_darker_layer = (LinearLayout) findViewById(R.id.ll_darker_layer);
+        ll_darker_layer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(leftCenterMenu != null) {
+                    leftCenterMenu.close(true);
+                }
+            }
+        });
         //判断是否是别的app分享进来的
         Intent intent = getIntent();
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
@@ -193,7 +201,6 @@ public class HomeAty extends BaseActivity {
                 .setLayoutParams(starParams)
                 .build();
 
-
         // Set up customized SubActionButtons for the right center menu
         SubActionButton.Builder lCSubBuilder = new SubActionButton.Builder(HomeAty.this);
 
@@ -238,6 +245,10 @@ public class HomeAty extends BaseActivity {
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
+
+
+                leftCenterMenu.close(true);
+
             }
         });
         SubActionButton button2 = lCSubBuilder.setContentView(lcIcon2, blueContentParams).build();
@@ -259,6 +270,8 @@ public class HomeAty extends BaseActivity {
                 window.setFocusable(true);
                 window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
+
+                leftCenterMenu.close(true);
             }
         });
 
@@ -268,6 +281,7 @@ public class HomeAty extends BaseActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeAty.this, BaseTagActivity.class);
                 startActivity(intent);
+                leftCenterMenu.close(true);
             }
         });
 

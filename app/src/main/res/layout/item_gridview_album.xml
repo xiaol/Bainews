@@ -21,8 +21,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginLeft="23dp"
+            android:paddingLeft="12dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <com.news.yazhidao.widget.LetterSpacingTextView
                 android:id="@+id/tv_name"
@@ -34,8 +36,8 @@
 
             <ImageView
                 android:id="@+id/iv_selected"
+                android:layout_marginTop="5dp"
                 android:layout_below="@+id/tv_name"
-                android:layout_marginLeft="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_selected" />
@@ -48,8 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
+        android:layout_marginLeft="23dp"
         android:background="@color/white">
 
         <ImageView

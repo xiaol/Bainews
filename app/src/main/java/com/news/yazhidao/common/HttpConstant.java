@@ -18,4 +18,5 @@ public class HttpConstant {
     public static final String URL_SEND_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchIm?";
     public static final String URL_GET_HISTORY_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchImContent?";
     public static final String URL_GET_MESSAGE_LIST = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
+    public static final String URL_FETCH_ELEMENTS = "http://api.deeporiginalx.com/news/baijia/fetchElementary";
 }

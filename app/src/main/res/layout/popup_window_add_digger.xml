@@ -1,113 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent"
+    android:id="@+id/rl_digger">
 
-    <RelativeLayout
-        android:background="#50000000"
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="23dp"
+        android:text="取消"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_below="@+id/tv_cancel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rl_digger">
+        android:layout_height="125dp"
+        android:gravity="top"
+        android:paddingLeft="21dp"
+        android:paddingRight="21dp"
+        android:paddingTop="30dp"
+        android:paddingBottom="30dp"
+        android:textSize="16sp"
+        android:textColor="#7d7d7d"
+        android:hint="挖点东西吧..."
+        android:background="@drawable/bg_edittext"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp" />
 
-        <TextView
-            android:id="@+id/tv_cancel"
+    <TextView
+        android:id="@+id/tv_devider"
+        android:layout_below="@+id/et_content"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:background="#dadada" />
+
+    <LinearLayout
+        android:id="@+id/ll_digger_source"
+        android:layout_below="@+id/tv_devider"
+        android:layout_marginRight="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="50dp"
-            android:layout_marginRight="23dp"
-            android:text="取消"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <EditText
-            android:id="@+id/et_content"
-            android:layout_below="@+id/tv_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="125dp"
-            android:gravity="top"
-            android:paddingLeft="21dp"
-            android:paddingRight="21dp"
-            android:paddingTop="30dp"
-            android:paddingBottom="30dp"
-            android:textSize="16sp"
-            android:textColor="#7d7d7d"
-            android:hint="挖点东西吧..."
-            android:background="@drawable/bg_edittext"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="23dp"
-            android:layout_marginLeft="23dp" />
+            android:layout_margin="7dp"
+            android:background="@drawable/img_digger_source" />
 
         <TextView
-            android:id="@+id/tv_devider"
-            android:layout_below="@+id/et_content"
+            android:id="@+id/tv_source_url"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginRight="23dp"
-            android:layout_marginLeft="23dp"
-            android:background="#dadada" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="http://www.baidu.com"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/album_scollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_digger_source"
+        android:cacheColorHint="#00000000"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:id="@+id/ll_digger_source"
-            android:layout_below="@+id/tv_devider"
-            android:layout_marginRight="23dp"
-            android:layout_marginLeft="23dp"
+            android:id="@+id/album_item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_marginTop="@dimen/news_detail_item_margin_top"
+            android:paddingRight="12dp"
+            android:layout_marginBottom="@dimen/news_detail_item_margin_top"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="7dp"
-                android:background="@drawable/img_digger_source" />
-
-            <TextView
-                android:id="@+id/tv_source_url"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:lines="1"
-                android:ellipsize="end"
-                android:text="http://www.baidu.com"
-                android:textSize="14sp" />
-
         </LinearLayout>
+    </HorizontalScrollView>
 
-        <HorizontalScrollView
-            android:id="@+id/album_scollView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ll_digger_source"
-            android:cacheColorHint="#00000000"
-            android:overScrollMode="never"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:id="@+id/album_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/news_detail_item_margin_top"
-                android:layout_marginBottom="@dimen/news_detail_item_margin_top"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <TextView
-            android:id="@+id/tv_confirm"
-            android:layout_below="@+id/album_scollView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="23dp"
-            android:textColor="@color/white"
-            android:text="确定"
-            android:textSize="16sp" />
-    </RelativeLayout>
-</ScrollView>
+    <TextView
+        android:id="@+id/tv_confirm"
+        android:layout_below="@+id/album_scollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="23dp"
+        android:textColor="@color/white"
+        android:text="确定"
+        android:textSize="16sp" />
+</RelativeLayout>

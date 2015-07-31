@@ -5,11 +5,21 @@
     android:background="@color/white"
     >
 
+    <ImageView
+        android:id="@+id/back_imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/btn_news_detail_left_back" />
+
     <TextView
         android:id="@+id/tv_tag"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center"
+        android:layout_toRightOf="@id/back_imageView"
+        android:gravity="left|center_vertical"
+        android:layout_marginLeft="5dp"
         android:text="大家都在关注的话题"
         android:textSize="15sp"
         android:background="@color/white"
@@ -22,6 +32,7 @@
         android:id="@+id/keywordsFlow"
         android:layout_width="fill_parent"
         android:layout_height="360dip"
+        android:layout_marginTop="10dp"
         android:background="@color/white"/>
 
     <Button
