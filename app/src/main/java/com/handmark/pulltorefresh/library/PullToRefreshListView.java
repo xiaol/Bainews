@@ -183,7 +183,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 			 */
 			if (scrollLvToEdge && getState() != State.MANUAL_REFRESHING) {
 				mRefreshableView.setSelection(selection);
-				setHeaderScroll(scrollToHeight);
+//				setHeaderScroll(scrollToHeight);
 			}
 		}
 

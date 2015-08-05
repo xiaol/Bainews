@@ -15,13 +15,14 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <ImageView
                 android:id="@+id/mNewsDetailHeaderImg"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="wrap_content"
+                />
             <LinearLayout
                 android:id="@+id/ll_spec_view"
                 android:layout_width="match_parent"

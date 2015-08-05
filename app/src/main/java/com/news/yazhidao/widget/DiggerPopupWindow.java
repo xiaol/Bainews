@@ -317,7 +317,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)
-                    .withIcon(R.drawable.app_icon_version2)
+                    .withIcon(R.drawable.app_icon_version3)
                     .withTitle("温馨提示")
                     .withEffect(Effectstype.Sidefill)
                     .withButton1Text("OK")
@@ -356,7 +356,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     }
                     //通知外面的LengJingFgt 数据发生了变化
                     Logger.i("jigang", "input url = " + inputUrl);
-                    mLengJingFgt.updateSpecialList(index, inputTitle, inputUrl, albumList.get(index));
+                    mLengJingFgt.updateSpecialList(index, inputTitle, inputUrl, albumList.get(index),m_pContext);
                     this.dismiss();
                 }
                 break;

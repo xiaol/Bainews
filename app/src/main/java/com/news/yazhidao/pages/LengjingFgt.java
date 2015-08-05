@@ -59,7 +59,7 @@ public class LengjingFgt extends Fragment {
         rootView = inflater.inflate(R.layout.fgt_category_lengjing, container, false);
         initVars();
         findViews();
-        Logger.e("jigang","---lengjing  onCreateView");
+        Logger.e("jigang", "---lengjing  onCreateView");
         return rootView;
     }
 
@@ -99,7 +99,7 @@ public class LengjingFgt extends Fragment {
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openAlbumListAty(position);
+                openAlbumListAty(position,getActivity());
             }
         });
 
@@ -112,19 +112,19 @@ public class LengjingFgt extends Fragment {
      * @param newsUrl
      */
     public void openEditWindow(String newsTitle, String newsUrl) {
-        for(int i = 0;i < mSpecialDatas.size();i ++){
+        for (int i = 0; i < mSpecialDatas.size(); i++) {
             DigSpecial special = mSpecialDatas.get(i);
 
             Album album = new Album();
             album.setAlbum(special.getTitle());
             album.setDescription(special.getDesc());
             album.setId(String.valueOf(special.getBgDrawable()));
-            album.setSelected(i==0);
+            album.setSelected(i == 0);
 
             albumList.add(album);
         }
 
-        DiggerPopupWindow window = new DiggerPopupWindow(this, mActivity, 1 + "", albumList, 1,false);
+        DiggerPopupWindow window = new DiggerPopupWindow(this, mActivity, 1 + "", albumList, 1, false);
         window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
         window.setFocusable(true);
         window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
@@ -133,43 +133,50 @@ public class LengjingFgt extends Fragment {
 
     /**
      * 打开专辑列表详情页
+     *
      * @param position 当前的专辑索引
      */
-    private void openAlbumListAty(int position){
+    private void openAlbumListAty(int position,Activity activity) {
         DigSpecial digSpecial = mSpecialDatas.get(position);
-        Intent specialAty = new Intent(getActivity(), AlbumListAty.class);
+        Intent specialAty = new Intent(activity, AlbumListAty.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, digSpecial);
         specialAty.putExtra(AlbumListAty.KEY_DIG_SPECIAL_INTENT, bundle);
-        startActivity(specialAty);
+        activity.startActivity(specialAty);
     }
+
     /**
      * 更新专辑列表数据
-     *  @param specialIndex   专辑索引,有可能为新建专辑索引
-     * @param inputTitle 挖掘内容的标题
-     * @param inputUrl  挖掘内容的url,可能为null
+     *
+     * @param specialIndex   专辑索引,有可能为新建专辑索引
+     * @param inputTitle     挖掘内容的标题
+     * @param inputUrl       挖掘内容的url,可能为null
      * @param mNewAddSpecial 新建的专辑entity类
      */
-    public void updateSpecialList(int specialIndex, String inputTitle, String inputUrl, Album mNewAddSpecial) {
+    public void updateSpecialList(int specialIndex, String inputTitle, String inputUrl, Album mNewAddSpecial,Activity activity) {
         Log.e("jigang", "update gaga");
-        //判断是否是心添加的专辑
-        if (specialIndex >= mSpecialDatas.size()) {
-            //添加一个新的专辑
-            ArrayList<DigSpecialItem> items1 = new ArrayList<>();
-            items1.add(0,new DigSpecialItem(inputTitle, inputUrl, 1));
-            Log.e("jigang", "id----" + mNewAddSpecial.getId());
-            mSpecialDatas.add(new DigSpecial(mNewAddSpecial.getAlbum(), mNewAddSpecial.getDescription(), Integer.valueOf(mNewAddSpecial.getId()), items1));
-            mSpecialLvAdatpter.notifyDataSetChanged();
-        } else {
-            //修改专辑数据
-            DigSpecial digSpecial = mSpecialDatas.get(specialIndex);
-            ArrayList<DigSpecialItem> items = digSpecial.getSpecialItems();
-            items.add(0,new DigSpecialItem(inputTitle, inputUrl, 1));
-            digSpecial.setSpecialItems(items);
-            mSpecialLvAdatpter.notifyDataSetChanged();
 
+        initVars();
+        //判断是否是心添加的专辑
+        if (mSpecialDatas != null) {
+            if (specialIndex >= mSpecialDatas.size()) {
+                //添加一个新的专辑
+                ArrayList<DigSpecialItem> items1 = new ArrayList<>();
+                items1.add(0, new DigSpecialItem(inputTitle, inputUrl, 1));
+                Log.e("jigang", "id----" + mNewAddSpecial.getId());
+                mSpecialDatas.add(new DigSpecial(mNewAddSpecial.getAlbum(), mNewAddSpecial.getDescription(), Integer.valueOf(mNewAddSpecial.getId()), items1));
+                mSpecialLvAdatpter.notifyDataSetChanged();
+            } else {
+                //修改专辑数据
+                DigSpecial digSpecial = mSpecialDatas.get(specialIndex);
+                ArrayList<DigSpecialItem> items = digSpecial.getSpecialItems();
+                items.add(0, new DigSpecialItem(inputTitle, inputUrl, 1));
+                digSpecial.setSpecialItems(items);
+                mSpecialLvAdatpter.notifyDataSetChanged();
+
+            }
+            openAlbumListAty(specialIndex,activity);
         }
-        openAlbumListAty(specialIndex);
     }
 
     /**

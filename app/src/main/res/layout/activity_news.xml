@@ -1,113 +1,117 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/screen_RelativeLayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/screenlayout"
+    <RelativeLayout xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/screen_RelativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.twotoasters.jazzylistview.JazzyListView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/lv_news"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#dfe6e9"
-        android:clipToPadding="false"
-        android:listSelector="#f3f3fa"
-        android:scrollbars="none"
-        ptr:ptrAnimationStyle="flip"
-        ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
-        ptr:ptrHeaderBackground="#4D94C9"
-        ptr:ptrHeaderTextColor="#ffffff"
-        ptr:ptrListViewExtrasEnabled="true"
-        ptr:ptrScrollingWhileRefreshingEnabled="false" />
-
-    <LinearLayout
-        android:id="@+id/ll_no_network"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/nonetwork"
-        android:orientation="horizontal"
-        android:visibility="gone" />
-
-
-    <FrameLayout
-        android:id="@+id/mHomeAtyLeftMenuWrapper"
-        android:layout_width="80dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="20dp">
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/mHomeAtyLeftMenu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:background="@drawable/bg_time_log" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/mHomeAtyRightMenuWrapper"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="20dp">
-
-        <com.news.yazhidao.widget.RoundedImageView
-            android:id="@+id/mHomeAtyRightMenu"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_login"
-            app:border_color="@color/black"
-            app:border_width="1dp"
-            app:corner_radius="20dp" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/mNewsFeedProgressWheelWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_gray">
-
-        <com.news.yazhidao.widget.ProgressWheel
-            android:id="@+id/mNewsFeedProgressWheel"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            ProgressWheel:text="加载中..."
-            ProgressWheel:textColor="#222"
-            ProgressWheel:textSize="14sp"
-            ProgressWheel:rimColor="#330097D6"
-            ProgressWheel:barLength="60dp"
-            ProgressWheel:barColor="#0097D6"
-            ProgressWheel:barWidth="6dp"
-            ProgressWheel:rimWidth="3dp" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/fl_mOnDestruction"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        >
+        android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/iv_ondestruction"
+            android:id="@+id/screenlayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.twotoasters.jazzylistview.JazzyListView
+            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/lv_news"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_ondestruct"
-            />
-    </FrameLayout>
+            android:background="#dfe6e9"
+            android:clipToPadding="false"
+            android:listSelector="#f3f3fa"
+            android:scrollbars="none"
+            ptr:ptrAnimationStyle="flip"
+            ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
+            ptr:ptrHeaderBackground="#4D94C9"
+            ptr:ptrHeaderTextColor="#ffffff"
+            ptr:ptrListViewExtrasEnabled="true"
+            ptr:ptrScrollingWhileRefreshingEnabled="false" />
 
-</RelativeLayout>
+        <LinearLayout
+            android:id="@+id/ll_no_network"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/nonetwork"
+            android:orientation="horizontal"
+            android:visibility="gone" />
+
+
+        <FrameLayout
+            android:id="@+id/mHomeAtyLeftMenuWrapper"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="20dp">
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/mHomeAtyLeftMenu"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:background="@drawable/bg_time_log" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mHomeAtyRightMenuWrapper"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp">
+
+            <com.news.yazhidao.widget.RoundedImageView
+                android:id="@+id/mHomeAtyRightMenu"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_login"
+                app:border_color="@color/black"
+                app:border_width="1dp"
+                app:corner_radius="20dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mNewsFeedProgressWheelWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_gray">
+
+            <ImageView
+                android:id="@+id/mNewsLoadingImg"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_mOnDestruction"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_ondestruction"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_ondestruct" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/ll_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:visibility="gone"
+        />
+
+</FrameLayout>

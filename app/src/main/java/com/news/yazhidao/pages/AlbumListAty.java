@@ -1,10 +1,12 @@
 package com.news.yazhidao.pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,16 +14,28 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.DigSpecial;
 import com.news.yazhidao.entity.DigSpecialItem;
+import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.digger.DigProgressView;
+import com.umeng.analytics.MobclickAgent;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 专辑列表页面
@@ -65,6 +79,45 @@ public class AlbumListAty extends BaseActivity {
             }
         });
         mSpecialLv = (ListView)findViewById(R.id.mSpecialLv);
+        mSpecialLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(AlbumListAty.this, NewsDetailAty.class);
+                intent.putExtra("isnew", true);
+                intent.putExtra("isdigger", true);
+                startActivityForResult(intent, 0);
+                //uemng statistic view the head news
+                MobclickAgent.onEvent(AlbumListAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+
+            }
+        });
+
+    }
+
+    private void loadNewsData(){
+
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
+        List<NameValuePair> pairs=new ArrayList<>();
+        pairs.add(new BasicNameValuePair("news_id", "55c1d3d90d0000db00f8569c"));
+        _Request.setParams(pairs);
+
+        _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+
+            @Override
+            public void success(final NewsDetailAdd result) {
+                if (result != null) {
+                    ToastUtil.toastLong("aaaaaaaa");
+                }
+
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+            }
+        }.setReturnType(new TypeToken<NewsDetailAdd>() {
+        }.getType()));
+        _Request.execute();
     }
 
     @Override
@@ -119,7 +172,7 @@ public class AlbumListAty extends BaseActivity {
                  holder = (SpecialLvHolder) convertView.getTag();
              }
              DigSpecialItem digSpecialItem = mSpecialLvDatas.get(position);
-             holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(AlbumListAty.this));
+             holder.mSpecialItemIcon.setBackgroundColor(R.drawable.bg_album_item);
              holder.mSpecialItemTitle.setText(digSpecialItem.getTitle());
 
              holder.mSpecialItemOnlyOne.setVisibility(View.GONE);

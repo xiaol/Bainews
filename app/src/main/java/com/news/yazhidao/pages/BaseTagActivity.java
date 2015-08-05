@@ -2,20 +2,25 @@ package com.news.yazhidao.pages;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.CloudTagManager;
+import com.news.yazhidao.widget.DiggerPopupWindow;
 
 import org.apache.http.NameValuePair;
 
@@ -30,11 +35,14 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
     public ArrayList<String> keywords;
     public ArrayList<String> hotwords;
     private int[] array = new int[8];
+    private ArrayList<DigSpecial> mSpecialDatas;
 
     //    , "九月", "十二", "五月天", "夏天的故事", "哈哈",
 //            "星巴克", "乐知天命"
     private CloudTagManager keywordsFlow;
     private Button btnchange, btnexperence;
+    private ImageView back_imageView;
+    private LengjingFgt fgt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +50,28 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.item_tag_cloud);
         btnchange = (Button) findViewById(R.id.btnchange);
         btnexperence = (Button) findViewById(R.id.btnexperence);
+        back_imageView = (ImageView) findViewById(R.id.back_imageView);
+        back_imageView.setOnClickListener(BaseTagActivity.this);
         btnchange.setOnClickListener(BaseTagActivity.this);
         btnexperence.setOnClickListener(BaseTagActivity.this);
         keywords = new ArrayList<String>();
         hotwords = new ArrayList<String>();
+        fgt = new LengjingFgt(BaseTagActivity.this);
+
+        //TODO 此处是测试数据
+        mSpecialDatas = new ArrayList();
+        ArrayList<DigSpecialItem> items1 = new ArrayList<>();
+        items1.add(new DigSpecialItem("这是一个神奇的网站.", "htttp://www.baidu.com", 1));
+        items1.add(new DigSpecialItem("默认", "htttp://www.baidu.com", 3));
+        items1.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.", "htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com", 7));
+        mSpecialDatas.add(new DigSpecial("默认", "这是一个神奇的app", R.drawable.bg_special_list_item_default, items1));
+
+        ArrayList<DigSpecialItem> items2 = new ArrayList<>();
+        items2.add(new DigSpecialItem("这是一个神奇的网站.", "htttp://www.baidu.com", 2));
+        items2.add(new DigSpecialItem("", "htttp://www.baidu.com", 2));
+        items2.add(new DigSpecialItem("默认", "", 5));
+        items2.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.", "htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com", 6));
+        mSpecialDatas.add(new DigSpecial("最爱的", "这是一个神奇的app,这是一个神奇的app,这是一个神奇的app", R.drawable.bg_special_list_item_default, items2));
 
         loadElements();
 
@@ -81,7 +107,28 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
         } else if (v == btnexperence) {
         } else if (v instanceof TextView) {
             String keyword = ((TextView) v).getText().toString();
-            Toast.makeText(this, keyword, Toast.LENGTH_LONG).show();
+
+            ArrayList<Album> albumList = new ArrayList<Album>();
+            for(int i = 0;i < mSpecialDatas.size();i ++){
+                DigSpecial special = mSpecialDatas.get(i);
+
+                Album album = new Album();
+                album.setAlbum(special.getTitle());
+                album.setDescription(special.getDesc());
+                album.setId(String.valueOf(special.getBgDrawable()));
+                album.setSelected(i==0);
+
+                albumList.add(album);
+            }
+
+            DiggerPopupWindow window = new DiggerPopupWindow(fgt, BaseTagActivity.this, 1 + "", albumList, 1,false);
+            window.setDigNewsTitleAndUrl(keyword, "");
+            window.setFocusable(true);
+            window.showAtLocation(BaseTagActivity.this.getWindow().getDecorView(), Gravity.CENTER
+                    | Gravity.CENTER, 0, 0);
+
+        }else if(v == back_imageView){
+            BaseTagActivity.this.finish();
         }
     }
 
