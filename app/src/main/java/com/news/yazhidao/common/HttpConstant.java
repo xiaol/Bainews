@@ -18,10 +18,14 @@ public class HttpConstant {
     public static final String URL_SEND_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchIm?";
     public static final String URL_GET_HISTORY_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchImContent?";
     public static final String URL_GET_MESSAGE_LIST = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
+    /**获取专辑列表接口*/
+    public static final String URL_FETCH_ALBUM_LIST = "http://api.deeporiginalx.com/news/baijia/fetchAlbumList?";
     /**挖掘机创建专辑接口*/
-    public static final String URL_CREATE_DIGGER_ALBUM = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
+    public static final String URL_CREATE_DIGGER_ALBUM = "http://api.deeporiginalx.com/news/baijia/createAlbum?";
     /**往专辑中添加挖掘内容*/
-    public static final String URL_ADD_ITEM_ALBUM = "http://60.28.29.37:8080/search?";
+    public static final String URL_DIGGER_ALBUM = "http://60.28.29.37:8080/excavator?";
+    /**获取指定专辑中的挖掘内容*/
+    public static final String URL_FETCH_ALBUM_SUBITEMS = "http://api.deeporiginalx.com/news/baijia/dredgeUpStatus?";
     /**获取热点话题标签*/
     public static final String URL_FETCH_ELEMENTS = "http://api.deeporiginalx.com/news/baijia/fetchElementary";
 }

@@ -32,6 +32,16 @@ public class DiggerAlbum implements Serializable {
     //专辑的背景图片
     private String album_img;
 
+    public DiggerAlbum(String album_id, String create_time, String album_des, String user_id, String album_title, String album_news_count, String album_img) {
+        this.album_id = album_id;
+        this.create_time = create_time;
+        this.album_des = album_des;
+        this.user_id = user_id;
+        this.album_title = album_title;
+        this.album_news_count = album_news_count;
+        this.album_img = album_img;
+    }
+
     public void setAlbum_id(String album_id) {
         this.album_id = album_id;
     }

@@ -152,6 +152,8 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                         mHomeLogin.setOnClickListener(LoginPopupWindow.this);
                         mHomeLogout.setVisibility(View.GONE);
                         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
+                        //发送广播通知LengJingFgt,刷新界面
+
                     }
                 }).setButton2Click(new View.OnClickListener() {
             @Override

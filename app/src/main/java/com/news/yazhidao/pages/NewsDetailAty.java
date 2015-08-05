@@ -3,9 +3,6 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -308,15 +305,6 @@ public class NewsDetailAty extends SwipeBackActivity {
             Intent intent = new Intent(this, HomeAty.class);
             startActivity(intent);
         }
-    }
-
-    public String getMacAddressAndDeviceid(Context c) {
-        WifiManager wifiMan = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInf = wifiMan.getConnectionInfo();
-        String macAddr = wifiInf.getMacAddress();
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId() + macAddr;
     }
 
     class StaggeredNewsDetailAdapter extends BaseAdapter {

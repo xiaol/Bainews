@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -25,6 +26,9 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.listener.DiggerNewsListener;
+import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
@@ -63,6 +67,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
      * 是否显示剪切中的数据
      */
     private boolean isShowClipboardContent = true;
+    private DiggerAlbum mDiggerAlbum;
 
     public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent) {
         super(context);
@@ -95,6 +100,8 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         loadData();
 
         if (isShowClipboardContent) {
+            //隐藏显示url的textview
+            ll_digger_source.setVisibility(View.GONE);
             showClipboardDialog(context);
         }
     }
@@ -157,7 +164,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 public void onClick(View v) {
                     int tag = (int) rl_album.getTag();
                     Album album = albumList.get(tag);
-
+                    hideKeyboard(et_content);
                     iv_selected.setVisibility(View.VISIBLE);
                     album.setSelected(true);
 
@@ -204,14 +211,14 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
 
                     @Override
-                    public void add(Album album) {
+                    public void add(Album album,DiggerAlbum diggerAlbum) {
                         if (album != null) {
                             //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
                             for (Album item : albumList) {
                                 item.setSelected(false);
                             }
                             albumList.add(album);
-
+                            mDiggerAlbum = diggerAlbum;
                             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
                             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
@@ -338,12 +345,18 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
     }
 
+    long currentTimeMillis = System.currentTimeMillis();
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_confirm:
-                String inputTitle = et_content.getText().toString();
-                String inputUrl = tv_source_url.getText().toString();
+                if(System.currentTimeMillis() - currentTimeMillis <= 1500){
+                    currentTimeMillis = System.currentTimeMillis();
+                    return;
+                }
+                currentTimeMillis = System.currentTimeMillis();
+                final String inputTitle = et_content.getText().toString();
+                final String inputUrl = tv_source_url.getText().toString();
                 if (TextUtils.isEmpty(inputTitle)) {
                     ToastUtil.toastShort("亲,挖掘内容不能为空!");
                 } else {
@@ -355,14 +368,46 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         }
                     }
                     //通知外面的LengJingFgt 数据发生了变化
-                    Logger.i("jigang", "input url = " + inputUrl);
-                    mLengJingFgt.updateSpecialList(index, inputTitle, inputUrl, albumList.get(index));
-                    this.dismiss();
+                    //TODO 开始挖掘
+                    final int finalIndex = index;
+                    final Album album = albumList.get(finalIndex);
+                    DigNewsRequest.digNews(m_pContext,album.getAlbumId() , inputTitle, inputUrl, new DiggerNewsListener() {
+                        @Override
+                        public void diggerNewsDone(String title) {
+
+                            if (!TextUtils.isEmpty(title)) {
+                                Logger.e("jigang","----专辑 id ="+album.getAlbumId());
+                                ToastUtil.toastShort("开始挖掘!");
+                                //如果mDiggerAlbum 为null,则说明用户选择的是老专辑,否则是新建专辑
+                                if (mDiggerAlbum == null){
+                                    DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
+//                                    mDiggerAlbum = new DiggerAlbum(album.getAlbumId(), DateUtil.getCurrentDate1(),album.getDescription(),"",album.getAlbum(),"1",album.getId());
+                                    mDiggerAlbum = diggerAlbum;
+                                }
+                                Logger.e("jigang","----专辑名称="+mDiggerAlbum.getAlbum_title());
+                                Logger.e("jigang","----挖掘 title="+title);
+                                mLengJingFgt.updateAlbumList(finalIndex, inputTitle, inputUrl, album,mDiggerAlbum);
+                                DiggerPopupWindow.this.dismiss();
+                            } else {
+                                ToastUtil.toastShort("开始挖掘失败,请稍后再试!");
+                            }
+                        }
+                    });
                 }
                 break;
         }
     }
-
+    /**
+     * 获取InputMethodManager，隐藏软键盘
+     * @param view
+     */
+    private void hideKeyboard(View view) {
+        IBinder token = view.getWindowToken();
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) m_pContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
     class AlbumAdapter extends BaseAdapter {
         Context mContext;
 
@@ -432,13 +477,14 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
 
                         @Override
-                        public void add(Album album) {
+                        public void add(Album album,DiggerAlbum diggerAlbum) {
                             if (album != null) {
                                 //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
                                 for (Album item : albumList) {
                                     item.setSelected(false);
                                 }
                                 albumList.add(album);
+                                mDiggerAlbum = diggerAlbum;
                                 adapter.notifyDataSetChanged();
                             }
                         }

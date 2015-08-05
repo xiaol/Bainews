@@ -14,8 +14,10 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.entity.DigSpecial;
-import com.news.yazhidao.entity.DigSpecialItem;
+import com.news.yazhidao.entity.AlbumSubItem;
+import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.listener.FetchAlbumSubItemsListener;
+import com.news.yazhidao.net.request.FetchAlbumSubItemsRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -33,9 +35,11 @@ public class AlbumListAty extends BaseActivity {
     private TextView mCommonHeaderTitle;
     public static final String KEY_DIG_SPECIAL_INTENT = "key_dig_special_intent";
     public static final String KEY_DIG_SPECIAL_BUNDLE = "key_dig_special_bundle";
+    public static final String KEY_DIG_IS_NEW_ADD = "key_dig_is_new_add";
     private View mCommonHeaderLeftBack;
     private SpecialLvAdapter mSpecialLvAdapter;
-    private ArrayList<DigSpecialItem> mSpecialLvDatas ;
+    private ArrayList<AlbumSubItem> mAlbumSubItems;
+    private DiggerAlbum mDiggerAlbum;
     private int mScreenWidth;
     private int mScreenHeight;
     protected boolean translucentStatus() {
@@ -52,11 +56,9 @@ public class AlbumListAty extends BaseActivity {
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         Bundle bundle = getIntent().getBundleExtra(KEY_DIG_SPECIAL_INTENT);
-        DigSpecial special = (DigSpecial) bundle.getSerializable(KEY_DIG_SPECIAL_BUNDLE);
-        mSpecialLvDatas = special.getSpecialItems();
-
+        mDiggerAlbum = (DiggerAlbum) bundle.getSerializable(KEY_DIG_SPECIAL_BUNDLE);
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
-        mCommonHeaderTitle.setText(special.getTitle());
+        mCommonHeaderTitle.setText(mDiggerAlbum.getAlbum_title());
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
         mCommonHeaderLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +73,14 @@ public class AlbumListAty extends BaseActivity {
     protected void loadData() {
         mSpecialLvAdapter = new SpecialLvAdapter();
         mSpecialLv.setAdapter(mSpecialLvAdapter);
+
+        FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), true, new FetchAlbumSubItemsListener() {
+            @Override
+            public void fetchAlbumSubItemsDone(ArrayList<AlbumSubItem> albumSubItems) {
+                mAlbumSubItems = albumSubItems;
+                mSpecialLvAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 
@@ -82,7 +92,7 @@ public class AlbumListAty extends BaseActivity {
 
          @Override
          public int getCount() {
-             return mSpecialLvDatas == null ? 0:mSpecialLvDatas.size();
+             return mAlbumSubItems == null ? 0:mAlbumSubItems.size();
          }
 
          @Override
@@ -118,22 +128,22 @@ public class AlbumListAty extends BaseActivity {
              }else {
                  holder = (SpecialLvHolder) convertView.getTag();
              }
-             DigSpecialItem digSpecialItem = mSpecialLvDatas.get(position);
+             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
              holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(AlbumListAty.this));
-             holder.mSpecialItemTitle.setText(digSpecialItem.getTitle());
+             holder.mSpecialItemTitle.setText(albumSubItem.getSearch_key());
 
              holder.mSpecialItemOnlyOne.setVisibility(View.GONE);
              holder.mSpecialItemTitle.setVisibility(View.VISIBLE);
              holder.mSpecialItemUrl.setVisibility(View.VISIBLE);
-             if (TextUtils.isEmpty(digSpecialItem.getUrl())||TextUtils.isEmpty(digSpecialItem.getTitle())){
+             if (TextUtils.isEmpty(albumSubItem.getSearch_url())||TextUtils.isEmpty(albumSubItem.getSearch_key())){
                  holder.mSpecialItemOnlyOne.setVisibility(View.VISIBLE);
                  holder.mSpecialItemTitle.setVisibility(View.GONE);
                  holder.mSpecialItemUrl.setVisibility(View.GONE);
-                 holder.mSpecialItemOnlyOne.setText(digSpecialItem.getUrl()+digSpecialItem.getTitle());
+                 holder.mSpecialItemOnlyOne.setText(albumSubItem.getSearch_url()+albumSubItem.getSearch_key());
                  holder.mSpecialItemOnlyOne.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
              }
 
-             holder.mSpecialItemProgress.setCurrentStep(digSpecialItem.getProgress());
+             holder.mSpecialItemProgress.setCurrentStep(Integer.valueOf(albumSubItem.getStatus()));
              return convertView;
          }
      }

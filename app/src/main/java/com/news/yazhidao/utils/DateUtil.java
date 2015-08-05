@@ -282,4 +282,13 @@ public class DateUtil {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         return format.format(date);
     }
+    /**
+     * 获取当前系统的时间  格式:2015-06-04 12:12:34
+     * @return
+     */
+    public static String getCurrentDate1() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh-MM-ss");
+        return format.format(date);
+    }
 }

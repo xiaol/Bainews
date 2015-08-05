@@ -1,11 +1,14 @@
 package com.news.yazhidao.widget;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -17,6 +20,9 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.BgAlbum;
+import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.listener.CreateDiggerAlbumListener;
+import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
 import com.news.yazhidao.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -33,7 +39,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private ArrayList<BgAlbum> ids;
     private AddAlbumListener listener;
     private Album album;
-
+    private DiggerAlbum mDiggerAlbum;
     private TextView tv_cancel;
     private TextView tv_add_album;
     private TextView tv_new;
@@ -85,20 +91,36 @@ public class AddAlbumPopupWindow extends PopupWindow {
         tv_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String inputTitle = et_name.getText().toString();
-                if (TextUtils.isEmpty(inputTitle)){
+                String inputTitle = et_name.getText().toString();
+                if (TextUtils.isEmpty(inputTitle)) {
                     ToastUtil.toastShort("专辑名称不能为空!");
-                }else{
+                } else {
                     album.setAlbum(inputTitle);
                     album.setDescription(et_des.getText().toString());
                     album.setSelected(true);
                     m_pContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    flag = true;
-                    dismiss();
+                    /**发送新建专辑的数据到服务器*/
+                    final DiggerAlbum diggerAlbum = new DiggerAlbum("", "", album.getDescription(), null, inputTitle, "0", album.getId());
+                    CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new CreateDiggerAlbumListener() {
+
+                        @Override
+                        public void createDiggerAlbumDone(String pAlbumId) {
+                            if (TextUtils.isEmpty(pAlbumId)) {
+                                ToastUtil.toastShort("创建专辑失败,请稍后再试!");
+                            } else {
+                                ToastUtil.toastShort("创建专辑成功!");
+                                album.setAlbumId(pAlbumId);
+                                mDiggerAlbum = diggerAlbum;
+                                flag = true;
+                                dismiss();
+                            }
+                        }
+                    });
                 }
 
             }
         });
+
         et_name = (EditText) mMenuView.findViewById(R.id.et_name);
         et_des = (EditText) mMenuView.findViewById(R.id.et_des);
 
@@ -128,6 +150,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
                 @Override
                 public void onClick(View v) {
                     int tag = (int) rl_album.getTag();
+                    /**当选择专辑背景时,隐藏软键盘*/
+                    hideKeyboard(et_name);
+                    hideKeyboard(et_des);
 
                     RelativeLayout layout = (RelativeLayout) bg_album_item_layout.getChildAt(tag);
                     ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
@@ -166,13 +191,23 @@ public class AddAlbumPopupWindow extends PopupWindow {
 //        //设置SelectPicPopupWindow弹出窗体的背景
 //        this.setBackgroundDrawable(dw);
     }
-
+    /**
+     * 获取InputMethodManager，隐藏软键盘
+     * @param view
+     */
+    private void hideKeyboard(View view) {
+        IBinder token = view.getWindowToken();
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) m_pContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
     @Override
     public void dismiss() {
         String inputTitle = et_name.getText().toString();
         if(album != null && inputTitle != null && !"".equals(inputTitle) && flag) {
             if(listener !=null ){
-                listener.add(album);
+                listener.add(album,mDiggerAlbum);
             }
         }
         super.dismiss();
@@ -232,6 +267,6 @@ public class AddAlbumPopupWindow extends PopupWindow {
     }
 
     public interface AddAlbumListener {
-        void add(Album album);
+        void add(Album album, DiggerAlbum diggerAlbum);
     }
 }

@@ -2,6 +2,8 @@ package com.news.yazhidao.pages;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -23,14 +25,22 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
-import com.news.yazhidao.entity.DigSpecial;
-import com.news.yazhidao.entity.DigSpecialItem;
+import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.FetchAlbumListListener;
+import com.news.yazhidao.listener.UserLoginListener;
+import com.news.yazhidao.net.request.FetchAlbumListRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
+import com.news.yazhidao.widget.LoginModePopupWindow;
 
 import java.util.ArrayList;
+
+import cn.sharesdk.framework.PlatformDb;
 
 
 public class LengjingFgt extends Fragment {
@@ -40,11 +50,19 @@ public class LengjingFgt extends Fragment {
     private ArrayList<Album> albumList = new ArrayList<Album>();
     //个人专辑列表
     private GridView mSpecialGv;
-    private MySpecialLvAdatpter mSpecialLvAdatpter;
-    private ArrayList<DigSpecial> mSpecialDatas;
+    private MyAlbumLvAdatpter mAlbumLvAdatpter;
+    private ArrayList<DiggerAlbum> mDiggerAlbums;
     private Activity mActivity;
 
+    private class LogoutReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+        }
+    }
     public LengjingFgt() {
+        mDiggerAlbums = new ArrayList<>();
     }
 
     @SuppressLint("ValidFragment")
@@ -64,23 +82,7 @@ public class LengjingFgt extends Fragment {
     }
 
     private void initVars() {
-
-        //TODO 此处是测试数据
-        mSpecialDatas = new ArrayList();
-        ArrayList<DigSpecialItem> items1 = new ArrayList<>();
-        items1.add(new DigSpecialItem("这是一个神奇的网站.", "htttp://www.baidu.com", 1));
-        items1.add(new DigSpecialItem("默认", "htttp://www.baidu.com", 3));
-        items1.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.", "htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com", 7));
-        mSpecialDatas.add(new DigSpecial("默认", "这是一个神奇的app", R.drawable.bg_special_list_item_default, items1));
-
-        ArrayList<DigSpecialItem> items2 = new ArrayList<>();
-        items2.add(new DigSpecialItem("这是一个神奇的网站.", "htttp://www.baidu.com", 2));
-        items2.add(new DigSpecialItem("", "htttp://www.baidu.com", 2));
-        items2.add(new DigSpecialItem("默认", "", 5));
-        items2.add(new DigSpecialItem("这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.这是一个神奇的网站.", "htttp://www.baidu.comhtttp://www.baidu.comhtttp://www.baidu.com", 6));
-        mSpecialDatas.add(new DigSpecial("最爱的", "这是一个神奇的app,这是一个神奇的app,这是一个神奇的app", R.drawable.bg_special_list_item_default, items2));
-
-        mSpecialLvAdatpter = new MySpecialLvAdatpter();
+        mAlbumLvAdatpter = new MyAlbumLvAdatpter();
     }
 
 
@@ -95,14 +97,38 @@ public class LengjingFgt extends Fragment {
 
         //专辑显示列表
         mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
-        mSpecialGv.setAdapter(mSpecialLvAdatpter);
+        mSpecialGv.setAdapter(mAlbumLvAdatpter);
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openAlbumListAty(position);
+                openAlbumListAty(position,false);
             }
         });
 
+        /**判断用户是否登录,如果没有登录则只显示教程页面*/
+        User user = SharedPreManager.getUser(getActivity());
+        if (user == null){
+            lv_lecture.setVisibility(View.VISIBLE);
+            mSpecialGv.setVisibility(View.GONE);
+        }else{
+            lv_lecture.setVisibility(View.GONE);
+            mSpecialGv.setVisibility(View.VISIBLE);
+            /**获取专辑列表数据*/
+            FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+                @Override
+                public void success(ArrayList<DiggerAlbum> resultList) {
+                    Logger.e("jigang", "--- " + resultList.size());
+                    if (resultList != null && resultList.size() > 0) {
+                        setDiggerAlbums(resultList);
+                    }
+                }
+
+                @Override
+                public void failure() {
+                    ToastUtil.toastShort("获取专辑失败!");
+                }
+            });
+        }
     }
 
     /**
@@ -111,77 +137,119 @@ public class LengjingFgt extends Fragment {
      * @param newsTitle
      * @param newsUrl
      */
-    public void openEditWindow(String newsTitle, String newsUrl) {
-        for(int i = 0;i < mSpecialDatas.size();i ++){
-            DigSpecial special = mSpecialDatas.get(i);
+    public void openEditWindow(final String newsTitle, final String newsUrl) {
+        /**判断用户是否登录,如果没有登录则只显示教程页面*/
+        User user = SharedPreManager.getUser(getActivity());
+        if (user == null){
+            final LoginModePopupWindow window = new LoginModePopupWindow(getActivity(), new UserLoginListener() {
+                @Override
+                public void userLogin(String platform, PlatformDb platformDb) {
+                    fetchAlbumListData(newsTitle,newsUrl);
+                }
 
-            Album album = new Album();
-            album.setAlbum(special.getTitle());
-            album.setDescription(special.getDesc());
-            album.setId(String.valueOf(special.getBgDrawable()));
-            album.setSelected(i==0);
+                @Override
+                public void userLogout() {
 
-            albumList.add(album);
+                }
+            }, null);
+            window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
+                    | Gravity.CENTER, 0, 0);
+        }else{
+           fetchAlbumListData(newsTitle, newsUrl);
         }
 
-        DiggerPopupWindow window = new DiggerPopupWindow(this, mActivity, 1 + "", albumList, 1,false);
-        window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
-        window.setFocusable(true);
-        window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
-                | Gravity.CENTER, 0, 0);
     }
 
+    /***
+     * 获取专辑列表
+     * @param newsTitle
+     * @param newsUrl
+     */
+private void fetchAlbumListData(final String newsTitle, final String newsUrl){
+    /**获取专辑列表数据*/
+    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+        @Override
+        public void success(ArrayList<DiggerAlbum> resultList) {
+            Logger.e("jigang", "--- " + resultList.size());
+            if (resultList != null && resultList.size() > 0) {
+                setDiggerAlbums(resultList);
+                for(int i = 0;i < mDiggerAlbums.size();i ++){
+                    DiggerAlbum diggerAlbum = mDiggerAlbums.get(i);
+
+                    Album album = new Album();
+                    album.setAlbum(diggerAlbum.getAlbum_title());
+                    album.setDescription(diggerAlbum.getAlbum_des());
+                    album.setId(String.valueOf(diggerAlbum.getAlbum_img()));
+                    album.setAlbumId(diggerAlbum.getAlbum_id());
+                    album.setSelected(i==0);
+
+                    albumList.add(album);
+                }
+
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1,false);
+                window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
+                window.setFocusable(true);
+                window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+            }
+        }
+
+        @Override
+        public void failure() {
+            ToastUtil.toastShort("获取专辑失败!");
+        }
+    });
+}
     /**
      * 打开专辑列表详情页
      * @param position 当前的专辑索引
      */
-    private void openAlbumListAty(int position){
-        DigSpecial digSpecial = mSpecialDatas.get(position);
+    private void openAlbumListAty(int position,boolean isNewAdd){
+        DiggerAlbum diggerAlbum = mDiggerAlbums.get(position);
+        Logger.e("jigang","update open ="+diggerAlbum.getAlbum_id());
         Intent specialAty = new Intent(getActivity(), AlbumListAty.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, digSpecial);
+        bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, diggerAlbum);
+        bundle.putBoolean(AlbumListAty.KEY_DIG_IS_NEW_ADD, isNewAdd);
         specialAty.putExtra(AlbumListAty.KEY_DIG_SPECIAL_INTENT, bundle);
         startActivity(specialAty);
     }
     /**
      * 更新专辑列表数据
-     *  @param specialIndex   专辑索引,有可能为新建专辑索引
-     * @param inputTitle 挖掘内容的标题
-     * @param inputUrl  挖掘内容的url,可能为null
-     * @param mNewAddSpecial 新建的专辑entity类
+     * @param pAlbumIndex   专辑索引,有可能为新建专辑索引
+     * @param pInputTitle 挖掘内容的标题
+     * @param pInputUrl  挖掘内容的url,可能为null
+     * @param pNewAddAlbum 新建的专辑entity类
+     * @param pDiggerAlbum
      */
-    public void updateSpecialList(int specialIndex, String inputTitle, String inputUrl, Album mNewAddSpecial) {
+    public void updateAlbumList(int pAlbumIndex, String pInputTitle, String pInputUrl, Album pNewAddAlbum, DiggerAlbum pDiggerAlbum) {
         Log.e("jigang", "update gaga");
-        //判断是否是心添加的专辑
-        if (specialIndex >= mSpecialDatas.size()) {
+        Logger.e("jigang", "update 11 =" + pDiggerAlbum.getAlbum_id());
+        //判断是否是新添加的专辑
+        if (pAlbumIndex >= mDiggerAlbums.size()) {
             //添加一个新的专辑
-            ArrayList<DigSpecialItem> items1 = new ArrayList<>();
-            items1.add(0,new DigSpecialItem(inputTitle, inputUrl, 1));
-            Log.e("jigang", "id----" + mNewAddSpecial.getId());
-            mSpecialDatas.add(new DigSpecial(mNewAddSpecial.getAlbum(), mNewAddSpecial.getDescription(), Integer.valueOf(mNewAddSpecial.getId()), items1));
-            mSpecialLvAdatpter.notifyDataSetChanged();
+            mDiggerAlbums.add(pDiggerAlbum);
+            mAlbumLvAdatpter.notifyDataSetChanged();
         } else {
             //修改专辑数据
-            DigSpecial digSpecial = mSpecialDatas.get(specialIndex);
-            ArrayList<DigSpecialItem> items = digSpecial.getSpecialItems();
-            items.add(0,new DigSpecialItem(inputTitle, inputUrl, 1));
-            digSpecial.setSpecialItems(items);
-            mSpecialLvAdatpter.notifyDataSetChanged();
+            DiggerAlbum diggerAlbum = mDiggerAlbums.get(pAlbumIndex);
+            diggerAlbum.setAlbum_news_count((Integer.valueOf(diggerAlbum.getAlbum_news_count())+1)+"");
+            mAlbumLvAdatpter.notifyDataSetChanged();
 
         }
-        openAlbumListAty(specialIndex);
-    }
-
-    /**
-     * 获取专辑列表数据
-     *
-     * @return
-     */
-    public ArrayList<DigSpecial> getSpecialDatas() {
-        return mSpecialDatas;
+        openAlbumListAty(pAlbumIndex, true);
     }
 
 
+    public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
+        this.mDiggerAlbums = mDiggerAlbums;
+        lv_lecture.setVisibility(View.GONE);
+        mSpecialGv.setVisibility(View.VISIBLE);
+        mAlbumLvAdatpter.notifyDataSetChanged();
+    }
+    public ArrayList<DiggerAlbum>  getDiggerAlbums(){
+        return mDiggerAlbums;
+    }
     /**
      * viewpager适配器
      */
@@ -208,9 +276,7 @@ public class LengjingFgt extends Fragment {
             convertView = View.inflate(getActivity(), R.layout.item_lv_lecture, null);
             ImageView iv_lecture = (ImageView) convertView.findViewById(R.id.iv_lecture);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth, (int) (GlobalParams.screenWidth * 0.73));
-            params.setMargins(10, 10, 10, 10);
-
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth - DensityUtil.dip2px(getActivity(),8), (int) (GlobalParams.screenWidth * 0.73));
             iv_lecture.setLayoutParams(params);
 
             switch (position) {
@@ -235,16 +301,16 @@ public class LengjingFgt extends Fragment {
     /**
      * 个人专辑列表适配器
      */
-    public class MySpecialLvAdatpter extends BaseAdapter {
+    public class MyAlbumLvAdatpter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mSpecialDatas == null ? 0 : mSpecialDatas.size();
+            return mDiggerAlbums == null ? 0 : mDiggerAlbums.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mSpecialDatas.get(position);
+            return mDiggerAlbums.get(position);
         }
 
         @Override
@@ -254,9 +320,9 @@ public class LengjingFgt extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            MySpecialHolder holder;
+            MyAlbumHolder holder;
             if (convertView == null) {
-                holder = new MySpecialHolder();
+                holder = new MyAlbumHolder();
                 convertView = View.inflate(getActivity(), R.layout.fgt_special_listview_item, null);
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (426.0f / 1280 * DeviceInfoUtil.getScreenHeight())));
                 holder.mSpecialTitleContainer = convertView.findViewById(R.id.mSpecialTitleContainer);
@@ -265,26 +331,26 @@ public class LengjingFgt extends Fragment {
                 holder.mSpecialDesc = (TextView) convertView.findViewById(R.id.mSpecialDesc);
                 convertView.setTag(holder);
             } else {
-                holder = (MySpecialHolder) convertView.getTag();
+                holder = (MyAlbumHolder) convertView.getTag();
             }
-            DigSpecial digSpecial = mSpecialDatas.get(position);
-            holder.mSpecialTitle.setText(digSpecial.getTitle());
-            holder.mSpecialCount.setText(digSpecial.getSpecialItems().size() + "");
-            holder.mSpecialDesc.setText(digSpecial.getDesc());
+            DiggerAlbum diggerAlbum = mDiggerAlbums.get(position);
+            holder.mSpecialTitle.setText(diggerAlbum.getAlbum_title());
+            holder.mSpecialCount.setText(diggerAlbum.getAlbum_news_count());
+            holder.mSpecialDesc.setText(diggerAlbum.getAlbum_des());
 
             //设置title父容器的宽度
             Rect rect = new Rect();
-            holder.mSpecialTitle.getPaint().getTextBounds(digSpecial.getTitle(), 0, digSpecial.getTitle().length(), rect);
+            holder.mSpecialTitle.getPaint().getTextBounds(diggerAlbum.getAlbum_title(), 0, diggerAlbum.getAlbum_title().length(), rect);
             holder.mSpecialTitleContainer.setLayoutParams(new LinearLayout.LayoutParams(rect.width() + DensityUtil.dip2px(getActivity(), 40), ViewGroup.LayoutParams.WRAP_CONTENT));
 
 
             //设置专辑背景图片
-            convertView.setBackgroundResource(digSpecial.getBgDrawable());
+            convertView.setBackgroundResource(Integer.valueOf(diggerAlbum.getAlbum_img()));
             return convertView;
         }
     }
 
-    static class MySpecialHolder {
+    static class MyAlbumHolder {
         View mSpecialTitleContainer;
         TextView mSpecialTitle;
         TextView mSpecialCount;

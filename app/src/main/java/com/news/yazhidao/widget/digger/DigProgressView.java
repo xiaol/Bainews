@@ -200,7 +200,7 @@ public class DigProgressView extends LinearLayout {
                 step6Icon.startPin();
                 step6Title.setTextColor(getResources().getColor(R.color.dig_title_doing));
                 break;
-            case 7:
+            case 0:
                 step1Icon.setBackgroundResource(R.drawable.ic_completed);
                 step1Icon.stopPinning();
                 step1Title.setTextColor(getResources().getColor(R.color.dig_title_done));

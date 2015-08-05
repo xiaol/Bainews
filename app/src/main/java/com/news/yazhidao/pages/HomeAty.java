@@ -26,17 +26,25 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
-import com.news.yazhidao.entity.DigSpecial;
+import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.FetchAlbumListListener;
+import com.news.yazhidao.listener.UserLoginListener;
+import com.news.yazhidao.net.request.FetchAlbumListRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
+import com.news.yazhidao.widget.LoginModePopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.ArrayList;
+
+import cn.sharesdk.framework.PlatformDb;
 
 
 public class HomeAty extends BaseActivity {
@@ -217,47 +225,80 @@ public class HomeAty extends BaseActivity {
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                albumList.clear();
-                ArrayList<DigSpecial> specialDatas = mLengJingFgt.getSpecialDatas();
-                for (int i = 0; i < specialDatas.size(); i++) {
-                    Album album = new Album();
-                    album.setSelected(i == 0);
-                    album.setAlbum(specialDatas.get(i).getTitle());
-                    albumList.add(album);
+                /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
+                User user = SharedPreManager.getUser(HomeAty.this);
+                if (user == null){
+                    final LoginModePopupWindow window = new LoginModePopupWindow(HomeAty.this, new UserLoginListener() {
+                        @Override
+                        public void userLogin(String platform, PlatformDb platformDb) {
+
+                        }
+
+                        @Override
+                        public void userLogout() {
+
+                        }
+                    }, null);
+                    window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                            | Gravity.CENTER, 0, 0);
+                    return;
                 }
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true);
+                /**获取专辑列表数据*/
+                FetchAlbumListRequest.obtainAlbumList(HomeAty.this, new FetchAlbumListListener() {
+                    @Override
+                    public void success(ArrayList<DiggerAlbum> resultList) {
+                        if(resultList !=null && resultList.size() > 0){
+                        albumList.clear();
+                        for (int i = 0; i < resultList.size(); i++) {
+                            Album album = new Album();
+                            album.setSelected(i == 0);
+                            album.setAlbum(resultList.get(i).getAlbum_title());
+                            album.setAlbumId(resultList.get(i).getAlbum_id());
+                            albumList.add(album);
+                        }
+                            mLengJingFgt.setDiggerAlbums(resultList);
+                        DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true);
 
-                window.setFocusable(true);
-                window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
+                        window.setFocusable(true);
+                        window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                                | Gravity.CENTER, 0, 0);
+
+                        }
+                    }
+
+                    @Override
+                    public void failure() {
+                        ToastUtil.toastShort("获取专辑失败!");
+                    }
+                });
 
 
                 leftCenterMenu.close(true);
 
             }
         });
-        SubActionButton button2 = lCSubBuilder.setContentView(lcIcon2, blueContentParams).build();
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                albumList.clear();
-
-                Album album = new Album();
-                album.setSelected(false);
-                album.setAlbum("默认");
-
-                albumList.add(album);
-
-                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2,true);
-                window.setFocusable(true);
-                window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
-
-                leftCenterMenu.close(true);
-            }
-        });
+//        SubActionButton button2 = lCSubBuilder.setContentView(lcIcon2, blueContentParams).build();
+//
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                albumList.clear();
+//
+//                Album album = new Album();
+//                album.setSelected(false);
+//                album.setAlbum("默认");
+//
+//                albumList.add(album);
+//
+//                DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 2,true);
+//                window.setFocusable(true);
+//                window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+//                        | Gravity.CENTER, 0, 0);
+//
+//                leftCenterMenu.close(true);
+//            }
+//        });
 
         SubActionButton button3 = lCSubBuilder.setContentView(lcIcon3, blueContentParams).build();
         button3.setOnClickListener(new View.OnClickListener() {
@@ -272,7 +313,7 @@ public class HomeAty extends BaseActivity {
         // Build another menu with custom options
         leftCenterMenu = new FloatingActionMenu.Builder(HomeAty.this)
                 .addSubActionView(button1)
-                .addSubActionView(button2)
+//                .addSubActionView(button2)
                 .addSubActionView(button3)
                 .setRadius(redActionMenuRadius)
                 .setStartAngle(-140)

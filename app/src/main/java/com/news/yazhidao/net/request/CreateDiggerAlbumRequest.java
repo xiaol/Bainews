@@ -1,6 +1,7 @@
 package com.news.yazhidao.net.request;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.DiggerAlbum;
@@ -57,11 +58,14 @@ public class CreateDiggerAlbumRequest {
             @Override
             public void success(String result) {
                 String albumId = null;
-                try {
-                    JSONObject jsonObj = new JSONObject(result);
-                    albumId = jsonObj.optString(ALBUM_ID);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (!TextUtils.isEmpty(result)){
+                    try {
+                        JSONObject jsonObj = new JSONObject(result);
+                        albumId = jsonObj.optString(ALBUM_ID);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 if (pListener != null) {
                     pListener.createDiggerAlbumDone(albumId);
