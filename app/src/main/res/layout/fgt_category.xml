@@ -15,11 +15,21 @@
         android:overScrollMode="never"></ListView>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/ll_layer"
+        android:id="@+id/ll_no_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
-        android:visibility="gone" />
+        android:background="#dfe6e9"
+        android:orientation="horizontal"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/btn_reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击重新加载"
+            android:textSize="14sp"
+            />
+
+    </LinearLayout>
 
 </FrameLayout>

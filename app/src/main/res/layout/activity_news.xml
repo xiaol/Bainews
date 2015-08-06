@@ -13,8 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.twotoasters.jazzylistview.JazzyListView
-            xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        <com.twotoasters.jazzylistview.JazzyListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/lv_news"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -33,9 +32,20 @@
             android:id="@+id/ll_no_network"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/nonetwork"
+            android:background="#dfe6e9"
             android:orientation="horizontal"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/btn_reload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击重新加载"
+                android:textSize="14sp"
+                />
+
+            </LinearLayout>
 
 
         <FrameLayout
@@ -79,6 +89,7 @@
             android:id="@+id/mNewsFeedProgressWheelWrapper"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:background="@color/bg_gray">
 
             <ImageView
@@ -111,7 +122,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#000000"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </FrameLayout>

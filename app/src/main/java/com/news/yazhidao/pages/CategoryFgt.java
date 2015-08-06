@@ -2,6 +2,7 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,7 +12,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -23,7 +26,8 @@ import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
-import com.news.yazhidao.utils.image.ImageManager;
+import com.news.yazhidao.utils.NetUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 
 import java.util.ArrayList;
@@ -36,6 +40,9 @@ public class CategoryFgt extends Fragment {
     private CategoryAdapter mAdapter;
     private ArrayList<Channel> marrCategory;
     private int mScreenWidth;
+    private TypedArray drawableList;
+    private LinearLayout ll_no_network;
+    private Button btn_reload;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,13 +56,38 @@ public class CategoryFgt extends Fragment {
     }
 
     private void initVars() {
+        drawableList = getResources().obtainTypedArray(R.array.bg_category_list);
+
         mAdapter = new CategoryAdapter(getActivity());
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         mScreenWidth = wm.getDefaultDisplay().getWidth();
-        loadChannelList();
     }
 
     private void findViews() {
+        //初始化
+        ll_no_network = (LinearLayout) rootView.findViewById(R.id.ll_no_network);
+        ll_no_network.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        btn_reload = (Button) rootView.findViewById(R.id.btn_reload);
+        btn_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetUtil.checkNetWork(getActivity())) {
+                    ll_no_network.setVisibility(View.GONE);
+                    mlvCategory.setVisibility(View.VISIBLE);
+                    loadChannelList();
+                } else {
+                    mlvCategory.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+                    ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+                }
+            }
+        });
+
         mlvCategory = (ListView) rootView.findViewById(R.id.category_listview);
         mlvCategory.setAdapter(mAdapter);
         mlvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -70,6 +102,16 @@ public class CategoryFgt extends Fragment {
                 }
             }
         });
+
+        //请求平道列表
+        if (NetUtil.checkNetWork(getActivity())) {
+            ll_no_network.setVisibility(View.GONE);
+            loadChannelList();
+        } else {
+            mlvCategory.setVisibility(View.GONE);
+            ll_no_network.setVisibility(View.VISIBLE);
+            ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+        }
     }
 
     private void setTabTitle(ArrayList<Channel> channelList, int position) {
@@ -124,7 +166,8 @@ public class CategoryFgt extends Fragment {
             }
             Channel channel = marrCategory.get(position);
             if (channel != null) {
-                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
+//                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
+                holder.ivBgIcon.setImageResource(drawableList.getResourceId(position,0));
                 holder.tvName.setText(channel.getChannel_name());
                 holder.tvDes.setText(channel.getChannel_des());
             }
@@ -150,6 +193,9 @@ public class CategoryFgt extends Fragment {
             }
 
             public void failed(MyAppException exception) {
+
+                ll_no_network.setVisibility(View.VISIBLE);
+                ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
 
             }
         }.setReturnType(new TypeToken<ArrayList<Channel>>() {
