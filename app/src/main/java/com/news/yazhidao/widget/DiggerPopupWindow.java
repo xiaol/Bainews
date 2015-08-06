@@ -153,6 +153,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
             layout.setLayoutParams(params);
             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
+            ivBgIcon.setBackgroundResource(Integer.valueOf(albumList.get(i).getId()));
             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
             tvName.setTextSize(16);
             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
@@ -386,7 +387,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                 }
                                 Logger.e("jigang","----专辑名称="+mDiggerAlbum.getAlbum_title());
                                 Logger.e("jigang","----挖掘 title="+title);
-                                mLengJingFgt.updateAlbumList(finalIndex, inputTitle, inputUrl, album,mDiggerAlbum);
+                                mLengJingFgt.updateAlbumList(finalIndex,mDiggerAlbum);
                                 DiggerPopupWindow.this.dismiss();
                             } else {
                                 ToastUtil.toastShort("开始挖掘失败,请稍后再试!");
@@ -448,7 +449,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             } else {
                 holder = (Holder) convertView.getTag();
             }
-
+            holder.ivBgIcon.setBackgroundResource(Integer.valueOf(albumList.get(position).getId()));
             holder.rl_album.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

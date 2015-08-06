@@ -21,6 +21,7 @@ import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
+import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -153,7 +154,8 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                         mHomeLogout.setVisibility(View.GONE);
                         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
                         //发送广播通知LengJingFgt,刷新界面
-
+                        Intent userLogoutIntent = new Intent(LengjingFgt.ACTION_USER_LOGOUTED);
+                        mContext.sendBroadcast(userLogoutIntent);
                     }
                 }).setButton2Click(new View.OnClickListener() {
             @Override

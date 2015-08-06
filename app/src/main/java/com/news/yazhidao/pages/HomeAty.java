@@ -252,6 +252,7 @@ public class HomeAty extends BaseActivity {
                             album.setSelected(i == 0);
                             album.setAlbum(resultList.get(i).getAlbum_title());
                             album.setAlbumId(resultList.get(i).getAlbum_id());
+                            album.setId(resultList.get(i).getAlbum_img());
                             albumList.add(album);
                         }
                             mLengJingFgt.setDiggerAlbums(resultList);
