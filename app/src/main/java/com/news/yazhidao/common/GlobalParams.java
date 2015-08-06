@@ -17,14 +17,14 @@ public class GlobalParams {
     public static int maxHeight;
     public static int screenWidth;
     public static int screenHeight;
-    public static int currentCatePos = -1;
+    public static int currentCatePos = 15;
     public static Context context;
     public static int split_index_top = 0;
     public static int split_index_bottom = 0;
     public static LoadingLayout loading_context;
     public static ViewPager pager;
     public static PagerSlidingTabStrip tabs;
-    public static String news_detail_url;
+    public static String news_detail_url = "";
     public static FloatingActionMenu leftCenterMenu;
     public static FloatingActionButton leftCenterButton;
 

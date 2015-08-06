@@ -104,6 +104,8 @@ public class NewsDetailAty extends SwipeBackActivity {
     @Override
     protected void loadData() {
         boolean isnew = getIntent().getBooleanExtra("isnew", false);
+        boolean isdigger = getIntent().getBooleanExtra("isdigger", false);
+        String newsId = getIntent().getStringExtra("newsId");
         position = getIntent().getIntExtra("position",0);
 
         User user = SharedPreManager.getUser(NewsDetailAty.this);
@@ -172,63 +174,117 @@ public class NewsDetailAty extends SwipeBackActivity {
             }.getType()));
             _Request.execute();
         } else {
-            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
 
-            List<NameValuePair> pairs=new ArrayList<>();
+            if (isdigger) {
+                    NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
+                    List<NameValuePair> pairs=new ArrayList<>();
+                    pairs.add(new BasicNameValuePair("news_id", newsId));
+                    _Request.setParams(pairs);
+                    _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
 
-            pairs.add(new BasicNameValuePair("url", GlobalParams.news_detail_url));
-            _Request.setParams(pairs);
+                        @Override
+                        public void success(final NewsDetailAdd result) {
+                            if (result != null) {
 
-            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+                                headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                                    @Override
+                                    public void onclickPullUp(int height) {
+                                        msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                                    }
+                                }, true, new NewsDetailHeaderView.CommentListener() {
+                                    @Override
+                                    public void comment(boolean istrue) {
 
-                @Override
-                public void success(final NewsDetailAdd result) {
-                    if (result != null) {
-                        headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
-                            @Override
-                            public void onclickPullUp(int height) {
-                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                                    }
+                                });
+
+                                mNewsDetailAdapter.setData(result.relate);
+                                mNewsDetailAdapter.notifyDataSetChanged();
+
+                                if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
+                                    msgvNewsDetail.setSelection(1);
+                                }
+                            }else {
+                                ToastUtil.toastShort("新闻的内容为空，无法打开");
+                                NewsDetailAty.this.finish();
                             }
-                        }, true,new NewsDetailHeaderView.CommentListener() {
-                            @Override
-                            public void comment(boolean istrue) {
 
-                            }
-                        });
+                            mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                            mNewsDetailProgressWheel.stopSpinning();
+                            mNewsDetailProgressWheel.setVisibility(View.GONE);
 
-                        mNewsDetailAdapter.setData(result.relate);
-                        mNewsDetailAdapter.notifyDataSetChanged();
-
-                        if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
-                            msgvNewsDetail.setSelection(1);
                         }
 
-                    } else {
-                        ToastUtil.toastShort("新闻的内容为空，无法打开");
-                        NewsDetailAty.this.finish();
+                        @Override
+                        public void failed(MyAppException exception) {
+
+                            mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                            mNewsDetailProgressWheel.stopSpinning();
+                            mNewsDetailProgressWheel.setVisibility(View.GONE);
+                        }
+                    }.setReturnType(new TypeToken<NewsDetailAdd>() {
+                    }.getType()));
+                    _Request.execute();
+            } else {
+
+
+                NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
+
+                List<NameValuePair> pairs = new ArrayList<>();
+
+                pairs.add(new BasicNameValuePair("url", GlobalParams.news_detail_url));
+                _Request.setParams(pairs);
+
+                _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+
+                    @Override
+                    public void success(final NewsDetailAdd result) {
+                        if (result != null) {
+                            headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                                @Override
+                                public void onclickPullUp(int height) {
+                                    msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+                                }
+                            }, true, new NewsDetailHeaderView.CommentListener() {
+                                @Override
+                                public void comment(boolean istrue) {
+
+                                }
+                            });
+
+                            mNewsDetailAdapter.setData(result.relate);
+                            mNewsDetailAdapter.notifyDataSetChanged();
+
+                            if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
+                                msgvNewsDetail.setSelection(1);
+                            }
+
+                        } else {
+                            ToastUtil.toastShort("新闻的内容为空，无法打开");
+                            NewsDetailAty.this.finish();
+                        }
+
+                        mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                        mNewsDetailProgressWheel.stopSpinning();
+                        mNewsDetailProgressWheel.setVisibility(View.GONE);
+
                     }
 
-                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                    mNewsDetailProgressWheel.stopSpinning();
-                    mNewsDetailProgressWheel.setVisibility(View.GONE);
-
-                }
-
-                @Override
-                public void failed(MyAppException exception) {
-                    mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                    mNewsDetailProgressWheel.stopSpinning();
-                    mNewsDetailProgressWheel.setVisibility(View.GONE);
-                }
-            }.setReturnType(new TypeToken<NewsDetailAdd>() {
-            }.getType()));
-            _Request.execute();
+                    @Override
+                    public void failed(MyAppException exception) {
+                        mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                        mNewsDetailProgressWheel.stopSpinning();
+                        mNewsDetailProgressWheel.setVisibility(View.GONE);
+                    }
+                }.setReturnType(new TypeToken<NewsDetailAdd>() {
+                }.getType()));
+                _Request.execute();
+            }
         }
-
 
         Intent intent = new Intent();
         intent.putExtra("position",String.valueOf(position));
-        intent.putExtra("isComment","0");
+        intent.putExtra("isComment", "0");
 
         setResult(0, intent);
     }

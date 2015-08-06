@@ -17,7 +17,7 @@
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:background="@color/blue"/>
+            android:background="@drawable/bg_album_item"/>
 
         <TextView
             android:id="@+id/mSpecialItemTitle"

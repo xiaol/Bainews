@@ -232,6 +232,16 @@ public class NewsFeed implements Serializable{
         private String sourceSitename;
         private String user;
         private String title;
+        private String similarity;
+
+
+        public String getSimilarity() {
+            return similarity;
+        }
+
+        public void setSimilarity(String similarity) {
+            this.similarity = similarity;
+        }
 
         public String getUrl() {
             return url;

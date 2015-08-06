@@ -1,6 +1,7 @@
 package com.news.yazhidao.net.request;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.User;
@@ -42,20 +43,24 @@ public class DigNewsRequest {
         User user = SharedPreManager.getUser(pContext);
         params.put(KEY_UID,user.getUserId());
         params.put(KEY_ALID,pAlbumId);
-        params.put(KEY_KEY,pTitle);
-        params.put(KEY_URL,pUrl);
+        if(!TextUtils.isEmpty(pTitle)){
+            params.put(KEY_KEY,pTitle);
+        }
+        if(!TextUtils.isEmpty(pUrl)){
+            params.put(KEY_URL,pUrl);
+        }
         request.getParams = params;
         request.setCallback(new StringCallback() {
             @Override
             public void success(String result) {
-                if (pLisener != null){
+                if (pLisener != null) {
                     pLisener.diggerNewsDone(result);
                 }
             }
 
             @Override
             public void failed(MyAppException exception) {
-                if (pLisener != null){
+                if (pLisener != null) {
                     pLisener.diggerNewsDone(null);
                 }
             }

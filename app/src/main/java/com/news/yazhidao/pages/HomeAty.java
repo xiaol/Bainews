@@ -57,6 +57,7 @@ public class HomeAty extends BaseActivity {
     private Drawable oldBackground = null;
     private int currentColor;
     private SystemBarTintManager mTintManager;
+    private LinearLayout ll_layer;
     private long mLastPressedBackKeyTime;
     //Viewpager 索引默认是1
     private int mViewPagerIndex = 1;
@@ -144,19 +145,16 @@ public class HomeAty extends BaseActivity {
                         leftCenterButton.detach(null);
                     }
                 }
-
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
 
         GlobalParams.tabs = tabs;
 
-        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                .getDisplayMetrics());
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics());
         pager.setPageMargin(pageMargin);
         GlobalParams.pager = pager;
         pager.setCurrentItem(mViewPagerIndex);

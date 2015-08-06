@@ -24,10 +24,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="今日头条，百家争鸣"
-            android:padding="27dp"
+            android:paddingLeft="27dp"
+            android:paddingRight="27dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/white"
-            android:background="#99000000"
-            android:textSize="22sp"
+            android:background="#22000000"
+            android:textSize="21sp"
             android:layout_alignParentBottom="true" />
 
     </RelativeLayout>

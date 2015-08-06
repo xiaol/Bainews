@@ -98,7 +98,7 @@ public class ImageLoaderHelper {
     public static DisplayImageOptions getOption() {
         DisplayImageOptions options;
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.image_back) //设置图片在下载期间显示的图片
+                .showImageOnLoading(R.drawable.img_base_big) //设置图片在下载期间显示的图片
                 .showImageForEmptyUri(R.drawable.image_back)//设置图片Uri为空或是错误的时候显示的图片
                 .showImageOnFail(R.drawable.image_back)  //设置图片加载/解码过程中错误时候显示的图片
                 .cacheInMemory(true)//设置下载的图片是否缓存在内存中

@@ -324,7 +324,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)
-                    .withIcon(R.drawable.app_icon_version2)
+                    .withIcon(R.drawable.app_icon_version3)
                     .withTitle("温馨提示")
                     .withEffect(Effectstype.Sidefill)
                     .withButton1Text("OK")

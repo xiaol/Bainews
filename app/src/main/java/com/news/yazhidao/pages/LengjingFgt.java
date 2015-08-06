@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.FetchAlbumListListener;
@@ -77,7 +78,7 @@ public class LengjingFgt extends Fragment {
         rootView = inflater.inflate(R.layout.fgt_category_lengjing, container, false);
         initVars();
         findViews();
-        Logger.e("jigang","---lengjing  onCreateView");
+        Logger.e("jigang", "---lengjing  onCreateView");
         return rootView;
     }
 
@@ -101,7 +102,7 @@ public class LengjingFgt extends Fragment {
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openAlbumListAty(position,false);
+                openAlbumListAty(position,false,getActivity());
             }
         });
 
@@ -202,18 +203,20 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 }
     /**
      * 打开专辑列表详情页
+     *
      * @param position 当前的专辑索引
      */
-    private void openAlbumListAty(int position,boolean isNewAdd){
+    private void openAlbumListAty(int position,boolean isNewAdd,Activity activity){
         DiggerAlbum diggerAlbum = mDiggerAlbums.get(position);
         Logger.e("jigang","update open ="+diggerAlbum.getAlbum_id());
-        Intent specialAty = new Intent(getActivity(), AlbumListAty.class);
+        Intent specialAty = new Intent(activity, AlbumListAty.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, diggerAlbum);
         bundle.putBoolean(AlbumListAty.KEY_DIG_IS_NEW_ADD, isNewAdd);
         specialAty.putExtra(AlbumListAty.KEY_DIG_SPECIAL_INTENT, bundle);
-        startActivity(specialAty);
+        activity.startActivity(specialAty);
     }
+
     /**
      * 更新专辑列表数据
      * @param pAlbumIndex   专辑索引,有可能为新建专辑索引
@@ -236,9 +239,11 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
             diggerAlbum.setAlbum_news_count((Integer.valueOf(diggerAlbum.getAlbum_news_count())+1)+"");
             mAlbumLvAdatpter.notifyDataSetChanged();
 
-        }
-        openAlbumListAty(pAlbumIndex, true);
+            }
+
+        openAlbumListAty(pAlbumIndex, true,getActivity());
     }
+
 
 
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {

@@ -794,8 +794,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 @Override
                 public void success(int width,int height) {
 
-
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
+                        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         int left = DensityUtil.dip2px(mContext, 4);
                         int top = DensityUtil.dip2px(mContext, 5);
                         params.setMargins(left, height - top, left, 0);
@@ -2037,7 +2036,9 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         });
                     }
                 } else {
-                    mllBaiKe.setVisibility(GONE);
+                    if(mllBaiKe != null) {
+                        mllBaiKe.setVisibility(GONE);
+                    }
                 }
                 //图片墙的相关显示
 
