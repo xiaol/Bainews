@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.listener.FetchAlbumSubItemsListener;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * 专辑列表页面
  * Created by fengjigang on 15/7/23.
  */
-public class AlbumListAty extends BaseActivity {
+public class AlbumListAty extends Activity {
     /**是不是调用的新接口的数据,谷歌今日焦点不是新接口*/
     public static final String KEY_IS_NEW_API = "key_is_new_api";
     /**是不是挖掘机打开的详情页*/
@@ -61,11 +61,17 @@ public class AlbumListAty extends BaseActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView();
+        initializeViews();
+        loadData();
+    }
+
     protected void setContentView() {
         setContentView(R.layout.aty_special_layout);
     }
 
-    @Override
     protected void initializeViews() {
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
@@ -82,10 +88,22 @@ public class AlbumListAty extends BaseActivity {
             }
         });
         mSpecialLv = (ListView)findViewById(R.id.mSpecialLv);
+
+
+    }
+
+    protected void loadData() {
+        mSpecialLvAdapter = new SpecialLvAdapter();
+        mSpecialLv.setAdapter(mSpecialLvAdapter);
         mSpecialLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            long firstClick;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                if (System.currentTimeMillis() - firstClick <= 1500){
+                    firstClick = System.currentTimeMillis();
+                    return;
+                }
+                firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(AlbumListAty.this, NewsDetailAty.class);
                 AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
                 /**判断是否已经挖掘完毕,挖掘完事儿后,方可打开*/
@@ -102,14 +120,6 @@ public class AlbumListAty extends BaseActivity {
                 }
             }
         });
-
-    }
-
-    @Override
-    protected void loadData() {
-        mSpecialLvAdapter = new SpecialLvAdapter();
-        mSpecialLv.setAdapter(mSpecialLvAdapter);
-
         FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), isNewAdd, new FetchAlbumSubItemsListener() {
             @Override
             public void fetchAlbumSubItemsDone(ArrayList<AlbumSubItem> albumSubItems) {

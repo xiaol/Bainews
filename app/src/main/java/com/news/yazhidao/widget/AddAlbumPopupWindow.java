@@ -23,6 +23,7 @@ import com.news.yazhidao.entity.BgAlbum;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.listener.CreateDiggerAlbumListener;
 import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private EditText et_des;
     private HorizontalScrollView bg_album_scollView;
     private LinearLayout bg_album_item_layout;
-    private int viewcount = 0;
+    private long mFirstClickStart;
     private boolean flag = false;
 
     public AddAlbumPopupWindow(Activity context,AddAlbumListener listener) {
@@ -82,6 +83,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 flag = false;
                 dismiss();
             }
@@ -91,6 +93,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
         tv_new.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideKeyboard(v);
                 String inputTitle = et_name.getText().toString();
                 if (TextUtils.isEmpty(inputTitle)) {
                     ToastUtil.toastShort("专辑名称不能为空!");
@@ -99,6 +102,12 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     album.setDescription(et_des.getText().toString());
                     album.setSelected(true);
                     m_pContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    /**防止多次点击*/
+                    if (System.currentTimeMillis() - mFirstClickStart <= 2000){
+                        mFirstClickStart = System.currentTimeMillis();
+                        return;
+                    }
+                    mFirstClickStart = System.currentTimeMillis();
                     /**发送新建专辑的数据到服务器*/
                     final DiggerAlbum diggerAlbum = new DiggerAlbum("", "", album.getDescription(), null, inputTitle, "0", album.getId());
                     CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new CreateDiggerAlbumListener() {
@@ -109,7 +118,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
                                 ToastUtil.toastShort("创建专辑失败,请稍后再试!");
                             } else {
                                 ToastUtil.toastShort("创建专辑成功!");
+                                Logger.e("jigang","创建专辑 id  "+pAlbumId);
                                 album.setAlbumId(pAlbumId);
+                                diggerAlbum.setAlbum_id(pAlbumId);
                                 mDiggerAlbum = diggerAlbum;
                                 flag = true;
                                 dismiss();

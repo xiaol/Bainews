@@ -231,12 +231,14 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
                             final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
                             rl_album.setTag(viewcount);
-
                             for (int i = 0; i < albumList.size(); i++) {
                                 if (i != viewcount) {
                                     RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
-                                    ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
-                                    iv_selected_temp.setVisibility(View.GONE);
+                                    if(layout_temp!=null){
+                                        ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
+                                        iv_selected_temp.setVisibility(View.GONE);
+
+                                    }
                                     albumList.get(i).setSelected(false);
 
                                 }
@@ -321,7 +323,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private void showClipboardDialog(final Context pContext) {
         ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData primaryClip = cbm.getPrimaryClip();
-        if (primaryClip !=null && primaryClip.getItemCount()!=0){
+        if (primaryClip !=null && primaryClip.getItemCount()!=0&&!TextUtils.isEmpty(primaryClip.getItemAt(0).getText())){
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)
@@ -382,9 +384,9 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                 //如果mDiggerAlbum 为null,则说明用户选择的是老专辑,否则是新建专辑
                                 if (mDiggerAlbum == null){
                                     DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
-//                                    mDiggerAlbum = new DiggerAlbum(album.getAlbumId(), DateUtil.getCurrentDate1(),album.getDescription(),"",album.getAlbum(),"1",album.getId());
                                     mDiggerAlbum = diggerAlbum;
                                 }
+                                Logger.e("jigang","----专辑id="+mDiggerAlbum.getAlbum_id());
                                 Logger.e("jigang","----专辑名称="+mDiggerAlbum.getAlbum_title());
                                 Logger.e("jigang","----挖掘 title="+title);
                                 mLengJingFgt.updateAlbumList(finalIndex,mDiggerAlbum);
