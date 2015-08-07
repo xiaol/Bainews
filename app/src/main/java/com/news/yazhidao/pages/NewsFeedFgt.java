@@ -740,6 +740,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
+            if(position == 0){
+                feed.setTop_flag(true);
+            }
+
+            if(position == mMiddleNewsArr.size() - 1){
+                feed.setBottom_flag(true);
+            }
 
             if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
 //                AdcocoUtil.update();
@@ -810,32 +817,22 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
                 holder.tv_interests.setOnClickListener(new View.OnClickListener()
-
-                                                       {
-                                                           @Override
-                                                           public void onClick(View v) {
-                                                               Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                               intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                               intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                                                               intent.putExtra("position", position);
-                                                               intent.putExtra("isnew", isNewFlag);
-                                                               startActivityForResult(intent, 0);
-                                                               //uemng statistic view the head news
-                                                               MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                           }
-                                                       }
-
+                   {
+                       @Override
+                       public void onClick(View v) {
+                           Intent intent = new Intent(mContext, NewsDetailAty.class);
+                           intent.putExtra(KEY_URL, feed.getSourceUrl());
+                           intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                           intent.putExtra("position", position);
+                           intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                           startActivityForResult(intent, 0);
+                           //uemng statistic view the head news
+                           MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                       }
+                   }
                 );
 
-                holder.cv_opinions.setBackgroundColor(new
-
-                                Color()
-
-                                .
-
-                                        parseColor("#50b5eb")
-
-                );
+                holder.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
                 holder.cv_opinions.setText("观点");
                 holder.cv_opinions.setTextColor(Color.WHITE);
                 holder.cv_opinions.setTextSize(11);
@@ -932,7 +929,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                                                                public void onClick(View v) {
                                                                    Intent intent = new Intent(mContext, NewsDetailAty.class);
                                                                    intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                                   intent.putExtra("isnew", isNewFlag);
+                                                                   intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
                                                                    intent.putExtra("position", position);
                                                                    startActivityForResult(intent, 0);
                                                                    //uemng statistic view the head news
@@ -1127,7 +1124,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 3) {
-                                if (i > 18) {
+                                if (i > 16) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -1213,7 +1210,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder2.rl_top_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(mMiddleNewsArr.size());
+                        GlobalParams.pager.setCurrentItem(0);
                     }
                 });
 
@@ -1422,7 +1419,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder3.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
+
+                        GlobalParams.pager.setCurrentItem(0);
+
                     }
                 });
 
@@ -1530,7 +1529,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 6) {
-                                if (i > 18) {
+                                if (i > 16) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -1605,32 +1604,32 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(mContext, 60);
+                params.height = DensityUtil.dip2px(mContext, 50);
                 break;
 
             case 2:
                 if (length == 4) {
-                    params.height = DensityUtil.dip2px(mContext, 160);
+                    params.height = DensityUtil.dip2px(mContext, 140);
                 } else {
-                    params.height = DensityUtil.dip2px(mContext, 110);
+                    params.height = DensityUtil.dip2px(mContext, 100);
                 }
                 break;
 
             case 3:
 
                 if (length == 6) {
-                    params.height = DensityUtil.dip2px(mContext, 210);
+                    params.height = DensityUtil.dip2px(mContext, 200);
                 } else if (length == 3) {
-                    params.height = DensityUtil.dip2px(mContext, 150);
+                    params.height = DensityUtil.dip2px(mContext, 140);
                 } else {
-                    params.height = DensityUtil.dip2px(mContext, 180);
+                    params.height = DensityUtil.dip2px(mContext, 160);
                 }
 
                 break;
 
             case 4:
                 if (type == TYPE_VIEWHOLDER3) {
-                    params.height = DensityUtil.dip2px(mContext, 280);
+                    params.height = DensityUtil.dip2px(mContext, 250);
                 } else {
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 210);
@@ -1658,7 +1657,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             case 6:
                 if (type == TYPE_VIEWHOLDER3) {
-                    params.height = DensityUtil.dip2px(mContext, 395);
+                    params.height = DensityUtil.dip2px(mContext, 350);
                 } else {
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 240);
@@ -1696,7 +1695,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
 
-        if (length > 20) {
+        if (length > 16) {
             if (GlobalParams.screenHeight == 1280) {
                 params.height = 85;
             } else if (GlobalParams.screenHeight == 1776) {
@@ -1834,13 +1833,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         ll_no_network.setVisibility(View.GONE);
 
         url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
-//        String url = "http://121.40.38.56/news/baijia/fetchHom" + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-
                 isClick = true;
 
                 long delta = System.currentTimeMillis() - start;
@@ -1858,6 +1855,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     ToastUtil.toastLong("网络不给力,请检查网络....");
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
+
                 lv_news.setVisibility(View.VISIBLE);
                 lv_news.onRefreshComplete();
                 mAniNewsLoading.stop();

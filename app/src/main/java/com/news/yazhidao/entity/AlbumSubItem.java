@@ -1,9 +1,11 @@
 package com.news.yazhidao.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by fengjigang on 15/8/5.
  */
-public class AlbumSubItem {
+public class AlbumSubItem implements Serializable {
 
     /**
      * status : 0

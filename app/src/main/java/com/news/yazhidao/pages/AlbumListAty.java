@@ -14,32 +14,19 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
-import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.listener.FetchAlbumSubItemsListener;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.request.FetchAlbumSubItemsRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.digger.DigProgressView;
-import com.umeng.analytics.MobclickAgent;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -47,6 +34,14 @@ import java.util.List;
  * Created by fengjigang on 15/7/23.
  */
 public class AlbumListAty extends BaseActivity {
+    /**是不是调用的新接口的数据,谷歌今日焦点不是新接口*/
+    public static final String KEY_IS_NEW_API = "key_is_new_api";
+    /**是不是挖掘机打开的详情页*/
+    public static final String KEY_IS_DIGGER  = "key_is_digger";
+    /**挖掘新闻entity类*/
+    public static final String KEY_ALBUMSUBITEM  = "key_albumsubitem";
+    /**传递的bundle*/
+    public static final String KEY_BUNDLE = "key_bundle";
 
     private ListView mSpecialLv;
     private TextView mCommonHeaderTitle;
@@ -57,6 +52,8 @@ public class AlbumListAty extends BaseActivity {
     private SpecialLvAdapter mSpecialLvAdapter;
     private ArrayList<AlbumSubItem> mAlbumSubItems;
     private DiggerAlbum mDiggerAlbum;
+    /**是否是新添加的挖掘内容*/
+    boolean isNewAdd;
     private int mScreenWidth;
     private int mScreenHeight;
     protected boolean translucentStatus() {
@@ -74,6 +71,7 @@ public class AlbumListAty extends BaseActivity {
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         Bundle bundle = getIntent().getBundleExtra(KEY_DIG_SPECIAL_INTENT);
         mDiggerAlbum = (DiggerAlbum) bundle.getSerializable(KEY_DIG_SPECIAL_BUNDLE);
+        isNewAdd = bundle.getBoolean(KEY_DIG_IS_NEW_ADD);
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
         mCommonHeaderTitle.setText(mDiggerAlbum.getAlbum_title());
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
@@ -90,41 +88,21 @@ public class AlbumListAty extends BaseActivity {
 
                 Intent intent = new Intent(AlbumListAty.this, NewsDetailAty.class);
                 AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
-                intent.putExtra("isnew", true);
-                intent.putExtra("isdigger", true);
-                intent.putExtra("newsId", albumSubItem.getInserteId());
-                startActivityForResult(intent, 0);
-                //uemng statistic view the head news
-                MobclickAgent.onEvent(AlbumListAty.this, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                /**判断是否已经挖掘完毕,挖掘完事儿后,方可打开*/
+                if ("0".equals(albumSubItem.getStatus())){
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(KEY_IS_DIGGER, true);
+                    bundle.putSerializable(KEY_ALBUMSUBITEM, albumSubItem);
+                    intent.putExtra(KEY_BUNDLE,bundle);
+                    intent.putExtra(KEY_IS_NEW_API,true);
+                    startActivityForResult(intent, 0);
 
+                }else{
+                    ToastUtil.toastShort("正在挖掘中,请回退页面查看!");
+                }
             }
         });
 
-    }
-
-    private void loadNewsData(){
-
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
-        List<NameValuePair> pairs=new ArrayList<>();
-        pairs.add(new BasicNameValuePair("news_id", "55c1d3d90d0000db00f8569c"));
-        _Request.setParams(pairs);
-
-        _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
-
-            @Override
-            public void success(final NewsDetailAdd result) {
-                if (result != null) {
-                    ToastUtil.toastLong("aaaaaaaa");
-                }
-
-            }
-
-            @Override
-            public void failed(MyAppException exception) {
-            }
-        }.setReturnType(new TypeToken<NewsDetailAdd>() {
-        }.getType()));
-        _Request.execute();
     }
 
     @Override
@@ -132,7 +110,7 @@ public class AlbumListAty extends BaseActivity {
         mSpecialLvAdapter = new SpecialLvAdapter();
         mSpecialLv.setAdapter(mSpecialLvAdapter);
 
-        FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), true, new FetchAlbumSubItemsListener() {
+        FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), isNewAdd, new FetchAlbumSubItemsListener() {
             @Override
             public void fetchAlbumSubItemsDone(ArrayList<AlbumSubItem> albumSubItems) {
                 mAlbumSubItems = albumSubItems;

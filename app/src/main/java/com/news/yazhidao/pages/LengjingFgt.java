@@ -5,10 +5,10 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +19,11 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.Album;
-import com.news.yazhidao.entity.DigSpecialItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.FetchAlbumListListener;
@@ -46,20 +44,32 @@ import cn.sharesdk.framework.PlatformDb;
 
 public class LengjingFgt extends Fragment {
 
+    /**用户注销登录广播*/
+    public static final String ACTION_USER_LOGOUTED = "com.news.yazhidao.ACTION_USER_LOGOUTED";
+
     private View rootView;
-    private ListView lv_lecture;
+    private ImageView lv_lecture;
     private ArrayList<Album> albumList = new ArrayList<Album>();
     //个人专辑列表
     private GridView mSpecialGv;
     private MyAlbumLvAdatpter mAlbumLvAdatpter;
     private ArrayList<DiggerAlbum> mDiggerAlbums;
     private Activity mActivity;
+    /**用户退出登录广播*/
+    private UserLogoutReceiver mUserLogoutReceiver;
 
-    private class LogoutReceiver extends BroadcastReceiver {
+    private class UserLogoutReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            if(ACTION_USER_LOGOUTED.equals(intent.getAction())){
+                Logger.e("jigang"," user is logout~~");
+                /**用户退出登录后,要清空挖掘机中显示的数据并且隐藏专辑列表和显示教程页*/
+                mDiggerAlbums = null;
+                mAlbumLvAdatpter.notifyDataSetChanged();
+                lv_lecture.setVisibility(View.VISIBLE);
+                mSpecialGv.setVisibility(View.GONE);
+            }
         }
     }
     public LengjingFgt() {
@@ -71,6 +81,20 @@ public class LengjingFgt extends Fragment {
         this.mActivity = mActivity;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mUserLogoutReceiver = new UserLogoutReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USER_LOGOUTED);
+        activity.registerReceiver(mUserLogoutReceiver,filter);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unregisterReceiver(mUserLogoutReceiver);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,8 +117,7 @@ public class LengjingFgt extends Fragment {
     }
 
     private void findViews() {
-        lv_lecture = (ListView) rootView.findViewById(R.id.lv_lecture);
-        lv_lecture.setAdapter(new MyAdapter());
+        lv_lecture = (ImageView) rootView.findViewById(R.id.lv_lecture);
 
         //专辑显示列表
         mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
@@ -186,7 +209,6 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 
                     albumList.add(album);
                 }
-
                 DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1,false);
                 window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
                 window.setFocusable(true);
@@ -220,13 +242,9 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
     /**
      * 更新专辑列表数据
      * @param pAlbumIndex   专辑索引,有可能为新建专辑索引
-     * @param pInputTitle 挖掘内容的标题
-     * @param pInputUrl  挖掘内容的url,可能为null
-     * @param pNewAddAlbum 新建的专辑entity类
      * @param pDiggerAlbum
      */
-    public void updateAlbumList(int pAlbumIndex, String pInputTitle, String pInputUrl, Album pNewAddAlbum, DiggerAlbum pDiggerAlbum) {
-        Log.e("jigang", "update gaga");
+    public void updateAlbumList(int pAlbumIndex, DiggerAlbum pDiggerAlbum) {
         Logger.e("jigang", "update 11 =" + pDiggerAlbum.getAlbum_id());
         //判断是否是新添加的专辑
         if (pAlbumIndex >= mDiggerAlbums.size()) {
@@ -262,7 +280,7 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 
         @Override
         public int getCount() {
-            return 3;
+            return 1;
         }
 
         @Override
@@ -342,7 +360,6 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
             holder.mSpecialTitle.setText(diggerAlbum.getAlbum_title());
             holder.mSpecialCount.setText(diggerAlbum.getAlbum_news_count());
             holder.mSpecialDesc.setText(diggerAlbum.getAlbum_des());
-
             //设置title父容器的宽度
             Rect rect = new Rect();
             holder.mSpecialTitle.getPaint().getTextBounds(diggerAlbum.getAlbum_title(), 0, diggerAlbum.getAlbum_title().length(), rect);

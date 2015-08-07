@@ -1,17 +1,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
 
-    <LinearLayout
+    >
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         >
 
-        <ListView
+        <ImageView
             android:id="@+id/lv_lecture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"></ListView>
+            android:layout_height="220dp"
+            android:background="@drawable/iv_lecture"
+            android:visibility="gone"/>
 
         <GridView
             android:id="@+id/mSpecialLv"
@@ -24,20 +28,6 @@
             android:verticalSpacing="8dp" />
 
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/ll_layer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="10dp"
-        android:numColumns="2"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="8dp"
-        android:visibility="gone"
-        />
-
+    </RelativeLayout>
 
 </FrameLayout>

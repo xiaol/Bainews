@@ -252,6 +252,7 @@ public class HomeAty extends BaseActivity {
                             album.setSelected(i == 0);
                             album.setAlbum(resultList.get(i).getAlbum_title());
                             album.setAlbumId(resultList.get(i).getAlbum_id());
+                            album.setId(resultList.get(i).getAlbum_img());
                             albumList.add(album);
                         }
                             mLengJingFgt.setDiggerAlbums(resultList);
@@ -314,8 +315,8 @@ public class HomeAty extends BaseActivity {
 //                .addSubActionView(button2)
                 .addSubActionView(button3)
                 .setRadius(redActionMenuRadius)
-                .setStartAngle(-140)
-                .setEndAngle(-40)
+                .setStartAngle(-125)
+                .setEndAngle(-55)
                 .attachTo(leftCenterButton)
                 .build();
 

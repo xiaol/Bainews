@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
@@ -103,9 +105,17 @@ public class NewsDetailAty extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
-        boolean isnew = getIntent().getBooleanExtra("isnew", false);
-        boolean isdigger = getIntent().getBooleanExtra("isdigger", false);
-        String newsId = getIntent().getStringExtra("newsId");
+        Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
+        boolean isnew = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API,false);
+        boolean isdigger = false;
+        AlbumSubItem albumSubItem;
+        String newsId = null;
+        if(bundle!=null){
+            isdigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
+            albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
+            newsId = albumSubItem.getInserteId();
+
+        }
         position = getIntent().getIntExtra("position",0);
 
         User user = SharedPreManager.getUser(NewsDetailAty.this);
