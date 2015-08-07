@@ -145,10 +145,7 @@
             android:exported="false"></service>
         <!-- Required SDK核心功能-->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
-        <activity
-            android:name=".pages.NewsDetailAty"
-            android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"></activity>
+
         <receiver
             android:name=".receiver.MessageJPushReceiver"
             android:enabled="true">
@@ -165,9 +162,11 @@
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme">
-
-        </activity>
+            android:theme="@style/SwipeBackTheme"/>
+        <activity
+            android:name=".pages.NewsDetailAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"></activity>
         <activity
             android:name=".pages.HomeAty"
             android:screenOrientation="portrait" >
@@ -181,7 +180,6 @@
         <activity
             android:name=".pages.ChatAty"
             android:screenOrientation="portrait" />
-
 
         <activity
             android:name=".pages.BaseTagActivity"
