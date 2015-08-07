@@ -818,8 +818,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
                 holder.tv_interests.setOnClickListener(new View.OnClickListener()
                    {
+                       long firstClick = 0;
                        @Override
                        public void onClick(View v) {
+
+                           if (System.currentTimeMillis() - firstClick <= 1500) {
+                               firstClick = System.currentTimeMillis();
+                               return;
+                           }
+                           firstClick = System.currentTimeMillis();
+
                            Intent intent = new Intent(mContext, NewsDetailAty.class);
                            intent.putExtra(KEY_URL, feed.getSourceUrl());
                            intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
@@ -922,20 +930,24 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder.tv_sourcesite.setVisibility(View.GONE);
                 }
 
-                holder.rl_title_content.setOnClickListener(new View.OnClickListener()
-
-                                                           {
-                                                               @Override
-                                                               public void onClick(View v) {
-                                                                   Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                                   intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                                   intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
-                                                                   intent.putExtra("position", position);
-                                                                   startActivityForResult(intent, 0);
-                                                                   //uemng statistic view the head news
-                                                                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                               }
-                                                           }
+                holder.rl_title_content.setOnClickListener(new View.OnClickListener(){
+                       long firstClick = 0;
+                       @Override
+                       public void onClick(View v) {
+                           if (System.currentTimeMillis() - firstClick <= 1500) {
+                               firstClick = System.currentTimeMillis();
+                               return;
+                           }
+                           firstClick = System.currentTimeMillis();
+                           Intent intent = new Intent(mContext, NewsDetailAty.class);
+                           intent.putExtra(KEY_URL, feed.getSourceUrl());
+                           intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                           intent.putExtra("position", position);
+                           startActivityForResult(intent, 0);
+                           //uemng statistic view the head news
+                           MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                       }
+                   }
 
                 );
                 //点击其他观点的点击事件
@@ -1215,8 +1227,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 });
 
                 holder2.iv_title_img.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
                     @Override
                     public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra("position", position);
@@ -1276,8 +1294,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder3.tv_title.setText(title);
                 holder3.tv_title.setFontSpacing(1);
                 holder3.tv_title.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
                     @Override
                     public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
@@ -1288,8 +1312,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 });
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
                     @Override
                     public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
@@ -1315,8 +1345,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder3.tv_interests.setText(feed.getOtherNum());
 
                 holder3.tv_interests.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
                     @Override
                     public void onClick(View v) {
+
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
+
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
@@ -1328,8 +1366,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 });
 
                 holder3.ll_image_list.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
                     @Override
                     public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
