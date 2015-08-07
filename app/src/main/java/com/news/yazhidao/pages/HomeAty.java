@@ -256,7 +256,7 @@ public class HomeAty extends BaseActivity {
                             albumList.add(album);
                         }
                             mLengJingFgt.setDiggerAlbums(resultList);
-                        DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true);
+                        DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true,false);
 
                         window.setFocusable(true);
                         window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
@@ -315,8 +315,8 @@ public class HomeAty extends BaseActivity {
 //                .addSubActionView(button2)
                 .addSubActionView(button3)
                 .setRadius(redActionMenuRadius)
-                .setStartAngle(-140)
-                .setEndAngle(-40)
+                .setStartAngle(-125)
+                .setEndAngle(-55)
                 .attachTo(leftCenterButton)
                 .build();
 

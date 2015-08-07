@@ -43,6 +43,7 @@ import java.util.ArrayList;
  */
 public class DiggerPopupWindow extends PopupWindow implements View.OnClickListener {
 
+    private final boolean isShowUrlTextView;
     private Activity m_pContext;
     private LengjingFgt mLengJingFgt;
     private View mMenuView;
@@ -69,12 +70,13 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private boolean isShowClipboardContent = true;
     private DiggerAlbum mDiggerAlbum;
 
-    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent) {
+    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent,boolean isShowUrlTextView) {
         super(context);
         m_pContext = context;
         this.mLengJingFgt = lengjingFgt;
         this.position = position;
         this.isShowClipboardContent = isShowClipboardContent;
+        this.isShowUrlTextView = isShowUrlTextView;
         if (albumList != null) {
             albumList.clear();
         }
@@ -100,9 +102,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         loadData();
 
         if (isShowClipboardContent) {
+            showClipboardDialog(context);
+        }
+        if (!isShowUrlTextView){
             //隐藏显示url的textview
             ll_digger_source.setVisibility(View.GONE);
-            showClipboardDialog(context);
         }
     }
 
@@ -172,10 +176,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     for (int i = 0; i < albumList.size(); i++) {
                         if (i != tag) {
                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                            ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                            iv_selected.setVisibility(View.INVISIBLE);
-                            albumList.get(i).setSelected(false);
-
+                            if(layout != null) {
+                                ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                iv_selected.setVisibility(View.INVISIBLE);
+                                albumList.get(i).setSelected(false);
+                            }
                         }
                     }
                 }
@@ -234,12 +239,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             for (int i = 0; i < albumList.size(); i++) {
                                 if (i != viewcount) {
                                     RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
-                                    if(layout_temp!=null){
+                                    if(layout_temp != null) {
                                         ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
                                         iv_selected_temp.setVisibility(View.GONE);
-
+                                        albumList.get(i).setSelected(false);
                                     }
-                                    albumList.get(i).setSelected(false);
 
                                 }
                             }

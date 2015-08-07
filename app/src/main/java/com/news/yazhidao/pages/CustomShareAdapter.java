@@ -19,7 +19,6 @@ import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.framework.authorize.AuthorizeAdapter;
-import cn.sharesdk.sina.weibo.SinaWeibo;
 
 /**
  * 一个用于演示{@link cn.sharesdk.framework.authorize.AuthorizeAdapter}的例子。
@@ -39,32 +38,32 @@ public class CustomShareAdapter extends AuthorizeAdapter implements OnClickListe
         Logger.e("jigang","----adapter------oncreate");
         // 隐藏标题栏右部的ShareSDK Logo
         hideShareSDKLogo();
-        String platName = getPlatformName();
-        if (SinaWeibo.NAME.equals(platName)
-                || SinaWeibo.NAME.equals(platName)) {
-            initUi(platName);
-            interceptPlatformActionListener(platName);
-            return;
-        }
-
-        // 使弹出动画失效，只能在onCreate中调用，否则无法起作用
-        if ("KaiXin".equals(platName)) {
-            disablePopUpAnimation();
-        }
-
-        // 下面的代码演示如何设置自定义的授权页面打开动画
-        if ("Douban".equals(platName)) {
-            stopFinish = true;
-            disablePopUpAnimation();
-            View rv = (View) getBodyView().getParent();
-            TranslateAnimation ta = new TranslateAnimation(
-                    Animation.RELATIVE_TO_SELF, -1,
-                    Animation.RELATIVE_TO_SELF, 0,
-                    Animation.RELATIVE_TO_SELF, 0,
-                    Animation.RELATIVE_TO_SELF, 0);
-            ta.setDuration(500);
-            rv.setAnimation(ta);
-        }
+//        String platName = getPlatformName();
+//        if (SinaWeibo.NAME.equals(platName)
+//                || SinaWeibo.NAME.equals(platName)) {
+//            initUi(platName);
+//            interceptPlatformActionListener(platName);
+//            return;
+//        }
+//
+//        // 使弹出动画失效，只能在onCreate中调用，否则无法起作用
+//        if ("KaiXin".equals(platName)) {
+//            disablePopUpAnimation();
+//        }
+//
+//        // 下面的代码演示如何设置自定义的授权页面打开动画
+//        if ("Douban".equals(platName)) {
+//            stopFinish = true;
+//            disablePopUpAnimation();
+//            View rv = (View) getBodyView().getParent();
+//            TranslateAnimation ta = new TranslateAnimation(
+//                    Animation.RELATIVE_TO_SELF, -1,
+//                    Animation.RELATIVE_TO_SELF, 0,
+//                    Animation.RELATIVE_TO_SELF, 0,
+//                    Animation.RELATIVE_TO_SELF, 0);
+//            ta.setDuration(500);
+//            rv.setAnimation(ta);
+//        }
     }
 
     private void initUi(String platName) {

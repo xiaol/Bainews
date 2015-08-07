@@ -36,11 +36,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,7 +68,6 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
@@ -115,6 +113,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private NewsFeedReceiver rt;
     private UserUrlReceiver userUrlReceiver;
     private boolean isClick = false;
+    private Button btn_reload;
 
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
     private int color = new Color().parseColor("#55ffffff");
@@ -261,11 +260,15 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         });
 
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
+        mNewsFeedProgressWheelWrapper.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_gif);
-        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-        mAniNewsLoading.start();
+
 
         fl_mOnDestruction = (FrameLayout) rootView.findViewById(R.id.fl_mOnDestruction);
 
@@ -283,12 +286,34 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         ll_no_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+            }
+        });
+        btn_reload = (Button) rootView.findViewById(R.id.btn_reload);
+        btn_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (NetUtil.checkNetWork(mContext)) {
 
-                    lv_news.setVisibility(View.VISIBLE);
-                    ll_no_network.setVisibility(View.GONE);
+                    if (GlobalParams.currentCatePos == 15) {
+                        loadNewsData(1);
+                        isNewFlag = false;
+                        mtvProgress.setVisibility(View.VISIBLE);
+                        mHomeAtyRightMenu.setVisibility(View.VISIBLE);
+                        mHomeAtyRightMenuWrapper.setVisibility(View.VISIBLE);
+                    } else {
+                        loadNewsFeedData(GlobalParams.currentCatePos, page, true);
+                        isNewFlag = true;
+                        page = 1;
+                        mtvProgress.setVisibility(View.GONE);
+                        mHomeAtyRightMenu.setVisibility(View.GONE);
+                        mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
+                    }
 
-                    loadNewsData(1);
+                    mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
+                    mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+                    mAniNewsLoading.start();
+
                 } else {
                     lv_news.setVisibility(View.GONE);
                     ll_no_network.setVisibility(View.VISIBLE);
@@ -311,7 +336,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     if (NetUtil.checkNetWork(mContext)) {
                         if (isNewFlag) {
                             page++;
-                            loadNewsFeedData(GlobalParams.currentCatePos, page,false);
+                            loadNewsFeedData(GlobalParams.currentCatePos, page, false);
                         } else {
                             lv_news.setVisibility(View.VISIBLE);
                             ll_no_network.setVisibility(View.GONE);
@@ -330,7 +355,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         list_adapter = new MyAdapter();
         lv_news.setAdapter(list_adapter);
-        lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
         lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
         lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
         lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -362,12 +387,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         setupJazziness(mCurrentTransitionEffect);
         loadData();
-        AdcocoUtil.setup(getActivity());
-        try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        AdcocoUtil.setup(getActivity());
+//        try {
+//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return rootView;
     }
 
@@ -388,7 +413,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (mDownNewsArr.size() == 1) {
                     _NewsFeed.setBottom_flag(true);
                     if (mUpNewsArr.size() > 0) {
-                        lv_news.setMode2(PullToRefreshBase.Mode.PULL_FROM_START, 1);
+                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                     } else {
                         lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
                     }
@@ -412,12 +437,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
         }
 
-
-        try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         //更新ui
         list_adapter.notifyDataSetChanged();
@@ -430,68 +454,109 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private void showNextUpNews() {
 
         if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
-            ListView listView = lv_news.getRefreshableView();
-            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f);
-            localTranslateAnimation.setDuration(300);
-            listView.setScrollY(0);
-            listView.clearAnimation();
-            listView.startAnimation(localTranslateAnimation);
-            localTranslateAnimation.setAnimationListener(new Animation.AnimationListener() {
 
+            new Handler().post(new Runnable() {
                 @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            lv_news.onRefreshComplete();
-                        }
-                    });
-
-                    if (miCurrentCount < miTotalCount)
-                        miCurrentCount++;
-                    mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
-                    new Handler().post(new Runnable() {
-                        @Override
-                        public void run() {
-                            synchronized (this) {
-                                NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
-                                if (mUpNewsArr.size() <= 1) {
-                                    _NewsFeed.setTop_flag(true);
-                                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-                                }
-                                mMiddleNewsArr.add(0, _NewsFeed);
-                                try {
-                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                mUpNewsArr.remove(mUpNewsArr.size() - 1);
-                                GlobalParams.split_index_bottom++;
-                                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
-                                list_adapter.notifyDataSetChanged();
-
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
+                public void run() {
+                    lv_news.onRefreshComplete();
                 }
             });
+
+            if (miCurrentCount < miTotalCount)
+                miCurrentCount++;
+            mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (this) {
+                        NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
+                        if (mUpNewsArr.size() <= 1) {
+                            _NewsFeed.setTop_flag(true);
+                            lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                        }
+                        mMiddleNewsArr.add(0, _NewsFeed);
+//                                try {
+//                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+                        mUpNewsArr.remove(mUpNewsArr.size() - 1);
+                        GlobalParams.split_index_bottom++;
+                        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+
+                        list_adapter.notifyDataSetChanged();
+
+                    }
+                }
+            });
+
+//            ListView listView = lv_news.getRefreshableView();
+//            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f);
+//            localTranslateAnimation.setDuration(300);
+//            listView.setScrollY(0);
+//            listView.clearAnimation();
+//            listView.startAnimation(localTranslateAnimation);
+//            localTranslateAnimation.setAnimationListener(new Animation.AnimationListener() {
+//
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            lv_news.onRefreshComplete();
+//                        }
+//                    });
+//
+//                    if (miCurrentCount < miTotalCount)
+//                        miCurrentCount++;
+//                    mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
+//                    new Handler().post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            synchronized (this) {
+//                                NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
+//                                if (mUpNewsArr.size() <= 1) {
+//                                    _NewsFeed.setTop_flag(true);
+//                                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+//                                }
+//                                mMiddleNewsArr.add(0, _NewsFeed);
+////                                try {
+////                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+////                                } catch (Exception e) {
+////                                    e.printStackTrace();
+////                                }
+//                                mUpNewsArr.remove(mUpNewsArr.size() - 1);
+//                                GlobalParams.split_index_bottom++;
+//                                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//
+//                                list_adapter.notifyDataSetChanged();
+//
+//                            }
+//                        }
+//                    });
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//
+//                }
+//            });
         }
     }
 
@@ -500,9 +565,15 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             ll_no_network.setVisibility(View.GONE);
             lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             loadNewsData(1);
+            mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
+            mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+            mAniNewsLoading.start();
         } else {
             lv_news.setVisibility(View.GONE);
             ll_no_network.setVisibility(View.VISIBLE);
+            mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
+            mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
+            ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
         }
         //获取当前更新的相关信息
         getUpdateParams();
@@ -669,9 +740,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
+            if(position == 0){
+                feed.setTop_flag(true);
+            }
+
+            if(position == mMiddleNewsArr.size() - 1){
+                feed.setBottom_flag(true);
+            }
 
             if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
-                AdcocoUtil.update();
+//                AdcocoUtil.update();
                 //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -734,37 +812,27 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         convertView.setTag(holder);
                     }
                 }
-                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+//                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 String title = feed.getTitle();
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
                 holder.tv_interests.setOnClickListener(new View.OnClickListener()
-
-                                                       {
-                                                           @Override
-                                                           public void onClick(View v) {
-                                                               Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                               intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                               intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                                                               intent.putExtra("position", position);
-                                                               intent.putExtra("isnew", isNewFlag);
-                                                               startActivityForResult(intent, 0);
-                                                               //uemng statistic view the head news
-                                                               MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                           }
-                                                       }
-
+                   {
+                       @Override
+                       public void onClick(View v) {
+                           Intent intent = new Intent(mContext, NewsDetailAty.class);
+                           intent.putExtra(KEY_URL, feed.getSourceUrl());
+                           intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                           intent.putExtra("position", position);
+                           intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                           startActivityForResult(intent, 0);
+                           //uemng statistic view the head news
+                           MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                       }
+                   }
                 );
 
-                holder.cv_opinions.setBackgroundColor(new
-
-                                Color()
-
-                                .
-
-                                        parseColor("#50b5eb")
-
-                );
+                holder.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
                 holder.cv_opinions.setText("观点");
                 holder.cv_opinions.setTextColor(Color.WHITE);
                 holder.cv_opinions.setTextSize(11);
@@ -847,10 +915,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder.tv_interests.setText(feed.getOtherNum());
                 }
 
-                if(GlobalParams.currentCatePos != 15 && feed.getSourceSiteName() != null){
+                if (GlobalParams.currentCatePos != 15 && feed.getSourceSiteName() != null) {
                     holder.tv_sourcesite.setVisibility(View.VISIBLE);
                     holder.tv_sourcesite.setText(feed.getSourceSiteName());
-                }else{
+                } else {
                     holder.tv_sourcesite.setVisibility(View.GONE);
                 }
 
@@ -859,13 +927,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                                                            {
                                                                @Override
                                                                public void onClick(View v) {
-                   Intent intent = new Intent(mContext, NewsDetailAty.class);
-                   intent.putExtra(KEY_URL, feed.getSourceUrl());
-                   intent.putExtra("isnew", isNewFlag);
-                   intent.putExtra("position", position);
-                   startActivityForResult(intent, 0);
-                   //uemng statistic view the head news
-                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                                                                   Intent intent = new Intent(mContext, NewsDetailAty.class);
+                                                                   intent.putExtra(KEY_URL, feed.getSourceUrl());
+                                                                   intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                                                                   intent.putExtra("position", position);
+                                                                   startActivityForResult(intent, 0);
+                                                                   //uemng statistic view the head news
+                                                                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
                                                                }
                                                            }
 
@@ -1056,7 +1124,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 3) {
-                                if (i > 18) {
+                                if (i > 16) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -1142,7 +1210,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder2.rl_top_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(mMiddleNewsArr.size());
+                        GlobalParams.pager.setCurrentItem(0);
                     }
                 });
 
@@ -1351,7 +1419,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder3.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        lv_news.getRefreshableView().setSelection(GlobalParams.split_index_bottom + 1);
+
+                        GlobalParams.pager.setCurrentItem(0);
+
                     }
                 });
 
@@ -1459,7 +1529,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 6) {
-                                if (i > 18) {
+                                if (i > 16) {
                                     source_title_length += 2;
                                 } else {
                                     source_title_length += 1;
@@ -1534,32 +1604,32 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(mContext, 60);
+                params.height = DensityUtil.dip2px(mContext, 50);
                 break;
 
             case 2:
                 if (length == 4) {
-                    params.height = DensityUtil.dip2px(mContext, 160);
+                    params.height = DensityUtil.dip2px(mContext, 140);
                 } else {
-                    params.height = DensityUtil.dip2px(mContext, 110);
+                    params.height = DensityUtil.dip2px(mContext, 100);
                 }
                 break;
 
             case 3:
 
                 if (length == 6) {
-                    params.height = DensityUtil.dip2px(mContext, 210);
+                    params.height = DensityUtil.dip2px(mContext, 200);
                 } else if (length == 3) {
-                    params.height = DensityUtil.dip2px(mContext, 150);
+                    params.height = DensityUtil.dip2px(mContext, 140);
                 } else {
-                    params.height = DensityUtil.dip2px(mContext, 180);
+                    params.height = DensityUtil.dip2px(mContext, 160);
                 }
 
                 break;
 
             case 4:
                 if (type == TYPE_VIEWHOLDER3) {
-                    params.height = DensityUtil.dip2px(mContext, 280);
+                    params.height = DensityUtil.dip2px(mContext, 250);
                 } else {
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 210);
@@ -1587,7 +1657,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             case 6:
                 if (type == TYPE_VIEWHOLDER3) {
-                    params.height = DensityUtil.dip2px(mContext, 395);
+                    params.height = DensityUtil.dip2px(mContext, 350);
                 } else {
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 240);
@@ -1625,7 +1695,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
 
-        if (length > 20) {
+        if (length > 16) {
             if (GlobalParams.screenHeight == 1280) {
                 params.height = 85;
             } else if (GlobalParams.screenHeight == 1776) {
@@ -1760,30 +1830,37 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         if (mAniNewsLoading != null) {
             mAniNewsLoading.start();
         }
+        ll_no_network.setVisibility(View.GONE);
 
         url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
-//        String url = "http://121.40.38.56/news/baijia/fetchHom" + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-
                 isClick = true;
 
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", delta + "");
+                int i = 0;
                 if (result != null) {
                     //分别填充3个数据源
-                    inflateDataInArrs(result);
+                    i = inflateDataInArrs(result);
+
                     miCurrentCount = 3;
                     miTotalCount = result.size();
                     mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
+                } else {
+                    ToastUtil.toastLong("网络不给力,请检查网络....");
+                    ll_no_network.setVisibility(View.VISIBLE);
                 }
+
+                lv_news.setVisibility(View.VISIBLE);
                 lv_news.onRefreshComplete();
                 mAniNewsLoading.stop();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                lv_news.getRefreshableView().setSelection(i);
 
             }
 
@@ -1796,17 +1873,20 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                 mAniNewsLoading.stop();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
-                mHomeAtyRightMenu.setVisibility(View.GONE);
                 mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
+                mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
+
+                ToastUtil.toastLong("网络不给力,请检查网络....");
+                ll_no_network.setVisibility(View.VISIBLE);
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
         request.execute();
     }
 
-    private void inflateDataInArrs(ArrayList<NewsFeed> result) {
+    private int inflateDataInArrs(ArrayList<NewsFeed> result) {
 
-        lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+        lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
         int _SplitStartIndex = 0;
         if (result != null && result.size() > 0) {
             for (int i = 0; i < result.size(); i++) {
@@ -1822,31 +1902,35 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
 
-                mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
-                mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
-                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-
-                if (mUpNewsArr.size() == 0) {
-                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-                } else {
-                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                }
+//                mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
+//                mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
+//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
+//
+//                if (mUpNewsArr.size() == 0) {
+//                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+//                } else {
+//                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+//                }
             } else if (_SplitStartIndex == 0) {
 
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
                 feed.setTop_flag(true);
 
-                mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
-                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
-                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+//                mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
+//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
+//                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             }
+
+            mMiddleNewsArr = result;
+
         }
+        return _SplitStartIndex;
     }
 
     //获取当前点击分类的新
-    private void loadNewsFeedData(final int position, int page,boolean flag) {
-        if(flag) {
+    private void loadNewsFeedData(final int position, int page, boolean flag) {
+        if (flag) {
             if (mNewsFeedProgressWheelWrapper != null) {
                 mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
             }
@@ -1861,6 +1945,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             mMiddleNewsArr.clear();
         }
         mDownNewsArr.clear();
+        ll_no_network.setVisibility(View.GONE);
 
         String url = HttpConstant.URL_GET_NEWS_LIST_NEW + "?channelId=" + position + "&page=" + this.page + "&limit=50";
         final long start = System.currentTimeMillis();
@@ -1879,15 +1964,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     list_adapter.notifyDataSetChanged();
                 } else {
-                    fl_mOnDestruction.setVisibility(View.VISIBLE);
-                    fl_mOnDestruction.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
+                    ToastUtil.toastLong("网络不给力,请检查网络....");
+                    ll_no_network.setVisibility(View.VISIBLE);
                 }
 
+                lv_news.setVisibility(View.VISIBLE);
                 lv_news.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
@@ -1899,6 +1980,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
+
+                ToastUtil.toastLong("网络不给力,请检查网络....");
+                ll_no_network.setVisibility(View.VISIBLE);
+
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
@@ -1910,21 +1995,33 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         @Override
         public void onReceive(Context context, Intent intent) {
             if ("sendposition".equals(intent.getAction())) {
-                if (GlobalParams.currentCatePos == 15) {
-                    loadNewsData(1);
-                    isNewFlag = false;
-                    mtvProgress.setVisibility(View.VISIBLE);
-                    mHomeAtyRightMenu.setVisibility(View.VISIBLE);
-                    mHomeAtyRightMenuWrapper.setVisibility(View.VISIBLE);
+
+                if (NetUtil.checkNetWork(mContext)) {
+                    lv_news.setVisibility(View.VISIBLE);
+                    ll_no_network.setVisibility(View.GONE);
+
+                    if (GlobalParams.currentCatePos == 15) {
+                        loadNewsData(1);
+                        isNewFlag = false;
+                        mtvProgress.setVisibility(View.VISIBLE);
+                        mHomeAtyRightMenu.setVisibility(View.VISIBLE);
+                        mHomeAtyRightMenuWrapper.setVisibility(View.VISIBLE);
+                    } else {
+                        loadNewsFeedData(GlobalParams.currentCatePos, page, true);
+                        isNewFlag = true;
+                        page = 1;
+                        mtvProgress.setVisibility(View.GONE);
+                        mHomeAtyRightMenu.setVisibility(View.GONE);
+                        mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
+                    }
+
                 } else {
-                    loadNewsFeedData(GlobalParams.currentCatePos, page,true);
-                    isNewFlag = true;
-                    page = 1;
-                    mtvProgress.setVisibility(View.GONE);
-                    mHomeAtyRightMenu.setVisibility(View.GONE);
+                    lv_news.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+
+                    mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
                     mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 }
-
                 fl_mOnDestruction.setVisibility(View.GONE);
             }
         }
