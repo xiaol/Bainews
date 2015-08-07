@@ -744,7 +744,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 feed.setTop_flag(true);
             }
 
-            if(position == mMiddleNewsArr.size() - 1){
+            if(position == mMiddleNewsArr.size() - 1 && GlobalParams.currentCatePos == 15){
                 feed.setBottom_flag(true);
             }
 
@@ -1657,7 +1657,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             case 6:
                 if (type == TYPE_VIEWHOLDER3) {
-                    params.height = DensityUtil.dip2px(mContext, 350);
+                    params.height = DensityUtil.dip2px(mContext, 250);
                 } else {
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 240);
@@ -1852,7 +1852,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     mtvProgress.setText("3/" + result.size());
                     list_adapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....");
+                    ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
 
@@ -1964,7 +1964,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     list_adapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....");
+                    ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
 
