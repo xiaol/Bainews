@@ -137,8 +137,6 @@ public class LengjingFgt extends Fragment {
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String s = null;
-                s.concat("");
                 openAlbumListAty(position,false,getActivity());
             }
         });
