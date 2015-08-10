@@ -25,6 +25,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.database.DatabaseHelper;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
@@ -42,7 +43,9 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.sharesdk.framework.PlatformDb;
 
@@ -102,7 +105,6 @@ public class HomeAty extends BaseActivity {
             }, 800);
         }
     }
-
     @Override
     protected void initializeViews() {
         if (leftCenterButton == null) {
@@ -241,35 +243,25 @@ public class HomeAty extends BaseActivity {
                             | Gravity.CENTER, 0, 0);
                     return;
                 }
-                /**获取专辑列表数据*/
-                FetchAlbumListRequest.obtainAlbumList(HomeAty.this, new FetchAlbumListListener() {
-                    @Override
-                    public void success(ArrayList<DiggerAlbum> resultList) {
-                        if(resultList !=null && resultList.size() > 0){
-                        albumList.clear();
-                        for (int i = 0; i < resultList.size(); i++) {
-                            Album album = new Album();
-                            album.setSelected(i == 0);
-                            album.setAlbum(resultList.get(i).getAlbum_title());
-                            album.setAlbumId(resultList.get(i).getAlbum_id());
-                            album.setId(resultList.get(i).getAlbum_img());
-                            albumList.add(album);
+                //查看数据库中是否已经专辑数据,如果没有则联网获取
+                ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
+                if (!TextUtil.isListEmpty(resultList)){
+                    handleAlbumsData(resultList);
+                }else{
+                    /**获取专辑列表数据*/
+                    FetchAlbumListRequest.obtainAlbumList(HomeAty.this, new FetchAlbumListListener() {
+                        @Override
+                        public void success(ArrayList<DiggerAlbum> resultList) {
+                            handleAlbumsData(resultList);
                         }
-                            mLengJingFgt.setDiggerAlbums(resultList);
-                        DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1,true,false);
 
-                        window.setFocusable(true);
-                        window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
-
+                        @Override
+                        public void failure() {
+                            ToastUtil.toastShort("获取专辑失败!");
                         }
-                    }
+                    });
 
-                    @Override
-                    public void failure() {
-                        ToastUtil.toastShort("获取专辑失败!");
-                    }
-                });
+                }
 
 
                 leftCenterMenu.close(true);
@@ -350,7 +342,45 @@ public class HomeAty extends BaseActivity {
 
     }
 
+    /**
+     * 从数据库获取专辑数据
+     * @return
+     */
+    private ArrayList<DiggerAlbum> queryAlbumsFromDB(){
+        DatabaseHelper dbHelper = DatabaseHelper.getHelper(HomeAty.this);
+        List<DiggerAlbum> diggerAlbums = new ArrayList<DiggerAlbum>();
+        try {
+            diggerAlbums = dbHelper.getAlbumDao().queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(diggerAlbums);
+    }
 
+    /**
+     * 处理获取到的专辑列表数据
+     * @param resultList
+     */
+    private void handleAlbumsData(ArrayList<DiggerAlbum> resultList){
+        if (!TextUtil.isListEmpty(resultList)) {
+            albumList.clear();
+            for (int i = 0; i < resultList.size(); i++) {
+                Album album = new Album();
+                album.setSelected(i == 0);
+                album.setAlbum(resultList.get(i).getAlbum_title());
+                album.setAlbumId(resultList.get(i).getAlbum_id());
+                album.setId(resultList.get(i).getAlbum_img());
+                albumList.add(album);
+            }
+            mLengJingFgt.setDiggerAlbums(resultList);
+            DiggerPopupWindow window = new DiggerPopupWindow(mLengJingFgt, HomeAty.this, 1 + "", albumList, 1, true, false);
+
+            window.setFocusable(true);
+            window.showAtLocation(HomeAty.this.getWindow().getDecorView(), Gravity.CENTER
+                    | Gravity.CENTER, 0, 0);
+
+        }
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
