@@ -106,12 +106,11 @@ public class NewsDetailAty extends SwipeBackActivity {
     @Override
     protected void loadData() {
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
-        boolean isnew = false;
+        boolean isnew = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API,false);
         boolean isdigger = false;
         AlbumSubItem albumSubItem;
         String newsId = null;
         if(bundle!=null){
-            isnew = bundle.getBoolean(AlbumListAty.KEY_IS_NEW_API);
             isdigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
             albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
             newsId = albumSubItem.getInserteId();

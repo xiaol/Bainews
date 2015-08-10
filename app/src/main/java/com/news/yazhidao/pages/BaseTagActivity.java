@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -11,33 +12,36 @@ import android.widget.TextView;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.Element;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CloudTagManager;
-import com.news.yazhidao.widget.DiggerPopupWindow;
+import com.news.yazhidao.widget.LoginModePopupWindow;
 
 import org.apache.http.NameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sharesdk.framework.PlatformDb;
+
 /**
  * Created by Berkeley on 7/20/15.
  */
 public class BaseTagActivity extends Activity implements View.OnClickListener {
-
+    /**热门话题key*/
+    public final static String KEY_HOT_TOPIC = "key_hot_topic";
     public ArrayList<String> keywords;
     public ArrayList<String> hotwords;
     private int[] array = new int[8];
     private ArrayList<DiggerAlbum> mAlbumDatas;
 
-    //    , "九月", "十二", "五月天", "夏天的故事", "哈哈",
-//            "星巴克", "乐知天命"
     private CloudTagManager keywordsFlow;
     private Button btnchange, btnexperence;
     private ImageView back_imageView;
@@ -92,31 +96,34 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
 
         } else if (v == btnexperence) {
         } else if (v instanceof TextView) {
-            String keyword = ((TextView) v).getText().toString();
+            final String keyword = ((TextView) v).getText().toString();
+            /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
+            User user = SharedPreManager.getUser(this);
+            if (user == null){
+                final LoginModePopupWindow window = new LoginModePopupWindow(this, new UserLoginListener() {
+                    @Override
+                    public void userLogin(String platform, PlatformDb platformDb) {
+                    /**通知棱镜界面界面进行挖掘处理*/
+                    Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
+                    intent.putExtra(KEY_HOT_TOPIC,keyword);
+                    sendBroadcast(intent);
+                    BaseTagActivity.this.finish();
+                    }
 
-            ArrayList<Album> albumList = new ArrayList<Album>();
-            for(int i = 0;i < mAlbumDatas.size();i ++){
-                DiggerAlbum diggerAlbum = mAlbumDatas.get(i);
+                    @Override
+                    public void userLogout() {
 
-                Album album = new Album();
-                album.setAlbum(diggerAlbum.getAlbum_title());
-                album.setDescription(diggerAlbum.getAlbum_des());
-                album.setId(String.valueOf(diggerAlbum.getAlbum_img()));
-                album.setSelected(i==0);
-
-                albumList.add(album);
+                    }
+                }, null);
+                window.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+                return;
             }
-
-            DiggerPopupWindow window = new DiggerPopupWindow(fgt, BaseTagActivity.this, 1 + "", albumList, 1,false);
-            window.setDigNewsTitleAndUrl(keyword, "");
-            window.setFocusable(true);
-            window.showAtLocation(BaseTagActivity.this.getWindow().getDecorView(), Gravity.CENTER
-                    | Gravity.CENTER, 0, 0);
-
         }else if(v == back_imageView){
             BaseTagActivity.this.finish();
         }
     }
+
 
     private void flyIn() {
         keywordsFlow.rubKeywords();

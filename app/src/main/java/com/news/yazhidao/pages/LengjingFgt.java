@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
@@ -47,9 +47,11 @@ public class LengjingFgt extends Fragment {
 
     /**用户注销登录广播*/
     public static final String ACTION_USER_LOGOUTED = "com.news.yazhidao.ACTION_USER_LOGOUTED";
+    /**用户完成热门话题选择*/
+    public static final String ACTION_USER_CHOSE_TOPIC = "com.news.yazhidao.ACTION_USER_CHOSE_TOPIC";
 
     private View rootView;
-    private ListView lv_lecture;
+    private ImageView lv_lecture;
     private ArrayList<Album> albumList = new ArrayList<Album>();
     //个人专辑列表
     private GridView mSpecialGv;
@@ -63,13 +65,21 @@ public class LengjingFgt extends Fragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(ACTION_USER_LOGOUTED.equals(intent.getAction())){
+            String action = intent.getAction();
+            if(ACTION_USER_LOGOUTED.equals(action)){
                 Logger.e("jigang"," user is logout~~");
                 /**用户退出登录后,要清空挖掘机中显示的数据并且隐藏专辑列表和显示教程页*/
                 mDiggerAlbums = null;
                 mAlbumLvAdatpter.notifyDataSetChanged();
                 lv_lecture.setVisibility(View.VISIBLE);
                 mSpecialGv.setVisibility(View.GONE);
+            }else if (ACTION_USER_CHOSE_TOPIC.equals(action)){
+                Logger.e("jigang","---ACTION_USER_CHOSE_TOPIC");
+                String hotTopic = intent.getStringExtra(BaseTagActivity.KEY_HOT_TOPIC);
+                if (!TextUtils.isEmpty(hotTopic)){
+                    hotTopic = hotTopic.replace("#","");
+                }
+                openEditWindow(hotTopic, "");
             }
         }
     }
@@ -88,6 +98,7 @@ public class LengjingFgt extends Fragment {
         mUserLogoutReceiver = new UserLogoutReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USER_LOGOUTED);
+        filter.addAction(ACTION_USER_CHOSE_TOPIC);
         activity.registerReceiver(mUserLogoutReceiver,filter);
     }
 
@@ -118,8 +129,7 @@ public class LengjingFgt extends Fragment {
     }
 
     private void findViews() {
-        lv_lecture = (ListView) rootView.findViewById(R.id.lv_lecture);
-        lv_lecture.setAdapter(new MyAdapter());
+        lv_lecture = (ImageView) rootView.findViewById(R.id.lv_lecture);
 
         //专辑显示列表
         mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
@@ -159,7 +169,7 @@ public class LengjingFgt extends Fragment {
 
     /**
      * 打开新闻挖掘的标题和url编辑界面
-     *
+     * 此方法主要用于从其他app分享进来或则从热门话题选择标签进来后挖掘
      * @param newsTitle
      * @param newsUrl
      */
@@ -211,7 +221,7 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 
                     albumList.add(album);
                 }
-                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1,false);
+                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1,false, !TextUtils.isEmpty(newsUrl));
                 window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
                 window.setFocusable(true);
                 window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
@@ -282,7 +292,7 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 
         @Override
         public int getCount() {
-            return 3;
+            return 1;
         }
 
         @Override
