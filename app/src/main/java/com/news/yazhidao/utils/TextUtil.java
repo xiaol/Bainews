@@ -16,6 +16,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -278,6 +280,11 @@ public class TextUtil {
                 e.printStackTrace();
             }
         }
+        try {
+            Logger.i("jigang","gzip json="+new String(sb.toString().getBytes(),"utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return sb.toString();
     }
 
@@ -392,5 +399,20 @@ public class TextUtil {
             data = matcher.group();
         }
         return data;
+    }
+
+    /**
+     * 判断一个List 是否为null 或者是否长度为0
+     * @param list
+     * @return
+     */
+    public static boolean isListEmpty(List list){
+        if (list == null){
+            return true;
+        }
+        if (list.size() == 0){
+            return true;
+        }
+        return false;
     }
 }

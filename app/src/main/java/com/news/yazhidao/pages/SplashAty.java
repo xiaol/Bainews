@@ -83,7 +83,6 @@ public class SplashAty extends BaseActivity {
         anim_fade_in.setFillAfter(true);
 
         timer = new Timer();
-
         setContentView(R.layout.rl_splash);
     }
 

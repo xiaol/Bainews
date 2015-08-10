@@ -10,6 +10,7 @@ public class HttpConstant {
     public static final String URL_GET_CHANNEL_LIST="http://api.deeporiginalx.com/news/baijia/FetchChannelList";
     public static final String URL_PRAISE="http://api.deeporiginalx.com/news/baijia/praise";
     public static final String URL_GET_NEWS_CONTENT="http://api.deeporiginalx.com/news/baijia/point";
+    /**谷歌今日焦点*/
     public static final String URL_GET_NEWS_DETAIL="http://api.deeporiginalx.com/news/baijia/fetchContent?url=";
     public static final String URL_GET_DIGGER_DETAIL="http://api.deeporiginalx.com/news/baijia/dredgeUpStatus?url=";
     public static final String URL_GET_NEWS_DETAIL_NEW="http://api.deeporiginalx.com/news/baijia/newsFetchContent";

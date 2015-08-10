@@ -168,10 +168,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             int msgId = msg.what;
+
+
             switch (msgId) {
                 case 1:
                     lv_news.setVisibility(View.GONE);
-                    mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
+                    mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
+                    mAniNewsLoading.stop();
+                    ll_no_network.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
@@ -209,6 +213,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         IntentFilter filter = new IntentFilter();
         filter.addAction("sendposition");
         mContext.registerReceiver(rt, filter);
+
+
 
         userUrlReceiver = new UserUrlReceiver();
         IntentFilter filter1 = new IntentFilter();
@@ -1180,10 +1186,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
-
-                                String ss = source.getSimilarity().substring(2, 4);
-
-                                tv_relate.setText(ss + "%相关");
+                                if(source.getSimilarity().length() > 4) {
+                                    String ss = source.getSimilarity().substring(2, 4);
+                                    tv_relate.setText(ss + "%相关");
+                                }else{
+                                    tv_relate.setVisibility(View.GONE);
+                                }
                             } else {
                                 tv_relate.setVisibility(View.GONE);
                             }
@@ -1741,11 +1749,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (type == TYPE_VIEWHOLDER3) {
 
                     if (length == 6) {
-                        params.height = DensityUtil.dip2px(mContext, 210);
+                        params.height = DensityUtil.dip2px(mContext, 250);
                     } else if (length == 3 || length == 4) {
-                        params.height = DensityUtil.dip2px(mContext, 150);
+                        params.height = DensityUtil.dip2px(mContext, 170);
                     } else {
-                        params.height = DensityUtil.dip2px(mContext, 180);
+                        params.height = DensityUtil.dip2px(mContext, 220);
                     }
 
                 } else {
@@ -1939,6 +1947,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     }
 
     private void loadNewsData(final int timenews) {
+        loadNewsTimer();
 
         String url = "";
         if (mNewsFeedProgressWheelWrapper != null) {
@@ -2049,6 +2058,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     //获取当前点击分类的新
     private void loadNewsFeedData(final int position, int page, boolean flag) {
+
+        loadNewsTimer();
+
         if (flag) {
             if (mNewsFeedProgressWheelWrapper != null) {
                 mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.database.DatabaseHelper;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
@@ -33,21 +34,29 @@ import com.news.yazhidao.net.request.FetchAlbumListRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.news.yazhidao.widget.LoginModePopupWindow;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cn.sharesdk.framework.PlatformDb;
 
 
 public class LengjingFgt extends Fragment {
 
-    /**用户注销登录广播*/
+    private static final String TAG = "LengjingFgt";
+    /**
+     * 用户注销登录广播
+     */
     public static final String ACTION_USER_LOGOUTED = "com.news.yazhidao.ACTION_USER_LOGOUTED";
-    /**用户完成热门话题选择*/
+    /**
+     * 用户完成热门话题选择
+     */
     public static final String ACTION_USER_CHOSE_TOPIC = "com.news.yazhidao.ACTION_USER_CHOSE_TOPIC";
 
     private View rootView;
@@ -58,7 +67,9 @@ public class LengjingFgt extends Fragment {
     private MyAlbumLvAdatpter mAlbumLvAdatpter;
     private ArrayList<DiggerAlbum> mDiggerAlbums;
     private Activity mActivity;
-    /**用户退出登录广播*/
+    /**
+     * 用户退出登录广播
+     */
     private UserLogoutReceiver mUserLogoutReceiver;
 
     private class UserLogoutReceiver extends BroadcastReceiver {
@@ -66,23 +77,24 @@ public class LengjingFgt extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(ACTION_USER_LOGOUTED.equals(action)){
-                Logger.e("jigang"," user is logout~~");
+            if (ACTION_USER_LOGOUTED.equals(action)) {
+                Logger.e("jigang", " user is logout~~");
                 /**用户退出登录后,要清空挖掘机中显示的数据并且隐藏专辑列表和显示教程页*/
                 mDiggerAlbums = null;
                 mAlbumLvAdatpter.notifyDataSetChanged();
                 lv_lecture.setVisibility(View.VISIBLE);
                 mSpecialGv.setVisibility(View.GONE);
-            }else if (ACTION_USER_CHOSE_TOPIC.equals(action)){
-                Logger.e("jigang","---ACTION_USER_CHOSE_TOPIC");
+            } else if (ACTION_USER_CHOSE_TOPIC.equals(action)) {
+                Logger.e("jigang", "---ACTION_USER_CHOSE_TOPIC");
                 String hotTopic = intent.getStringExtra(BaseTagActivity.KEY_HOT_TOPIC);
-                if (!TextUtils.isEmpty(hotTopic)){
-                    hotTopic = hotTopic.replace("#","");
+                if (!TextUtils.isEmpty(hotTopic)) {
+                    hotTopic = hotTopic.replace("#", "");
                 }
                 openEditWindow(hotTopic, "");
             }
         }
     }
+
     public LengjingFgt() {
         mDiggerAlbums = new ArrayList<>();
     }
@@ -99,7 +111,7 @@ public class LengjingFgt extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USER_LOGOUTED);
         filter.addAction(ACTION_USER_CHOSE_TOPIC);
-        activity.registerReceiver(mUserLogoutReceiver,filter);
+        activity.registerReceiver(mUserLogoutReceiver, filter);
     }
 
     @Override
@@ -137,16 +149,16 @@ public class LengjingFgt extends Fragment {
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openAlbumListAty(position,false,getActivity());
+                openAlbumListAty(position, false, getActivity());
             }
         });
 
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
-        if (user == null){
+        if (user == null) {
             lv_lecture.setVisibility(View.VISIBLE);
             mSpecialGv.setVisibility(View.GONE);
-        }else{
+        } else {
             lv_lecture.setVisibility(View.GONE);
             mSpecialGv.setVisibility(View.VISIBLE);
             /**获取专辑列表数据*/
@@ -161,7 +173,7 @@ public class LengjingFgt extends Fragment {
 
                 @Override
                 public void failure() {
-                    ToastUtil.toastShort("获取专辑失败!");
+                    Logger.e(TAG,"获取专辑失败!");
                 }
             });
         }
@@ -170,17 +182,29 @@ public class LengjingFgt extends Fragment {
     /**
      * 打开新闻挖掘的标题和url编辑界面
      * 此方法主要用于从其他app分享进来或则从热门话题选择标签进来后挖掘
+     *
      * @param newsTitle
      * @param newsUrl
      */
     public void openEditWindow(final String newsTitle, final String newsUrl) {
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
-        if (user == null){
+        if (user == null) {
             final LoginModePopupWindow window = new LoginModePopupWindow(getActivity(), new UserLoginListener() {
                 @Override
                 public void userLogin(String platform, PlatformDb platformDb) {
-                    fetchAlbumListData(newsTitle,newsUrl);
+                    /**获取专辑列表数据*/
+                    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+                        @Override
+                        public void success(ArrayList<DiggerAlbum> resultList) {
+                            handleAlbumsData(newsTitle, newsUrl, resultList);
+                        }
+
+                        @Override
+                        public void failure() {
+                            ToastUtil.toastShort("获取专辑失败!");
+                        }
+                    });
                 }
 
                 @Override
@@ -190,59 +214,122 @@ public class LengjingFgt extends Fragment {
             }, null);
             window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
                     | Gravity.CENTER, 0, 0);
-        }else{
-           fetchAlbumListData(newsTitle, newsUrl);
+        } else {
+            //查看数据库中是否已经专辑数据,如果没有则联网获取
+            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
+            if (!TextUtil.isListEmpty(resultList)) {
+                handleAlbumsData(newsTitle, newsUrl, resultList);
+            } else {
+                /**获取专辑列表数据*/
+                FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+                    @Override
+                    public void success(ArrayList<DiggerAlbum> resultList) {
+                        handleAlbumsData(newsTitle, newsUrl, resultList);
+                    }
+
+                    @Override
+                    public void failure() {
+                        ToastUtil.toastShort("获取专辑失败!");
+                    }
+                });
+
+            }
         }
 
     }
 
-    /***
+    /**
+     * 从数据库获取专辑数据
+     *
+     * @return
+     */
+    private ArrayList<DiggerAlbum> queryAlbumsFromDB() {
+        DatabaseHelper dbHelper = DatabaseHelper.getHelper(getActivity());
+        List<DiggerAlbum> diggerAlbums = new ArrayList<>();
+        try {
+            diggerAlbums = dbHelper.getAlbumDao().queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(diggerAlbums);
+    }
+
+    /**
+     * 处理获取到的专辑列表数据
+     *
+     * @param resultList
+     */
+    private void handleAlbumsData(final String newsTitle, final String newsUrl, ArrayList<DiggerAlbum> resultList) {
+        if (!TextUtil.isListEmpty(resultList)) {
+            albumList.clear();
+            for (int i = 0; i < resultList.size(); i++) {
+                Album album = new Album();
+                album.setSelected(i == 0);
+                album.setAlbum(resultList.get(i).getAlbum_title());
+                album.setAlbumId(resultList.get(i).getAlbum_id());
+                album.setId(resultList.get(i).getAlbum_img());
+                albumList.add(album);
+            }
+            setDiggerAlbums(resultList);
+            DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1, false, !TextUtils.isEmpty(newsUrl));
+            window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
+            window.setFocusable(true);
+            window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
+                    | Gravity.CENTER, 0, 0);
+
+        }
+    }
+
+    /**
      * 获取专辑列表
+     *
      * @param newsTitle
      * @param newsUrl
      */
-private void fetchAlbumListData(final String newsTitle, final String newsUrl){
-    /**获取专辑列表数据*/
-    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-        @Override
-        public void success(ArrayList<DiggerAlbum> resultList) {
-            Logger.e("jigang", "--- " + resultList.size());
-            if (resultList != null && resultList.size() > 0) {
-                setDiggerAlbums(resultList);
-                for(int i = 0;i < mDiggerAlbums.size();i ++){
-                    DiggerAlbum diggerAlbum = mDiggerAlbums.get(i);
+    @Deprecated
+    private void fetchAlbumListData(final String newsTitle, final String newsUrl) {
+        /**获取专辑列表数据*/
+        FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+            @Override
+            public void success(ArrayList<DiggerAlbum> resultList) {
+                Logger.e("jigang", "--- " + resultList.size());
+                if (resultList != null && resultList.size() > 0) {
+                    setDiggerAlbums(resultList);
+                    for (int i = 0; i < mDiggerAlbums.size(); i++) {
+                        DiggerAlbum diggerAlbum = mDiggerAlbums.get(i);
 
-                    Album album = new Album();
-                    album.setAlbum(diggerAlbum.getAlbum_title());
-                    album.setDescription(diggerAlbum.getAlbum_des());
-                    album.setId(String.valueOf(diggerAlbum.getAlbum_img()));
-                    album.setAlbumId(diggerAlbum.getAlbum_id());
-                    album.setSelected(i==0);
+                        Album album = new Album();
+                        album.setAlbum(diggerAlbum.getAlbum_title());
+                        album.setDescription(diggerAlbum.getAlbum_des());
+                        album.setId(String.valueOf(diggerAlbum.getAlbum_img()));
+                        album.setAlbumId(diggerAlbum.getAlbum_id());
+                        album.setSelected(i == 0);
 
-                    albumList.add(album);
+                        albumList.add(album);
+                    }
+                    DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1, false, !TextUtils.isEmpty(newsUrl));
+                    window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
+                    window.setFocusable(true);
+                    window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
+                            | Gravity.CENTER, 0, 0);
                 }
-                DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1,false, !TextUtils.isEmpty(newsUrl));
-                window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
-                window.setFocusable(true);
-                window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
             }
-        }
 
-        @Override
-        public void failure() {
-            ToastUtil.toastShort("获取专辑失败!");
-        }
-    });
-}
+            @Override
+            public void failure() {
+                ToastUtil.toastShort("获取专辑失败!");
+            }
+        });
+    }
+
     /**
      * 打开专辑列表详情页
      *
      * @param position 当前的专辑索引
      */
-    private void openAlbumListAty(int position,boolean isNewAdd,Activity activity){
+    private void openAlbumListAty(int position, boolean isNewAdd, Activity activity) {
         DiggerAlbum diggerAlbum = mDiggerAlbums.get(position);
-        Logger.e("jigang","update open ="+diggerAlbum.getAlbum_id());
+        Logger.e("jigang", "update open =" + diggerAlbum.getAlbum_id());
         Intent specialAty = new Intent(activity, AlbumListAty.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, diggerAlbum);
@@ -253,7 +340,8 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
 
     /**
      * 更新专辑列表数据
-     * @param pAlbumIndex   专辑索引,有可能为新建专辑索引
+     *
+     * @param pAlbumIndex  专辑索引,有可能为新建专辑索引
      * @param pDiggerAlbum
      */
     public void updateAlbumList(int pAlbumIndex, DiggerAlbum pDiggerAlbum) {
@@ -266,14 +354,13 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
         } else {
             //修改专辑数据
             DiggerAlbum diggerAlbum = mDiggerAlbums.get(pAlbumIndex);
-            diggerAlbum.setAlbum_news_count((Integer.valueOf(diggerAlbum.getAlbum_news_count())+1)+"");
+            diggerAlbum.setAlbum_news_count((Integer.valueOf(diggerAlbum.getAlbum_news_count()) + 1) + "");
             mAlbumLvAdatpter.notifyDataSetChanged();
 
-            }
+        }
 
-        openAlbumListAty(pAlbumIndex, true,getActivity());
+        openAlbumListAty(pAlbumIndex, true, getActivity());
     }
-
 
 
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
@@ -282,9 +369,11 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
         mSpecialGv.setVisibility(View.VISIBLE);
         mAlbumLvAdatpter.notifyDataSetChanged();
     }
-    public ArrayList<DiggerAlbum>  getDiggerAlbums(){
+
+    public ArrayList<DiggerAlbum> getDiggerAlbums() {
         return mDiggerAlbums;
     }
+
     /**
      * viewpager适配器
      */
@@ -311,7 +400,7 @@ private void fetchAlbumListData(final String newsTitle, final String newsUrl){
             convertView = View.inflate(getActivity(), R.layout.item_lv_lecture, null);
             ImageView iv_lecture = (ImageView) convertView.findViewById(R.id.iv_lecture);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth - DensityUtil.dip2px(getActivity(),8), (int) (GlobalParams.screenWidth * 0.73));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth - DensityUtil.dip2px(getActivity(), 8), (int) (GlobalParams.screenWidth * 0.73));
             iv_lecture.setLayoutParams(params);
 
             switch (position) {

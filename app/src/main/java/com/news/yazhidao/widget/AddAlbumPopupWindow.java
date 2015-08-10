@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.database.DatabaseHelper;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.BgAlbum;
 import com.news.yazhidao.entity.DiggerAlbum;
@@ -26,6 +27,7 @@ import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -34,6 +36,7 @@ import java.util.ArrayList;
  */
 public class AddAlbumPopupWindow extends PopupWindow {
 
+    private static final String TAG = "AddAlbumPopupWindow";
     private Activity m_pContext;
     private View mMenuView;
     private ArrayList<Album> albumList;
@@ -122,6 +125,14 @@ public class AddAlbumPopupWindow extends PopupWindow {
                                 album.setAlbumId(pAlbumId);
                                 diggerAlbum.setAlbum_id(pAlbumId);
                                 mDiggerAlbum = diggerAlbum;
+                                /**把新创建好的专辑存入数据库*/
+                                DatabaseHelper dbHelper = DatabaseHelper.getHelper(m_pContext);
+                                try {
+                                    dbHelper.getAlbumDao().create(mDiggerAlbum);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                    Logger.e(TAG,"新建专辑存入数据库失败--"+e.getMessage());
+                                }
                                 flag = true;
                                 dismiss();
                             }
