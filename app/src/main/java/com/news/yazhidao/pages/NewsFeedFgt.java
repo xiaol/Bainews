@@ -1628,8 +1628,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             return convertView;
         }
-
-
     }
 
     private void setContentParams(LinearLayout ll_source_content, int i, int length, int type) {
