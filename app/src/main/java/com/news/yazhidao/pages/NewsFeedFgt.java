@@ -1187,7 +1187,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
                     holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
                     convertView.setTag(holder2);
-//                    }
                 }
 
                 ViewGroup.LayoutParams layoutParams = holder2.iv_title_img.getLayoutParams();
@@ -1210,9 +1209,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
                     ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
-//                    ImageLoaderHelper.dispalyImage(HomeAty.this,feed.getImgUrl(),holder2.iv_title_img);
                 } else {
-                    holder2.tv_title.setBackgroundColor(color);
+                    holder2.tv_title.setBackgroundResource(R.drawable.img_base_big);
                 }
 
                 if (feed.isTop_flag()) {
@@ -1433,8 +1431,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                             holder3.tv_weekday.setText(weekday);
                         } else {
-
-
                             String myDate = DateUtil.getMyDate(mCurrentDate, holder3.tv_month, holder3.tv_day);
 
                             String am = "";
@@ -1632,8 +1628,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             return convertView;
         }
-
-
     }
 
     private void setContentParams(LinearLayout ll_source_content, int i, int length, int type) {
@@ -1648,7 +1642,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 1:
-                params.height = DensityUtil.dip2px(mContext, 50);
+                params.height = DensityUtil.dip2px(mContext, 60);
                 break;
 
             case 2:
