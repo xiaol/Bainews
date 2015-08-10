@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+
+    <item
+        android:drawable="@drawable/loading_new_pic1"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic2"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic3"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic4"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic5"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic6"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic7"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic8"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic9"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic10"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic11"
+        android:duration="100" />
+
+    <item
+        android:drawable="@drawable/loading_new_pic12"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/loading_new_pic13"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/loading_new_pic14"
+        android:duration="100" />
+    <item
+        android:drawable="@drawable/loading_new_pic15"
+        android:duration="100" />
+</animation-list>

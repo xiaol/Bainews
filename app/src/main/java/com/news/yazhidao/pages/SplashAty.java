@@ -163,7 +163,7 @@ public class SplashAty extends BaseActivity {
                     }
                 }
             }
-        }, 4000);
+        }, 3000);
 
         String url = HttpConstant.URL_GET_START_URL;
         request = new NetworkRequest(url, NetworkRequest.RequestMethod.POST);
