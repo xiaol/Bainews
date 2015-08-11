@@ -16,17 +16,16 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 15/5/14.
  */
-@Deprecated
 public class UploadUmengPushIdRequest {
-    private static final String TAG = "UploadJpushidRequest";
+    private static final String TAG = "UploadUmengPushIdRequest";
 
-    public static void uploadJpushId(Context mContext,final String jpushId) {
+    public static void uploadUmengPushId(Context mContext,final String pUmengPushId) {
 
         User user = SharedPreManager.getUser(mContext);
-        NetworkRequest request = new NetworkRequest(HttpConstant.URL_UPLOAD_JPUSHID, NetworkRequest.RequestMethod.GET);
+        NetworkRequest request = new NetworkRequest(HttpConstant.URL_UPLOAD_UMENGPUSHID, NetworkRequest.RequestMethod.GET);
         HashMap<String, Object> params = new HashMap<>();
         params.put("uuid", DeviceInfoUtil.getUUID());
-        params.put("jpushId", jpushId);
+        params.put("umengPushId", pUmengPushId);
         params.put("userId", user == null ? "" : user.getUserId());
         params.put("platformType", user == null ? "" : user.getPlatformType());
         request.getParams = params;
@@ -39,7 +38,7 @@ public class UploadUmengPushIdRequest {
             @Override
             public void success(String result) {
                 if (result.contains("200")) {
-                    SharedPreManager.saveJPushId(jpushId);
+                    SharedPreManager.saveJPushId(pUmengPushId);
                     Logger.i(TAG, "upload jpushid success");
                 }else{
                     Logger.i(TAG,"upload jpushid success---"+result);

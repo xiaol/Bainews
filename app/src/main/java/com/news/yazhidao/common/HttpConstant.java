@@ -16,6 +16,7 @@ public class HttpConstant {
     public static final String URL_GET_NEWS_REFRESH_TIME="http://api.deeporiginalx.com/news/baijia/fetchTime?timefeedback=1";
     public static final String URL_USER_LOGIN="http://api.deeporiginalx.com/news/baijia/fetchLogin";
     public static final String URL_UPLOAD_JPUSHID = "http://api.deeporiginalx.com/news/baijia/fetchImUser?";
+    public static final String URL_UPLOAD_UMENGPUSHID = "http://api.deeporiginalx.com/news/baijia/uploadUmengPushId?";
     public static final String URL_SEND_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchIm?";
     public static final String URL_GET_HISTORY_MESSAGE = "http://api.deeporiginalx.com/news/baijia/fetchImContent?";
     public static final String URL_GET_MESSAGE_LIST = "http://api.deeporiginalx.com/news/baijia/fetchImList?";
