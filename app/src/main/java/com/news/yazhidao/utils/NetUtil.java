@@ -59,6 +59,7 @@ public class NetUtil {
 	 * @return
 	 */
 	private static boolean isWIFIConnection(Context context) {
+
 		// 获取到系统服务�?—关于链接的管理
 		ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		// 获取到WIFI的链接描述信�?

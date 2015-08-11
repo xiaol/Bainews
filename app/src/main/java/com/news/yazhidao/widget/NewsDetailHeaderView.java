@@ -790,24 +790,42 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private void initialNewsDetailAddHeaderView(final NewsDetailAdd pNewsDetail) {
 
         if (TextUtils.isValidate(((NewsDetailAdd) pNewsDetail).imgUrl)) {
-            ImageManager.getInstance(mContext).DisplayImage(((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
-                @Override
-                public void success(int width,int height) {
+//            ImageManager.getInstance(mContext).DisplayImage(((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
+//                @Override
+//                public void success(int width,int height) {
+//
+//                        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                        int left = DensityUtil.dip2px(mContext, 4);
+//                        int top = DensityUtil.dip2px(mContext, 5);
+//                        params.setMargins(left, height - top, left, 0);
+//
+//                        mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+//
+//                }
+//
+//                @Override
+//                public void failed() {
+//
+//                }
+//            });
 
-                        FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        int left = DensityUtil.dip2px(mContext, 4);
-                        int top = DensityUtil.dip2px(mContext, 5);
-                        params.setMargins(left, height - top, left, 0);
+            ViewGroup.LayoutParams layoutParams = mNewsDetailHeaderImg.getLayoutParams();
+            layoutParams.width = GlobalParams.screenWidth;
+            layoutParams.height = (int) (GlobalParams.screenHeight * 0.40);
+            mNewsDetailHeaderImg.setLayoutParams(layoutParams);
 
-                        mNewsDetailHeaderContentWrapper.setLayoutParams(params);
 
-                }
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
+            int left = DensityUtil.dip2px(mContext, 8);
+            int top = DensityUtil.dip2px(mContext, 10);
+            params.setMargins(left, (int)(GlobalParams.screenHeight * 0.4) - top, left, 0);
 
-                @Override
-                public void failed() {
+            mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+            TextViewExtend tv = new TextViewExtend(mContext);
 
-                }
-            });
+            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
+
+
         } else {
             mNewsDetailHeaderImg.setVisibility(GONE);
         }
@@ -1259,25 +1277,39 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private void initialNewsDetailHeaderView(final NewsDetail pNewsDetail) {
 
         if (TextUtils.isValidate(((NewsDetail) pNewsDetail).imgUrl)) {
-            ImageManager.getInstance(mContext).DisplayImage(((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
-                @Override
-                public void success(int width,int height) {
+
+            ViewGroup.LayoutParams layoutParams = mNewsDetailHeaderImg.getLayoutParams();
+            layoutParams.width = GlobalParams.screenWidth;
+            layoutParams.height = (int) (GlobalParams.screenHeight * 0.40);
+            mNewsDetailHeaderImg.setLayoutParams(layoutParams);
 
 
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
-                        int left = DensityUtil.dip2px(mContext, 8);
-                        int top = DensityUtil.dip2px(mContext, 10);
-                        params.setMargins(left, height - top, left, 0);
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
+            int left = DensityUtil.dip2px(mContext, 8);
+            int top = DensityUtil.dip2px(mContext, 10);
+            params.setMargins(left, (int)(GlobalParams.screenHeight * 0.4) - top, left, 0);
 
-                        mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+            mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+            TextViewExtend tv = new TextViewExtend(mContext);
 
-                }
+            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
 
-                @Override
-                public void failed() {
-
-                }
-            });
+//            ImageManager.getInstance(mContext).DisplayImage(((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, true, new DisplayImageListener() {
+//                @Override
+//                public void success(int width,int height) {
+////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
+////                        int left = DensityUtil.dip2px(mContext, 8);
+////                        int top = DensityUtil.dip2px(mContext, 10);
+////                        params.setMargins(left, height - top, left, 0);
+////
+////                        mNewsDetailHeaderContentWrapper.setLayoutParams(params);
+//                }
+//
+//                @Override
+//                public void failed() {
+//
+//                }
+//            });
         } else {
             mNewsDetailHeaderImg.setVisibility(GONE);
         }

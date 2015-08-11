@@ -163,6 +163,11 @@
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"/>
+
+        <activity
+            android:name=".pages.GuideAty"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".pages.NewsDetailAty"
             android:screenOrientation="portrait"
