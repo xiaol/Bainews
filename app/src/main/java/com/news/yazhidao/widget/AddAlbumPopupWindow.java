@@ -127,7 +127,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     diggerAlbum.setAlbum_id(albumId);
                     mDiggerAlbum = diggerAlbum;
                     /**(1).把新创建好的专辑存入数据库*/
-                    DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
+                    final DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
                     diggerAlbumDao.insert(diggerAlbum);
                     flag = true;
                     /**(2).把新创建好的专辑存入数据库*/
@@ -151,8 +151,9 @@ public class AddAlbumPopupWindow extends PopupWindow {
                                 if (!TextUtils.isEmpty(albumId)) {
                                     //TODO 上传专辑数据到服务器成功处理
                                     Logger.e("jigang","---上传新建专辑成功");
+                                    diggerAlbum.setIs_uploaded("1");
+                                    diggerAlbumDao.update(diggerAlbum);
                                 } else {
-                                   //TODO 上传专辑数据到服务器失败处理
                                     Logger.e("jigang","---上传新建专辑失败");
                                 }
 
@@ -161,7 +162,6 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
                         @Override
                         public void failed(MyAppException exception) {
-                                //TODO 上传专辑数据到服务器失败处理
                             Logger.e("jigang","---上传新建专辑失败,"+exception.getMessage());
                         }
                     });

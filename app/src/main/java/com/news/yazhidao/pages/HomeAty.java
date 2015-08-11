@@ -229,7 +229,18 @@ public class HomeAty extends BaseActivity {
                     final LoginModePopupWindow window = new LoginModePopupWindow(HomeAty.this, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
+                            /**获取专辑列表数据*/
+                            FetchAlbumListRequest.obtainAlbumList(HomeAty.this, new FetchAlbumListListener() {
+                                @Override
+                                public void success(ArrayList<DiggerAlbum> resultList) {
+                                    handleAlbumsData(resultList);
+                                }
 
+                                @Override
+                                public void failure() {
+                                    ToastUtil.toastShort("获取专辑失败!");
+                                }
+                            });
                         }
 
                         @Override

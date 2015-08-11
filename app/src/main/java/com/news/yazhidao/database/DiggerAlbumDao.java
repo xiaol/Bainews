@@ -16,6 +16,9 @@ import java.util.List;
  */
 public class DiggerAlbumDao {
     private static final String TAG = "DiggerAlbunDao";
+    /**是否上传成功列名*/
+    public static final String COLUMN_IS_UPLOADED = "is_uploaded";
+
     private Context mContext;
     private Dao<DiggerAlbum, String> mDiggerAlbumDao;
     private DatabaseHelper mDbHelper;
@@ -88,5 +91,19 @@ public class DiggerAlbumDao {
             }
 
         }
+    }
+
+    /**
+     * 查询没有上传成功的专辑集合
+     * @return
+     */
+    public ArrayList<DiggerAlbum> queryNotUpload(){
+        List albums = new ArrayList();
+        try {
+            albums = mDiggerAlbumDao.queryForEq(COLUMN_IS_UPLOADED, "0");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(albums);
     }
 }
