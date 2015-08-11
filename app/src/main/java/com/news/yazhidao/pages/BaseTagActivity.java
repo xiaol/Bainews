@@ -118,6 +118,12 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
                 window.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
                 return;
+            }else{
+                /**通知棱镜界面界面进行挖掘处理*/
+                Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
+                intent.putExtra(KEY_HOT_TOPIC,keyword);
+                sendBroadcast(intent);
+                BaseTagActivity.this.finish();
             }
         }else if(v == back_imageView){
             BaseTagActivity.this.finish();

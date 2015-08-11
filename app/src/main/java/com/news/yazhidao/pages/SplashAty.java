@@ -83,7 +83,6 @@ public class SplashAty extends BaseActivity {
         anim_fade_in.setFillAfter(true);
 
         timer = new Timer();
-
         setContentView(R.layout.rl_splash);
     }
 
@@ -163,7 +162,7 @@ public class SplashAty extends BaseActivity {
                     }
                 }
             }
-        }, 4000);
+        }, 3000);
 
         String url = HttpConstant.URL_GET_START_URL;
         request = new NetworkRequest(url, NetworkRequest.RequestMethod.POST);

@@ -19,15 +19,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#dfe6e9"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center" >
 
         <Button
             android:id="@+id/btn_reload"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:background="@drawable/loading_new_pic15"
+            />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="点击重新加载"
-            android:textSize="14sp"
+            android:layout_marginTop="10dp"
+            android:text="重新加载..."
+            android:textColor="#55000000"
+            android:textSize="15sp"
             />
 
     </LinearLayout>

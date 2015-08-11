@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,12 +35,12 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
-import com.news.yazhidao.widget.ProgressWheel;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -60,8 +62,11 @@ public class NewsDetailAty extends SwipeBackActivity {
     private StaggeredNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
     private NewsDetailHeaderView headerView;
-    private ProgressWheel mNewsDetailProgressWheel;
     private View mNewsDetailProgressWheelWrapper;
+    private AnimationDrawable mAniNewsLoading;
+    private LinearLayout ll_no_network;
+    private Button btn_reload;
+    private ImageView mNewsLoadingImg;
     //从哪儿进入的详情页
     private String mSource;
     private SwipeBackLayout mSwipeBackLayout;
@@ -91,20 +96,45 @@ public class NewsDetailAty extends SwipeBackActivity {
         headerView = new NewsDetailHeaderView(this);
 
         mivBack = (ImageView) findViewById(R.id.back_imageView);
-        mNewsDetailProgressWheel = (ProgressWheel) findViewById(R.id.mNewsDetailProgressWheel);
         mNewsDetailProgressWheelWrapper = findViewById(R.id.mNewsDetailProgressWheelWrapper);
-        mNewsDetailProgressWheel.spin();
+        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
         mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.DISABLED);
         msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
 //        msgvNewsDetail.setSmoothScrollbarEnabled(true);
         msgvNewsDetail.addHeaderView(headerView);
         msgvNewsDetail.setAdapter(mNewsDetailAdapter);
+
+        ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
+        btn_reload = (Button) findViewById(R.id.btn_reload);
         setListener();
     }
 
+
     @Override
     protected void loadData() {
+
+        if (NetUtil.checkNetWork(NewsDetailAty.this)) {
+            ll_no_network.setVisibility(View.GONE);
+            loadNewsDetail();
+            mNewsDetailProgressWheelWrapper.setVisibility(View.VISIBLE);
+            mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+            mAniNewsLoading.start();
+        } else {
+            ll_no_network.setVisibility(View.VISIBLE);
+            ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra("position",String.valueOf(position));
+        intent.putExtra("isComment", "0");
+
+        setResult(0, intent);
+    }
+
+    private void loadNewsDetail() {
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isnew = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API,false);
         boolean isdigger = false;
@@ -169,16 +199,14 @@ public class NewsDetailAty extends SwipeBackActivity {
                     }
 
                     mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                    mNewsDetailProgressWheel.stopSpinning();
-                    mNewsDetailProgressWheel.setVisibility(View.GONE);
-
+                    mAniNewsLoading.stop();
                 }
 
                 @Override
                 public void failed(MyAppException exception) {
                     mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                    mNewsDetailProgressWheel.stopSpinning();
-                    mNewsDetailProgressWheel.setVisibility(View.GONE);
+                    ll_no_network.setVisibility(View.VISIBLE);
+                    mAniNewsLoading.stop();
                 }
             }.setReturnType(new TypeToken<NewsDetail>() {
             }.getType()));
@@ -220,8 +248,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                             }
 
                             mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                            mNewsDetailProgressWheel.stopSpinning();
-                            mNewsDetailProgressWheel.setVisibility(View.GONE);
+                            mAniNewsLoading.stop();
 
                         }
 
@@ -229,8 +256,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         public void failed(MyAppException exception) {
 
                             mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                            mNewsDetailProgressWheel.stopSpinning();
-                            mNewsDetailProgressWheel.setVisibility(View.GONE);
+                            mAniNewsLoading.stop();
                         }
                     }.setReturnType(new TypeToken<NewsDetailAdd>() {
                     }.getType()));
@@ -275,28 +301,20 @@ public class NewsDetailAty extends SwipeBackActivity {
                         }
 
                         mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                        mNewsDetailProgressWheel.stopSpinning();
-                        mNewsDetailProgressWheel.setVisibility(View.GONE);
+                        mAniNewsLoading.stop();
 
                     }
 
                     @Override
                     public void failed(MyAppException exception) {
                         mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                        mNewsDetailProgressWheel.stopSpinning();
-                        mNewsDetailProgressWheel.setVisibility(View.GONE);
+                        mAniNewsLoading.stop();
                     }
                 }.setReturnType(new TypeToken<NewsDetailAdd>() {
                 }.getType()));
                 _Request.execute();
             }
         }
-
-        Intent intent = new Intent();
-        intent.putExtra("position",String.valueOf(position));
-        intent.putExtra("isComment", "0");
-
-        setResult(0, intent);
     }
 
 
@@ -347,6 +365,21 @@ public class NewsDetailAty extends SwipeBackActivity {
                         break;
                 }
                 return false;
+            }
+        });
+
+
+        btn_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (NetUtil.checkNetWork(NewsDetailAty.this)) {
+                    loadNewsDetail();
+                    mNewsDetailProgressWheelWrapper.setVisibility(View.VISIBLE);
+                    ll_no_network.setVisibility(View.GONE);
+                } else {
+                    ll_no_network.setVisibility(View.VISIBLE);
+                    ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+                }
             }
         });
     }
