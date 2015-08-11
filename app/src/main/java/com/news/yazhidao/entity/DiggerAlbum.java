@@ -1,11 +1,15 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * 挖掘机界面中得专辑entity
  * Created by fengjigang on 15/7/31.
  */
+@DatabaseTable(tableName = "tb_album")
 public class DiggerAlbum implements Serializable {
 
     /**
@@ -17,21 +21,28 @@ public class DiggerAlbum implements Serializable {
      * album_news_count : 0
      * album_img : 2130837689
      */
-    //专辑id
+    /**专辑id*/
+    @DatabaseField(id = true,columnName = "album_id")
     private String album_id;
-    //专辑创建的时间
+    /**专辑创建的时间*/
+    @DatabaseField(columnName = "create_time")
     private String create_time;
-    //专辑描述
+    /**专辑描述*/
+    @DatabaseField(columnName = "album_des")
     private String album_des;
-    //用户id
+    /**用户id*/
+    @DatabaseField(columnName = "user_id")
     private String user_id;
-    //专辑标题
+    /**专辑标题*/
+    @DatabaseField(columnName = "album_title")
     private String album_title;
-    //专辑中包含挖掘内容的个数
+    /**专辑中包含挖掘内容的个数*/
+    @DatabaseField(columnName = "album_news_count")
     private String album_news_count;
-    //专辑的背景图片
+    /**专辑的背景图片*/
+    @DatabaseField(columnName = "album_img")
     private String album_img;
-
+    public DiggerAlbum(){}
     public DiggerAlbum(String album_id, String create_time, String album_des, String user_id, String album_title, String album_news_count, String album_img) {
         this.album_id = album_id;
         this.create_time = create_time;

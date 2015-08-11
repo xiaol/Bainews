@@ -43,6 +43,7 @@ import java.util.ArrayList;
  */
 public class DiggerPopupWindow extends PopupWindow implements View.OnClickListener {
 
+    private static final String TAG = "DiggerPopupWindow";
     private final boolean isShowUrlTextView;
     private Activity m_pContext;
     private LengjingFgt mLengJingFgt;

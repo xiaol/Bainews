@@ -4,17 +4,20 @@ import android.content.Context;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.DatabaseHelper;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.FetchAlbumListListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +33,7 @@ public class FetchAlbumListRequest {
      * @param pContext 上下文
      * @param pListener 回调接口
      */
-    public static void obtainAlbumList(Context pContext, final FetchAlbumListListener pListener){
+    public static void obtainAlbumList(final Context pContext, final FetchAlbumListListener pListener){
         NetworkRequest request = new NetworkRequest(HttpConstant.URL_FETCH_ALBUM_LIST, NetworkRequest.RequestMethod.POST);
         ArrayList<NameValuePair> params = new ArrayList<>();
         //此处默认用户是已经登录过的
@@ -38,6 +41,19 @@ public class FetchAlbumListRequest {
         params.add(new BasicNameValuePair(KEY_USERID,user.getUserId()));
         request.setParams(params);
         request.setCallback(new JsonCallback<ArrayList<DiggerAlbum>>() {
+            @Override
+            protected void asyncPostRequest(ArrayList<DiggerAlbum> diggerAlbums) {
+                //把专辑信息存入数据库
+                DatabaseHelper dbHelper = DatabaseHelper.getHelper(pContext);
+                if (!TextUtil.isListEmpty(diggerAlbums)) {
+                    for (DiggerAlbum album:diggerAlbums)
+                        try {
+                            dbHelper.getAlbumDao().create(album);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                }
+            }
 
             @Override
             public void success(ArrayList<DiggerAlbum> result) {

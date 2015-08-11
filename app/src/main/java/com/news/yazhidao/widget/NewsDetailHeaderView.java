@@ -1799,8 +1799,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         request.setCallback(new JsonCallback<Object>() {
 
             public void success(Object result) {
-
-
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", result + "");
             }
