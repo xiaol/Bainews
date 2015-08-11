@@ -14,17 +14,15 @@ import com.j256.ormlite.table.TableUtils;
 import com.news.yazhidao.entity.DiggerAlbum;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    /**
-     * albumDao ，每张表对于一个
-     */
-    private Dao<DiggerAlbum, String> albumDao;
-
+    private HashMap<String,Dao> mDaos;
     private DatabaseHelper(Context context) {
         super(context, TABLE_NAME, null, 1);
+        mDaos = new HashMap<>();
     }
 
     @Override
@@ -67,11 +65,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return instance;
     }
 
-    public Dao<DiggerAlbum, String> getAlbumDao() throws SQLException {
-        if (albumDao == null) {
-            albumDao = getDao(DiggerAlbum.class);
+
+    /**
+     * 按Class 获取Dao对象
+     * @param clazz
+     * @return
+     * @throws SQLException
+     */
+    public synchronized Dao getDao(Class clazz) throws SQLException
+    {
+        Dao dao = null;
+        String className = clazz.getSimpleName();
+        if (mDaos.containsKey(className))
+        {
+            dao = mDaos.get(className);
         }
-        return albumDao;
+        if (dao == null)
+        {
+            dao = super.getDao(clazz);
+            mDaos.put(className, dao);
+        }
+        return dao;
     }
 
     /**
@@ -80,7 +94,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        albumDao = null;
+        for (String key : mDaos.keySet())
+        {
+            Dao dao = mDaos.get(key);
+            dao = null;
+        }
     }
 
 

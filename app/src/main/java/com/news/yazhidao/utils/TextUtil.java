@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -383,7 +385,7 @@ public class TextUtil {
         while (matcherUrl.find()){
             data = data.replace(matcherUrl.group(),"");
         }
-        return data.replace("\n","");
+        return data.replace("\n", "");
     }
 
     /**
@@ -415,4 +417,13 @@ public class TextUtil {
         }
         return false;
     }
+
+    /**
+     * 获取数据库表id
+     * @return 24位十六进制字符串
+     */
+    public static String getDatabaseId(){
+        return new ObjectId().toString();
+    }
+
 }

@@ -206,6 +206,12 @@
                 <action android:name="updateUI" />
             </intent-filter>
         </receiver>
+        <!--网络状态发生变化-->
+        <receiver android:name=".receiver.NetworkStateChangedReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.news.yazhidao.widget.imagewall.WallActivity"

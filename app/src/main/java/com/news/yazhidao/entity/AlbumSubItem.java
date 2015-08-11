@@ -1,18 +1,16 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * Created by fengjigang on 15/8/5.
+ * 专辑中所包含的挖掘items
  */
+@DatabaseTable(tableName = "tb_album_item")
 public class AlbumSubItem implements Serializable {
 
-    /**
-     * status : 0
-     * search_url : None
-     * inserteId : 55c1e1670d00006101f8569f
-     * search_key : 啊啊啊啊啊
-     */
     private String status;
     private String search_url;
     private String inserteId;
@@ -48,5 +46,10 @@ public class AlbumSubItem implements Serializable {
 
     public String getSearch_key() {
         return search_key;
+    }
+
+    @Override
+    public String toString() {
+        return "<"+this.getClass().getSimpleName()+">:"+"status="+status+",search_url="+search_url+",search_key="+search_key+",inserteid="+inserteId;
     }
 }
