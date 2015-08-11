@@ -3,26 +3,6 @@ package com.news.yazhidao.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-
-import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.net.request.UploadJpushidRequest;
-import com.news.yazhidao.pages.ChatAty;
-import com.news.yazhidao.pages.FeedBackActivity;
-import com.news.yazhidao.pages.HomeAty;
-import com.news.yazhidao.pages.NewsDetailAty;
-import com.news.yazhidao.pages.NewsFeedFgt;
-import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.helper.NotificationHelper;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.update.UmengUpdateAgent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import cn.jpush.android.api.JPushInterface;
 
 /**
  * Created by fengjigang on 15/5/14.
@@ -32,12 +12,11 @@ public class MessageJPushReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        /**
         String _Action = intent.getAction();
         Bundle bundle = intent.getExtras();
         if (JPushInterface.ACTION_REGISTRATION_ID.equals(_Action)) {
-            String jpushId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
-            Logger.i("jigang", "----title---" + jpushId);
+            String device_token = UmengRegistrar.getRegistrationId(context);
             UploadJpushidRequest.uploadJpushId(context,jpushId);
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(_Action)) {
             String title = bundle.getString(JPushInterface.EXTRA_TITLE);
@@ -106,7 +85,7 @@ public class MessageJPushReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
-            }
+            }**/
         }
 
 }

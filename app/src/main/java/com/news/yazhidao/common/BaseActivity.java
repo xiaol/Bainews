@@ -9,8 +9,8 @@ import android.view.WindowManager;
 import com.news.yazhidao.R;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
-import cn.jpush.android.api.JPushInterface;
 
 /**
  *  Created by feng on 3/23/15.
@@ -24,6 +24,9 @@ public abstract class BaseActivity extends FragmentActivity {
         if (isNeedAnimation()){
             overridePendingTransition(R.anim.aty_right_enter, R.anim.aty_no_ani);
         }
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.enable();
+        PushAgent.getInstance(this).onAppStart();
         //fixed:Android 4.4 以上通知栏沉浸式，兼容xiaomi 4.1.2 和华为 4.1.2 系统等
         if(translucentStatus()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -60,14 +63,12 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
-        JPushInterface.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
-        JPushInterface.onPause(this);
     }
 
     @Override

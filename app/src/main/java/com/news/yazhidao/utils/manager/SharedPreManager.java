@@ -29,7 +29,7 @@ public class SharedPreManager {
         e.putString(key, value);
         e.commit();
     }
-
+    @Deprecated
     public static void saveJPushId(String value){
         SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_PRIVATE).edit();
         e.putString(CommonConstant.KEY_JPUSH_ID, value);
@@ -38,6 +38,16 @@ public class SharedPreManager {
 
     public static String getJPushId(){
         return get(CommonConstant.FILE_JPUSH,CommonConstant.KEY_JPUSH_ID);
+    }
+
+    public static void saveUmengId(String value){
+        SharedPreferences.Editor e = getSettings(CommonConstant.FILE_UMENG, Context.MODE_PRIVATE).edit();
+        e.putString(CommonConstant.KEY_UMENG_ID, value);
+        e.commit();
+    }
+
+    public static String getUmengId(){
+        return get(CommonConstant.FILE_UMENG,CommonConstant.KEY_UMENG_ID);
     }
 
     /**
