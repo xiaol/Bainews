@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
@@ -44,9 +43,6 @@ public class YaZhiDaoApplication extends Application {
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setDebugMode(true);
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
-        String device_token = UmengRegistrar.getRegistrationId(this);
-        Log.i("eva","device_token");
-        Log.i("eva",device_token+"1");
         super.onCreate();
     }
     public static Context getAppContext(){
