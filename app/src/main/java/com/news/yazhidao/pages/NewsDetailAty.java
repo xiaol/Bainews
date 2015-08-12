@@ -161,7 +161,6 @@ public class NewsDetailAty extends SwipeBackActivity {
 
         if (!isnew) {
             NetworkRequest _Request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
-
             _Request.setCallback(new JsonCallback<NewsDetail>() {
 
                 @Override

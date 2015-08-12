@@ -108,7 +108,6 @@ public class HomeAty extends BaseActivity {
         if (leftCenterButton == null) {
             addMenu();
         } else {
-            ToastUtil.toastLong("adsfefvrefve");
         }
 
         //pagesliding
@@ -432,7 +431,7 @@ public class HomeAty extends BaseActivity {
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
-        private final String[] TITLES = {"关注", "谷歌今日焦点", "挖掘机"};
+        private final String[] TITLES = {"关注", "谷歌今日焦点", "一订"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
