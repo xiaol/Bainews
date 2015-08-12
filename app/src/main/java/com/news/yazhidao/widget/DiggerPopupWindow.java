@@ -266,9 +266,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                         if (i != tag) {
                                             albumList.get(i).setSelected(false);
                                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                                            ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                                            iv_selected.setVisibility(View.INVISIBLE);
-                                            albumList.get(i).setSelected(false);
+                                            if(layout != null){
+                                                ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                                iv_selected.setVisibility(View.INVISIBLE);
+                                                albumList.get(i).setSelected(false);
+                                            }
                                         }
                                     }
                                 }

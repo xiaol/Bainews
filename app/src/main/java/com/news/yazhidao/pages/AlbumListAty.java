@@ -26,6 +26,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.digger.DigProgressView;
 
 import java.util.ArrayList;
@@ -231,7 +232,11 @@ public class AlbumListAty extends BaseActivity {
                 holder = (SpecialLvHolder) convertView.getTag();
             }
             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
-            holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(AlbumListAty.this));
+            String imgUrl = albumSubItem.getImg();
+            holder.mSpecialItemIcon.setBackgroundResource(R.drawable.img_base_small);
+            if(!TextUtils.isEmpty(imgUrl)){
+                ImageManager.getInstance(AlbumListAty.this).DisplayImage(imgUrl,holder.mSpecialItemIcon,false,null);
+            }
             holder.mSpecialItemTitle.setText(albumSubItem.getSearch_key());
             holder.mSpecialItemUrl.setText(albumSubItem.getSearch_url());
 

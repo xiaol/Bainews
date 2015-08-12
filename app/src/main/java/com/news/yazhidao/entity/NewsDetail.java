@@ -109,13 +109,10 @@ public class NewsDetail implements Serializable{
         public String isCommentFlag;
     }
 
-<<<<<<< HEAD
     public class Article{
         public String url;
         public String self_opinion;
     }
-
-=======
 
     public class sourceSitename{
         public String reposts_count;
@@ -129,5 +126,4 @@ public class NewsDetail implements Serializable{
         public String comments_count;
         public String img_url;
     }
->>>>>>> 88dbbd54b3c4b663b469554fe7607487ca7ca36f
 }
