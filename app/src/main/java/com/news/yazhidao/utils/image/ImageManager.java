@@ -58,15 +58,16 @@ public class ImageManager {
 
         imageViews.put(imageView, url);
         // 先从内存缓存中查找
-
         Bitmap bitmap = memoryCache.get(url);
         if (bitmap != null) {
             if (isPreHandle) {
                 bitmap=ImageUtils.zoomBitmap(bitmap, DeviceInfoUtil.getScreenWidth());
             }
 
-            width = bitmap.getWidth();
-            height = bitmap.getHeight();
+            if(bitmap != null) {
+                width = bitmap.getWidth();
+                height = bitmap.getHeight();
+            }
 
             imageView.setImageBitmap(bitmap);
             if(listener!=null)
@@ -221,8 +222,12 @@ public class ImageManager {
                     bitmap=ImageUtils.zoomBitmap(bitmap,DeviceInfoUtil.getScreenWidth());
                 }
 
-                width = bitmap.getWidth();
-                height = bitmap.getHeight();
+
+                if(bitmap != null) {
+                    width = bitmap.getWidth();
+                    height = bitmap.getHeight();
+                }
+
                 if(mListener!=null)
                     mListener.success(width,height);
                 photoToLoad.imageView.setImageBitmap(bitmap);

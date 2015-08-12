@@ -59,6 +59,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private HorizontalScrollView bg_album_scollView;
     private LinearLayout bg_album_item_layout;
     private long mFirstClickStart;
+    //判断是如何dismiss钓popupwindow ，如果点击确定，flag = true 其他为fasle
     private boolean flag = false;
 
     public AddAlbumPopupWindow(Activity context, AddAlbumListener listener) {
