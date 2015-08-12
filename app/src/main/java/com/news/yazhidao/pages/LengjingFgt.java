@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.database.DatabaseHelper;
+import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
@@ -40,9 +40,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.news.yazhidao.widget.LoginModePopupWindow;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.sharesdk.framework.PlatformDb;
 
@@ -244,14 +242,8 @@ public class LengjingFgt extends Fragment {
      * @return
      */
     private ArrayList<DiggerAlbum> queryAlbumsFromDB() {
-        DatabaseHelper dbHelper = DatabaseHelper.getHelper(getActivity());
-        List<DiggerAlbum> diggerAlbums = new ArrayList<>();
-        try {
-            diggerAlbums = dbHelper.getAlbumDao().queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>(diggerAlbums);
+        DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(getActivity());
+        return diggerAlbumDao.querForAll();
     }
 
     /**
@@ -350,15 +342,8 @@ public class LengjingFgt extends Fragment {
         if (pAlbumIndex >= mDiggerAlbums.size()) {
             //添加一个新的专辑
             mDiggerAlbums.add(pDiggerAlbum);
-            mAlbumLvAdatpter.notifyDataSetChanged();
-        } else {
-            //修改专辑数据
-            DiggerAlbum diggerAlbum = mDiggerAlbums.get(pAlbumIndex);
-            diggerAlbum.setAlbum_news_count((Integer.valueOf(diggerAlbum.getAlbum_news_count()) + 1) + "");
-            mAlbumLvAdatpter.notifyDataSetChanged();
-
         }
-
+        mAlbumLvAdatpter.notifyDataSetChanged();
         openAlbumListAty(pAlbumIndex, true, getActivity());
     }
 

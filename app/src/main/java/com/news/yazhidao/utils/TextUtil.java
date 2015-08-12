@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -179,70 +181,6 @@ public class TextUtil {
         if(TextUtils.isEmpty(source_name)){
             return;
         }
-        if (source_name.contains("凤凰网")) {
-            iv_source.setBackgroundResource(R.drawable.fenghuangwang);
-        } else if( source_name.contains("网易")) {
-            iv_source.setBackgroundResource(R.drawable.yi);
-        } else if( source_name.contains("zhihu")) {
-            iv_source.setBackgroundResource(R.drawable.zhihu);
-        } else if( source_name.contains("weibo")) {
-            iv_source.setBackgroundResource(R.drawable.weibo);
-        } else if( source_name.contains("国际在线")) {
-            iv_source.setBackgroundResource(R.drawable.guojizaixian);
-        } else if( source_name.contains("新浪网")) {
-            iv_source.setBackgroundResource(R.drawable.xinlang);
-        } else if( source_name.contains("搜狐")) {
-            iv_source.setBackgroundResource(R.drawable.souhu);
-        } else if( source_name.contains("腾讯")) {
-            iv_source.setBackgroundResource(R.drawable.tengxun);
-        } else if( source_name.contains("中国经济报")) {
-            iv_source.setBackgroundResource(R.drawable.zhongguojingjibao);
-        } else if( source_name.contains("中国经济网")) {
-            iv_source.setBackgroundResource(R.drawable.zhongguojingjiwang);
-        } else if( source_name.contains("人民网")) {
-            iv_source.setBackgroundResource(R.drawable.renminwang);
-        } else if( source_name.contains("经济参考报")) {
-            iv_source.setBackgroundResource(R.drawable.jingjicankaobao);
-        } else if( source_name.contains("南方网")) {
-            iv_source.setBackgroundResource(R.drawable.nanfang);
-        } else if( source_name.contains("中工网")) {
-            iv_source.setBackgroundResource(R.drawable.zhonggongwang);
-        } else if( source_name.contains("央视网")) {
-            iv_source.setBackgroundResource(R.drawable.yangshiwang);
-        } else if( source_name.contains("金融街")) {
-            iv_source.setBackgroundResource(R.drawable.jinrongjie);
-        } else if( source_name.contains("南海网")) {
-            iv_source.setBackgroundResource(R.drawable.nanhaiwang);
-        } else if( source_name.contains("36氪")) {
-            iv_source.setBackgroundResource(R.drawable.thirty_six_ke);
-        } else if( source_name.contains("环球网")) {
-            iv_source.setBackgroundResource(R.drawable.huanqiuwang);
-        } else if( source_name.contains("解放牛网")) {
-            iv_source.setBackgroundResource(R.drawable.jiefangniuwang);
-        } else if( source_name.contains("21CN")) {
-            iv_source.setBackgroundResource(R.drawable.twenty_one_cn);
-        } else if( source_name.contains("中金在线")) {
-            iv_source.setBackgroundResource(R.drawable.zhongjinzaixian);
-        } else if( source_name.contains("证券之星")) {
-            iv_source.setBackgroundResource(R.drawable.zhengquanzhixing);
-        } else if( source_name.contains("太平洋电脑网")) {
-            iv_source.setBackgroundResource(R.drawable.taipingyangdiannaowang);
-        } else if( source_name.contains("中关村在线")) {
-            iv_source.setBackgroundResource(R.drawable.zhongguancunzaixian);
-        } else if( source_name.contains("红网")) {
-            iv_source.setBackgroundResource(R.drawable.hongwang);
-        } else if( source_name.contains("北青网")) {
-            iv_source.setBackgroundResource(R.drawable.beiqingwang);
-        } else if( source_name.contains("sports.cn")) {
-            iv_source.setBackgroundResource(R.drawable.sportscn);
-        } else if( source_name.contains("新民网")) {
-            iv_source.setBackgroundResource(R.drawable.xinmin);
-        } else if( source_name.contains("中国山东网")) {
-            iv_source.setBackgroundResource(R.drawable.zhongguoshandongwang);
-        } else {
-            iv_source.setBackgroundResource(R.drawable.other);
-        }
-
     }
 
     public static String trimEnterInContent(String[] split) {
@@ -331,35 +269,7 @@ public class TextUtil {
      * @return
      */
     public static int getSpecialBgPic(int positon){
-        positon = positon % 8;
-        int resource = R.drawable.bg_album1;
-        switch (positon){
-            case 1:
-                resource = R.drawable.bg_album1;
-                break;
-            case 2:
-                resource = R.drawable.bg_album2;
-                break;
-            case 3:
-                resource = R.drawable.bg_album3;
-                break;
-            case 4:
-                resource = R.drawable.bg_album4;
-                break;
-            case 5:
-                resource = R.drawable.bg_album5;
-                break;
-            case 6:
-                resource = R.drawable.bg_album6;
-                break;
-            case 7:
-                resource = R.drawable.bg_album7;
-                break;
-            case 8:
-                resource = R.drawable.bg_album8;
-                break;
-        }
-        return resource;
+        return 0;
     }
     /**
      * 获取别的app分享进来的新闻链接中的url
@@ -383,7 +293,7 @@ public class TextUtil {
         while (matcherUrl.find()){
             data = data.replace(matcherUrl.group(),"");
         }
-        return data.replace("\n","");
+        return data.replace("\n", "");
     }
 
     /**
@@ -415,4 +325,13 @@ public class TextUtil {
         }
         return false;
     }
+
+    /**
+     * 获取数据库表id
+     * @return 24位十六进制字符串
+     */
+    public static String getDatabaseId(){
+        return new ObjectId().toString();
+    }
+
 }

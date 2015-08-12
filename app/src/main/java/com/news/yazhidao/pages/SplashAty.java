@@ -61,9 +61,7 @@ public class SplashAty extends BaseActivity {
                 case 1:
                     request.cancel(true);
                     tv_splash_news.setText("今日头条，百家争鸣");
-
                     iv_splash_background.startAnimation(anim_fade_out);
-
                     break;
                 default:
                     break;
@@ -82,25 +80,25 @@ public class SplashAty extends BaseActivity {
         anim_fade_out.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                ScaleAnimation animation_scale =new ScaleAnimation(1.0f, 2.0f, 1.0f, 2.0f,
+
+                final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.4f, 1.0f, 1.4f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                animation.setDuration(2000);//设置动画持续时间
-                animation.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                animation_scale.setDuration(8000);//设置动画持续时间
+                animation_scale.setFillAfter(true);//动画执行完后是否停留在执行完的状态
 
                 iv_news.startAnimation(animation_scale);
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-
             }
         });
         anim_fade_out.setFillAfter(true);
+        anim_fade_out.setRepeatCount(1);
         anim_fade_in = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_in);
         anim_fade_in.setFillAfter(true);
 
@@ -115,7 +113,11 @@ public class SplashAty extends BaseActivity {
         flag = sp.getBoolean("isshow",false);
 
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
-        rl_splash.setOnClickListener(new View.OnClickListener() {
+        iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
+        tv_splash_news = (TextView) findViewById(R.id.tv_splash_news);
+        iv_app_icon = (ImageView) findViewById(R.id.iv_app_icon);
+        iv_news = (ImageView) findViewById(R.id.iv_news);
+        iv_news.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(flag) {
@@ -131,10 +133,6 @@ public class SplashAty extends BaseActivity {
                 }
             }
         });
-        iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
-        tv_splash_news = (TextView) findViewById(R.id.tv_splash_news);
-        iv_app_icon = (ImageView) findViewById(R.id.iv_app_icon);
-        iv_news = (ImageView) findViewById(R.id.iv_news);
 
         MobclickAgent.onEvent(this, CommonConstant.US_BAINEWS_USER_ASSESS_APP);
     }
@@ -168,8 +166,9 @@ public class SplashAty extends BaseActivity {
 
                     if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
+                        rl_splash.setVisibility(View.VISIBLE);
                     } else {
-                        tv_splash_news.setText("今日头条，百家争鸣");
+                        rl_splash.setVisibility(View.GONE);
                     }
 
                     if (result.getImgUrl() != null) {
@@ -177,12 +176,10 @@ public class SplashAty extends BaseActivity {
                         ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(), iv_news, false, new DisplayImageListener() {
                             @Override
                             public void success(int width, int height) {
-
                             }
 
                             @Override
                             public void failed() {
-
                             }
                         });
                     } else {
@@ -229,6 +226,9 @@ public class SplashAty extends BaseActivity {
             timer.cancel();
             timer = null;
         }
+
+        anim_fade_out.cancel();
+
 
         super.onDestroy();
     }

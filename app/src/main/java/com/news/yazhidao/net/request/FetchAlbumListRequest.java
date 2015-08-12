@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.database.DatabaseHelper;
+import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.FetchAlbumListListener;
@@ -17,7 +17,6 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -44,14 +43,14 @@ public class FetchAlbumListRequest {
             @Override
             protected void asyncPostRequest(ArrayList<DiggerAlbum> diggerAlbums) {
                 //把专辑信息存入数据库
-                DatabaseHelper dbHelper = DatabaseHelper.getHelper(pContext);
+                DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(pContext);
                 if (!TextUtil.isListEmpty(diggerAlbums)) {
-                    for (DiggerAlbum album:diggerAlbums)
-                        try {
-                            dbHelper.getAlbumDao().create(album);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
+                    for (DiggerAlbum album : diggerAlbums) {
+                        DiggerAlbum existAlbum = diggerAlbumDao.queryById(album.getAlbum_id());
+                        if (existAlbum == null) {
+                            diggerAlbumDao.insert(album);
                         }
+                    }
                 }
             }
 

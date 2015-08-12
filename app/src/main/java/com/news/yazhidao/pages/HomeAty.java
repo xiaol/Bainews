@@ -25,7 +25,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.database.DatabaseHelper;
+import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
@@ -43,9 +43,7 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cn.sharesdk.framework.PlatformDb;
 
@@ -231,7 +229,18 @@ public class HomeAty extends BaseActivity {
                     final LoginModePopupWindow window = new LoginModePopupWindow(HomeAty.this, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
+                            /**获取专辑列表数据*/
+                            FetchAlbumListRequest.obtainAlbumList(HomeAty.this, new FetchAlbumListListener() {
+                                @Override
+                                public void success(ArrayList<DiggerAlbum> resultList) {
+                                    handleAlbumsData(resultList);
+                                }
 
+                                @Override
+                                public void failure() {
+                                    ToastUtil.toastShort("获取专辑失败!");
+                                }
+                            });
                         }
 
                         @Override
@@ -347,14 +356,8 @@ public class HomeAty extends BaseActivity {
      * @return
      */
     private ArrayList<DiggerAlbum> queryAlbumsFromDB(){
-        DatabaseHelper dbHelper = DatabaseHelper.getHelper(HomeAty.this);
-        List<DiggerAlbum> diggerAlbums = new ArrayList<DiggerAlbum>();
-        try {
-            diggerAlbums = dbHelper.getAlbumDao().queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>(diggerAlbums);
+        DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(this);
+        return diggerAlbumDao.querForAll();
     }
 
     /**

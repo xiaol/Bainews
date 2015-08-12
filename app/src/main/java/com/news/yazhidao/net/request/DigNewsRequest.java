@@ -2,15 +2,15 @@ package com.news.yazhidao.net.request;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.DiggerNewsListener;
-import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 /**
@@ -36,35 +36,29 @@ public class DigNewsRequest {
      * @param pUrl 要挖掘的url
      * @param pLisener 挖掘回调接口
      */
-    public static void digNews(Context pContext,String pAlbumId,String pTitle,String pUrl, final DiggerNewsListener pLisener){
+    public static void digNews(Context pContext,String pAlbumId,String pTitle,String pUrl, StringCallback pLisener){
         NetworkRequest request = new NetworkRequest(HttpConstant.URL_DIGGER_ALBUM, NetworkRequest.RequestMethod.GET);
         HashMap<String,Object> params = new HashMap<>();
         //此处默认用户是已经登录过的
         User user = SharedPreManager.getUser(pContext);
         params.put(KEY_UID,user.getUserId());
-        params.put(KEY_ALID,pAlbumId);
+        params.put(KEY_ALID, pAlbumId);
         if(!TextUtils.isEmpty(pTitle)){
             params.put(KEY_KEY,pTitle);
         }
         if(!TextUtils.isEmpty(pUrl)){
-            params.put(KEY_URL,pUrl);
+            byte[] bytes = Base64.encode(pUrl.getBytes(), Base64.DEFAULT);
+            String url = null;
+            try {
+                url = new String(bytes,"utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            //去掉最后面的"="符号
+            params.put(KEY_URL, url.replace("=",""));
         }
         request.getParams = params;
-        request.setCallback(new StringCallback() {
-            @Override
-            public void success(String result) {
-                if (pLisener != null) {
-                    pLisener.diggerNewsDone(result);
-                }
-            }
-
-            @Override
-            public void failed(MyAppException exception) {
-                if (pLisener != null) {
-                    pLisener.diggerNewsDone(null);
-                }
-            }
-        });
+        request.setCallback(pLisener);
         request.execute();
     }
 }

@@ -71,7 +71,6 @@ import app.base.task.CallbackRunnable;
 import app.base.task.Compt;
 import cn.sharesdk.framework.PlatformDb;
 
-
 /**
  * Created by h.yuan on 2015/3/23.
  */
@@ -420,8 +419,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
         TextView tv_praise_count = (TextView) rl_comment.findViewById(R.id.tv_praise_count);
         tv_praise_count.setText(count + "");
-
-
         this.marrPoint = marrPoint;
 
     }
@@ -877,7 +874,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         }
 
         mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
-        mNewsDetailHeaderTitle.setText(((NewsDetailAdd) pNewsDetail).title);
+        String title = TextUtil.getNewsTitle(((NewsDetailAdd) pNewsDetail).title);
+        mNewsDetailHeaderTitle.setText(title);
         mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -1361,7 +1359,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         }
 
         mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
-        mNewsDetailHeaderTitle.setText(((NewsDetail) pNewsDetail).title);
+        String title = TextUtil.getNewsTitle(((NewsDetail) pNewsDetail).title);
+        mNewsDetailHeaderTitle.setText(title);
         mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {

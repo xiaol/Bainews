@@ -192,6 +192,7 @@ public class AlbumListAty extends BaseActivity {
             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
             holder.mSpecialItemIcon.setBackgroundColor(TextUtil.getRandomColor4Special(AlbumListAty.this));
             holder.mSpecialItemTitle.setText(albumSubItem.getSearch_key());
+            holder.mSpecialItemUrl.setText(albumSubItem.getSearch_url());
 
             holder.mSpecialItemOnlyOne.setVisibility(View.GONE);
             holder.mSpecialItemTitle.setVisibility(View.VISIBLE);

@@ -42,8 +42,11 @@ public class DiggerAlbum implements Serializable {
     /**专辑的背景图片*/
     @DatabaseField(columnName = "album_img")
     private String album_img;
+    /**新建专辑时,是否上传成功 0 为未上传成功,1为上传成功*/
+    @DatabaseField(columnName = "is_uploaded")
+    private String is_uploaded;
     public DiggerAlbum(){}
-    public DiggerAlbum(String album_id, String create_time, String album_des, String user_id, String album_title, String album_news_count, String album_img) {
+    public DiggerAlbum(String album_id, String create_time, String album_des, String user_id, String album_title, String album_news_count, String album_img,String is_uploaded) {
         this.album_id = album_id;
         this.create_time = create_time;
         this.album_des = album_des;
@@ -51,6 +54,7 @@ public class DiggerAlbum implements Serializable {
         this.album_title = album_title;
         this.album_news_count = album_news_count;
         this.album_img = album_img;
+        this.is_uploaded = is_uploaded;
     }
 
     public void setAlbum_id(String album_id) {
@@ -107,5 +111,18 @@ public class DiggerAlbum implements Serializable {
 
     public String getAlbum_img() {
         return album_img;
+    }
+
+    public String getIs_uploaded() {
+        return is_uploaded;
+    }
+
+    public void setIs_uploaded(String is_uploaded) {
+        this.is_uploaded = is_uploaded;
+    }
+
+    @Override
+    public String toString() {
+        return "<"+this.getClass().getSimpleName()+">:"+"album_id="+album_id+",create_time="+create_time+",album_des="+album_des+",user_id="+user_id+",album_title="+album_title+",album_news_count="+album_news_count+",album_img="+album_img+",is_upload="+is_uploaded;
     }
 }

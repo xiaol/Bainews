@@ -168,8 +168,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             int msgId = msg.what;
-
-
             switch (msgId) {
                 case 1:
                     lv_news.setVisibility(View.GONE);
@@ -1136,9 +1134,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                         RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                            long firstClick = 0;
                             @Override
                             public void onClick(View v) {
-
+                                if (System.currentTimeMillis() - firstClick <= 1500) {
+                                    firstClick = System.currentTimeMillis();
+                                    return;
+                                }
+                                firstClick = System.currentTimeMillis();
                                 Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
                                 intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
@@ -1581,9 +1584,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                         RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
+                            long firstClick = 0;
                             @Override
                             public void onClick(View v) {
-
+                                if (System.currentTimeMillis() - firstClick <= 1500) {
+                                    firstClick = System.currentTimeMillis();
+                                    return;
+                                }
+                                firstClick = System.currentTimeMillis();
                                 Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
                                 intent.putExtra(KEY_URL, source.getUrl());
                                 startActivity(intent);
@@ -1684,12 +1692,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             //下拉时给显示的item添加动画
             if (position == 0 && mIsNeedAnim)
-
             {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.aty_list_item_in));
                 return convertView;
             }
+
             //上拉时给显示的item添加动画
 //            if (position > mMiddleNewsArr.size() - 2 && mIsNeedAnim) {
 //                convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -1744,13 +1752,17 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 3:
+                if(type == TYPE_VIEWHOLDER3){
+                    params.height = DensityUtil.dip2px(mContext, 210);
+                }else {
 
-                if (length == 6) {
-                    params.height = DensityUtil.dip2px(mContext, 200);
-                } else if (length == 3) {
-                    params.height = DensityUtil.dip2px(mContext, 120);
-                } else {
-                    params.height = DensityUtil.dip2px(mContext, 170);
+                    if (length == 6) {
+                        params.height = DensityUtil.dip2px(mContext, 200);
+                    } else if (length == 3) {
+                        params.height = DensityUtil.dip2px(mContext, 120);
+                    } else {
+                        params.height = DensityUtil.dip2px(mContext, 170);
+                    }
                 }
 
                 break;

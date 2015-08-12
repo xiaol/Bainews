@@ -18,16 +18,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.database.DatabaseHelper;
+import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.BgAlbum;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.listener.CreateDiggerAlbumListener;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 
-import java.sql.SQLException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 
@@ -55,7 +62,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
     //判断是如何dismiss钓popupwindow ，如果点击确定，flag = true 其他为fasle
     private boolean flag = false;
 
-    public AddAlbumPopupWindow(Activity context,AddAlbumListener listener) {
+    public AddAlbumPopupWindow(Activity context, AddAlbumListener listener) {
         super(context);
         this.listener = listener;
         m_pContext = context;
@@ -65,7 +72,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
     private void findHeadPortraitImageViews() {
 
-        mMenuView = View.inflate(m_pContext, R.layout.rl_add_album,null);
+        mMenuView = View.inflate(m_pContext, R.layout.rl_add_album, null);
         mMenuView.setFocusableInTouchMode(true);
         mMenuView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -107,38 +114,59 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     album.setSelected(true);
                     m_pContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     /**防止多次点击*/
-                    if (System.currentTimeMillis() - mFirstClickStart <= 2000){
+                    if (System.currentTimeMillis() - mFirstClickStart <= 2000) {
                         mFirstClickStart = System.currentTimeMillis();
                         return;
                     }
                     mFirstClickStart = System.currentTimeMillis();
-                    /**发送新建专辑的数据到服务器*/
-                    final DiggerAlbum diggerAlbum = new DiggerAlbum("", "", album.getDescription(), null, inputTitle, "0", album.getId());
-                    CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new CreateDiggerAlbumListener() {
+                    User user = SharedPreManager.getUser(m_pContext);
+                    /**先存到本地数据库,随后发送新建专辑的数据到服务器*/
+                    String albumId = TextUtil.getDatabaseId();
+                    final DiggerAlbum diggerAlbum = new DiggerAlbum(albumId, DateUtil.getDate(), album.getDescription(), user.getUserId(), inputTitle, "0", album.getId(),"0");
+                    ToastUtil.toastShort("创建专辑成功!");
+                    album.setAlbumId(albumId);
+                    diggerAlbum.setAlbum_id(albumId);
+                    mDiggerAlbum = diggerAlbum;
+                    /**(1).把新创建好的专辑存入数据库*/
+                    final DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
+                    diggerAlbumDao.insert(diggerAlbum);
+                    flag = true;
+                    /**(2).把新创建好的专辑存入数据库*/
+                    CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new StringCallback() {
+                        @Override
+                        public int retryCount() {
+                            return 3;
+                        }
 
                         @Override
-                        public void createDiggerAlbumDone(String pAlbumId) {
-                            if (TextUtils.isEmpty(pAlbumId)) {
-                                ToastUtil.toastShort("创建专辑失败,请稍后再试!");
-                            } else {
-                                ToastUtil.toastShort("创建专辑成功!");
-                                Logger.e("jigang","创建专辑 id  "+pAlbumId);
-                                album.setAlbumId(pAlbumId);
-                                diggerAlbum.setAlbum_id(pAlbumId);
-                                mDiggerAlbum = diggerAlbum;
-                                /**把新创建好的专辑存入数据库*/
-                                DatabaseHelper dbHelper = DatabaseHelper.getHelper(m_pContext);
+                        public void success(String result) {
+                            String albumId = null;
+                            if (!TextUtils.isEmpty(result)) {
                                 try {
-                                    dbHelper.getAlbumDao().create(mDiggerAlbum);
-                                } catch (SQLException e) {
+                                    JSONObject jsonObj = new JSONObject(result);
+                                    albumId = jsonObj.optString(CreateDiggerAlbumRequest.ALBUM_ID);
+                                } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Logger.e(TAG,"新建专辑存入数据库失败--"+e.getMessage());
                                 }
-                                flag = true;
-                                dismiss();
+                                Logger.e("jigang","---upload album "+diggerAlbum);
+                                if (!TextUtils.isEmpty(albumId)) {
+                                    //TODO 上传专辑数据到服务器成功处理
+                                    Logger.e("jigang","---上传新建专辑成功");
+                                    diggerAlbum.setIs_uploaded("1");
+                                    diggerAlbumDao.update(diggerAlbum);
+                                } else {
+                                    Logger.e("jigang","---上传新建专辑失败");
+                                }
+
                             }
                         }
+
+                        @Override
+                        public void failed(MyAppException exception) {
+                            Logger.e("jigang","---上传新建专辑失败,"+exception.getMessage());
+                        }
                     });
+                    dismiss();
                 }
 
             }
@@ -156,13 +184,13 @@ public class AddAlbumPopupWindow extends PopupWindow {
             ivBgIcon.setBackgroundResource(Integer.parseInt(ids.get(i).getId()));
             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
 
-            if(i == 0){
+            if (i == 0) {
                 iv_selected.setVisibility(View.VISIBLE);
             }
 
-            if(ids.get(i).isSelected()){
+            if (ids.get(i).isSelected()) {
                 iv_selected.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 iv_selected.setVisibility(View.GONE);
             }
 
@@ -195,7 +223,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
                 }
             });
-            bg_album_item_layout.addView(layout,i);
+            bg_album_item_layout.addView(layout, i);
         }
 
 
@@ -214,8 +242,10 @@ public class AddAlbumPopupWindow extends PopupWindow {
 //        //设置SelectPicPopupWindow弹出窗体的背景
 //        this.setBackgroundDrawable(dw);
     }
+
     /**
      * 获取InputMethodManager，隐藏软键盘
+     *
      * @param view
      */
     private void hideKeyboard(View view) {
@@ -225,12 +255,13 @@ public class AddAlbumPopupWindow extends PopupWindow {
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
     @Override
     public void dismiss() {
         String inputTitle = et_name.getText().toString();
-        if(album != null && inputTitle != null && !"".equals(inputTitle) && flag) {
-            if(listener !=null ){
-                listener.add(album,mDiggerAlbum);
+        if (album != null && inputTitle != null && !"".equals(inputTitle) && flag) {
+            if (listener != null) {
+                listener.add(album, mDiggerAlbum);
             }
         }
         super.dismiss();
@@ -240,10 +271,10 @@ public class AddAlbumPopupWindow extends PopupWindow {
     private void loadData() {
         ids = new ArrayList<BgAlbum>();
 
-        for(int i = 0 ;i < 8;i ++){
+        for (int i = 0; i < 8; i++) {
             BgAlbum ba = new BgAlbum();
             ba.setSelected(i == 0);
-            setId(ba,i);
+            setId(ba, i);
             ids.add(ba);
         }
 
@@ -253,32 +284,32 @@ public class AddAlbumPopupWindow extends PopupWindow {
 
     private void setId(BgAlbum ba, int i) {
 
-        switch (i){
-            case 0 :
+        switch (i) {
+            case 0:
                 ba.setId(String.valueOf(R.drawable.bg_album1));
                 break;
 
-            case 1 :
+            case 1:
                 ba.setId(String.valueOf(R.drawable.bg_album2));
                 break;
 
-            case 2 :
+            case 2:
                 ba.setId(String.valueOf(R.drawable.bg_album3));
                 break;
 
-            case 3 :
+            case 3:
                 ba.setId(String.valueOf(R.drawable.bg_album4));
                 break;
 
-            case 4 :
+            case 4:
                 ba.setId(String.valueOf(R.drawable.bg_album5));
                 break;
 
-            case 5 :
+            case 5:
                 ba.setId(String.valueOf(R.drawable.bg_album6));
                 break;
 
-            case 6 :
+            case 6:
                 ba.setId(String.valueOf(R.drawable.bg_album7));
                 break;
 
