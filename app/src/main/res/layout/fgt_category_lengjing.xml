@@ -44,7 +44,7 @@
                 android:textSize="13sp"
                 android:textColor="#818181"
                 />
-            
+
         </FrameLayout>
 
         <GridView

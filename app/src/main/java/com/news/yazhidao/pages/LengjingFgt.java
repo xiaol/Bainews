@@ -76,14 +76,12 @@ public class LengjingFgt extends Fragment {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (ACTION_USER_LOGOUTED.equals(action)) {
-                Logger.e("jigang", " user is logout~~");
                 /**用户退出登录后,要清空挖掘机中显示的数据并且隐藏专辑列表和显示教程页*/
                 mDiggerAlbums = null;
                 mAlbumLvAdatpter.notifyDataSetChanged();
                 fl_lecture.setVisibility(View.VISIBLE);
                 mSpecialGv.setVisibility(View.GONE);
             } else if (ACTION_USER_CHOSE_TOPIC.equals(action)) {
-                Logger.e("jigang", "---ACTION_USER_CHOSE_TOPIC");
                 String hotTopic = intent.getStringExtra(BaseTagActivity.KEY_HOT_TOPIC);
                 if (!TextUtils.isEmpty(hotTopic)) {
                     hotTopic = hotTopic.replace("#", "");
@@ -127,6 +125,8 @@ public class LengjingFgt extends Fragment {
         Logger.e("jigang", "---lengjing  onCreateView");
         return rootView;
     }
+
+
 
     private void initVars() {
         mAlbumLvAdatpter = new MyAlbumLvAdatpter();
@@ -173,11 +173,11 @@ public class LengjingFgt extends Fragment {
                 @Override
                 public void failure() {
                     Logger.e(TAG,"获取专辑失败!");
+                    setDiggerAlbums(queryAlbumsFromDB());
                 }
             });
         }
     }
-
     /**
      * 打开新闻挖掘的标题和url编辑界面
      * 此方法主要用于从其他app分享进来或则从热门话题选择标签进来后挖掘
@@ -273,47 +273,6 @@ public class LengjingFgt extends Fragment {
         }
     }
 
-    /**
-     * 获取专辑列表
-     *
-     * @param newsTitle
-     * @param newsUrl
-     */
-    @Deprecated
-    private void fetchAlbumListData(final String newsTitle, final String newsUrl) {
-        /**获取专辑列表数据*/
-        FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-            @Override
-            public void success(ArrayList<DiggerAlbum> resultList) {
-                Logger.e("jigang", "--- " + resultList.size());
-                if (resultList != null && resultList.size() > 0) {
-                    setDiggerAlbums(resultList);
-                    for (int i = 0; i < mDiggerAlbums.size(); i++) {
-                        DiggerAlbum diggerAlbum = mDiggerAlbums.get(i);
-
-                        Album album = new Album();
-                        album.setAlbum(diggerAlbum.getAlbum_title());
-                        album.setDescription(diggerAlbum.getAlbum_des());
-                        album.setId(String.valueOf(diggerAlbum.getAlbum_img()));
-                        album.setAlbumId(diggerAlbum.getAlbum_id());
-                        album.setSelected(i == 0);
-
-                        albumList.add(album);
-                    }
-                    DiggerPopupWindow window = new DiggerPopupWindow(LengjingFgt.this, mActivity, 1 + "", albumList, 1, false, !TextUtils.isEmpty(newsUrl));
-                    window.setDigNewsTitleAndUrl(newsTitle, newsUrl);
-                    window.setFocusable(true);
-                    window.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.CENTER
-                            | Gravity.CENTER, 0, 0);
-                }
-            }
-
-            @Override
-            public void failure() {
-                ToastUtil.toastShort("获取专辑失败!");
-            }
-        });
-    }
 
     /**
      * 打开专辑列表详情页
