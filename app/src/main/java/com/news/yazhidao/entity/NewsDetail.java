@@ -98,7 +98,7 @@ public class NewsDetail implements Serializable{
 
 
     public class Weibo {
-        public sourceSitename sourceSitename;
+//        public sourceSitename sourceSitename;
         public String url;
         public String profileImageUrl;
         public String user;
