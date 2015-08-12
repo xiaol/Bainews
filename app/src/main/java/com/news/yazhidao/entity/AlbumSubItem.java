@@ -37,6 +37,9 @@ public class AlbumSubItem implements Serializable {
     /**创建的时间*/
     @DatabaseField(columnName = "createTime")
     private String createTime;
+    /**图片*/
+    @DatabaseField(columnName = "img")
+    private String img;
 
     /**外键,该对象属于哪个专辑*/
     @DatabaseField(canBeNull = true,foreign = true,columnName = COLUMN_ALBUM_ID,foreignAutoRefresh = true)
@@ -98,6 +101,22 @@ public class AlbumSubItem implements Serializable {
 
     public void setDiggerAlbum(DiggerAlbum diggerAlbum) {
         this.diggerAlbum = diggerAlbum;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     @Override

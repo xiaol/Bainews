@@ -41,7 +41,7 @@ public class YaZhiDaoApplication extends Application {
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
         PushAgent mPushAgent = PushAgent.getInstance(this);
-        mPushAgent.setDebugMode(true);
+        mPushAgent.setDebugMode(false);
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
         super.onCreate();
     }
