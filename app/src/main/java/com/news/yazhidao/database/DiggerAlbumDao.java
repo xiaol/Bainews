@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Created by fengjigang on 15/8/11.
- * 专辑表操作对象
+ * 专辑表操作Dao
  */
 public class DiggerAlbumDao {
     private static final String TAG = "DiggerAlbunDao";
@@ -29,6 +29,7 @@ public class DiggerAlbumDao {
             mDiggerAlbumDao  = mDbHelper.getDao(DiggerAlbum.class);
         } catch (SQLException e) {
             e.printStackTrace();
+            Logger.e(TAG,"dao failure >>>"+e.getMessage());
         }
     }
 

@@ -12,15 +12,9 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "tb_album")
 public class DiggerAlbum implements Serializable {
 
-    /**
-     * album_id : 55bae2e42c0e2c01fc2866d2
-     * create_time : 2015-07-31 10:52:20
-     * album_des :
-     * user_id : 3
-     * album_title : 默认
-     * album_news_count : 0
-     * album_img : 2130837689
-     */
+    public final static String UPLOAD_DONE = "1";
+    public final static String UPLOAD_NOT_DONE = "0";
+
     /**专辑id*/
     @DatabaseField(id = true,columnName = "album_id")
     private String album_id;
@@ -45,6 +39,7 @@ public class DiggerAlbum implements Serializable {
     /**新建专辑时,是否上传成功 0 为未上传成功,1为上传成功*/
     @DatabaseField(columnName = "is_uploaded")
     private String is_uploaded;
+
     public DiggerAlbum(){}
     public DiggerAlbum(String album_id, String create_time, String album_des, String user_id, String album_title, String album_news_count, String album_img,String is_uploaded) {
         this.album_id = album_id;

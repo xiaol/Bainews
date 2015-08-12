@@ -288,7 +288,7 @@ public class DateUtil {
      */
     public static String getDate() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:MM:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
         return format.format(date);
     }
 }
