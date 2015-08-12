@@ -16,9 +16,11 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.database.AlbumSubItemDao;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.listener.FetchAlbumSubItemsListener;
+import com.news.yazhidao.net.JsonCallback;
+import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.request.FetchAlbumSubItemsRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -53,6 +55,10 @@ public class AlbumListAty extends BaseActivity {
     public static final String KEY_DIG_SPECIAL_INTENT = "key_dig_special_intent";
     public static final String KEY_DIG_SPECIAL_BUNDLE = "key_dig_special_bundle";
     public static final String KEY_DIG_IS_NEW_ADD = "key_dig_is_new_add";
+    /**
+     * 刷新数据
+     */
+    public static final String ACTION_REFRESH_DATA = "com.news.yazhidao.ACTION_REFRESH_DATA";
 
     private ListView mSpecialLv;
     private TextView mCommonHeaderTitle;
@@ -61,23 +67,19 @@ public class AlbumListAty extends BaseActivity {
     private ArrayList<AlbumSubItem> mAlbumSubItems;
     private DiggerAlbum mDiggerAlbum;
     /**
-     * 是否是新添加的挖掘内容
+     * 1.是否是新添加的挖掘内容
+     * 2.此处判断从何处打开的该Activity,isNewAdd = true ,表示挖掘后立即打开,false 表示 在专辑列表中点击的专辑item
      */
     boolean isNewAdd;
     private int mScreenWidth;
     private int mScreenHeight;
 
+
     protected boolean translucentStatus() {
         return false;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView();
-        initializeViews();
-        loadData();
-    }
+
 
     @Override
     protected void setContentView() {
@@ -135,15 +137,54 @@ public class AlbumListAty extends BaseActivity {
                 }
             }
         });
-        FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), isNewAdd, new FetchAlbumSubItemsListener() {
+
+        final AlbumSubItemDao dao = new AlbumSubItemDao(this);
+        if (isNewAdd) {
+            ArrayList<AlbumSubItem> subItems = dao.queryByAlbumId(mDiggerAlbum.getAlbum_id());
+            mAlbumSubItems = subItems;
+            mSpecialLvAdapter.notifyDataSetChanged();
+        } else {
+            loadDataFromServer(dao);
+        }
+    }
+
+    /**
+     * 联网获取数据
+     *
+     * @param pDao
+     */
+    private void loadDataFromServer(final AlbumSubItemDao pDao) {
+        FetchAlbumSubItemsRequest.fetchAlbumSubItems(this, mDiggerAlbum.getAlbum_id(), isNewAdd, new JsonCallback<ArrayList<AlbumSubItem>>() {
             @Override
-            public void fetchAlbumSubItemsDone(ArrayList<AlbumSubItem> albumSubItems) {
-                mAlbumSubItems = albumSubItems;
+            protected void asyncPostRequest(ArrayList<AlbumSubItem> subItems) {
+                //存数据库
+                if (!TextUtil.isListEmpty(subItems)) {
+                    for (AlbumSubItem item : subItems) {
+                        item.setDiggerAlbum(mDiggerAlbum);
+                        if (pDao.queryByTitleAndUrl(item.getSearch_key(),item.getSearch_url())==null){
+                            pDao.insert(item);
+                        }else {
+                            pDao.update(item);
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void success(ArrayList<AlbumSubItem> result) {
+                mAlbumSubItems = result;
+                mSpecialLvAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                ArrayList<AlbumSubItem> subItems = pDao.queryByAlbumId(mDiggerAlbum.getAlbum_id());
+                mAlbumSubItems = subItems;
                 mSpecialLvAdapter.notifyDataSetChanged();
             }
         });
     }
-
 
     /**
      * 列表适配器

@@ -122,7 +122,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     User user = SharedPreManager.getUser(m_pContext);
                     /**先存到本地数据库,随后发送新建专辑的数据到服务器*/
                     String albumId = TextUtil.getDatabaseId();
-                    final DiggerAlbum diggerAlbum = new DiggerAlbum(albumId, DateUtil.getDate(), album.getDescription(), user.getUserId(), inputTitle, "0", album.getId(),"0");
+                    final DiggerAlbum diggerAlbum = new DiggerAlbum(albumId, DateUtil.getDate(), album.getDescription(), user.getUserId(), inputTitle, "0", album.getId(),DiggerAlbum.UPLOAD_NOT_DONE);
                     ToastUtil.toastShort("创建专辑成功!");
                     album.setAlbumId(albumId);
                     diggerAlbum.setAlbum_id(albumId);
@@ -152,7 +152,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
                                 if (!TextUtils.isEmpty(albumId)) {
                                     //TODO 上传专辑数据到服务器成功处理
                                     Logger.e("jigang","---上传新建专辑成功");
-                                    diggerAlbum.setIs_uploaded("1");
+                                    diggerAlbum.setIs_uploaded(DiggerAlbum.UPLOAD_DONE);
                                     diggerAlbumDao.update(diggerAlbum);
                                 } else {
                                     Logger.e("jigang","---上传新建专辑失败");

@@ -11,6 +11,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 
 import java.sql.SQLException;
@@ -29,7 +30,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, DiggerAlbum.class);
+            TableUtils.createTableIfNotExists(connectionSource, DiggerAlbum.class);
+            TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
