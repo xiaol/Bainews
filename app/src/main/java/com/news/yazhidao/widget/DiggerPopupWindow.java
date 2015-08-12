@@ -25,9 +25,11 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
+import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.listener.DiggerNewsListener;
+import com.news.yazhidao.net.MyAppException;
+import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.Logger;
@@ -379,26 +381,36 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     //TODO 开始挖掘
                     final int finalIndex = index;
                     final Album album = albumList.get(finalIndex);
-                    DigNewsRequest.digNews(m_pContext,album.getAlbumId() , inputTitle, inputUrl, new DiggerNewsListener() {
+                    /**修改数据库,随后开始挖掘*/
+                    /**(1).修改数据库*/
+                    //如果mDiggerAlbum 为null,则说明用户选择的是老专辑,否则是新建专辑
+                    if (mDiggerAlbum == null){
+                        DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
+                        mDiggerAlbum = diggerAlbum;
+                    }
+                    mLengJingFgt.updateAlbumList(finalIndex, mDiggerAlbum);
+                    DiggerPopupWindow.this.dismiss();
+                    DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
+                    mDiggerAlbum.setAlbum_news_count((Integer.valueOf(mDiggerAlbum.getAlbum_news_count())+1)+"");
+                    diggerAlbumDao.update(mDiggerAlbum);
+                    /**(2).开始向服务器请求挖掘数据*/
+                    DigNewsRequest.digNews(m_pContext, album.getAlbumId(), inputTitle, inputUrl, new StringCallback() {
                         @Override
-                        public void diggerNewsDone(String title) {
-
-                            if (!TextUtils.isEmpty(title)) {
-                                Logger.e("jigang","----专辑 id ="+album.getAlbumId());
-                                ToastUtil.toastShort("开始挖掘!");
-                                //如果mDiggerAlbum 为null,则说明用户选择的是老专辑,否则是新建专辑
-                                if (mDiggerAlbum == null){
-                                    DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
-                                    mDiggerAlbum = diggerAlbum;
-                                }
-                                Logger.e("jigang","----专辑id="+mDiggerAlbum.getAlbum_id());
-                                Logger.e("jigang","----专辑名称="+mDiggerAlbum.getAlbum_title());
-                                Logger.e("jigang","----挖掘 title="+title);
-                                mLengJingFgt.updateAlbumList(finalIndex,mDiggerAlbum);
-                                DiggerPopupWindow.this.dismiss();
+                        public int retryCount() {
+                            return 3;
+                        }
+                        @Override
+                        public void success(String result) {
+                            if (!TextUtils.isEmpty(result)) {
+                                Logger.e("jigang", "---向服务器请求挖掘成功!" + result);
                             } else {
-                                ToastUtil.toastShort("开始挖掘失败,请稍后再试!");
+                                Logger.e("jigang", "---向服务器请求挖掘失败!");
                             }
+                        }
+
+                        @Override
+                        public void failed(MyAppException exception) {
+                            Logger.e("jigang", "---向服务器请求挖掘失败!");
                         }
                     });
                 }
