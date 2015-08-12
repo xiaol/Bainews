@@ -232,7 +232,6 @@ public class AlbumListAty extends BaseActivity {
                 holder = (SpecialLvHolder) convertView.getTag();
             }
             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
-            albumSubItem.setImg("http://ww2.sinaimg.cn/wap180/59097e5djw1euzomewy3dj20oc0goq5k.jpg");
             String imgUrl = albumSubItem.getImg();
             holder.mSpecialItemIcon.setBackgroundResource(R.drawable.img_base_small);
             if(!TextUtils.isEmpty(imgUrl)){
