@@ -98,12 +98,26 @@ public class NewsDetail implements Serializable{
 
 
     public class Weibo {
-        public String sourceSitename;
+        public sourceSitename sourceSitename;
         public String url;
         public String profileImageUrl;
         public String user;
         public String title;
         public String img;
         public String isCommentFlag;
+    }
+
+
+    public class sourceSitename{
+        public String reposts_count;
+        public String updateTime;
+        public String source_name;
+        public String url;
+        public ArrayList<String> img_urls;
+        public String profile_image_url;
+        public String content;
+        public String like_count;
+        public String comments_count;
+        public String img_url;
     }
 }

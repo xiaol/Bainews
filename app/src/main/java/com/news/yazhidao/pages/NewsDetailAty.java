@@ -378,7 +378,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                     ll_no_network.setVisibility(View.GONE);
                 } else {
                     ll_no_network.setVisibility(View.VISIBLE);
-                    ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+                    ToastUtil.toastLong("您的网络出现问题，请检查网络设置...");
                 }
             }
         });

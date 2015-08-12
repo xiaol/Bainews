@@ -16,6 +16,7 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 15/5/14.
  */
+@Deprecated
 public class UploadJpushidRequest {
     private static final String TAG = "UploadJpushidRequest";
 

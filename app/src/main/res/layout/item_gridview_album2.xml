@@ -15,8 +15,7 @@
             android:layout_height="200dp"
             android:layout_marginLeft="13dp"
             android:layout_marginRight="13dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/bg_album1" />
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/iv_selected"

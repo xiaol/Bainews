@@ -1,12 +1,14 @@
 package com.news.yazhidao.pages;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +49,8 @@ public class SplashAty extends BaseActivity {
     private StartUrl splashInfo;
     private Timer timer;
     private NetworkRequest request;
+    private boolean flag;
+    private ImageView iv_news;
 
     private Handler doActionHandler = new Handler() {
         @Override
@@ -55,14 +59,9 @@ public class SplashAty extends BaseActivity {
             int msgId = msg.what;
             switch (msgId) {
                 case 1:
-
                     request.cancel(true);
                     tv_splash_news.setText("今日头条，百家争鸣");
-
-                    iv_app_icon.startAnimation(anim_fade_out);
-                    rl_splash.setVisibility(View.VISIBLE);
-                    rl_splash.startAnimation(anim_fade_in);
-
+                    iv_splash_background.startAnimation(anim_fade_out);
                     break;
                 default:
                     break;
@@ -78,7 +77,28 @@ public class SplashAty extends BaseActivity {
     protected void setContentView() {
 
         anim_fade_out = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_out);
+        anim_fade_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.4f, 1.0f, 1.4f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                animation_scale.setDuration(8000);//设置动画持续时间
+                animation_scale.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+
+                iv_news.startAnimation(animation_scale);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
         anim_fade_out.setFillAfter(true);
+        anim_fade_out.setRepeatCount(1);
         anim_fade_in = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_in);
         anim_fade_in.setFillAfter(true);
 
@@ -89,61 +109,30 @@ public class SplashAty extends BaseActivity {
     @Override
     protected void initializeViews() {
 
+        SharedPreferences sp = getSharedPreferences("showflag", 0);
+        flag = sp.getBoolean("isshow",false);
+
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
-        rl_splash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SplashAty.this, HomeAty.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
-                SplashAty.this.finish();
-            }
-        });
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
         tv_splash_news = (TextView) findViewById(R.id.tv_splash_news);
         iv_app_icon = (ImageView) findViewById(R.id.iv_app_icon);
-
-        //add umeng statistic access app
-//        final long _Strat = System.currentTimeMillis();
-//        ImageView imageView = (ImageView) findViewById(R.id.bg_imageView);
-//        umeng_channel = AnalyticsConfig.getChannel(this);
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//        try {
-//            Date date1 = df.parse("2015-05-31");
-//            Date date2 = df.parse("2015-06-02");
-//            if (_Strat > date1.getTime() && _Strat < date2.getTime()) {
-//
-//                if("c360".equals(umeng_channel)){
-//                    imageView.setBackgroundResource(R.drawable.bg_splash_c360_special);
-//                }else{
-//                    imageView.setBackgroundResource(R.drawable.bg_splash_festival);
-//                }
-//            }else{
-//                if("c360".equals(umeng_channel)){
-//                    imageView.setBackgroundResource(R.drawable.bg_splash_c360_normal);
-//                }
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-
-//        ZipperUtil.unzip(this, new ZipperUtil.ZipCompleteListener() {
-//            @Override
-//            public void complate() {
-//                if (System.currentTimeMillis() - _Strat < 2000) {
-//                    mHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            SplashAty.this.finish();
-//                            startActivity(new Intent(SplashAty.this, HomeAty.class));
-//                        }
-//                    }, 2000);
-//                } else {
-//                    SplashAty.this.finish();
-//                    startActivity(new Intent(SplashAty.this, HomeAty.class));
-//                }
-//            }
-//        });
+        iv_news = (ImageView) findViewById(R.id.iv_news);
+        iv_news.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag) {
+                    Intent intent = new Intent(SplashAty.this, HomeAty.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
+                    SplashAty.this.finish();
+                }else{
+                    Intent intent_guide = new Intent(SplashAty.this, GuideAty.class);
+                    startActivity(intent_guide);
+                    overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
+                    SplashAty.this.finish();
+                }
+            }
+        });
 
         MobclickAgent.onEvent(this, CommonConstant.US_BAINEWS_USER_ASSESS_APP);
     }
@@ -177,40 +166,31 @@ public class SplashAty extends BaseActivity {
 
                     if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
+                        rl_splash.setVisibility(View.VISIBLE);
                     } else {
-                        tv_splash_news.setText("今日头条，百家争鸣");
+                        rl_splash.setVisibility(View.GONE);
                     }
 
                     if (result.getImgUrl() != null) {
 //                        ImageLoaderHelper.dispalyImage(SplashAty.this,result.getImgUrl(),iv_splash_background);
-                        ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(), iv_splash_background, false, new DisplayImageListener() {
+                        ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(), iv_news, false, new DisplayImageListener() {
                             @Override
                             public void success(int width, int height) {
-
                             }
 
                             @Override
                             public void failed() {
-
                             }
                         });
                     } else {
 
                     }
                 }
-
-                iv_app_icon.startAnimation(anim_fade_out);
-                rl_splash.setVisibility(View.VISIBLE);
-                rl_splash.startAnimation(anim_fade_in);
-
+                iv_splash_background.startAnimation(anim_fade_out);
             }
 
             public void failed(MyAppException exception) {
-
-                iv_app_icon.startAnimation(anim_fade_out);
-                rl_splash.setVisibility(View.VISIBLE);
-                rl_splash.startAnimation(anim_fade_in);
-
+                iv_splash_background.startAnimation(anim_fade_out);
             }
         }.setReturnType(new TypeToken<StartUrl>() {
         }.getType()));
@@ -237,5 +217,19 @@ public class SplashAty extends BaseActivity {
             timer = null;
         }
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        anim_fade_out.cancel();
+
+
+        super.onDestroy();
     }
 }

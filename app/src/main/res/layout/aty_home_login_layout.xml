@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/new_gray"
             android:textSize="@dimen/textsize_twenty"
-            android:text="登陆"
+            android:text="登录"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/common_padding_fifteen"
             android:gravity="center"
