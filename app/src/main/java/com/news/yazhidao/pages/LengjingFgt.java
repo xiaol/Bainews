@@ -17,13 +17,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
@@ -58,8 +57,9 @@ public class LengjingFgt extends Fragment {
     public static final String ACTION_USER_CHOSE_TOPIC = "com.news.yazhidao.ACTION_USER_CHOSE_TOPIC";
 
     private View rootView;
-    private ImageView lv_lecture;
+    private FrameLayout fl_lecture;
     private ArrayList<Album> albumList = new ArrayList<Album>();
+    private TextView lstv_des;
     //个人专辑列表
     private GridView mSpecialGv;
     private MyAlbumLvAdatpter mAlbumLvAdatpter;
@@ -80,7 +80,7 @@ public class LengjingFgt extends Fragment {
                 /**用户退出登录后,要清空挖掘机中显示的数据并且隐藏专辑列表和显示教程页*/
                 mDiggerAlbums = null;
                 mAlbumLvAdatpter.notifyDataSetChanged();
-                lv_lecture.setVisibility(View.VISIBLE);
+                fl_lecture.setVisibility(View.VISIBLE);
                 mSpecialGv.setVisibility(View.GONE);
             } else if (ACTION_USER_CHOSE_TOPIC.equals(action)) {
                 Logger.e("jigang", "---ACTION_USER_CHOSE_TOPIC");
@@ -139,7 +139,8 @@ public class LengjingFgt extends Fragment {
     }
 
     private void findViews() {
-        lv_lecture = (ImageView) rootView.findViewById(R.id.lv_lecture);
+        fl_lecture = (FrameLayout) rootView.findViewById(R.id.fl_lecture);
+        lstv_des = (TextView)rootView.findViewById(R.id.lstv_des);
 
         //专辑显示列表
         mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
@@ -154,10 +155,10 @@ public class LengjingFgt extends Fragment {
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
         if (user == null) {
-            lv_lecture.setVisibility(View.VISIBLE);
+            fl_lecture.setVisibility(View.VISIBLE);
             mSpecialGv.setVisibility(View.GONE);
         } else {
-            lv_lecture.setVisibility(View.GONE);
+            fl_lecture.setVisibility(View.GONE);
             mSpecialGv.setVisibility(View.VISIBLE);
             /**获取专辑列表数据*/
             FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
@@ -350,61 +351,13 @@ public class LengjingFgt extends Fragment {
 
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
         this.mDiggerAlbums = mDiggerAlbums;
-        lv_lecture.setVisibility(View.GONE);
+        fl_lecture.setVisibility(View.GONE);
         mSpecialGv.setVisibility(View.VISIBLE);
         mAlbumLvAdatpter.notifyDataSetChanged();
     }
 
     public ArrayList<DiggerAlbum> getDiggerAlbums() {
         return mDiggerAlbums;
-    }
-
-    /**
-     * viewpager适配器
-     */
-    private class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            convertView = View.inflate(getActivity(), R.layout.item_lv_lecture, null);
-            ImageView iv_lecture = (ImageView) convertView.findViewById(R.id.iv_lecture);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(GlobalParams.screenWidth - DensityUtil.dip2px(getActivity(), 8), (int) (GlobalParams.screenWidth * 0.73));
-            iv_lecture.setLayoutParams(params);
-
-            switch (position) {
-                case 0:
-                    iv_lecture.setBackgroundResource(R.drawable.img_lecture);
-                    break;
-
-                case 1:
-                    iv_lecture.setBackgroundResource(R.drawable.img_lecture2);
-                    break;
-
-                case 2:
-                    iv_lecture.setBackgroundResource(R.drawable.img_lecture3);
-                    break;
-            }
-
-            return convertView;
-        }
-
     }
 
     /**

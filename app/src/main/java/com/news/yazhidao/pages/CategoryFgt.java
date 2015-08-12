@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -28,6 +27,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 
 import java.util.ArrayList;
@@ -40,7 +40,6 @@ public class CategoryFgt extends Fragment {
     private CategoryAdapter mAdapter;
     private ArrayList<Channel> marrCategory;
     private int mScreenWidth;
-    private TypedArray drawableList;
     private LinearLayout ll_no_network;
     private Button btn_reload;
 
@@ -56,8 +55,6 @@ public class CategoryFgt extends Fragment {
     }
 
     private void initVars() {
-        drawableList = getResources().obtainTypedArray(R.array.bg_category_list);
-
         mAdapter = new CategoryAdapter(getActivity());
         WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         mScreenWidth = wm.getDefaultDisplay().getWidth();
@@ -166,8 +163,7 @@ public class CategoryFgt extends Fragment {
             }
             Channel channel = marrCategory.get(position);
             if (channel != null) {
-//                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
-                holder.ivBgIcon.setImageResource(drawableList.getResourceId(position,0));
+                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
                 holder.tvName.setText(channel.getChannel_name());
                 holder.tvDes.setText(channel.getChannel_des());
             }
@@ -193,10 +189,7 @@ public class CategoryFgt extends Fragment {
             }
 
             public void failed(MyAppException exception) {
-
                 ll_no_network.setVisibility(View.VISIBLE);
-                ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
-
             }
         }.setReturnType(new TypeToken<ArrayList<Channel>>() {
         }.getType()));

@@ -124,10 +124,34 @@ java.lang.Object readResolve();
 -keep class **.R{*;}
 -dontwarn cn.sharesdk.**
 -dontwarn **.R$*
+#umengPush 混淆相关
+-keep class com.umeng.message.* {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class com.umeng.message.protobuffer. * {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class com.squareup.wire.* {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class org.android.agoo.impl.*{
+        public <fields>;
+        public <methods>;
+}
+
+-keep class org.android.agoo.service.* {*;}
+
+-keep class org.android.spdy.**{*;}
 
 #JPush 混淆相关
--dontwarn cn.jpush.**
--keep class cn.jpush.** {*; }
+#-dontwarn cn.jpush.**
+#-keep class cn.jpush.** {*; }
 
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
