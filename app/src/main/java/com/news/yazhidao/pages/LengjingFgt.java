@@ -310,7 +310,9 @@ public class LengjingFgt extends Fragment {
 
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
         this.mDiggerAlbums = mDiggerAlbums;
-        fl_lecture.setVisibility(View.GONE);
+        if (fl_lecture!=null){
+            fl_lecture.setVisibility(View.GONE);
+        }
         mSpecialGv.setVisibility(View.VISIBLE);
         mAlbumLvAdatpter.notifyDataSetChanged();
     }

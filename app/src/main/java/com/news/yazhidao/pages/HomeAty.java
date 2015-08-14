@@ -421,8 +421,11 @@ public class HomeAty extends BaseActivity {
      * @param newColor
      */
     private void changeColor(int newColor) {
-
         tabs.setBackgroundColor(newColor);
+        /**如果系统版本在4.4以下就使用黑色*/
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            tabs.setBackgroundResource(R.drawable.bg_common_header_gradient);
+        }
         mTintManager.setTintColor(newColor);
         // change ActionBar color just if an ActionBar is available
         SystemBarTintManager.SystemBarConfig config = mTintManager.getConfig();
