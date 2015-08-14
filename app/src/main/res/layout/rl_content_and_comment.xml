@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
 
         <com.news.yazhidao.widget.LetterSpacingTextView
@@ -111,8 +112,8 @@
 
         <ImageView
             android:id="@+id/iv_none_point"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
             android:visibility="gone"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"

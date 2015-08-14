@@ -111,6 +111,7 @@ public class NewsDetail implements Serializable{
 
     public class Article{
         public String url;
+        public String title;
         public String self_opinion;
     }
 

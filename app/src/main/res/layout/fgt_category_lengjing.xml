@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
                 android:layout_marginRight="4dp"
-                android:text="您可以从今日头条、一点资讯和网易新闻等三百多款应用保存到头条百家。"
+                android:text="您可以从今日头条、一点资讯和网易新闻等三百多款应用将信息资讯保存到头条百家。"
                 android:layout_marginBottom="220dp"
                 android:textSize="13sp"
                 android:textColor="#818181"
@@ -56,8 +56,8 @@
             android:visibility="gone"
             android:numColumns="2"
             android:horizontalSpacing="10dp"
+            android:layout_margin="10dp"
             android:verticalSpacing="8dp" />
-
 
     </RelativeLayout>
 

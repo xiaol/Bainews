@@ -99,7 +99,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private static final String KEY_TRANSITION_EFFECT = "transition_effect";
     private Map<String, Integer> mEffectMap;
     private int mCurrentTransitionEffect = JazzyHelper.SLIDE_IN;
-    private FrameLayout fl_mOnDestruction;
     private View mHomeAtyLeftMenuWrapper;
     //打开详情页时，带过去的url地址
     public static String KEY_URL = "url";
@@ -295,9 +294,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         });
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-
-
-        fl_mOnDestruction = (FrameLayout) rootView.findViewById(R.id.fl_mOnDestruction);
 
         //添加umeng更新
         mHandler.postDelayed(new Runnable() {
@@ -2116,6 +2112,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     lv_news.setVisibility(View.VISIBLE);
+                    lv_news.getRefreshableView().setSelection(0);
                     list_adapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
@@ -2160,12 +2157,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         mHomeAtyRightMenu.setVisibility(View.VISIBLE);
                         mHomeAtyRightMenuWrapper.setVisibility(View.VISIBLE);
                     } else {
-                        loadNewsFeedData(GlobalParams.currentCatePos, page, true);
                         isNewFlag = true;
                         page = 1;
                         mtvProgress.setVisibility(View.GONE);
                         mHomeAtyRightMenu.setVisibility(View.GONE);
                         mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
+                        loadNewsFeedData(GlobalParams.currentCatePos, page, true);
                     }
 
                 } else {
@@ -2175,7 +2172,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
                     mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 }
-                fl_mOnDestruction.setVisibility(View.GONE);
             }
         }
     }

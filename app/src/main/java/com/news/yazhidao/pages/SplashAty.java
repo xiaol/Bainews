@@ -85,10 +85,37 @@ public class SplashAty extends BaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.4f, 1.0f, 1.4f,
+                final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                animation_scale.setDuration(8000);//设置动画持续时间
+                animation_scale.setDuration(4000);//设置动画持续时间
                 animation_scale.setFillAfter(true);//动画执行完后是否停留在执行完的状态
+                animation_scale.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                        if(flag) {
+                            Intent intent = new Intent(SplashAty.this, HomeAty.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
+                            SplashAty.this.finish();
+                        }else{
+                            Intent intent_guide = new Intent(SplashAty.this, GuideAty.class);
+                            startActivity(intent_guide);
+                            overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
+                            SplashAty.this.finish();
+                        }
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
 
                 iv_news.startAnimation(animation_scale);
             }
@@ -110,7 +137,7 @@ public class SplashAty extends BaseActivity {
     protected void initializeViews() {
 
         SharedPreferences sp = getSharedPreferences("showflag", 0);
-//        flag = sp.getBoolean("isshow",false);
+        flag = sp.getBoolean("isshow",false);
 
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
@@ -151,7 +178,7 @@ public class SplashAty extends BaseActivity {
                     }
                 }
             }
-        }, 3000);
+        }, 2000);
 
         String url = HttpConstant.URL_GET_START_URL;
         request = new NetworkRequest(url, NetworkRequest.RequestMethod.POST);
