@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -74,6 +75,7 @@ public class AlbumListAty extends BaseActivity {
     boolean isNewAdd;
     private int mScreenWidth;
     private int mScreenHeight;
+    private View mCommonHeaderWrapper;
 
 
     protected boolean translucentStatus() {
@@ -94,6 +96,7 @@ public class AlbumListAty extends BaseActivity {
         Bundle bundle = getIntent().getBundleExtra(KEY_DIG_SPECIAL_INTENT);
         mDiggerAlbum = (DiggerAlbum) bundle.getSerializable(KEY_DIG_SPECIAL_BUNDLE);
         isNewAdd = bundle.getBoolean(KEY_DIG_IS_NEW_ADD);
+        mCommonHeaderWrapper = findViewById(R.id.mCommonHeaderWrapper);
         mCommonHeaderTitle = (TextView) findViewById(R.id.mCommonHeaderTitle);
         mCommonHeaderTitle.setText(mDiggerAlbum.getAlbum_title());
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
@@ -104,7 +107,7 @@ public class AlbumListAty extends BaseActivity {
             }
         });
         mSpecialLv = (ListView) findViewById(R.id.mSpecialLv);
-
+        changeCommonHeaderColor();
 
     }
 
@@ -187,6 +190,15 @@ public class AlbumListAty extends BaseActivity {
         });
     }
 
+    /**
+     * 修改标题栏的色值
+     */
+    private void changeCommonHeaderColor(){
+        /**如果系统版本在4.4以下就使用黑色*/
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+        }
+    }
     /**
      * 列表适配器
      */
