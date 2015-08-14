@@ -105,16 +105,16 @@ public class YaZhiDaoApplication extends Application {
                     context.startActivity(HomeIntent);
                 } else {
                     try {
-                        JSONObject urlObject = new JSONObject(extras);
-                        String news_url = urlObject.getString("news_url");
-                        if (!TextUtils.isEmpty(news_url)) {
+//                        JSONObject urlObject = new JSONObject(extras);
+//                        String news_url = urlObject.getString("news_url");
+                        if (!TextUtils.isEmpty(extras)) {
                             Intent detailIntent = new Intent(context, NewsDetailAty.class);
-                            detailIntent.putExtra(NewsFeedFgt.KEY_URL, news_url);
+                            detailIntent.putExtra(NewsFeedFgt.KEY_URL, extras);
                             detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
                             detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(detailIntent);
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {

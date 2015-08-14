@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- 顶部带圆角 白色背景 灰色边框 无下边框 长方体 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <rotate xmlns:android="http://schemas.android.com/apk/res/android"
+            android:fromDegrees="90"
+            android:toDegrees="90" >
+
+            <shape android:shape="line" >
+                <stroke
+                    android:dashGap="6px"
+                    android:dashWidth="6px"
+                    android:color="#C7B299" />
+            </shape>
+
+        </rotate>
+    </item>
+</layer-list>
+

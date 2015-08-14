@@ -4,48 +4,50 @@
     android:background="#f3f3fa"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#f3f3fa"
         android:fitsSystemWindows="true">
 
-        <com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView
-            android:id="@+id/news_detail_staggeredGridView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:cacheColorHint="#00000000"
-            android:fadingEdge="none"
-            android:overScrollMode="never"
-            android:scrollbars="none"
-            app:column_count="2"
-            app:item_margin="16dp" />
+            android:orientation="vertical">
+
+            <com.news.yazhidao.widget.NewsListView
+                android:id="@+id/news_detail_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:cacheColorHint="#00000000"
+                android:fadingEdge="none"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/back_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/btn_news_detail_left_back" />
+
+    <FrameLayout
+        android:id="@+id/mNewsDetailProgressWheelWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray">
 
         <ImageView
-            android:id="@+id/back_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="26dp"
-            android:layout_marginTop="23dp"
-            android:background="@drawable/btn_news_detail_left_back" />
+            android:id="@+id/mNewsLoadingImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center" />
 
-        <FrameLayout
-            android:id="@+id/mNewsDetailProgressWheelWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_gray">
-
-            <ImageView
-                android:id="@+id/mNewsLoadingImg"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_no_network"

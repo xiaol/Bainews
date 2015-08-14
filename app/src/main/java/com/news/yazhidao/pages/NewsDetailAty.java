@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,15 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.etsy.android.grid.StaggeredGridView;
 import com.google.gson.reflect.TypeToken;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshStaggeredGridView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.GlobalParams;
@@ -36,14 +33,14 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.helper.ImageLoaderHelper;
+import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView;
+import com.news.yazhidao.widget.NewsListView;
+import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.NameValuePair;
@@ -57,9 +54,7 @@ import java.util.List;
 public class NewsDetailAty extends SwipeBackActivity {
 
     private static final String TAG = "NewsDetailAty";
-    private PullToRefreshStaggeredGridView mPullToRefreshStaggeredGridView;
-    private StaggeredGridView msgvNewsDetail;
-    private StaggeredNewsDetailAdapter mNewsDetailAdapter;
+    private ListNewsDetailAdapter mNewsDetailAdapter;
     private ImageView mivBack;
     private NewsDetailHeaderView headerView;
     private View mNewsDetailProgressWheelWrapper;
@@ -74,6 +69,7 @@ public class NewsDetailAty extends SwipeBackActivity {
     private String userId = "";
     private String platformType = "";
     private int position = 0;
+    private NewsListView mlvRelate;
 
     @Override
     protected void setContentView() {
@@ -92,7 +88,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
 
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
-        mNewsDetailAdapter = new StaggeredNewsDetailAdapter(this);
+        mNewsDetailAdapter = new ListNewsDetailAdapter(this);
         headerView = new NewsDetailHeaderView(this);
 
         mivBack = (ImageView) findViewById(R.id.back_imageView);
@@ -100,13 +96,10 @@ public class NewsDetailAty extends SwipeBackActivity {
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-        mPullToRefreshStaggeredGridView = (PullToRefreshStaggeredGridView) findViewById(R.id.news_detail_staggeredGridView);
-        mPullToRefreshStaggeredGridView.setMode(PullToRefreshBase.Mode.DISABLED);
-        msgvNewsDetail = mPullToRefreshStaggeredGridView.getRefreshableView();
-//        msgvNewsDetail.setSmoothScrollbarEnabled(true);
-        msgvNewsDetail.addHeaderView(headerView);
-        msgvNewsDetail.setAdapter(mNewsDetailAdapter);
-
+        mlvRelate = (NewsListView) findViewById(R.id.news_detail_listView);
+        mlvRelate.addHeaderView(headerView);
+//        mlvRelate.addFooterView(new ImageView());
+        mlvRelate.setAdapter(mNewsDetailAdapter);
         ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
         btn_reload = (Button) findViewById(R.id.btn_reload);
         setListener();
@@ -128,7 +121,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         }
 
         Intent intent = new Intent();
-        intent.putExtra("position",String.valueOf(position));
+        intent.putExtra("position", String.valueOf(position));
         intent.putExtra("isComment", "0");
 
         setResult(0, intent);
@@ -136,20 +129,20 @@ public class NewsDetailAty extends SwipeBackActivity {
 
     private void loadNewsDetail() {
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
-        boolean isnew = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API,false);
+        boolean isnew = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API, false);
         boolean isdigger = false;
         AlbumSubItem albumSubItem;
         String newsId = null;
-        if(bundle!=null){
+        if (bundle != null) {
             isdigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
             albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
             newsId = albumSubItem.getInserteId();
 
         }
-        position = getIntent().getIntExtra("position",0);
+        position = getIntent().getIntExtra("position", 0);
 
         User user = SharedPreManager.getUser(NewsDetailAty.this);
-        if(user != null) {
+        if (user != null) {
             userId = user.getUserId();
             platformType = user.getPlatformType();
         }
@@ -169,17 +162,17 @@ public class NewsDetailAty extends SwipeBackActivity {
                         headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                             @Override
                             public void onclickPullUp(int height) {
-                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+//                                msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                             }
-                        }, false, new NewsDetailHeaderView.CommentListener(){
+                        }, false, new NewsDetailHeaderView.CommentListener() {
 
                             @Override
                             public void comment(boolean istrue) {
-                                if(istrue){
+                                if (istrue) {
 
                                     Intent intent = new Intent();
-                                    intent.putExtra("position",String.valueOf(position));
-                                    intent.putExtra("isComment","1");
+                                    intent.putExtra("position", String.valueOf(position));
+                                    intent.putExtra("isComment", "1");
 
                                     setResult(0, intent);
                                 }
@@ -189,7 +182,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         mNewsDetailAdapter.notifyDataSetChanged();
 
                         if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
-                            msgvNewsDetail.setSelection(1);
+                            mlvRelate.setSelection(1);
                         }
 
                     } else {
@@ -213,53 +206,53 @@ public class NewsDetailAty extends SwipeBackActivity {
         } else {
 
             if (isdigger) {
-                    NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
-                    List<NameValuePair> pairs=new ArrayList<>();
-                    pairs.add(new BasicNameValuePair("news_id", newsId));
-                    _Request.setParams(pairs);
-                    _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+                NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
+                List<NameValuePair> pairs = new ArrayList<>();
+                pairs.add(new BasicNameValuePair("news_id", newsId));
+                _Request.setParams(pairs);
+                _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
 
-                        @Override
-                        public void success(final NewsDetailAdd result) {
-                            if (result != null) {
+                    @Override
+                    public void success(final NewsDetailAdd result) {
+                        if (result != null) {
 
-                                headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
-                                    @Override
-                                    public void onclickPullUp(int height) {
-                                        msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
-                                    }
-                                }, true, new NewsDetailHeaderView.CommentListener() {
-                                    @Override
-                                    public void comment(boolean istrue) {
-
-                                    }
-                                });
-
-                                mNewsDetailAdapter.setData(result.relate);
-                                mNewsDetailAdapter.notifyDataSetChanged();
-
-                                if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
-                                    msgvNewsDetail.setSelection(1);
+                            headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
+                                @Override
+                                public void onclickPullUp(int height) {
+//                                        msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                                 }
-                            }else {
-                                ToastUtil.toastShort("新闻的内容为空，无法打开");
-                                NewsDetailAty.this.finish();
+                            }, true, new NewsDetailHeaderView.CommentListener() {
+                                @Override
+                                public void comment(boolean istrue) {
+
+                                }
+                            });
+
+                            mNewsDetailAdapter.setData(result.relate);
+                            mNewsDetailAdapter.notifyDataSetChanged();
+
+                            if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
+                                mlvRelate.setSelection(1);
                             }
-
-                            mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                            mAniNewsLoading.stop();
-
+                        } else {
+                            ToastUtil.toastShort("新闻的内容为空，无法打开");
+                            NewsDetailAty.this.finish();
                         }
 
-                        @Override
-                        public void failed(MyAppException exception) {
+                        mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                        mAniNewsLoading.stop();
 
-                            mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
-                            mAniNewsLoading.stop();
-                        }
-                    }.setReturnType(new TypeToken<NewsDetailAdd>() {
-                    }.getType()));
-                    _Request.execute();
+                    }
+
+                    @Override
+                    public void failed(MyAppException exception) {
+
+                        mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
+                        mAniNewsLoading.stop();
+                    }
+                }.setReturnType(new TypeToken<NewsDetailAdd>() {
+                }.getType()));
+                _Request.execute();
             } else {
 
 
@@ -278,7 +271,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                             headerView.setDetailData(result, getIntent().getStringExtra("url"), new NewsDetailHeaderView.HeaderVeiwPullUpListener() {
                                 @Override
                                 public void onclickPullUp(int height) {
-                                    msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
+//                                    msgvNewsDetail.mFlingRunnable.startScroll(-height, 1000);
                                 }
                             }, true, new NewsDetailHeaderView.CommentListener() {
                                 @Override
@@ -291,7 +284,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                             mNewsDetailAdapter.notifyDataSetChanged();
 
                             if (NewsFeedFgt.VALUE_NEWS_SOURCE.equals(mSource)) {
-                                msgvNewsDetail.setSelection(1);
+                                mlvRelate.setSelection(1);
                             }
 
                         } else {
@@ -324,10 +317,10 @@ public class NewsDetailAty extends SwipeBackActivity {
                 onBackPressed();
             }
         });
-        msgvNewsDetail.setOnTouchListener(new View.OnTouchListener() {
+        mlvRelate.setOnTouchListener(new View.OnTouchListener() {
             float _StartY = 0;
             float _DeltaY = 0;
-            RelativeLayout.LayoutParams _MivBackLayout = (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
+            FrameLayout.LayoutParams _MivBackLayout = (FrameLayout.LayoutParams) mivBack.getLayoutParams();
             int _MivBackTopMargin = _MivBackLayout.topMargin;
             int _MivBackSelfHeigh = mivBack.getHeight();
 
@@ -386,7 +379,7 @@ public class NewsDetailAty extends SwipeBackActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        msgvNewsDetail.startFlingRunnable(300);
+//        msgvNewsDetail.startFlingRunnable(300);
         headerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -405,13 +398,14 @@ public class NewsDetailAty extends SwipeBackActivity {
         }
     }
 
-    class StaggeredNewsDetailAdapter extends BaseAdapter {
+    class ListNewsDetailAdapter extends BaseAdapter {
 
         Context mContext;
         ArrayList<NewsDetail.Relate> mArrData;
         int screenWidth;
+        int lineHeight = 35;
 
-        StaggeredNewsDetailAdapter(Context context) {
+        ListNewsDetailAdapter(Context context) {
             mContext = context;
             screenWidth = DeviceInfoUtil.getScreenWidth() / 2 - DensityUtil.dip2px(mContext, 24);
         }
@@ -441,35 +435,76 @@ public class NewsDetailAty extends SwipeBackActivity {
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_staggered_gridview_news_detail, null, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_listview_news_detail, null, false);
+                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.time_textView);
                 holder.ivPicture = (ImageView) convertView.findViewById(R.id.picture_imageView);
                 holder.tvContent = (TextView) convertView.findViewById(R.id.content_textView);
-                holder.ivSource = (ImageView) convertView.findViewById(R.id.source_imageView);
-                holder.tvSource = (TextView) convertView.findViewById(R.id.source_textView);
+                holder.ivLineBottom = (ImageView) convertView.findViewById(R.id.line_bottom_imageView);
+                holder.rlLine = (RelativeLayout) convertView.findViewById(R.id.line_layout);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
             final NewsDetail.Relate _Relate = mArrData.get(position);
-            holder.tvContent.setText(_Relate.title);
-            if (TextUtils.isEmpty(_Relate.img))
-                holder.ivPicture.setVisibility(View.GONE);
-            else {
-                holder.ivPicture.setVisibility(View.VISIBLE);
-                ImageLoaderHelper.loadImage(mContext, _Relate.img, new SimpleImageLoadingListener() {
+            String title = _Relate.title;
+            final String img = _Relate.img;
+            if (!TextUtils.isEmpty(title)) {
+                holder.tvContent.setText(title);
+                holder.tvContent.post(new Runnable() {
                     @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        super.onLoadingComplete(imageUri, view, loadedImage);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.ivPicture.getLayoutParams();
-                        layoutParams.width = screenWidth;
-                        layoutParams.height = screenWidth * loadedImage.getHeight() / loadedImage.getWidth();
-                        holder.ivPicture.setLayoutParams(layoutParams);
-                        holder.ivPicture.setImageBitmap(loadedImage);
+                    public void run() {
+                        int i = holder.tvContent.getLineCount();
+                        if (i == 1)
+                            if (TextUtils.isEmpty(img))
+                                lineHeight = 35;
+                            else
+                                lineHeight = 60;
+                        else {
+                            if (TextUtils.isEmpty(img))
+                                lineHeight = 55;
+                            else
+                                lineHeight = 70;
+                        }
+                        RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) holder.ivLineBottom.getLayoutParams();
+                        lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
+                        lpLineBottom.width = DensityUtil.dip2px(mContext, lineHeight);
+                        holder.ivLineBottom.setLayoutParams(lpLineBottom);
+
+                        RelativeLayout.LayoutParams lpLine = (RelativeLayout.LayoutParams) holder.rlLine.getLayoutParams();
+                        lpLine.leftMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+                        lpLine.rightMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+                        holder.rlLine.setLayoutParams(lpLine);
+
+                        if (position == mArrData.size() - 1) {
+                            holder.ivLineBottom.setVisibility(View.INVISIBLE);
+                        } else {
+                            holder.ivLineBottom.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }
-            TextUtil.setResourceSiteIcon(holder.ivSource, _Relate.sourceSitename);
-            holder.tvSource.setText(_Relate.sourceSitename);
+
+            if (TextUtils.isEmpty(img))
+                holder.ivPicture.setVisibility(View.GONE);
+            else {
+                holder.ivPicture.setVisibility(View.VISIBLE);
+                ImageManager.getInstance(mContext).DisplayImage(img, holder.ivPicture, false, null);
+            }
+            RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) holder.ivLineBottom.getLayoutParams();
+            lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
+            lpLineBottom.width = DensityUtil.dip2px(mContext, lineHeight);
+            holder.ivLineBottom.setLayoutParams(lpLineBottom);
+
+            RelativeLayout.LayoutParams lpLine = (RelativeLayout.LayoutParams) holder.rlLine.getLayoutParams();
+            lpLine.leftMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+            lpLine.rightMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+            holder.rlLine.setLayoutParams(lpLine);
+
+            if (position == mArrData.size() - 1) {
+                holder.ivLineBottom.setVisibility(View.INVISIBLE);
+            } else {
+                holder.ivLineBottom.setVisibility(View.VISIBLE);
+            }
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -488,9 +523,12 @@ public class NewsDetailAty extends SwipeBackActivity {
 
 
     class Holder {
+        TextViewExtend tvTime;
         ImageView ivPicture;
         TextView tvContent;
-        ImageView ivSource;
+        ImageView ivLineTop;
+        ImageView ivLineBottom;
+        RelativeLayout rlLine;
         TextView tvSource;
     }
 
