@@ -52,7 +52,7 @@ public class NetworkStateChangedReceiver extends BroadcastReceiver {
         for (AlbumSubItem item: pSubItems){
             final DiggerAlbum album = item.getDiggerAlbum();
             String album_id = album.getAlbum_id();
-            FetchAlbumSubItemsRequest.fetchAlbumSubItems(pContext, album_id, false, new JsonCallback<ArrayList<AlbumSubItem>>() {
+            FetchAlbumSubItemsRequest.fetchAlbumSubItems(pContext, album_id, true, new JsonCallback<ArrayList<AlbumSubItem>>() {
                         @Override
                         public int retryCount() {
                             return 3;
@@ -64,11 +64,9 @@ public class NetworkStateChangedReceiver extends BroadcastReceiver {
                             if (!TextUtil.isListEmpty(subItems)) {
                                 for (AlbumSubItem item : subItems) {
                                     item.setDiggerAlbum(album);
-
                                     Logger.e("jigang","----update item ="+item);
                                     pDao.update(item);
                                 }
-
                             }
                         }
 

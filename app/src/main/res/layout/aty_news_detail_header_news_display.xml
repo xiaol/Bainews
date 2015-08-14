@@ -169,9 +169,31 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
+            <TextView
+                android:id="@+id/tv_devider2"
+                android:layout_below="@id/mNewsDetailHeaderContentParent"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
+
+            <com.news.yazhidao.widget.ShowAllListview
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/tv_devider2"
+                android:id="@+id/lv_article" />
+
+            <TextView
+                android:id="@+id/tv_devider3"
+                android:layout_below="@id/lv_article"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
+
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/tv_add_comment"
-                android:layout_below="@+id/mNewsDetailHeaderContentParent"
+                android:layout_below="@+id/tv_devider3"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:gravity="center"

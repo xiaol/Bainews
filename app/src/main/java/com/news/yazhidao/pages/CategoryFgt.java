@@ -189,10 +189,7 @@ public class CategoryFgt extends Fragment {
             }
 
             public void failed(MyAppException exception) {
-
                 ll_no_network.setVisibility(View.VISIBLE);
-                ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
-
             }
         }.setReturnType(new TypeToken<ArrayList<Channel>>() {
         }.getType()));

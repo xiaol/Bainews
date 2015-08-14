@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_new_card"
+    android:orientation="vertical">
+
+    <com.news.yazhidao.widget.LetterSpacingTextView
+        android:id="@+id/tv_article_des"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="#dadada" />
+
+    <RelativeLayout
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/iv_source"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/icon_source"
+            />
+
+        <com.news.yazhidao.widget.LetterSpacingTextView
+            android:id="@+id/tv_url"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="#b8b8b8"
+            android:layout_toRightOf="@+id/iv_source"
+            android:layout_marginLeft="8dp"
+            />
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_width="10dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/icon_arrow"
+            />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_devider"
+        android:layout_below="@id/mNewsDetailHeaderContentParent"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginTop="15dp"
+        android:background="#dfe6e9" />
+
+</LinearLayout>

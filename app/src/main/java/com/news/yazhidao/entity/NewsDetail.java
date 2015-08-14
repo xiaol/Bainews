@@ -26,6 +26,8 @@ public class NewsDetail implements Serializable{
 
     public ArrayList<BaiDuBaiKe> baike;
 
+    public SelfOpinion relate_opinion;
+
     public boolean isdoc;
 
     public String docUrl;
@@ -107,6 +109,10 @@ public class NewsDetail implements Serializable{
         public String isCommentFlag;
     }
 
+    public class Article{
+        public String url;
+        public String self_opinion;
+    }
 
     public class sourceSitename{
         public String reposts_count;
