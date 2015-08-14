@@ -408,7 +408,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         Context mContext;
         ArrayList<NewsDetail.Relate> mArrData;
         int screenWidth;
-        int lineHeight = 35;
+        int lineHeight = 32;
 
         ListNewsDetailAdapter(Context context) {
             mContext = context;
@@ -461,14 +461,14 @@ public class NewsDetailAty extends SwipeBackActivity {
                         int i = holder.tvContent.getLineCount();
                         if (i == 1)
                             if (TextUtils.isEmpty(img))
-                                lineHeight = 35;
+                                lineHeight = 32;
                             else
-                                lineHeight = 60;
+                                lineHeight = 57;
                         else {
                             if (TextUtils.isEmpty(img))
-                                lineHeight = 55;
+                                lineHeight = 52;
                             else
-                                lineHeight = 70;
+                                lineHeight = 67;
                         }
                         RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) holder.ivLineBottom.getLayoutParams();
                         lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
