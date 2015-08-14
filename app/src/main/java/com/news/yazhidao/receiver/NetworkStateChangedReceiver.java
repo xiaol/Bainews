@@ -57,7 +57,6 @@ public class NetworkStateChangedReceiver extends BroadcastReceiver {
                         public int retryCount() {
                             return 3;
                         }
-
                         @Override
                         public void success(ArrayList<AlbumSubItem> subItems) {
                             //存数据库

@@ -130,7 +130,7 @@ java.lang.Object readResolve();
         public <methods>;
 }
 
--keep class com.umeng.message.protobuffer. * {
+-keep class com.umeng.message.protobuffer.* {
         public <fields>;
         public <methods>;
 }

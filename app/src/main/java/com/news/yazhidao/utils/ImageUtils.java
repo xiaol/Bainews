@@ -145,11 +145,17 @@ public class ImageUtils {
     public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth, int screenHeight, int type) {
         boolean flag = false;
         int newHeight = 0;
-        Bitmap bitmap_big = zoomBitmap(bm, screenWidth);
 
-        if(bitmap_big.getHeight() < screenHeight * 0.4){
+        Bitmap bitmap_big = null;
+
+        if(bm != null) {
+            bitmap_big = zoomBitmap(bm, screenWidth);
+        }
+
+        if(bitmap_big != null && bitmap_big.getHeight() < screenHeight * 0.4){
             bitmap_big = zoomBitmapWithHeight(bitmap_big,(int)(screenHeight * 0.4));
         }
+
         if(bitmap_big != null) {
             newHeight = bitmap_big.getHeight();
         }

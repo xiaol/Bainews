@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/bg_gray"
         android:id="@+id/fl_content">
 
@@ -47,6 +47,7 @@
                     android:id="@+id/lv_article_comments" />
 
                 <TextView
+                    android:id="@+id/tv_devider_imgwall"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:background="#dfe6e9" />
@@ -60,6 +61,7 @@
                 android:background="#dfe6e9" />
 
             <TextView
+                android:id="@+id/tv_devider_baike"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#dfe6e9" />
@@ -72,6 +74,7 @@
                 android:orientation="vertical" />
 
             <TextView
+                android:id="@+id/tv_devider_zhihu"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#dfe6e9" />
@@ -121,6 +124,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_devider_douban"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#dfe6e9" />
@@ -149,6 +153,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_devider_sina"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#dfe6e9" />
@@ -182,6 +187,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_devider_relate"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#dfe6e9" />
