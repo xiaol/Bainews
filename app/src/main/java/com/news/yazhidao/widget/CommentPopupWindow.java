@@ -525,13 +525,10 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                                 PraiseRequest.Praise(mContext, user.getUserId(), user.getPlatformType(), uuid, sourceUrl, point_item.commentId, new PraiseListener() {
                                     @Override
                                     public void success() {
-                                        ToastUtil.toastLong("success");
                                     }
 
                                     @Override
                                     public void failed() {
-                                        ToastUtil.toastLong("fail");
-
                                     }
                                 });
                             }
