@@ -109,7 +109,6 @@ public class HomeAty extends BaseActivity {
             addMenu();
         } else {
         }
-
         //pagesliding
         mTintManager = new SystemBarTintManager(HomeAty.this);
         // enable status bar tint
