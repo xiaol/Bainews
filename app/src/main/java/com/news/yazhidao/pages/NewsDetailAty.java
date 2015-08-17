@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -98,7 +99,11 @@ public class NewsDetailAty extends SwipeBackActivity {
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         mlvRelate = (NewsListView) findViewById(R.id.news_detail_listView);
         mlvRelate.addHeaderView(headerView);
-//        mlvRelate.addFooterView(new ImageView());
+        ImageView imageView = new ImageView(this);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,50);
+        imageView.setLayoutParams(layoutParams);
+        imageView.setBackgroundResource(R.color.bg_gray);
+        mlvRelate.addFooterView(imageView);
         mlvRelate.setAdapter(mNewsDetailAdapter);
         ll_no_network = (LinearLayout) findViewById(R.id.ll_no_network);
         btn_reload = (Button) findViewById(R.id.btn_reload);
@@ -117,7 +122,7 @@ public class NewsDetailAty extends SwipeBackActivity {
             mAniNewsLoading.start();
         } else {
             ll_no_network.setVisibility(View.VISIBLE);
-            ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+            ToastUtil.toastLong("您的网络有点不给力，请检查网络设置....");
         }
 
         Intent intent = new Intent();
@@ -403,7 +408,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         Context mContext;
         ArrayList<NewsDetail.Relate> mArrData;
         int screenWidth;
-        int lineHeight = 35;
+        int lineHeight = 32;
 
         ListNewsDetailAdapter(Context context) {
             mContext = context;
@@ -456,14 +461,14 @@ public class NewsDetailAty extends SwipeBackActivity {
                         int i = holder.tvContent.getLineCount();
                         if (i == 1)
                             if (TextUtils.isEmpty(img))
-                                lineHeight = 35;
+                                lineHeight = 32;
                             else
-                                lineHeight = 60;
+                                lineHeight = 57;
                         else {
                             if (TextUtils.isEmpty(img))
-                                lineHeight = 55;
+                                lineHeight = 52;
                             else
-                                lineHeight = 70;
+                                lineHeight = 67;
                         }
                         RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) holder.ivLineBottom.getLayoutParams();
                         lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
