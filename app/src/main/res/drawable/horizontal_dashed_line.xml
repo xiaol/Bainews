@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- 顶部带圆角 白色背景 灰色边框 无下边框 长方体 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="line">
+            <stroke
+                android:dashGap="3dp"
+                android:dashWidth="6dp"
+                android:width="1dp"
+                android:color="#63a219" />
+            <!-- 虚线的高度 -->
+            <size android:height="1dp" />
+        </shape>
+    </item>
+</layer-list>
+
