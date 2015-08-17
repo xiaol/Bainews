@@ -53,4 +53,9 @@ public class Album {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "id="+id+",albumId="+albumId+",select = "+isSelected+",album="+album;
+    }
 }

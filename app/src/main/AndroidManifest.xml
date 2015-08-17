@@ -209,9 +209,6 @@
 
 
 
-
-
-
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
@@ -228,11 +225,6 @@
         <activity
             android:name=".pages.HomeAty"
             android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
         </activity>
 
         <activity
@@ -258,6 +250,14 @@
             android:theme="@style/SwipeBackTheme"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".pages.DiggerAty" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>

@@ -252,6 +252,7 @@ public class LengjingFgt extends Fragment {
      * @param resultList
      */
     private void handleAlbumsData(final String newsTitle, final String newsUrl, ArrayList<DiggerAlbum> resultList) {
+        Logger.e("jigang","--handleAlbumsData--"+resultList.size());
         if (!TextUtil.isListEmpty(resultList)) {
             albumList.clear();
             for (int i = 0; i < resultList.size(); i++) {

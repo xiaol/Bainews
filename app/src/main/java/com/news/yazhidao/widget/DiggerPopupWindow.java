@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -155,8 +156,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         et_content = (EditText) mMenuView.findViewById(R.id.et_content);
         album_scollView = (HorizontalScrollView) mMenuView.findViewById(R.id.album_scollView);
         album_item_layout = (LinearLayout) mMenuView.findViewById(R.id.album_item_layout);
-
+        Logger.e("jigang", "-----digger window--" + albumList.size());
+        Logger.e("jigang", "-----digger window--" + albumList);
         for (int i = 0; i < albumList.size(); i++) {
+            Logger.e("jigang","-----digger 000000--");
             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
@@ -204,9 +207,12 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
             album_item_layout.addView(layout);
             viewcount++;
+            Logger.e("jigang","-----digger 11111--"+album_item_layout.getChildCount());
         }
 
-
+new Handler().postDelayed(new Runnable() {
+    @Override
+    public void run() {
         RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
         layout_add.setLayoutParams(params);
@@ -222,7 +228,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
 
                     @Override
-                    public void add(Album album,DiggerAlbum diggerAlbum) {
+                    public void add(Album album, DiggerAlbum diggerAlbum) {
                         if (album != null) {
                             //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
                             for (Album item : albumList) {
@@ -244,7 +250,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             for (int i = 0; i < albumList.size(); i++) {
                                 if (i != viewcount) {
                                     RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
-                                    if(layout_temp != null) {
+                                    if (layout_temp != null) {
                                         ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
                                         iv_selected_temp.setVisibility(View.GONE);
                                         albumList.get(i).setSelected(false);
@@ -266,7 +272,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                                         if (i != tag) {
                                             albumList.get(i).setSelected(false);
                                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                                            if(layout != null){
+                                            if (layout != null) {
                                                 ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
                                                 iv_selected.setVisibility(View.INVISIBLE);
                                                 albumList.get(i).setSelected(false);
@@ -299,6 +305,8 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         });
 
         album_item_layout.addView(layout_add);
+    }
+}, 3000);
 
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
