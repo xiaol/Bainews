@@ -41,6 +41,9 @@ public class DigNewsRequest {
         HashMap<String,Object> params = new HashMap<>();
         //此处默认用户是已经登录过的
         User user = SharedPreManager.getUser(pContext);
+        if(user == null){
+            return;
+        }
         params.put(KEY_UID,user.getUserId());
         params.put(KEY_ALID, pAlbumId);
         if(!TextUtils.isEmpty(pTitle)){

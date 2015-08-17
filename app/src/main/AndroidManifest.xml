@@ -259,6 +259,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity android:name=".pages.DiggerAty" android:screenOrientation="portrait"/>
+
         <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>
                 <action android:name="updateUI" />
