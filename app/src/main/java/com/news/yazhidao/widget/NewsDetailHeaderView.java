@@ -111,7 +111,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private TextView tv_devider_zhihu;
     private TextView tv_devider_douban;
     private TextView tv_devider_sina;
-    private TextView tv_devider_relate;
     private WordWrapView mvDouBanItem;
     private HorizontalScrollView mSinaScrollView;
     private ImageView mNewsDetailHeaderImg;
@@ -214,7 +213,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         mllSina = (LinearLayout) mRootView.findViewById(R.id.sina_linearLayout);
         mllSinaItem = (LinearLayout) mRootView.findViewById(R.id.sina_item_layout);
         tv_devider_sina = (TextView) mRootView.findViewById(R.id.tv_devider_sina);
-        tv_devider_relate = (TextView) mRootView.findViewById(R.id.tv_devider_relate);
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
         mNewsDetailRelate = (TextView) mRootView.findViewById(R.id.mNewsDetailRelate);
         mNewsDetailHeaderImg = (ImageView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
@@ -2060,7 +2058,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
             } else {
                 mNewsDetailRelate.setVisibility(GONE);
-                tv_devider_relate.setVisibility(View.GONE);
             }
         } else {
 
@@ -2267,7 +2264,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
             } else {
                 mNewsDetailRelate.setVisibility(GONE);
-                tv_devider_relate.setVisibility(View.GONE);
             }
 
         }

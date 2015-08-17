@@ -531,7 +531,6 @@ public class NewsDetailAty extends SwipeBackActivity {
         TextViewExtend tvTime;
         ImageView ivPicture;
         TextView tvContent;
-        ImageView ivLineTop;
         ImageView ivLineBottom;
         RelativeLayout rlLine;
         TextView tvSource;

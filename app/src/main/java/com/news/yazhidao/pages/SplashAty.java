@@ -138,7 +138,6 @@ public class SplashAty extends BaseActivity {
 
         SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow",false);
-
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
         tv_splash_news = (TextView) findViewById(R.id.tv_splash_news);

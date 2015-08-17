@@ -86,18 +86,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
 
-    private static final String ARG_POSITION = "position";
-    private int position;
-
     //JazzyListView
-    private static final String KEY_TRANSITION_EFFECT = "transition_effect";
-    private Map<String, Integer> mEffectMap;
     private int mCurrentTransitionEffect = JazzyHelper.SLIDE_IN;
     private View mHomeAtyLeftMenuWrapper;
     //打开详情页时，带过去的url地址
@@ -109,16 +103,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private String mCurrentDate, mCurrentType;
     private JazzyListView lv_news;
     private MyAdapter list_adapter;
-    private TextView tv_stroke1;
-    private TextView tv_stroke2;
     private LinearLayout ll_no_network;
     private NewsFeedReceiver rt;
-    private UserUrlReceiver userUrlReceiver;
     private boolean isClick = false;
     private Button btn_reload;
 
     private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
-    private int color = new Color().parseColor("#55ffffff");
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
     private ViewHolder3 holder3 = null;
@@ -127,7 +117,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private String[] images;
     private int contentSize = 0;
     private int contentSize2 = 0;
-    private TextViewExtend tv_title;
     private LoadingLayout mylayout;
     private TimeFeed mCurrentTimeFeed;
     private int source_title_length = 0;
@@ -143,10 +132,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
     //是否第一次执行隐藏banner动画
-    private boolean mIsFistAnim = true;
     private boolean refresh_flag = false;
-    private boolean top_flag = false;
-    private boolean bottom_flag = false;
     private static long mLastPressedBackKeyTime;
     private AnimationDrawable mAniNewsLoading;
     //将在下拉显示的新闻数据
@@ -155,7 +141,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
     private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
-    private ImageLoaderHelper imageLoader;
     private Handler mHandler = new Handler();
     private View mHomeAtyRightMenuWrapper;
     private RoundedImageView mHomeAtyRightMenu;
@@ -180,20 +165,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         }
     };
 
-    public static NewsFeedFgt newInstance(int position) {
-        NewsFeedFgt f = new NewsFeedFgt();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         mContext = getActivity();
-        position = getArguments().getInt(ARG_POSITION);
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
@@ -203,25 +180,20 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         GlobalParams.maxHeight = (int) (height * 0.27);
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
-        imageLoader = new ImageLoaderHelper(mContext);
+        ImageLoaderHelper imageLoader = new ImageLoaderHelper(mContext);
         TimeoOutAlarmReceiver.setListener(this);
 
         rt = new NewsFeedReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("sendposition");
+        filter.addAction("saveuser");
         mContext.registerReceiver(rt, filter);
-
-        userUrlReceiver = new UserUrlReceiver();
-        IntentFilter filter1 = new IntentFilter();
-        filter1.addAction("saveuser");
-        mContext.registerReceiver(userUrlReceiver, filter1);
     }
 
     @Override
     public void onDestroy() {
         if (rt != null) {
             mContext.unregisterReceiver(rt);
-            mContext.unregisterReceiver(userUrlReceiver);
         }
 
         if (timer != null) {
@@ -234,8 +206,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Logger.e("jigang", "---newsfeed  onCreateView");
-
         final View rootView = inflater.inflate(R.layout.activity_news, container, false);
         ViewCompat.setElevation(rootView, 50);
 
@@ -275,7 +245,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (isClick) {
                     mCurrentTime = System.currentTimeMillis();
                     long updateTime = mUpdateTime - (mCurrentTime - mLastTime);
-                    RelativeLayout screenRelativeLayout = (RelativeLayout) rootView.findViewById(R.id.screen_RelativeLayout);
                     TimePopupWindow m_ppopupWindow = new TimePopupWindow((HomeAty) mContext, null, mCurrentTimeFeed, updateTime, mTotalTime, NewsFeedFgt.this);
                     m_ppopupWindow.setDateAndType(mCurrentDate, mCurrentType);
                     m_ppopupWindow.setAnimationStyle(R.style.AnimationAlpha);
@@ -304,7 +273,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
         }, 2000);
 
-        tv_title = (TextViewExtend) rootView.findViewById(R.id.tv_title);
         ll_no_network = (LinearLayout) rootView.findViewById(R.id.ll_no_network);
         ll_no_network.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2173,14 +2141,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 }
             }
-        }
-    }
-
-
-    private class UserUrlReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
             if ("saveuser".equals(intent.getAction())) {
                 String url = intent.getStringExtra("url");
 

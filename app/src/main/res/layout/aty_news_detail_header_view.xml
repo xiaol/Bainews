@@ -16,7 +16,6 @@
             android:id="@+id/mNewsDeatailTitleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
             android:orientation="vertical">
 
             <!--新闻详情展示-->
@@ -186,22 +185,20 @@
                 </com.news.yazhidao.widget.CustomHorizontalScrollView>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_devider_relate"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="#dfe6e9" />
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/mNewsDetailRelate"
-                android:background="@drawable/bg_detail_relate"
-                android:paddingLeft="16dp"
-                android:paddingBottom="10dp"
-                android:gravity="left"
+                android:gravity="top"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="1dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="22dp"
                 android:text="相关观点"
-                android:textSize="18sp"
+                android:background="@drawable/bg_relate"
+                android:textSize="16sp"
                 android:textColor="@color/sina_item_content_gray"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
