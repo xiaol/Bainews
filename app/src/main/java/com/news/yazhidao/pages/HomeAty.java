@@ -18,7 +18,6 @@ import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -173,7 +172,6 @@ public class HomeAty extends BaseActivity {
      */
     private void changeColor(int newColor) {
         tabs.setBackgroundColor(newColor);
-        Logger.e("jigang","----device--"+Build.DEVICE+","+Build.BOARD+","+Build.HARDWARE+","+Build.PRODUCT);
         /**如果系统版本在4.4以下就使用黑色*/
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             tabs.setBackgroundResource(R.drawable.bg_common_header_gradient);
