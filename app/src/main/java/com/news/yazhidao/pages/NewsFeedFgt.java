@@ -958,7 +958,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (GlobalParams.currentCatePos != 15 && feed.getSourceSiteName() != null) {
                     holder.tv_sourcesite.setVisibility(View.VISIBLE);
                     holder.tv_sourcesite.setText(feed.getSourceSiteName());
-                } else {
+                }else {
                     holder.tv_sourcesite.setVisibility(View.GONE);
                 }
 
