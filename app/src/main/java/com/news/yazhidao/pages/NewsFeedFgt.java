@@ -79,6 +79,7 @@ import com.news.yazhidao.widget.TextViewVertical;
 import com.news.yazhidao.widget.TimePopupWindow;
 import com.twotoasters.jazzylistview.JazzyHelper;
 import com.twotoasters.jazzylistview.JazzyListView;
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -294,7 +295,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         lv_news.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             @Override
@@ -324,7 +324,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         ll_no_network.setVisibility(View.VISIBLE);
                     }
                 }
-
             }
         });
 
@@ -364,11 +363,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         setupJazziness(mCurrentTransitionEffect);
         loadData();
-        AdcocoUtil.setup(getActivity());
-        try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+
+        String platform = AnalyticsConfig.getChannel(getActivity());
+        if("adcoco".equals(platform)) {
+            AdcocoUtil.setup(getActivity());
+            try {
+                new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return rootView;
     }
@@ -412,11 +416,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 //
 //            }
 //        }
-
-        try {
-            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String platform = AnalyticsConfig.getChannel(getActivity());
+        if("adcoco".equals(platform)) {
+            try {
+                new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //更新ui
@@ -770,7 +776,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
-                AdcocoUtil.update();
+                String platform = AnalyticsConfig.getChannel(getActivity());
+                if("adcoco".equals(platform)) {
+                    AdcocoUtil.update();
+                }
                 //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -833,7 +842,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         convertView.setTag(holder);
                     }
                 }
-                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+                if("adcoco".equals(platform)) {
+                    AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+                }
                 String title = feed.getTitle();
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
@@ -1111,6 +1122,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         });
                         ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(GlobalParams.screenWidth * 0.74), ViewGroup.LayoutParams.WRAP_CONTENT);
+                        layoutParams.addRule(RelativeLayout.RIGHT_OF,R.id.iv_source);
+                        layoutParams.leftMargin = DensityUtil.dip2px(getActivity(),8);
+                        tv_news_source.setLayoutParams(layoutParams);
                         TextView tv_relate = (TextView) ll_souce_view.findViewById(R.id.tv_relate);
                         ImageView iv_combine_line_top = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line_top);
                         TextView tv_devider_line = (TextView) ll_souce_view.findViewById(R.id.tv_devider_line);
