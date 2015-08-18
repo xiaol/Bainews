@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_para"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/rl_all_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rl_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical">
+
+            <com.news.yazhidao.widget.LetterSpacingTextView
+                android:id="@+id/lstv_para_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingTop="6dp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_comment"
+                android:layout_below="@+id/lstv_para_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/rl_user_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_praise_count"
+                        android:layout_width="40dp"
+                        android:layout_height="20dp"
+                        android:paddingLeft="14dp"
+                        android:paddingTop="1dp"
+                        android:textColor="@color/red"
+                        android:textSize="10sp"
+                        android:background="@drawable/bg_add_praise"
+                        android:layout_marginBottom="1dp"
+                        android:text="0" />
+
+                    <com.news.yazhidao.widget.RoundedImageView
+                        android:id="@+id/iv_user_icon"
+                        android:layout_below="@+id/tv_praise_count"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_comment_para"
+                        app:border_color="@color/black"
+                        app:border_width="1dp"
+                        app:corner_radius="20dp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_user_comment"
+                    android:layout_toRightOf="@+id/rl_user_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="5dp">
+
+                    <ImageView
+                        android:id="@+id/iv_add_comment"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/img_zhuiju"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_count"
+                        android:layout_width="30dp"
+                        android:layout_height="17dp"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:layout_toLeftOf="@+id/iv_add_comment"
+                        android:layout_marginRight="7dp" />
+
+                    <TextView
+                        android:id="@+id/tv_comment_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_below="@id/iv_add_comment"
+                        android:textSize="14sp"
+                        android:textColor="#32bfcd" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_none_point"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@+id/lstv_para_content"
+                android:background="@drawable/img_zhuiju"
+                android:layout_alignParentRight="true" />
+
+            <com.news.yazhidao.widget.SpeechView
+                android:id="@+id/speechView"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/lstv_para_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content" />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_news_img_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="13dp"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            />
+
+        <ImageView
+            android:id="@+id/iv_news_des"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_devider"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/rl_all_content"
+        android:layout_height="10dp"
+        android:background="#dfe6e9" />
+
+</RelativeLayout>

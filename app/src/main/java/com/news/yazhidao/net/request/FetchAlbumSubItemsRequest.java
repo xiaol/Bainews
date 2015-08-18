@@ -36,6 +36,9 @@ public class FetchAlbumSubItemsRequest {
     public static void fetchAlbumSubItems(Context pContext,String pAlbumId,boolean isAdd, final JsonCallback<ArrayList<AlbumSubItem>> pListener) {
         final NetworkRequest request = new NetworkRequest(HttpConstant.URL_FETCH_ALBUM_SUBITEMS, NetworkRequest.RequestMethod.POST);
         User user = SharedPreManager.getUser(pContext);
+        if(user == null){
+            return;
+        }
         ArrayList<NameValuePair> params = new ArrayList<>();
         Logger.e("jigang","----  userid "+user.getUserId());
         params.add(new BasicNameValuePair(KEY_USER_ID, user.getUserId()));

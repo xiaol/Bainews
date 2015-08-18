@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/mHomeLoginWrapper"
@@ -18,13 +18,46 @@
             android:gravity="center_vertical"
             android:paddingLeft="105dp"
             android:text="@string/home_login_text"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
+
+        <LinearLayout
+            android:id="@+id/mDigger"
+            android:layout_width="230dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/mHomeLogin"
+            android:background="@color/white"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="13dp"
+                android:src="@drawable/ic_user_login_digger"/>
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/home_digger"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/mHomeLoginDivide1"
+            android:layout_width="230dp"
+            android:layout_height="1px"
+            android:layout_below="@id/mDigger"
+            android:background="@color/divide_home_login"/>
 
         <LinearLayout
             android:id="@+id/mHomeChatWrapper"
             android:layout_width="230dp"
             android:layout_height="60dp"
-            android:layout_below="@id/mHomeLogin"
+            android:layout_below="@id/mHomeLoginDivide1"
             android:background="@drawable/bg_login_footer"
             android:gravity="center"
             android:orientation="horizontal">
@@ -33,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="13dp"
-                android:src="@drawable/ic_home_chat" />
+                android:src="@drawable/ic_home_chat"/>
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/mHomeChat"
@@ -42,16 +75,19 @@
                 android:gravity="center"
                 android:text="@string/home_login_chat"
                 android:textColor="@color/home_login_chat"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
+
 
         <View
             android:id="@+id/mHomeLoginDivide"
             android:layout_width="230dp"
             android:layout_height="1px"
             android:layout_below="@id/mHomeChatWrapper"
-            android:background="@color/divide_home_login" />
+            android:background="@color/divide_home_login"
+            android:visibility="gone"
+            />
 
         <LinearLayout
             android:id="@+id/mHomeLogout"
@@ -60,14 +96,14 @@
             android:layout_below="@id/mHomeLoginDivide"
             android:background="@drawable/bg_login_footer"
             android:gravity="center"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="13dp"
-                android:src="@drawable/ic_user_logout" />
+                android:src="@drawable/ic_user_logout"/>
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:layout_width="wrap_content"
@@ -75,9 +111,10 @@
                 android:gravity="center"
                 android:text="@string/home_logout"
                 android:textColor="@color/home_logout"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
+
 
         <ImageView
             android:id="@+id/mHomeLoginCancel"
@@ -85,8 +122,9 @@
             android:layout_height="26dp"
             android:layout_below="@id/mHomeLogout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:src="@drawable/bg_date_close" />
+            android:layout_marginTop="25dp"
+            android:src="@drawable/bg_date_close"
+            />
     </RelativeLayout>
 
     <com.news.yazhidao.widget.RoundedImageView
@@ -102,5 +140,5 @@
         android:src="@drawable/ic_user_login_default"
         app:border_color="@color/white"
         app:border_width="5dp"
-        app:corner_radius="38dp" />
+        app:corner_radius="38dp"/>
 </RelativeLayout>

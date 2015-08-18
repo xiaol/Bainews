@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,8 +44,6 @@ public class CategoryFgt extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("jigang", "-----CategoryFgt  onCreateView");
-
         rootView = inflater.inflate(R.layout.fgt_category, container, false);
         initVars();
         findViews();
@@ -63,12 +59,6 @@ public class CategoryFgt extends Fragment {
     private void findViews() {
         //初始化
         ll_no_network = (LinearLayout) rootView.findViewById(R.id.ll_no_network);
-        ll_no_network.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         btn_reload = (Button) rootView.findViewById(R.id.btn_reload);
         btn_reload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,20 +77,8 @@ public class CategoryFgt extends Fragment {
 
         mlvCategory = (ListView) rootView.findViewById(R.id.category_listview);
         mlvCategory.setAdapter(mAdapter);
-        mlvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GlobalParams.pager.setCurrentItem(1);
-                GlobalParams.currentCatePos = Integer.parseInt(marrCategory.get(position).getChannel_id());
-                Intent intent = new Intent("sendposition");
-                GlobalParams.context.sendBroadcast(intent);
-                if (GlobalParams.tabs != null) {
-                    setTabTitle(marrCategory, position);
-                }
-            }
-        });
 
-        //请求平道列表
+        //请求频道列表
         if (NetUtil.checkNetWork(getActivity())) {
             ll_no_network.setVisibility(View.GONE);
             loadChannelList();
@@ -143,7 +121,7 @@ public class CategoryFgt extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             Holder holder;
             if (convertView == null) {
                 holder = new Holder();
@@ -161,11 +139,23 @@ public class CategoryFgt extends Fragment {
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            Channel channel = marrCategory.get(position);
+            final Channel channel = marrCategory.get(position);
             if (channel != null) {
                 ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
                 holder.tvName.setText(channel.getChannel_name());
                 holder.tvDes.setText(channel.getChannel_des());
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GlobalParams.pager.setCurrentItem(1);
+                        GlobalParams.currentCatePos = Integer.parseInt(channel.getChannel_id());
+                        Intent intent = new Intent("sendposition");
+                        GlobalParams.context.sendBroadcast(intent);
+                        if (GlobalParams.tabs != null) {
+                            setTabTitle(marrCategory, position);
+                        }
+                    }
+                });
             }
             return convertView;
         }

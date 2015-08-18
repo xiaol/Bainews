@@ -1,135 +1,101 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/screen_RelativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/screenlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.twotoasters.jazzylistview.JazzyListView xmlns:ptr="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/lv_news"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#dfe6e9"
-            android:clipToPadding="false"
-            android:listSelector="#f3f3fa"
-            android:scrollbars="none"
-            ptr:ptrAnimationStyle="flip"
-            ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
-            ptr:ptrHeaderBackground="#4D94C9"
-            ptr:ptrHeaderTextColor="#ffffff"
-            ptr:ptrListViewExtrasEnabled="true"
-            ptr:ptrScrollingWhileRefreshingEnabled="false" />
-
-        <LinearLayout
-            android:id="@+id/ll_no_network"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#dfe6e9"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:visibility="gone" >
-
-            <Button
-                android:id="@+id/btn_reload"
-                android:layout_width="50dp"
-                android:layout_height="55dp"
-                android:background="@drawable/loading_new_pic15"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="重新加载..."
-                android:textColor="#55000000"
-                android:textSize="15sp"
-                />
-
-            </LinearLayout>
-
-
-        <FrameLayout
-            android:id="@+id/mHomeAtyLeftMenuWrapper"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="20dp">
-
-            <com.news.yazhidao.widget.TextViewExtend
-                android:id="@+id/mHomeAtyLeftMenu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:background="@drawable/bg_time_log" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/mHomeAtyRightMenuWrapper"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="20dp">
-
-            <com.news.yazhidao.widget.RoundedImageView
-                android:id="@+id/mHomeAtyRightMenu"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_login"
-                app:border_color="@color/black"
-                app:border_width="1dp"
-                app:corner_radius="20dp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/mNewsFeedProgressWheelWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            android:background="@color/bg_gray">
-
-            <ImageView
-                android:id="@+id/mNewsLoadingImg"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/fl_mOnDestruction"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/iv_ondestruction"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/img_ondestruct" />
-        </FrameLayout>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/ll_layer"
+    <com.twotoasters.jazzylistview.JazzyListView
+        android:id="@+id/lv_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
-        android:visibility="gone" />
+        android:background="#dfe6e9"
+        android:clipToPadding="false"
+        android:listSelector="#f3f3fa"
+        android:scrollbars="none"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrDrawable="@drawable/pull_to_refresh_arrow"
+        ptr:ptrHeaderBackground="#4D94C9"
+        ptr:ptrHeaderTextColor="#ffffff"
+        ptr:ptrListViewExtrasEnabled="true"
+        ptr:ptrScrollingWhileRefreshingEnabled="false" />
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/ll_no_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dfe6e9"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_reload"
+            android:layout_width="50dp"
+            android:layout_height="55dp"
+            android:background="@drawable/loading_new_pic15" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="重新加载..."
+            android:textColor="#55000000"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/mHomeAtyLeftMenuWrapper"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="20dp">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/mHomeAtyLeftMenu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:background="@drawable/bg_time_log" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/mHomeAtyRightMenuWrapper"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp">
+
+        <com.news.yazhidao.widget.RoundedImageView
+            android:id="@+id/mHomeAtyRightMenu"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_login"
+            app:border_color="@color/black"
+            app:border_width="1dp"
+            app:corner_radius="20dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/mNewsFeedProgressWheelWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@color/bg_gray">
+
+        <ImageView
+            android:id="@+id/mNewsLoadingImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+</RelativeLayout>
+

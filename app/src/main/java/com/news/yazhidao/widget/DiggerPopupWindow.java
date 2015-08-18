@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -75,7 +76,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private boolean isShowClipboardContent = true;
     private DiggerAlbum mDiggerAlbum;
 
-    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent,boolean isShowUrlTextView) {
+    public DiggerPopupWindow(LengjingFgt lengjingFgt, Activity context, String itemCount, ArrayList<Album> list, int position, boolean isShowClipboardContent, boolean isShowUrlTextView) {
         super(context);
         m_pContext = context;
         this.mLengJingFgt = lengjingFgt;
@@ -109,7 +110,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         if (isShowClipboardContent) {
             showClipboardDialog(context);
         }
-        if (!isShowUrlTextView){
+        if (!isShowUrlTextView) {
             //隐藏显示url的textview
             ll_digger_source.setVisibility(View.GONE);
         }
@@ -155,8 +156,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         et_content = (EditText) mMenuView.findViewById(R.id.et_content);
         album_scollView = (HorizontalScrollView) mMenuView.findViewById(R.id.album_scollView);
         album_item_layout = (LinearLayout) mMenuView.findViewById(R.id.album_item_layout);
-
+        Logger.e("jigang", "-----digger window--" + albumList.size());
+        Logger.e("jigang", "-----digger window--" + albumList);
         for (int i = 0; i < albumList.size(); i++) {
+            Logger.e("jigang", "-----digger 000000--");
             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
@@ -181,7 +184,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     for (int i = 0; i < albumList.size(); i++) {
                         if (i != tag) {
                             RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                            if(layout != null) {
+                            if (layout != null) {
                                 ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
                                 iv_selected.setVisibility(View.INVISIBLE);
                                 albumList.get(i).setSelected(false);
@@ -201,104 +204,114 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             } else {
                 iv_selected.setVisibility(View.INVISIBLE);
             }
-
+            layout.setVisibility(View.VISIBLE);
             album_item_layout.addView(layout);
             viewcount++;
+            Logger.e("jigang", "-----digger 11111--" + album_item_layout.getChildCount());
         }
 
-
-        RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
-        layout_add.setLayoutParams(params);
-
-        final RelativeLayout rl_album = (RelativeLayout) layout_add.findViewById(R.id.rl_album);
-        final RelativeLayout rl_add_album = (RelativeLayout) layout_add.findViewById(R.id.rl_add_album);
-        rl_album.setVisibility(View.GONE);
-        rl_add_album.setVisibility(View.VISIBLE);
-
-        rl_add_album.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
+            public void run() {
+                RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
+                layout_add.setLayoutParams(params);
 
+                final RelativeLayout rl_album = (RelativeLayout) layout_add.findViewById(R.id.rl_album);
+                final RelativeLayout rl_add_album = (RelativeLayout) layout_add.findViewById(R.id.rl_add_album);
+                rl_album.setVisibility(View.GONE);
+                rl_add_album.setVisibility(View.VISIBLE);
+
+                rl_add_album.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void add(Album album,DiggerAlbum diggerAlbum) {
-                        if (album != null) {
-                            //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
-                            for (Album item : albumList) {
-                                item.setSelected(false);
-                            }
-                            albumList.add(album);
-                            mDiggerAlbum = diggerAlbum;
-                            RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
+                    public void onClick(View v) {
+                        AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
 
-                            layout.setLayoutParams(params);
-                            ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
-                            ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
-                            LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
-                            tvName.setTextSize(16);
-                            final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                            final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
-                            rl_album.setTag(viewcount);
-                            for (int i = 0; i < albumList.size(); i++) {
-                                if (i != viewcount) {
-                                    RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
-                                    if(layout_temp != null) {
-                                        ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
-                                        iv_selected_temp.setVisibility(View.GONE);
-                                        albumList.get(i).setSelected(false);
+                            @Override
+                            public void add(Album album, DiggerAlbum diggerAlbum) {
+                                if (album != null) {
+                                    //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
+                                    for (Album item : albumList) {
+                                        item.setSelected(false);
                                     }
+                                    albumList.add(album);
+                                    mDiggerAlbum = diggerAlbum;
+                                    RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
-                                }
-                            }
-
-                            rl_album.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    int tag = (int) rl_album.getTag();
-                                    Album album = albumList.get(tag);
-
-                                    iv_selected.setVisibility(View.VISIBLE);
-                                    album.setSelected(true);
-
+                                    layout.setLayoutParams(params);
+                                    ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
+                                    ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
+                                    LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
+                                    tvName.setTextSize(16);
+                                    final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                    final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
+                                    rl_album.setTag(viewcount);
                                     for (int i = 0; i < albumList.size(); i++) {
-                                        if (i != tag) {
-                                            albumList.get(i).setSelected(false);
-                                            RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                                            if(layout != null){
-                                                ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                                                iv_selected.setVisibility(View.INVISIBLE);
+                                        if (i != viewcount) {
+                                            RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
+                                            if (layout_temp != null) {
+                                                ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
+                                                iv_selected_temp.setVisibility(View.GONE);
                                                 albumList.get(i).setSelected(false);
                                             }
+
                                         }
                                     }
+
+                                    rl_album.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            int tag = (int) rl_album.getTag();
+                                            Album album = albumList.get(tag);
+
+                                            iv_selected.setVisibility(View.VISIBLE);
+                                            album.setSelected(true);
+
+                                            for (int i = 0; i < albumList.size(); i++) {
+                                                if (i != tag) {
+                                                    albumList.get(i).setSelected(false);
+                                                    RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
+                                                    if (layout != null) {
+                                                        ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                                        iv_selected.setVisibility(View.INVISIBLE);
+                                                        albumList.get(i).setSelected(false);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+
+                                    tvName.setText(album.getAlbum());
+
+                                    if (album.isSelected()) {
+                                        iv_selected.setVisibility(View.VISIBLE);
+                                    } else {
+                                        iv_selected.setVisibility(View.INVISIBLE);
+                                    }
+
+                                    imm.hideSoftInputFromWindow(mMenuView.getWindowToken(), 0);
+
+                                    album_item_layout.addView(layout, viewcount);
+                                    albumList.add(album);
+                                    viewcount++;
                                 }
-                            });
-
-                            tvName.setText(album.getAlbum());
-
-                            if (album.isSelected()) {
-                                iv_selected.setVisibility(View.VISIBLE);
-                            } else {
-                                iv_selected.setVisibility(View.INVISIBLE);
                             }
-
-                            imm.hideSoftInputFromWindow(mMenuView.getWindowToken(), 0);
-
-                            album_item_layout.addView(layout, viewcount);
-                            albumList.add(album);
-                            viewcount++;
-                        }
+                        });
+                        window.setFocusable(true);
+                        window.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.CENTER
+                                | Gravity.CENTER, 0, 0);
                     }
                 });
-                window.setFocusable(true);
-                window.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
-            }
-        });
+                layout_add.setVisibility(View.VISIBLE);
+                album_item_layout.addView(layout_add);
 
-        album_item_layout.addView(layout_add);
+                TextView tv = new TextView(m_pContext);
+                tv.setText("cdnsjvnsjvnosvnosnvsdnva");
+                tv.setTextSize(25);
+                album_item_layout.addView(tv);
+            }
+        }, 3000);
 
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
@@ -334,7 +347,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private void showClipboardDialog(final Context pContext) {
         ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData primaryClip = cbm.getPrimaryClip();
-        if (primaryClip !=null && primaryClip.getItemCount()!=0&&!TextUtils.isEmpty(primaryClip.getItemAt(0).getText())){
+        if (primaryClip != null && primaryClip.getItemCount() != 0 && !TextUtils.isEmpty(primaryClip.getItemAt(0).getText())) {
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)
@@ -360,11 +373,12 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     }
 
     long currentTimeMillis = System.currentTimeMillis();
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_confirm:
-                if(System.currentTimeMillis() - currentTimeMillis <= 1500){
+                if (System.currentTimeMillis() - currentTimeMillis <= 1500) {
                     currentTimeMillis = System.currentTimeMillis();
                     return;
                 }
@@ -388,7 +402,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     /**修改数据库,随后开始挖掘*/
 
                     //如果mDiggerAlbum 为null,则说明用户选择的是老专辑,否则是新建专辑
-                    if (mDiggerAlbum == null){
+                    if (mDiggerAlbum == null) {
                         DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
                         mDiggerAlbum = diggerAlbum;
                     }
@@ -402,9 +416,9 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     final AlbumSubItem albumSubItem = new AlbumSubItem(inputTitle, inputUrl);
                     albumSubItem.setDiggerAlbum(mDiggerAlbum);
                     AlbumSubItem existItem = albumSubItemDao.queryByTitleAndUrl(inputTitle, inputUrl);
-                    if (existItem == null){
+                    if (existItem == null) {
                         albumSubItemDao.insert(albumSubItem);
-                    }else{
+                    } else {
                         ToastUtil.toastShort("您已挖掘过该新闻!");
                     }
                     /**(3).开始向服务器请求挖掘数据*/
@@ -413,6 +427,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         public int retryCount() {
                             return 3;
                         }
+
                         @Override
                         public void success(String result) {
                             if (!TextUtils.isEmpty(result)) {
@@ -424,7 +439,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
                         @Override
                         public void failed(MyAppException exception) {
-                            Logger.e("jigang", "---向服务器请求挖掘失败!"+exception.getMessage());
+                            Logger.e("jigang", "---向服务器请求挖掘失败!" + exception.getMessage());
                         }
                     });
                     DiggerPopupWindow.this.dismiss();
@@ -432,8 +447,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 break;
         }
     }
+
     /**
      * 获取InputMethodManager，隐藏软键盘
+     *
      * @param view
      */
     private void hideKeyboard(View view) {
@@ -443,6 +460,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
+
     class AlbumAdapter extends BaseAdapter {
         Context mContext;
 
@@ -512,7 +530,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
 
                         @Override
-                        public void add(Album album,DiggerAlbum diggerAlbum) {
+                        public void add(Album album, DiggerAlbum diggerAlbum) {
                             if (album != null) {
                                 //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
                                 for (Album item : albumList) {

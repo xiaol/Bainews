@@ -1,64 +1,69 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-
-        <FrameLayout
-            android:id="@+id/fl_lecture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            >
-
-            <ImageView
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/iv_lecture"
-                android:background="@drawable/img_lecture"
-                />
+                android:background="@color/white"
+    >
 
-            <TextView
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="使用最喜欢的资讯应用"
-                android:layout_marginTop="45dp"
-                android:layout_marginLeft="1dp"
-                android:layout_gravity="center_horizontal"
-                android:textSize="21sp"
-                android:textColor="#565656"
-                />
 
-            <TextView
-                android:id="@+id/lstv_des"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginRight="4dp"
-                android:text="您可以从今日头条、一点资讯和网易新闻等三百多款应用将信息资讯保存到头条百家。"
-                android:layout_marginBottom="220dp"
-                android:textSize="13sp"
-                android:textColor="#818181"
-                />
+    <RelativeLayout
+        android:id="@+id/fl_lecture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        >
 
-        </FrameLayout>
+        <TextView
+            android:id="@+id/mTitle"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="25dp"
+            android:text="使用最喜欢的资讯应用"
+            android:textColor="#565656"
+            android:textSize="21sp"
 
-        <GridView
-            android:id="@+id/mSpecialLv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="10dp"
-            android:visibility="gone"
-            android:numColumns="2"
-            android:horizontalSpacing="10dp"
-            android:layout_margin="10dp"
-            android:verticalSpacing="8dp" />
+            />
+
+        <ImageView
+            android:id="@+id/iv_lecture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_lengji_lecture"
+            />
+
+        <TextView
+            android:id="@+id/lstv_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/iv_lecture"
+            android:layout_alignRight="@id/iv_lecture"
+            android:layout_below="@id/iv_lecture"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="4dp"
+            android:text="您可以从今日头条、一点资讯和网易新闻等三百多款应用将信息资讯保存到头条百家。"
+            android:textColor="#818181"
+            android:textSize="13sp"
+            />
 
     </RelativeLayout>
 
-</FrameLayout>
+    <GridView
+        android:id="@+id/mSpecialLv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:verticalSpacing="8dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>

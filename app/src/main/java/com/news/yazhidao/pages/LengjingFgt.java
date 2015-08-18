@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,7 +56,7 @@ public class LengjingFgt extends Fragment {
     public static final String ACTION_USER_CHOSE_TOPIC = "com.news.yazhidao.ACTION_USER_CHOSE_TOPIC";
 
     private View rootView;
-    private FrameLayout fl_lecture;
+    private View fl_lecture;
     private ArrayList<Album> albumList = new ArrayList<Album>();
     private TextView lstv_des;
     //个人专辑列表
@@ -139,7 +138,7 @@ public class LengjingFgt extends Fragment {
     }
 
     private void findViews() {
-        fl_lecture = (FrameLayout) rootView.findViewById(R.id.fl_lecture);
+        fl_lecture = rootView.findViewById(R.id.fl_lecture);
         lstv_des = (TextView)rootView.findViewById(R.id.lstv_des);
 
         //专辑显示列表
@@ -253,6 +252,7 @@ public class LengjingFgt extends Fragment {
      * @param resultList
      */
     private void handleAlbumsData(final String newsTitle, final String newsUrl, ArrayList<DiggerAlbum> resultList) {
+        Logger.e("jigang","--handleAlbumsData--"+resultList.size());
         if (!TextUtil.isListEmpty(resultList)) {
             albumList.clear();
             for (int i = 0; i < resultList.size(); i++) {

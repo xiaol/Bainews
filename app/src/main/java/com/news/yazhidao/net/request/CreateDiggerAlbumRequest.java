@@ -43,6 +43,9 @@ public class CreateDiggerAlbumRequest {
         ArrayList<NameValuePair> params = new ArrayList<>();
         //此处默认用户是已经登录过的
         User user = SharedPreManager.getUser(pContext);
+        if(user == null){
+            return;
+        }
         params.add(new BasicNameValuePair(USER_ID,user.getUserId()));
         params.add(new BasicNameValuePair(ALBUM_ID,pDiggerAlbum.getAlbum_id()));
         params.add(new BasicNameValuePair(ALBUM_TITLE,pDiggerAlbum.getAlbum_title()));

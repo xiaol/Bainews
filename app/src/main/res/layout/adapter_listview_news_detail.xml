@@ -33,6 +33,7 @@
             android:layout_centerHorizontal="true" />
 
         <ImageView
+            android:id="@+id/top_line_imageView"
             android:layout_above="@+id/rounded_imageView"
             android:layerType="software"
             android:layout_width="22dp"

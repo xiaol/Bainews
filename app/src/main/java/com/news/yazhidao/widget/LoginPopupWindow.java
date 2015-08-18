@@ -20,6 +20,7 @@ import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.pages.ChatAty;
+import com.news.yazhidao.pages.DiggerAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
@@ -41,8 +42,10 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     private View mHomeChatWrapper;
     private View mHomeLoginCancel;
     private UserLoginListener mUserLoginListener;
+    private View mHomeLoginDivide;
     private View mHomeLogout;
     private OnDismissListener listener;
+    private View mDigger;//挖掘机选项
 
     public LoginPopupWindow(Context mContext,OnDismissListener listener) {
         this.listener = listener;
@@ -61,6 +64,9 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeChatWrapper = mPopupWidow.findViewById(R.id.mHomeChatWrapper);
         mHomeLoginCancel = mPopupWidow.findViewById(R.id.mHomeLoginCancel);
         mHomeLogout = mPopupWidow.findViewById(R.id.mHomeLogout);
+        mHomeLoginDivide = mPopupWidow.findViewById(R.id.mHomeLoginDivide);
+        mDigger = mPopupWidow.findViewById(R.id.mDigger);
+        mDigger.setOnClickListener(this);
         mHomeLogout.setOnClickListener(this);
         mHomeLoginCancel.setOnClickListener(this);
         mHomeLogin.setOnClickListener(this);
@@ -72,6 +78,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             mHomeLogin.setText(user.getUserName());
             mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             mHomeLogout.setVisibility(View.VISIBLE);
+            mHomeLoginDivide.setVisibility(View.VISIBLE);
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
             ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
                 @Override
@@ -126,6 +133,11 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                 mContext.startActivity(intent);
                 dismiss();
                 break;
+            case R.id.mDigger:
+                Intent digger = new Intent(mContext, DiggerAty.class);
+                mContext.startActivity(digger);
+                this.dismiss();
+                break;
         }
     }
 
@@ -139,8 +151,8 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                 .withIcon(R.drawable.app_icon_version3)
                 .withTitle("退出登录")
                 .withEffect(Effectstype.Sidefill)
-                .withButton1Text("OK")
-                .withButton2Text("Cancel")
+                .withButton1Text("确定")
+                .withButton2Text("取消")
                 .setButton1Click(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -152,6 +164,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                         mHomeLogin.setText(Html.fromHtml(mContext.getResources().getString(R.string.home_login_text)));
                         mHomeLogin.setOnClickListener(LoginPopupWindow.this);
                         mHomeLogout.setVisibility(View.GONE);
+                        mHomeLoginDivide.setVisibility(View.GONE);
                         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
                         //发送广播通知LengJingFgt,刷新界面
                         Intent userLogoutIntent = new Intent(LengjingFgt.ACTION_USER_LOGOUTED);
@@ -187,6 +200,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
         mHomeLogout.setVisibility(View.VISIBLE);
+        mHomeLoginDivide.setVisibility(View.VISIBLE);
         ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
             @Override
             public void success(int width,int height) {
