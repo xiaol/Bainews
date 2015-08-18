@@ -1117,7 +1117,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         });
                         ImageView iv_source = (ImageView) ll_souce_view.findViewById(R.id.iv_source);
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
-                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(GlobalParams.screenWidth * 0.74), ViewGroup.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)(GlobalParams.screenWidth * 0.7), ViewGroup.LayoutParams.WRAP_CONTENT);
                         layoutParams.addRule(RelativeLayout.RIGHT_OF,R.id.iv_source);
                         layoutParams.leftMargin = DensityUtil.dip2px(getActivity(),8);
                         tv_news_source.setLayoutParams(layoutParams);
