@@ -35,7 +35,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:layout_marginLeft="8dp"
-        android:textColor="#666666"
+        android:textColor="#888888"
         android:text="Fay苏"
         android:textSize="11sp"
         />

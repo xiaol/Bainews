@@ -844,27 +844,27 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
                 holder.tv_interests.setOnClickListener(new View.OnClickListener() {
-                                                           long firstClick = 0;
+                       long firstClick = 0;
 
-                                                           @Override
-                                                           public void onClick(View v) {
+                       @Override
+                       public void onClick(View v) {
 
-                                                               if (System.currentTimeMillis() - firstClick <= 1500) {
-                                                                   firstClick = System.currentTimeMillis();
-                                                                   return;
-                                                               }
-                                                               firstClick = System.currentTimeMillis();
+                           if (System.currentTimeMillis() - firstClick <= 1500) {
+                               firstClick = System.currentTimeMillis();
+                               return;
+                           }
+                           firstClick = System.currentTimeMillis();
 
-                                                               Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                               intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                               intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                                                               intent.putExtra("position", position);
-                                                               intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
-                                                               startActivityForResult(intent, 0);
-                                                               //uemng statistic view the head news
-                                                               MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                           }
-                                                       }
+                           Intent intent = new Intent(mContext, NewsDetailAty.class);
+                           intent.putExtra(KEY_URL, feed.getSourceUrl());
+                           intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                           intent.putExtra("position", position);
+                           intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                           startActivityForResult(intent, 0);
+                           //uemng statistic view the head news
+                           MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                       }
+                   }
                 );
 
                 holder.cv_opinions.setBackgroundColor(new Color().parseColor("#50b5eb"));
@@ -1137,7 +1137,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             String source_title = source.getTitle();
 //                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
                             String source_name_font = "";
-                            source_title = "<font color =\"#000000\">" + "<big>" + source_title + "</big>" + "</font>";
+                            source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
                             if (source_name != null) {
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {
@@ -1587,7 +1587,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             String source_title = source.getTitle();
 //                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
                             String source_name_font = "";
-                            source_title = "<font color =\"#000000\">" + "<big>" + source_title + "</big>" + "</font>";
+                            source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
                             if (source_name != null) {
 
                                 if (source.getUser() != null && !"".equals(source.getUser())) {

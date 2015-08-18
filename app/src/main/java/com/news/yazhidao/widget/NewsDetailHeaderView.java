@@ -2291,7 +2291,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 newsdetailViewHolder.lstv_para_content.setFontSpacing(1);
                 newsdetailViewHolder.lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
                 newsdetailViewHolder.lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                newsdetailViewHolder.lstv_para_content.setTextColor(mContext.getResources().getColor(R.color.black));
+                newsdetailViewHolder.lstv_para_content.setTextColor(new Color().parseColor("#656565"));
                 newsdetailViewHolder.lstv_para_content.setText(_Split[position]);
                 newsdetailViewHolder.lstv_para_content.setTag(position);
 
@@ -2611,7 +2611,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         newsdetailAddViewHolder.lstv_para_content.setFontSpacing(1);
                         newsdetailAddViewHolder.lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
                         newsdetailAddViewHolder.lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                        newsdetailAddViewHolder.lstv_para_content.setTextColor(mContext.getResources().getColor(R.color.black));
+                        newsdetailAddViewHolder.lstv_para_content.setTextColor(new Color().parseColor("#656565"));
                         newsdetailAddViewHolder.lstv_para_content.setText(text);
                         newsdetailAddViewHolder.lstv_para_content.setTag(position);
                         newsdetailAddViewHolder.rl_comment.setOnClickListener(new View.OnClickListener() {
