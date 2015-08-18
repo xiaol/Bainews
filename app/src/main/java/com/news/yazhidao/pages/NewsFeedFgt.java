@@ -68,6 +68,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.widget.CircleView;
 import com.news.yazhidao.widget.LetterSpacingTextView;
@@ -363,12 +364,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         setupJazziness(mCurrentTransitionEffect);
         loadData();
-//        AdcocoUtil.setup(getActivity());
-//        try {
-//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        AdcocoUtil.setup(getActivity());
+        try {
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return rootView;
     }
     /**
@@ -412,11 +413,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 //            }
 //        }
 
-//        try {
-//            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //更新ui
         list_adapter.notifyDataSetChanged();
@@ -436,6 +437,41 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         }
         });
 
+<<<<<<< HEAD
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    lv_news.onRefreshComplete();
+                }
+            });
+
+            if (miCurrentCount < miTotalCount)
+                miCurrentCount++;
+            mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (this) {
+                        NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
+                        if (mUpNewsArr.size() <= 1) {
+                            _NewsFeed.setTop_flag(true);
+                            lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+                        }
+                        mMiddleNewsArr.add(0, _NewsFeed);
+                        try {
+                            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        mUpNewsArr.remove(mUpNewsArr.size() - 1);
+                        GlobalParams.split_index_bottom++;
+                        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+                        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+                        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+=======
          if (miCurrentCount < miTotalCount)
          miCurrentCount++;
          mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
@@ -461,6 +497,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
         lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
         lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+>>>>>>> 289c4e22caf04bc857029467c594825599113ffd
 
         list_adapter.notifyDataSetChanged();
 
@@ -733,7 +770,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
-//                AdcocoUtil.update();
+                AdcocoUtil.update();
                 //普通卡片
                 if (convertView == null) {
                     holder = new ViewHolder();
@@ -796,7 +833,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         convertView.setTag(holder);
                     }
                 }
-//                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+                AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 String title = feed.getTitle();
 
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);

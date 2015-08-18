@@ -42,7 +42,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:layout_marginTop="10dp"
                     android:id="@+id/lv_article_comments" />
 
                 <TextView
@@ -132,7 +131,6 @@
                 android:id="@+id/douban_linerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:orientation="horizontal">
 
@@ -161,7 +159,6 @@
                 android:id="@+id/sina_linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:background="#ffffff"
                 android:orientation="horizontal">
 
@@ -185,7 +182,6 @@
                 </com.news.yazhidao.widget.CustomHorizontalScrollView>
             </LinearLayout>
 
-
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/mNewsDetailRelate"
                 android:gravity="top"
@@ -194,6 +190,7 @@
                 android:paddingTop="1dp"
                 android:paddingBottom="6dp"
                 android:layout_marginLeft="22dp"
+                android:layout_marginTop="10dp"
                 android:text="相关观点"
                 android:background="@drawable/bg_relate"
                 android:textSize="16sp"

@@ -222,7 +222,6 @@ public class ImageManager {
                     bitmap=ImageUtils.zoomBitmap(bitmap,DeviceInfoUtil.getScreenWidth());
                 }
 
-
                 if(bitmap != null) {
                     width = bitmap.getWidth();
                     height = bitmap.getHeight();
