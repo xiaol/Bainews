@@ -27,12 +27,10 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +84,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, TimeOutAlarmUpdateListener {
 
@@ -133,40 +129,21 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private boolean mIsNeedAnim = true;
     //是否第一次执行隐藏banner动画
     private boolean refresh_flag = false;
-    private static long mLastPressedBackKeyTime;
     private AnimationDrawable mAniNewsLoading;
     //将在下拉显示的新闻数据
     private ArrayList<NewsFeed> mMiddleNewsArr = new ArrayList<>();
     //将在当前显示的新闻数据
-    private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
+//    private ArrayList<NewsFeed> mUpNewsArr = new ArrayList<>();
     //将在上拉显示的新闻数据
-    private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
+//    private ArrayList<NewsFeed> mDownNewsArr = new ArrayList<>();
     private Handler mHandler = new Handler();
     private View mHomeAtyRightMenuWrapper;
     private RoundedImageView mHomeAtyRightMenu;
     private int TYPE_VIEWHOLDER = 1;
     private int TYPE_VIEWHOLDER3 = 3;
-    private Timer timer;
-    private Handler doActionHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int msgId = msg.what;
-            switch (msgId) {
-                case 1:
-                    lv_news.setVisibility(View.GONE);
-                    mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
-                    mAniNewsLoading.stop();
-                    ll_no_network.setVisibility(View.VISIBLE);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
 
     @Override
+
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -174,13 +151,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
         height = wm.getDefaultDisplay().getHeight();
-        timer = new Timer();
 
         GlobalParams.maxWidth = width;
         GlobalParams.maxHeight = (int) (height * 0.27);
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
-        ImageLoaderHelper imageLoader = new ImageLoaderHelper(mContext);
         TimeoOutAlarmReceiver.setListener(this);
 
         rt = new NewsFeedReceiver();
@@ -195,13 +170,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         if (rt != null) {
             mContext.unregisterReceiver(rt);
         }
-
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
     }
 
     @Override
@@ -274,12 +249,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         }, 2000);
 
         ll_no_network = (LinearLayout) rootView.findViewById(R.id.ll_no_network);
-        ll_no_network.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         btn_reload = (Button) rootView.findViewById(R.id.btn_reload);
         btn_reload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,12 +326,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         list_adapter = new MyAdapter();
         lv_news.setAdapter(list_adapter);
         lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
         lv_news.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
@@ -397,23 +366,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         return rootView;
     }
 
-
-
-    private void loadNewsTimer(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (NetUtil.checkNetWork(getActivity())) {
-                    if (mMiddleNewsArr.size() == 0) {
-                        Message message = new Message();
-                        message.what = 1;
-                        doActionHandler.sendMessage(message);
-                    }
-                }
-            }
-        }, 10000);
-    }
-
     /**
      * 上拉加载时显示一条数据
      */
@@ -424,36 +376,36 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
             }
         });
-
-        for (int i = 0; i < 3; i++) {
-            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
-                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-                if (mDownNewsArr.size() == 1) {
-                    _NewsFeed.setBottom_flag(true);
-                    if (mUpNewsArr.size() > 0) {
-                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
-                    } else {
-                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
-                    }
-
-                }
-                mMiddleNewsArr.add(_NewsFeed);
-                mDownNewsArr.remove(mDownNewsArr.size() - 1);
-
-                if (miCurrentCount < miTotalCount)
-                    miCurrentCount++;
-                mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
-                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
-            } else {
-
-            }
-        }
+//
+//        for (int i = 0; i < 3; i++) {
+//            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
+//                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
+//                if (mDownNewsArr.size() == 1) {
+//                    _NewsFeed.setBottom_flag(true);
+//                    if (mUpNewsArr.size() > 0) {
+//                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
+//                    } else {
+//                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
+//                    }
+//
+//                }
+//                mMiddleNewsArr.add(_NewsFeed);
+//                mDownNewsArr.remove(mDownNewsArr.size() - 1);
+//
+//                if (miCurrentCount < miTotalCount)
+//                    miCurrentCount++;
+//                mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
+//                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//
+//            } else {
+//
+//            }
+//        }
 
 //        try {
 //            new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
@@ -470,48 +422,47 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
      * 下拉刷新时显示一条数据
      */
     private void showNextUpNews() {
+        /** mUpNewsArr
+         if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
 
-        if (mUpNewsArr != null && mUpNewsArr.size() > 0) {
+         new Handler().post(new Runnable() {
+        @Override public void run() {
+        lv_news.onRefreshComplete();
+        }
+        });
 
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    lv_news.onRefreshComplete();
-                }
-            });
+         if (miCurrentCount < miTotalCount)
+         miCurrentCount++;
+         mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
+         new Handler().post(new Runnable() {
+        @Override public void run() {
+        synchronized (this) {
+        NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
+        if (mUpNewsArr.size() <= 1) {
+        _NewsFeed.setTop_flag(true);
+        lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
+        }
+        mMiddleNewsArr.add(0, _NewsFeed);
+        //                                try {
+        //                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
+        //                                } catch (Exception e) {
+        //                                    e.printStackTrace();
+        //                                }
+        mUpNewsArr.remove(mUpNewsArr.size() - 1);
+        GlobalParams.split_index_bottom++;
+        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
 
-            if (miCurrentCount < miTotalCount)
-                miCurrentCount++;
-            mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (this) {
-                        NewsFeed _NewsFeed = mUpNewsArr.get(mUpNewsArr.size() - 1);
-                        if (mUpNewsArr.size() <= 1) {
-                            _NewsFeed.setTop_flag(true);
-                            lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-                        }
-                        mMiddleNewsArr.add(0, _NewsFeed);
-//                                try {
-//                                    new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-                        mUpNewsArr.remove(mUpNewsArr.size() - 1);
-                        GlobalParams.split_index_bottom++;
-                        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+        list_adapter.notifyDataSetChanged();
 
-                        list_adapter.notifyDataSetChanged();
-
-                    }
-                }
-            });
+        }
+        }
+        });
+         **/
 
 //            ListView listView = lv_news.getRefreshableView();
 //            TranslateAnimation localTranslateAnimation = new TranslateAnimation(0.0F, 0.0F, -lv_news.getScrollY(), height * 0.4f);
@@ -575,7 +526,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 //
 //                }
 //            });
-        }
+//        }
     }
 
     protected void loadData() {
@@ -662,7 +613,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
-            if(data != null) {
+            if (data != null) {
                 String isComment = data.getStringExtra("isComment");
                 int position = Integer.parseInt(data.getStringExtra("position"));
                 if ("1".equals(isComment)) {
@@ -759,12 +710,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             contentSize2 = 0;
 
             if (!refresh_flag) {
-                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
+//                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
+//                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
             }
 
             final NewsFeed feed = mMiddleNewsArr.get(position);
@@ -959,24 +910,24 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 }
 
                 holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
-                       long firstClick = 0;
+                                                               long firstClick = 0;
 
-                       @Override
-                       public void onClick(View v) {
-                           if (System.currentTimeMillis() - firstClick <= 1500) {
-                               firstClick = System.currentTimeMillis();
-                               return;
-                           }
-                           firstClick = System.currentTimeMillis();
-                           Intent intent = new Intent(mContext, NewsDetailAty.class);
-                           intent.putExtra(KEY_URL, feed.getSourceUrl());
-                           intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
-                           intent.putExtra("position", position);
-                           startActivityForResult(intent, 0);
-                           //uemng statistic view the head news
-                           MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                       }
-                   }
+                                                               @Override
+                                                               public void onClick(View v) {
+                                                                   if (System.currentTimeMillis() - firstClick <= 1500) {
+                                                                       firstClick = System.currentTimeMillis();
+                                                                       return;
+                                                                   }
+                                                                   firstClick = System.currentTimeMillis();
+                                                                   Intent intent = new Intent(mContext, NewsDetailAty.class);
+                                                                   intent.putExtra(KEY_URL, feed.getSourceUrl());
+                                                                   intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                                                                   intent.putExtra("position", position);
+                                                                   startActivityForResult(intent, 0);
+                                                                   //uemng statistic view the head news
+                                                                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                                                               }
+                                                           }
 
                 );
                 //点击其他观点的点击事件
@@ -1099,6 +1050,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             long firstClick = 0;
+
                             @Override
                             public void onClick(View v) {
                                 if (System.currentTimeMillis() - firstClick <= 1500) {
@@ -1161,10 +1113,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
-                                if(source.getSimilarity().length() > 4) {
+                                if (source.getSimilarity().length() > 4) {
                                     String ss = source.getSimilarity().substring(2, 4);
                                     tv_relate.setText(ss + "%相关");
-                                }else{
+                                } else {
                                     tv_relate.setVisibility(View.GONE);
                                 }
                             } else {
@@ -1549,6 +1501,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         RelativeLayout ll_souce_view = (RelativeLayout) View.inflate(mContext, R.layout.lv_source_item3, null);
                         ll_souce_view.setOnClickListener(new View.OnClickListener() {
                             long firstClick = 0;
+
                             @Override
                             public void onClick(View v) {
                                 if (System.currentTimeMillis() - firstClick <= 1500) {
@@ -1613,10 +1566,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
-                                if(source.getSimilarity().length() > 4) {
+                                if (source.getSimilarity().length() > 4) {
                                     String ss = source.getSimilarity().substring(2, 4);
                                     tv_relate.setText(ss + "%相关");
-                                }else{
+                                } else {
                                     tv_relate.setVisibility(View.GONE);
                                 }
                             } else {
@@ -1655,8 +1608,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             //下拉时给显示的item添加动画
-            if (position == 0 && mIsNeedAnim)
-            {
+            if (position == 0 && mIsNeedAnim) {
                 convertView.clearAnimation();
                 convertView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.aty_list_item_in));
                 return convertView;
@@ -1716,9 +1668,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 break;
 
             case 3:
-                if(type == TYPE_VIEWHOLDER3){
+                if (type == TYPE_VIEWHOLDER3) {
                     params.height = DensityUtil.dip2px(mContext, 210);
-                }else {
+                } else {
 
                     if (length == 6) {
                         params.height = DensityUtil.dip2px(mContext, 200);
@@ -1933,7 +1885,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     }
 
     private void loadNewsData(final int timenews) {
-        loadNewsTimer();
 
         String url = "";
         if (mNewsFeedProgressWheelWrapper != null) {
@@ -1948,6 +1899,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        request.setTimeOut(10000);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
@@ -1990,7 +1942,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
-
+                lv_news.setVisibility(View.GONE);
                 ll_no_network.setVisibility(View.VISIBLE);
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
@@ -2044,9 +1996,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     //获取当前点击分类的新
     private void loadNewsFeedData(final int position, int page, boolean flag) {
-
-        loadNewsTimer();
-
         if (flag) {
             if (mNewsFeedProgressWheelWrapper != null) {
                 mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
@@ -2056,28 +2005,29 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 mAniNewsLoading.start();
             }
         }
+//        synchronized (mUpNewsArr){
+//            mUpNewsArr.clear();
+//        }
 
-        mUpNewsArr.clear();
         if (this.page == 1) {
-            mMiddleNewsArr.clear();
+            synchronized (this) {
+                if (mMiddleNewsArr != null) {
+                    mMiddleNewsArr.clear();
+                    mMiddleNewsArr = null;
+                }
+            }
         }
-        mDownNewsArr.clear();
+//        mDownNewsArr.clear();
         ll_no_network.setVisibility(View.GONE);
 
         String url = HttpConstant.URL_GET_NEWS_LIST_NEW + "?channelId=" + position + "&page=" + this.page + "&limit=50";
-        final long start = System.currentTimeMillis();
         final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
 
-                long delta = System.currentTimeMillis() - start;
-                Logger.i("ariesy", delta + "");
                 if (result != null && result.size() > 0) {
-                    for (int i = 0; i < result.size(); i++) {
-                        mMiddleNewsArr.add(result.get(i));
-                    }
-
+                    mMiddleNewsArr = result;
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     lv_news.setVisibility(View.VISIBLE);
                     lv_news.getRefreshableView().setSelection(0);
@@ -2101,7 +2051,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 mNewsLoadingImg.setImageResource(R.drawable.loading_gif_new);
                 mAniNewsLoading.start();
                 ll_no_network.setVisibility(View.VISIBLE);
-
+                lv_news.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
@@ -2153,22 +2103,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 }
             }
         }
-    }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (keyCode == event.KEYCODE_BACK) {
-
-            long pressedBackKeyTime = System.currentTimeMillis();
-            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
-                getActivity().finish();
-            } else {
-                ToastUtil.showToastWithIcon("再按一次退出应用", R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-            }
-            mLastPressedBackKeyTime = pressedBackKeyTime;
-
-        }
-        return true;
     }
 
 }
