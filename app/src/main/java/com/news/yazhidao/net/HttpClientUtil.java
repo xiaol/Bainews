@@ -67,7 +67,7 @@ public class HttpClientUtil {
             addRequestHeaders(post, request.headers);
             if (request.params == null) {
                 throw new IllegalArgumentException("You should set post parameters when use POST to request ");
-            }else{
+            } else {
                 post.setEntity(new UrlEncodedFormEntity(request.params, HTTP.UTF_8));
             }
             return client.execute(post);
@@ -80,7 +80,7 @@ public class HttpClientUtil {
 
     private static HttpResponse get(NetworkRequest request) throws MyAppException {
         try {
-            HttpClient client = getHttpClient();
+            HttpClient client = getHttpClient(request);
             HttpGet get;
             if (request.getParams != null) {
                 get = new HttpGet(addParamsToUrl(request.url, request.getParams));
@@ -105,7 +105,7 @@ public class HttpClientUtil {
         }
     }
 
-    public static synchronized HttpClient getHttpClient() {
+    public static synchronized HttpClient getHttpClient(NetworkRequest request) {
         if (null == customerHttpClient) {
             HttpParams params = new BasicHttpParams();
             // 设置一些基本参数
@@ -120,11 +120,11 @@ public class HttpClientUtil {
                                     + "AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1");
             // 超时设置
             /* 从连接池中取连接的超时时间 */
-            ConnManagerParams.setTimeout(params, 15000);
+            ConnManagerParams.setTimeout(params, request.getTimeOut() == 15000 ? 15000 : request.getTimeOut());
             /* 连接超时 */
-            HttpConnectionParams.setConnectionTimeout(params, 15000);
+            HttpConnectionParams.setConnectionTimeout(params, request.getTimeOut() == 15000 ? 15000 : request.getTimeOut());
             /* 请求超时 */
-            HttpConnectionParams.setSoTimeout(params, 15000);
+            HttpConnectionParams.setSoTimeout(params, request.getTimeOut() == 15000 ? 15000 : request.getTimeOut());
 
             // 设置我们的HttpClient支持HTTP和HTTPS两种模式
             SchemeRegistry schReg = new SchemeRegistry();
