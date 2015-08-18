@@ -1760,7 +1760,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             }
 
             long time = System.currentTimeMillis() -start;
-            ToastUtil.toastShort("执行时间为:" + time);
+//            ToastUtil.toastShort("执行时间为:" + time);
 
         }
     }

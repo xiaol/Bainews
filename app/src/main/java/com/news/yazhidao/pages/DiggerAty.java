@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -53,6 +54,7 @@ public class DiggerAty extends BaseActivity {
     private View mCommonHeaderLeftBack;
     private View mLayerMask;//点击底部+号时的遮罩
     private boolean isOpenHomeAty;//关闭此页面时是否需要HomeAty
+    private View mCommonHeaderWrapper;
 
     @Override
     protected boolean translucentStatus() {
@@ -62,6 +64,7 @@ public class DiggerAty extends BaseActivity {
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_digger);
+        mCommonHeaderWrapper = findViewById(R.id.mCommonHeaderWrapper);
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
         mCommonHeaderTitle.setText(R.string.home_digger);
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
@@ -104,6 +107,7 @@ public class DiggerAty extends BaseActivity {
         transaction.add(R.id.mDiggerLayout, mLengJingFgt);
         transaction.commit();
         addMenu();
+        changeCommonHeaderColor();
     }
 
     @Override
@@ -124,7 +128,19 @@ public class DiggerAty extends BaseActivity {
             startActivity(intent);
         }
     }
-
+    /**
+     * 修改标题栏的色值
+     */
+    private void changeCommonHeaderColor(){
+        /**如果系统版本在4.4以下就使用黑色*/
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+        }else{
+            if ("dior".equals(Build.DEVICE)&&"dior".equals(Build.PRODUCT)){
+                mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+            }
+        }
+    }
     private void addMenu() {
 
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);

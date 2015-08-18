@@ -197,6 +197,10 @@ public class AlbumListAty extends BaseActivity {
         /**如果系统版本在4.4以下就使用黑色*/
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
             mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+        }else{
+            if ("dior".equals(Build.DEVICE)&&"dior".equals(Build.PRODUCT)){
+                mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+            }
         }
     }
     /**
