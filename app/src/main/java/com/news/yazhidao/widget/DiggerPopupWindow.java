@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -25,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.database.AlbumSubItemDao;
 import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
@@ -35,6 +33,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.customdialog.Effectstype;
@@ -101,11 +100,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             }
         }
 
-        width = GlobalParams.screenWidth;
-        height = GlobalParams.screenHeight;
+        width = DeviceInfoUtil.getScreenWidth();
+        height = DeviceInfoUtil.getScreenHeight();
 
         findHeadPortraitImageViews();
-        loadData();
 
         if (isShowClipboardContent) {
             showClipboardDialog(context);
@@ -210,9 +208,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             Logger.e("jigang","-----digger 11111--"+album_item_layout.getChildCount());
         }
 
-new Handler().postDelayed(new Runnable() {
-    @Override
-    public void run() {
         RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
         layout_add.setLayoutParams(params);
@@ -305,8 +300,6 @@ new Handler().postDelayed(new Runnable() {
         });
 
         album_item_layout.addView(layout_add);
-    }
-}, 3000);
 
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
@@ -329,9 +322,6 @@ new Handler().postDelayed(new Runnable() {
         super.dismiss();
     }
 
-    private void loadData() {
-
-    }
 
     public void setDigNewsTitleAndUrl(String title, String url) {
         et_content.setText(title);
@@ -349,8 +339,8 @@ new Handler().postDelayed(new Runnable() {
                     .withIcon(R.drawable.app_icon_version3)
                     .withTitle("温馨提示")
                     .withEffect(Effectstype.Sidefill)
-                    .withButton1Text("OK")
-                    .withButton2Text("Cancel")
+                    .withButton1Text("确定")
+                    .withButton2Text("取消")
                     .setButton1Click(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

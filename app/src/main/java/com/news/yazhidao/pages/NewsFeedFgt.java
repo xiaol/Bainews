@@ -16,6 +16,7 @@
 
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -32,7 +33,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,10 +165,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         }
     };
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = activity;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         mContext = getActivity();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -180,7 +184,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         GlobalParams.maxHeight = (int) (height * 0.27);
         GlobalParams.screenWidth = width;
         GlobalParams.screenHeight = height;
-        ImageLoaderHelper imageLoader = new ImageLoaderHelper(mContext);
         TimeoOutAlarmReceiver.setListener(this);
 
         rt = new NewsFeedReceiver();
@@ -213,11 +216,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         mHomeAtyLeftMenuWrapper = rootView.findViewById(R.id.mHomeAtyLeftMenuWrapper);
         mHomeAtyRightMenuWrapper = rootView.findViewById(R.id.mHomeAtyRightMenuWrapper);
         mHomeAtyRightMenu = (RoundedImageView) rootView.findViewById(R.id.mHomeAtyRightMenu);
-        SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
+        SharedPreferences sp = mContext.getSharedPreferences("userurl", Context.MODE_PRIVATE);
         String url = sp.getString("url", "");
 
         if (!"".equals(url)) {
-            ImageLoaderHelper.dispalyImage(getActivity(), url, mHomeAtyRightMenu);
+            ImageLoaderHelper.dispalyImage(mContext, url, mHomeAtyRightMenu);
         }
 
         mHomeAtyRightMenuWrapper.setOnClickListener(new View.OnClickListener() {
@@ -228,7 +231,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     @Override
                     public void onDismiss() {
                         mHomeAtyRightMenu.setImageResource(R.drawable.ic_login);
-                        SharedPreferences sp = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE);
+                        SharedPreferences sp = mContext.getSharedPreferences("userurl", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
                         editor.clear();
                         editor.commit();
@@ -403,7 +406,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (NetUtil.checkNetWork(getActivity())) {
+                if (NetUtil.checkNetWork(mContext)) {
                     if (mMiddleNewsArr.size() == 0) {
                         Message message = new Message();
                         message.what = 1;
@@ -2144,31 +2147,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             if ("saveuser".equals(intent.getAction())) {
                 String url = intent.getStringExtra("url");
 
-                SharedPreferences.Editor e = getActivity().getSharedPreferences("userurl", Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor e = mContext.getSharedPreferences("userurl", Context.MODE_PRIVATE).edit();
                 e.putString("url", url);
                 e.commit();
 
                 if (url != null && !"".equals(url)) {
-                    ImageLoaderHelper.dispalyImage(getActivity(), url, mHomeAtyRightMenu);
+                    ImageLoaderHelper.dispalyImage(mContext, url, mHomeAtyRightMenu);
                 }
             }
         }
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO Auto-generated method stub
-        if (keyCode == event.KEYCODE_BACK) {
-
-            long pressedBackKeyTime = System.currentTimeMillis();
-            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
-                getActivity().finish();
-            } else {
-                ToastUtil.showToastWithIcon("再按一次退出应用", R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
-            }
-            mLastPressedBackKeyTime = pressedBackKeyTime;
-
-        }
-        return true;
-    }
 
 }
