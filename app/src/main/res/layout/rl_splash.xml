@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:background="@drawable/img_background" />
+        android:background="@drawable/img_background_flyme" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -33,11 +33,10 @@
         <ImageView
             android:id="@+id/iv_app_icon"
             android:layout_width="150dp"
-            android:layout_height="64dp"
-            android:background="@drawable/img_logo"
+            android:layout_height="34dp"
+            android:background="@drawable/ic_logo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp" />
-
     </RelativeLayout>
 
 
@@ -58,6 +57,7 @@
             android:paddingBottom="10dp"
             android:textColor="@color/white"
             android:background="#22000000"
+            android:visibility="gone"
             android:textSize="21sp"
             android:layout_alignParentBottom="true" />
 

@@ -48,18 +48,26 @@ public class ImageLoaderHelper {
     }
 
     public static void dispalyImage(Context context, String url, ImageView imageView,View tv_title) {
+        config = generateConfig(context);
+        imageLoader.init(config);
         imageLoader.displayImage(url, new ImageViewAware(imageView), getOption(),null,null,tv_title);
     }
 
     public static void dispalyImage(Context context, String url, ImageView imageView,ImageLoadingListener listener) {
+        config = generateConfig(context);
+        imageLoader.init(config);
         imageLoader.displayImage(url, imageView, getOption(),listener);
     }
 
     public static void loadImage(Context context, String url, ImageLoadingListener listener) {
+        config = generateConfig(context);
+        imageLoader.init(config);
         imageLoader.loadImage(url, getOption(), listener);
     }
 
     public static void dispalyImage(Context context, String url, ImageView imageView, SimpleImageLoadingListener listener) {
+        config = generateConfig(context);
+        imageLoader.init(config);
         imageLoader.displayImage(url, imageView, getOption(), listener);
     }
 

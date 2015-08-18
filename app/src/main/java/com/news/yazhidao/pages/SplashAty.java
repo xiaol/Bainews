@@ -23,6 +23,7 @@ import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.umeng.analytics.MobclickAgent;
@@ -84,7 +85,7 @@ public class SplashAty extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
+                tv_splash_news.setVisibility(View.VISIBLE);
                 final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
                 animation_scale.setDuration(4000);//设置动画持续时间
@@ -96,7 +97,6 @@ public class SplashAty extends BaseActivity {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-
                         if(flag) {
                             Intent intent = new Intent(SplashAty.this, HomeAty.class);
                             startActivity(intent);
@@ -108,7 +108,6 @@ public class SplashAty extends BaseActivity {
                             overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
                             SplashAty.this.finish();
                         }
-
                     }
 
                     @Override
@@ -129,6 +128,8 @@ public class SplashAty extends BaseActivity {
         anim_fade_in = AnimationUtils.loadAnimation(SplashAty.this, R.anim.alpha_in);
         anim_fade_in.setFillAfter(true);
 
+
+
         timer = new Timer();
         setContentView(R.layout.rl_splash);
     }
@@ -139,7 +140,14 @@ public class SplashAty extends BaseActivity {
         SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow",false);
         rl_splash = (RelativeLayout) findViewById(R.id.rl_splash);
+
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
+
+        if(DeviceInfoUtil.isFlyme()){
+            iv_splash_background.setBackgroundResource(R.drawable.img_background_flyme);
+        }else{
+            iv_splash_background.setBackgroundResource(R.drawable.img_background);
+        }
         tv_splash_news = (TextView) findViewById(R.id.tv_splash_news);
         iv_app_icon = (ImageView) findViewById(R.id.iv_app_icon);
         iv_news = (ImageView) findViewById(R.id.iv_news);
