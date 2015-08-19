@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -25,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.database.AlbumSubItemDao;
 import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
@@ -35,10 +33,12 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.customdialog.Effectstype;
 import com.news.yazhidao.widget.customdialog.SuperDialogBuilder;
+import com.umeng.analytics.AnalyticsConfig;
 
 import java.util.ArrayList;
 
@@ -101,11 +101,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             }
         }
 
-        width = GlobalParams.screenWidth;
-        height = GlobalParams.screenHeight;
+        width = DeviceInfoUtil.getScreenWidth();
+        height = DeviceInfoUtil.getScreenHeight();
 
         findHeadPortraitImageViews();
-        loadData();
 
         if (isShowClipboardContent) {
             showClipboardDialog(context);
@@ -156,10 +155,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         et_content = (EditText) mMenuView.findViewById(R.id.et_content);
         album_scollView = (HorizontalScrollView) mMenuView.findViewById(R.id.album_scollView);
         album_item_layout = (LinearLayout) mMenuView.findViewById(R.id.album_item_layout);
-        Logger.e("jigang", "-----digger window--" + albumList.size());
-        Logger.e("jigang", "-----digger window--" + albumList);
         for (int i = 0; i < albumList.size(); i++) {
-            Logger.e("jigang", "-----digger 000000--");
             RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
@@ -209,10 +205,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             viewcount++;
             Logger.e("jigang", "-----digger 11111--" + album_item_layout.getChildCount());
         }
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
                 RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
                 layout_add.setLayoutParams(params);
@@ -306,12 +298,11 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 layout_add.setVisibility(View.VISIBLE);
                 album_item_layout.addView(layout_add);
 
+        album_item_layout.addView(layout_add);
                 TextView tv = new TextView(m_pContext);
                 tv.setText("cdnsjvnsjvnosvnosnvsdnva");
                 tv.setTextSize(25);
                 album_item_layout.addView(tv);
-            }
-        }, 3000);
 
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
@@ -334,9 +325,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         super.dismiss();
     }
 
-    private void loadData() {
-
-    }
 
     public void setDigNewsTitleAndUrl(String title, String url) {
         et_content.setText(title);
@@ -354,8 +342,8 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                     .withIcon(R.drawable.app_icon_version3)
                     .withTitle("温馨提示")
                     .withEffect(Effectstype.Sidefill)
-                    .withButton1Text("OK")
-                    .withButton2Text("Cancel")
+                    .withButton1Text("确定")
+                    .withButton2Text("取消")
                     .setButton1Click(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -547,8 +535,6 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                             | Gravity.CENTER, 0, 0);
                 }
             });
-
-
             if (position == albumList.size()) {
 
                 holder.rl_album.setVisibility(View.GONE);

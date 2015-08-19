@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -107,6 +108,22 @@ public class LengjingFgt extends Fragment {
         filter.addAction(ACTION_USER_LOGOUTED);
         filter.addAction(ACTION_USER_CHOSE_TOPIC);
         activity.registerReceiver(mUserLogoutReceiver, filter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = getArguments();
+        if (bundle != null){
+            final String title = bundle.getString(DiggerAty.KEY_TITLE);
+            final String url = bundle.getString(DiggerAty.KEY_URL);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    openEditWindow(title, url);
+                }
+            }, 800);
+        }
     }
 
     @Override

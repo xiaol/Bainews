@@ -194,7 +194,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         ToastUtil.toastShort("新闻的内容为空，无法打开");
                         NewsDetailAty.this.finish();
                     }
-
+                    GlobalParams.start_u = System.currentTimeMillis();
                     mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                     mAniNewsLoading.stop();
                 }
@@ -244,9 +244,9 @@ public class NewsDetailAty extends SwipeBackActivity {
                             NewsDetailAty.this.finish();
                         }
 
+
                         mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                         mAniNewsLoading.stop();
-
                     }
 
                     @Override
@@ -422,6 +422,7 @@ public class NewsDetailAty extends SwipeBackActivity {
 
         @Override
         public int getCount() {
+            Logger.e("jigang","----相关观点-----");
             return mArrData == null ? 0 : mArrData.size();
         }
 
@@ -437,6 +438,7 @@ public class NewsDetailAty extends SwipeBackActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            Logger.e("jigang","----相关观点--getview---");
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();

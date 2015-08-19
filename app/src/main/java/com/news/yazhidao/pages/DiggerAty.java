@@ -3,7 +3,8 @@ package com.news.yazhidao.pages;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Intent;
-import android.os.Handler;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -41,6 +42,9 @@ import cn.sharesdk.framework.PlatformDb;
  */
 public class DiggerAty extends BaseActivity {
 
+    public final static String KEY_TITLE = "key_title";
+    public final static String KEY_URL = "key_url";
+
     private FloatingActionButton leftCenterButton;
     private FloatingActionButton.LayoutParams starParams;
     private FloatingActionMenu leftCenterMenu;
@@ -49,6 +53,8 @@ public class DiggerAty extends BaseActivity {
     private TextView mCommonHeaderTitle;
     private View mCommonHeaderLeftBack;
     private View mLayerMask;//点击底部+号时的遮罩
+    private boolean isOpenHomeAty;//关闭此页面时是否需要HomeAty
+    private View mCommonHeaderWrapper;
 
     @Override
     protected boolean translucentStatus() {
@@ -58,6 +64,7 @@ public class DiggerAty extends BaseActivity {
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_digger);
+        mCommonHeaderWrapper = findViewById(R.id.mCommonHeaderWrapper);
         mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
         mCommonHeaderTitle.setText(R.string.home_digger);
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
@@ -80,13 +87,27 @@ public class DiggerAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
+        //判断是否是别的app分享进来的
+        Intent intent = getIntent();
+        final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
+        String type = intent.getType();
+
         //FIXME 目前暂时酱紫写,后面有可能还有改动
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         mLengJingFgt = new LengjingFgt(this);
+        if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
+            //把页面设置在挖掘机
+            Bundle bundle = new Bundle();
+            bundle.putString(KEY_TITLE,TextUtil.getNewsTitle(data));
+            bundle.putString(KEY_URL,TextUtil.getNewsUrl(data));
+            mLengJingFgt.setArguments(bundle);
+            isOpenHomeAty = true;
+        }
         transaction.add(R.id.mDiggerLayout, mLengJingFgt);
         transaction.commit();
         addMenu();
+        changeCommonHeaderColor();
     }
 
     @Override
@@ -97,23 +118,29 @@ public class DiggerAty extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //判断是否是别的app分享进来的
-        Intent intent = getIntent();
-        final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String type = intent.getType();
-        if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
-            //把页面设置在挖掘机
-            //在LengJingFgt 中打开编辑页面,延时防止crash
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mLengJingFgt.openEditWindow(TextUtil.getNewsTitle(data), TextUtil.getNewsUrl(data));
-                }
-            }, 800);
-//            mLengJingFgt.openEditWindow(TextUtil.getNewsTitle(data), TextUtil.getNewsUrl(data));
-        }
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        if (isOpenHomeAty){
+            Intent intent = new Intent(this,HomeAty.class);
+            startActivity(intent);
+        }
+    }
+    /**
+     * 修改标题栏的色值
+     */
+    private void changeCommonHeaderColor(){
+        /**如果系统版本在4.4以下就使用黑色*/
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+            mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+        }else{
+            if ("dior".equals(Build.DEVICE)&&"dior".equals(Build.PRODUCT)){
+                mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
+            }
+        }
+    }
     private void addMenu() {
 
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
