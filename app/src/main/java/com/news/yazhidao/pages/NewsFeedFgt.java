@@ -184,6 +184,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     @Override
     public void onResume() {
         super.onResume();
+        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
     }
 
@@ -238,12 +239,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         });
 
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
-        mNewsFeedProgressWheelWrapper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+//        mNewsFeedProgressWheelWrapper.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 
