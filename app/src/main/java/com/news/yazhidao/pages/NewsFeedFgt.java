@@ -127,6 +127,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private boolean isNewFlag;
     private int miCurrentCount, miTotalCount;
     private int page = 1;
+    NetworkRequest mRequest;
 
     //listview重新布局刷新界面的时候是否需要动画
     private boolean mIsNeedAnim = true;
@@ -181,11 +182,14 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         super.onDestroy();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void CancelRequest(){
+        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+        if(mRequest!=null) {
+            mRequest.cancel(true);
+        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -238,12 +242,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         });
 
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
-        mNewsFeedProgressWheelWrapper.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 
@@ -2024,13 +2022,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
-        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
-        request.setTimeOut(10000);
-        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
+         mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        mRequest.setTimeOut(10000);
+        mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
                 isClick = true;
-
                 long delta = System.currentTimeMillis() - start;
                 Logger.i("ariesy", delta + "");
                 int i = 0;
@@ -2056,7 +2053,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
 
             public void failed(MyAppException exception) {
-
                 isClick = true;
                 miCurrentCount = 0;
                 mtvProgress.setText("0");
@@ -2073,7 +2069,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
-        request.execute();
+        mRequest.execute();
     }
 
     private int inflateDataInArrs(ArrayList<NewsFeed> result) {
@@ -2147,11 +2143,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         ll_no_network.setVisibility(View.GONE);
 
         String url = HttpConstant.URL_GET_NEWS_LIST_NEW + "?channelId=" + position + "&page=" + this.page + "&limit=50";
-        final NetworkRequest request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
-        request.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
+         mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
-
                 if (result != null && result.size() > 0) {
                     mMiddleNewsArr = result;
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
@@ -2181,7 +2176,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
-        request.execute();
+        mRequest.execute();
     }
 
     private class NewsFeedReceiver extends BroadcastReceiver {

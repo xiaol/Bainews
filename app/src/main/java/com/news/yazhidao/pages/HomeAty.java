@@ -93,7 +93,8 @@ public class HomeAty extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-
+                if (position != 1)
+                    mfgeNewsFeed.CancelRequest();
                 if (position == 2) {
                     if (leftCenterButton != null) {
                         leftCenterButton.detach(null);
@@ -142,9 +143,9 @@ public class HomeAty extends BaseActivity {
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
             } else {
-                if(DeviceInfoUtil.isFlyme()){
+                if (DeviceInfoUtil.isFlyme()) {
                     ToastUtil.toastShort(getString(R.string.press_back_again_exit));
-                }else{
+                } else {
                     ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
                 }
                 mLastPressedBackKeyTime = pressedBackKeyTime;
@@ -175,8 +176,8 @@ public class HomeAty extends BaseActivity {
         /**如果系统版本在4.4以下就使用黑色*/
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             tabs.setBackgroundResource(R.drawable.bg_common_header_gradient);
-        }else{
-            if ("dior".equals(Build.DEVICE)&&"dior".equals(Build.PRODUCT)){
+        } else {
+            if ("dior".equals(Build.DEVICE) && "dior".equals(Build.PRODUCT)) {
                 tabs.setBackgroundResource(R.drawable.bg_common_header_gradient);
             }
         }
