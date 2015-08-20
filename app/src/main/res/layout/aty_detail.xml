@@ -4,7 +4,7 @@
     android:background="#f3f3fa"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_gray"
@@ -18,7 +18,7 @@
             <com.news.yazhidao.widget.NewsListView
                 android:id="@+id/news_detail_listView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:background="@color/white"
                 android:cacheColorHint="#00000000"
                 android:fadingEdge="none"

@@ -422,7 +422,6 @@ public class NewsDetailAty extends SwipeBackActivity {
 
         @Override
         public int getCount() {
-            Logger.e("jigang","----相关观点-----");
             return mArrData == null ? 0 : mArrData.size();
         }
 
@@ -438,7 +437,6 @@ public class NewsDetailAty extends SwipeBackActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            Logger.e("jigang","----相关观点--getview---");
             final Holder holder;
             if (convertView == null) {
                 holder = new Holder();

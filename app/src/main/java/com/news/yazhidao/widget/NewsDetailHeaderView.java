@@ -2278,12 +2278,12 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 newsdetailViewHolder = (NewsdetailViewHolder) convertView.getTag();
             }
             setViewBg(newsdetailViewHolder.iv_none_point);
-                newsdetailViewHolder.lstv_para_content.setFontSpacing(1);
-                newsdetailViewHolder.lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
-                newsdetailViewHolder.lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                newsdetailViewHolder.lstv_para_content.setTextColor(new Color().parseColor("#656565"));
-                newsdetailViewHolder.lstv_para_content.setText(_Split[position]);
-                newsdetailViewHolder.lstv_para_content.setTag(position);
+            newsdetailViewHolder.lstv_para_content.setFontSpacing(1);
+            newsdetailViewHolder.lstv_para_content.setLineSpacing(DensityUtil.dip2px(mContext, 24), 0);
+            newsdetailViewHolder.lstv_para_content.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            newsdetailViewHolder.lstv_para_content.setTextColor(new Color().parseColor("#656565"));
+            newsdetailViewHolder.lstv_para_content.setText(_Split[position]);
+            newsdetailViewHolder.lstv_para_content.setTag(position);
 
             if (_Split[position] != null && !"".equals(_Split[position])) {
 
@@ -2504,8 +2504,10 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 }
 
             }
+
             long time = System.currentTimeMillis() - start;
-//            ToastUtil.toastLong("getview 执行时间：" + time);
+            Logger.e("jigang","getview 执行时间：" + time);
+
             return convertView;
         }
     }
@@ -2529,7 +2531,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-
+            Logger.e("jigang", "-----newsdetail getview");
             boolean add_flag = false;
             if (convertView == null) {
                 newsdetailAddViewHolder = new NewsdetailAddViewHolder();
