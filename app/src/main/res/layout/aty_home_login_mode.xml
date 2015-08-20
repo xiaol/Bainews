@@ -83,6 +83,7 @@
             android:textColor="@color/white"
             android:textSize="11sp"
             android:layout_gravity="center_horizontal"
+            android:visibility="gone"
             />
         <ImageView
             android:id="@+id/mLoginModeCancel"

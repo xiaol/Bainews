@@ -367,7 +367,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         String platform = AnalyticsConfig.getChannel(getActivity());
         if("adcoco".equals(platform)) {
-            Logger.e("jigang","---adcoco---");
             AdcocoUtil.setup(getActivity());
             try {
                 new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
