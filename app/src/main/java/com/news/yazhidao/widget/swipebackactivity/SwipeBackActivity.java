@@ -11,17 +11,14 @@ public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivit
 
     @Override
     protected void setContentView() {
-
     }
 
     @Override
     protected void initializeViews() {
-
     }
 
     @Override
     protected void loadData() {
-
     }
 
 

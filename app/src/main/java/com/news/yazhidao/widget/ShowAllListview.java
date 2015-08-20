@@ -24,7 +24,6 @@ public class ShowAllListview extends ListView{
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,

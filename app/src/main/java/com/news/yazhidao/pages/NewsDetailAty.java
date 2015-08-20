@@ -194,7 +194,7 @@ public class NewsDetailAty extends SwipeBackActivity {
                         ToastUtil.toastShort("新闻的内容为空，无法打开");
                         NewsDetailAty.this.finish();
                     }
-
+                    GlobalParams.start_u = System.currentTimeMillis();
                     mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                     mAniNewsLoading.stop();
                 }
@@ -244,9 +244,9 @@ public class NewsDetailAty extends SwipeBackActivity {
                             NewsDetailAty.this.finish();
                         }
 
+
                         mNewsDetailProgressWheelWrapper.setVisibility(View.GONE);
                         mAniNewsLoading.stop();
-
                     }
 
                     @Override

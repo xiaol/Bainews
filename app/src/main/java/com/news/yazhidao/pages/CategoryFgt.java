@@ -23,6 +23,7 @@ import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.image.ImageManager;
@@ -107,6 +108,7 @@ public class CategoryFgt extends Fragment {
 
         @Override
         public int getCount() {
+            Logger.e("jigang","------CategoryAdapter-----");
             return marrCategory == null ? 0 : marrCategory.size();
         }
 
@@ -122,6 +124,8 @@ public class CategoryFgt extends Fragment {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            Logger.e("jigang","------CategoryAdapter--- getview--");
+
             Holder holder;
             if (convertView == null) {
                 holder = new Holder();
