@@ -270,13 +270,16 @@ public class InputBar extends FrameLayout {
                     mRecordVolume = 0;
                     if (event.getY() < 0 || event.getX() < 0) {
                         cancalRecord();
+                        Log.i("eva","1111");
                     } else {
                         finishRecord();
+                        Log.i("eva", "2222");
                     }
                     break;
 
                 case MotionEvent.ACTION_CANCEL:
                     cancalRecord();
+                    Log.i("eva", "3333");
                     break;
             }
 
@@ -392,6 +395,10 @@ public class InputBar extends FrameLayout {
         if (mCheckRecordTimer != null)
             mCheckRecordTimer.cancel(); //退出计时器
 
+        if (thread != null) {
+            thread.interrupt();
+            thread = null;
+        }
         if (mDelegate != null)
             mDelegate.recordDidCancel(this);
 
