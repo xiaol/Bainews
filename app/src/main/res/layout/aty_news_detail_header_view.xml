@@ -31,6 +31,11 @@
             <!--android:layout_marginTop="32dp"-->
             <!--android:paddingBottom="32dp"-->
             <!--android:textSize="14sp" />-->
+            <TextView
+                android:id="@+id/tv_devider_article_comments"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#dfe6e9" />
 
             <RelativeLayout
                 android:id="@+id/rl_article_comments"
@@ -40,7 +45,7 @@
 
                 <com.news.yazhidao.widget.ShowAllListview
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:background="@color/white"
                     android:id="@+id/lv_article_comments" />
 

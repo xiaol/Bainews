@@ -179,7 +179,7 @@ public class TextViewVertical extends View {
         FontMetrics fm = paint.getFontMetrics();
 
 
-        mFontHeight = (int) (Math.ceil(fm.descent - fm.top) * 0.9);// 获得字体高度
+        mFontHeight = (int) (Math.ceil(fm.descent - fm.top) * 0.87);// 获得字体高度
 
         //计算文字行数
         mRealLine = 0;

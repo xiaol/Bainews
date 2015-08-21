@@ -49,7 +49,7 @@
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:textSize="16sp"
-                android:textColor="#000000" />
+                android:textColor="#2b2b2b" />
 
             <com.news.yazhidao.widget.LetterSpacingTextView
                 android:id="@+id/tv_news_category"
@@ -165,13 +165,13 @@
                 android:layout_height="1dp"
                 android:background="#dadada" />
 
-            <com.news.yazhidao.widget.CircleView
+            <ImageView
                 android:id="@+id/cv_opinions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingLeft="2dp"
-                android:paddingTop="5dp" />
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:background="@drawable/ic_news_opinion"
+                android:layout_gravity="center" />
+
 
             <ImageView
                 android:layout_width="match_parent"

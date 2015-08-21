@@ -25,6 +25,7 @@ public class GlobalParams {
     public static ViewPager pager;
     public static PagerSlidingTabStrip tabs;
     public static String news_detail_url = "";
+    public static long start_u;
     public static FloatingActionMenu leftCenterMenu;
     public static FloatingActionButton leftCenterButton;
 
