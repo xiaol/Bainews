@@ -186,8 +186,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     }
 
     public void CancelRequest(){
-        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+//        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+//        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         if(mRequest!=null) {
             mRequest.cancel(true);
         }
@@ -2070,8 +2070,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
 
                 mAniNewsLoading.stop();
-                mNewsLoadingImg.setImageResource(R.drawable.loading_gif_new);
-                mAniNewsLoading.start();
+//                mNewsLoadingImg.setImageResource(R.drawable.loading_gif_new);
+//                mAniNewsLoading.start();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mHomeAtyRightMenuWrapper.setVisibility(View.GONE);
                 mHomeAtyLeftMenuWrapper.setVisibility(View.GONE);
@@ -2180,8 +2180,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
-                mNewsLoadingImg.setImageResource(R.drawable.loading_gif_new);
-                mAniNewsLoading.start();
+//                mNewsLoadingImg.setImageResource(R.drawable.loading_gif_new);
+//                mAniNewsLoading.start();
                 ll_no_network.setVisibility(View.VISIBLE);
                 lv_news.setVisibility(View.GONE);
             }

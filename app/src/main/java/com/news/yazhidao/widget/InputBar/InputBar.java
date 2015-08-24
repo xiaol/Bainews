@@ -392,6 +392,10 @@ public class InputBar extends FrameLayout {
         if (mCheckRecordTimer != null)
             mCheckRecordTimer.cancel(); //退出计时器
 
+        if (thread != null) {
+            thread.interrupt();
+            thread = null;
+        }
         if (mDelegate != null)
             mDelegate.recordDidCancel(this);
 
