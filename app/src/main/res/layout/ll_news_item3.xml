@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemroot">
 
     <RelativeLayout
@@ -29,14 +30,15 @@
             android:layout_marginBottom="8dp"
             android:layout_below="@+id/rl_divider">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/iv_title_img"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/image_back" />
+                fresco:placeholderImage="@drawable/img_base_small"
+                 />
 
 
             <TextView

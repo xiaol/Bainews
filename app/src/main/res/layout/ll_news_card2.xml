@@ -4,6 +4,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemroot">
 
     <RelativeLayout
@@ -29,23 +30,21 @@
             android:layout_marginTop="16dp"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card1"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:scaleType="centerCrop"
                 android:layout_height="130dp"
                 android:layout_margin="10dp"
-                android:background="@drawable/fenghuangwang" />
+                fresco:placeholderImage="@drawable/img_base_small" />
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="130dp"
-                android:scaleType="centerCrop"
                 android:layout_margin="10dp"
-                android:background="@drawable/zhengquanzhixing" />
+                fresco:placeholderImage="@drawable/img_base_small" />
 
         </LinearLayout>
 

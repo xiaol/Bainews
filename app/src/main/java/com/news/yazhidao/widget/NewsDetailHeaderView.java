@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -114,7 +116,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private TextView tv_devider_article_comments;
     private WordWrapView mvDouBanItem;
     private HorizontalScrollView mSinaScrollView;
-    private ImageView mNewsDetailHeaderImg;
+    private SimpleDraweeView mNewsDetailHeaderImg;
     private LetterSpacingTextView mNewsDetailHeaderTitle;
     private TextView mNewsDetailHeaderTime;
     private TextView mNewsDetailHeaderTemperature;
@@ -222,7 +224,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         tv_devider_sina = (TextView) mRootView.findViewById(R.id.tv_devider_sina);
         mSinaScrollView = (HorizontalScrollView) mRootView.findViewById(R.id.sina_scollView);
         mNewsDetailRelate = (TextView) mRootView.findViewById(R.id.mNewsDetailRelate);
-        mNewsDetailHeaderImg = (ImageView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
+        mNewsDetailHeaderImg = (SimpleDraweeView) mRootView.findViewById(R.id.mNewsDetailHeaderImg);//新闻头图
         mNewsDetailHeaderTitle = (LetterSpacingTextView) mRootView.findViewById(R.id.mNewsDetailHeaderTitle);//新闻标题
         mNewsDetailHeaderTime = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTime);//新闻时间
         mNewsDetailHeaderTemperature = (TextView) mRootView.findViewById(R.id.mNewsDetailHeaderTemperature);//新闻所属的温度
@@ -592,8 +594,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             mNewsDetailHeaderContentWrapper.setLayoutParams(params);
             TextViewExtend tv = new TextViewExtend(mContext);
 
-            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
-
+//            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetailAdd) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
+            mNewsDetailHeaderImg.setImageURI(Uri.parse(((NewsDetailAdd) pNewsDetail).imgUrl));
 
         } else {
             mNewsDetailHeaderImg.setVisibility(GONE);
@@ -805,8 +807,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
             mNewsDetailHeaderContentWrapper.setLayoutParams(params);
             TextViewExtend tv = new TextViewExtend(mContext);
 
-            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
-
+//            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
+            mNewsDetailHeaderImg.setImageURI(Uri.parse(((NewsDetail) pNewsDetail).imgUrl));
         } else {
             mNewsDetailHeaderImg.setVisibility(GONE);
         }

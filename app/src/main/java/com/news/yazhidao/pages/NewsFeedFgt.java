@@ -25,7 +25,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -48,6 +50,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
@@ -783,7 +786,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
 
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
-                    holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                    holder.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
                     holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                     holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                     holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
@@ -816,7 +819,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         holder = new ViewHolder();
                         convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
                         holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
-                        holder.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                        holder.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
                         holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
                         holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                         holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
@@ -1074,7 +1077,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         )))
 
                 {
-                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
+//                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
+                    holder.iv_title_img.setImageURI(Uri.parse(feed.getImgUrl()));
+                    holder.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, .4f));
                 }
 
                 final long start = System.currentTimeMillis();
@@ -1224,7 +1229,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (convertView == null) {
                     holder2 = new ViewHolder2();
                     convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-                    holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                    holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
                     holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
                     holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
                     holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
@@ -1234,7 +1239,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 } else {
                     holder2 = new ViewHolder2();
                     convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-                    holder2.iv_title_img = (ImageView) convertView.findViewById(R.id.iv_title_img);
+                    holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
                     holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
                     holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
                     holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
@@ -1271,7 +1276,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
 
                 if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
-                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
+//                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
+                    holder2.iv_title_img.setImageURI(Uri.parse(feed.getImgUrl()));
+                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f,.4f));
                 } else {
                     holder2.tv_title.setBackgroundResource(R.drawable.img_base_big);
                 }
@@ -1314,8 +1321,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                     convertView = View.inflate(mContext, R.layout.ll_news_card2, null);
                     holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                    holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                    holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
+                    holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                    holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
                     holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
                     holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                     holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
@@ -1333,9 +1340,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     convertView = View.inflate(mContext, R.layout.ll_news_card, null);
 
                     holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                    holder3.image_card1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                    holder3.image_card2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                    holder3.image_card3 = (ImageView) convertView.findViewById(R.id.image_card3);
+                    holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                    holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
+                    holder3.image_card3 = (SimpleDraweeView) convertView.findViewById(R.id.image_card3);
                     holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
                     holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
                     holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
@@ -1530,24 +1537,29 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (images.length == 2) {
 
                     if (holder3.image_card1 != null) {
-                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
+//                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
+                        holder3.image_card1.setImageURI(Uri.parse(images[0]));
                     }
 
                     if (holder3.image_card2 != null) {
-                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
+//                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
+                        holder3.image_card2.setImageURI(Uri.parse(images[1]));
                     }
 
                 } else {
 
                     if (holder3.image_card1 != null) {
-                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
+//                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
+                        holder3.image_card1.setImageURI(Uri.parse(images[0]));
                     }
                     if (holder3.image_card2 != null) {
-                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
+//                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
+                        holder3.image_card2.setImageURI(Uri.parse(images[1]));
                     }
 
                     if (holder3.image_card3 != null) {
-                        ImageLoaderHelper.dispalyImage(mContext, images[2], holder3.image_card3);
+//                        ImageLoaderHelper.dispalyImage(mContext, images[2], holder3.image_card3);
+                        holder3.image_card3.setImageURI(Uri.parse(images[2]));
                     }
                 }
 
@@ -1949,7 +1961,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     class ViewHolder {
 
-        ImageView iv_title_img;
+        SimpleDraweeView iv_title_img;
         TextView tv_title;
         TextViewExtend tv_sourcesite;
         LetterSpacingTextView tv_news_category;
@@ -1975,7 +1987,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
     class ViewHolder2 {
 
-        ImageView iv_title_img;
+        SimpleDraweeView iv_title_img;
         TextViewVertical tv_title;
         TextView tv_news_category;
         FrameLayout fl_news_content;
@@ -1988,9 +2000,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         LinearLayout ll_top_line;
         LinearLayout ll_image_list;
         LinearLayout ll_view_content;
-        ImageView image_card1;
-        ImageView image_card2;
-        ImageView image_card3;
+        SimpleDraweeView image_card1;
+        SimpleDraweeView image_card2;
+        SimpleDraweeView image_card3;
         LetterSpacingTextView tv_title;
         LetterSpacingTextView tv_news_category;
         LinearLayout ll_source_content;

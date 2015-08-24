@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
 import com.news.yazhidao.pages.ChatAty;
@@ -43,6 +44,8 @@ public class YaZhiDaoApplication extends Application {
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setDebugMode(false);
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
+        //init fresco
+        Fresco.initialize(this);
         super.onCreate();
     }
     public static Context getAppContext(){

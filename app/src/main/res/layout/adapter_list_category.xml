@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mNewsDetailHeaderWrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_bg_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:background="@drawable/img_base_big"
+        fresco:placeholderImage="@drawable/img_base_middle"
+        fresco:placeholderImageScaleType="fitXY"
         />
 
     <com.news.yazhidao.widget.LetterSpacingTextView
