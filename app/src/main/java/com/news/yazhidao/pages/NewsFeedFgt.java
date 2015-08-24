@@ -185,10 +185,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         super.onDestroy();
     }
 
-    public void CancelRequest(){
+    public void CancelRequest() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-        if(mRequest!=null) {
+        if (mRequest != null) {
             mRequest.cancel(true);
         }
     }
@@ -367,7 +367,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
 
         String platform = AnalyticsConfig.getChannel(getActivity());
-        if("adcoco".equals(platform)) {
+        if ("adcoco".equals(platform)) {
             AdcocoUtil.setup(getActivity());
             try {
                 new AdcocoUtil().insertAdcoco(mMiddleNewsArr, lv_news.getRefreshableView(), mMiddleNewsArr.size(), -1);
@@ -733,12 +733,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         @Override
         public int getCount() {
-            if (mMiddleNewsArr != null && mMiddleNewsArr.size() > 0) {
-
-
-                return mMiddleNewsArr.size();
-            }
-            return 0;
+            return mMiddleNewsArr == null ? 0 : mMiddleNewsArr.size();
         }
 
         @Override
@@ -775,16 +770,16 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 feed.setBottom_flag(true);
             }
 
-            if ("400".equals(feed.getSpecial()) || feed.getSpecial() == null) {
+            String strSpecial = feed.getSpecial();
+            if ("400".equals(strSpecial) || strSpecial == null) {
                 String platform = AnalyticsConfig.getChannel(getActivity());
                 if ("adcoco".equals(platform)) {
                     AdcocoUtil.update();
                 }
                 //普通卡片
-                if (convertView == null) {
+                if (convertView == null || convertView.getTag().getClass() != ViewHolder.class) {
                     holder = new ViewHolder();
                     convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
-
                     holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
                     holder.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
                     holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
@@ -807,193 +802,95 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
                     holder.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
                     convertView.setTag(holder);
-                } else
-
-                {
-                    if (convertView.getTag() != null && ViewHolder.class == convertView.getTag().getClass()) {
-                        holder = (ViewHolder) convertView.getTag();
-                        holder.ll_source_content.removeAllViews();
-                        holder.rl_bottom_mark.setVisibility(View.GONE);
-                        holder.ll_time_item.setVisibility(View.GONE);
-                    } else {
-                        holder = new ViewHolder();
-                        convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
-                        holder.rl_title_content = (RelativeLayout) convertView.findViewById(R.id.rl_title_content);
-                        holder.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
-                        holder.tv_title = (TextView) convertView.findViewById(R.id.tv_title);
-                        holder.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                        holder.img_source_sina = (ImageView) convertView.findViewById(R.id.img_source_sina);
-                        holder.tv_sourcesite = (TextViewExtend) convertView.findViewById(R.id.tv_sourcesite);
-                        holder.img_source_baidu = (ImageView) convertView.findViewById(R.id.img_source_baidu);
-                        holder.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
-                        holder.img_source_zhihu = (ImageView) convertView.findViewById(R.id.img_source_zhihu);
-                        holder.img_source_biimgs = (ImageView) convertView.findViewById(R.id.img_source_biimgs);
-                        holder.img_source_comment = (ImageView) convertView.findViewById(R.id.img_source_comment);
-                        holder.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                        holder.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                        holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                        holder.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
-                        holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                        holder.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
-                        holder.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
-                        holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
-                        holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-                        holder.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
-                        convertView.setTag(holder);
-                    }
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
                 }
                 if ("adcoco".equals(platform)) {
                     AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 }
-                String title = feed.getTitle();
 
+                String title = feed.getTitle();
                 holder.tv_title.setText(title, TextView.BufferType.SPANNABLE);
                 holder.tv_interests.setOnClickListener(new View.OnClickListener() {
-                                                           long firstClick = 0;
+                    long firstClick = 0;
 
-                                                           @Override
-                                                           public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
 
-                                                               if (System.currentTimeMillis() - firstClick <= 1500) {
-                                                                   firstClick = System.currentTimeMillis();
-                                                                   return;
-                                                               }
-                                                               firstClick = System.currentTimeMillis();
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
+                        intent.putExtra("position", position);
+                        intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                        startActivityForResult(intent, 0);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
 
-                                                               Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                               intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                               intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
-                                                               intent.putExtra("position", position);
-                                                               intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
-                                                               startActivityForResult(intent, 0);
-                                                               //uemng statistic view the head news
-                                                               MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                           }
-                                                       }
-                );
-
-                if (feed.getCategory() != null) {
-
-                    holder.tv_news_category.setText(feed.getCategory());
-                    TextUtil.setNewsBackGroundRight(holder.tv_news_category, feed.getCategory());
+                String strCategory = feed.getCategory();
+                if (strCategory != null) {
+                    holder.tv_news_category.setText(strCategory);
+                    TextUtil.setNewsBackGroundRight(holder.tv_news_category, strCategory);
                     holder.tv_news_category.setFontSpacing(5);
-
 //                    TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 } else {
                     holder.tv_news_category.setVisibility(View.GONE);
                 }
 
                 //百度百科
-                if ("0".equals(feed.getIsBaikeFlag()) || feed.getIsBaikeFlag() == null) {
-
-
+                String strBaikeFlag = feed.getIsBaikeFlag();
+                if ("0".equals(strBaikeFlag) || strBaikeFlag == null) {
                     holder.img_source_baidu.setVisibility(View.GONE);
                 } else {
                     holder.img_source_baidu.setVisibility(View.VISIBLE);
                 }
 
                 //评论
-                if ("0".equals(feed.getIsCommentsFlag()) || feed.getIsCommentsFlag() == null) {
+                String strCommentsFlag = feed.getIsCommentsFlag();
+                if ("0".equals(strCommentsFlag) || strCommentsFlag == null) {
                     holder.img_source_comment.setVisibility(View.GONE);
                 } else {
                     holder.img_source_comment.setVisibility(View.VISIBLE);
                 }
 
                 //图片墙
-                if ("0".
-
-                        equals(feed.getIsImgWallFlag()
-
-                        ) || feed.getIsImgWallFlag() == null)
-
-                {
+                String strImgWallFlag = feed.getIsImgWallFlag();
+                if ("0".equals(strImgWallFlag) || strImgWallFlag == null) {
                     holder.img_source_biimgs.setVisibility(View.GONE);
-                } else
-
-                {
+                } else {
                     holder.img_source_biimgs.setVisibility(View.VISIBLE);
                 }
 
                 //微博
-                if ("0".
-
-                        equals(feed.getIsWeiboFlag()
-
-                        ) || feed.getIsWeiboFlag() == null)
-
-                {
+                String strWeiboFlag = feed.getIsWeiboFlag();
+                if ("0".equals(strWeiboFlag) || strWeiboFlag == null) {
                     holder.img_source_sina.setVisibility(View.GONE);
-                } else
-
-                {
+                } else {
                     holder.img_source_sina.setVisibility(View.VISIBLE);
                 }
 
                 //知乎
-                if ("0".
-
-                        equals(feed.getIsZhihuFlag()
-
-                        ) || feed.getIsZhihuFlag() == null)
-
-                {
+                String strZhihuFlag = feed.getIsZhihuFlag();
+                if ("0".equals(strZhihuFlag) || strZhihuFlag == null) {
                     holder.img_source_zhihu.setVisibility(View.GONE);
-                } else
-
-                {
+                } else {
                     holder.img_source_zhihu.setVisibility(View.VISIBLE);
                 }
 
-                if (feed.getOtherNum() == null || "0".equals(feed.getOtherNum())) {
+                String strOtherNum = feed.getOtherNum();
+                if (strOtherNum == null || "0".equals(strOtherNum)) {
                     holder.tv_interests.setText("0");
                 } else {
-                    holder.tv_interests.setText(feed.getOtherNum());
+                    holder.tv_interests.setText(strOtherNum);
                 }
-
-                if (GlobalParams.currentCatePos != 15 && feed.getSourceSiteName() != null) {
-                    holder.tv_sourcesite.setVisibility(View.VISIBLE);
-                    holder.tv_sourcesite.setText(feed.getSourceSiteName());
-                } else {
-                    holder.tv_sourcesite.setVisibility(View.GONE);
-                }
-
-                holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
-                                                               long firstClick = 0;
-
-                                                               @Override
-                                                               public void onClick(View v) {
-                                                                   if (System.currentTimeMillis() - firstClick <= 1500) {
-                                                                       firstClick = System.currentTimeMillis();
-                                                                       return;
-                                                                   }
-                                                                   firstClick = System.currentTimeMillis();
-                                                                   Intent intent = new Intent(mContext, NewsDetailAty.class);
-                                                                   intent.putExtra(KEY_URL, feed.getSourceUrl());
-                                                                   intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
-                                                                   intent.putExtra("position", position);
-                                                                   startActivityForResult(intent, 0);
-                                                                   //uemng statistic view the head news
-                                                                   MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                                                               }
-                                                           }
-
-                );
-                //点击其他观点的点击事件
-                holder.ll_source_interest.setOnClickListener(new View.OnClickListener()
-
-                                                             {
-                                                                 @Override
-                                                                 public void onClick(View v) {
-                                                                     //uemng statistic click other viewpoint
-                                                                     MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
-                                                                 }
-                                                             }
-
-                );
-
-
-                if (feed != null && feed.getOtherNum() != null) {
-                    if (Integer.parseInt(feed.getOtherNum()) == 0 || "".equals(feed.getOtherNum())) {
+                if (feed != null && strOtherNum != null) {
+                    if (Integer.parseInt(strOtherNum) == 0 || "".equals(strOtherNum)) {
                         holder.ll_source_interest.setVisibility(View.GONE);
                     } else {
                         holder.ll_source_interest.setVisibility(View.VISIBLE);
@@ -1002,9 +899,47 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder.ll_source_interest.setVisibility(View.GONE);
                 }
 
+                String strSourceSiteName = feed.getSourceSiteName();
+                if (GlobalParams.currentCatePos != 15 && strSourceSiteName != null) {
+                    holder.tv_sourcesite.setVisibility(View.VISIBLE);
+                    holder.tv_sourcesite.setText(strSourceSiteName);
+                } else {
+                    holder.tv_sourcesite.setVisibility(View.GONE);
+                }
+
+                holder.rl_title_content.setOnClickListener(new View.OnClickListener() {
+                    long firstClick = 0;
+
+                    @Override
+                    public void onClick(View v) {
+                        if (System.currentTimeMillis() - firstClick <= 1500) {
+                            firstClick = System.currentTimeMillis();
+                            return;
+                        }
+                        firstClick = System.currentTimeMillis();
+                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
+                        intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
+                        intent.putExtra("position", position);
+                        startActivityForResult(intent, 0);
+                        //uemng statistic view the head news
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
+                    }
+                });
+
+                //点击其他观点的点击事件
+                holder.ll_source_interest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_ONCLICK_OTHER_VIEWPOINT);
+                    }
+                });
+
                 //如果是最后一条新闻显示阅读更多布局
                 if (feed.isBottom_flag()) {
                     holder.rl_bottom_mark.setVisibility(View.VISIBLE);
+                } else {
+                    holder.rl_bottom_mark.setVisibility(View.GONE);
                 }
 
                 if (feed.isTime_flag()) {
@@ -1032,10 +967,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                         holder.tv_weekday.setText(weekday);
                     } else {
-
-
-                        String myDate = DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
-
                         String am = "";
 
                         //判断上午还是下午
@@ -1057,39 +988,28 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                         holder.tv_weekday.setText(weekday);
                     }
+                } else {
+                    holder.ll_time_item.setVisibility(View.GONE);
                 }
 
                 holder.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
-                                                             @Override
-                                                             public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
+                        GlobalParams.pager.setCurrentItem(0);
+                    }
+                });
 
-                                                                 GlobalParams.pager.setCurrentItem(0);
-
-                                                             }
-                                                         }
-                );
-
-
-                if (feed.getImgUrl() != null && !("".
-
-                        equals(feed.getImgUrl()
-
-                        )))
-
-                {
-//                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder.iv_title_img, holder.iv_title_img);
-                    holder.iv_title_img.setImageURI(Uri.parse(feed.getImgUrl()));
+                String strImgUrl = feed.getImgUrl();
+                if (strImgUrl != null && !("".equals(strImgUrl))) {
+//                    ImageLoaderHelper.dispalyImage(mContext, strImgUrl, holder.iv_title_img, holder.iv_title_img);
+                    holder.iv_title_img.setImageURI(Uri.parse(strImgUrl));
                     holder.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, .4f));
                 }
-
-                final long start = System.currentTimeMillis();
 
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
 
                 //解析新闻来源观点数据
-                if (sourceList != null && sourceList.size() > 0)
-
-                {
+                if (sourceList != null && sourceList.size() > 0) {
                     source_title_length = 0;
                     holder.ll_view_content.setVisibility(View.VISIBLE);
 
@@ -1121,9 +1041,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         TextViewExtend tv_news_source = (TextViewExtend) ll_souce_view.findViewById(R.id.tv_news_source);
                         RelativeLayout.LayoutParams layoutParams = null;
                         if (DeviceInfoUtil.isFlyme()) {
-                             layoutParams = new RelativeLayout.LayoutParams((int) (GlobalParams.screenWidth * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
+                            layoutParams = new RelativeLayout.LayoutParams((int) (GlobalParams.screenWidth * 0.75), ViewGroup.LayoutParams.WRAP_CONTENT);
                         } else {
-                             layoutParams = new RelativeLayout.LayoutParams((int) (GlobalParams.screenWidth * 0.70), ViewGroup.LayoutParams.WRAP_CONTENT);
+                            layoutParams = new RelativeLayout.LayoutParams((int) (GlobalParams.screenWidth * 0.70), ViewGroup.LayoutParams.WRAP_CONTENT);
                         }
                         layoutParams.addRule(RelativeLayout.RIGHT_OF, R.id.iv_source);
                         layoutParams.topMargin = DensityUtil.dip2px(getActivity(), 10);
@@ -1140,7 +1060,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         if (source != null) {
 
                             String source_name = source.getSourceSitename();
-
                             String finalText = "";
                             String source_title = source.getTitle();
 //                            source_title = "<font size =\"7\" color =\"red\">" + source_title + "</font>";
@@ -1184,13 +1103,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 3) {
-                                if(DeviceInfoUtil.isFlyme()){
+                                if (DeviceInfoUtil.isFlyme()) {
                                     if (i > 19) {
                                         source_title_length += 2;
                                     } else {
                                         source_title_length += 1;
                                     }
-                                }else{
+                                } else {
                                     if (i > 16) {
                                         source_title_length += 2;
                                     } else {
@@ -1225,8 +1144,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                 //大图卡片
             } else if ("1".equals(feed.getSpecial())) {
-
-                if (convertView == null) {
+                if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
                     holder2 = new ViewHolder2();
                     convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
                     holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
@@ -1235,32 +1153,22 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
                     holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
                     holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
+                    ViewGroup.LayoutParams lpContnet = holder2.fl_news_content.getLayoutParams();
+                    lpContnet.width = width;
+                    lpContnet.height = (int) (height * 0.40);
+                    holder2.fl_news_content.setLayoutParams(lpContnet);
+                    ViewGroup.LayoutParams lpImg = holder2.iv_title_img.getLayoutParams();
+                    lpImg.width = width;
+                    lpImg.height = (int) (height * 0.40);
+                    holder2.iv_title_img.setLayoutParams(lpImg);
                     convertView.setTag(holder2);
                 } else {
-                    holder2 = new ViewHolder2();
-                    convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-                    holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
-                    holder2.tv_title = (TextViewVertical) convertView.findViewById(R.id.tv_title);
-                    holder2.tv_news_category = (TextView) convertView.findViewById(R.id.tv_news_category);
-                    holder2.fl_news_content = (FrameLayout) convertView.findViewById(R.id.fl_news_content);
-
-                    ViewGroup.LayoutParams layoutParams = holder2.fl_news_content.getLayoutParams();
-                    layoutParams.width = width;
-                    layoutParams.height = (int) (height * 0.40);
-                    holder2.fl_news_content.setLayoutParams(layoutParams);
-                    holder2.rl_top_mark = (RelativeLayout) convertView.findViewById(R.id.rl_top_mark);
-                    holder2.rl_divider_top = (RelativeLayout) convertView.findViewById(R.id.rl_divider_top);
-                    convertView.setTag(holder2);
+                    holder2 = (ViewHolder2) convertView.getTag();
                 }
-
-                ViewGroup.LayoutParams layoutParams = holder2.iv_title_img.getLayoutParams();
-                layoutParams.width = width;
-                layoutParams.height = (int) (height * 0.40);
-                holder2.iv_title_img.setLayoutParams(layoutParams);
 
                 String title_news = feed.getTitle();
                 String title = "";
-                if(title_news != null && title_news.length() > 0){
+                if (title_news != null && title_news.length() > 0) {
                     title = TextUtil.getNewsTitle(title_news);
                 }
 
@@ -1270,15 +1178,17 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
                 holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 20));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
-                holder2.tv_news_category.setText(feed.getCategory());
-                TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
 
-                TextUtil.setTextBackGround(holder2.tv_news_category, feed.getCategory());
+                String strCategory = feed.getCategory();
+                holder2.tv_news_category.setText(strCategory);
+                TextUtil.setViewCompatBackground(strCategory, mylayout);
+                TextUtil.setTextBackGround(holder2.tv_news_category, strCategory);
 
-                if (feed.getImgUrl() != null && !("".equals(feed.getImgUrl()))) {
+                String strImgUrl = feed.getImgUrl();
+                if (feed.getImgUrl() != null && !("".equals(strImgUrl))) {
 //                    ImageLoaderHelper.dispalyImage(mContext, feed.getImgUrl(), holder2.iv_title_img, holder2.tv_title);
-                    holder2.iv_title_img.setImageURI(Uri.parse(feed.getImgUrl()));
-                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f,.4f));
+                    holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
+                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, .4f));
                 } else {
                     holder2.tv_title.setBackgroundResource(R.drawable.img_base_big);
                 }
@@ -1286,6 +1196,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 if (feed.isTop_flag()) {
                     holder2.rl_top_mark.setVisibility(View.VISIBLE);
                     holder2.rl_divider_top.setVisibility(View.VISIBLE);
+                } else {
+                    holder2.rl_top_mark.setVisibility(View.GONE);
+                    holder2.rl_divider_top.setVisibility(View.GONE);
                 }
                 holder2.rl_top_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1315,53 +1228,58 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 //多图卡片
             } else if ("9".equals(feed.getSpecial())) {
                 images = feed.getImgUrl_ex();
-                holder3 = new ViewHolder3();
-
                 if (images.length == 2) {
-
-                    convertView = View.inflate(mContext, R.layout.ll_news_card2, null);
-                    holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                    holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
-                    holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
-                    holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                    holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                    holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                    holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                    holder3.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
-                    holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                    holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    holder3.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
-                    holder3.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
-                    holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
-                    holder3.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-                    holder3.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
-                    holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
+                    if (convertView == null || convertView.getTag().getClass() != ViewHolder3.class) {
+                        holder3 = new ViewHolder3();
+                        convertView = View.inflate(mContext, R.layout.ll_news_card2, null);
+                        holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                        holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                        holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
+                        holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                        holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                        holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                        holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                        holder3.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
+                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
+                        holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+                        holder3.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
+                        holder3.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
+                        holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                        holder3.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+                        holder3.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
+                        holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
+                        convertView.setTag(holder3);
+                    } else {
+                        holder3 = (ViewHolder3) convertView.getTag();
+                    }
                 } else {
-                    convertView = View.inflate(mContext, R.layout.ll_news_card, null);
-
-                    holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
-                    holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
-                    holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
-                    holder3.image_card3 = (SimpleDraweeView) convertView.findViewById(R.id.image_card3);
-                    holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
-                    holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
-                    holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
-                    holder3.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
-                    holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
-                    holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
-                    holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
-                    holder3.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
-                    holder3.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
-                    holder3.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
-                    holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
-                    holder3.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-                    holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
+                    if (convertView == null || convertView.getTag().getClass() != ViewHolder3.class) {
+                        holder3 = new ViewHolder3();
+                        convertView = View.inflate(mContext, R.layout.ll_news_card, null);
+                        holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                        holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                        holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
+                        holder3.image_card3 = (SimpleDraweeView) convertView.findViewById(R.id.image_card3);
+                        holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
+                        holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
+                        holder3.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
+                        holder3.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
+                        holder3.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
+                        holder3.tv_interests = (TextViewExtend) convertView.findViewById(R.id.tv_interests);
+                        holder3.rl_bottom_mark = (RelativeLayout) convertView.findViewById(R.id.rl_bottom_mark);
+                        holder3.cv_opinions = (ImageView) convertView.findViewById(R.id.cv_opinions);
+                        holder3.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
+                        holder3.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
+                        holder3.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
+                        holder3.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
+                        holder3.ll_time_item = (LinearLayout) convertView.findViewById(R.id.ll_time_item);
+                        convertView.setTag(holder3);
+                    } else {
+                        holder3 = (ViewHolder3) convertView.getTag();
+                    }
                 }
 
-                convertView.setTag(holder3);
-
                 String title = feed.getTitle();
-
                 holder3.tv_title.setText(title);
                 holder3.tv_title.setFontSpacing(1);
                 holder3.tv_title.setOnClickListener(new View.OnClickListener() {
@@ -1402,10 +1320,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     }
                 });
 
-                if (feed.getCategory() != null) {
-                    holder3.tv_news_category.setText(feed.getCategory());
+                String strCategory = feed.getCategory();
+                if (strCategory != null) {
+                    holder3.tv_news_category.setText(strCategory);
                     holder3.tv_news_category.setFontSpacing(5);
-                    TextUtil.setNewsBackGroundRight(holder3.tv_news_category, feed.getCategory());
+                    TextUtil.setNewsBackGroundRight(holder3.tv_news_category, strCategory);
                     TextUtil.setViewCompatBackground(feed.getCategory(), mylayout);
                 }
 
@@ -1472,61 +1391,59 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 //如果是最后一条新闻显示阅读更多布局
                 if (feed.isBottom_flag()) {
                     holder3.rl_bottom_mark.setVisibility(View.VISIBLE);
+                } else {
+                    holder3.rl_bottom_mark.setVisibility(View.GONE);
                 }
 
                 if (feed.isTime_flag()) {
                     holder3.ll_time_item.setVisibility(View.VISIBLE);
+                    if (mCurrentDate == null) {
+                        long time = System.currentTimeMillis();
+                        Date date = new Date(time);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = format.format(date);
 
-                    if (feed.isTime_flag()) {
-                        holder3.ll_time_item.setVisibility(View.VISIBLE);
+                        //填充时间日期
+                        DateUtil.getMyDate(currentDate, holder3.tv_month, holder3.tv_day);
 
-                        if (mCurrentDate == null) {
-                            long time = System.currentTimeMillis();
-                            Date date = new Date(time);
-                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                            String currentDate = format.format(date);
+                        //判断上午还是下午
+                        DateUtil.getMorningOrAfternoon(time, holder3.tv_time);
 
-                            //填充时间日期
-                            DateUtil.getMyDate(currentDate, holder3.tv_month, holder3.tv_day);
-
-                            //判断上午还是下午
-                            DateUtil.getMorningOrAfternoon(time, holder3.tv_time);
-
-                            //判断是星期几
-                            String weekday = "";
-                            try {
-                                weekday = DateUtil.dayForWeek(currentDate);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            holder3.tv_weekday.setText(weekday);
-                        } else {
-                            String myDate = DateUtil.getMyDate(mCurrentDate, holder3.tv_month, holder3.tv_day);
-
-                            String am = "";
-
-                            //判断上午还是下午
-                            if ("0".equals(mCurrentType)) {
-                                am = "早间";
-                            } else {
-                                am = "晚间";
-                            }
-
-                            holder3.tv_time.setText(am);
-
-                            //判断是星期几
-                            String weekday = "";
-                            try {
-                                weekday = DateUtil.dayForWeek(mCurrentDate);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            holder3.tv_weekday.setText(weekday);
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(currentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
+                        holder3.tv_weekday.setText(weekday);
+                    } else {
+                        String am = "";
+
+                        //判断上午还是下午
+                        if ("0".equals(mCurrentType)) {
+                            am = "早间";
+                        } else {
+                            am = "晚间";
+                        }
+
+                        holder3.tv_time.setText(am);
+
+                        //判断是星期几
+                        String weekday = "";
+                        try {
+                            weekday = DateUtil.dayForWeek(mCurrentDate);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        holder3.tv_weekday.setText(weekday);
                     }
+                } else {
+                    holder3.ll_time_item.setVisibility(View.GONE);
                 }
+
                 holder3.rl_bottom_mark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1535,19 +1452,15 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 });
 
                 if (images.length == 2) {
-
                     if (holder3.image_card1 != null) {
 //                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
                         holder3.image_card1.setImageURI(Uri.parse(images[0]));
                     }
-
                     if (holder3.image_card2 != null) {
 //                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
                         holder3.image_card2.setImageURI(Uri.parse(images[1]));
                     }
-
                 } else {
-
                     if (holder3.image_card1 != null) {
 //                        ImageLoaderHelper.dispalyImage(mContext, images[0], holder3.image_card1);
                         holder3.image_card1.setImageURI(Uri.parse(images[0]));
@@ -1556,17 +1469,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 //                        ImageLoaderHelper.dispalyImage(mContext, images[1], holder3.image_card2);
                         holder3.image_card2.setImageURI(Uri.parse(images[1]));
                     }
-
                     if (holder3.image_card3 != null) {
 //                        ImageLoaderHelper.dispalyImage(mContext, images[2], holder3.image_card3);
                         holder3.image_card3.setImageURI(Uri.parse(images[2]));
                     }
                 }
 
-                final long start = System.currentTimeMillis();
-
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
-
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
 
@@ -1667,13 +1576,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
                             if (a < 6) {
-                                if(DeviceInfoUtil.isFlyme()){
+                                if (DeviceInfoUtil.isFlyme()) {
                                     if (i > 19) {
                                         source_title_length += 2;
                                     } else {
                                         source_title_length += 1;
                                     }
-                                }else {
+                                } else {
                                     if (i > 16) {
                                         source_title_length += 2;
                                     } else {
@@ -2033,7 +1942,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
         url = HttpConstant.URL_GET_NEWS_LIST + "?timenews=" + timenews;
         final long start = System.currentTimeMillis();
-         mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         mRequest.setTimeOut(10000);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
@@ -2154,7 +2063,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         ll_no_network.setVisibility(View.GONE);
 
         String url = HttpConstant.URL_GET_NEWS_LIST_NEW + "?channelId=" + position + "&page=" + this.page + "&limit=50";
-         mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
+        mRequest = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
 
             public void success(ArrayList<NewsFeed> result) {
