@@ -496,7 +496,8 @@ public class NewsDetailAty extends SwipeBackActivity {
                     if (relate.updateTime != null) {
                         holder.tvTime.setText(relate.updateTime.substring(5, 10).replace("-", "/"));
                         break;
-                    }
+                    }else
+                        holder.tvTime.setText("01/01");
                 }
             }
             if (TextUtils.isEmpty(img))
