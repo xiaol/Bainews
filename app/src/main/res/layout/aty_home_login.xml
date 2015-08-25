@@ -25,7 +25,7 @@
             android:layout_width="230dp"
             android:layout_height="60dp"
             android:layout_below="@id/mHomeLogin"
-            android:background="@color/white"
+            android:background="@drawable/bg_login_footer"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -51,7 +51,9 @@
             android:layout_width="230dp"
             android:layout_height="1px"
             android:layout_below="@id/mDigger"
-            android:background="@color/divide_home_login"/>
+            android:background="@color/divide_home_login"
+            android:visibility="gone"
+            />
 
         <LinearLayout
             android:id="@+id/mHomeChatWrapper"
@@ -60,7 +62,9 @@
             android:layout_below="@id/mHomeLoginDivide1"
             android:background="@drawable/bg_login_footer"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"

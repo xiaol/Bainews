@@ -1007,12 +1007,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 }
 
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
-
+                holder.ll_source_content.removeAllViews();
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
                     source_title_length = 0;
                     holder.ll_view_content.setVisibility(View.VISIBLE);
-
                     for (int a = 0; a < sourceList.size(); a++) {
 
                         final NewsFeed.Source source = sourceList.get(a);
@@ -1474,7 +1473,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         holder3.image_card3.setImageURI(Uri.parse(images[2]));
                     }
                 }
-
+                holder3.ll_source_content.removeAllViews();
                 sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
                 //解析新闻来源观点数据
                 if (sourceList != null && sourceList.size() > 0) {
@@ -1836,7 +1835,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     }
 
     private void setLineVisibility(ArrayList<NewsFeed.Source> sourceList, ImageView iv_combine_line, TextView tv_devider_line, int a) {
-
         switch (sourceList.size()) {
             case 1:
                 iv_combine_line.setVisibility(View.GONE);
