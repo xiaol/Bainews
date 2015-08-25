@@ -55,6 +55,10 @@ public class LengjingFgt extends Fragment {
      * 用户完成热门话题选择
      */
     public static final String ACTION_USER_CHOSE_TOPIC = "com.news.yazhidao.ACTION_USER_CHOSE_TOPIC";
+    /**
+     * 添加新专辑时,刷新专辑列表
+     */
+    public static final String ACTION_USER_REFRESH_ALBUM = "com.news.yazhidao.ACTION_USER_REFRESH_ALBUM";
 
     private View rootView;
     private View fl_lecture;
@@ -87,6 +91,8 @@ public class LengjingFgt extends Fragment {
                     hotTopic = hotTopic.replace("#", "");
                 }
                 openEditWindow(hotTopic, "");
+            } else if (ACTION_USER_REFRESH_ALBUM.equals(action)){
+                refreshAlbumList();
             }
         }
     }
@@ -107,6 +113,7 @@ public class LengjingFgt extends Fragment {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USER_LOGOUTED);
         filter.addAction(ACTION_USER_CHOSE_TOPIC);
+        filter.addAction(ACTION_USER_REFRESH_ALBUM);
         activity.registerReceiver(mUserLogoutReceiver, filter);
     }
 
@@ -123,6 +130,7 @@ public class LengjingFgt extends Fragment {
                     openEditWindow(title, url);
                 }
             }, 800);
+
         }
     }
 
@@ -324,7 +332,14 @@ public class LengjingFgt extends Fragment {
         openAlbumListAty(pAlbumIndex, true, getActivity());
     }
 
-
+    /**
+     * 刷新列表
+     */
+    public void refreshAlbumList(){
+        ArrayList<DiggerAlbum> diggerAlbums = queryAlbumsFromDB();
+        mDiggerAlbums = diggerAlbums;
+        mAlbumLvAdatpter.notifyDataSetChanged();
+    }
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
         this.mDiggerAlbums = mDiggerAlbums;
         if (fl_lecture!=null){

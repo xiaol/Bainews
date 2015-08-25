@@ -36,7 +36,9 @@
                 android:layout_weight="1"
                 android:layout_height="130dp"
                 android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/img_base_small" />
+                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImageScaleType="fitXY"
+                />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
@@ -44,7 +46,9 @@
                 android:layout_weight="1"
                 android:layout_height="130dp"
                 android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/img_base_small" />
+                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImageScaleType="fitXY"
+                />
 
         </LinearLayout>
 

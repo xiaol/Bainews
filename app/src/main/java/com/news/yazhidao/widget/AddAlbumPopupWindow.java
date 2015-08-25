@@ -2,6 +2,7 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -26,6 +27,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
+import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -123,15 +125,25 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     /**先存到本地数据库,随后发送新建专辑的数据到服务器*/
                     String albumId = TextUtil.getDatabaseId();
                     final DiggerAlbum diggerAlbum = new DiggerAlbum(albumId, DateUtil.getDate(), album.getDescription(), user.getUserId(), inputTitle, "0", album.getId(),DiggerAlbum.UPLOAD_NOT_DONE);
-                    ToastUtil.toastShort("创建专辑成功!");
                     album.setAlbumId(albumId);
                     diggerAlbum.setAlbum_id(albumId);
                     mDiggerAlbum = diggerAlbum;
                     /**(1).把新创建好的专辑存入数据库*/
                     final DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
+                    ArrayList<DiggerAlbum> diggerAlbums = diggerAlbumDao.existedDiggerAlbum(diggerAlbum);
+                    if (!TextUtil.isListEmpty(diggerAlbums)){
+                        ToastUtil.toastShort("亲,您已经创建过该专辑!");
+                        return;
+                    }
                     diggerAlbumDao.insert(diggerAlbum);
+                    ToastUtil.toastShort("创建专辑成功!");
                     flag = true;
-                    /**(2).把新创建好的专辑存入数据库*/
+
+                    /**(2).通知棱镜fragment 界面刷新列表数据*/
+                    Intent intent = new Intent(LengjingFgt.ACTION_USER_REFRESH_ALBUM);
+                    m_pContext.sendBroadcast(intent);
+
+                    /**(3).把新创建好的专辑上传到服务器*/
                     CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new StringCallback() {
                         @Override
                         public int retryCount() {
