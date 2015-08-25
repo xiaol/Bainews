@@ -110,7 +110,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private boolean isClick = false;
     private Button btn_reload;
 
-    private ArrayList<NewsFeed.Source> sourceList = new ArrayList<NewsFeed.Source>();
+    private ArrayList<NewsFeed.Source> sourceList;
     private ViewHolder holder = null;
     private ViewHolder2 holder2 = null;
     private ViewHolder3 holder3 = null;
@@ -2037,7 +2037,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     }
 
     //获取当前点击分类的新
-    private void loadNewsFeedData(final int position, int page, boolean flag) {
+    private void loadNewsFeedData(final int position, int page, final boolean flag) {
         if (flag) {
             if (mNewsFeedProgressWheelWrapper != null) {
                 mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
@@ -2051,7 +2051,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 //            mUpNewsArr.clear();
 //        }
 
-        if (this.page == 1) {
+        if (this.page == 1 && flag) {
             synchronized (this) {
                 if (mMiddleNewsArr != null) {
                     mMiddleNewsArr.clear();
@@ -2068,7 +2068,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
             public void success(ArrayList<NewsFeed> result) {
                 if (result != null && result.size() > 0) {
-                    mMiddleNewsArr = result;
+                    if (flag)
+                        mMiddleNewsArr = result;
+                    else {
+                        for(NewsFeed newsFeed :result) {
+                            mMiddleNewsArr.add(newsFeed);
+                        }
+                    }
                     lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
                     lv_news.setVisibility(View.VISIBLE);
                     lv_news.getRefreshableView().setSelection(0);
