@@ -100,7 +100,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mlvRelate = (NewsListView) findViewById(R.id.news_detail_listView);
         mlvRelate.addHeaderView(headerView);
         ImageView imageView = new ImageView(this);
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,50);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
         imageView.setLayoutParams(layoutParams);
         imageView.setBackgroundResource(R.color.bg_gray);
         mlvRelate.addFooterView(imageView);
@@ -488,7 +488,17 @@ public class NewsDetailAty extends SwipeBackActivity {
                     }
                 });
             }
-
+            if (_Relate.updateTime != null)
+                holder.tvTime.setText(_Relate.updateTime.substring(5, 10).replace("-", "/"));
+            else {
+                for (int i = position; i < mArrData.size(); i++) {
+                    NewsDetail.Relate relate = mArrData.get(i);
+                    if (relate.updateTime != null) {
+                        holder.tvTime.setText(relate.updateTime.substring(5, 10).replace("-", "/"));
+                        break;
+                    }
+                }
+            }
             if (TextUtils.isEmpty(img))
                 holder.ivPicture.setVisibility(View.GONE);
             else {
