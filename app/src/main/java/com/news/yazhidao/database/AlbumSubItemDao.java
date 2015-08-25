@@ -84,15 +84,19 @@ public class AlbumSubItemDao {
     public void update(AlbumSubItem pAlbumSubItem){
         if (pAlbumSubItem != null){
             AlbumSubItem existItem = queryByTitleAndUrl(pAlbumSubItem.getSearch_key(), pAlbumSubItem.getSearch_url());
-            existItem.setInserteId(pAlbumSubItem.getInserteId());
-            existItem.setStatus(pAlbumSubItem.getStatus());
-            if (existItem != null){
-                try {
-                    mAlbumSubItemDao.update(existItem);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    Logger.e(TAG, "pAlbumSubItem update " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
+            if(existItem != null) {
+                existItem.setInserteId(pAlbumSubItem.getInserteId());
+                existItem.setStatus(pAlbumSubItem.getStatus());
+                if (existItem != null) {
+                    try {
+                        mAlbumSubItemDao.update(existItem);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Logger.e(TAG, "pAlbumSubItem update " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
+                    }
                 }
+            }else{
+
             }
 
         }
@@ -114,7 +118,7 @@ public class AlbumSubItemDao {
             e.printStackTrace();
             Logger.e(TAG, "queryByAlbumId " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
         }
-        return new ArrayList<>(subItems);
+        return new ArrayList<AlbumSubItem>(subItems);
     }
     /**
      * 查询没有上传成功的挖掘新闻集合
@@ -127,6 +131,6 @@ public class AlbumSubItemDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>(subItems);
+        return new ArrayList<AlbumSubItem>(subItems);
     }
 }

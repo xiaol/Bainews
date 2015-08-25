@@ -645,25 +645,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         mNewsDetailHeaderTitle.setFontSpacing(LetterSpacingTextView.BIGGEST);
         String title = TextUtil.getNewsTitle(((NewsDetailAdd) pNewsDetail).title);
         mNewsDetailHeaderTitle.setText(title);
-        mNewsDetailHeaderTitle.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                mNewsDeatailTitleLayout.setVisibility(View.GONE);
-                mNewsDetailEditableLayout.setVisibility(View.VISIBLE);
-                mNewsDetailEdittext.setText(mNewsDetailHeaderTitle.getText());
-                mNewsDetailEdittext.setOnLongClickListener(new OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-
-                        return true;
-                    }
-                });
-                EDIT_POSITION = TITLE;
-
-                return true;
-            }
-        });
 
         MnewsDetailButtonConfirm.setOnClickListener(new OnClickListener() {
             @Override
