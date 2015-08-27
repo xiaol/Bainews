@@ -3,8 +3,11 @@ package com.news.yazhidao.database;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +21,10 @@ public class DiggerAlbumDao {
     private static final String TAG = "DiggerAlbunDao";
     /**是否上传成功列名*/
     public static final String COLUMN_IS_UPLOADED = "is_uploaded";
+    /**专辑描述列名*/
+    public static final String COLUMN_ALBUM_DES = "album_des";
+    /**专辑标题列名*/
+    public static final String COLUMN_ALBUM_TITLE = "album_title";
 
     private Context mContext;
     private Dao<DiggerAlbum, String> mDiggerAlbumDao;
@@ -69,10 +76,13 @@ public class DiggerAlbumDao {
         List list = new ArrayList();
         try {
             list = mDiggerAlbumDao.queryForAll();
+            if (TextUtil.isListEmpty(list)){
+                return new ArrayList<DiggerAlbum>();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>(list);
+        return new ArrayList<DiggerAlbum>(list);
     }
 
     /**
@@ -94,6 +104,26 @@ public class DiggerAlbumDao {
         }
     }
 
+    /**
+     * 查询标题和描述一致的专辑
+     * @param pDiggerAlbum 专辑对象
+     * @return
+     */
+    public ArrayList<DiggerAlbum> existedDiggerAlbum(DiggerAlbum pDiggerAlbum){
+        List<DiggerAlbum> list = new ArrayList<>();
+        QueryBuilder<DiggerAlbum, String> builder = mDiggerAlbumDao.queryBuilder();
+        Where<DiggerAlbum, String> where = builder.where();
+        try {
+            where.eq(COLUMN_ALBUM_TITLE,pDiggerAlbum.getAlbum_title()).and().eq(COLUMN_ALBUM_DES, pDiggerAlbum.getAlbum_des());
+            list = builder.query();
+            if (TextUtil.isListEmpty(list)){
+                return new ArrayList<>();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(list);
+    }
     /**
      * 查询没有上传成功的专辑集合
      * @return

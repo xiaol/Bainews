@@ -2,6 +2,7 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,11 +11,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
@@ -23,10 +24,8 @@ import com.news.yazhidao.entity.Channel;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 
 import java.util.ArrayList;
@@ -108,7 +107,6 @@ public class CategoryFgt extends Fragment {
 
         @Override
         public int getCount() {
-            Logger.e("jigang","------CategoryAdapter-----");
             return marrCategory == null ? 0 : marrCategory.size();
         }
 
@@ -124,13 +122,12 @@ public class CategoryFgt extends Fragment {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            Logger.e("jigang","------CategoryAdapter--- getview--");
 
             Holder holder;
             if (convertView == null) {
                 holder = new Holder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_category, null, false);
-                holder.ivBgIcon = (ImageView) convertView.findViewById(R.id.iv_bg_icon);
+                holder.ivBgIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_bg_icon);
                 holder.tvName = (LetterSpacingTextView) convertView.findViewById(R.id.tv_name);
                 holder.tvName.setFontSpacing(5);
                 holder.tvDes = (LetterSpacingTextView) convertView.findViewById(R.id.tv_des);
@@ -145,7 +142,8 @@ public class CategoryFgt extends Fragment {
             }
             final Channel channel = marrCategory.get(position);
             if (channel != null) {
-                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
+//                ImageManager.getInstance(mContext).DisplayImage(channel.getChannel_android_img(), holder.ivBgIcon, false, null);
+                holder.ivBgIcon.setImageURI(Uri.parse(channel.getChannel_android_img()));
                 holder.tvName.setText(channel.getChannel_name());
                 holder.tvDes.setText(channel.getChannel_des());
                 convertView.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +164,7 @@ public class CategoryFgt extends Fragment {
     }
 
     class Holder {
-        ImageView ivBgIcon;
+        SimpleDraweeView ivBgIcon;
         LetterSpacingTextView tvName;
         LetterSpacingTextView tvDes;
     }

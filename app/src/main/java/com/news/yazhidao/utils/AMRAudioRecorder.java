@@ -21,11 +21,12 @@ public class AMRAudioRecorder implements Callback {
     private MediaRecorder mediaRecorder;
     private File audioFile;
     private static final int RECORDER_STOP = 1;
-    boolean isRecord = false;
+    boolean isRecording = false;
     int bufferSizeInBytes = 0;
     private Context mContext;
+
     public AMRAudioRecorder(Context myContext, String argFileName, String argPath) {
-        this.mContext=myContext;
+        this.mContext = myContext;
         m_strFileName = argFileName;
         m_strPath = argPath;
     }
@@ -34,19 +35,20 @@ public class AMRAudioRecorder implements Callback {
     public void startRecorder() {
 //        if (mAudioAnimation != null && !mAudioAnimation.isRunning()
 //                && mblnIsPlay == false) {
+        if (mediaRecorder == null) {
+            mediaRecorder = new MediaRecorder();
+            // 第1步：设置音频来源（MIC表示麦克风）
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
-        mediaRecorder = new MediaRecorder();
-        // 第1步：设置音频来源（MIC表示麦克风）
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            //第2步：设置音频输出格式（默认的输出格式）
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
+            //第3步：设置音频编码方式（默认的编码方式）
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-        //第2步：设置音频输出格式（默认的输出格式）
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_NB);
-        //第3步：设置音频编码方式（默认的编码方式）
-        mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
-        mediaRecorder.setAudioSamplingRate(8000);
-        //创建一个临时的音频输出文件
-        audioFile = new File(FileUtils.getSaveDir(mContext)+File.separator+m_strFileName+".amr");
+            mediaRecorder.setAudioSamplingRate(8000);
+            //创建一个临时的音频输出文件
+        }
+        audioFile = new File(FileUtils.getSaveDir(mContext) + File.separator + m_strFileName + ".amr");
         Log.i("---", "audioFile.getAbsolutePath()---" + audioFile.getAbsolutePath());
         //第4步：指定音频输出文件
         mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
@@ -57,6 +59,7 @@ public class AMRAudioRecorder implements Callback {
 
             //第6步：调用start方法开始录音
             mediaRecorder.start();
+            isRecording = true;
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -78,8 +81,10 @@ public class AMRAudioRecorder implements Callback {
     }
 
     public void stopRecorder() {
-        if (mediaRecorder != null) {
+        if (mediaRecorder != null && isRecording) {
+            isRecording = false;
             mediaRecorder.stop();
+            mediaRecorder.reset();
             mediaRecorder.release();
             mediaRecorder = null;
         }

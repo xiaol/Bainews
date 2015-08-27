@@ -35,10 +35,10 @@ import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.customdialog.Effectstype;
 import com.news.yazhidao.widget.customdialog.SuperDialogBuilder;
-import com.umeng.analytics.AnalyticsConfig;
 
 import java.util.ArrayList;
 
@@ -203,106 +203,99 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
             layout.setVisibility(View.VISIBLE);
             album_item_layout.addView(layout);
             viewcount++;
-            Logger.e("jigang", "-----digger 11111--" + album_item_layout.getChildCount());
         }
-                RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
-                layout_add.setLayoutParams(params);
+        RelativeLayout layout_add = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));//4635
+        layout_add.setLayoutParams(params);
 
-                final RelativeLayout rl_album = (RelativeLayout) layout_add.findViewById(R.id.rl_album);
-                final RelativeLayout rl_add_album = (RelativeLayout) layout_add.findViewById(R.id.rl_add_album);
-                rl_album.setVisibility(View.GONE);
-                rl_add_album.setVisibility(View.VISIBLE);
+        final RelativeLayout rl_album = (RelativeLayout) layout_add.findViewById(R.id.rl_album);
+        final RelativeLayout rl_add_album = (RelativeLayout) layout_add.findViewById(R.id.rl_add_album);
+        rl_album.setVisibility(View.GONE);
+        rl_add_album.setVisibility(View.VISIBLE);
 
-                rl_add_album.setOnClickListener(new View.OnClickListener() {
+        rl_add_album.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
+
                     @Override
-                    public void onClick(View v) {
-                        AddAlbumPopupWindow window = new AddAlbumPopupWindow(m_pContext, new AddAlbumPopupWindow.AddAlbumListener() {
+                    public void add(Album album, DiggerAlbum diggerAlbum) {
+                        if (album != null) {
+                            //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
+                            for (Album item : albumList) {
+                                item.setSelected(false);
+                            }
+                            albumList.add(album);
+                            mDiggerAlbum = diggerAlbum;
+                            RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
 
-                            @Override
-                            public void add(Album album, DiggerAlbum diggerAlbum) {
-                                if (album != null) {
-                                    //添加新专辑的时候,要默认新专辑为选中,所以要把老数据全部置为false
-                                    for (Album item : albumList) {
-                                        item.setSelected(false);
-                                    }
-                                    albumList.add(album);
-                                    mDiggerAlbum = diggerAlbum;
-                                    RelativeLayout layout = (RelativeLayout) View.inflate(m_pContext, R.layout.item_gridview_album, null);
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) (width * 0.47), (int) (height * 0.32));
-
-                                    layout.setLayoutParams(params);
-                                    ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
-                                    ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
-                                    LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
-                                    tvName.setTextSize(16);
-                                    final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                                    final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
-                                    rl_album.setTag(viewcount);
-                                    for (int i = 0; i < albumList.size(); i++) {
-                                        if (i != viewcount) {
-                                            RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
-                                            if (layout_temp != null) {
-                                                ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
-                                                iv_selected_temp.setVisibility(View.GONE);
-                                                albumList.get(i).setSelected(false);
-                                            }
-
-                                        }
+                            layout.setLayoutParams(params);
+                            ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
+                            ivBgIcon.setBackgroundResource(Integer.parseInt(album.getId()));
+                            LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
+                            tvName.setTextSize(16);
+                            final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                            final RelativeLayout rl_album = (RelativeLayout) layout.findViewById(R.id.rl_album);
+                            rl_album.setTag(viewcount);
+                            for (int i = 0; i < albumList.size(); i++) {
+                                if (i != viewcount) {
+                                    RelativeLayout layout_temp = (RelativeLayout) album_item_layout.getChildAt(i);
+                                    if (layout_temp != null) {
+                                        ImageView iv_selected_temp = (ImageView) layout_temp.findViewById(R.id.iv_selected);
+                                        iv_selected_temp.setVisibility(View.GONE);
+                                        albumList.get(i).setSelected(false);
                                     }
 
-                                    rl_album.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            int tag = (int) rl_album.getTag();
-                                            Album album = albumList.get(tag);
-
-                                            iv_selected.setVisibility(View.VISIBLE);
-                                            album.setSelected(true);
-
-                                            for (int i = 0; i < albumList.size(); i++) {
-                                                if (i != tag) {
-                                                    albumList.get(i).setSelected(false);
-                                                    RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
-                                                    if (layout != null) {
-                                                        ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
-                                                        iv_selected.setVisibility(View.INVISIBLE);
-                                                        albumList.get(i).setSelected(false);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-
-                                    tvName.setText(album.getAlbum());
-
-                                    if (album.isSelected()) {
-                                        iv_selected.setVisibility(View.VISIBLE);
-                                    } else {
-                                        iv_selected.setVisibility(View.INVISIBLE);
-                                    }
-
-                                    imm.hideSoftInputFromWindow(mMenuView.getWindowToken(), 0);
-
-                                    album_item_layout.addView(layout, viewcount);
-                                    albumList.add(album);
-                                    viewcount++;
                                 }
                             }
-                        });
-                        window.setFocusable(true);
-                        window.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
+
+                            rl_album.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int tag = (int) rl_album.getTag();
+                                    Album album = albumList.get(tag);
+
+                                    iv_selected.setVisibility(View.VISIBLE);
+                                    album.setSelected(true);
+
+                                    for (int i = 0; i < albumList.size(); i++) {
+                                        if (i != tag) {
+                                            albumList.get(i).setSelected(false);
+                                            RelativeLayout layout = (RelativeLayout) album_item_layout.getChildAt(i);
+                                            if (layout != null) {
+                                                ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);
+                                                iv_selected.setVisibility(View.INVISIBLE);
+                                                albumList.get(i).setSelected(false);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+
+                            tvName.setText(album.getAlbum());
+
+                            if (album.isSelected()) {
+                                iv_selected.setVisibility(View.VISIBLE);
+                            } else {
+                                iv_selected.setVisibility(View.INVISIBLE);
+                            }
+
+                            imm.hideSoftInputFromWindow(mMenuView.getWindowToken(), 0);
+
+                            album_item_layout.addView(layout, viewcount);
+                            albumList.add(album);
+                            viewcount++;
+                        }
                     }
                 });
-                layout_add.setVisibility(View.VISIBLE);
-                album_item_layout.addView(layout_add);
-
+                window.setFocusable(true);
+                window.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.CENTER
+                        | Gravity.CENTER, 0, 0);
+            }
+        });
+        layout_add.setVisibility(View.VISIBLE);
         album_item_layout.addView(layout_add);
-                TextView tv = new TextView(m_pContext);
-                tv.setText("cdnsjvnsjvnosvnosnvsdnva");
-                tv.setTextSize(25);
-                album_item_layout.addView(tv);
 
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
@@ -335,7 +328,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
     private void showClipboardDialog(final Context pContext) {
         ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData primaryClip = cbm.getPrimaryClip();
-        if (primaryClip != null && primaryClip.getItemCount() != 0 && !TextUtils.isEmpty(primaryClip.getItemAt(0).getText())) {
+        if (primaryClip != null && primaryClip.getItemCount() != 0 && !TextUtil.isEmptyString(primaryClip.getItemAt(0).getText().toString())) {
             final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
             _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
                     .withDuration(400)
@@ -373,7 +366,7 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                 currentTimeMillis = System.currentTimeMillis();
                 final String inputTitle = et_content.getText().toString();
                 final String inputUrl = tv_source_url.getText().toString();
-                if (TextUtils.isEmpty(inputTitle)) {
+                if (TextUtil.isEmptyString(inputTitle)) {
                     ToastUtil.toastShort("亲,挖掘内容不能为空!");
                 } else {
                     //判断用户选择的是哪一个专辑

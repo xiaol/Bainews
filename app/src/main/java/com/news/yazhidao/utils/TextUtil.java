@@ -334,4 +334,18 @@ public class TextUtil {
         return new ObjectId().toString();
     }
 
+    /**
+     * 判断字符串是否为null 或者 长度为0 或者 只包含空字符
+     * @param pString
+     * @return
+     */
+    public static boolean isEmptyString(String pString){
+        if (pString == null){
+            return true;
+        }
+        if (pString.length() == 0 || pString.trim().length() == 0){
+            return true;
+        }
+        return false;
+    }
 }

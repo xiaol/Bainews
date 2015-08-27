@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_item_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -49,11 +50,13 @@
         android:layout_marginBottom="10dp"
         android:layout_below="@+id/rl_divider_top">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_title_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/img_base_big"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:placeholderImage="@drawable/img_base_middle"
+            fresco:placeholderImageScaleType="fitXY"
              />
 
         <RelativeLayout

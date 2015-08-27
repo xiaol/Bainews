@@ -114,6 +114,9 @@ public class AlbumSubItemDao {
             builder.where().eq(AlbumSubItem.COLUMN_ALBUM_ID, pAlbumId);
             builder.orderBy(AlbumSubItem.COLUMN_CREATE_TIME,false);
             subItems = builder.query();
+            if (TextUtil.isListEmpty(subItems)){
+                return new ArrayList<>();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             Logger.e(TAG, "queryByAlbumId " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
@@ -128,6 +131,9 @@ public class AlbumSubItemDao {
         List subItems = new ArrayList();
         try {
             subItems = mAlbumSubItemDao.queryForEq(COLUMN_IS_UPLOADED, "0");
+            if (TextUtil.isListEmpty(subItems)){
+                return new ArrayList<>();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
