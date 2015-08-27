@@ -26,6 +26,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -749,8 +750,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            contentSize = 0;
-            contentSize2 = 0;
+            contentSize = 0;//单图布局
+            contentSize2 = 0;//多图布局
 
             if (!refresh_flag) {
 //                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
@@ -1049,6 +1050,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         layoutParams.leftMargin = DensityUtil.dip2px(getActivity(), 8);
                         tv_news_source.setLayoutParams(layoutParams);
                         TextView tv_relate = (TextView) ll_souce_view.findViewById(R.id.tv_relate);
+                        tv_relate.getPaint().getTextBounds("",0,10,new Rect());
                         ImageView iv_combine_line_top = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line_top);
                         TextView tv_devider_line = (TextView) ll_souce_view.findViewById(R.id.tv_devider_line);
                         ImageView iv_combine_line = (ImageView) ll_souce_view.findViewById(R.id.iv_combine_line);
@@ -1100,7 +1102,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             } else {
                                 tv_relate.setVisibility(View.GONE);
                             }
-
+                            //判断标题内容是一行还是两行
                             if (a < 3) {
                                 if (DeviceInfoUtil.isFlyme()) {
                                     if (i > 19) {
@@ -1122,12 +1124,13 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             setIvCombineLineParams(iv_combine_line, i);
                         }
 
+                        //控制布局的size 最多为3
                         if (contentSize < 3) {
                             holder.ll_source_content.addView(ll_souce_view);
                             contentSize++;
                         }
                     }
-
+                    //设置相关观点布局的高度
                     int i = 0;
                     if (sourceList.size() > 3) {
                         i = 3;

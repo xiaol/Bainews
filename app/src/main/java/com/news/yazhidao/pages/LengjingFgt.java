@@ -121,7 +121,7 @@ public class LengjingFgt extends Fragment {
     public void onResume() {
         super.onResume();
         Bundle bundle = getArguments();
-        if (bundle != null){
+        if (bundle != null && bundle.size() >0){
             final String title = bundle.getString(DiggerAty.KEY_TITLE);
             final String url = bundle.getString(DiggerAty.KEY_URL);
             new Handler().postDelayed(new Runnable() {
@@ -130,10 +130,9 @@ public class LengjingFgt extends Fragment {
                     openEditWindow(title, url);
                 }
             }, 800);
-
+            bundle.clear();
         }
     }
-
     @Override
     public void onDetach() {
         super.onDetach();
