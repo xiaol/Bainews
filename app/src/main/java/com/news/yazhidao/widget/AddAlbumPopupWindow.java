@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +107,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
             public void onClick(View v) {
                 hideKeyboard(v);
                 String inputTitle = et_name.getText().toString();
-                if (TextUtils.isEmpty(inputTitle)) {
+                if (TextUtil.isEmptyString(inputTitle)) {
                     ToastUtil.toastShort("专辑名称不能为空!");
                 } else {
                     album.setAlbum(inputTitle);
@@ -153,7 +152,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
                         @Override
                         public void success(String result) {
                             String albumId = null;
-                            if (!TextUtils.isEmpty(result)) {
+                            if (!TextUtil.isEmptyString(albumId)) {
                                 try {
                                     JSONObject jsonObj = new JSONObject(result);
                                     albumId = jsonObj.optString(CreateDiggerAlbumRequest.ALBUM_ID);
@@ -161,7 +160,7 @@ public class AddAlbumPopupWindow extends PopupWindow {
                                     e.printStackTrace();
                                 }
                                 Logger.e("jigang","---upload album "+diggerAlbum);
-                                if (!TextUtils.isEmpty(albumId)) {
+                                if (!TextUtil.isEmptyString(albumId)) {
                                     //TODO 上传专辑数据到服务器成功处理
                                     Logger.e("jigang","---上传新建专辑成功");
                                     diggerAlbum.setIs_uploaded(DiggerAlbum.UPLOAD_DONE);

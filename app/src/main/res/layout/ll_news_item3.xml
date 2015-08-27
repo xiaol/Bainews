@@ -187,9 +187,9 @@
             android:layout_below="@+id/ll_view_content"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="15dp" />
 
         <RelativeLayout
             android:id="@+id/rl_bottom_mark"

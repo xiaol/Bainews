@@ -80,6 +80,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             mHomeLogout.setVisibility(View.VISIBLE);
             mHomeLoginDivide.setVisibility(View.VISIBLE);
             mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
+            mDigger.setBackgroundResource(R.drawable.bg_login_footer_default);
             ImageManager.getInstance(mContext).DisplayImage(user.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {
                 @Override
                 public void success(int width,int height) {
@@ -166,6 +167,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                         mHomeLogout.setVisibility(View.GONE);
                         mHomeLoginDivide.setVisibility(View.GONE);
                         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer);
+                        mDigger.setBackgroundResource(R.drawable.bg_login_footer);
                         //发送广播通知LengJingFgt,刷新界面
                         Intent userLogoutIntent = new Intent(LengjingFgt.ACTION_USER_LOGOUTED);
                         mContext.sendBroadcast(userLogoutIntent);
@@ -199,6 +201,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
         mHomeLogin.setText(platformDb.getUserName());
         mHomeLogin.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
         mHomeChatWrapper.setBackgroundResource(R.drawable.bg_login_footer_default);
+        mDigger.setBackgroundResource(R.drawable.bg_login_footer_default);
         mHomeLogout.setVisibility(View.VISIBLE);
         mHomeLoginDivide.setVisibility(View.VISIBLE);
         ImageManager.getInstance(mContext).DisplayImage(platformDb.getUserIcon(), mHomeUserIcon, false,new DisplayImageListener() {

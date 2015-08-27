@@ -54,6 +54,7 @@ public class NewsDetail implements Serializable{
         public String sourceSitename;
         public String img;
         public String title;
+        public String updateTime;
     }
 
     //name entity

@@ -12,7 +12,6 @@
         android:gravity="center"
         android:padding="3dp"
         android:background="@drawable/white_relate_onepx_solid"
-        android:text="08/14"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="10dp"
         android:textSize="12sp" />
