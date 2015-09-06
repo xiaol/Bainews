@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_rounded"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/white_relate_onedp_solid" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/iv_rounded"
+        android:paddingBottom="15dp"
+        android:text="阿拉拉拉拉拉阿拉拉拉拉拉阿拉拉拉拉拉阿拉拉拉拉拉阿拉拉拉拉拉"
+        android:textColor="@color/DarkGray"
+        android:textSize="14sp" />
+
+
+</RelativeLayout>
