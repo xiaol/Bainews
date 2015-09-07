@@ -147,4 +147,8 @@
     <color name="dig_title_done">#0dd2ab</color>
     <color name="dig_special_title">#a0a0a0</color>
 
+    <!--NewsDetailAty HeaderView color-->
+    <color name="bg_news_detail">#E6E6E6</color>
+    <color name="news_detail_speech_divider">#F0F0F0</color>
+    <color name="news_detail_desc">#2b2b2b</color>
 </resources>

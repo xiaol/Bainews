@@ -26,7 +26,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -841,7 +840,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
                         firstClick = System.currentTimeMillis();
 
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         intent.putExtra("position", position);
@@ -936,7 +935,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             return;
                         }
                         firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(AlbumListAty.KEY_IS_NEW_API, isNewFlag);
                         intent.putExtra("position", position);
@@ -1175,7 +1174,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
                     holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, .4f));
                 } else {
-                    holder2.tv_title.setBackgroundResource(R.drawable.img_base_big);
+                    holder2.tv_title.setBackgroundResource(R.drawable.bg_load_default_big);
                 }
 
                 if (feed.isTop_flag()) {
@@ -1202,7 +1201,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             return;
                         }
                         firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
@@ -1292,7 +1291,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             return;
                         }
                         firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
@@ -1311,7 +1310,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             return;
                         }
                         firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
@@ -1342,7 +1341,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
                         firstClick = System.currentTimeMillis();
 
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra(KEY_NEWS_SOURCE, VALUE_NEWS_SOURCE);
                         intent.putExtra("position", position);
@@ -1362,7 +1361,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             return;
                         }
                         firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty.class);
+                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
                         intent.putExtra("url", feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);

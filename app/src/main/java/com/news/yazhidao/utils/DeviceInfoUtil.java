@@ -55,6 +55,29 @@ public class DeviceInfoUtil {
     }
 
     /**
+     * 获取手机屏幕宽度,此方法有效防止空指针
+     * @param pContext
+     * @return
+     */
+    public static int getScreenWidth(Context pContext){
+        WindowManager wm = (WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.widthPixels;
+    }
+
+    /**
+     * 获取手机屏幕高度,此方法有效防止空指针
+     * @param pContext
+     * @return
+     */
+    public static int getScreenHeight(Context pContext){
+        WindowManager wm = (WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.heightPixels;
+    }
+    /**
      * 获取状态栏的高度
      * @param mContext
      * @return
