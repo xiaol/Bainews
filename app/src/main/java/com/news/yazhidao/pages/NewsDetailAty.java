@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -325,7 +324,7 @@ public class NewsDetailAty extends SwipeBackActivity {
         mlvRelate.setOnTouchListener(new View.OnTouchListener() {
             float _StartY = 0;
             float _DeltaY = 0;
-            FrameLayout.LayoutParams _MivBackLayout = (FrameLayout.LayoutParams) mivBack.getLayoutParams();
+            RelativeLayout.LayoutParams _MivBackLayout = (RelativeLayout.LayoutParams) mivBack.getLayoutParams();
             int _MivBackTopMargin = _MivBackLayout.topMargin;
             int _MivBackSelfHeigh = mivBack.getHeight();
 
