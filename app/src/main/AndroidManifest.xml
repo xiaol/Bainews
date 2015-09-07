@@ -223,6 +223,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"></activity>
         <activity
+            android:name=".pages.NewsDetailAty2"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"></activity>
+        <activity
             android:name=".pages.HomeAty"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"

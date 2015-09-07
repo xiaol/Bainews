@@ -36,7 +36,7 @@
                 android:layout_weight="1"
                 android:layout_height="90dp"
                 android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
                 />
 
             <com.facebook.drawee.view.SimpleDraweeView
@@ -45,7 +45,7 @@
                 android:layout_weight="1"
                 android:layout_height="90dp"
                 android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
                 />
 
             <com.facebook.drawee.view.SimpleDraweeView
@@ -54,7 +54,7 @@
                 android:layout_weight="1"
                 android:layout_height="90dp"
                 android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
                 />
 
         </LinearLayout>

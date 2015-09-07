@@ -249,7 +249,7 @@ public class AlbumListAty extends BaseActivity {
             }
             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
             String imgUrl = albumSubItem.getImg();
-            holder.mSpecialItemIcon.setBackgroundResource(R.drawable.img_base_small);
+            holder.mSpecialItemIcon.setBackgroundResource(R.drawable.bg_load_default_small);
             if(!TextUtils.isEmpty(imgUrl)){
                 ImageManager.getInstance(AlbumListAty.this).DisplayImage(imgUrl,holder.mSpecialItemIcon,false,null);
             }

@@ -37,7 +37,7 @@
                 android:scaleType="centerCrop"
                 android:layout_marginTop="15dp"
                 android:layout_marginLeft="8dp"
-                fresco:placeholderImage="@drawable/img_base_small"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
                  />
 
 
