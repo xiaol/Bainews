@@ -8,6 +8,14 @@
 
 package cn.sharesdk.onekeyshare;
 
+import static com.mob.tools.utils.BitmapHelper.captureView;
+import static com.mob.tools.utils.R.getStringRes;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,20 +25,11 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import cn.sharesdk.framework.CustomPlatform;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
-import m.framework.utils.UIHandler;
-
-import static cn.sharesdk.framework.utils.BitmapHelper.captureView;
-import static cn.sharesdk.framework.utils.R.getStringRes;
+import com.mob.tools.utils.UIHandler;
 
 /**
  * 快捷分享的入口
@@ -319,15 +318,25 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 			plat.SSOSetting(disableSSO);
 			String name = plat.getName();
 
-//			boolean isGooglePlus = "GooglePlus".equals(name);
-//			if (isGooglePlus && !plat.isValid()) {
-//				Message msg = new Message();
-//				msg.what = MSG_TOAST;
-//				int resId = getStringRes(context, "google_plus_client_inavailable");
-//				msg.obj = context.getString(resId);
-//				UIHandler.sendMessage(msg, this);
-//				continue;
-//			}
+			boolean isGooglePlus = "GooglePlus".equals(name);
+			if (isGooglePlus && !plat.isClientValid()) {
+				Message msg = new Message();
+				msg.what = MSG_TOAST;
+				int resId = getStringRes(context, "google_plus_client_inavailable");
+				msg.obj = context.getString(resId);
+				UIHandler.sendMessage(msg, this);
+				continue;
+			}
+
+			boolean isAlipay = "Alipay".equals(name);
+			if (isAlipay && !plat.isClientValid()) {
+				Message msg = new Message();
+				msg.what = MSG_TOAST;
+				int resId = getStringRes(context, "alipay_client_inavailable");
+				msg.obj = context.getString(resId);
+				UIHandler.sendMessage(msg, this);
+				continue;
+			}
 
 			boolean isKakaoTalk = "KakaoTalk".equals(name);
 			if (isKakaoTalk && !plat.isClientValid()) {
@@ -453,12 +462,12 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 
 			if (!started) {
 				started = true;
-				if (this == callback) {
+//				if (this == callback) {
 					int resId = getStringRes(context, "sharing");
 					if (resId > 0) {
 						showNotification(context.getString(resId));
 					}
-				}
+//				}
 			}
 			plat.setPlatformActionListener(callback);
 			ShareCore shareCore = new ShareCore();
@@ -498,6 +507,9 @@ public class OnekeyShare implements PlatformActionListener, Callback {
 		msg.arg2 = action;
 		msg.obj = platform;
 		UIHandler.sendMessage(msg, this);
+
+		// 分享失败的统计
+		ShareSDK.logDemoEvent(5, platform);
 	}
 
 	public boolean handleMessage(Message msg) {

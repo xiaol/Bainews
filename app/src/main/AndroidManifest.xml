@@ -72,7 +72,7 @@
 
         <!-- ################## ShareSdk 社会化分享 ####################### -->
         <activity
-            android:name="cn.sharesdk.framework.ShareSDKUIShell"
+            android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
