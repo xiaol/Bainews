@@ -105,4 +105,8 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
                 break;
         }
     }
+
+    public void setShareListener(View.OnClickListener pListener){
+        mDetailShare.setOnClickListener(pListener);
+    }
 }

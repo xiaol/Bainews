@@ -1,7 +1,9 @@
 package com.news.yazhidao.pages;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -17,6 +19,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
+import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
@@ -32,7 +35,7 @@ import java.util.List;
  */
 public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener {
 
-    private int mScreenWidth,mScreenHeight;
+    private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
     private SwipeBackLayout mSwipeBackLayout;
     private String mUserId;
@@ -40,7 +43,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private String uuid;
     private String mNewsDetailUrl;
     private NewsDetailHeaderView2 mDetailHeaderView;
-
+    private RelativeLayout mDetailView;
+    private SharePopupWindow mSharePopupWindow;
 
     @Override
     protected boolean translucentStatus() {
@@ -58,7 +62,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     protected void initializeViews() {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mDetailHeaderView = (NewsDetailHeaderView2)findViewById(R.id.mDetailHeaderView);
+        mDetailHeaderView = (NewsDetailHeaderView2) findViewById(R.id.mDetailHeaderView);
+        mDetailView = (RelativeLayout) findViewById(R.id.mDetailView);
+        mDetailHeaderView.setShareListener(this);
     }
 
     @Override
@@ -84,25 +90,25 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         uuid = DeviceInfoUtil.getUUID();
         String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;
         /**是否是新的api,除了谷歌今日焦点,其他都是新api接口*/
-        if (!isNewApi){
+        if (!isNewApi) {
             NetworkRequest _Request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
             _Request.setCallback(new JsonCallback<NewsDetail>() {
 
                 @Override
                 public void success(NewsDetail result) {
-                    if (result != null){
+                    if (result != null) {
                         mDetailHeaderView.updateView(result);
                     }
                 }
 
                 @Override
                 public void failed(MyAppException exception) {
-                    Logger.e("jigang",exception.getMessage());
+                    Logger.e("jigang", exception.getMessage());
                 }
             }.setReturnType(new TypeToken<NewsDetail>() {
             }.getType()));
             _Request.execute();
-        }else {
+        } else {
             NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
             List<NameValuePair> pairs = new ArrayList<>();
             /**是否是挖掘的新闻*/
@@ -125,16 +131,17 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
                 @Override
                 public void failed(MyAppException exception) {
-                    Logger.e("jigang",exception.getMessage());
+                    Logger.e("jigang", exception.getMessage());
                 }
             }.setReturnType(new TypeToken<NewsDetailAdd>() {
             }.getType()));
             _Request.execute();
         }
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mDetailLeftBack:
 
                 break;
@@ -142,7 +149,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
                 break;
             case R.id.mDetailShare:
-
+                mSharePopupWindow = new SharePopupWindow(this);
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
         }
     }
