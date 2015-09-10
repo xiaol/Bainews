@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.imagewall.WallActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
@@ -65,6 +67,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailHeaderView = (NewsDetailHeaderView2) findViewById(R.id.mDetailHeaderView);
         mDetailView = (RelativeLayout) findViewById(R.id.mDetailView);
         mDetailHeaderView.setShareListener(this);
+        mDetailHeaderView.setCommentListener(this);
     }
 
     @Override
@@ -146,7 +149,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
                 break;
             case R.id.mDetailComment:
-
+                Intent intent = new Intent(this, WallActivity.class);
+                startActivity(intent);
                 break;
             case R.id.mDetailShare:
                 mSharePopupWindow = new SharePopupWindow(this);

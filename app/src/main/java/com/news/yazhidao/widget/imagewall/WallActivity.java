@@ -1,251 +1,167 @@
 package com.news.yazhidao.widget.imagewall;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.drawable.Animatable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.utils.adapter.Logs;
-import com.news.yazhidao.utils.adapter.MapAdapter;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.widget.TextViewExtend;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class WallActivity extends Activity {
-    public static List browsedata = null;
-    public static Map<String, Integer> url_height = new HashMap<String, Integer>();
-    List<View> layouts = new ArrayList<View>();
+public class WallActivity extends Activity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+
+    private ViewPager mViewPager;
+    private PagerAdapter mPagerAdapter;
+    private ArrayList<View> mViews;
+    private ImageView mivBack;
+    private TextViewExtend mtvTitle, mtvPagerNum, mtvContent;
+    private int[] mImages;
+    private String mTotalSize;
+    private String[] aaaa;
+    private int mScreenWidth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.walllayout);
-        // ((Gallery)findViewById(R.layout.walllayout));
-        MapAdapter.AdaptInfo staggeredinfo = new MapAdapter.AdaptInfo();
-        staggeredinfo.listviewItemLayoutId = R.layout.wallitemlayout;
-        staggeredinfo.objectFields = new String[]{"img", "note"};
-        staggeredinfo.viewIds = new Integer[]{R.id.image, R.id.txt};
-        MapAdapter commtAdapter = new MapAdapter(this, staggeredinfo) {
-
-            @Override
-            protected void getViewInDetail(Object item, int position,
-                                           View convertView) {
-                // TODO Auto-generated method stub
-                super.getViewInDetail(item, position, convertView);
-                ((TextView) convertView.findViewById(R.id.pagination)).setText((position + 1) + "/" + browsedata.size());
-                ((TextView) convertView.findViewById(R.id.pagination)).setShadowLayer(3, 5, 5, Color.BLACK);
-                ((TextView) convertView.findViewById(R.id.txt)).setShadowLayer(3, 5, 5, Color.BLACK);
-            }
-
-            @Override
-            protected boolean findAndBindView(View convertView, int pos,
-                                              Object item, String name, Object value) {
-                // TODO Auto-generated method stub
-                if (name.equals("img")) {
-                    Logs.e("============== " + value + " " + getCount() + ""
-                            + convertView.findViewById(R.id.image));
-
-
-                }
-                return super.findAndBindView(convertView, pos, item, name,
-                        value);
-            }
-
-
-        };
-        if (browsedata == null) {
-            throw new RuntimeException("browsedata invalidly is null");
-        }
-//        commtAdapter.setItemDataSrc(new MapContent(browsedata));
-//        ((Gallery) findViewById(R.id.wall)).setAdapter(commtAdapter);
-//        ((Gallery) findViewById(R.id.wall)).setSelection(getIntent().getIntExtra("page", 0));
-
-        android.support.v4.view.ViewPager pager = (android.support.v4.view.ViewPager) this.findViewById(R.id.wall);
-        for (int i = 0; i < browsedata.size(); i++) {
-            layouts.add(LayoutInflater.from(this).inflate(R.layout.wallitemlayout, null));
-            getView(i);
-        }
-
-
-//        List<PageInfo> pageInfos = new ArrayList<PageInfo>(0);
-//        pageInfos.add( genPageInfo(getClass(),
-//                this, getClass(),R.layout.wallitemlayout));
-//        for(int i = 0;i<browsedata.size();i++){
-//            pageInfos.add( genPageInfo(getClass(),
-//                    this, getClass(),R.layout.wallitemlayout));
-//        }
-//
-//        ViewPagerHelper viewPagerHelper = new ViewPagerHelper(this, null);
-//        viewPagerHelper.setLayoutid(R.id.wall);
-//        viewPagerHelper.setup(this, 0, pageInfos);
-//        pager.setCurrentItem(getIntent()
-//                .getIntExtra("page", 0));
-        commtAdapter.notifyDataSetChanged();
-
-        pager.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return browsedata.size();
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position,
-                                    Object object) {
-                ((ViewPager) container).removeView(layouts.get(position));
-            }
-
-            List list = new ArrayList();
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-//                if (list.contains(position)) {
-//                    return container.getChildAt(position);
-//                } else {
-//                    list.add(position);
-//                }
-                container.addView(layouts.get(position));
-                BitmapFactory.Options bf = new BitmapFactory.Options();
-                bf.inSampleSize = 256;
-
-                if (bitmap.containsKey(position)) {
-                    ((ImageView) layouts.get(position).findViewById(R.id.image)).setImageBitmap(bitmap.get(position));
-                } else {
-                    ImageLoader.getInstance().displayImage(((Map) browsedata.get(position)).get("img").toString(),
-                            ((ImageView) layouts.get(position).findViewById(R.id.image)), getImageOption(bf), new ImageLoadingListener() {
-                                @Override
-                                public void onLoadingStarted(String imageUri, View view) {
-
-                                }
-
-                                @Override
-                                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-
-                                }
-
-                                @Override
-                                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-
-
-                                    view.getLayoutParams().height = loadedImage.getHeight() * GlobalParams.screenWidth / loadedImage.getWidth();
-
-
-                                    view.invalidate();
-
-
-                                }
-
-                                @Override
-                                public void onLoadingCancelled(String imageUri, View view) {
-
-                                }
-                            });
-                }
-//                if(position-1>=0){
-//                    getView((ViewPager) container, position - 1);
-//                }
-//                if(position+1<getCount()){
-//                    getView((ViewPager) container, position + 1);
-//                }
-                return layouts.get(position);
-            }
-
-
-        });
-        pager.setCurrentItem(getIntent().getIntExtra("page", 0));
+        initVars();
+        findViews();
+        setListener();
     }
 
-    Map<Integer, Bitmap> bitmap = new HashMap<Integer, Bitmap>();
-
-    public View getView(final int position) {
-
-
-        View view =
-
-                layouts.get(position);
-        ((TextView) view.findViewById(R.id.pagination)).setText((position + 1) + "/" + browsedata.size());
-        ((TextView) view.findViewById(R.id.pagination)).setShadowLayer(3, 5, 5, Color.BLACK);
-        ((TextView) view.findViewById(R.id.txt)).setShadowLayer(3, 5, 5, Color.BLACK);
-        String note = ((Map) browsedata.get(position)).get("note").toString();
-        String img = ((Map) browsedata.get(position)).get("img").toString();
-
-        ((TextView) view.findViewById(R.id.txt)).setText(note);
-//        BitmapFactory.Options bf = new BitmapFactory.Options();
-//        bf.inSampleSize = 8;
-//        ImageLoader.getInstance().loadImage(img.toString(), getImageOption(bf), new ImageLoadingListener() {
-//            @Override
-//            public void onLoadingStarted(String imageUri, View view) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-//
-//            }
-//
-//            @Override
-//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-//                bitmap.put(position,loadedImage);
-//            }
-//
-//            @Override
-//            public void onLoadingCancelled(String imageUri, View view) {
-//
-//            }
-//        });
-//        BitmapFactory.Options bf = new BitmapFactory.Options();
-//        bf.inSampleSize = 8;
-
-//        Bitmap bitmap = BitmapFactory.decodeFile(ImageLoader.getInstance().getDiskCache().get(img.toString()).toString(), bf);
-//        ((ImageView) view.findViewById(R.id.image)).setImageBitmap(bitmap);
-//
-//        ((RelativeLayout.LayoutParams)((RelativeLayout)((ImageView) view.findViewById(R.id.image)).getParent()).getLayoutParams()).addRule(Gravity.CENTER_VERTICAL);
-//        RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(-1,bitmap.getHeight() * GlobalParams.screenWidth / bitmap.getWidth());
-//        ((ImageView) view.findViewById(R.id.image)).setLayoutParams(rl);
-//
-//        ((ImageView) view.findViewById(R.id.image)).getRootView().invalidate();
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                ((Activity) view.getContext()).finish();
-            }
-        });
-        return view;
+    private void initVars() {
+        mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
+        aaaa = new String[]{"aaaaa", "dffffffffff", "dfdfdfdf", "2erwerwerwerwerwerwerwer"};
+        mImages = new int[]{R.drawable.aaa, R.drawable.aaa,
+                R.drawable.aaa, R.drawable.aaa};
+        mViews = new ArrayList<View>();
+        mTotalSize = String.valueOf(mImages.length);
     }
 
-    public DisplayImageOptions getImageOption(
-            BitmapFactory.Options decodingOptions) {
-        final DisplayImageOptions options = new DisplayImageOptions.Builder()
+    // 初始化视图
+    private void findViews() {
+        // 实例化视图控件
+        mViewPager = (ViewPager) findViewById(R.id.wall_viewPager);
+        mtvTitle = (TextViewExtend) findViewById(R.id.title_textView);
+        mtvPagerNum = (TextViewExtend) findViewById(R.id.pager_num_textView);
+        mtvContent = (TextViewExtend) findViewById(R.id.content_textView);
+        mivBack = (ImageView) findViewById(R.id.back_imageView);
+        mtvContent.setMovementMethod(ScrollingMovementMethod.getInstance());
+        for (int i = 0; i < mImages.length; i++) {
+            final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            mViews.add(imageView);
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(Uri.parse("http://c.hiphotos.baidu.com/image/pic/item/e850352ac65c103851f8a024b6119313b17e8955.jpg"))
+                    .setTapToRetryEnabled(true)
+                    .setOldController(imageView.getController())
+                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                        @Override
+                        public void onFinalImageSet(
+                                String id,
+                                @Nullable ImageInfo imageInfo,
+                                @Nullable Animatable anim) {
+                            if (imageInfo == null) {
+                                return;
+                            }
+                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mViewPager.getLayoutParams();
+                            lp.width = mScreenWidth;
+                            lp.height = (int) (mScreenWidth * imageInfo.getHeight() / (float) imageInfo.getWidth());
+                            mViewPager.setLayoutParams(lp);
+//                            ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
+//                            layoutParams.width = ViewPager.LayoutParams.MATCH_PARENT;
+//                            layoutParams.height = ViewPager.LayoutParams.MATCH_PARENT;
+//                            imageView.setLayoutParams(layoutParams);
+                        }
+                    })
+                    .build();
+            imageView.setController(controller);
+        }
+        mPagerAdapter = new WallPagerAdapter(mViews);
+        mViewPager.setAdapter(mPagerAdapter);
+        mtvTitle.setText("sdfsdfsdf");
+        mtvPagerNum.setText("sdfsdfsdf");
+        mtvPagerNum.setText("1/" + mTotalSize);
+        mtvContent.setText("sdfsdfsdf");
+    }
 
-                .cacheInMemory(true)
-                .cacheOnDisk(true).considerExifParams(true)
-                .decodingOptions(decodingOptions)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
-        return options;
+    private void setListener() {
+        mViewPager.setOnPageChangeListener(this);
+        mivBack.setOnClickListener(this);
+    }
+
+    //按钮的点击事件
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_imageView:
+                onBackPressed();
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onPageScrolled(int arg0, float arg1, int arg2) {
+        // TODO Auto-generated method stub
+
+    }
+
+    // 监听viewpage
+    @Override
+    public void onPageSelected(int arg0) {
+        mtvTitle.setText(aaaa[arg0]);
+        mtvPagerNum.setText(arg0 + 1 + "/" + mTotalSize);
+        mtvContent.setText(aaaa[arg0] + "fasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsdddddddfasdfasdfsddddddd");
+    }
+
+    public class WallPagerAdapter extends PagerAdapter {
+        private List<View> views = new ArrayList<View>();
+
+        public WallPagerAdapter(List<View> views) {
+            this.views = views;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public int getCount() {
+            return views.size();
+        }
+
+        @Override
+        public void destroyItem(View container, int position, Object object) {
+            ((ViewPager) container).removeView(views.get(position));
+        }
+
+        @Override
+        public Object instantiateItem(View container, int position) {
+            ((ViewPager) container).addView(views.get(position));
+            return views.get(position);
+        }
+
     }
 }

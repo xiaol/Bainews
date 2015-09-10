@@ -12,6 +12,6 @@ public class ImageWallView extends FrameLayout {
     }
 
     public void addSource(Object source,int styleconstant){
-        ViewWall.add(this, source,styleconstant);
+//        ViewWall.add(this, source,styleconstant);
     }
 }

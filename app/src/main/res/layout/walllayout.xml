@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/back_imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/btn_news_detail_left_back" />
+
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/content_textView"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:maxLines="8"
+        android:scrollbars="vertical"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/pager_num_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/content_textView"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/title_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/content_textView"
+        android:layout_marginLeft="15dp"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="2"
+        android:paddingRight="80dp"
+        android:text="sdsfassdsfassdsfassdsfassdsfassdsfassdsfassdsfassdsfas"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/wall"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"/>
-
+        android:id="@+id/wall_viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/title_textView"
+        android:layout_marginBottom="10dp"/>
 </RelativeLayout>

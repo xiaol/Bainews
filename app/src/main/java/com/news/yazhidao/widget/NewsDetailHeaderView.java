@@ -58,7 +58,6 @@ import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.imagewall.BitmapUtil;
 import com.news.yazhidao.widget.imagewall.ImageWallView;
-import com.news.yazhidao.widget.imagewall.ViewWall;
 import com.umeng.analytics.MobclickAgent;
 
 import org.apache.http.NameValuePair;
@@ -1378,7 +1377,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         public boolean run(Message message, boolean b, Activity activity) throws Exception {
 
                             mImageWall.setVisibility(View.VISIBLE);
-                            mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
+//                            mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
                             return false;
                         }
                     }).run();
@@ -1596,7 +1595,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                         public boolean run(Message message, boolean b, Activity activity) throws Exception {
 
                             mImageWall.setVisibility(View.VISIBLE);
-                            mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
+//                            mImageWall.addSource(getBackRunnable().getObject(), ViewWall.STYLE_9);
                             return false;
                         }
                     }).run();
