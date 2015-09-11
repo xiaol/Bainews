@@ -13,6 +13,7 @@
         android:contentDescription="详情页头图"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
         fresco:placeholderImageScaleType="fitXY"
+        fresco:actualImageScaleType="focusCrop"
         />
 
     <RelativeLayout
@@ -86,6 +87,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/mDetailCommentWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mDetailHeaderImg"
@@ -121,16 +123,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:layout_marginLeft="12dp"
                 android:layout_toRightOf="@id/mDetailSpeechCommentUserIcon"/>
 
             <View
+                android:id="@+id/mDetailSpeechDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_below="@id/mDetailSpeechCommentUserIcon"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/red"
+                android:background="@color/news_detail_speech_divider"
                 />
         </RelativeLayout>
 

@@ -1,6 +1,7 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,12 +24,13 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
     private final SimpleDraweeView mDetailSpeechCommentUserIcon;
     private final SpeechView mDetailSpeechComment;
     private int mScreenWidth,mScreenHeight;
-    //返回上一级,全文评论,分享
-    private View mDetailLeftBack,mDetailComment,mDetailShare;
+    //返回上一级,全文评论,分享,语音评论父容器,评论父容器
+    private View mDetailLeftBack,mDetailComment,mDetailShare,mDetailSpeechCommentWrapper,mDetailCommentWrapper;
     //新闻大头图
     private SimpleDraweeView mDetailHeaderImg;
     //新闻标题,新闻时间,新闻描述
     private TextView mDetailTitle,mDetailDate,mDetailDesc;
+
     public NewsDetailHeaderView2(Context context) {
         this(context, null);
     }
@@ -46,9 +48,12 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         mDetailComment = root.findViewById(R.id.mDetailComment);
         mDetailShare = root.findViewById(R.id.mDetailShare);
         mDetailHeaderImg = (SimpleDraweeView)root.findViewById(R.id.mDetailHeaderImg);
+        mDetailHeaderImg.getHierarchy().setActualImageFocusPoint(new PointF(.5f,0.35f));
         mDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(mScreenWidth*520.0f/720)));
         mDetailTitle = (TextView)root.findViewById(R.id.mDetailTitle);
         mDetailDate = (TextView)root.findViewById(R.id.mDetailDate);
+        mDetailCommentWrapper = root.findViewById(R.id.mDetailCommentWrapper);
+        mDetailSpeechCommentWrapper = root.findViewById(R.id.mDetailSpeechCommentWrapper);
         mDetailSpeechCommentUserIcon = (SimpleDraweeView)root.findViewById(R.id.mDetailSpeechCommentUserIcon);
         mDetailSpeechComment = (SpeechView)root.findViewById(R.id.mDetailSpeechComment);
         mDetailDesc = (TextView)root.findViewById(R.id.mDetailDesc);
@@ -59,27 +64,56 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
      * @param pNewsDetail
      */
     public void updateView(Object pNewsDetail){
+        //FIXME 等接口改后,此处就不用这么费劲来写了,可以简化
         if(pNewsDetail instanceof NewsDetail){
             NewsDetail detail = (NewsDetail)pNewsDetail;
             mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
             mDetailTitle.setText(detail.title);
             mDetailDate.setText(detail.updateTime);
-            mDetailDesc.setText(detail.abs);
-            if (!TextUtil.isListEmpty(detail.point)){
-                NewsDetail.Point comment = detail.point.get(0);
-                mDetailSpeechComment.setUrlAndDuration(comment.srcText,comment.srcTextTime,true);
-                mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(comment.userIcon));
+            /**语音评论和新闻描述有一个不为null*/
+            if (!TextUtil.isEmptyString(detail.abs) || detail.isdoc){
+                if (!TextUtil.isEmptyString(detail.abs)){
+                    mDetailDesc.setText(detail.abs.replace("\n",""));
+                    mDetailDesc.setVisibility(VISIBLE);
+                }else {
+                    mDetailDesc.setVisibility(GONE);
+                }
+                if (detail.isdoc){
+                    mDetailSpeechComment.setUrlAndDuration(detail.docUrl,Integer.valueOf(detail.docTime),true);
+                    mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(detail.docUserIcon));
+                    mDetailSpeechCommentWrapper.setVisibility(VISIBLE);
+                }else{
+                    mDetailSpeechCommentWrapper.setVisibility(GONE);
+                }
+                mDetailCommentWrapper.setVisibility(VISIBLE);
+            }else{
+                mDetailCommentWrapper.setVisibility(GONE);
             }
         }else if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
-            mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
+            if (!TextUtil.isEmptyString(detail.imgUrl)){
+                mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
+            }
             mDetailTitle.setText(detail.title);
             mDetailDate.setText(detail.updateTime);
-            mDetailDesc.setText(detail.abs);
-            if (!TextUtil.isListEmpty(detail.point)){
-                NewsDetail.Point comment = detail.point.get(0);
-                mDetailSpeechComment.setUrlAndDuration(comment.srcText,comment.srcTextTime,true);
-                mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(comment.userIcon));
+            /**语音评论和新闻描述有一个不为null*/
+            if (!TextUtil.isEmptyString(detail.abs) || detail.isdoc){
+                if (!TextUtil.isEmptyString(detail.abs)){
+                    mDetailDesc.setText(detail.abs.replace("\n",""));
+                    mDetailDesc.setVisibility(VISIBLE);
+                }else {
+                    mDetailDesc.setVisibility(GONE);
+                }
+                if (detail.isdoc){
+                    mDetailSpeechComment.setUrlAndDuration(detail.docUrl,Integer.valueOf(detail.docTime),true);
+                    mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(detail.docUserIcon));
+                    mDetailSpeechCommentWrapper.setVisibility(VISIBLE);
+                }else{
+                    mDetailSpeechCommentWrapper.setVisibility(GONE);
+                }
+                mDetailCommentWrapper.setVisibility(VISIBLE);
+            }else{
+                mDetailCommentWrapper.setVisibility(GONE);
             }
         }
     }

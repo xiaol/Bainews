@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/mDetailImageWallWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="185dp"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+    >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/mDetailImageWallImg"
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        fresco:placeholderImage="@drawable/bg_load_default_middle"
+        fresco:placeholderImageScaleType="fitXY"
+        fresco:roundedCornerRadius="3dp"
+        fresco:roundTopLeft="false"
+        fresco:roundTopRight="false"
+        fresco:actualImageScaleType="focusCrop"
+
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_item_news_detail_imagewall"
+        >
+
+        <ImageView
+            android:id="@+id/mDetailPictureSet"
+            android:layout_toLeftOf="@+id/mDetailImageWallCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_news_detail_picture_set"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/mDetailImageWallCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/white"
+            android:text="18"
+            android:textSize="14sp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="14dp"
+            />
+    </RelativeLayout>
+</RelativeLayout>

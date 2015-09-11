@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_news_detail_content_footer"
+    >
+
+    <View
+        android:id="@+id/mDetailCommentDivider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/bg_news_detail"
+        />
+
+    <RelativeLayout
+        android:id="@+id/mDetailCommentItemWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mDetailCommentDivider"
+        android:background="@drawable/bg_item_news_detail_content"
+        android:paddingLeft="26dp"
+        android:paddingRight="26dp"
+        >
+
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/mDetailCommentUserIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="16dp"
+            app:placeholderImage="@drawable/ic_user_login_default"
+            app:roundAsCircle="true"
+            app:roundingBorderColor="@color/bg_home_login_header"
+            app:roundingBorderWidth="2px"
+            />
+
+        <TextView
+            android:id="@+id/mDetailCommentUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/mDetailCommentUserIcon"
+            android:layout_toRightOf="@id/mDetailCommentUserIcon"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="@string/mNewsDetailHeaderDesc"
+            android:textColor="@color/news_detail_desc"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/mDetailCommentUserSpeech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mDetailCommentUserName"
+            android:layout_marginRight="52dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/mDetailCommentUserIcon"
+            android:lineSpacingMultiplier="1.15"
+            android:text="@string/mNewsDetailHeaderDesc"
+            android:textColor="@color/news_detail_content"
+            android:textSize="14sp"
+            />
+
+        <LinearLayout
+            android:id="@+id/mDetailCommentPraiseWrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/mDetailCommentUserSpeech"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/mDetailCommentPraise"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:paddingBottom="28dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/bg_normal_praise"
+                />
+
+            <TextView
+                android:id="@+id/mDetailCommentPraiseNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mDetailCommentPraise"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-24dp"
+                android:text="12345"
+                android:textColor="@color/red"
+                android:textSize="10sp"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignLeft="@id/mDetailCommentUserSpeech"
+            android:layout_below="@id/mDetailCommentUserSpeech"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="22dp"
+            android:background="@color/news_detail_speech_divider"
+            />
+
+    </RelativeLayout>
+        <TextView
+            android:id="@+id/mDetailCommentCheckAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/bg_item_news_detail_check_all"
+            android:padding="8dp"
+            android:text="查看全部"
+            android:textColor="@color/news_detail_content"
+            android:textSize="16sp"
+            android:visibility="visible"
+            />
+</RelativeLayout>

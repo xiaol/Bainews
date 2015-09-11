@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by Berkeley on 8/12/15.
  */
-public class SelfOpinion implements Serializable {
+public class NewsDetailSelfOpinion implements Serializable {
 
     private ArrayList<NewsDetail.Article> self_opinion;
 

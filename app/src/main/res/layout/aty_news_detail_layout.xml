@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                xmlns:roundedImage="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/bg_news_detail"
     >
-    <com.news.yazhidao.widget.NewsDetailHeaderView2
-        android:id="@+id/mDetailHeaderView"
+    <ExpandableListView
+        android:id="@+id/mDetailContentListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
+        />
+    <FrameLayout
+        android:id="@+id/mNewsDetailLoaddingWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray">
 
+        <ImageView
+            android:id="@+id/mNewsLoadingImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            />
+
+    </FrameLayout>
 </RelativeLayout>

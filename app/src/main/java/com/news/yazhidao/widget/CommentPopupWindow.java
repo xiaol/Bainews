@@ -176,8 +176,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         if (marrPoints != null && marrPoints.size() > 0) {
             NewsDetail.Point point = marrPoints.get(0);
         }
-        NewsDetail newsDetail = new NewsDetail();
-        NewsDetail.Point newPoint = newsDetail.new Point();
+        NewsDetail.Point newPoint = new NewsDetail.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;

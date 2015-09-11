@@ -36,7 +36,7 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.entity.SelfOpinion;
+import com.news.yazhidao.entity.NewsDetailSelfOpinion;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.PraiseListener;
@@ -145,7 +145,7 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private NewsdetailViewHolder newsdetailViewHolder = null;
     private NewsdetailAddViewHolder newsdetailAddViewHolder = null;
     private ArrayList<NewsDetail.Point> marrPoint = new ArrayList<NewsDetail.Point>();
-    private SelfOpinion relate_opinion;
+    private NewsDetailSelfOpinion relate_opinion;
     private ArrayList<NewsDetail.Article> self_opinion = new ArrayList<NewsDetail.Article>();
     private ArrayList<NewsDetail.Point> paraPoint = new ArrayList<NewsDetail.Point>();
     private ImageView iv_show_all_zhihu_views;

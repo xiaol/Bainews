@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+    >
+
+    <View
+        android:id="@+id/mDetailGroupDivider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/bg_news_detail"
+        />
+
+    <RelativeLayout
+        android:id="@+id/mNewsDetailContentWrapper"
+        android:layout_below="@id/mDetailGroupDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_item_news_detail_content_middle"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="12dp"
+        >
+
+        <TextView
+            android:id="@+id/mDetailContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.15"
+            android:text="@string/mNewsDetailHeaderDesc"
+            android:textColor="@color/news_detail_content"
+            android:textSize="14sp"
+            />
+
+        <TextView
+            android:id="@+id/mDetailCommentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/mDetailContent"
+            android:background="@drawable/btn_news_detail_comment_count"
+            android:gravity="center"
+            android:text="234"
+            android:textColor="@color/news_detail_comment_count"
+            android:textSize="12sp"
+            />
+
+        <ImageView
+            android:id="@+id/mDetailAddComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/mDetailContent"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/btn_news_detail_add_comment"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

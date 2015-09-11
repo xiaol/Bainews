@@ -166,8 +166,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     @Override
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
-        NewsDetail newsDetail = new NewsDetail();
-        newPoint = newsDetail.new Point();
+        newPoint = new NewsDetail.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_DOC;
