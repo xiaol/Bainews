@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/mDetailRelateOpinionWrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_news_detail_content_middle"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-    >
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mDetailRelateOpinionWrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_item_news_detail_content_middle">
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/mDetailRelateOpinionTime"
@@ -18,16 +15,14 @@
         android:gravity="center"
         android:padding="3dp"
         android:textColor="@color/DarkGray"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
 
     <RelativeLayout
         android:id="@+id/line_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/time_textView"
-        android:layout_marginLeft="22dp"
-        >
+        android:layout_toRightOf="@+id/mDetailRelateOpinionTime">
 
         <ImageView
             android:id="@+id/rounded_imageView"
@@ -35,18 +30,17 @@
             android:layout_height="8dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="22dp"
-            android:background="@drawable/white_relate_onedp_solid"/>
+            android:background="@drawable/white_relate_onedp_solid" />
 
         <ImageView
             android:id="@+id/top_line_imageView"
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginLeft="22dp"
-            android:layout_below="@+id/rounded_imageView"
+            android:layout_above="@+id/rounded_imageView"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="-22dp"
             android:background="@drawable/vertical_dashed_line"
-            android:layerType="software"/>
+            android:layerType="software" />
 
         <ImageView
             android:id="@+id/line_bottom_imageView"
@@ -55,20 +49,17 @@
             android:layout_below="@+id/rounded_imageView"
             android:layout_centerHorizontal="true"
             android:background="@drawable/vertical_dashed_line"
-            android:layerType="software"/>
+            android:layerType="software" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="22dp"
         android:layout_toRightOf="@+id/line_layout"
-        android:background="@drawable/white_relate_onepx_solid"
-        >
+        android:background="@drawable/white_relate_onepx_solid">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/mDetailRelateOpinionImg"
@@ -81,8 +72,7 @@
             android:layout_marginTop="5dp"
             fresco:placeholderImage="@drawable/bg_load_default_small"
             fresco:placeholderImageScaleType="fitXY"
-            fresco:roundedCornerRadius="3dp"
-            />
+            fresco:roundedCornerRadius="3dp" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mDetailRelateOpinionContent"
@@ -95,7 +85,7 @@
             android:gravity="left"
             android:maxLines="2"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     public enum ViewHolderType{
         CONTENT,IMAGEWALL, DIFFERENT_OPINION, SELECTION_COMMENT,NEWS_ENTRY,RELATE_OPINION,WEIBO,ZHIHU
     }
-    private int mSreenWidth,mSreenHeight;
+    private int mSreenWidth,mSreenHeight,lineHeight = 32;
     private Context mContext;
     private String mNewsUrl;
     private ArrayList<ArrayList> mNewsContentDataList;
@@ -167,7 +168,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         /**新闻内容组*/
         if (getViewHolderType(groupPosition) == ViewHolderType.CONTENT) {
@@ -345,15 +346,17 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mRelateHolder.mDetailRelateOpinionTime = (TextViewExtend) convertView.findViewById(R.id.mDetailRelateOpinionTime);
                 mRelateHolder.mDetailRelateOpinionContent = (TextViewExtend) convertView.findViewById(R.id.mDetailRelateOpinionContent);
                 mRelateHolder.mDetailRelateOpinionImg = (SimpleDraweeView) convertView.findViewById(R.id.mDetailRelateOpinionImg);
+                mRelateHolder.rlLine = (RelativeLayout) convertView.findViewById(R.id.line_layout);
+                mRelateHolder.ivLineBottom = (ImageView) convertView.findViewById(R.id.line_bottom_imageView);
+                mRelateHolder.ivLineTop = (ImageView) convertView.findViewById(R.id.top_line_imageView);
                 convertView.setTag(mRelateHolder);
             }else {
                 mRelateHolder = (RelateOpinionViewHolder) convertView.getTag();
             }
-            ArrayList<NewsDetail.Relate> list = mNewsContentDataList.get(groupPosition);
+            final ArrayList<NewsDetail.Relate> list = mNewsContentDataList.get(groupPosition);
             NewsDetail.Relate relate = list.get(childPosition);
             mRelateHolder.mDetailRelateOpinionTime.setText(relate.updateTime.substring(5, 10).replace("-", "."));
             mRelateHolder.mDetailRelateOpinionContent.setText(relate.title);
-            mRelateHolder.mDetailRelateOpinionImg.setImageURI(Uri.parse(relate.img));
             if (list.size() == 1){
                 convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
             }else {
@@ -362,6 +365,71 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }else {
                     convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
                 }
+            }
+            String title =relate.title;
+            final String img = relate.img;
+            if (TextUtils.isEmpty(img))
+                mRelateHolder.mDetailRelateOpinionImg.setVisibility(View.GONE);
+            else {
+                mRelateHolder.mDetailRelateOpinionImg.setVisibility(View.VISIBLE);
+                mRelateHolder.mDetailRelateOpinionImg.setImageURI(Uri.parse(relate.img));
+            }
+            if (!TextUtils.isEmpty(title)) {
+                mRelateHolder.mDetailRelateOpinionContent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int i = mRelateHolder.mDetailRelateOpinionContent.getLineCount();
+                        if (i == 1)
+                            if (TextUtils.isEmpty(img))
+                                lineHeight = 32;
+                            else
+                                lineHeight = 57;
+                        else {
+                            if (TextUtils.isEmpty(img))
+                                lineHeight = 52;
+                            else
+                                lineHeight = 67;
+                        }
+                        RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) mRelateHolder.ivLineBottom.getLayoutParams();
+                        lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
+                        lpLineBottom.width = DensityUtil.dip2px(mContext, lineHeight);
+                        mRelateHolder.ivLineBottom.setLayoutParams(lpLineBottom);
+
+                        RelativeLayout.LayoutParams lpLine = (RelativeLayout.LayoutParams) mRelateHolder.rlLine.getLayoutParams();
+                        lpLine.leftMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+                        lpLine.rightMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+                        mRelateHolder.rlLine.setLayoutParams(lpLine);
+                        if (childPosition == 0) {
+                            mRelateHolder.ivLineTop.setVisibility(View.INVISIBLE);
+                        } else {
+                            mRelateHolder.ivLineTop.setVisibility(View.VISIBLE);
+                        }
+                        if (childPosition == list.size() - 1) {
+                            mRelateHolder.ivLineBottom.setVisibility(View.INVISIBLE);
+                        } else {
+                            mRelateHolder.ivLineBottom.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+            }
+            RelativeLayout.LayoutParams lpLineBottom = (RelativeLayout.LayoutParams) mRelateHolder.ivLineBottom.getLayoutParams();
+            lpLineBottom.height = DensityUtil.dip2px(mContext, lineHeight);
+            lpLineBottom.width = DensityUtil.dip2px(mContext, lineHeight);
+            mRelateHolder.ivLineBottom.setLayoutParams(lpLineBottom);
+
+            RelativeLayout.LayoutParams lpLine = (RelativeLayout.LayoutParams) mRelateHolder.rlLine.getLayoutParams();
+            lpLine.leftMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+            lpLine.rightMargin = DensityUtil.dip2px(mContext, -lineHeight / 2.0f + 10);
+            mRelateHolder.rlLine.setLayoutParams(lpLine);
+            if (childPosition == 0) {
+                mRelateHolder.ivLineTop.setVisibility(View.INVISIBLE);
+            } else {
+                mRelateHolder.ivLineTop.setVisibility(View.VISIBLE);
+            }
+            if (childPosition == list.size() - 1) {
+                mRelateHolder.ivLineBottom.setVisibility(View.INVISIBLE);
+            } else {
+                mRelateHolder.ivLineBottom.setVisibility(View.VISIBLE);
             }
             convertView.setPadding(DensityUtil.dip2px(mContext,22),0,DensityUtil.dip2px(mContext,22),0);
             convertView.setTag(R.id.mDetailRelateOpinionWrapper,relate.url);
@@ -596,8 +664,9 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         TextViewExtend mDetailRelateOpinionTime;
         RelativeLayout lineLayout;
         ImageView roundedImageView;
-        ImageView topLineImageView;
-        ImageView lineBottomImageView;
+        ImageView ivLineBottom;
+        ImageView ivLineTop;
+        RelativeLayout rlLine;
         SimpleDraweeView mDetailRelateOpinionImg;
         TextViewExtend mDetailRelateOpinionContent;
     }
