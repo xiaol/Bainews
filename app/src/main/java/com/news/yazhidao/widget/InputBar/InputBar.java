@@ -53,7 +53,7 @@ public class InputBar extends FrameLayout {
     private InputBarDelegate mDelegate;
     private Context mContext;
     private boolean isLong = false;// 是否滑动到取消录音的距离
-    private Activity mActivity;
+    private Context mActivity;
     public static final int MAX_TIME = 60;// 最长录音时间
     public static final int MIN_TIME = 1;// 最短录音时间
     public static final int RECORD_NO = 1000; // 不在录音
@@ -66,7 +66,7 @@ public class InputBar extends FrameLayout {
     private float mfCurDuration;
     private Handler mHandler;
 
-    public void setActivityAndHandler(Activity activity, Handler handler) {
+    public void setActivityAndHandler(Context activity, Handler handler) {
         mActivity = activity;
         mHandler = handler;
     }

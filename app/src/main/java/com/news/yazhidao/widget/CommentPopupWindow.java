@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,11 +18,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.listener.UserLoginListener;
@@ -29,8 +30,8 @@ import com.news.yazhidao.net.request.PraiseRequest;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.MediaPlayerManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.InputBar.InputBar;
@@ -49,7 +50,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     private ImageView mivClose;
     private View mMenuView;
-    private Activity m_pContext;
+    private Context m_pContext;
     //    private Context m_pContext;
     private ListView mlvComment;
     private DateAdapter mCommentAdapter;
@@ -76,26 +77,32 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     /**
      * 评论界面
+     *
      * @param context
      * @param points
      * @param sourceUrl
      * @param updateCommentCount
      * @param paraindex
-     * @param flag 判断是段落还是全文评论
+     * @param flag               判断是段落还是全文评论
      * @param updatePraiseCount
      */
-    public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, int flag,IUpdatePraiseCount updatePraiseCount) {
+    public CommentPopupWindow(Context context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, int flag, IUpdatePraiseCount updatePraiseCount) {
         super(context);
         m_pContext = context;
         this.paraindex = paraindex;
         marrPoints = points;
         this.sourceUrl = sourceUrl;
         comment_flag = flag;
-        if (marrPoints.size() > 0) {
-            mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
+        if(paraindex == -1){
+            if (!TextUtil.isListEmpty(marrPoints)){
+                mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
+            }else {
+                mParagraphIndex = 0;
+            }
+        }else {
+            mParagraphIndex = paraindex;
         }
 
-        mParagraphIndex = paraindex;
 
         mIUpdateCommentCount = updateCommentCount;
         mIUpdatePraiseCount = updatePraiseCount;
@@ -172,8 +179,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         super.dismiss();
         //退出评论页面时，关闭正在播放的语音评论
         MediaPlayerManager.getInstance().stop();
-        mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point, comment_flag, praiseFlag);
-        mIUpdatePraiseCount.updatePraise(praiseCount,mParagraphIndex,marrPoint);
+        if (mIUpdateCommentCount != null){
+            mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point, comment_flag, praiseFlag);
+        }
+        if (mIUpdatePraiseCount != null){
+            mIUpdatePraiseCount.updatePraise(praiseCount,mParagraphIndex,marrPoint);
+        }
     }
 
     private void loadData() {
@@ -397,8 +408,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         }
 
         public void setData(ArrayList<NewsDetail.Point> arrPoint) {
-            if (arrPoint != null)
-                marrPoint = arrPoint;
+            marrPoint = arrPoint;
         }
 
         @Override
@@ -424,8 +434,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.mSpeechView = (SpeechView) convertView.findViewById(R.id.mSpeechView);
-                holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
-                holder.ivHeadIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
@@ -435,19 +444,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             }
             final NewsDetail.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
-                ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false, new DisplayImageListener() {
-                    @Override
-                    public void success(int width,int height) {
-
-                    }
-
-                    @Override
-                    public void failed() {
-
-                    }
-                });
-            else
-                holder.ivHeadIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_comment_para));
+                holder.ivHeadIcon.setImageURI(Uri.parse(point.userIcon));
             holder.tvName.setText(point.userName);
             if (point.up != null) {
                 holder.tvPraiseCount.setText(point.up);
@@ -455,7 +452,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 holder.tvPraiseCount.setText("0");
             }
 
-            if(position == 0) {
+            if (position == 0) {
                 praiseCount = Integer.parseInt(holder.tvPraiseCount.getText().toString());
             }
 
@@ -463,9 +460,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
 
             if ("1".equals(point.isPraiseFlag)) {
-                holder.ivPraise.setBackgroundResource(R.drawable.bg_praised);
+                holder.ivPraise.setImageResource(R.drawable.bg_praised);
             } else {
-                holder.ivPraise.setBackgroundResource(R.drawable.bg_normal_praise);
+                holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
             }
 
 
@@ -506,10 +503,10 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                                 | Gravity.CENTER, 0, 0);
 
                     } else {
-                        if("1".equals(point.isPraiseFlag)){
+                        if ("1".equals(point.isPraiseFlag)) {
                             ToastUtil.toastLong("您已经点过赞了");
-                        }else {
-                            holder.ivPraise.setBackgroundResource(R.drawable.bg_praised);
+                        } else {
+                            holder.ivPraise.setImageResource(R.drawable.bg_praised);
                             point.isPraiseFlag = "1";
                             int count = 0;
                             if (holder.tvPraiseCount != null && holder.tvPraiseCount.getText() != null && !"".equals(holder.tvPraiseCount.getText())) {
@@ -521,9 +518,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                                 praiseCount = praiseCount + 1;
                             }
 
-                            if(point.up != null){
+                            if (point.up != null) {
                                 point.up = count + 1 + "";
-                            }else{
+                            } else {
                                 point.up = "1";
                             }
 
@@ -551,7 +548,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
 
     class Holder {
-        RoundedImageView ivHeadIcon;
+        SimpleDraweeView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
@@ -565,6 +562,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
 
     public interface IUpdatePraiseCount {
-        void updatePraise(int count, int paragraphIndex,ArrayList<NewsDetail.Point> marrPoint);
+        void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint);
     }
 }

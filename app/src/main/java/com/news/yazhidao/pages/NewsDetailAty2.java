@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +29,7 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
@@ -81,7 +81,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
-        mNewsDetailELVAdapter = new NewsDetailELVAdapter(this,mNewsContentDataList);
+        mNewsDetailELVAdapter = new NewsDetailELVAdapter(this, mNewsContentDataList);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         //设置Listview默认展开
-        for(int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++){
+        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
             mDetailContentListView.expandGroup(i);
         }
         //去掉Listview左边箭头
@@ -136,6 +136,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mPlatformType = user.getPlatformType();
         }
         mNewsDetailUrl = getIntent().getStringExtra("url");
+        mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
 //        mNewsDetailUrl = "http://sports.people.com.cn/n/2015/0910/c22176-27564278.html";
         uuid = DeviceInfoUtil.getUUID();
         String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;
@@ -149,11 +150,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mAniNewsLoading.stop();
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                     mNewsDetail = result;
+                    mNewsDetailELVAdapter.setNewsDetail(result);
                     if (result != null) {
                         mDetailHeaderView.updateView(result);
                         parseNewsDetail(result);
                         //设置Listview默认展开
-                        for(int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++){
+                        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
                             mDetailContentListView.expandGroup(i);
                         }
                     }
@@ -185,11 +187,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mAniNewsLoading.stop();
                     mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                     mNewsDetailAdd = result;
+                    mNewsDetailELVAdapter.setNewsDetail(result);
                     if (result != null) {
                         mDetailHeaderView.updateView(result);
                         parseNewsDetail(result);
                         //设置Listview默认展开
-                        for(int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++){
+                        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
                             mDetailContentListView.expandGroup(i);
                         }
                     }
@@ -234,25 +237,26 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetail.Point> points;
-                if (!TextUtil.isListEmpty(mNewsDetail.point)){
+                if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)) {
                     points = mNewsDetail.point;
-                }else {
+                } else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
                     points = mNewsDetailAdd.point;
+                } else {
+                    points = null;
                 }
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, null, -1, -1, null);
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, null, -1, 7, null);
                 window.setFocusable(true);
                 //防止虚拟软键盘被弹出菜单遮住
-                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 window.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM
                         | Gravity.CENTER, 0, 0);
                 break;
             case R.id.mDetailShare:
                 mSharePopupWindow = new SharePopupWindow(this);
-                if(mNewsDetail != null){
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title,mNewsDetailUrl);
-                }else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title,mNewsDetailUrl);
+                if (mNewsDetail != null) {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl);
+                } else {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl);
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
@@ -262,115 +266,121 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
-    private ArrayList<ArrayList> parseNewsDetail(NewsDetail pNewsDetail){
+    private ArrayList<ArrayList> parseNewsDetail(NewsDetail pNewsDetail) {
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
-        if (pNewsDetail != null){
+        if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
-            if (!TextUtil.isEmptyString(pNewsDetail.content)){
+            if (!TextUtil.isEmptyString(pNewsDetail.content)) {
                 ArrayList list = new ArrayList<>();
                 String[] contents = pNewsDetail.content.split("\n");
                 ArrayList<NewsDetail.Point> points = pNewsDetail.point;
-                for (int i = 0; i < contents.length; i++){
+                for (int i = 0; i < contents.length; i++) {
                     NewsDetailContent content = new NewsDetailContent();
                     content.setContent(contents[i]);
                     content.setComments(new ArrayList<NewsDetail.Point>());
                     list.add(content);
                 }
                 if (!TextUtil.isListEmpty(points)) {
-                    for (int j = 0; j < points.size(); j++){
+                    for (int j = 0; j < points.size(); j++) {
                         NewsDetail.Point point = points.get(j);
-                        int paragraphIndex =Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)){
-                            if (paragraphIndex < list.size()){
+                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
+                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
+                            if (paragraphIndex < list.size()) {
                                 NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
                                 content.getComments().add(point);
                             }
                         }
                     }
                 }
-                if (list.size() > 0){
+                if (list.size() > 0) {
                     mNewsContentDataList.add(list);
                 }
             }
             /**计算图片墙所在组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)){
+            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)) {
                 NewsDetailImageWall imageWall = new NewsDetailImageWall();
                 imageWall.setImgWall(pNewsDetail.imgWall);
                 ArrayList<NewsDetailImageWall> list = new ArrayList();
                 list.add(imageWall);
-                mNewsContentDataList.add(list);
+                if (list.size() > 0) {
+                    mNewsContentDataList.add(list);
+                }
             }
             /**计算差异化观点所在组数据*/
-            if (pNewsDetail.relate_opinion != null){
-                mNewsContentDataList.add(pNewsDetail.relate_opinion.getSelf_opinion());
+            if (pNewsDetail.relate_opinion != null) {
+                ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
+                if (!TextUtil.isListEmpty(self_opinion)){
+                    mNewsContentDataList.add(self_opinion);
+                }
             }
             /**计算精选评论观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.point)) {
                 ArrayList<NewsDetail.Point> points = new ArrayList<>();
-                for (int j = 0; j < pNewsDetail.point.size(); j++){
+                for (int j = 0; j < pNewsDetail.point.size(); j++) {
                     NewsDetail.Point point = pNewsDetail.point.get(j);
-                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)){
+                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
                         points.add(point);
                     }
                 }
                 Collections.sort(points);
                 /**只要3条评论*/
-                if (points.size() >3){
-                    points = new ArrayList<>(points.subList(0,3));
+                if (points.size() > 3) {
+                    points = new ArrayList<>(points.subList(0, 3));
                 }
                 points.add(new NewsDetail.Point());
                 mNewsContentDataList.add(points);
             }
             /**计算新闻词条组数据*/
             ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
-            if (!TextUtil.isListEmpty(pNewsDetail.baike)){
-                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike){
-                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE,item.url));
+            if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
+                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike) {
+                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
                 }
             }
-            if (!TextUtil.isListEmpty(pNewsDetail.douban)){
-                for (ArrayList item : pNewsDetail.douban){
-                    entryList.add(new NewsDetailEntry((String)item.get(0), NewsDetailEntry.EntyType.DOUBAN,(String)item.get(1)));
+            if (!TextUtil.isListEmpty(pNewsDetail.douban)) {
+                for (ArrayList item : pNewsDetail.douban) {
+                    entryList.add(new NewsDetailEntry((String) item.get(0), NewsDetailEntry.EntyType.DOUBAN, (String) item.get(1)));
                 }
             }
-            if (entryList.size() != 0){
+            if (entryList.size() != 0) {
                 mNewsContentDataList.add(entryList);
             }
 
             /**相关观点组数据*/
-            if(!TextUtil.isListEmpty(pNewsDetail.relate)){
+            if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
                 mNewsContentDataList.add(pNewsDetail.relate);
             }
             /**微博组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.weibo)){
-                if (pNewsDetail.weibo.size() > 5){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0,5)));
-                }else {
+            if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
+                if (pNewsDetail.weibo.size() > 5) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 5)));
+                } else {
                     mNewsContentDataList.add(pNewsDetail.weibo);
                 }
             }
             /**知乎组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)){
-                if (pNewsDetail.zhihu.size() > 5){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0,5)));
-                }else {
+            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
+                if (pNewsDetail.zhihu.size() > 5) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 5)));
+                } else {
                     mNewsContentDataList.add(pNewsDetail.zhihu);
                 }
             }
         }
         return mNewsContentDataList;
     }
-    private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail){
+
+    private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
-        if (pNewsDetail != null){
+        if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
-            if (!TextUtil.isListEmpty(pNewsDetail.content)){
+            if (!TextUtil.isListEmpty(pNewsDetail.content)) {
                 ArrayList list = new ArrayList<>();
                 ArrayList<NewsDetail.Point> points = pNewsDetail.point;
-                for (int i = 0; i < pNewsDetail.content.size(); i++){
+                for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
-                    HashMap<String, String> hashMap = treeMap.get(i+"");
-                    if (hashMap.get("txt") != null){
+                    HashMap<String, String> hashMap = treeMap.get(i + "");
+                    if (hashMap.get("txt") != null) {
                         NewsDetailContent content = new NewsDetailContent();
                         content.setContent(hashMap.get("txt"));//img img_info txt
                         content.setComments(new ArrayList<NewsDetail.Point>());
@@ -378,23 +388,23 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }
                 }
                 if (!TextUtil.isListEmpty(points)) {
-                    for (int j = 0; j < points.size(); j++){
+                    for (int j = 0; j < points.size(); j++) {
                         NewsDetail.Point point = points.get(j);
-                        int paragraphIndex =Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)){
-                            if (paragraphIndex < list.size()){
+                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
+                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
+                            if (paragraphIndex < list.size()) {
                                 NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
                                 content.getComments().add(point);
                             }
                         }
                     }
                 }
-                if (list.size() > 0){
+                if (list.size() > 0) {
                     mNewsContentDataList.add(list);
                 }
             }
             /**计算图片墙所在组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)){
+            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)) {
                 NewsDetailImageWall imageWall = new NewsDetailImageWall();
                 imageWall.setImgWall(pNewsDetail.imgWall);
                 ArrayList<NewsDetailImageWall> list = new ArrayList();
@@ -406,66 +416,69 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                         HashMap<String, String> hashMap = treeMap.get(i + "");
                         if (hashMap.get("img") != null) {
                             HashMap<String, String> image = new HashMap<>();//img img_info txt
-                            image.put("img",hashMap.get("img"));
+                            image.put("img", hashMap.get("img"));
                             imageWall.getImgWall().add(image);
                         }
                     }
                 }
             }
             /**计算差异化观点所在组数据*/
-            if (pNewsDetail.relate_opinion != null){
-                mNewsContentDataList.add(pNewsDetail.relate_opinion.getSelf_opinion());
+            if (pNewsDetail.relate_opinion != null) {
+                ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
+                if (!TextUtil.isListEmpty(self_opinion)){
+                    mNewsContentDataList.add(self_opinion);
+                }
             }
             /**计算精选评论观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.point)) {
                 ArrayList<NewsDetail.Point> points = new ArrayList<>();
-                for (int j = 0; j < pNewsDetail.point.size(); j++){
+                for (int j = 0; j < pNewsDetail.point.size(); j++) {
                     NewsDetail.Point point = pNewsDetail.point.get(j);
-                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)){
+                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
                         points.add(point);
                     }
                 }
                 Collections.sort(points);
                 /**只要3条评论*/
-                if (points.size() >3){
-                    points = new ArrayList<>(points.subList(0,3));
+                if (points.size() > 3) {
+                    points = new ArrayList<>(points.subList(0, 3));
                 }
                 points.add(new NewsDetail.Point());
                 mNewsContentDataList.add(points);
             }
             /**计算新闻词条组数据*/
             ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
-            if (!TextUtil.isListEmpty(pNewsDetail.baike)){
-                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike){
-                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE,item.url));
+            if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
+                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike) {
+                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
                 }
             }
-            if (!TextUtil.isListEmpty(pNewsDetail.douban)){
-                for (ArrayList item : pNewsDetail.douban){
-                    entryList.add(new NewsDetailEntry((String)item.get(0), NewsDetailEntry.EntyType.DOUBAN,(String)item.get(1)));
+            if (!TextUtil.isListEmpty(pNewsDetail.douban)) {
+                for (ArrayList item : pNewsDetail.douban) {
+                    entryList.add(new NewsDetailEntry((String) item.get(0), NewsDetailEntry.EntyType.DOUBAN, (String) item.get(1)));
                 }
             }
-            if (entryList.size() != 0){
+            if (entryList.size() != 0) {
                 mNewsContentDataList.add(entryList);
             }
 
             /**相关观点组数据*/
-            if(!TextUtil.isListEmpty(pNewsDetail.relate)){
+            if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
                 mNewsContentDataList.add(pNewsDetail.relate);
             }
             /**微博组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.weibo)){
-                if (pNewsDetail.weibo.size() > 5){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0,5)));
-                }else {
+            if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
+                if (pNewsDetail.weibo.size() > 5) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 5)));
+                } else {
                     mNewsContentDataList.add(pNewsDetail.weibo);
                 }
             }
             /**知乎组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)){
-                if (pNewsDetail.zhihu.size() > 5){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0,5)));
-                }else {
+            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
+                if (pNewsDetail.zhihu.size() > 5) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 5)));
+                } else {
                     mNewsContentDataList.add(pNewsDetail.zhihu);
                 }
             }

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,14 +17,16 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.imagewall.WallActivity;
 
@@ -36,6 +40,9 @@ import java.util.HashMap;
 public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
 
 
+    private NewsDetail mNewsDetail;
+    private NewsDetailAdd mNewsDetailAdd;
+
     /**
      * viewholder 的类型
      */
@@ -44,14 +51,9 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     }
     private int mSreenWidth,mSreenHeight;
     private Context mContext;
+    private String mNewsUrl;
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<HashMap<String, String>> mImageWallMap;
-    /**跳转webview页面相关url*/
-    private String mDifferentOpinionUrl;
-    private String mNewsEntryUrl;
-    private String mNewsRelateOpinionUrl;
-    private String mNewsZhiHuUrl;
-    private String mNewsWeiBoUrl;
 
     private GroupViewHolder mGroupViewHolder;
     private ContentViewHolder mContentViewHolder;
@@ -73,7 +75,15 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         this.mNewsContentDataList = mNewsContentDataList;
         this.notifyDataSetChanged();
     }
-
+    public void setNewsUrl(String mNewsDetailUrl) {
+        this.mNewsUrl = mNewsUrl;
+    }
+    public void setNewsDetail(NewsDetail pNewsDetail) {
+        this.mNewsDetail = pNewsDetail;
+    }
+    public void setNewsDetail(NewsDetailAdd pNewsDetailAdd) {
+        this.mNewsDetailAdd = pNewsDetailAdd;
+    }
     @Override
     public int getGroupCount() {
         return mNewsContentDataList == null ? 0 : mNewsContentDataList.size();
@@ -212,7 +222,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContentViewHolder.mDetailAddComment.setVisibility(View.VISIBLE);
                 mContentViewHolder.mDetailAddComment.setOnClickListener(NewsDetailELVAdapter.this);
             }
-
+            mContentViewHolder.mDetailCommentCount.setTag(R.id.mDetailCommentCount,content.getComments());
+            mContentViewHolder.mDetailAddComment.setTag(R.id.mDetailAddComment,Integer.valueOf(childPosition));
         } else if(getViewHolderType(groupPosition) == ViewHolderType.IMAGEWALL){
             /**图片墙组*/
             if (convertView == null || !ImageWallHolder.class.getClasses().equals(convertView.getTag().getClass())){
@@ -455,10 +466,12 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         Intent webviewIntent = new Intent(mContext,NewsDetailWebviewAty.class);
         switch (v.getId()){
             case R.id.mDetailCommentCount:
-                ToastUtil.toastShort("onclik count comment");
+                ArrayList<NewsDetail.Point> comments = (ArrayList<NewsDetail.Point>) v.getTag(R.id.mDetailCommentCount);
+                openComment(comments,comments.get(0).sourceUrl,Integer.valueOf(comments.get(0).paragraphIndex),2,null, null);
                 break;
             case R.id.mDetailAddComment:
-                ToastUtil.toastShort("onclik add comment");
+                int index = (Integer)v.getTag(R.id.mDetailAddComment);
+                openComment(null,mNewsUrl,index,1,null, null);
                 break;
             case R.id.mDetailImageWallWrapper:
                 Intent imageWallIntent = new Intent(mContext, WallActivity.class);
@@ -466,10 +479,13 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContext.startActivity(imageWallIntent);
                 break;
             case R.id.mDetailCommentPraiseWrapper:
-                ToastUtil.toastShort("点赞~~~");
                 break;
             case R.id.mDetailCommentCheckAll:
-                ToastUtil.toastShort("查看全部评论");
+                if (mNewsDetailAdd != null){
+                    openComment(mNewsDetailAdd.point,mNewsUrl,-1,2,null, null);
+                }else if(mNewsDetail != null) {
+                    openComment(mNewsDetail.point,mNewsUrl,-1,2,null, null);
+                }
                 break;
             case R.id.mDetailZhiHuWrapper:
                 String zhihuUrl = (String) v.getTag(R.id.mDetailZhiHuWrapper);
@@ -501,6 +517,21 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         }
     }
 
+    /**
+     *  打开评论界面
+     * @param pPoints
+     * @param pNewsUrl
+     * @param pParaindex 段落索引  -1 为全文
+     * @param type 类型,段落还是全文
+     */
+    public void openComment(ArrayList<NewsDetail.Point> pPoints,String pNewsUrl,int pParaindex,int type,CommentPopupWindow.IUpdateCommentCount updateCommentCount,  CommentPopupWindow.IUpdatePraiseCount updatePraiseCount){
+        CommentPopupWindow window = new CommentPopupWindow(mContext, pPoints, pNewsUrl, null, pParaindex, type, null);
+        window.setFocusable(true);
+        //防止虚拟软键盘被弹出菜单遮住
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.showAtLocation(((NewsDetailAty2)mContext).getWindow().getDecorView(), Gravity.BOTTOM
+                | Gravity.CENTER, 0, 0);
+    }
     /**
      * 所有分组通用 ViewHolder
      */
