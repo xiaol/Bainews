@@ -180,9 +180,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         super.dismiss();
         //退出评论页面时，关闭正在播放的语音评论
         MediaPlayerManager.getInstance().stop();
-        if (mIUpdateCommentCount != null){
-            mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point, comment_flag, praiseFlag);
-        }
+//        if (mIUpdateCommentCount != null){
+//            mIUpdateCommentCount.updateCommentCount(miCount, mParagraphIndex, point, comment_flag, praiseFlag);
+//        }
         if (mIUpdatePraiseCount != null){
             mIUpdatePraiseCount.updatePraise(praiseCount,mParagraphIndex,marrPoint);
         }
@@ -198,7 +198,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         if (marrPoints != null && marrPoints.size() > 0) {
             NewsDetail.Point point = marrPoints.get(0);
         }
-        NewsDetail.Point newPoint = new NewsDetail.Point();
+        final NewsDetail.Point newPoint = new NewsDetail.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
@@ -218,22 +218,29 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         newPoint.userIcon = user.getUserIcon();
         newPoint.userName = user.getUserName();
         newPoint.type = type;
+        newPoint.sourceUrl = sourceUrl;
         marrPoints.add(newPoint);
         point = newPoint;
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         Logger.i("jigang", type + "----url==" + argContent + "-------duration===" + speechDuration);
         UploadCommentRequest.uploadComment(m_pContext, sourceUrl, argContent, mParagraphIndex + "", type, speechDuration, new UploadCommentListener() {
+
             @Override
-            public void success() {
-                miCount += 1;
-                Log.i("tag", "111");
-                ToastUtil.toastLong("发表成功");
+            public void success(NewsDetail.Point result) {
+                if (result != null){
+                    result.up = "0";
+                    result.down = "0";
+                    if (mIUpdateCommentCount != null){
+                        mIUpdateCommentCount.updateCommentCount(mParagraphIndex,result,result.type);
+                    }
+                }
+                Logger.e("jigang","+++++++comment=="+result);
             }
 
             @Override
             public void failed() {
-                Log.i("tag", "222");
+                Logger.e("jigang","+++++++comment fail==");
             }
         });
         Log.i("tag", argContent);
@@ -565,6 +572,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     public interface IUpdateCommentCount {
         void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point, int flag, boolean isPraiseFlag);
+        void updateCommentCount(int paragraphIndex,NewsDetail.Point point,String flag);
     }
 
 

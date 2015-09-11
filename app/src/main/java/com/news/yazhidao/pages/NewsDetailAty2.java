@@ -47,7 +47,7 @@ import java.util.List;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener {
+public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount {
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -243,7 +243,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 } else {
                     points = null;
                 }
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, null, -1, 7, null);
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, 7, this);
                 window.setFocusable(true);
                 //防止虚拟软键盘被弹出菜单遮住
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -485,4 +485,24 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         return mNewsContentDataList;
     }
 
+    @Override
+    public void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point, int flag, boolean isPraiseFlag) {
+
+    }
+
+    @Override
+    public void updateCommentCount(int paragraphIndex, NewsDetail.Point point, String flag) {
+//            if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)){
+//                mNewsDetail.point.add(point);
+//                mNewsDetailELVAdapter.setNewsDetail(mNewsDetail);
+//            }else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)){
+//                mNewsDetailAdd.point.add(point);
+//                mNewsDetailELVAdapter.setNewsDetail(mNewsDetailAdd);
+//            }
+    }
+
+    @Override
+    public void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint) {
+
+    }
 }

@@ -435,6 +435,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
     }
 
+    @Override
+    public void updateCommentCount(int paragraphIndex, NewsDetail.Point point, String flag) {
+
+    }
+
 
     @Override
     public void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint) {

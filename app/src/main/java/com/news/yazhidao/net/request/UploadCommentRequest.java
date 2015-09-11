@@ -3,11 +3,12 @@ package com.news.yazhidao.net.request;
 import android.content.Context;
 
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UploadCommentListener;
+import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
-import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.AliYunOssManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -69,27 +70,21 @@ public class UploadCommentRequest {
         pairs.add(new BasicNameValuePair("platformType", user.getPlatformType()));
 
         request.setParams(pairs);
-        request.setCallback(new StringCallback() {
+        request.setCallback(new JsonCallback<NewsDetail.Point>() {
             @Override
-            public void success(String result) {
-                if(result != null && result.contains("200")){
-                    if(listener!=null){
-                        listener.success();
-                    }
-                }else{
-                    if(listener!=null){
-                        listener.failed();
-                    }
+            public void success(NewsDetail.Point result) {
+                if (listener != null) {
+                    listener.success(result);
                 }
             }
 
             @Override
             public void failed(MyAppException exception) {
-                if(listener!=null){
+                if (listener != null) {
                     listener.failed();
                 }
             }
-        });
+        }.setReturnClass(NewsDetail.Point.class));
         request.execute();
     }
 
