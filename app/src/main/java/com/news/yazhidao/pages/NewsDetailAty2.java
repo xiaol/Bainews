@@ -29,7 +29,6 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
@@ -112,6 +111,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         });
         mDetailHeaderView.setShareListener(this);
         mDetailHeaderView.setCommentListener(this);
+        mDetailHeaderView.setLeftBackListener(this);
     }
 
     @Override
@@ -233,7 +233,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
-
+                onBackPressed();
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetail.Point> points;
