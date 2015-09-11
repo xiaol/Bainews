@@ -74,6 +74,16 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private boolean praiseFlag = false;
     private int praiseCount;
 
+    /**
+     * 评论界面
+     * @param context
+     * @param points
+     * @param sourceUrl
+     * @param updateCommentCount
+     * @param paraindex
+     * @param flag 判断是段落还是全文评论
+     * @param updatePraiseCount
+     */
     public CommentPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, int flag,IUpdatePraiseCount updatePraiseCount) {
         super(context);
         m_pContext = context;

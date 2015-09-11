@@ -1,6 +1,7 @@
 package com.news.yazhidao.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.imagewall.WallActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +42,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private int mSreenWidth,mSreenHeight;
     private Context mContext;
     private ArrayList<ArrayList> mNewsContentDataList;
+    private ArrayList<HashMap<String, String>> mImageWallMap;
+
     private GroupViewHolder mGroupViewHolder;
     private ContentViewHolder mContentViewHolder;
     private ImageWallHolder mImageWallHolder;
@@ -215,10 +219,10 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
             ArrayList<NewsDetailImageWall> imageWalls = mNewsContentDataList.get(groupPosition);
             NewsDetailImageWall imageWall = imageWalls.get(0);
-            ArrayList<HashMap<String, String>> imgWallMap = imageWall.getImgWall();
-            HashMap<String, String> imageMap = imgWallMap.get(0);
+            this.mImageWallMap = imageWall.getImgWall();
+            HashMap<String, String> imageMap = mImageWallMap.get(0);
             mImageWallHolder.mDetailImageWallImg.setImageURI(Uri.parse(imageMap.get("img")));
-            mImageWallHolder.mDetailImageWallCount.setText("" + imgWallMap.size());
+            mImageWallHolder.mDetailImageWallCount.setText("" + mImageWallMap.size());
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }else if (getViewHolderType(groupPosition) == ViewHolderType.DIFFERENT_OPINION){
             /**差异化观点组*/
@@ -436,14 +440,15 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.mDetailCommentCount:
-                v.getTag();
                 ToastUtil.toastShort("onclik count comment");
                 break;
             case R.id.mDetailAddComment:
                 ToastUtil.toastShort("onclik add comment");
                 break;
             case R.id.mDetailImageWallWrapper:
-                ToastUtil.toastShort("onclik image wall");
+                Intent imageWallIntent = new Intent(mContext, WallActivity.class);
+                imageWallIntent.putExtra(WallActivity.KEY_IMAGE_WALL_DATA,mImageWallMap);
+                mContext.startActivity(imageWallIntent);
                 break;
             case R.id.mDetailDiffOpinionWrapper:
                 ToastUtil.toastShort("onclik different opinoin");

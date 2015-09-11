@@ -2,10 +2,13 @@ package com.news.yazhidao.utils.helper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
@@ -30,6 +33,8 @@ import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.renren.Renren;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -40,9 +45,9 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class ShareSdkHelper {
     private static final String TAG = "ShareSdkHelper";
-    private static final String WECHAT_CLIENT_NOT_EXIST_EXCEPTION="cn.sharesdk.wechat.utils.WechatClientNotExistException";
+    private static final String WECHAT_CLIENT_NOT_EXIST_EXCEPTION = "cn.sharesdk.wechat.utils.WechatClientNotExistException";
     private static Context mContext;
-    private static Handler mHandler=new Handler();
+    private static Handler mHandler = new Handler();
     private static UserLoginListener mUserLoginListener;
     private static UserLoginPopupStateListener mUserLoginPopupStateListener;
     private static PlatformActionListener mActionListener = new PlatformActionListener() {
@@ -57,7 +62,7 @@ public class ShareSdkHelper {
                 String iconURL = platformDb.getUserIcon();
                 String token = platformDb.getToken();
                 //关注官方微博
-                if(SinaWeibo.NAME.equals(platformDb.getPlatformNname())){
+                if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
                     platform.followFriend("头条百家");
                 }
                 Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token);
@@ -76,13 +81,13 @@ public class ShareSdkHelper {
                         //保存user json串到sp 中
                         SharedPreManager.saveUser(user);
                         String jPushId = SharedPreManager.getJPushId();
-                        if(!TextUtils.isEmpty(jPushId)){
-                            UploadJpushidRequest.uploadJpushId(mContext,jPushId);
+                        if (!TextUtils.isEmpty(jPushId)) {
+                            UploadJpushidRequest.uploadJpushId(mContext, jPushId);
                         }
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
 
                         Intent intent = new Intent("saveuser");
-                        intent.putExtra("url",user.getUserIcon());
+                        intent.putExtra("url", user.getUserIcon());
                         GlobalParams.context.sendBroadcast(intent);
 
                         if (mUserLoginListener != null) {
@@ -110,10 +115,10 @@ public class ShareSdkHelper {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                if(WECHAT_CLIENT_NOT_EXIST_EXCEPTION.equals(throwable.toString())){
-                    Logger.e(TAG,"000000");
-                    ToastUtil.toastShort("您手机还未安装微信客户端");
-                }
+                    if (WECHAT_CLIENT_NOT_EXIST_EXCEPTION.equals(throwable.toString())) {
+                        Logger.e(TAG, "000000");
+                        ToastUtil.toastShort("您手机还未安装微信客户端");
+                    }
 
                     mUserLoginPopupStateListener.close();
                 }
@@ -137,19 +142,20 @@ public class ShareSdkHelper {
 
     /**
      * sharesdk 授权认证
-     *  @param context
+     *
+     * @param context
      * @param platform
      * @param loginListener
      * @param userLoginPopupStateListener
      */
     public static void authorize(Context context, String platform, UserLoginListener loginListener, UserLoginPopupStateListener userLoginPopupStateListener) {
 //        mProgressDialog.show();
-        mContext=context;
+        mContext = context;
         mUserLoginListener = loginListener;
-        mUserLoginPopupStateListener=userLoginPopupStateListener;
+        mUserLoginPopupStateListener = userLoginPopupStateListener;
         Platform _Plateform = ShareSDK.getPlatform(mContext, platform);
         //判断指定平台是否已经完成授权
-        if (_Plateform.isValid()&&SharedPreManager.getUser(context)!=null) {
+        if (_Plateform.isValid() && SharedPreManager.getUser(context) != null) {
             String userId = _Plateform.getDb().getUserId();
             if (userId != null) {
                 if (mUserLoginListener != null) {
@@ -256,4 +262,80 @@ public class ShareSdkHelper {
         }
     }
 
+    public static void ShareToPlatformByNewsDetail(final Context context, final String argPlatform, final String title, final String url) {
+        mHandler = new Handler(context.getMainLooper());
+        PlatformActionListener pShareListner = new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.toastShort("分享成功");
+                    }
+                };
+                mHandler.post(myRunnable);
+
+            }
+
+            @Override
+            public void onError(Platform platform, int i, Throwable throwable) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.toastShort("分享失败");
+                    }
+                });
+            }
+
+            @Override
+            public void onCancel(Platform platform, int i) {
+            }
+        };
+
+        Platform.ShareParams pShareParams = new Platform.ShareParams();
+        pShareParams.setImageData(BitmapFactory.decodeResource(YaZhiDaoApplication.getAppContext().getResources(), R.drawable.app_icon));
+//        pShareParams.setImageUrl("http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg");
+        if (argPlatform.equals(Wechat.NAME) ||
+                argPlatform.equals(WechatMoments.NAME)) {
+            pShareParams.setShareType(Platform.SHARE_WEBPAGE);
+            pShareParams.setTitle(title);
+            pShareParams.setUrl(url);
+        } else {
+            pShareParams.setText(title + url);
+        }
+        if (argPlatform.equals(Wechat.NAME)) {
+            Platform platform = ShareSDK.getPlatform(Wechat.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            pShareParams.setText("头条百家分享社区");
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(WechatMoments.NAME)) {
+            Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(SinaWeibo.NAME)) {
+            Platform platform = ShareSDK.getPlatform(SinaWeibo.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(TencentWeibo.NAME)) {
+            Platform platform = ShareSDK.getPlatform(TencentWeibo.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(QQ.NAME)) {
+            Platform platform = ShareSDK.getPlatform(QQ.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(QZone.NAME)) {
+            Platform platform = ShareSDK.getPlatform(QZone.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(Renren.NAME)) {
+            Platform platform = ShareSDK.getPlatform(Renren.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        } else if (argPlatform.equals(Douban.NAME)) {
+            Platform platform = ShareSDK.getPlatform(Douban.NAME);
+            platform.setPlatformActionListener(pShareListner);
+            platform.share(pShareParams);
+        }
+    }
 }

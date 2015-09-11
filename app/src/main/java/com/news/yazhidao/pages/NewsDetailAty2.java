@@ -1,11 +1,15 @@
 package com.news.yazhidao.pages;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -27,7 +31,11 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
+import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.imagewall.WallActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 import org.apache.http.NameValuePair;
@@ -45,6 +53,8 @@ import java.util.List;
 public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener {
 
     private int mScreenWidth, mScreenHeight;
+    //滑动关闭当前activity布局
+    private SwipeBackLayout mSwipeBackLayout;
     private String mUserId;
     private String mPlatformType;
     private String uuid;
@@ -53,15 +63,14 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
     private ArrayList<ArrayList> mNewsContentDataList;
-    //滑动关闭当前activity布局
-    private SwipeBackLayout mSwipeBackLayout;
     private NewsDetailELVAdapter mNewsDetailELVAdapter;
     private NewsDetailHeaderView2 mDetailHeaderView;
     private ExpandableListView mDetailContentListView;
     private View mNewsDetailLoaddingWrapper;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
-
+    private View mDetailView;
+    private SharePopupWindow mSharePopupWindow;
 
     @Override
     protected boolean translucentStatus() {
@@ -81,6 +90,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     protected void initializeViews() {
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mNewsDetailLoaddingWrapper.setOnClickListener(this);
@@ -102,6 +112,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 return true;
             }
         });
+        mDetailHeaderView.setShareListener(this);
+        mDetailHeaderView.setCommentListener(this);
     }
 
     @Override
@@ -205,10 +217,28 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
                 break;
             case R.id.mDetailComment:
-
+                ArrayList<NewsDetail.Point> points;
+                if (!TextUtil.isListEmpty(mNewsDetail.point)){
+                    points = mNewsDetail.point;
+                }else {
+                    points = mNewsDetailAdd.point;
+                }
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, null, -1, -1, null);
+                window.setFocusable(true);
+                //防止虚拟软键盘被弹出菜单遮住
+                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                window.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM
+                        | Gravity.CENTER, 0, 0);
                 break;
             case R.id.mDetailShare:
-
+                mSharePopupWindow = new SharePopupWindow(this);
+                if(mNewsDetail != null){
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title,mNewsDetailUrl);
+                }else {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title,mNewsDetailUrl);
+                }
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
             case R.id.mNewsDetailLoaddingWrapper:
                 loadData();

@@ -11,6 +11,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 
+import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 
 import java.util.HashMap;
@@ -69,14 +71,14 @@ public class CustomShareAdapter extends AuthorizeAdapter implements OnClickListe
     private void initUi(String platName) {
         ctvFollow = new CheckedTextView(getActivity());
         try {
-            ctvFollow.setBackgroundResource(com.sharesdk.R.drawable.ic_launcher);
+            ctvFollow.setBackgroundResource(R.drawable.ic_launcher);
         } catch (Throwable t) {
             t.printStackTrace();
         }
         ctvFollow.setChecked(true);
-        int dp_10 = cn.sharesdk.framework.utils.R.dipToPx(getActivity(), 10);
+        int dp_10 = DensityUtil.dip2px(getActivity(), 10);
         ctvFollow.setCompoundDrawablePadding(dp_10);
-        ctvFollow.setCompoundDrawablesWithIntrinsicBounds(com.sharesdk.R.drawable.ic_launcher, 0, 0, 0);
+        ctvFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_launcher, 0, 0, 0);
         ctvFollow.setGravity(Gravity.CENTER_VERTICAL);
         ctvFollow.setPadding(dp_10, dp_10, dp_10, dp_10);
         ctvFollow.setText("aaaaa");

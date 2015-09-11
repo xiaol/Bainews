@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('libs/ShareSDK-Core-2.5.9.jar')
     compile files('libs/ShareSDK-Douban-2.5.9.jar')
@@ -30,4 +30,18 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-Core-2.5.9.jar')
     compile files('libs/ShareSDK-Wechat-Favorite-2.5.9.jar')
     compile files('libs/ShareSDK-Wechat-Moments-2.5.9.jar')
+    compile files('libs/MobLogCollector.jar')
+    compile files('libs/MobTools.jar')
+    compile files('libs/ShareSDK-Core-2.6.2.jar')
+    compile files('libs/ShareSDK-Email-2.6.2.jar')
+    compile files('libs/ShareSDK-QQ-2.6.2.jar')
+    compile files('libs/ShareSDK-QZone-2.6.2.jar')
+    compile files('libs/ShareSDK-ShortMessage-2.6.2.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.6.2.jar')
+    compile files('libs/ShareSDK-TencentWeibo-2.6.2.jar')
+    compile files('libs/ShareSDK-Wechat-2.6.2.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.6.2.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-2.6.2.jar')
+    compile files('libs/ShareSDK-Wechat-Moments-2.6.2.jar')
+    compile files('libs/ShareSDK-Douban-2.6.2.jar')
 }
