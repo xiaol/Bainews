@@ -76,7 +76,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         this.notifyDataSetChanged();
     }
     public void setNewsUrl(String mNewsDetailUrl) {
-        this.mNewsUrl = mNewsUrl;
+        this.mNewsUrl = mNewsDetailUrl;
     }
     public void setNewsDetail(NewsDetail pNewsDetail) {
         this.mNewsDetail = pNewsDetail;

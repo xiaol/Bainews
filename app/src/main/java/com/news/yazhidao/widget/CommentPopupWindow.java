@@ -69,7 +69,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private int miCount, mParagraphIndex;
     private String sourceUrl;
     private ArrayList<NewsDetail.Point> marrPoint;
-    private int paraindex;
     private NewsDetail.Point point;
     private RelativeLayout rl_popup;
     private boolean praiseFlag = false;
@@ -89,8 +88,10 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     public CommentPopupWindow(Context context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, int flag, IUpdatePraiseCount updatePraiseCount) {
         super(context);
         m_pContext = context;
-        this.paraindex = paraindex;
         marrPoints = points;
+        if (marrPoints == null){
+            marrPoints = new ArrayList<>();
+        }
         this.sourceUrl = sourceUrl;
         comment_flag = flag;
         if(paraindex == -1){
@@ -201,10 +202,16 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
+            if (mParagraphIndex == -1){
+                type = UploadCommentRequest.SPEECH_DOC;
+            }
             newPoint.srcText = argContent;
             newPoint.srcTextTime = speechDuration / 1000;
         } else {
             type = UploadCommentRequest.TEXT_PARAGRAPH;
+            if (mParagraphIndex == -1){
+                type = UploadCommentRequest.TEXT_DOC;
+            }
             newPoint.srcText = argContent;
         }
         User user = SharedPreManager.getUser(m_pContext);
@@ -216,7 +223,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mCommentAdapter.setData(marrPoints);
         mCommentAdapter.notifyDataSetChanged();
         Logger.i("jigang", type + "----url==" + argContent + "-------duration===" + speechDuration);
-        UploadCommentRequest.uploadComment(m_pContext, sourceUrl, argContent, paraindex + "", type, speechDuration, new UploadCommentListener() {
+        UploadCommentRequest.uploadComment(m_pContext, sourceUrl, argContent, mParagraphIndex + "", type, speechDuration, new UploadCommentListener() {
             @Override
             public void success() {
                 miCount += 1;
