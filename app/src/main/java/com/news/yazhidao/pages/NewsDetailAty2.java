@@ -1,15 +1,15 @@
 package com.news.yazhidao.pages;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -34,8 +34,6 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
-import com.news.yazhidao.widget.imagewall.WallActivity;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 import org.apache.http.NameValuePair;
@@ -208,6 +206,24 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }.getType()));
             _Request.execute();
         }
+    }
+
+    float startY;
+    float endY;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                startY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Logger.e("jigang","move ----"+event.getY());
+                break;
+            case MotionEvent.ACTION_UP:
+                Logger.e("jigang","end ----"+(event.getY()- startY));
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override

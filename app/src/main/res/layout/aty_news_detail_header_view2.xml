@@ -11,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="270dp"
         android:contentDescription="详情页头图"
+        fresco:actualImageScaleType="focusCrop"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
         fresco:placeholderImageScaleType="fitXY"
-        fresco:actualImageScaleType="focusCrop"
         />
 
     <RelativeLayout
@@ -57,34 +57,42 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/mDetailTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_alignBottom="@id/mDetailHeaderImg"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:ellipsize="end"
-        android:lines="2"
-        android:text="@string/mNewsDetailTitle"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        />
+        android:layout_alignTop="@id/mDetailHeaderImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_news_detail_header_gradient"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:gravity="bottom"
+        >
 
-    <TextView
-        android:id="@+id/mDetailDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/mDetailHeaderImg"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/mNewsDetailHeaderTime"
-        android:textColor="@color/white"
-        android:textSize="10sp"
-        />
+        <TextView
+            android:id="@+id/mDetailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/mNewsDetailTitle"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/mDetailDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/mNewsDetailHeaderTime"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:layout_marginBottom="5dp"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/mDetailCommentWrapper"
@@ -122,8 +130,8 @@
                 android:id="@+id/mDetailSpeechComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:layout_marginLeft="12dp"
+                android:layout_marginTop="15dp"
                 android:layout_toRightOf="@id/mDetailSpeechCommentUserIcon"/>
 
             <View

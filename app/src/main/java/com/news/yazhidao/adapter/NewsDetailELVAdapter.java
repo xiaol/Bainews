@@ -18,6 +18,7 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
+import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -33,6 +34,8 @@ import java.util.HashMap;
  * 新闻详情页中 ExpandableListView 对应的adapter
  */
 public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements View.OnClickListener {
+
+
     /**
      * viewholder 的类型
      */
@@ -43,6 +46,12 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private Context mContext;
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<HashMap<String, String>> mImageWallMap;
+    /**跳转webview页面相关url*/
+    private String mDifferentOpinionUrl;
+    private String mNewsEntryUrl;
+    private String mNewsRelateOpinionUrl;
+    private String mNewsZhiHuUrl;
+    private String mNewsWeiBoUrl;
 
     private GroupViewHolder mGroupViewHolder;
     private ContentViewHolder mContentViewHolder;
@@ -240,8 +249,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             NewsDetail.Article opinion = list.get(childPosition);
             mDiffOpinionHolder.mDetailDiffOpinionContent.setText(opinion.self_opinion);
             mDiffOpinionHolder.mDetailDiffOpinionTitle.setText(opinion.title);
-
             //设置点击事件
+            convertView.setTag(R.id.mDetailDiffOpinionWrapper,opinion.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }else if(getViewHolderType(groupPosition) == ViewHolderType.SELECTION_COMMENT){
             /**精选评论组*/
@@ -315,6 +324,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             mEntryHolder.mDetailEntryTitle.setText(entry.getTitle());
             mEntryHolder.mDetailEntryIcon.setImageResource(entry.getType() == NewsDetailEntry.EntyType.BAIDUBAIKE ? R.drawable.ic_news_detail_entry_baike : R.drawable.ic_news_detail_entry_douban);
             convertView.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 16), 0, 0);
+            convertView.setTag(R.id.mDetailEntryWrapper,entry.getUrl());
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }else if (getViewHolderType(groupPosition) == ViewHolderType.RELATE_OPINION){
             /**相关观点组*/
@@ -343,6 +353,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }
             }
             convertView.setPadding(DensityUtil.dip2px(mContext,22),0,DensityUtil.dip2px(mContext,22),0);
+            convertView.setTag(R.id.mDetailRelateOpinionWrapper,relate.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }else if (getViewHolderType(groupPosition) == ViewHolderType.WEIBO){
             /**微博组*/
@@ -379,6 +390,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
 
             }
             convertView.setPadding(DensityUtil.dip2px(mContext,22),0,DensityUtil.dip2px(mContext,22),0);
+
+            convertView.setTag(R.id.mDetailWeiBoWrapper,weibo.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }else if (getViewHolderType(groupPosition) == ViewHolderType.ZHIHU){
             /**知乎组*/
@@ -404,6 +417,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }
             }
             convertView.setPadding(DensityUtil.dip2px(mContext,22),0,DensityUtil.dip2px(mContext,22),0);
+            convertView.setTag(R.id.mDetailZhiHuWrapper,zhihu.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }
         return convertView;
@@ -438,6 +452,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     }
     @Override
     public void onClick(View v) {
+        Intent webviewIntent = new Intent(mContext,NewsDetailWebviewAty.class);
         switch (v.getId()){
             case R.id.mDetailCommentCount:
                 ToastUtil.toastShort("onclik count comment");
@@ -450,23 +465,38 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 imageWallIntent.putExtra(WallActivity.KEY_IMAGE_WALL_DATA,mImageWallMap);
                 mContext.startActivity(imageWallIntent);
                 break;
-            case R.id.mDetailDiffOpinionWrapper:
-                ToastUtil.toastShort("onclik different opinoin");
-                break;
             case R.id.mDetailCommentPraiseWrapper:
                 ToastUtil.toastShort("点赞~~~");
                 break;
             case R.id.mDetailCommentCheckAll:
                 ToastUtil.toastShort("查看全部评论");
                 break;
+            case R.id.mDetailZhiHuWrapper:
+                String zhihuUrl = (String) v.getTag(R.id.mDetailZhiHuWrapper);
+                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL,zhihuUrl);
+                mContext.startActivity(webviewIntent);
+                break;
+            case R.id.mDetailDiffOpinionWrapper:
+                String diffUrl = (String) v.getTag(R.id.mDetailDiffOpinionWrapper);
+                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL,diffUrl);
+                mContext.startActivity(webviewIntent);
+                break;
             case R.id.mDetailEntryWrapper:
-                ToastUtil.toastShort("查看新闻词条");
+                String entryUrl = (String) v.getTag(R.id.mDetailEntryWrapper);
+                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL,entryUrl);
+                mContext.startActivity(webviewIntent);
                 break;
             case R.id.mDetailRelateOpinionWrapper:
-                ToastUtil.toastShort("相关观点");
+                String relateUrl = (String) v.getTag(R.id.mDetailRelateOpinionWrapper);
+                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL,relateUrl);
+                mContext.startActivity(webviewIntent);
                 break;
-            case R.id.mDetailZhiHuWrapper:
-                ToastUtil.toastShort("知乎推荐");
+            case R.id.mDetailWeiBoWrapper:
+                String weiboUrl = (String) v.getTag(R.id.mDetailWeiBoWrapper);
+                if (!TextUtil.isEmptyString(weiboUrl)){
+                    webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL,weiboUrl);
+                    mContext.startActivity(webviewIntent);
+                }
                 break;
         }
     }

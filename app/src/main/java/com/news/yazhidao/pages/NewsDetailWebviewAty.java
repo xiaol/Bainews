@@ -23,6 +23,7 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
  */
 public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "NewsDetailWebviewAty";
+    public static final String KEY_URL = "key_url";
     private WebView mNewsSourcesiteWebview;
     private String mNewsUrl;
     private View mNewsSourcesiteLeftBack;
@@ -133,7 +134,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void initializeViews() {
 
-        mNewsUrl=getIntent().getStringExtra(NewsFeedFgt.KEY_URL);
+        mNewsUrl=getIntent().getStringExtra(KEY_URL);
         mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
