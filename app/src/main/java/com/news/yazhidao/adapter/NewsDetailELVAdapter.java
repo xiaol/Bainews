@@ -23,6 +23,7 @@ import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -351,9 +352,17 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
             ArrayList<NewsDetail.Relate> list = mNewsContentDataList.get(groupPosition);
             NewsDetail.Relate relate = list.get(childPosition);
+            if (relate.updateTime == null){
+                relate.updateTime = DateUtil.getDate();
+            }
             mRelateHolder.mDetailRelateOpinionTime.setText(relate.updateTime.substring(5, 10).replace("-", "."));
             mRelateHolder.mDetailRelateOpinionContent.setText(relate.title);
-            mRelateHolder.mDetailRelateOpinionImg.setImageURI(Uri.parse(relate.img));
+            if (relate.img != null){
+                mRelateHolder.mDetailRelateOpinionImg.setImageURI(Uri.parse(relate.img));
+                mRelateHolder.mDetailRelateOpinionImg.setVisibility(View.VISIBLE);
+            }else {
+                mRelateHolder.mDetailRelateOpinionImg.setVisibility(View.GONE);
+            }
             if (list.size() == 1){
                 convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
             }else {

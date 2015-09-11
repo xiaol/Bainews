@@ -13,7 +13,6 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailELVAdapter;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetail;
@@ -29,11 +28,11 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 import org.apache.http.NameValuePair;
@@ -48,7 +47,7 @@ import java.util.List;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener {
+public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener {
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -86,8 +85,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
-//        mSwipeBackLayout = getSwipeBackLayout();
-//        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
