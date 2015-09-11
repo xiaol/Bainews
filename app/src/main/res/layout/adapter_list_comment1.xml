@@ -3,84 +3,82 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_comment_content"
     android:layout_width="match_parent"
-    android:paddingTop="10dp"
     android:layout_height="wrap_content">
 
-    <com.news.yazhidao.widget.RoundedImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_user_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:border_color="@color/black"
-        app:border_width="1dp"
-        app:corner_radius="20dp"
-        android:layout_margin="10dp" />
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="16dp"
+        app:placeholderImage="@drawable/ic_user_login_default"
+        app:roundAsCircle="true"
+        app:roundingBorderColor="@color/bg_home_login_header"
+        app:roundingBorderWidth="2px" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_alignTop="@+id/iv_user_icon"
         android:layout_toRightOf="@+id/iv_user_icon"
-        android:textSize="11sp"
-        android:textColor="#2b2b2b" />
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/news_detail_desc"
+        android:textSize="12sp" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_comment_content"
         android:layout_width="250dp"
-        android:layout_toRightOf="@+id/iv_user_icon"
-        android:layout_below="@+id/tv_user_name"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
-        android:maxLines="2"
+        android:layout_below="@+id/tv_user_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/iv_user_icon"
         android:ellipsize="end"
-        android:textSize="14sp"
-        android:textColor="#9c9c9c" />
+        android:lineSpacingMultiplier="1.15"
+        android:text="@string/mNewsDetailHeaderDesc"
+        android:textColor="@color/news_detail_content"
+        android:textSize="14sp" />
 
     <RelativeLayout
         android:id="@+id/rl_praise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tv_user_name"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginTop="-10dp">
 
         <ImageView
             android:id="@+id/iv_praise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/bg_normal_praise" />
+            android:scaleType="centerInside"
+            android:src="@drawable/bg_normal_praise" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/tv_praise_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:textSize="12sp"
-            android:textColor="@color/red"
+            android:layout_below="@+id/iv_praise"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/iv_praise" />
+            android:layout_marginTop="-13dp"
+            android:textColor="@color/red"
+            android:paddingBottom="15dp"
+            android:textSize="10sp" />
     </RelativeLayout>
 
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:layout_width="1dp"
-        android:layout_height="wrap_content"
-        android:background="#9c9c9c"
-        android:layout_alignTop="@+id/rl_praise"
-        android:layout_alignBottom="@+id/rl_praise"
-        android:layout_toLeftOf="@+id/rl_praise"
-        android:layout_marginLeft="10dp"
-        android:layout_centerVertical="true" />
 
     <com.news.yazhidao.widget.SpeechView
         android:id="@+id/mSpeechView"
         android:layout_width="wrap_content"
-        android:layout_toRightOf="@+id/iv_user_icon"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/tv_user_name"
-        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/iv_user_icon" />
 </RelativeLayout>
