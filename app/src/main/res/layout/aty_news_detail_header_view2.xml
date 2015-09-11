@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_news_detail"
-    >
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_news_detail">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/mDetailHeaderImg"
@@ -13,16 +12,14 @@
         android:contentDescription="详情页头图"
         fresco:actualImageScaleType="focusCrop"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
-        fresco:placeholderImageScaleType="fitXY"
-        />
+        fresco:placeholderImageScaleType="fitXY" />
 
     <RelativeLayout
         android:id="@+id/mDetailHeader"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/mDetailLeftBack"
@@ -31,8 +28,7 @@
             android:layout_marginLeft="20dp"
             android:contentDescription="转到上一级"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_left_back"
-            />
+            android:src="@drawable/btn_detail_left_back" />
 
         <ImageView
             android:id="@+id/mDetailComment"
@@ -41,8 +37,7 @@
             android:layout_toLeftOf="@+id/mDetailShare"
             android:contentDescription="评论"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_comment"
-            />
+            android:src="@drawable/btn_detail_comment" />
 
         <ImageView
             android:id="@+id/mDetailShare"
@@ -52,23 +47,21 @@
             android:layout_marginRight="20dp"
             android:contentDescription="分享"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_share"
-            />
+            android:src="@drawable/btn_detail_share" />
 
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_alignBottom="@id/mDetailHeaderImg"
-        android:layout_alignTop="@id/mDetailHeaderImg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignBottom="@id/mDetailHeaderImg"
+        android:layout_alignTop="@id/mDetailHeaderImg"
         android:background="@drawable/bg_news_detail_header_gradient"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="10dp"
         android:gravity="bottom"
-        >
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <TextView
             android:id="@+id/mDetailTitle"
@@ -78,19 +71,17 @@
             android:maxLines="2"
             android:text="@string/mNewsDetailTitle"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/mDetailDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="12dp"
             android:text="@string/mNewsDetailHeaderTime"
             android:textColor="@color/white"
-            android:textSize="10sp"
-            android:layout_marginBottom="5dp"
-            />
+            android:textSize="10sp" />
 
     </LinearLayout>
 
@@ -103,16 +94,14 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="-10dp"
         android:background="@drawable/bg_detail_desc"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/mDetailSpeechCommentWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:background="@color/white"
-            >
+            android:background="@color/white">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/mDetailSpeechCommentUserIcon"
@@ -123,8 +112,7 @@
                 fresco:placeholderImage="@drawable/ic_user_login_default"
                 fresco:roundAsCircle="true"
                 fresco:roundingBorderColor="@color/bg_home_login_header"
-                fresco:roundingBorderWidth="2dp"
-                />
+                fresco:roundingBorderWidth="2dp" />
 
             <com.news.yazhidao.widget.SpeechView
                 android:id="@+id/mDetailSpeechComment"
@@ -132,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/mDetailSpeechCommentUserIcon"/>
+                android:layout_toRightOf="@id/mDetailSpeechCommentUserIcon" />
 
             <View
                 android:id="@+id/mDetailSpeechDivider"
@@ -142,8 +130,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/news_detail_speech_divider"
-                />
+                android:background="@color/news_detail_speech_divider" />
         </RelativeLayout>
 
         <TextView
@@ -156,7 +143,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_desc"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
     </LinearLayout>
 </RelativeLayout>

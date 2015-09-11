@@ -111,6 +111,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         });
         mDetailHeaderView.setShareListener(this);
         mDetailHeaderView.setCommentListener(this);
+        mDetailHeaderView.setLeftBackListener(this);
     }
 
     @Override
@@ -232,7 +233,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
-
+                onBackPressed();
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetail.Point> points;
