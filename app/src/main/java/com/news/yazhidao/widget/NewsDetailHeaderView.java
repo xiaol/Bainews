@@ -455,6 +455,11 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
     }
 
+    @Override
+    public void updataPraise(String commentId) {
+
+    }
+
     public void setContentViewHeight(int pHeight) {
         this.mContentHeight = pHeight;
     }

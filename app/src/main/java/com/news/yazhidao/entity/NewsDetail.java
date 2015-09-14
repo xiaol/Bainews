@@ -109,6 +109,12 @@ public class NewsDetail implements Serializable{
 
         @Override
         public int compareTo(Object another) {
+            if (this.up == null){
+                this.up = "0";
+            }
+            if (((Point)another).up == null){
+                ((Point)another).up = "";
+            }
             int first = Integer.valueOf(this.up);
             int second = Integer.valueOf(((Point)another).up);
             if (first < second){

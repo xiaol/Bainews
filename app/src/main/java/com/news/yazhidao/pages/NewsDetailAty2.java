@@ -68,6 +68,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
+    float startY;
 
     @Override
     protected boolean translucentStatus() {
@@ -96,6 +97,23 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
         mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
+        mDetailContentListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Logger.e("jigang","move ----"+event.getY());
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Logger.e("jigang","end ----"+(event.getY()- startY));
+                        break;
+                }
+                return false;
+            }
+        });
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         //设置Listview默认展开
         for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
@@ -211,23 +229,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
-    float startY;
-    float endY;
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                startY = event.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                Logger.e("jigang","move ----"+event.getY());
-                break;
-            case MotionEvent.ACTION_UP:
-                Logger.e("jigang","end ----"+(event.getY()- startY));
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
 
     @Override
     public void onClick(View v) {
@@ -244,7 +245,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 } else {
                     points = null;
                 }
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, 7, this);
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, 2, this);
                 window.setFocusable(true);
                 //防止虚拟软键盘被弹出菜单遮住
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -283,12 +284,17 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
                         NewsDetail.Point point = points.get(j);
-                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                            if (paragraphIndex < list.size()) {
-                                NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
-                                content.getComments().add(point);
+                        try {
+                            int paragraphIndex = Integer.valueOf(point.paragraphIndex);
+                            if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
+                                if (paragraphIndex < list.size()) {
+                                    NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
+                                    content.getComments().add(point);
+                                }
                             }
+
+                        }catch (NumberFormatException e){
+
                         }
                     }
                 }
@@ -493,17 +499,48 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     public void updateCommentCount(int paragraphIndex, NewsDetail.Point point, String flag) {
-//            if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)){
-//                mNewsDetail.point.add(point);
-//                mNewsDetailELVAdapter.setNewsDetail(mNewsDetail);
-//            }else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)){
-//                mNewsDetailAdd.point.add(point);
-//                mNewsDetailELVAdapter.setNewsDetail(mNewsDetailAdd);
-//            }
+        if (UploadCommentRequest.TEXT_DOC.equals(flag) || UploadCommentRequest.SPEECH_DOC.equals(flag)){
+            if (mNewsDetail != null){
+                mNewsContentDataList = parseNewsDetail(mNewsDetail);
+            }else if (mNewsDetailAdd != null) {
+                mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            }
+        }else {
+            if (mNewsDetail != null){
+                if (mNewsDetail.point == null){
+                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                    list.add(point);
+                    mNewsDetail.point = list;
+                }else {
+                    mNewsDetail.point.add(point);
+                }
+                mNewsContentDataList = parseNewsDetail(mNewsDetail);
+            }else if (mNewsDetailAdd != null){
+                if (mNewsDetailAdd.point == null) {
+                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                    list.add(point);
+                    mNewsDetailAdd.point = list;
+                } else {
+                    mNewsDetailAdd.point.add(point);
+                }
+                mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            }
+        }
+
+        mNewsDetailELVAdapter.notifyDataSetChanged();
+        //设置Listview默认展开
+        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
+            mDetailContentListView.expandGroup(i);
+        }
     }
 
     @Override
     public void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint) {
+
+    }
+
+    @Override
+    public void updataPraise(String commentId) {
 
     }
 }

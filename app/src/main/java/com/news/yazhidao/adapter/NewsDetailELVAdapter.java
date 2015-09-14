@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -48,7 +50,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
 
     private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
-
+    private ExpandableListView mExpListView;
     @Override
     public void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point, int flag, boolean isPraiseFlag) {
 
@@ -58,46 +60,56 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     public void updateCommentCount(int paragraphIndex, NewsDetail.Point point, String flag) {
         if (UploadCommentRequest.TEXT_DOC.equals(flag) || UploadCommentRequest.SPEECH_DOC.equals(flag)){
             if (mNewsDetail != null){
-                mNewsDetail.point.add(point);
                 mNewsContentDataList = parseNewsDetail(mNewsDetail);
-            }else if (mNewsDetailAdd != null){
-                mNewsDetailAdd.point.add(point);
+            }else if (mNewsDetailAdd != null) {
                 mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
             }
         }else {
-            ArrayList<NewsDetailContent> arrayList = mNewsContentDataList.get(getContentGroupIndex());
-            NewsDetailContent content = arrayList.get(paragraphIndex);
-            content.getComments().add(point);
-
-//            //再往精选评论中加 //TODO 修改精选评论数据源
-//            if (getAllCommentGroupIndex() == -1){
-//                ArrayList<NewsDetail.Point> points = new ArrayList<>();
-//                points.add(point);
-//                if (mNewsDetail != null){
-//                    mNewsDetail.point = points;
-//                    mNewsContentDataList = parseNewsDetail(mNewsDetail);
-//                }else if (mNewsDetailAdd != null){
-//                    mNewsDetailAdd.point = points;
-//                    mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
-//                }
-//            }else {
-//                if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)){
-//                    mNewsDetail.point.add(point);
-//                    mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
-//                }else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)){
-//                    mNewsDetailAdd.point.add(point);
-//                    mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
-//                }
-//                ArrayList<NewsDetail.Point> points = mNewsContentDataList.get(getAllCommentGroupIndex());
-//                points.add(point);
-//            }
+            if (mNewsDetail != null){
+                if (mNewsDetail.point == null){
+                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                    list.add(point);
+                    mNewsDetail.point = list;
+                }else {
+                    mNewsDetail.point.add(point);
+                }
+                mNewsContentDataList = parseNewsDetail(mNewsDetail);
+            }else if (mNewsDetailAdd != null){
+                if (mNewsDetailAdd.point == null) {
+                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                    list.add(point);
+                    mNewsDetailAdd.point = list;
+                } else {
+                    mNewsDetailAdd.point.add(point);
+                }
+                mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            }
         }
+
+
         notifyDataSetChanged();
+        expandedListView();
     }
 
     @Override
     public void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint) {
 
+    }
+
+    @Override
+    public void updataPraise(String commentId) {
+        if (getSelectionCommentGroupIndex() != -1){
+            ArrayList<NewsDetail.Point> list = mNewsContentDataList.get(getSelectionCommentGroupIndex());
+            if (!TextUtil.isListEmpty(list)){
+                for (NewsDetail.Point point : list){
+//                    if (commentId.equals(point.commentId)){
+////                        point.up = (Integer.valueOf(point.up) + 1 ) +"";
+//                        break;
+//                    }
+                }
+                notifyDataSetChanged();
+            }
+        }
     }
 
     /**
@@ -184,6 +196,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        mExpListView = (ExpandableListView) parent;
         switch (getViewHolderType(groupPosition)){
             case CONTENT:
             case IMAGEWALL:
@@ -225,7 +238,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
 
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-
         /**新闻内容组*/
         if (getViewHolderType(groupPosition) == ViewHolderType.CONTENT) {
             ArrayList arrayList = mNewsContentDataList.get(groupPosition);
@@ -610,10 +622,23 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         return -1;
     }
     /**
-     * 获取all正文所在组索引
+     * 获取图片墙所在组索引
      * @return
      */
-    public int getAllCommentGroupIndex(){
+    public int getImageWallGroupIndex(){
+        for (int i = 0 ;i <mNewsContentDataList.size(); i++){
+            Object obj = mNewsContentDataList.get(i).get(0);
+            if (obj instanceof NewsDetailImageWall){
+                return i;
+            }
+        }
+        return -1;
+    }
+    /**
+     * 获取精选评论所在组索引
+     * @return
+     */
+    public int getSelectionCommentGroupIndex(){
         for (int i = 0 ;i <mNewsContentDataList.size(); i++){
             Object obj = mNewsContentDataList.get(i).get(0);
             if (obj instanceof NewsDetail.Point){
@@ -641,7 +666,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         switch (v.getId()){
             case R.id.mDetailCommentCount:
                 ArrayList<NewsDetail.Point> comments = (ArrayList<NewsDetail.Point>) v.getTag(R.id.mDetailCommentCount);
-                openComment(comments,comments.get(0).sourceUrl,Integer.valueOf(comments.get(0).paragraphIndex),2,this, this);
+                openComment(comments,comments.get(0).sourceUrl,Integer.valueOf(comments.get(0).paragraphIndex),1,this, this);
                 break;
             case R.id.mDetailAddComment:
                 int index = (Integer)v.getTag(R.id.mDetailAddComment);
@@ -703,10 +728,11 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         window.setFocusable(true);
         //防止虚拟软键盘被弹出菜单遮住
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        window.showAtLocation(((NewsDetailAty2)mContext).getWindow().getDecorView(), Gravity.BOTTOM
+        window.showAtLocation(((NewsDetailAty2) mContext).getWindow().getDecorView(), Gravity.BOTTOM
                 | Gravity.CENTER, 0, 0);
     }
     private ArrayList<ArrayList> parseNewsDetail(NewsDetail pNewsDetail) {
+        mNewsContentDataList.clear();
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
         if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
@@ -723,12 +749,16 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
                         NewsDetail.Point point = points.get(j);
-                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                            if (paragraphIndex < list.size()) {
-                                NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
-                                content.getComments().add(point);
+                        try {
+                            int paragraphIndex = Integer.valueOf(point.paragraphIndex);
+                            if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
+                                if (paragraphIndex < list.size()) {
+                                    NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
+                                    content.getComments().add(point);
+                                }
                             }
+                        }catch (NumberFormatException e){
+
                         }
                     }
                 }
@@ -807,10 +837,12 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }
             }
         }
+        Logger.e("jigang", "group size = " + mNewsContentDataList.size());
         return mNewsContentDataList;
     }
 
     private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
+        mNewsContentDataList.clear();
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
         if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
@@ -924,6 +956,16 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
         }
         return mNewsContentDataList;
+    }
+
+    /**
+     * 展开所有的childview
+     */
+    public void expandedListView(){
+        //设置Listview默认展开
+        for (int i = 0; i < this.getGroupCount(); i++) {
+            mExpListView.expandGroup(i);
+        }
     }
     /**
      * 所有分组通用 ViewHolder

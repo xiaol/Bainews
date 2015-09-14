@@ -48,6 +48,7 @@ import cn.sharesdk.framework.PlatformDb;
  */
 public class CommentPopupWindow extends PopupWindow implements InputBarDelegate, Handler.Callback {
 
+//    private int mParaindex;
     private ImageView mivClose;
     private View mMenuView;
     private Context m_pContext;
@@ -94,6 +95,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         }
         this.sourceUrl = sourceUrl;
         comment_flag = flag;
+//        mParaindex = paraindex;
         if(paraindex == -1){
             if (!TextUtil.isListEmpty(marrPoints)){
                 mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
@@ -231,11 +233,12 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                 if (result != null){
                     result.up = "0";
                     result.down = "0";
+                    result.paragraphIndex = mParagraphIndex + "";
                     if (mIUpdateCommentCount != null){
-                        mIUpdateCommentCount.updateCommentCount(mParagraphIndex,result,result.type);
+                        mIUpdateCommentCount.updateCommentCount(mParagraphIndex,result, point.type);
                     }
                 }
-                Logger.e("jigang","+++++++comment=="+result);
+                Logger.e("jigang","+++++++comment=="+result.paragraphIndex);
             }
 
             @Override
@@ -540,11 +543,14 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
                             String uuid = DeviceInfoUtil.getUUID();
 
-                            NewsDetail.Point point_item = marrPoint.get(position);
+                            final NewsDetail.Point point_item = marrPoint.get(position);
                             if (user != null) {
                                 PraiseRequest.Praise(mContext, user.getUserId(), user.getPlatformType(), uuid, sourceUrl, point_item.commentId, new PraiseListener() {
                                     @Override
                                     public void success() {
+                                        if (mIUpdatePraiseCount != null){
+                                            mIUpdatePraiseCount.updataPraise(point_item.commentId);
+                                        }
                                     }
 
                                     @Override
@@ -578,5 +584,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
     public interface IUpdatePraiseCount {
         void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint);
+        void updataPraise(String commentId);
     }
 }
