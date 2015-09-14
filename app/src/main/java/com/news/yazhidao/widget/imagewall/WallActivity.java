@@ -85,6 +85,7 @@ public class WallActivity extends BaseActivity implements ViewPager.OnPageChange
         for (int i = 0; i < mImageWalls.size(); i++) {
             final SimpleDraweeView imageView = new SimpleDraweeView(this);
             mViews.add(imageView);
+            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             DraweeController controller = Fresco.newDraweeControllerBuilder()
                     .setUri(Uri.parse(mImageWalls.get(i).get("img")))
                     .setTapToRetryEnabled(true)
