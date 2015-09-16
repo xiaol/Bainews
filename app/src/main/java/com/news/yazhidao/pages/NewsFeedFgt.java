@@ -952,7 +952,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     } else {
                         String am = "";
                         //填充时间日期
-                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
+                        DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
@@ -1386,7 +1386,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     } else {
                         String am = "";
                         //填充时间日期
-                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
+                        DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
