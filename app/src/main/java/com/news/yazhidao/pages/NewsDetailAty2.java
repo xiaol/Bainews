@@ -125,13 +125,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Logger.e("jigang", "first =" + firstVisibleItem + ",visible = " + visibleItemCount + ",total =" + totalItemCount);
                 View childAt = view.getChildAt(0);
                 if (childAt != null) {
                     if (firstVisibleItem != 0 || childAt.getY() > 0) {
                         return;
                     }
-                    Logger.e("jigang", "----" + childAt.getX() + ",,height=" + childAt.getY() + ",top=" + childAt.getTop() + ",hhh=" + childAt.getHeight());
                     double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
                     int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
                     Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
