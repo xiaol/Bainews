@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -58,7 +57,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private RelativeLayout mrlRecord;
     private Handler mHandler;
     private double mRecordVolume;// 麦克风获取的音量值
-    private TextViewExtend mtvVoiceTips, mtvVoiceTimes;
+    private TextViewExtend mtvTitle, mtvVoiceTips, mtvVoiceTimes;
     private ImageView mivRecord;
     private ArrayList<NewsDetail.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
@@ -70,6 +69,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private RelativeLayout rl_popup;
     private boolean praiseFlag = false;
     private int praiseCount;
+    private SharePopupWindow.ShareDismiss mShareDismiss;
 
     /**
      * 评论界面
@@ -81,27 +81,26 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
      * @param paraindex
      * @param updatePraiseCount
      */
-    public CommentPopupWindow(Context context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, IUpdatePraiseCount updatePraiseCount) {
+    public CommentPopupWindow(Context context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, IUpdatePraiseCount updatePraiseCount, SharePopupWindow.ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
-        if (points == null){
+        mShareDismiss = shareDismiss;
+        if (points == null) {
             marrPoints = new ArrayList<>();
-        }else {
+        } else {
             marrPoints = new ArrayList<>(points);
         }
         this.sourceUrl = sourceUrl;
         mParaindex = paraindex;
-        if(paraindex == -1){
-            if (!TextUtil.isListEmpty(marrPoints)){
+        if (paraindex == -1) {
+            if (!TextUtil.isListEmpty(marrPoints)) {
                 mParagraphIndex = Integer.valueOf(marrPoints.get(0).paragraphIndex);
-            }else {
+            } else {
                 mParagraphIndex = 0;
             }
-        }else {
+        } else {
             mParagraphIndex = paraindex;
         }
-
-
         mIUpdateCommentCount = updateCommentCount;
         mIUpdatePraiseCount = updatePraiseCount;
         LayoutInflater inflater = (LayoutInflater) context
@@ -114,7 +113,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     private void findHeadPortraitImageViews() {
-
+        mtvTitle = (TextViewExtend) mMenuView.findViewById(R.id.title_textView);
         //录音动画
         mrlRecord = (RelativeLayout) mMenuView.findViewById(R.id.voice_record_layout_wins);
         mtvVoiceTips = (TextViewExtend) mMenuView.findViewById(R.id.tv_voice_tips);
@@ -124,15 +123,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         mInputBar = (InputBar) mMenuView.findViewById(R.id.input_bar_view);
         mInputBar.setActivityAndHandler(m_pContext, mHandler);
         mInputBar.setDelegate(this);
-        mivClose = (ImageView)
-                mMenuView.findViewById(R.id.close_imageView);
-        rl_popup = (RelativeLayout) mMenuView.findViewById(R.id.rl_popup);
-        rl_popup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         mlvComment = (ListView) mMenuView.findViewById(R.id.comment_list_view);
         mlvComment.setAdapter(mCommentAdapter);
         mCommentAdapter.setData(marrPoints);
@@ -146,11 +137,11 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //设置SelectPicPopupWindow弹出窗体动画效果
-//        this.setAnimationStyle(R.style.DialogAnimation);
+        this.setAnimationStyle(R.style.popupWindowAnimation);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
+//        ColorDrawable dw = new ColorDrawable(0xb0000000);
         //设置SelectPicPopupWindow弹出窗体的背景
-        this.setBackgroundDrawable(dw);
+//        this.setBackgroundDrawable(dw);
         mivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +153,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     @Override
     public void dismiss() {
         super.dismiss();
+        mShareDismiss.shareDismiss();
         //退出评论页面时，关闭正在播放的语音评论
         MediaPlayerManager.getInstance().stop();
     }
@@ -180,14 +172,14 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
-            if (mParaindex == -1){
+            if (mParaindex == -1) {
                 type = UploadCommentRequest.SPEECH_DOC;
             }
             newPoint.srcText = argContent;
             newPoint.srcTextTime = speechDuration / 1000;
         } else {
             type = UploadCommentRequest.TEXT_PARAGRAPH;
-            if (mParaindex == -1){
+            if (mParaindex == -1) {
                 type = UploadCommentRequest.TEXT_DOC;
             }
             newPoint.srcText = argContent;
@@ -204,23 +196,23 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
             @Override
             public void success(NewsDetail.Point result) {
-                if (result != null){
+                if (result != null) {
                     result.up = "0";
                     result.down = "0";
                     result.paragraphIndex = mParagraphIndex + "";
                     //刷新评论界面
                     mCommentAdapter.setData(marrPoints);
                     //通知刷新外面新闻展示界面
-                    if (mIUpdateCommentCount != null){
+                    if (mIUpdateCommentCount != null) {
                         mIUpdateCommentCount.updateCommentCount(result);
                     }
                 }
-                Logger.e("jigang","+++++++comment=="+result.paragraphIndex + ",,,,type="+point.type);
+                Logger.e("jigang", "+++++++comment==" + result.paragraphIndex + ",,,,type=" + point.type);
             }
 
             @Override
             public void failed() {
-                Logger.e("jigang","+++++++comment fail==");
+                Logger.e("jigang", "+++++++comment fail==");
             }
         });
         Log.i("tag", argContent);
@@ -526,7 +518,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                                 PraiseRequest.Praise(mContext, user.getUserId(), user.getPlatformType(), uuid, sourceUrl, point_item.commentId, new PraiseListener() {
                                     @Override
                                     public void success() {
-                                        if (mIUpdatePraiseCount != null){
+                                        if (mIUpdatePraiseCount != null) {
                                             mIUpdatePraiseCount.updataPraise();
                                         }
                                     }

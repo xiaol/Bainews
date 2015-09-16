@@ -23,7 +23,6 @@ import com.news.yazhidao.pages.NewsDetailAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.helper.ImageLoaderHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.InputbarPopupWindow;
 import com.news.yazhidao.widget.LetterSpacingTextView;
 import com.news.yazhidao.widget.LoginModePopupWindow;
@@ -134,16 +133,16 @@ public class NewsDetailAdapter extends BaseAdapter {
                             }
                         }
 
-                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, (int) holder.rl_para.getTag(), view);
-                        window.setFocusable(true);
-                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                        //防止虚拟软键盘被弹出菜单遮住、
-                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
+//                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, (int) holder.rl_para.getTag(), view);
+//                        window.setFocusable(true);
+//                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                        //防止虚拟软键盘被弹出菜单遮住、
+//                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                | Gravity.CENTER, 0, 0);
                     }
                 });
 //                        final SpeechView speechView = (SpeechView) rl_para.findViewById(R.id.speechView);
@@ -187,15 +186,15 @@ public class NewsDetailAdapter extends BaseAdapter {
                                                     point_para.add(points.get(m));
                                                 }
                                             }
-                                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index,view);
-                                            window.setFocusable(true);
-                                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                                            //防止虚拟软键盘被弹出菜单遮住、
-                                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-                                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                                    | Gravity.CENTER, 0, 0);
+//                                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index,view);
+//                                            window.setFocusable(true);
+//                                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                                            //防止虚拟软键盘被弹出菜单遮住、
+//                                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//                                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                                    | Gravity.CENTER, 0, 0);
                                         }
                                     }
                                 });
@@ -330,16 +329,16 @@ public class NewsDetailAdapter extends BaseAdapter {
                                         point_para.add(points.get(m));
                                     }
                                 }
-                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index, view);
-                                window.setFocusable(true);
-                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                                //防止虚拟软键盘被弹出菜单遮住、
-                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                        | Gravity.CENTER, 0, 0);
+//                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index, view);
+//                                window.setFocusable(true);
+//                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                                //防止虚拟软键盘被弹出菜单遮住、
+//                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                        | Gravity.CENTER, 0, 0);
                             }
                         }
                     });

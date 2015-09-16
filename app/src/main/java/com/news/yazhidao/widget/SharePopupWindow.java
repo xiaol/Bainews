@@ -42,11 +42,13 @@ public class SharePopupWindow extends PopupWindow {
     private TypedArray mTypedArray;
     private String[] mShareName;
     private String[] marrSharePlatform;
-    private String mstrTitle , mstrUrl;
+    private String mstrTitle, mstrUrl;
+    private ShareDismiss mShareDismiss;
 
-    public SharePopupWindow(Activity context) {
+    public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
+        mShareDismiss = shareDismiss;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_share, null);
@@ -66,7 +68,7 @@ public class SharePopupWindow extends PopupWindow {
         //设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        this.setHeight(800);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //设置SelectPicPopupWindow弹出窗体动画效果
@@ -98,6 +100,11 @@ public class SharePopupWindow extends PopupWindow {
         mstrUrl = url;
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        mShareDismiss.shareDismiss();
+    }
 
     class ShareAdapter extends BaseAdapter {
 
@@ -172,5 +179,9 @@ public class SharePopupWindow extends PopupWindow {
 
     class Holder {
         TextViewExtend tvShare;
+    }
+
+    public interface ShareDismiss {
+        void shareDismiss();
     }
 }
