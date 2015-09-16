@@ -134,7 +134,7 @@ public class NewsDetailAdapter extends BaseAdapter {
                             }
                         }
 
-                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, (int) holder.rl_para.getTag(), PARA_FLAG, view);
+                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, (int) holder.rl_para.getTag(), view);
                         window.setFocusable(true);
                         //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
 //                                          window.setBackgroundDrawable(new BitmapDrawable());
@@ -187,7 +187,7 @@ public class NewsDetailAdapter extends BaseAdapter {
                                                     point_para.add(points.get(m));
                                                 }
                                             }
-                                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index, PARA_FLAG,view);
+                                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index,view);
                                             window.setFocusable(true);
                                             //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
 //                                              window.setBackgroundDrawable(new BitmapDrawable());
@@ -330,7 +330,7 @@ public class NewsDetailAdapter extends BaseAdapter {
                                         point_para.add(points.get(m));
                                     }
                                 }
-                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index, PARA_FLAG, view);
+                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, view, para_index, view);
                                 window.setFocusable(true);
                                 //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
 //                                              window.setBackgroundDrawable(new BitmapDrawable());

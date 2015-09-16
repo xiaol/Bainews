@@ -24,8 +24,8 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
     private final SimpleDraweeView mDetailSpeechCommentUserIcon;
     private final SpeechView mDetailSpeechComment;
     private int mScreenWidth,mScreenHeight;
-    //返回上一级,全文评论,分享,语音评论父容器,评论父容器
-    private View mDetailLeftBack,mDetailComment,mDetailShare,mDetailSpeechCommentWrapper,mDetailCommentWrapper;
+    //语音评论父容器,评论父容器
+    private View mDetailSpeechCommentWrapper,mDetailCommentWrapper;
     //新闻大头图
     private SimpleDraweeView mDetailHeaderImg;
     //新闻标题,新闻时间,新闻描述
@@ -44,9 +44,6 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         mScreenWidth = DeviceInfoUtil.getScreenWidth(context);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(context);
         View root = View.inflate(context, R.layout.aty_news_detail_header_view2, this);
-        mDetailLeftBack = root.findViewById(R.id.mDetailLeftBack);
-        mDetailComment = root.findViewById(R.id.mDetailComment);
-        mDetailShare = root.findViewById(R.id.mDetailShare);
         mDetailHeaderImg = (SimpleDraweeView)root.findViewById(R.id.mDetailHeaderImg);
         mDetailHeaderImg.getHierarchy().setActualImageFocusPoint(new PointF(.5f,0.35f));
         mDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(mScreenWidth*520.0f/720)));
@@ -116,38 +113,5 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
                 mDetailCommentWrapper.setVisibility(GONE);
             }
         }
-    }
-
-    /**
-     * 设置subviews 的点击事件回调
-     * @param pSubView
-     * @param pListener
-     */
-    public void setSubViewOnClickListener(View pSubView,View.OnClickListener pListener){
-        if (pSubView == null || pListener == null){
-            return;
-        }
-        switch (pSubView.getId()){
-            case R.id.mDetailLeftBack:
-                mDetailLeftBack.setOnClickListener(pListener);
-                break;
-            case R.id.mDetailComment:
-                mDetailComment.setOnClickListener(pListener);
-                break;
-            case R.id.mDetailShare:
-                mDetailShare.setOnClickListener(pListener);
-                break;
-        }
-    }
-
-    public void setCommentListener(View.OnClickListener pListener){
-        mDetailComment.setOnClickListener(pListener);
-    }
-
-    public void setShareListener(View.OnClickListener pListener){
-        mDetailShare.setOnClickListener(pListener);
-    }
-    public void setLeftBackListener(View.OnClickListener pListener){
-        mDetailLeftBack.setOnClickListener(pListener);
     }
 }

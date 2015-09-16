@@ -1,11 +1,12 @@
 package com.news.yazhidao.pages;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 
@@ -63,7 +64,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private NewsDetailELVAdapter mNewsDetailELVAdapter;
     private NewsDetailHeaderView2 mDetailHeaderView;
     private ExpandableListView mDetailContentListView;
-    private View mNewsDetailLoaddingWrapper;
+    /**返回上一级,全文评论,分享*/
+    private View mDetailLeftBack,mDetailComment,mDetailShare,mDetailHeader,mNewsDetailLoaddingWrapper;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -94,42 +96,53 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsDetailLoaddingWrapper.setOnClickListener(this);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+
+        mDetailHeader = findViewById(R.id.mDetailHeader);
+        mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack.setOnClickListener(this);
+        mDetailComment = findViewById(R.id.mDetailComment);
+        mDetailComment.setOnClickListener(this);
+        mDetailShare = findViewById(R.id.mDetailShare);
+        mDetailShare.setOnClickListener(this);
+
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
         mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
-        mDetailContentListView.setOnTouchListener(new View.OnTouchListener() {
+        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        startY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Logger.e("jigang","move ----"+event.getY());
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Logger.e("jigang","end ----"+(event.getY()- startY));
-                        break;
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Logger.e("jigang","first ="+firstVisibleItem + ",visible = "+visibleItemCount + ",total =" +totalItemCount);
+                View childAt = view.getChildAt(0);
+                if (childAt != null) {
+                if (firstVisibleItem != 0 || childAt.getY() > 0){
+                    return;
                 }
-                return false;
+                    Logger.e("jigang", "----" + childAt.getX() + ",,height=" + childAt.getY() +",top="+childAt.getTop()+",hhh=" + childAt.getHeight());
+                    double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
+                    int alpaha = (int) (move* 1.0f / childAt.getHeight() * 255);
+                    Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
+                    mDetailHeader.setBackground(drawable);
+                    mDetailHeader.getBackground().setAlpha(alpaha);
+                }
             }
         });
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         //设置Listview默认展开
-        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
-            mDetailContentListView.expandGroup(i);
-        }
+        expandedChildViews();
         //去掉Listview左边箭头
         mDetailContentListView.setGroupIndicator(null);
+        //取消groupview 点击事件
         mDetailContentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 return true;
             }
         });
-        mDetailHeaderView.setShareListener(this);
-        mDetailHeaderView.setCommentListener(this);
-        mDetailHeaderView.setLeftBackListener(this);
     }
 
     @Override
@@ -147,7 +160,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             newsId = albumSubItem.getInserteId();
 
         }
-//        position = getIntent().getIntExtra("position", 0);
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
         if (user != null) {
             mUserId = user.getUserId();
@@ -155,7 +167,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
         mNewsDetailUrl = getIntent().getStringExtra("url");
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
-//        mNewsDetailUrl = "http://sports.people.com.cn/n/2015/0910/c22176-27564278.html";
         uuid = DeviceInfoUtil.getUUID();
         String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;
         /**是否是新的api,除了谷歌今日焦点,其他都是新api接口*/
@@ -245,7 +256,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 } else {
                     points = null;
                 }
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, 2, this);
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this);
                 window.setFocusable(true);
                 //防止虚拟软键盘被弹出菜单遮住
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -267,7 +278,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * 解析新闻详情POJO,转换成expandablelistview 所须POJO
+     *
+     * @param pNewsDetail
+     * @return
+     */
     private ArrayList<ArrayList> parseNewsDetail(NewsDetail pNewsDetail) {
+        mNewsContentDataList.clear();
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
         if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
@@ -292,8 +310,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                                     content.getComments().add(point);
                                 }
                             }
-
-                        }catch (NumberFormatException e){
+                        } catch (NumberFormatException e) {
 
                         }
                     }
@@ -315,7 +332,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             /**计算差异化观点所在组数据*/
             if (pNewsDetail.relate_opinion != null) {
                 ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
-                if (!TextUtil.isListEmpty(self_opinion)){
+                if (!TextUtil.isListEmpty(self_opinion)) {
                     mNewsContentDataList.add(self_opinion);
                 }
             }
@@ -376,7 +393,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         return mNewsContentDataList;
     }
 
+    /**
+     * 解析新闻详情POJO,转换成expandablelistview 所须POJO
+     *
+     * @param pNewsDetail
+     * @return
+     */
     private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
+        mNewsContentDataList.clear();
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
         if (pNewsDetail != null) {
             /**计算新闻内容所在组*/
@@ -431,7 +455,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             /**计算差异化观点所在组数据*/
             if (pNewsDetail.relate_opinion != null) {
                 ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
-                if (!TextUtil.isListEmpty(self_opinion)){
+                if (!TextUtil.isListEmpty(self_opinion)) {
                     mNewsContentDataList.add(self_opinion);
                 }
             }
@@ -492,55 +516,45 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         return mNewsContentDataList;
     }
 
-    @Override
-    public void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point point, int flag, boolean isPraiseFlag) {
-
-    }
-
-    @Override
-    public void updateCommentCount(int paragraphIndex, NewsDetail.Point point, String flag) {
-        if (UploadCommentRequest.TEXT_DOC.equals(flag) || UploadCommentRequest.SPEECH_DOC.equals(flag)){
-            if (mNewsDetail != null){
-                mNewsContentDataList = parseNewsDetail(mNewsDetail);
-            }else if (mNewsDetailAdd != null) {
-                mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
-            }
-        }else {
-            if (mNewsDetail != null){
-                if (mNewsDetail.point == null){
-                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
-                    list.add(point);
-                    mNewsDetail.point = list;
-                }else {
-                    mNewsDetail.point.add(point);
-                }
-                mNewsContentDataList = parseNewsDetail(mNewsDetail);
-            }else if (mNewsDetailAdd != null){
-                if (mNewsDetailAdd.point == null) {
-                    ArrayList<NewsDetail.Point> list = new ArrayList<>();
-                    list.add(point);
-                    mNewsDetailAdd.point = list;
-                } else {
-                    mNewsDetailAdd.point.add(point);
-                }
-                mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
-            }
-        }
-
-        mNewsDetailELVAdapter.notifyDataSetChanged();
-        //设置Listview默认展开
+    /**
+     * 展开所有的childview
+     */
+    private void expandedChildViews() {
         for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
             mDetailContentListView.expandGroup(i);
         }
     }
 
     @Override
-    public void updatePraise(int count, int paragraphIndex, ArrayList<NewsDetail.Point> marrPoint) {
+    public void updateCommentCount(NewsDetail.Point point) {
+        if (mNewsDetail != null) {
+            if (mNewsDetail.point == null) {
+                ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                list.add(point);
+                mNewsDetail.point = list;
+            } else {
+                mNewsDetail.point.add(point);
+            }
+            mNewsContentDataList = parseNewsDetail(mNewsDetail);
+        } else if (mNewsDetailAdd != null) {
+            if (mNewsDetailAdd.point == null) {
+                ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                list.add(point);
+                mNewsDetailAdd.point = list;
+            } else {
+                mNewsDetailAdd.point.add(point);
+            }
+            mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+        }
 
+        mNewsDetailELVAdapter.notifyDataSetChanged();
+        //设置Listview默认展开
+        expandedChildViews();
     }
 
+
     @Override
-    public void updataPraise(String commentId) {
+    public void updataPraise() {
 
     }
 }

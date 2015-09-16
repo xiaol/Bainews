@@ -148,6 +148,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private RoundedImageView mHomeAtyRightMenu;
     private int TYPE_VIEWHOLDER = 1;
     private int TYPE_VIEWHOLDER3 = 3;
+    /**大图新闻和小图新闻分割处*/
+    private int split_index_top;
 
     @Override
     public void onAttach(Activity activity) {
@@ -330,13 +332,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         list_adapter = new MyAdapter();
         lv_news.setAdapter(list_adapter);
         lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-//        lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-//        lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//        lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-//        lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//        lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//        lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-
         lv_news.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
 
 
@@ -385,36 +380,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 lv_news.onRefreshComplete();
             }
         });
-//
-//        for (int i = 0; i < 3; i++) {
-//            if (mDownNewsArr != null && mDownNewsArr.size() > 0) {
-//                NewsFeed _NewsFeed = mDownNewsArr.get(mDownNewsArr.size() - 1);
-//                if (mDownNewsArr.size() == 1) {
-//                    _NewsFeed.setBottom_flag(true);
-//                    if (mUpNewsArr.size() > 0) {
-//                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
-//                    } else {
-//                        lv_news.setMode2(PullToRefreshBase.Mode.DISABLED, 1);
-//                    }
-//
-//                }
-//                mMiddleNewsArr.add(_NewsFeed);
-//                mDownNewsArr.remove(mDownNewsArr.size() - 1);
-//
-//                if (miCurrentCount < miTotalCount)
-//                    miCurrentCount++;
-//                mtvProgress.setText(miCurrentCount + "/" + miTotalCount);
-//                lv_news.setPullLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-//                lv_news.setPullLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//                lv_news.setRefreshingLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-//                lv_news.setRefreshingLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//                lv_news.setReleaseLabel("还有" + mDownNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_END);
-//                lv_news.setReleaseLabel("还有" + mUpNewsArr.size() + "条新鲜新闻...", PullToRefreshBase.Mode.PULL_FROM_START);
-//
-//            } else {
-//
-//            }
-//        }
         String platform = AnalyticsConfig.getChannel(getActivity());
         if ("adcoco".equals(platform)) {
             try {
@@ -986,7 +951,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         holder.tv_weekday.setText(weekday);
                     } else {
                         String am = "";
-
+                        //填充时间日期
+                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
@@ -1419,7 +1385,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         holder3.tv_weekday.setText(weekday);
                     } else {
                         String am = "";
-
+                        //填充时间日期
+                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
@@ -1931,33 +1898,15 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     break;
                 }
             }
-
-            GlobalParams.split_index_top = _SplitStartIndex;
-
+            split_index_top = _SplitStartIndex;
             if (_SplitStartIndex >= 1) {
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
-
-//                mUpNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex - 1));
-//                mMiddleNewsArr = new ArrayList<>(result.subList(_SplitStartIndex - 1, _SplitStartIndex + 1));
-//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 1, result.size()));
-//
-//                if (mUpNewsArr.size() == 0) {
-//                    lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
-//                } else {
-//                    lv_news.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-//                }
             } else if (_SplitStartIndex == 0) {
-
                 NewsFeed feed = result.get(_SplitStartIndex);
                 feed.setTime_flag(true);
                 feed.setTop_flag(true);
-
-//                mMiddleNewsArr = new ArrayList<>(result.subList(0, _SplitStartIndex + 2));
-//                mDownNewsArr = new ArrayList<>(result.subList(_SplitStartIndex + 2, result.size()));
-//                lv_news.setMode(PullToRefreshBase.Mode.DISABLED);
             }
-
             mMiddleNewsArr = result;
 
         }

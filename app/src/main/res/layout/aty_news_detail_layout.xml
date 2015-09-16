@@ -13,6 +13,42 @@
         android:paddingBottom="10dp"
         android:clipToPadding="false"
         />
+    <RelativeLayout
+        android:id="@+id/mDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        >
+
+        <ImageView
+            android:id="@+id/mDetailLeftBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:contentDescription="转到上一级"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_left_back" />
+
+        <ImageView
+            android:id="@+id/mDetailComment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toLeftOf="@+id/mDetailShare"
+            android:contentDescription="评论"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_comment" />
+
+        <ImageView
+            android:id="@+id/mDetailShare"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:contentDescription="分享"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_share" />
+
+    </RelativeLayout>
     <FrameLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
