@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -48,7 +49,7 @@ import java.util.List;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount {
+public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -57,6 +58,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private String mPlatformType;
     private String uuid;
     private String mNewsDetailUrl;
+    private ImageView mivShareBg;
     //新闻内容POJO
     private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
@@ -64,8 +66,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private NewsDetailELVAdapter mNewsDetailELVAdapter;
     private NewsDetailHeaderView2 mDetailHeaderView;
     private ExpandableListView mDetailContentListView;
-    /**返回上一级,全文评论,分享*/
-    private View mDetailLeftBack,mDetailComment,mDetailShare,mDetailHeader,mNewsDetailLoaddingWrapper;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
+    /**
+     * 返回上一级,全文评论,分享
+     */
+    private View mDetailLeftBack, mDetailComment, mDetailShare, mDetailHeader, mNewsDetailLoaddingWrapper;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -84,6 +89,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
         mNewsDetailELVAdapter = new NewsDetailELVAdapter(this, mNewsContentDataList);
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
     }
 
     @Override
@@ -96,7 +105,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsDetailLoaddingWrapper.setOnClickListener(this);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-
+        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
@@ -116,15 +125,15 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                Logger.e("jigang","first ="+firstVisibleItem + ",visible = "+visibleItemCount + ",total =" +totalItemCount);
+                Logger.e("jigang", "first =" + firstVisibleItem + ",visible = " + visibleItemCount + ",total =" + totalItemCount);
                 View childAt = view.getChildAt(0);
                 if (childAt != null) {
-                if (firstVisibleItem != 0 || childAt.getY() > 0){
-                    return;
-                }
-                    Logger.e("jigang", "----" + childAt.getX() + ",,height=" + childAt.getY() +",top="+childAt.getTop()+",hhh=" + childAt.getHeight());
+                    if (firstVisibleItem != 0 || childAt.getY() > 0) {
+                        return;
+                    }
+                    Logger.e("jigang", "----" + childAt.getX() + ",,height=" + childAt.getY() + ",top=" + childAt.getTop() + ",hhh=" + childAt.getHeight());
                     double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
-                    int alpaha = (int) (move* 1.0f / childAt.getHeight() * 255);
+                    int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
                     Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
                     mDetailHeader.setBackground(drawable);
                     mDetailHeader.getBackground().setAlpha(alpaha);
@@ -256,15 +265,18 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 } else {
                     points = null;
                 }
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this);
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this, this);
                 window.setFocusable(true);
                 //防止虚拟软键盘被弹出菜单遮住
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                window.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM
-                        | Gravity.CENTER, 0, 0);
+                window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
             case R.id.mDetailShare:
-                mSharePopupWindow = new SharePopupWindow(this);
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                mSharePopupWindow = new SharePopupWindow(this, this);
                 if (mNewsDetail != null) {
                     mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl);
                 } else {
@@ -556,5 +568,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     @Override
     public void updataPraise() {
 
+    }
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mivShareBg.setVisibility(View.INVISIBLE);
     }
 }

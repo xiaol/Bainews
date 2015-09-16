@@ -281,16 +281,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     }
                                 }
 
-                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, (int) paragraphIndex, NewsDetailHeaderView.this);
-                                window.setFocusable(true);
-                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                                //防止虚拟软键盘被弹出菜单遮住、
-                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                        | Gravity.CENTER, 0, 0);
+//                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, (int) paragraphIndex, NewsDetailHeaderView.this);
+//                                window.setFocusable(true);
+//                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                                //防止虚拟软键盘被弹出菜单遮住、
+//                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                        | Gravity.CENTER, 0, 0);
                             }
                         });
 
@@ -368,16 +368,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                         }
                                     }
 
-                                    CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, (int) rl_para.getTag(), NewsDetailHeaderView.this);
-                                    window.setFocusable(true);
-                                    //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                                    //防止虚拟软键盘被弹出菜单遮住、
-                                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                            | Gravity.CENTER, 0, 0);
+//                                    CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, (int) rl_para.getTag(), NewsDetailHeaderView.this);
+//                                    window.setFocusable(true);
+//                                    //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                                    //防止虚拟软键盘被弹出菜单遮住、
+//                                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                            | Gravity.CENTER, 0, 0);
                                 }
                             });
 
@@ -2286,16 +2286,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                             }
                         }
 
-                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, position, NewsDetailHeaderView.this);
-                        window.setFocusable(true);
-                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                        //防止虚拟软键盘被弹出菜单遮住、
-                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
+//                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, position, NewsDetailHeaderView.this);
+//                        window.setFocusable(true);
+//                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                        //防止虚拟软键盘被弹出菜单遮住、
+//                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                | Gravity.CENTER, 0, 0);
                     }
                 });
 
@@ -2330,15 +2330,15 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     point_para.add(points.get(m));
                                 }
                             }
-                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
-                            window.setFocusable(true);
-                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                            //防止虚拟软键盘被弹出菜单遮住、
-                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                    | Gravity.CENTER, 0, 0);
+//                            CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
+//                            window.setFocusable(true);
+//                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                            //防止虚拟软键盘被弹出菜单遮住、
+//                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                    | Gravity.CENTER, 0, 0);
                         }
                     }
                 });
@@ -2368,16 +2368,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
 
                         } else {
 
-                            InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points, sourceUrl, NewsDetailHeaderView.this, ARTICLE_FLAG);
-                            window.setFocusable(true);
-                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                            //防止虚拟软键盘被弹出菜单遮住、
-                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                    | Gravity.CENTER, 0, GlobalParams.screenHeight);
+//                            InputbarPopupWindow window = new InputbarPopupWindow((NewsDetailAty) mContext, points, sourceUrl, NewsDetailHeaderView.this, ARTICLE_FLAG);
+//                            window.setFocusable(true);
+//                            //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                            //防止虚拟软键盘被弹出菜单遮住、
+//                            window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                            window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                    | Gravity.CENTER, 0, GlobalParams.screenHeight);
                         }
                     }
                 });
@@ -2466,16 +2466,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                         point_para.add(points.get(m));
                                     }
                                 }
-                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
-                                window.setFocusable(true);
-                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                                //防止虚拟软键盘被弹出菜单遮住、
-                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                        | Gravity.CENTER, 0, 0);
+//                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
+//                                window.setFocusable(true);
+//                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                                //防止虚拟软键盘被弹出菜单遮住、
+//                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                        | Gravity.CENTER, 0, 0);
                             }
                         }
                     });
@@ -2599,16 +2599,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                     }
                                 }
 
-                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, position, NewsDetailHeaderView.this);
-                                window.setFocusable(true);
-                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                          window.setBackgroundDrawable(new BitmapDrawable());
-                                //防止虚拟软键盘被弹出菜单遮住、
-                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                        | Gravity.CENTER, 0, 0);
+//                                CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, position, NewsDetailHeaderView.this);
+//                                window.setFocusable(true);
+//                                //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                          window.setBackgroundDrawable(new BitmapDrawable());
+//                                //防止虚拟软键盘被弹出菜单遮住、
+//                                window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                        | Gravity.CENTER, 0, 0);
                             }
                         });
 
@@ -2643,15 +2643,15 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                             point_para.add(points.get(m));
                                         }
                                     }
-                                    CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
-                                    window.setFocusable(true);
-                                    //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                                    //防止虚拟软键盘被弹出菜单遮住、
-                                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-                                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                            | Gravity.CENTER, 0, 0);
+//                                    CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
+//                                    window.setFocusable(true);
+//                                    //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                                    //防止虚拟软键盘被弹出菜单遮住、
+//                                    window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//                                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                    window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                            | Gravity.CENTER, 0, 0);
                                 }
                             }
                         });
@@ -2779,16 +2779,16 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                                                 point_para.add(points.get(m));
                                             }
                                         }
-                                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
-                                        window.setFocusable(true);
-                                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
-//                                              window.setBackgroundDrawable(new BitmapDrawable());
-                                        //防止虚拟软键盘被弹出菜单遮住、
-                                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
-
-                                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-                                                | Gravity.CENTER, 0, 0);
+//                                        CommentPopupWindow window = new CommentPopupWindow((NewsDetailAty) mContext, point_para, sourceUrl, NewsDetailHeaderView.this, para_index, NewsDetailHeaderView.this);
+//                                        window.setFocusable(true);
+//                                        //这句是为了防止弹出菜单获取焦点之后，点击activity的其他组件没有响应
+////                                              window.setBackgroundDrawable(new BitmapDrawable());
+//                                        //防止虚拟软键盘被弹出菜单遮住、
+//                                        window.setSoftInputMode(PopupWindow.INPUT_METHOD_NEEDED);
+//
+//                                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//                                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
+//                                                | Gravity.CENTER, 0, 0);
                                     }
                                 }
                             });
