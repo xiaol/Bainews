@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -139,9 +140,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         //设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.popupWindowAnimation);
         //实例化一个ColorDrawable颜色为半透明
-//        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        ColorDrawable dw = new ColorDrawable(Color.parseColor("#50b5eb"));
         //设置SelectPicPopupWindow弹出窗体的背景
-//        this.setBackgroundDrawable(dw);
+        this.setBackgroundDrawable(dw);
         mivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
