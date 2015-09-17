@@ -152,11 +152,11 @@ public class NewsDetailAty extends SwipeBackActivity {
             platformType = user.getPlatformType();
         }
 
-        GlobalParams.news_detail_url = getIntent().getStringExtra("url");
+//        GlobalParams.news_detail_url = getIntent().getStringExtra("url");
         uuid = DeviceInfoUtil.getUUID();
 
-        String url = HttpConstant.URL_GET_NEWS_DETAIL + GlobalParams.news_detail_url + "&userId=" + userId + "&platformType=" + platformType;
-
+        String url = HttpConstant.URL_GET_NEWS_DETAIL + getIntent().getStringExtra("url") + "&userId=" + userId + "&platformType=" + platformType;
+        Logger.e("jigang","-----newsurl : " + url);
         if (!isnew) {
             NetworkRequest _Request = new NetworkRequest(url, NetworkRequest.RequestMethod.GET);
             _Request.setCallback(new JsonCallback<NewsDetail>() {

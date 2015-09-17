@@ -71,6 +71,7 @@ public class LetterSpacingTextView extends TextViewExtend {
                 finalText.setSpan(new ScaleXSpan((letterSpacing+1)/10), i, i+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
+
         super.setText(finalText, BufferType.SPANNABLE);
     }
 

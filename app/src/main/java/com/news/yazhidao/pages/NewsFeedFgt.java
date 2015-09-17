@@ -25,7 +25,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -1004,6 +1006,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
 
                         holder.tv_weekday.setText(weekday);
+                        //填充时间日期
+//                        DateUtil.getMyDate(mCurrentDate, holder3.tv_month, holder3.tv_day);
                     }
                 } else {
                     holder.ll_time_item.setVisibility(View.GONE);
@@ -1069,6 +1073,8 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         setLineVisibility(sourceList, iv_combine_line, tv_devider_line, a);
                         if (source != null) {
 
+
+
                             String source_name = source.getSourceSitename();
                             String finalText = "";
                             String source_title = source.getTitle();
@@ -1093,13 +1099,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                                 tv_news_source.setText(Html.fromHtml(finalText));
                             }
 
-                            int i = 0;
 
-                            if (source.getUser() != null && !"".equals(source.getUser())) {
-                                i = source.getTitle().length() + source.getUser().length();
-                            } else {
-                                i = source.getSourceSitename().length() + source.getTitle().length();
-                            }
 
                             if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
                                 if (source.getSimilarity().length() > 4) {
@@ -1112,17 +1112,34 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                                 tv_relate.setVisibility(View.GONE);
                             }
 
+                            Paint paint = new Paint();
+                            Rect rect = new Rect();
+                            paint.getTextBounds(finalText,0,finalText.length(),rect);
+                            int tv_width = 0;
+                            if(DeviceInfoUtil.isFlyme()) {
+                                tv_width = DensityUtil.dip2px(getActivity(),305);
+                            }else{
+                                tv_width = DensityUtil.dip2px(getActivity(),342);
+                            }
+
+                            int width = rect.width();
+                            int height = rect.height();
+                            int line = 0;
+                            if(tv_width >= width){
+                                line = 1;
+                            }else{
+                                line = 2;
+                            }
+
                             //设置观点view的布局
-                            setIvCombineLineParams(iv_combine_line, tv_news_source.getLineCount());
+                            setIvCombineLineParams(iv_combine_line, line);
                         }
 
                         //控制布局的size 最多为3
                         holder.ll_source_content.addView(ll_souce_view);
                     }
 
-//                    setContentParams(holder.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER);
                 } else {
-//                    setContentParams(holder.ll_source_content, 0, source_title_length, TYPE_VIEWHOLDER);
                 }
 
                 //大图卡片
@@ -1437,6 +1454,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
 
                         holder3.tv_weekday.setText(weekday);
+
+                        //填充时间日期
+                        DateUtil.getMyDate(mCurrentDate, holder3.tv_month, holder3.tv_day);
                     }
                 } else {
                     holder3.ll_time_item.setVisibility(View.GONE);
@@ -1526,6 +1546,19 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                         if (source != null) {
 
+                            int i = 0;
+                            int linecount = 0;
+
+                            if (source.getUser() != null && !"".equals(source.getUser())) {
+                                i = source.getTitle().length() + source.getUser().length();
+                                tv_news_source.setText(source.getUser() + source.getTitle());
+                                linecount = tv_news_source.getLineCount();
+                            } else {
+                                i = source.getSourceSitename().length() + source.getTitle().length();
+                                tv_news_source.setText(source.getSourceSitename() + source.getTitle());
+                                linecount = tv_news_source.getLineCount();
+                            }
+
                             String source_name = source.getSourceSitename();
 
                             String finalText = "";
@@ -1564,9 +1597,26 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             } else {
                                 tv_relate.setVisibility(View.GONE);
                             }
+                            Paint paint = new Paint();
+                            Rect rect = new Rect();
+                            paint.getTextBounds(finalText,0,finalText.length(),rect);
+
+                            int tv_width = 0;
+                            if(DeviceInfoUtil.isFlyme()) {
+                                tv_width = DensityUtil.dip2px(getActivity(),305);
+                            }else{
+                                tv_width = DensityUtil.dip2px(getActivity(),342);
+                            }
+                            int width = rect.width();
+                            int line = 0;
+                            if(tv_width >= width){
+                                line = 1;
+                            }else{
+                                line = 2;
+                            }
 
                             //设置观点view的布局
-                            setIvCombineLineParams(iv_combine_line, tv_news_source.getLineCount());
+                            setIvCombineLineParams(iv_combine_line,line);
                         }
 
                     holder3.ll_source_content.addView(ll_souce_view);
@@ -1756,8 +1806,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
         if(length == 1){
             params.height = DensityUtil.dip2px(mContext,20);
-        }else{
+        }else if(length == 2){
             params.height = DensityUtil.dip2px(mContext,40);
+        }else{
+            params.height = DensityUtil.dip2px(mContext,20);
         }
         iv_combine_line_top.setLayoutParams(params);
 

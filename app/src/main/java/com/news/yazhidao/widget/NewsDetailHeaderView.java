@@ -633,7 +633,6 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
         if (((NewsDetailAdd) pNewsDetail).isdoc == false) {
             rl_speech_view.setVisibility(View.GONE);
             tv_cutoff_line.setVisibility(View.GONE);
-
         } else {
             sv_article_comment.setUrl(((NewsDetailAdd) pNewsDetail).docUrl, true);
             sv_article_comment.setDuration(Integer.parseInt(((NewsDetailAdd) pNewsDetail).docTime));
@@ -773,23 +772,21 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
     private void initialNewsDetailHeaderView(final NewsDetail pNewsDetail) {
 
         if (TextUtils.isValidate(((NewsDetail) pNewsDetail).imgUrl)) {
-
             ViewGroup.LayoutParams layoutParams = mNewsDetailHeaderImg.getLayoutParams();
-            layoutParams.width = GlobalParams.screenWidth;
-            layoutParams.height = (int) (GlobalParams.screenHeight * 0.40);
-            mNewsDetailHeaderImg.setLayoutParams(layoutParams);
+            WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 
+            int width = wm.getDefaultDisplay().getWidth();
+            int height = wm.getDefaultDisplay().getHeight();
+            layoutParams.width = width;
+            layoutParams.height = (int) (height * 0.40);
+            mNewsDetailHeaderImg.setLayoutParams(layoutParams);
 
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mNewsDetailHeaderContentWrapper.getLayoutParams();
             int left = DensityUtil.dip2px(mContext, 8);
             int top = DensityUtil.dip2px(mContext, 10);
-            params.setMargins(left, (int) (GlobalParams.screenHeight * 0.4) - top, left, 0);
-
+            params.setMargins(left, (int) (height * 0.4) - top, left, 0);
             mNewsDetailHeaderContentWrapper.setLayoutParams(params);
-            TextViewExtend tv = new TextViewExtend(mContext);
-
-//            ImageLoaderHelper.dispalyImage(mContext, ((NewsDetail) pNewsDetail).imgUrl, mNewsDetailHeaderImg, tv);
-            mNewsDetailHeaderImg.setImageURI(Uri.parse(((NewsDetail) pNewsDetail).imgUrl));
+            mNewsDetailHeaderImg.setImageURI(Uri.parse(((NewsDetail) pNewsDetail).imgUrl),mContext);
         } else {
             mNewsDetailHeaderImg.setVisibility(GONE);
         }
@@ -2259,6 +2256,8 @@ public class NewsDetailHeaderView extends FrameLayout implements CommentPopupWin
                 convertView.setTag(newsdetailViewHolder);
             } else {
                 newsdetailViewHolder = (NewsdetailViewHolder) convertView.getTag();
+
+
             }
             setViewBg(newsdetailViewHolder.iv_none_point);
             newsdetailViewHolder.lstv_para_content.setFontSpacing(1);
