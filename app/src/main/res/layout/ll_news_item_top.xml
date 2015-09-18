@@ -38,7 +38,7 @@
         android:layout_below="@id/rl_top_mark"
         android:layout_width="wrap_content"
         android:layout_height="6dp"
-        android:background="#dfe6e9"
+        android:background="@color/bg_news_detail"
         android:visibility="gone"
         />
 
@@ -75,9 +75,8 @@
 
             <TextView
                 android:id="@+id/tv_news_category"
-                android:layout_toRightOf="@+id/tv_title"
                 android:layout_marginTop="70dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="85dp"
                 android:paddingLeft="2dp"
                 android:layout_width="18dp"
                 android:layout_height="36dp"
