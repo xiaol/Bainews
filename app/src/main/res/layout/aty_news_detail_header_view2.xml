@@ -13,7 +13,6 @@
         fresco:actualImageScaleType="focusCrop"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
         fresco:placeholderImageScaleType="fitXY" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

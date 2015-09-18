@@ -1,6 +1,5 @@
 package com.news.yazhidao.widget;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -36,7 +35,7 @@ public class SharePopupWindow extends PopupWindow {
 
     private TextViewExtend mtvClose;
     private View mMenuView;
-    private Activity m_pContext;
+    private Context m_pContext;
     private GridView mgvShare;
     private ShareAdapter mShareAdapter;
     private TypedArray mTypedArray;
@@ -45,7 +44,7 @@ public class SharePopupWindow extends PopupWindow {
     private String mstrTitle, mstrUrl;
     private ShareDismiss mShareDismiss;
 
-    public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
+    public SharePopupWindow(Context context, ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
         mShareDismiss = shareDismiss;

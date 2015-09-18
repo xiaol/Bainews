@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="25dp"
             android:layout_marginBottom="25dp"
             android:background="@drawable/bg_item_news_detail_check_all"
             android:padding="8dp"

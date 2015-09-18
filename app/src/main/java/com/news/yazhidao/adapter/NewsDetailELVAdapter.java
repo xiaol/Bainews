@@ -239,7 +239,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**设置新闻内容每一个item的背景,针对圆角*/
             if (arrayList.size() == 1) {
                 /**判断是否有只有当前一个组*/
-                if (mNewsContentDataList.size() > 1) {
+                if (mNewsContentDataList.size() > 0) {
                     mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
                 } else {
                     mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
@@ -248,7 +248,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 if (childPosition == 0) {
                     mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
                 } else if (childPosition == arrayList.size() - 1) {
-                    if (mNewsContentDataList.size() > 1) {
+                    if (mNewsContentDataList.size() > 0) {
                         mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
                     } else {
                         mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
@@ -504,12 +504,18 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mWeiboViewHolder.mDetailWeiboUserName = (TextView) convertView.findViewById(R.id.mDetailWeiboUserName);
                 mWeiboViewHolder.mDetailWeiboUserSpeech = (TextView) convertView.findViewById(R.id.mDetailWeiboUserSpeech);
                 mWeiboViewHolder.mDetailWeiboImg = (SimpleDraweeView) convertView.findViewById(R.id.mDetailWeiboImg);
+                mWeiboViewHolder.mDetailWeiboContentDivider = convertView.findViewById(R.id.mDetailWeiboContentDivider);
                 convertView.setTag(mWeiboViewHolder);
             } else {
                 mWeiboViewHolder = (WeiboViewHolder) convertView.getTag();
             }
             ArrayList<NewsDetail.Weibo> list = mNewsContentDataList.get(groupPosition);
             NewsDetail.Weibo weibo = list.get(childPosition);
+            if (childPosition == list.size() - 1){
+                mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.GONE);
+            }else {
+                mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.VISIBLE);
+            }
             if (list.size() == 1) {
                 convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
             } else {
@@ -539,7 +545,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mZhiHuHolder = new ZhiHuViewHolder();
                 convertView = View.inflate(mContext, R.layout.item_news_detail_zhihu, null);
                 mZhiHuHolder.mDetailZhiHuTitle = (TextView) convertView.findViewById(R.id.mDetailZhiHuTitle);
-                mZhiHuHolder.mDetailZhiHuDivider = (View) convertView.findViewById(R.id.mDetailZhiHuDivider);
+                mZhiHuHolder.mDetailZhiHuDivider = convertView.findViewById(R.id.mDetailZhiHuDivider);
                 convertView.setTag(mZhiHuHolder);
             } else {
                 mZhiHuHolder = (ZhiHuViewHolder) convertView.getTag();
@@ -547,6 +553,12 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             ArrayList<NewsDetail.ZhiHu> list = mNewsContentDataList.get(groupPosition);
             NewsDetail.ZhiHu zhihu = list.get(childPosition);
             mZhiHuHolder.mDetailZhiHuTitle.setText(zhihu.title);
+            //影藏最后一个item的分割线
+            if (childPosition == list.size() - 1){
+                mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.GONE);
+            }else {
+                mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.VISIBLE);
+            }
             if (list.size() == 1) {
                 convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
             } else {
@@ -982,6 +994,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         TextView mDetailWeiboUserName;
         TextView mDetailWeiboUserSpeech;
         SimpleDraweeView mDetailWeiboImg;
+        View mDetailWeiboContentDivider;
     }
 
     /**
