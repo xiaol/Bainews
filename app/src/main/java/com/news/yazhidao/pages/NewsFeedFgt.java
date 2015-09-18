@@ -1908,7 +1908,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     lv_news.setVisibility(View.VISIBLE);
                     lv_news.getRefreshableView().setSelection(i);
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
+                    ToastUtil.toastLong("网络不给力,请检查网络....");
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
 
