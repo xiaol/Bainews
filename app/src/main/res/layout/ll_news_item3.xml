@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_below="@+id/ll_time_item"
-            android:background="#DFE6E9" />
+            android:background="@color/bg_news_detail" />
 
         <RelativeLayout
             android:id="@+id/rl_title_content"

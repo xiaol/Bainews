@@ -38,7 +38,7 @@
         android:layout_below="@id/rl_top_mark"
         android:layout_width="wrap_content"
         android:layout_height="6dp"
-        android:background="#dfe6e9"
+        android:background="@color/bg_news_detail"
         android:visibility="gone"
         />
 
