@@ -9,7 +9,7 @@
         android:id="@+id/iv_bg_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fresco:placeholderImage="@drawable/img_base_middle"
+        fresco:placeholderImage="@drawable/bg_load_default_middle"
         fresco:placeholderImageScaleType="fitXY"
         />
 

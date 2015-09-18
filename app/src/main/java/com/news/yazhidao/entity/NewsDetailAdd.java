@@ -46,7 +46,8 @@ public class NewsDetailAdd implements Serializable{
     public ArrayList<HashMap<String,String>> imgWall;
     //相关新闻
     public ArrayList<NewsDetail.Relate> relate;
-
+    /**差异化观点*/
+    public NewsDetailSelfOpinion relate_opinion;
     public String rc;
 
     //name entity

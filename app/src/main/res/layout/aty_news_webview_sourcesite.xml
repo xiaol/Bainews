@@ -171,9 +171,7 @@
         android:id="@+id/mLeftBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="25dp"
+        android:layout_margin="25dp"
         android:src="@drawable/btn_news_detail_left_back"
         />
 </RelativeLayout>

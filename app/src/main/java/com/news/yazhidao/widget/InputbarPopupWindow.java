@@ -166,8 +166,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     @Override
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
-        NewsDetail newsDetail = new NewsDetail();
-        newPoint = newsDetail.new Point();
+        newPoint = new NewsDetail.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_DOC;
@@ -188,17 +187,15 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
         dismiss();
         UploadCommentRequest.uploadComment(m_pContext, mSourceUrl, argContent, "0", type, speechDuration, new UploadCommentListener() {
-            @Override
-            public void success() {
 
-                miCount += 1;
-                Log.i("tag", "111");
-                ToastUtil.toastLong("发表成功");
+            @Override
+            public void success(NewsDetail.Point result) {
+
             }
 
             @Override
             public void failed() {
-                Log.i("tag", "222");
+
             }
         });
         Log.i("tag", argContent);

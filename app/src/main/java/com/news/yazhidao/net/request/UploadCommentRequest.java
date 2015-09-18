@@ -3,11 +3,12 @@ package com.news.yazhidao.net.request;
 import android.content.Context;
 
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UploadCommentListener;
+import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
-import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.AliYunOssManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -23,13 +24,13 @@ import java.util.List;
  * 上传用户评论的请求
  */
 public class UploadCommentRequest {
-    //文本类型段落评论
+    /**文本类型段落评论*/
     public static final String TEXT_PARAGRAPH="text_paragraph";
-    //文本类型全文评论
+    /**文本类型全文评论*/
     public static final String TEXT_DOC="text_doc";
-    //语音类型段落评论
+    /**语音类型段落评论*/
     public static final String SPEECH_PARAGRAPH="speech_paragraph";
-    //语音类型全文评论
+    /**语音类型全文评论*/
     public static final String SPEECH_DOC="speech_doc";
 
 
@@ -41,7 +42,7 @@ public class UploadCommentRequest {
      * @param paragraphIndex 如果是段落评论的话，此参数表示被评论的段落索引，如果是全文评论，则需指定该值为-1
      * @param type 评论的类型
      * @param speechDuration 如果是语音评论，此参数即语音的时长
-     *@param listener 上传结果回调  @see #TEXT_PARAGRAPH
+     * @param listener 上传结果回调  @see #TEXT_PARAGRAPH
      * @see #TEXT_DOC
      * @see #SPEECH_PARAGRAPH
      * @see #SPEECH_DOC
@@ -69,27 +70,21 @@ public class UploadCommentRequest {
         pairs.add(new BasicNameValuePair("platformType", user.getPlatformType()));
 
         request.setParams(pairs);
-        request.setCallback(new StringCallback() {
+        request.setCallback(new JsonCallback<NewsDetail.Point>() {
             @Override
-            public void success(String result) {
-                if(result != null && result.contains("200")){
-                    if(listener!=null){
-                        listener.success();
-                    }
-                }else{
-                    if(listener!=null){
-                        listener.failed();
-                    }
+            public void success(NewsDetail.Point result) {
+                if (listener != null) {
+                    listener.success(result);
                 }
             }
 
             @Override
             public void failed(MyAppException exception) {
-                if(listener!=null){
+                if (listener != null) {
                     listener.failed();
                 }
             }
-        });
+        }.setReturnClass(NewsDetail.Point.class));
         request.execute();
     }
 

@@ -125,7 +125,7 @@ public class AlbumListAty extends BaseActivity {
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                Intent intent = new Intent(AlbumListAty.this, NewsDetailAty.class);
+                Intent intent = new Intent(AlbumListAty.this, NewsDetailAty2.class);
                 AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
                 /**判断是否已经挖掘完毕,挖掘完事儿后,方可打开*/
                 if ("0".equals(albumSubItem.getStatus())) {
@@ -249,7 +249,7 @@ public class AlbumListAty extends BaseActivity {
             }
             AlbumSubItem albumSubItem = mAlbumSubItems.get(position);
             String imgUrl = albumSubItem.getImg();
-            holder.mSpecialItemIcon.setBackgroundResource(R.drawable.img_base_small);
+            holder.mSpecialItemIcon.setBackgroundResource(R.drawable.bg_load_default_small);
             if(!TextUtils.isEmpty(imgUrl)){
                 ImageManager.getInstance(AlbumListAty.this).DisplayImage(imgUrl,holder.mSpecialItemIcon,false,null);
             }

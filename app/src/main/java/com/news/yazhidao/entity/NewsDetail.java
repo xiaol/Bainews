@@ -25,15 +25,15 @@ public class NewsDetail implements Serializable{
     public String root_class;
 
     public ArrayList<BaiDuBaiKe> baike;
-
-    public SelfOpinion relate_opinion;
-
+    /**差异化观点*/
+    public NewsDetailSelfOpinion relate_opinion;
+    /**是否有语音评论*/
     public boolean isdoc;
-
+    /**语音评论的url*/
     public String docUrl;
-
+    /**语音评论时长*/
     public String docTime;
-
+    /**语音评论用户图像的url*/
     public String docUserIcon;
 
     public ArrayList<ZhiHu> zhihu;
@@ -43,6 +43,8 @@ public class NewsDetail implements Serializable{
     public ArrayList<ArrayList<String>> douban;  //get(0)  title  get(1) url
 
     public ArrayList<Weibo> weibo;
+    /** e.g:"note": "7日上午8时许，广州市区下起暴雨。在海珠区新滘东路绿道，一年约45岁的女子在绿道上撑伞行走时遭雷电击中。主治医生称，伤者暂无生命危险，但还需留院观察。",
+     "img": "http://img3.cache.netease.com/photo/0001/2015-09-08/B2VV22KN00AP0001.jpg"*/
     public ArrayList<HashMap<String,String>> imgWall;
     //相关新闻
     public ArrayList<Relate> relate;
@@ -81,12 +83,19 @@ public class NewsDetail implements Serializable{
         public String title;
     }
 
-    public class Point {
+    public static class Point implements Comparable {
         public String userName;
+        /**用户评论内容*/
         public String srcText;
         public String desText;
         public String paragraphIndex;
-        public String type;
+        /**
+         * @see com.news.yazhidao.net.request.UploadCommentRequest#TEXT_DOC
+         * @see com.news.yazhidao.net.request.UploadCommentRequest#TEXT_PARAGRAPH
+         * @see com.news.yazhidao.net.request.UploadCommentRequest#SPEECH_DOC
+         * @see com.news.yazhidao.net.request.UploadCommentRequest#SPEECH_PARAGRAPH
+         * */
+        public String type;//
         public String up;
         public String down;
         public String comments_count;
@@ -97,6 +106,25 @@ public class NewsDetail implements Serializable{
         public String commentId;
         //语音评论的时长
         public int srcTextTime;
+
+        @Override
+        public int compareTo(Object another) {
+            if (this.up == null){
+                this.up = "0";
+            }
+            if (((Point)another).up == null){
+                ((Point)another).up = "";
+            }
+            int first = Integer.valueOf(this.up);
+            int second = Integer.valueOf(((Point)another).up);
+            if (first < second){
+                return 1;
+            }
+            if (first == second){
+                return 0;
+            }
+            return -1;
+        }
     }
 
 

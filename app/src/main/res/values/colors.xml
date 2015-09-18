@@ -125,7 +125,7 @@
     <color name="btn_unpress_color">#22000000</color>
 
     <!--login portion-->
-   <color name="bg_home_login_header">#50b5eb</color>
+    <color name="bg_home_login_header">#50b5eb</color>
     <color name="home_login_chat">#2b2b2b</color>
     <color name="home_logout">#ff7878</color>
     <color name="bg_home_login_weixin">#00e17f</color>
@@ -146,5 +146,17 @@
     <color name="dig_title_doing">#f6aa32</color>
     <color name="dig_title_done">#0dd2ab</color>
     <color name="dig_special_title">#a0a0a0</color>
+
+    <!--NewsDetailAty HeaderView color-->
+    <color name="bg_news_detail">#E6E6E6</color>
+    <color name="news_detail_speech_divider">#F0F0F0</color>
+    <color name="news_detail_desc">#2b2b2b</color>
+
+    <!--NewsDetailAty news content color-->
+    <color name="news_detail_content">#494949</color>
+    <color name="news_detail_comment_count">#676767</color>
+    <color name="news_detail_imagewall">#55000000</color>
+    <color name="news_detail_different_opinion_title">#b8b8b8</color>
+    <color name="bg_news_detail_different_opinion_title">#e8e8e8</color>
 
 </resources>
