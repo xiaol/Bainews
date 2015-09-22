@@ -9,8 +9,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 106
-        versionName "1.1.2"
+        versionCode 107
+        versionName "1.1.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -96,4 +96,5 @@ dependencies {
     compile files('libs/com.umeng.message.lib_v2.4.1.jar')
     compile 'com.facebook.fresco:fresco:0.6.1'
     compile files('libs/MzOpenSDK-1.0.jar')
+//    compile 'org.zeroturnaround:gradle-jrebel-plugin:1.1.2'//热调试lib
 }

@@ -152,6 +152,7 @@
     <color name="bg_news_detail">#E6E6E6</color>
     <color name="news_detail_speech_divider">#F0F0F0</color>
     <color name="news_detail_desc">#2b2b2b</color>
+    <color name="news_detail_desc_shadow">#d8d8d8</color>
 
     <!--NewsDetailAty news content color-->
     <color name="news_detail_content">#494949</color>

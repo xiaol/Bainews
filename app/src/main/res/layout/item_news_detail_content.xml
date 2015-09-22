@@ -41,8 +41,9 @@
             android:background="@drawable/btn_news_detail_comment_count"
             android:gravity="center"
             android:text="234"
+            android:layout_marginBottom="4dp"
             android:textColor="@color/news_detail_comment_count"
-            android:textSize="12sp"
+            android:textSize="11sp"
             />
 
         <ImageView
