@@ -62,6 +62,7 @@ import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.TimeFeed;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.TimeOutAlarmUpdateListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
@@ -2064,11 +2065,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
             if ("saveuser".equals(intent.getAction())) {
                 String url = intent.getStringExtra("url");
-
                 SharedPreferences.Editor e = mContext.getSharedPreferences("userurl", Context.MODE_PRIVATE).edit();
                 e.putString("url", url);
                 e.commit();
-
                 if (url != null && !"".equals(url)) {
                     ImageLoaderHelper.dispalyImage(mContext, url, mHomeAtyRightMenu);
                 }

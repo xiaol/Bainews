@@ -24,6 +24,7 @@ import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -249,6 +250,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             _Request.execute();
         }
     }
+
     @Override
     public void finish() {
         super.finish();
@@ -286,10 +288,19 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);
                 mSharePopupWindow = new SharePopupWindow(this, this);
+                String type;
+                if (mNewsDetail != null)
+                    type = "0";
+                else
+                    type = "1";
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("url", mNewsDetailUrl);
+                hashMap.put("type", type);
+                String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
                 if (mNewsDetail != null) {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url);
                 } else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url);
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;

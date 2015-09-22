@@ -27,7 +27,6 @@ public class SharedPreManager {
     public static void save(String spName, String key, String value){
         SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
         e.putString(key, value);
-        e.clear();
         boolean result = e.commit();
         Logger.e("jigang","save result = " + result + ",value="+value);
     }
