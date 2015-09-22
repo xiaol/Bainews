@@ -24,7 +24,6 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.umeng.analytics.MobclickAgent;
@@ -196,7 +195,6 @@ public class SplashAty extends BaseActivity {
             public void success(StartUrl result) {
                 if (result != null) {
                     splashInfo = result;
-                    Logger.e("jigang","-----result size="+result.getNews_url_list().size());
                     if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
                         rl_splash.setVisibility(View.VISIBLE);

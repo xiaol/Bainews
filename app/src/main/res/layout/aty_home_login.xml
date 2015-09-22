@@ -142,7 +142,8 @@
         android:layout_marginTop="-35dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_user_login_default"
+        android:background="@drawable/bg_home_user_icon"
         app:border_color="@color/white"
-        app:border_width="5dp"
-        app:corner_radius="38dp"/>
+        app:border_width="3dp"
+        app:corner_radius="60dp"/>
 </RelativeLayout>

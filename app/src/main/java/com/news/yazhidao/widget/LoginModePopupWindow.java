@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserLoginListener;
@@ -22,10 +20,11 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.UserCallback;
-import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.pages.HomeAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
@@ -153,6 +152,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
                     @Override
                     public void onError(OAuthError oAuthError) {
                         LoginModePopupWindow.this.dismiss();
+                        ToastUtil.toastShort("魅族账号授权失败!");
                     }
 
                     @Override
@@ -197,8 +197,8 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
                                             HashMap<String, Object> params = new HashMap<>();
                                             params.put("uuid", DeviceInfoUtil.getUUID());
                                             params.put("userId", TextUtil.getDatabaseId());
-                                            params.put("expiresIn", System.currentTimeMillis()+1000*60*60*24*3);
-                                            params.put("expiresTime",System.currentTimeMillis()+1000*60*60*24*3);
+                                            params.put("expiresIn", System.currentTimeMillis()+1000*60*60*24*30);
+                                            params.put("expiresTime",System.currentTimeMillis()+1000*60*60*24*30);
                                             params.put("token", token);
                                             params.put("userGender", "1");
                                             params.put("userIcon", strIcon);
@@ -210,14 +210,10 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
                                                 @Override
                                                 public void success(User user) {
                                                     SharedPreManager.saveUser(user);
-                                                    String jPushId = SharedPreManager.getJPushId();
-                                                    if (!TextUtils.isEmpty(jPushId)) {
-                                                        UploadJpushidRequest.uploadJpushId(mContext, jPushId);
-                                                    }
 
                                                     Intent intent = new Intent("saveuser");
                                                     intent.putExtra("url", user.getUserIcon());
-                                                    GlobalParams.context.sendBroadcast(intent);
+                                                    mContext.sendBroadcast(intent);
 
                                                     if (mUserLoginListener != null) {
                                                         new Handler().post(new Runnable() {
@@ -236,6 +232,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
 
                                                 @Override
                                                 public void failed(MyAppException exception) {
+                                                    Logger.e("jigang","333--"+exception.getMessage());
                                                 }
                                             }.setReturnClass(User.class));
                                             request.execute();
@@ -246,6 +243,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
 
                                     @Override
                                     public void failed(MyAppException exception) {
+                                        Logger.e("jigang","111--"+exception.getMessage());
                                     }
                                 });
                                 request.execute();
@@ -253,7 +251,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
 
                             @Override
                             public void failed(MyAppException exception) {
-
+                                Logger.e("jigang","222--"+exception.getMessage());
                             }
                         });
                         request.execute();
