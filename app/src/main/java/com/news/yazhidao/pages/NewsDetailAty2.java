@@ -249,6 +249,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             _Request.execute();
         }
     }
+
     @Override
     public void finish() {
         super.finish();
@@ -286,10 +287,16 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);
                 mSharePopupWindow = new SharePopupWindow(this, this);
+                String type;
+                if (mNewsDetail != null)
+                    type = "0";
+                else
+                    type = "1";
+                String url = "http://deeporiginalx.com/news.html?url=" + mNewsDetailUrl + "&type=" + type;
                 if (mNewsDetail != null) {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url);
                 } else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url);
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;

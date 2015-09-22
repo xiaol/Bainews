@@ -197,6 +197,9 @@ public class SplashAty extends BaseActivity {
                 if (result != null) {
                     splashInfo = result;
                     Logger.e("jigang","-----result size="+result.getNews_url_list().size());
+                    //umengPushId
+//                    String a = UmengRegistrar.getRegistrationId(SplashAty.this);
+//                    Logger.e("jigang",a+"=====a");
                     if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
                         rl_splash.setVisibility(View.VISIBLE);
