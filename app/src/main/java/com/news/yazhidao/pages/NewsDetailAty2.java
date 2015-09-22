@@ -24,6 +24,7 @@ import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -292,7 +293,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     type = "0";
                 else
                     type = "1";
-                String url = "http://deeporiginalx.com/news.html?url=" + mNewsDetailUrl + "&type=" + type;
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("url", mNewsDetailUrl);
+                hashMap.put("type", type);
+                String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
                 if (mNewsDetail != null) {
                     mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url);
                 } else {
