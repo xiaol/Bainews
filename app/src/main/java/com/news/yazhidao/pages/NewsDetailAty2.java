@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     float startY;
+    private String mSource;
 
     @Override
     protected boolean translucentStatus() {
@@ -99,6 +101,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     protected void initializeViews() {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -246,7 +249,15 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             _Request.execute();
         }
     }
-
+    @Override
+    public void finish() {
+        super.finish();
+        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
+        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+            Intent intent = new Intent(this, HomeAty.class);
+            startActivity(intent);
+        }
+    }
 
     @Override
     public void onClick(View v) {

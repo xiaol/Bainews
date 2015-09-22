@@ -1,9 +1,5 @@
 
 apply plugin: 'com.android.application'
-// This does not break the build when Android Studio is missing the JRebel for Android plugin.
-apply plugin: 'com.zeroturnaround.jrebel.android'
-// This does not break the build when Android Studio is missing the JRebel for Android plugin.
-apply plugin: 'com.zeroturnaround.jrebel.android'
 
 android {
     compileSdkVersion 21
@@ -99,5 +95,5 @@ dependencies {
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/com.umeng.message.lib_v2.4.1.jar')
     compile 'com.facebook.fresco:fresco:0.6.1'
-    compile 'org.zeroturnaround:gradle-jrebel-plugin:1.1.2'//热调试lib
+//    compile 'org.zeroturnaround:gradle-jrebel-plugin:1.1.2'//热调试lib
 }

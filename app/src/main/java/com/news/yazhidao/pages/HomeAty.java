@@ -26,8 +26,6 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sharesdk.framework.ShareSDK;
-
 
 public class HomeAty extends BaseActivity {
 
@@ -52,7 +50,6 @@ public class HomeAty extends BaseActivity {
     @Override
     protected void setContentView() {
         setContentView(R.layout.activity_viewpager);
-        ShareSDK.initSDK(this);
         mFragmentList = new ArrayList<Fragment>();
         mfgtCategory = new CategoryFgt();
         mfgeNewsFeed = new NewsFeedFgt();
