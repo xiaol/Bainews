@@ -26,6 +26,9 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
+    <!-- 魅族 -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+
     <!--UmengPush-->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -205,6 +208,13 @@
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" />
 
+        <!-- 魅族登录 -->
+        <activity
+            android:name="sdk.meizu.auth.ui.AuthActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask">
+        </activity>
+
 
         <activity
             android:name=".pages.NewsDetailWebviewAty"
@@ -283,7 +293,7 @@
             android:name=".pages.AlbumListAty"
             android:screenOrientation="portrait" />
         <!-- 配置Receiver(必须) -->
-        <receiver
+        <receiverdebuggable
             android:name="com.lostip.sdk.ad.custom.receiver.AdCocoaStateReceiver"
             android:exported="false">
             <intent-filter>
@@ -294,7 +304,7 @@
 
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver>
+        </receiverdebuggable>
     </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

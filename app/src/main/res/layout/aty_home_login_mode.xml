@@ -74,6 +74,32 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/mLoginModeMeiZu"
+            android:layout_width="230dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            android:background="@color/bg_home_login_meizu"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="24dp"
+                android:src="@drawable/ic_login_meizu" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_login_mode_meizu"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mLoginModeWarning"
             android:layout_width="wrap_content"

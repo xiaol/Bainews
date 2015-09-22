@@ -23,7 +23,6 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -55,7 +54,7 @@ public class SharePopupWindow extends PopupWindow {
         mShareAdapter = new ShareAdapter(m_pContext);
         mShareName = m_pContext.getResources().getStringArray(R.array.share_list_name);
         mTypedArray = m_pContext.getResources().obtainTypedArray(R.array.share_list_image);
-        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME, QZone.NAME, TencentWeibo.NAME};
+        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME, TencentWeibo.NAME};
         findHeadPortraitImageViews();
     }
 
