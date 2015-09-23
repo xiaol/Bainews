@@ -27,9 +27,6 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
     private View mLoginModeWeibo;
     private View mLoginModeWeiXin;
     private View mLoginModeMeiZu;
-    private String CLIENT_ID = "tsGKllOEx2MnUVmBmRey";
-    private String REDIRECT_URI = "http://www.deeporiginalx.com/";
-    private String CLIENT_SECRET = "gOMuh3824Tx2UKJWvu3Qa3DsUTSvyv";
     private UserLoginListener mUserLoginListener;
     private UserLoginPopupStateListener mUserLoginPopupStateListener;
 
@@ -57,7 +54,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
         mLoginModeMeiZu.setOnClickListener(this);
         mLoginModeMeiZu.setVisibility(View.VISIBLE);
         if ("Meizu".equals(android.os.Build.MANUFACTURER)) { //魅族手机
-//            mLoginModeMeiZu.setVisibility(View.VISIBLE);
+            mLoginModeMeiZu.setVisibility(View.VISIBLE);
         }
     }
 
