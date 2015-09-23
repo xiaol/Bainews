@@ -288,19 +288,22 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);
                 mSharePopupWindow = new SharePopupWindow(this, this);
-                String type;
-                if (mNewsDetail != null)
+                String type, remark;
+                if (mNewsDetail != null) {
                     type = "0";
-                else
+                    remark = mNewsDetail.abs;
+                } else {
                     type = "1";
+                    remark = mNewsDetailAdd.abs;
+                }
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("url", mNewsDetailUrl);
                 hashMap.put("type", type);
                 String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
                 if (mNewsDetail != null) {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url,remark);
                 } else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url);
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url,remark);
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;

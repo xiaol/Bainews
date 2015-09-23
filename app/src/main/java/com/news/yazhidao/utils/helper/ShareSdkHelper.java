@@ -21,6 +21,7 @@ import com.news.yazhidao.net.request.UserLoginRequest;
 import com.news.yazhidao.pages.ShareSdkAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
@@ -262,7 +263,7 @@ public class ShareSdkHelper {
         }
     }
 
-    public static void ShareToPlatformByNewsDetail(final Context context, final String argPlatform, final String title, final String url) {
+    public static void ShareToPlatformByNewsDetail(final Context context, final String argPlatform, final String title, final String url,final String remark) {
         mHandler = new Handler(context.getMainLooper());
         PlatformActionListener pShareListner = new PlatformActionListener() {
             @Override
@@ -306,7 +307,10 @@ public class ShareSdkHelper {
         if (argPlatform.equals(Wechat.NAME)) {
             Platform platform = ShareSDK.getPlatform(Wechat.NAME);
             platform.setPlatformActionListener(pShareListner);
-            pShareParams.setText("头条百家分享社区");
+            if(TextUtil.isEmptyString(remark))
+                pShareParams.setText("头条百家分享社区");
+            else
+                pShareParams.setText(remark);
             platform.share(pShareParams);
         } else if (argPlatform.equals(WechatMoments.NAME)) {
             Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);
