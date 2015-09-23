@@ -40,7 +40,7 @@ public class SharePopupWindow extends PopupWindow {
     private TypedArray mTypedArray;
     private String[] mShareName;
     private String[] marrSharePlatform;
-    private String mstrTitle, mstrUrl;
+    private String mstrTitle, mstrUrl, mstrRemark;
     private ShareDismiss mShareDismiss;
 
     public SharePopupWindow(Context context, ShareDismiss shareDismiss) {
@@ -93,9 +93,10 @@ public class SharePopupWindow extends PopupWindow {
         });
     }
 
-    public void setTitleAndUrl(String title, String url) {
+    public void setTitleAndUrl(String title, String url, String remark) {
         mstrTitle = title;
         mstrUrl = url;
+        mstrRemark = remark;
     }
 
     @Override
@@ -166,8 +167,9 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl);
+                        ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl, mstrRemark);
                     }
+                    SharePopupWindow.this.dismiss();
                 }
             });
             return convertView;

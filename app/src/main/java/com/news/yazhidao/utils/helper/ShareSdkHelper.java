@@ -173,7 +173,7 @@ public class ShareSdkHelper {
         mUserLoginListener = loginListener;
         mUserLoginPopupStateListener = userLoginPopupStateListener;
         Platform _Plateform = ShareSDK.getPlatform(mContext, platform);
-        if ("meizu".equals(platform)){
+        if ("meizu".equals(platform)) {
             meizuLogin();
             return;
         }
@@ -284,118 +284,120 @@ public class ShareSdkHelper {
             platform.share(pShareParams);
         }
     }
-private static void meizuLogin(){
-    MzAuthenticator mAuthenticator = new MzAuthenticator(CLIENT_ID, REDIRECT_URI);
-    mAuthenticator.requestCodeAuth((HomeAty) mContext, "uc_basic_info", new CodeCallback() {
-        @Override
-        public void onError(OAuthError oAuthError) {
-            mUserLoginPopupStateListener.close();
-            ToastUtil.toastShort("魅族账号授权失败!");
-        }
 
-        @Override
-        public void onGetCode(String code) {
-            List<NameValuePair> nameValuePairs = new LinkedList<>();
-            nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
-            nameValuePairs.add(new BasicNameValuePair("client_id", CLIENT_ID));
-            nameValuePairs.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
-            nameValuePairs.add(new BasicNameValuePair("code", code));
-            nameValuePairs.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
-            nameValuePairs.add(new BasicNameValuePair("state", "11"));
-            NetworkRequest request = new NetworkRequest("https://open-api.flyme.cn/oauth/token", NetworkRequest.RequestMethod.POST);
-            request.setParams(nameValuePairs);
-            request.setTimeOut(10000);
-            request.setCallback(new StringCallback() {
-                @Override
-                public void success(String result) {
-                    JSONObject dataJson;
-                    String strToken = null;
-                    try {
-                        dataJson = new JSONObject(result);
-                        strToken = dataJson.getString("access_token");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    final String token = strToken;
-                    NetworkRequest request = new NetworkRequest("https://open-api.flyme.cn/v2/me?access_token=" + strToken);
-                    request.setTimeOut(10000);
-                    request.setCallback(new StringCallback() {
+    private static void meizuLogin() {
+        MzAuthenticator mAuthenticator = new MzAuthenticator(CLIENT_ID, REDIRECT_URI);
+        mAuthenticator.requestCodeAuth((HomeAty) mContext, "uc_basic_info", new CodeCallback() {
+            @Override
+            public void onError(OAuthError oAuthError) {
+                mUserLoginPopupStateListener.close();
+                ToastUtil.toastShort("魅族账号授权失败!");
+            }
 
-                        @Override
-                        public void success(String result) {
-                            JSONObject resultJson;
-                            try {
-                                resultJson = new JSONObject(result);
-                                JSONObject jsonvalue = resultJson.getJSONObject("value");
-                                Log.i("eva", jsonvalue.toString());
-                                final String strIcon = jsonvalue.getString("icon");
-                                final String strNickname = jsonvalue.getString("nickname");
-                                Log.i("eva", strIcon + "strIcon");
-                                Log.i("eva", strNickname + "strNickname");
-                                HashMap<String, Object> params = new HashMap<>();
-                                params.put("uuid", DeviceInfoUtil.getUUID());
-                                params.put("userId", TextUtil.getDatabaseId());
-                                params.put("expiresIn", System.currentTimeMillis()+ 1000*60*60*24*30l);
-                                params.put("expiresTime", System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30l);
-                                params.put("token", token);
-                                params.put("userGender", "1");
-                                params.put("userIcon", strIcon);
-                                params.put("userName", strNickname);
-                                params.put("platformType", "meizu");
-                                NetworkRequest request = new NetworkRequest(HttpConstant.URL_USER_LOGIN, NetworkRequest.RequestMethod.GET);
-                                request.getParams = params;
-                                request.setCallback(new UserCallback<User>() {
-                                    @Override
-                                    public void success(final User user) {
-                                        SharedPreManager.saveUser(user);
+            @Override
+            public void onGetCode(String code) {
+                List<NameValuePair> nameValuePairs = new LinkedList<>();
+                nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
+                nameValuePairs.add(new BasicNameValuePair("client_id", CLIENT_ID));
+                nameValuePairs.add(new BasicNameValuePair("client_secret", CLIENT_SECRET));
+                nameValuePairs.add(new BasicNameValuePair("code", code));
+                nameValuePairs.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
+                nameValuePairs.add(new BasicNameValuePair("state", "11"));
+                NetworkRequest request = new NetworkRequest("https://open-api.flyme.cn/oauth/token", NetworkRequest.RequestMethod.POST);
+                request.setParams(nameValuePairs);
+                request.setTimeOut(10000);
+                request.setCallback(new StringCallback() {
+                    @Override
+                    public void success(String result) {
+                        JSONObject dataJson;
+                        String strToken = null;
+                        try {
+                            dataJson = new JSONObject(result);
+                            strToken = dataJson.getString("access_token");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        final String token = strToken;
+                        NetworkRequest request = new NetworkRequest("https://open-api.flyme.cn/v2/me?access_token=" + strToken);
+                        request.setTimeOut(10000);
+                        request.setCallback(new StringCallback() {
 
-                                        Intent intent = new Intent("saveuser");
-                                        intent.putExtra("url", user.getUserIcon());
-                                        mContext.sendBroadcast(intent);
+                            @Override
+                            public void success(String result) {
+                                JSONObject resultJson;
+                                try {
+                                    resultJson = new JSONObject(result);
+                                    JSONObject jsonvalue = resultJson.getJSONObject("value");
+                                    Log.i("eva", jsonvalue.toString());
+                                    final String strIcon = jsonvalue.getString("icon");
+                                    final String strNickname = jsonvalue.getString("nickname");
+                                    Log.i("eva", strIcon + "strIcon");
+                                    Log.i("eva", strNickname + "strNickname");
+                                    HashMap<String, Object> params = new HashMap<>();
+                                    params.put("uuid", DeviceInfoUtil.getUUID());
+                                    params.put("userId", TextUtil.getDatabaseId());
+                                    params.put("expiresIn", System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30l);
+                                    params.put("expiresTime", System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30l);
+                                    params.put("token", token);
+                                    params.put("userGender", "1");
+                                    params.put("userIcon", strIcon);
+                                    params.put("userName", strNickname);
+                                    params.put("platformType", "meizu");
+                                    NetworkRequest request = new NetworkRequest(HttpConstant.URL_USER_LOGIN, NetworkRequest.RequestMethod.GET);
+                                    request.getParams = params;
+                                    request.setCallback(new UserCallback<User>() {
+                                        @Override
+                                        public void success(final User user) {
+                                            SharedPreManager.saveUser(user);
 
-                                        if (mUserLoginListener != null) {
-                                            new Handler().post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    mUserLoginPopupStateListener.close();
-                                                    PlatformDb platformDb = new PlatformDb(mContext, "platformNname", 1);
-                                                    platformDb.put("nickname", strNickname);
-                                                    platformDb.put("icon", strIcon);
-                                                    mUserLoginListener.userLogin(strNickname, platformDb);
-                                                }
-                                            });
+                                            Intent intent = new Intent("saveuser");
+                                            intent.putExtra("url", user.getUserIcon());
+                                            mContext.sendBroadcast(intent);
+
+                                            if (mUserLoginListener != null) {
+                                                new Handler().post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        mUserLoginPopupStateListener.close();
+                                                        PlatformDb platformDb = new PlatformDb(mContext, "platformNname", 1);
+                                                        platformDb.put("nickname", strNickname);
+                                                        platformDb.put("icon", strIcon);
+                                                        mUserLoginListener.userLogin(strNickname, platformDb);
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void failed(MyAppException exception) {
-                                        Logger.e("jigang","333--"+exception.getMessage());
-                                    }
-                                }.setReturnClass(User.class));
-                                request.execute();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                        @Override
+                                        public void failed(MyAppException exception) {
+                                            Logger.e("jigang", "333--" + exception.getMessage());
+                                        }
+                                    }.setReturnClass(User.class));
+                                    request.execute();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void failed(MyAppException exception) {
-                            Logger.e("jigang","111--"+exception.getMessage());
-                        }
-                    });
-                    request.execute();
-                }
+                            @Override
+                            public void failed(MyAppException exception) {
+                                Logger.e("jigang", "111--" + exception.getMessage());
+                            }
+                        });
+                        request.execute();
+                    }
 
-                @Override
-                public void failed(MyAppException exception) {
-                    Logger.e("jigang","222--"+exception.getMessage());
-                }
-            });
-            request.execute();
-        }
-    });
-}
-    public static void ShareToPlatformByNewsDetail(final Context context, final String argPlatform, final String title, final String url) {
+                    @Override
+                    public void failed(MyAppException exception) {
+                        Logger.e("jigang", "222--" + exception.getMessage());
+                    }
+                });
+                request.execute();
+            }
+        });
+    }
+
+    public static void ShareToPlatformByNewsDetail(final Context context, final String argPlatform, final String title, final String url, final String remark) {
         mHandler = new Handler(context.getMainLooper());
         PlatformActionListener pShareListner = new PlatformActionListener() {
             @Override
@@ -439,7 +441,10 @@ private static void meizuLogin(){
         if (argPlatform.equals(Wechat.NAME)) {
             Platform platform = ShareSDK.getPlatform(Wechat.NAME);
             platform.setPlatformActionListener(pShareListner);
-            pShareParams.setText("头条百家分享社区");
+            if (TextUtil.isEmptyString(remark))
+                pShareParams.setText("头条百家分享社区");
+            else
+                pShareParams.setText(remark);
             platform.share(pShareParams);
         } else if (argPlatform.equals(WechatMoments.NAME)) {
             Platform platform = ShareSDK.getPlatform(WechatMoments.NAME);

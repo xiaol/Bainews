@@ -81,6 +81,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     float startY;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -104,7 +105,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
         AlbumSubItem albumSubItem;
         String newsId = null;
         if (arguments != null) {
-            isDigger = arguments.getBoolean(AlbumListAty.KEY_IS_DIGGER,false);
+            isDigger = arguments.getBoolean(AlbumListAty.KEY_IS_DIGGER, false);
             albumSubItem = (AlbumSubItem) arguments.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
             newsId = albumSubItem.getInserteId();
 
@@ -242,6 +243,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
             }
         });
     }
+
     /**
      * 解析新闻详情POJO,转换成expandablelistview 所须POJO
      *
@@ -479,6 +481,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
         }
         return mNewsContentDataList;
     }
+
     /**
      * 展开所有的childview
      */
@@ -487,6 +490,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
             mDetailContentListView.expandGroup(i);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -506,7 +510,7 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
-                ((Activity)mContext).finish();
+                ((Activity) mContext).finish();
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetail.Point> points;
@@ -529,10 +533,16 @@ public class NewsDetailFgt extends Fragment implements View.OnClickListener, Com
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);
                 mSharePopupWindow = new SharePopupWindow(mContext, this);
+                String remark;
                 if (mNewsDetail != null) {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl);
+                    remark = mNewsDetail.abs;
                 } else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl);
+                    remark = mNewsDetailAdd.abs;
+                }
+                if (mNewsDetail != null) {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl, remark);
+                } else {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl, remark);
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
