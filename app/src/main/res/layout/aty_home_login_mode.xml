@@ -113,10 +113,11 @@
             />
         <ImageView
             android:id="@+id/mLoginModeCancel"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_marginTop="22dp"
             android:src="@drawable/bg_date_close"
+            android:scaleType="centerInside"
             android:layout_gravity="center_horizontal"
             />
     </LinearLayout>
