@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/mDetailCommentUserName"
-            android:layout_marginRight="52dp"
+            android:layout_marginRight="25dp"
             android:layout_marginTop="11dp"
             android:layout_toRightOf="@id/mDetailCommentUserIcon"
             android:lineSpacingMultiplier="1.15"
@@ -68,6 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="-10dp"
             android:layout_alignTop="@id/mDetailCommentUserSpeech"
             android:orientation="vertical"
             >
