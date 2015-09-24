@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/close_imageView"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/white_relate_onedp_solid"
-        android:gravity="center"
-        android:text="取消分享"
-        android:textColor="#3e3e3e"
-        android:textSize="17.5sp" />
-
-    <GridView
-        android:id="@+id/share_gridView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="25dp"
-        android:horizontalSpacing="15dp"
-        android:numColumns="5"
-        android:verticalSpacing="20dp" />
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="vertical">
 
+        <GridView
+            android:id="@+id/share_gridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="25dp"
+            android:horizontalSpacing="15dp"
+            android:numColumns="5"
+            android:verticalSpacing="20dp" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/close_imageView"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/white_relate_onedp_solid"
+            android:gravity="center"
+            android:text="取消分享"
+            android:textColor="#3e3e3e"
+            android:textSize="17.5sp" />
+
+    </LinearLayout>
 </RelativeLayout>
