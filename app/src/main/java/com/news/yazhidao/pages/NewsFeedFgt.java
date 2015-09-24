@@ -765,6 +765,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     holder.ll_source_content = (LinearLayout) convertView.findViewById(R.id.ll_source_content);
                     holder.ll_source_interest = (LinearLayout) convertView.findViewById(R.id.ll_source_interest);
                     holder.ll_view_content = (LinearLayout) convertView.findViewById(R.id.ll_view_content);
+                    holder.rl_all_content = (RelativeLayout) convertView.findViewById(R.id.rl_all_content);
                     holder.tv_month = (TextView) convertView.findViewById(R.id.tv_month);
                     holder.tv_day = (TextView) convertView.findViewById(R.id.tv_day);
                     holder.tv_weekday = (TextView) convertView.findViewById(R.id.tv_weekday);
@@ -779,6 +780,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                 }
                 if ("adcoco".equals(platform)) {
                     AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
+                }
+
+                if(DeviceInfoUtil.isFlyme()){
+                    holder.rl_all_content.setPadding(0,0,0,DensityUtil.dip2px(getActivity(),15));
                 }
 
                 if(sourceList != null && sourceList.size() > 0){
@@ -953,7 +958,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     } else {
                         String am = "";
                         //填充时间日期
-                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
+                        DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
@@ -1200,6 +1205,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         convertView = View.inflate(mContext, R.layout.ll_news_card2, null);
                         holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
                         holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                        holder3.rl_all_content = (RelativeLayout) convertView.findViewById(R.id.rl_all_content);
                         holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
                         holder3.tv_title = (LetterSpacingTextView) convertView.findViewById(R.id.tv_title);
                         holder3.tv_news_category = (LetterSpacingTextView) convertView.findViewById(R.id.tv_news_category);
@@ -1225,6 +1231,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         holder3 = new ViewHolder3();
                         convertView = View.inflate(mContext, R.layout.ll_news_card, null);
                         holder3.ll_image_list = (LinearLayout) convertView.findViewById(R.id.ll_image_list);
+                        holder3.rl_all_content = (RelativeLayout) convertView.findViewById(R.id.rl_all_content);
                         holder3.image_card1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
                         holder3.image_card2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
                         holder3.image_card3 = (SimpleDraweeView) convertView.findViewById(R.id.image_card3);
@@ -1249,6 +1256,10 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     }
                 }
 
+                if(DeviceInfoUtil.isFlyme()){
+                    holder3.rl_all_content.setPadding(0,0,0,DensityUtil.dip2px(getActivity(),15));
+                }
+
                 if(sourceList != null && sourceList.size() > 0){
                     if(sourceList.size() > 6){
                         for (int i = 0;i < 6;i ++){
@@ -1257,7 +1268,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         sourceList = list;
                     }
                 }else{
-                    holder.ll_view_content.setVisibility(View.GONE);
+                    holder3.ll_view_content.setVisibility(View.GONE);
                 }
 
                 String title = feed.getTitle();
@@ -1402,7 +1413,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     } else {
                         String am = "";
                         //填充时间日期
-                        DateUtil.getMyDate(DateUtil.getDate(), holder.tv_month, holder.tv_day);
+                        DateUtil.getMyDate(mCurrentDate, holder.tv_month, holder.tv_day);
                         //判断上午还是下午
                         if ("0".equals(mCurrentType)) {
                             am = "早间";
@@ -1828,6 +1839,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
         LinearLayout ll_view_content;
+        RelativeLayout rl_all_content;
         RelativeLayout rl_title_content;
         TextViewExtend tv_interests;
         RelativeLayout rl_bottom_mark;
@@ -1859,6 +1871,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         SimpleDraweeView image_card2;
         SimpleDraweeView image_card3;
         LetterSpacingTextView tv_title;
+        RelativeLayout rl_all_content;
         LetterSpacingTextView tv_news_category;
         LinearLayout ll_source_content;
         LinearLayout ll_source_interest;
@@ -1908,7 +1921,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     lv_news.setVisibility(View.VISIBLE);
                     lv_news.getRefreshableView().setSelection(i);
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
+                    ToastUtil.toastLong("网络不给力,请检查网络....");
                     ll_no_network.setVisibility(View.VISIBLE);
                 }
 
@@ -2064,11 +2077,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
             }
             if ("saveuser".equals(intent.getAction())) {
                 String url = intent.getStringExtra("url");
-
                 SharedPreferences.Editor e = mContext.getSharedPreferences("userurl", Context.MODE_PRIVATE).edit();
                 e.putString("url", url);
                 e.commit();
-
                 if (url != null && !"".equals(url)) {
                     ImageLoaderHelper.dispalyImage(mContext, url, mHomeAtyRightMenu);
                 }

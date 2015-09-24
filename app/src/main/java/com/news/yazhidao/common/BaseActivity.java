@@ -11,6 +11,8 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
+import cn.sharesdk.framework.ShareSDK;
+
 
 /**
  *  Created by feng on 3/23/15.
@@ -21,6 +23,7 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ShareSDK.initSDK(this);
         if (isNeedAnimation()){
             overridePendingTransition(R.anim.aty_right_enter, R.anim.aty_no_ani);
         }
@@ -39,7 +42,6 @@ public abstract class BaseActivity extends FragmentActivity {
         setContentView();
         initializeViews();
         loadData();
-
     }
 
     protected abstract void setContentView();

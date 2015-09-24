@@ -27,7 +27,8 @@ public class SharedPreManager {
     public static void save(String spName, String key, String value){
         SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
         e.putString(key, value);
-        e.commit();
+        boolean result = e.commit();
+        Logger.e("jigang","save result = " + result + ",value="+value);
     }
     @Deprecated
     public static void saveJPushId(String value){
@@ -64,7 +65,9 @@ public class SharedPreManager {
     public static void deleteUser(Context mContext){
         User user = getUser(mContext);
         if(user!=null){
-            ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
+            if (!"meizu".equals(user.getPlatformType())){
+                ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
+            }
         }
         remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
     }
@@ -77,7 +80,16 @@ public class SharedPreManager {
         if(TextUtils.isEmpty(userJson)){
             return null;
         }
+
         User user = User.parseUser(userJson);
+        if ("meizu".equals(user.getPlatformType())){
+            if (System.currentTimeMillis() - user.getExpiresTime() > 0){
+                remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+                return null;
+            }else {
+                return user;
+            }
+        }
         if(ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
             return user;
         }else{

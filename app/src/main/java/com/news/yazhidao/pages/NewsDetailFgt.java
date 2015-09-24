@@ -1,11 +1,15 @@
 package com.news.yazhidao.pages;
 
-import android.content.Intent;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
@@ -24,7 +28,6 @@ import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -36,7 +39,6 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 import org.apache.http.NameValuePair;
@@ -48,10 +50,10 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by fengjigang on 15/9/6.
- * 新闻展示详情页
+ * Created by fengjigang on 15/9/17.
+ * 新闻详情页,主要用于SplashAty界面点击查看新闻详情时,展示其后面的若干条新闻
  */
-public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
+public class NewsDetailFgt extends Fragment implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -61,6 +63,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private String uuid;
     private String mNewsDetailUrl;
     private ImageView mivShareBg;
+    private Context mContext;
     //新闻内容POJO
     private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
@@ -78,105 +81,41 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     float startY;
-    private String mSource;
 
     @Override
-    protected boolean translucentStatus() {
-        return false;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContext = getActivity();
     }
 
     @Override
-    protected void setContentView() {
-        setContentView(R.layout.aty_news_detail_layout);
-        mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
-        mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
-        mNewsContentDataList = new ArrayList<>();
-        mNewsDetailELVAdapter = new NewsDetailELVAdapter(this, mNewsContentDataList);
-        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
-        mAlphaAnimationIn.setDuration(500);
-        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
-        mAlphaAnimationOut.setDuration(500);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.aty_news_detail_layout, container, false);
+        initViews(root);
+        loadData();
+        return root;
     }
 
-    @Override
-    protected void initializeViews() {
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
-        mDetailView = findViewById(R.id.mDetailWrapper);
-        mDetailHeaderView = new NewsDetailHeaderView2(this);
-        mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mNewsDetailLoaddingWrapper.setOnClickListener(this);
-        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
-        mDetailHeader = findViewById(R.id.mDetailHeader);
-        mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
-        mDetailLeftBack.setOnClickListener(this);
-        mDetailComment = findViewById(R.id.mDetailComment);
-        mDetailComment.setOnClickListener(this);
-        mDetailShare = findViewById(R.id.mDetailShare);
-        mDetailShare.setOnClickListener(this);
-
-        mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
-        mDetailContentListView.addHeaderView(mDetailHeaderView);
-        mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
-        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                View childAt = view.getChildAt(0);
-                if (childAt != null) {
-                    if (firstVisibleItem != 0 || childAt.getY() > 0) {
-                        return;
-                    }
-                    double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
-                    int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
-                    Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
-                    mDetailHeader.setBackground(drawable);
-                    mDetailHeader.getBackground().setAlpha(alpaha);
-                }
-            }
-        });
-        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-        //设置Listview默认展开
-        expandedChildViews();
-        //去掉Listview左边箭头
-        mDetailContentListView.setGroupIndicator(null);
-        //取消groupview 点击事件
-        mDetailContentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;
-            }
-        });
-    }
-
-    @Override
-    protected void loadData() {
+    private void loadData() {
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
         mAniNewsLoading.start();
-        Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
-        boolean isNewApi = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API, false);
+        Bundle arguments = getArguments();
+        boolean isNewApi = arguments.getBoolean(AlbumListAty.KEY_IS_NEW_API, false);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
         String newsId = null;
-        if (bundle != null) {
-            isDigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
-            albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
+        if (arguments != null) {
+            isDigger = arguments.getBoolean(AlbumListAty.KEY_IS_DIGGER, false);
+            albumSubItem = (AlbumSubItem) arguments.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
             newsId = albumSubItem.getInserteId();
 
         }
-        User user = SharedPreManager.getUser(NewsDetailAty2.this);
+        User user = SharedPreManager.getUser(mContext);
         if (user != null) {
             mUserId = user.getUserId();
             mPlatformType = user.getPlatformType();
         }
-        mNewsDetailUrl = getIntent().getStringExtra("url");
+        mNewsDetailUrl = arguments.getString("url");
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
         String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;
@@ -251,66 +190,58 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
-            Intent intent = new Intent(this, HomeAty.class);
-            startActivity(intent);
-        }
-    }
+    private void initViews(View root) {
+        mDetailView = root.findViewById(R.id.mDetailWrapper);
+        mDetailHeaderView = new NewsDetailHeaderView2(mContext);
+        mNewsDetailLoaddingWrapper = root.findViewById(R.id.mNewsDetailLoaddingWrapper);
+        mNewsDetailLoaddingWrapper.setOnClickListener(this);
+        mNewsLoadingImg = (ImageView) root.findViewById(R.id.mNewsLoadingImg);
+        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+        mivShareBg = (ImageView) root.findViewById(R.id.share_bg_imageView);
+        mDetailHeader = root.findViewById(R.id.mDetailHeader);
+        mDetailLeftBack = root.findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack.setOnClickListener(this);
+        mDetailComment = root.findViewById(R.id.mDetailComment);
+        mDetailComment.setOnClickListener(this);
+        mDetailShare = root.findViewById(R.id.mDetailShare);
+        mDetailShare.setOnClickListener(this);
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.mDetailLeftBack:
-                onBackPressed();
-                break;
-            case R.id.mDetailComment:
-                ArrayList<NewsDetail.Point> points;
-                if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)) {
-                    points = mNewsDetail.point;
-                } else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
-                    points = mNewsDetailAdd.point;
-                } else {
-                    points = null;
+        mDetailContentListView = (ExpandableListView) root.findViewById(R.id.mDetailContentListView);
+        mDetailContentListView.addHeaderView(mDetailHeaderView);
+        mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
+        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                View childAt = view.getChildAt(0);
+                if (childAt != null) {
+                    if (firstVisibleItem != 0 || childAt.getY() > 0) {
+                        return;
+                    }
+                    double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
+                    int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
+                    Drawable drawable = mContext.getResources().getDrawable(R.color.bg_home_login_header);
+                    mDetailHeader.setBackground(drawable);
+                    mDetailHeader.getBackground().setAlpha(alpaha);
                 }
-                mivShareBg.startAnimation(mAlphaAnimationIn);
-                mivShareBg.setVisibility(View.VISIBLE);
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this, this);
-                window.setFocusable(true);
-                //防止虚拟软键盘被弹出菜单遮住
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-                break;
-            case R.id.mDetailShare:
-                mivShareBg.startAnimation(mAlphaAnimationIn);
-                mivShareBg.setVisibility(View.VISIBLE);
-                mSharePopupWindow = new SharePopupWindow(this, this);
-                String type, remark;
-                if (mNewsDetail != null) {
-                    type = "0";
-                    remark = mNewsDetail.abs;
-                } else {
-                    type = "1";
-                    remark = mNewsDetailAdd.abs;
-                }
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("url", mNewsDetailUrl);
-                hashMap.put("type", type);
-                String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
-                if (mNewsDetail != null) {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, url,remark);
-                } else {
-                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url,remark);
-                }
-                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-                break;
-            case R.id.mNewsDetailLoaddingWrapper:
-                loadData();
-                break;
-        }
+            }
+        });
+        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+        //设置Listview默认展开
+        expandedChildViews();
+        //去掉Listview左边箭头
+        mDetailContentListView.setGroupIndicator(null);
+        //取消groupview 点击事件
+        mDetailContentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
     }
 
     /**
@@ -561,6 +492,67 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.mDetailLeftBack:
+                ((Activity) mContext).finish();
+                break;
+            case R.id.mDetailComment:
+                ArrayList<NewsDetail.Point> points;
+                if (mNewsDetail != null && !TextUtil.isListEmpty(mNewsDetail.point)) {
+                    points = mNewsDetail.point;
+                } else if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
+                    points = mNewsDetailAdd.point;
+                } else {
+                    points = null;
+                }
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                CommentPopupWindow window = new CommentPopupWindow(mContext, points, mNewsDetailUrl, this, -1, this, this);
+                window.setFocusable(true);
+                //防止虚拟软键盘被弹出菜单遮住
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+                window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                break;
+            case R.id.mDetailShare:
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                mSharePopupWindow = new SharePopupWindow(mContext, this);
+                String remark;
+                if (mNewsDetail != null) {
+                    remark = mNewsDetail.abs;
+                } else {
+                    remark = mNewsDetailAdd.abs;
+                }
+                if (mNewsDetail != null) {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetail.title, mNewsDetailUrl, remark);
+                } else {
+                    mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, mNewsDetailUrl, remark);
+                }
+                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                break;
+            case R.id.mNewsDetailLoaddingWrapper:
+                loadData();
+                break;
+        }
+    }
+
+    @Override
     public void updateCommentCount(NewsDetail.Point point) {
         if (mNewsDetail != null) {
             if (mNewsDetail.point == null) {
@@ -586,7 +578,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         //设置Listview默认展开
         expandedChildViews();
     }
-
 
     @Override
     public void updataPraise() {

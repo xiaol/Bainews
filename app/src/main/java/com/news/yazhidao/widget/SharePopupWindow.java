@@ -1,6 +1,5 @@
 package com.news.yazhidao.widget;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -23,7 +22,6 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -36,16 +34,16 @@ public class SharePopupWindow extends PopupWindow {
 
     private TextViewExtend mtvClose;
     private View mMenuView;
-    private Activity m_pContext;
+    private Context m_pContext;
     private GridView mgvShare;
     private ShareAdapter mShareAdapter;
     private TypedArray mTypedArray;
     private String[] mShareName;
     private String[] marrSharePlatform;
-    private String mstrTitle, mstrUrl;
+    private String mstrTitle, mstrUrl, mstrRemark;
     private ShareDismiss mShareDismiss;
 
-    public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
+    public SharePopupWindow(Context context, ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
         mShareDismiss = shareDismiss;
@@ -55,7 +53,7 @@ public class SharePopupWindow extends PopupWindow {
         mShareAdapter = new ShareAdapter(m_pContext);
         mShareName = m_pContext.getResources().getStringArray(R.array.share_list_name);
         mTypedArray = m_pContext.getResources().obtainTypedArray(R.array.share_list_image);
-        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME, QZone.NAME, TencentWeibo.NAME};
+        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME, TencentWeibo.NAME};
         findHeadPortraitImageViews();
     }
 
@@ -68,13 +66,13 @@ public class SharePopupWindow extends PopupWindow {
         //设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(800);
+        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         //设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         //设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.popupWindowAnimation);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        ColorDrawable dw = new ColorDrawable(0x00000000);
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
@@ -95,9 +93,10 @@ public class SharePopupWindow extends PopupWindow {
         });
     }
 
-    public void setTitleAndUrl(String title, String url) {
+    public void setTitleAndUrl(String title, String url, String remark) {
         mstrTitle = title;
         mstrUrl = url;
+        mstrRemark = remark;
     }
 
     @Override
@@ -168,8 +167,9 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl);
+                        ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl, mstrRemark);
                     }
+                    SharePopupWindow.this.dismiss();
                 }
             });
             return convertView;

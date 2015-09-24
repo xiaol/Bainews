@@ -11,8 +11,8 @@
     <ImageView
         android:id="@+id/rounded_imageView"
         android:background="@drawable/white_relate_onedp_solid"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
         android:layout_centerVertical="true"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
@@ -29,7 +29,7 @@
         android:text="haha"
         android:textColor="@color/news_detail_content"
         android:layout_centerVertical="true"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         />

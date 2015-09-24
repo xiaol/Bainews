@@ -20,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:text="新闻词条"
-        android:textStyle="bold"
         android:textColor="@color/white"
         android:background="@drawable/bg_item_news_detail_entry_title"
         android:gravity="center"

@@ -11,7 +11,7 @@ import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
 import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.pages.HomeAty;
-import com.news.yazhidao.pages.NewsDetailAty;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.CrashHandler;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -108,7 +108,7 @@ public class YaZhiDaoApplication extends Application {
 //                        JSONObject urlObject = new JSONObject(extras);
 //                        String news_url = urlObject.getString("news_url");
                         if (!TextUtils.isEmpty(extras)) {
-                            Intent detailIntent = new Intent(context, NewsDetailAty.class);
+                            Intent detailIntent = new Intent(context, NewsDetailAty2.class);
                             detailIntent.putExtra(NewsFeedFgt.KEY_URL, extras);
                             detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
                             detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

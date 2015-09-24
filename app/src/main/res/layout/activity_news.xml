@@ -76,7 +76,8 @@
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_gravity="center"
-            android:background="@drawable/ic_login"
+            android:src="@drawable/ic_login"
+            android:background="@drawable/bg_home_user_icon"
             app:border_color="@color/black"
             app:border_width="1dp"
             app:corner_radius="20dp" />

@@ -129,6 +129,7 @@
     <color name="home_login_chat">#2b2b2b</color>
     <color name="home_logout">#ff7878</color>
     <color name="bg_home_login_weixin">#00e17f</color>
+    <color name="bg_home_login_meizu">#00baff</color>
     <color name="bg_home_login_weibo">#ff5d5d</color>
     <color name="bg_home_login_mode">#000000</color>
     <color name="divide_home_login">#989898</color>
@@ -151,6 +152,7 @@
     <color name="bg_news_detail">#E6E6E6</color>
     <color name="news_detail_speech_divider">#F0F0F0</color>
     <color name="news_detail_desc">#2b2b2b</color>
+    <color name="news_detail_desc_shadow">#d8d8d8</color>
 
     <!--NewsDetailAty news content color-->
     <color name="news_detail_content">#494949</color>

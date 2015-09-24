@@ -167,7 +167,6 @@ public class SplashAty extends BaseActivity {
                 }
             }
         });
-
         MobclickAgent.onEvent(this, CommonConstant.US_BAINEWS_USER_ASSESS_APP);
     }
 
@@ -195,16 +194,13 @@ public class SplashAty extends BaseActivity {
 
             public void success(StartUrl result) {
                 if (result != null) {
-
                     splashInfo = result;
-
                     if (result.getTitle() != null) {
                         tv_splash_news.setText(result.getTitle());
                         rl_splash.setVisibility(View.VISIBLE);
                     } else {
                         rl_splash.setVisibility(View.GONE);
                     }
-
                     if (result.getImgUrl() != null) {
 //                        ImageLoaderHelper.dispalyImage(SplashAty.this,result.getImgUrl(),iv_splash_background);
                         ImageManager.getInstance(SplashAty.this).DisplayImage(result.getImgUrl(), iv_news, false, new DisplayImageListener() {

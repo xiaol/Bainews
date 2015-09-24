@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:background="@color/new_light_gray"
+    android:background="#ebebeb"
     android:layout_alignParentBottom="true"
     android:id="@+id/gray_bg"
     android:focusable="true"
@@ -14,8 +14,8 @@
         android:background="@drawable/input_type_record"
         android:id="@+id/switch_button"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginRight="12.5dp"
+        android:layout_marginLeft="12.5dp" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/send_button"
@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:text="发送"
-        android:textColor="@color/white"
+        android:textColor="@color/Gray"
         android:gravity="center"
         android:textSize="@dimen/textsize_twenty"
         android:layout_margin="@dimen/common_padding_five" />
@@ -35,13 +35,12 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/send_button"
         android:layout_toRightOf="@+id/switch_button"
-        android:text="按住开始录音"
+        android:text="按住说话"
         android:id="@+id/record_button"
-        android:textColor="@color/white"
+        android:textColor="#3e3e3e"
         android:background="@drawable/comment_button_bg"
         android:gravity="center"
-        android:textSize="@dimen/textsize_twelve"
-        android:layout_marginRight="10dp"
+        android:textSize="@dimen/textsize_fifteen"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
 
@@ -62,7 +61,6 @@
         android:focusableInTouchMode="true"
         android:background="@drawable/input_view_bg"
         android:textColorHint="@color/LightGray"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp" />
 

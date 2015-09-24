@@ -122,12 +122,13 @@
 
         <ImageView
             android:id="@+id/mHomeLoginCancel"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_below="@id/mHomeLogout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:src="@drawable/bg_date_close"
+            android:scaleType="centerInside"
             />
     </RelativeLayout>
 
@@ -142,7 +143,8 @@
         android:layout_marginTop="-35dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_user_login_default"
+        android:background="@drawable/bg_home_user_icon"
         app:border_color="@color/white"
-        app:border_width="5dp"
-        app:corner_radius="38dp"/>
+        app:border_width="3dp"
+        app:corner_radius="60dp"/>
 </RelativeLayout>

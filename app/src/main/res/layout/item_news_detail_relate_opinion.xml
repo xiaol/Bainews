@@ -84,8 +84,8 @@
             android:ellipsize="end"
             android:gravity="left"
             android:maxLines="2"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textColor="@color/news_detail_content"
+            android:textSize="14sp" />
     </RelativeLayout>
 
 </RelativeLayout>
