@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import com.news.yazhidao.R;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
@@ -52,8 +53,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
         mLoginModeWeiXin.setOnClickListener(this);
         mLoginModeMeiZu = mPopupWidow.findViewById(R.id.mLoginModeMeiZu);
         mLoginModeMeiZu.setOnClickListener(this);
-        mLoginModeMeiZu.setVisibility(View.VISIBLE);
-        if ("Meizu".equals(android.os.Build.MANUFACTURER)) { //魅族手机
+        if (DeviceInfoUtil.isFlyme()) { //魅族手机
             mLoginModeMeiZu.setVisibility(View.VISIBLE);
         }
     }
