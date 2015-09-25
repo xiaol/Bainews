@@ -8,6 +8,7 @@
     android:id="@+id/itemroot">
 
     <RelativeLayout
+        android:id="@+id/rl_all_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_feedstream_list_table">
