@@ -20,6 +20,7 @@
         android:layout_marginBottom="100dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/bg_experence2"
+        android:stateListAnimator="@null"
         android:layout_centerHorizontal="true"
         android:textColor="#80c3fd"
         android:textSize="23sp"
