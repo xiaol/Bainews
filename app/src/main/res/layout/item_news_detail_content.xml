@@ -19,7 +19,8 @@
         android:background="@drawable/bg_item_news_detail_content_middle"
         android:paddingLeft="22dp"
         android:paddingRight="22dp"
-        android:paddingTop="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
         >
 
         <TextView
@@ -41,20 +42,18 @@
             android:background="@drawable/btn_news_detail_comment_count"
             android:gravity="center"
             android:text="234"
-            android:layout_marginBottom="4dp"
             android:textColor="@color/news_detail_comment_count"
             android:textSize="11sp"
             />
 
-        <ImageView
-            android:id="@+id/mDetailAddComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/mDetailContent"
-            android:layout_marginBottom="4dp"
-            android:src="@drawable/btn_news_detail_add_comment"
-            />
+        <!--<ImageView-->
+            <!--android:id="@+id/mDetailAddComment"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_below="@id/mDetailContent"-->
+            <!--android:src="@drawable/btn_news_detail_add_comment"-->
+            <!--/>-->
     </RelativeLayout>
 
 </RelativeLayout>

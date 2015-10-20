@@ -46,7 +46,10 @@ import java.util.HashMap;
  */
 public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount {
 
-
+    /**段落评论position*/
+    private final static String KEY_POSITION = "key_position";
+    /**段落评论所对应的数据*/
+    private final static String KEY_COMMENTS = "key_comments";
     private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
     private ExpandableListView mExpListView;
@@ -228,7 +231,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 convertView = View.inflate(mContext, R.layout.item_news_detail_content, null);
                 mContentViewHolder.mDetailContent = (TextView) convertView.findViewById(R.id.mDetailContent);
                 mContentViewHolder.mDetailCommentCount = (TextView) convertView.findViewById(R.id.mDetailCommentCount);
-                mContentViewHolder.mDetailAddComment = (ImageView) convertView.findViewById(R.id.mDetailAddComment);
                 mContentViewHolder.mNewsDetailContentWrapper = convertView.findViewById(R.id.mNewsDetailContentWrapper);
                 mContentViewHolder.mDetailGroupDivider = convertView.findViewById(R.id.mDetailGroupDivider);
                 convertView.setTag(mContentViewHolder);
@@ -257,7 +259,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                     mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
                 }
             }
-            mContentViewHolder.mNewsDetailContentWrapper.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 12), DensityUtil.dip2px(mContext, 22), 0);
+            mContentViewHolder.mNewsDetailContentWrapper.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 4), DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 8));
             /**设置分组之间的间隔*/
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
@@ -265,16 +267,16 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**设置该段落的评论数*/
             if (!TextUtil.isListEmpty(content.getComments())) {
                 mContentViewHolder.mDetailCommentCount.setText("" + content.getComments().size());
-                mContentViewHolder.mDetailCommentCount.setVisibility(View.VISIBLE);
-                mContentViewHolder.mDetailAddComment.setVisibility(View.GONE);
-                mContentViewHolder.mDetailCommentCount.setOnClickListener(NewsDetailELVAdapter.this);
+                mContentViewHolder.mDetailCommentCount.setBackgroundResource(R.drawable.btn_news_detail_comment_count);
             } else {
-                mContentViewHolder.mDetailCommentCount.setVisibility(View.GONE);
-                mContentViewHolder.mDetailAddComment.setVisibility(View.VISIBLE);
-                mContentViewHolder.mDetailAddComment.setOnClickListener(NewsDetailELVAdapter.this);
+                mContentViewHolder.mDetailCommentCount.setText("");
+                mContentViewHolder.mDetailCommentCount.setBackgroundResource(R.drawable.btn_news_detail_add_comment);
             }
-            mContentViewHolder.mDetailCommentCount.setTag(R.id.mDetailCommentCount, content.getComments());
-            mContentViewHolder.mDetailAddComment.setTag(R.id.mDetailAddComment, Integer.valueOf(childPosition));
+            mContentViewHolder.mDetailCommentCount.setOnClickListener(this);
+            HashMap<String,Object> data = new HashMap<>();
+            data.put(KEY_POSITION,childPosition);
+            data.put(KEY_COMMENTS,content.getComments());
+            mContentViewHolder.mDetailCommentCount.setTag(R.id.mDetailCommentCount, data);
         } else if (getViewHolderType(groupPosition) == ViewHolderType.IMAGEWALL) {
             /**图片墙组*/
             if (convertView == null || !ImageWallHolder.class.getClasses().equals(convertView.getTag().getClass())) {
@@ -370,12 +372,18 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 convertView = View.inflate(mContext, R.layout.item_news_detail_entry, null);
                 mEntryHolder.mDetailEntryTitle = (TextView) convertView.findViewById(R.id.mDetailEntryTitle);
                 mEntryHolder.mDetailEntryIcon = (ImageView) convertView.findViewById(R.id.mDetailEntryIcon);
+                mEntryHolder.mDetailEntryDivider = convertView.findViewById(R.id.mDetailEntryDivider);
                 convertView.setTag(mEntryHolder);
             } else {
                 mEntryHolder = (NewsEntryViewHolder) convertView.getTag();
             }
             ArrayList<NewsDetailEntry> list = mNewsContentDataList.get(groupPosition);
             NewsDetailEntry entry = list.get(childPosition);
+            if (childPosition == list.size() - 1){
+                mEntryHolder.mDetailEntryDivider.setVisibility(View.INVISIBLE);
+            }else {
+                mEntryHolder.mDetailEntryDivider.setVisibility(View.VISIBLE);
+            }
             if (list.size() == 1) {
                 convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
             } else {
@@ -387,7 +395,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
             mEntryHolder.mDetailEntryTitle.setText(entry.getTitle());
             mEntryHolder.mDetailEntryIcon.setImageResource(entry.getType() == NewsDetailEntry.EntyType.BAIDUBAIKE ? R.drawable.ic_news_detail_entry_baike : R.drawable.ic_news_detail_entry_douban);
-            convertView.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 16), 0, 0);
+            convertView.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 8), 0, 0);
             convertView.setTag(R.id.mDetailEntryWrapper, entry.getUrl());
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         } else if (getViewHolderType(groupPosition) == ViewHolderType.RELATE_OPINION) {
@@ -512,7 +520,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             ArrayList<NewsDetail.Weibo> list = mNewsContentDataList.get(groupPosition);
             NewsDetail.Weibo weibo = list.get(childPosition);
             if (childPosition == list.size() - 1){
-                mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.GONE);
+                mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.INVISIBLE);
             }else {
                 mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.VISIBLE);
             }
@@ -555,7 +563,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             mZhiHuHolder.mDetailZhiHuTitle.setText(zhihu.title);
             //影藏最后一个item的分割线
             if (childPosition == list.size() - 1){
-                mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.GONE);
+                mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.INVISIBLE);
             }else {
                 mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.VISIBLE);
             }
@@ -609,12 +617,14 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         Intent webviewIntent = new Intent(mContext, NewsDetailWebviewAty.class);
         switch (v.getId()) {
             case R.id.mDetailCommentCount:
-                ArrayList<NewsDetail.Point> comments = (ArrayList<NewsDetail.Point>) v.getTag(R.id.mDetailCommentCount);
-                openComment(comments, comments.get(0).sourceUrl, Integer.valueOf(comments.get(0).paragraphIndex), this, this);
-                break;
-            case R.id.mDetailAddComment:
-                int index = (Integer) v.getTag(R.id.mDetailAddComment);
-                openComment(null, mNewsUrl, index, this, this);
+                HashMap<String,Object> data = (HashMap<String, Object>) v.getTag(R.id.mDetailCommentCount);
+                Integer position = (Integer) data.get(KEY_POSITION);
+                ArrayList<NewsDetail.Point> comments = (ArrayList<NewsDetail.Point>) data.get(KEY_COMMENTS);
+                if (TextUtil.isListEmpty(comments)){
+                    openComment(null, mNewsUrl, position, this, this);
+                }else {
+                    openComment(comments, comments.get(0).sourceUrl, Integer.valueOf(comments.get(0).paragraphIndex), this, this);
+                }
                 break;
             case R.id.mDetailImageWallWrapper:
                 Intent imageWallIntent = new Intent(mContext, WallActivity.class);
@@ -927,7 +937,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     static class ContentViewHolder {
         TextView mDetailContent;
         TextView mDetailCommentCount;
-        ImageView mDetailAddComment;
         View mNewsDetailContentWrapper;
         View mDetailGroupDivider;
     }
@@ -970,6 +979,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     static class NewsEntryViewHolder {
         TextView mDetailEntryTitle;
         ImageView mDetailEntryIcon;
+        View mDetailEntryDivider;
     }
 
     /**

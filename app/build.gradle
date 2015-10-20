@@ -9,22 +9,22 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 107
-        versionName "1.1.3"
+        versionCode 108
+        versionName "1.1.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
     productFlavors {
 //        googleplay {}
 //        yingyongbao {}
-//        xiaomi {}
+        xiaomi {}
 //        adcoco{}
 //        c360 {}
 //        baidu {}
 //        wandoujia {}
-//        meizu{}
+        meizu{}
 //        anzhi {}
-//        wandoujia {}
+        wandoujia {}
 //        jifeng {}
 //        yingyonghui {}
 //        mumayi {}
