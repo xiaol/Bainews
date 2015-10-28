@@ -87,6 +87,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     protected void setContentView() {
+        
         setContentView(R.layout.aty_news_detail_layout);
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
