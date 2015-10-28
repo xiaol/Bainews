@@ -150,7 +150,9 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private RoundedImageView mHomeAtyRightMenu;
     private int TYPE_VIEWHOLDER = 1;
     private int TYPE_VIEWHOLDER3 = 3;
-    /**大图新闻和小图新闻分割处*/
+    /**
+     * 大图新闻和小图新闻分割处
+     */
     private int split_index_top;
 
     @Override
@@ -782,19 +784,19 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     AdcocoUtil.ad(position, convertView, mMiddleNewsArr);
                 }
 
-                if(DeviceInfoUtil.isFlyme()){
-                    holder.rl_all_content.setPadding(0,0,0,DensityUtil.dip2px(getActivity(),15));
+                if (DeviceInfoUtil.isFlyme()) {
+                    holder.rl_all_content.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15));
                 }
 
-                if(sourceList != null && sourceList.size() > 0){
-                    if(sourceList.size() > 3){
-                        for (int i = 0;i < 3;i ++){
+                if (sourceList != null && sourceList.size() > 0) {
+                    if (sourceList.size() > 3) {
+                        for (int i = 0; i < 3; i++) {
                             list.add(sourceList.get(i));
                         }
                         sourceList = list;
                     }
 
-                }else{
+                } else {
                     holder.ll_view_content.setVisibility(View.GONE);
                 }
 
@@ -1045,7 +1047,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         if (source != null) {
 
 
-
                             String source_name = source.getSourceSitename();
                             String finalText = "";
                             String source_title = source.getTitle();
@@ -1071,7 +1072,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
 
 
-
                             if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
                                 if (source.getSimilarity().length() > 4) {
                                     String ss = source.getSimilarity().substring(2, 4);
@@ -1085,20 +1085,20 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
 
                             Paint paint = new Paint();
                             Rect rect = new Rect();
-                            paint.getTextBounds(finalText,0,finalText.length(),rect);
+                            paint.getTextBounds(finalText, 0, finalText.length(), rect);
                             int tv_width = 0;
-                            if(DeviceInfoUtil.isFlyme()) {
-                                tv_width = DensityUtil.dip2px(getActivity(),305);
-                            }else{
-                                tv_width = DensityUtil.dip2px(getActivity(),342);
+                            if (DeviceInfoUtil.isFlyme()) {
+                                tv_width = DensityUtil.dip2px(getActivity(), 305);
+                            } else {
+                                tv_width = DensityUtil.dip2px(getActivity(), 342);
                             }
 
                             int width = rect.width();
                             int height = rect.height();
                             int line = 0;
-                            if(tv_width >= width){
+                            if (tv_width >= width) {
                                 line = 1;
-                            }else{
+                            } else {
                                 line = 2;
                             }
 
@@ -1143,7 +1143,11 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     title = TextUtil.getNewsTitle(title_news);
                 }
 
-                holder2.tv_title.setText(title);
+                if (title != null && !"".equals(title)) {
+                    holder2.tv_title.setText(title);
+                } else {
+                    holder2.tv_title.setText(title_news);
+                }
                 int textsize = DensityUtil.dip2px(mContext, 18);
                 holder2.tv_title.setTextSize(textsize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
@@ -1256,18 +1260,18 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     }
                 }
 
-                if(DeviceInfoUtil.isFlyme()){
-                    holder3.rl_all_content.setPadding(0,0,0,DensityUtil.dip2px(getActivity(),15));
+                if (DeviceInfoUtil.isFlyme()) {
+                    holder3.rl_all_content.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15));
                 }
 
-                if(sourceList != null && sourceList.size() > 0){
-                    if(sourceList.size() > 6){
-                        for (int i = 0;i < 6;i ++){
+                if (sourceList != null && sourceList.size() > 0) {
+                    if (sourceList.size() > 6) {
+                        for (int i = 0; i < 6; i++) {
                             list.add(sourceList.get(i));
                         }
                         sourceList = list;
                     }
-                }else{
+                } else {
                     holder3.ll_view_content.setVisibility(View.GONE);
                 }
 
@@ -1577,27 +1581,27 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                             }
                             Paint paint = new Paint();
                             Rect rect = new Rect();
-                            paint.getTextBounds(finalText,0,finalText.length(),rect);
+                            paint.getTextBounds(finalText, 0, finalText.length(), rect);
 
                             int tv_width = 0;
-                            if(DeviceInfoUtil.isFlyme()) {
-                                tv_width = DensityUtil.dip2px(getActivity(),305);
-                            }else{
-                                tv_width = DensityUtil.dip2px(getActivity(),342);
+                            if (DeviceInfoUtil.isFlyme()) {
+                                tv_width = DensityUtil.dip2px(getActivity(), 305);
+                            } else {
+                                tv_width = DensityUtil.dip2px(getActivity(), 342);
                             }
                             int width = rect.width();
                             int line = 0;
-                            if(tv_width >= width){
+                            if (tv_width >= width) {
                                 line = 1;
-                            }else{
+                            } else {
                                 line = 2;
                             }
 
                             //设置观点view的布局
-                            setIvCombineLineParams(iv_combine_line,line);
+                            setIvCombineLineParams(iv_combine_line, line);
                         }
 
-                    holder3.ll_source_content.addView(ll_souce_view);
+                        holder3.ll_source_content.addView(ll_souce_view);
                     }
 
 //                    setContentParams(holder3.ll_source_content, sourceList.size(), source_title_length, TYPE_VIEWHOLDER3);
@@ -1782,12 +1786,12 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private void setIvCombineLineParams(ImageView iv_combine_line_top, int length) {
 
         ViewGroup.LayoutParams params = iv_combine_line_top.getLayoutParams();
-        if(length == 1){
-            params.height = DensityUtil.dip2px(mContext,20);
-        }else if(length == 2){
-            params.height = DensityUtil.dip2px(mContext,40);
-        }else{
-            params.height = DensityUtil.dip2px(mContext,20);
+        if (length == 1) {
+            params.height = DensityUtil.dip2px(mContext, 20);
+        } else if (length == 2) {
+            params.height = DensityUtil.dip2px(mContext, 40);
+        } else {
+            params.height = DensityUtil.dip2px(mContext, 20);
         }
         iv_combine_line_top.setLayoutParams(params);
 
@@ -2008,7 +2012,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                     if (flag)
                         mMiddleNewsArr = result;
                     else {
-                        for(NewsFeed newsFeed :result) {
+                        for (NewsFeed newsFeed : result) {
                             mMiddleNewsArr.add(newsFeed);
                         }
                     }

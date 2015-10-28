@@ -271,6 +271,8 @@ public class TextUtil {
     public static int getSpecialBgPic(int positon){
         return 0;
     }
+
+
     /**
      * 获取别的app分享进来的新闻链接中的url
      * @param data
