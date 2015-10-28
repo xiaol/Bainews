@@ -1886,7 +1886,6 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
         TextView tv_day;
         TextView tv_weekday;
         TextView tv_time;
-
         RelativeLayout rl_bottom_mark;
 
     }

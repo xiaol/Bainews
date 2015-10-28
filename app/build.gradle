@@ -17,14 +17,14 @@ android {
     productFlavors {
 //        googleplay {}
 //        yingyongbao {}
-        xiaomi {}
+//        xiaomi {}
 //        adcoco{}
 //        c360 {}
 //        baidu {}
 //        wandoujia {}
-        meizu{}
+//        meizu{}
 //        anzhi {}
-        wandoujia {}
+//        wandoujia {}
 //        jifeng {}
 //        yingyonghui {}
 //        mumayi {}
@@ -36,18 +36,26 @@ android {
 //        jifeng {}
 //        yingyonghui {}
 //        mumayi {}
+//        oppo{}
+//        vivo{}
+
 //        zhihuiyun {}
 //        wo {}
 //        sougou {}
 //        mm {}
-        official{}
+//        official{}
+        lianxiang{}
+        yidong{}
+        jinli{}
+        dianxin{}
+        liantong{}
+        suning{}
 
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
         }
     }
 
-// /Users/fiocca/develop/BaiNews/toutiaobaoke.keystore
     signingConfigs {
         myConfig {
             storeFile file("/Users/fiocca/develop/BaiNews/toutiaobaoke.keystore")
