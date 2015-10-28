@@ -142,7 +142,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 }
             }
         });
-        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         //设置Listview默认展开
         expandedChildViews();
         //去掉Listview左边箭头
@@ -159,6 +158,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     @Override
     protected void loadData() {
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         mAniNewsLoading.start();
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isNewApi = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API, false);
@@ -176,7 +176,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             mUserId = user.getUserId();
             mPlatformType = user.getPlatformType();
         }
-        mNewsDetailUrl = getIntent().getStringExtra("url");
+        mNewsDetailUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_URL);
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
         String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;

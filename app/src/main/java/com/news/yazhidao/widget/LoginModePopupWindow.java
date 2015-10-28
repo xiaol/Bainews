@@ -13,6 +13,7 @@ import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
+import com.umeng.analytics.AnalyticsConfig;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -53,7 +54,7 @@ public class LoginModePopupWindow extends PopupWindow implements View.OnClickLis
         mLoginModeWeiXin.setOnClickListener(this);
         mLoginModeMeiZu = mPopupWidow.findViewById(R.id.mLoginModeMeiZu);
         mLoginModeMeiZu.setOnClickListener(this);
-        if (DeviceInfoUtil.isFlyme()) { //魅族手机
+        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(mContext))) { //魅族手机
             mLoginModeMeiZu.setVisibility(View.VISIBLE);
         }
     }
