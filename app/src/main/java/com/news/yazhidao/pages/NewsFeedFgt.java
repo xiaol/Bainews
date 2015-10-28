@@ -99,7 +99,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
     private int mCurrentTransitionEffect = JazzyHelper.SLIDE_IN;
     private View mHomeAtyLeftMenuWrapper;
     //打开详情页时，带过去的url地址
-    public static String KEY_URL = "url";
+    public static String KEY_URL = "key_url";
     //打开其他观点时，带到详情页的参数，标示从哪儿进入的详情页
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String VALUE_NEWS_SOURCE = "other_view";
@@ -1289,7 +1289,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
                         firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
                         //uemng statistic view the head news
@@ -1308,7 +1308,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
                         firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
                         //uemng statistic view the head news
@@ -1359,7 +1359,7 @@ public class NewsFeedFgt extends Fragment implements TimePopupWindow.IUpdateUI, 
                         }
                         firstClick = System.currentTimeMillis();
                         Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                        intent.putExtra("url", feed.getSourceUrl());
+                        intent.putExtra(KEY_URL, feed.getSourceUrl());
                         intent.putExtra("position", position);
                         startActivityForResult(intent, 0);
                         //uemng statistic view the head news
