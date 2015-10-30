@@ -18,6 +18,7 @@ package com.handmark.pulltorefresh.library;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,14 +86,12 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		mRefreshableView.setOnScrollListener(this);
 	}
 
-
-
 	/**
 	 * Gets whether an indicator graphic should be displayed when the View is in
 	 * a state where a Pull-to-Refresh can happen. An example of this state is
 	 * when the Adapter View is scrolled to the top and the mode is set to
-	 * {@link com.handmark.pulltorefresh.library.PullToRefreshBase.Mode#PULL_FROM_START}. The default value is <var>true</var> if
-	 * {@link com.handmark.pulltorefresh.library.PullToRefreshBase#isPullToRefreshOverScrollEnabled()
+	 * {@link Mode#PULL_FROM_START}. The default value is <var>true</var> if
+	 * {@link PullToRefreshBase#isPullToRefreshOverScrollEnabled()
 	 * isPullToRefreshOverScrollEnabled()} returns false.
 	 * 
 	 * @return true if the indicators will be shown
@@ -105,8 +104,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			final int totalItemCount) {
 
 		if (DEBUG) {
-//			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount
-//					+ ". Total Items:" + totalItemCount);
+			Log.d(LOG_TAG, "First Visible: " + firstVisibleItem + ". Visible Count: " + visibleItemCount
+					+ ". Total Items:" + totalItemCount);
 		}
 
 		/**
@@ -143,9 +142,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	/**
-	 * Pass-through method for {@link com.handmark.pulltorefresh.library.PullToRefreshBase#getRefreshableView()
+	 * Pass-through method for {@link PullToRefreshBase#getRefreshableView()
 	 * getRefreshableView()}.
-	 * {@link android.widget.AdapterView#setAdapter(android.widget.Adapter)}
+	 * {@link AdapterView#setAdapter(android.widget.Adapter)}
 	 * setAdapter(adapter)}. This is just for convenience!
 	 * 
 	 * @param adapter - Adapter to set
@@ -199,9 +198,9 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	/**
-	 * Pass-through method for {@link com.handmark.pulltorefresh.library.PullToRefreshBase#getRefreshableView()
+	 * Pass-through method for {@link PullToRefreshBase#getRefreshableView()
 	 * getRefreshableView()}.
-	 * {@link android.widget.AdapterView#setOnItemClickListener(android.widget.AdapterView.OnItemClickListener)
+	 * {@link AdapterView#setOnItemClickListener(OnItemClickListener)
 	 * setOnItemClickListener(listener)}. This is just for convenience!
 	 * 
 	 * @param listener - OnItemClickListener to use
@@ -214,7 +213,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		mOnLastItemVisibleListener = listener;
 	}
 
-	public void setOnScrollListener(OnScrollListener listener) {
+	public final void setOnScrollListener(OnScrollListener listener) {
 		mOnScrollListener = listener;
 	}
 
@@ -226,7 +225,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	 * Sets whether an indicator graphic should be displayed when the View is in
 	 * a state where a Pull-to-Refresh can happen. An example of this state is
 	 * when the Adapter View is scrolled to the top and the mode is set to
-	 * {@link com.handmark.pulltorefresh.library.PullToRefreshBase.Mode#PULL_FROM_START}
+	 * {@link Mode#PULL_FROM_START}
 	 * 
 	 * @param showIndicator - true if the indicators should be shown.
 	 */
@@ -322,8 +321,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	@Override
-	protected void updateUIForMode(int i) {
-		super.updateUIForMode(0);
+	protected void updateUIForMode() {
+		super.updateUIForMode();
 
 		// Check Indicator Views consistent with new Mode
 		if (getShowIndicatorInternal()) {
@@ -377,7 +376,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 		if (null == adapter || adapter.isEmpty()) {
 			if (DEBUG) {
-//				Log.d(LOG_TAG, "isFirstItemVisible. Empty View.");
+				Log.d(LOG_TAG, "isFirstItemVisible. Empty View.");
 			}
 			return true;
 
@@ -406,7 +405,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 
 		if (null == adapter || adapter.isEmpty()) {
 			if (DEBUG) {
-//				Log.d(LOG_TAG, "isLastItemVisible. Empty View.");
+				Log.d(LOG_TAG, "isLastItemVisible. Empty View.");
 			}
 			return true;
 		} else {
@@ -414,8 +413,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 			final int lastVisiblePosition = mRefreshableView.getLastVisiblePosition();
 
 			if (DEBUG) {
-//				Log.d(LOG_TAG, "isLastItemVisible. Last Item Position: " + lastItemPosition + " Last Visible Pos: "
-//						+ lastVisiblePosition);
+				Log.d(LOG_TAG, "isLastItemVisible. Last Item Position: " + lastItemPosition + " Last Visible Pos: "
+						+ lastVisiblePosition);
 			}
 
 			/**

@@ -25,7 +25,6 @@ import android.widget.ScrollView;
 
 import com.news.yazhidao.R;
 
-
 public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 
 	public PullToRefreshScrollView(Context context) {
@@ -57,6 +56,7 @@ public class PullToRefreshScrollView extends PullToRefreshBase<ScrollView> {
 		} else {
 			scrollView = new ScrollView(context, attrs);
 		}
+
 		scrollView.setId(R.id.scrollview);
 		return scrollView;
 	}

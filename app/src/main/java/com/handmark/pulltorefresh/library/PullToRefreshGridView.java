@@ -60,7 +60,6 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 
 		// Use Generated ID (from res/values/ids.xml)
 		gv.setId(R.id.gridview);
-//        gv.setHorizontalSpacing(U.dip2px(getContext(),6.0f));
 		return gv;
 	}
 
@@ -68,7 +67,6 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 
 		public InternalGridView(Context context, AttributeSet attrs) {
 			super(context, attrs);
-            setDividerPadding(0);
 		}
 
 		@Override
@@ -87,9 +85,7 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 
 		public InternalGridViewSDK9(Context context, AttributeSet attrs) {
 			super(context, attrs);
-            setDividerPadding(0);
-
-        }
+		}
 
 		@Override
 		protected boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
@@ -99,7 +95,7 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 					scrollRangeY, maxOverScrollX, maxOverScrollY, isTouchEvent);
 
 			// Does all of the hard work...
-//			OverscrollHelper.overScrollBy(PullToRefreshGridView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
+			OverscrollHelper.overScrollBy(PullToRefreshGridView.this, deltaX, scrollX, deltaY, scrollY, isTouchEvent);
 
 			return returnValue;
 		}

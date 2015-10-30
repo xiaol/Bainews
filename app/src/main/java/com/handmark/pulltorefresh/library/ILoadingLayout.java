@@ -14,7 +14,7 @@ public interface ILoadingLayout {
 	public void setLastUpdatedLabel(CharSequence label);
 
 	/**
-	 * Set the drawable used in the loading input_bar_view. This is the same as calling
+	 * Set the drawable used in the loading layout. This is the same as calling
 	 * <code>setLoadingDrawable(drawable, Mode.BOTH)</code>
 	 * 
 	 * @param drawable - Drawable to display
@@ -49,7 +49,7 @@ public interface ILoadingLayout {
 	/**
 	 * Set's the Sets the typeface and style in which the text should be
 	 * displayed. Please see
-	 * {@link android.widget.TextView#setTypeface(android.graphics.Typeface)
+	 * {@link android.widget.TextView#setTypeface(Typeface)
 	 * TextView#setTypeface(Typeface)}.
 	 */
 	public void setTextTypeface(Typeface tf);

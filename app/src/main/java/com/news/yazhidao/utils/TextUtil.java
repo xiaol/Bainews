@@ -73,27 +73,27 @@ public class TextUtil {
 
     public static void setViewCompatBackground(String category,LoadingLayout loadingLayout) {
 
-        if ("焦点".equals(category)) {
-            loadingLayout.setHeaderBackground("#ff4341");
-        } else if ("国际".equals(category)) {
-            loadingLayout.setHeaderBackground("#007fff");
-        } else if ("港台".equals(category)) {
-            loadingLayout.setHeaderBackground("#726bf8");
-        } else if ("内地".equals(category)) {
-            loadingLayout.setHeaderBackground("#18a68b");
-        } else if ("财经".equals(category)) {
-            loadingLayout.setHeaderBackground("#32bfcd");
-        } else if ("科技".equals(category)) {
-            loadingLayout.setHeaderBackground("#007fff");
-        } else if ("体育".equals(category)) {
-            loadingLayout.setHeaderBackground("#df8145");
-        } else if ("社会".equals(category)) {
-            loadingLayout.setHeaderBackground("#00b285");
-        } else if ("国内".equals(category)) {
-            loadingLayout.setHeaderBackground("#726bf8");
-        } else if ("娱乐".equals(category)) {
-            loadingLayout.setHeaderBackground("#ff7272");
-        }
+//        if ("焦点".equals(category)) {
+//            loadingLayout.setHeaderBackground("#ff4341");
+//        } else if ("国际".equals(category)) {
+//            loadingLayout.setHeaderBackground("#007fff");
+//        } else if ("港台".equals(category)) {
+//            loadingLayout.setHeaderBackground("#726bf8");
+//        } else if ("内地".equals(category)) {
+//            loadingLayout.setHeaderBackground("#18a68b");
+//        } else if ("财经".equals(category)) {
+//            loadingLayout.setHeaderBackground("#32bfcd");
+//        } else if ("科技".equals(category)) {
+//            loadingLayout.setHeaderBackground("#007fff");
+//        } else if ("体育".equals(category)) {
+//            loadingLayout.setHeaderBackground("#df8145");
+//        } else if ("社会".equals(category)) {
+//            loadingLayout.setHeaderBackground("#00b285");
+//        } else if ("国内".equals(category)) {
+//            loadingLayout.setHeaderBackground("#726bf8");
+//        } else if ("娱乐".equals(category)) {
+//            loadingLayout.setHeaderBackground("#ff7272");
+//        }
 
     }
 
