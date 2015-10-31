@@ -255,9 +255,9 @@ public class TextUtil {
         return new String(c);
     }
     /**
-     * 随机产生一个颜色值给专辑做背景色
+     * 随机产生一个颜色值给热词搜索做背景色
      */
-    public static int getRandomColor4Special(Context mContext){
+    public static int getRandomColor4Hotlabel(Context mContext){
         String[] colorArr = mContext.getResources().getStringArray(R.array.bg_special_colors);
         Random random = new Random();
         int index = random.nextInt(colorArr.length);

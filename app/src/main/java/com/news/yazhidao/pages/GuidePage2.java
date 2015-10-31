@@ -29,7 +29,7 @@ public class GuidePage2 extends Fragment {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putBoolean("isshow", true);
                 editor.commit();
-                Intent intent = new Intent(getActivity(), HomeAty.class);
+                Intent intent = new Intent(getActivity(), MainAty.class);
                 startActivity(intent);
                 getActivity().finish();
             }

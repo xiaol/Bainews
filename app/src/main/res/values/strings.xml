@@ -78,18 +78,25 @@
 
     <!--个人专辑中默认的背景色-->
     <string-array name="bg_special_colors">
-        <item name="item1">#ee6270</item>
-        <item name="item2">#6279a3</item>
-        <item name="item3">#f788a2</item>
-        <item name="item4">#37ccd9</item>
-        <item name="item5">#b56f40</item>
-        <item name="item6">#f6aa32</item>
-        <item name="item7">#35a6fb</item>
-        <item name="item8">#e2ab4b</item>
-        <item name="item9">#2bc972</item>
-        <item name="item10">#9153c6</item>
-        <item name="item11">#ffda59</item>
-        <item name="item12">#7174ff</item>
-        <item name="item13">#ff44b2</item>
+        <item name="item1">#dd91b5</item>
+        <item name="item2">#88b6e7</item>
+        <item name="item3">#b7d194</item>
+        <item name="item4">#83cac2</item>
+        <item name="item5">#cfba8f</item>
+        <item name="item6">#dcbe92</item>
+        <item name="item7">#c192dc</item>
+        <item name="item8">#9792dc</item>
+        <item name="item9">#92bcdc</item>
+        <item name="item10">#dcd992</item>
+        <item name="item11">#dc9c92</item>
+        <item name="item12">#a2d7d5</item>
+        <item name="item13">#aba2d7</item>
     </string-array>
+
+    <!--新闻频道-->
+    <string name="drawer_btn_rss">频道管理</string>
+    <string name="subscribe_my_category">我的频道</string>
+    <string name="subscribe_more_category">更多频道</string>
+    <string name="subscribe_manager_category_info">单击增删频道</string>
+    <string name="subscribe_manager_category_info_2">单击增删频道，长按拖拽排序</string>
 </resources>

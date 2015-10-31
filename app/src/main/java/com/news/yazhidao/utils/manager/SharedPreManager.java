@@ -76,6 +76,7 @@ public class SharedPreManager {
      * @return
      */
     public static User getUser(Context mContext){
+        ShareSDK.initSDK(mContext);
         String userJson = get(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
         if(TextUtils.isEmpty(userJson)){
             return null;

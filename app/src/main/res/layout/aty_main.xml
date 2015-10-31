@@ -1,0 +1,112 @@
+<RelativeLayout
+    android:id="@+id/main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/activity_bg_color">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        style="@style/main_title_bar_style">
+
+        <ImageView
+            android:id="@+id/mTopSearch"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12.0dip"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:scaleType="centerInside"
+            android:src="@drawable/main_search_drawer"/>
+
+        <RelativeLayout
+            android:id="@+id/title_click_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingLeft="13.0dip"
+            >
+
+            <FrameLayout
+                android:id="@+id/title_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/mAppTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/title"/>
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/mTopRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/title_parent"
+                android:contentDescription="@string/app_name"
+                android:padding="3.0dip"
+                android:src="@drawable/refreshicon_titlebar"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/mChannelLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/top_category_height"
+        android:layout_below="@id/title_bar"
+        android:background="@drawable/bg_category_bar">
+
+        <ImageView
+            android:id="@+id/mChannelExpand"
+            android:layout_width="@dimen/top_category_height"
+            android:layout_height="@dimen/top_category_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            android:scaleType="center"
+            android:src="@drawable/ic_category_expand"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/top_category_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/mChannelExpand">
+
+            <com.news.yazhidao.widget.channel.ChannelTabStrip
+                android:id="@+id/mChannelTabStrip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/top_category_height"
+                android:clipToPadding="false"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mViewPager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/mChannelLayout"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/mMainUserLogin"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        app:placeholderImage="@drawable/ic_login"
+        app:placeholderImageScaleType="centerCrop"
+        app:actualImageScaleType="centerInside"
+        app:roundAsCircle="true"
+        app:roundingBorderWidth="1dp"
+        app:roundingBorderColor="@color/black"
+        />
+</RelativeLayout>

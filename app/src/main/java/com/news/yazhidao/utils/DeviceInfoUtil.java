@@ -86,7 +86,7 @@ public class DeviceInfoUtil {
         Class<?> c = null;
         Object obj = null;
         Field field = null;
-        int x = 0, barHeight = 38;//默认为38，貌似大部分是这样的
+        int x = 0, barHeight = DensityUtil.dip2px(mContext,25);//默认为25dp，貌似大部分是这样的
 
         try {
             c = Class.forName("com.android.internal.R$dimen");
@@ -209,6 +209,23 @@ public class DeviceInfoUtil {
 
     public static String getApkSource(Context appContext) {
         return getManifestMetaData(appContext, "UMENG_CHANNEL");
+    }
+
+    /**
+     * 获取当前应用的包名
+     * @param pContext
+     * @return
+     */
+    public static String getApkPackageName(Context pContext){
+        PackageInfo info = null;
+        String packageName = null;
+        try {
+            info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            packageName = info.packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return packageName;
     }
 
     /**

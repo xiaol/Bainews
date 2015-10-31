@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
@@ -23,6 +22,7 @@ import com.news.yazhidao.net.UserCallback;
 import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.net.request.UserLoginRequest;
 import com.news.yazhidao.pages.HomeAty;
+import com.news.yazhidao.pages.MainAty;
 import com.news.yazhidao.pages.ShareSdkAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -105,9 +105,9 @@ public class ShareSdkHelper {
                         }
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
 
-                        Intent intent = new Intent("saveuser");
-                        intent.putExtra("url", user.getUserIcon());
-                        GlobalParams.context.sendBroadcast(intent);
+                        Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
+                        intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
+                        mContext.sendBroadcast(intent);
 
                         if (mUserLoginListener != null) {
                             mHandler.post(new Runnable() {

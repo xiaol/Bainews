@@ -98,7 +98,7 @@ public class SplashAty extends BaseActivity {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         if(flag) {
-                            Intent intent = new Intent(SplashAty.this, HomeAty.class);
+                            Intent intent = new Intent(SplashAty.this, MainAty.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
                             SplashAty.this.finish();
@@ -155,7 +155,7 @@ public class SplashAty extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(flag) {
-                    Intent intent = new Intent(SplashAty.this, HomeAty.class);
+                    Intent intent = new Intent(SplashAty.this, MainAty.class);
                     startActivity(intent);
                     overridePendingTransition(R.anim.animation_alpha_in, R.anim.slide_out);
                     SplashAty.this.finish();

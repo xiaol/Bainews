@@ -1,65 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.news.yazhidao"
-    android:versionCode="108"
-    android:versionName="1.1.4">
+<manifest package="com.news.yazhidao"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          android:versionCode="108"
+          android:versionName="1.1.4">
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- Optional. Required for location feature -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
 
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
 
     <!--UmengPush-->
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!--【必选】用以设置前台是否显示通知-->
-    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 可选 -->
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_ADDED"/>
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED"/>
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_INSTALL"/>
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED"/>
+    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
 
 
     <application
         android:name=".application.YaZhiDaoApplication"
+        android:debuggable="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:debuggable="true"
         >
         <meta-data
             android:name="platform_id"
-            android:value="13872c5a3cfafb1e639b619c3a25c7ab" />
+            android:value="13872c5a3cfafb1e639b619c3a25c7ab"/>
 
         <!-- ################## Umeng 添加UmengAppkey ####################### -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="551a6a28fd98c5b574000788" />
+            android:value="551a6a28fd98c5b574000788"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="${UMENG_CHANNEL_VALUE}" />
+            android:value="${UMENG_CHANNEL_VALUE}"/>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
             android:value="5bb97a8b1477e856c94db429c7f098df"></meta-data>
@@ -81,13 +83,13 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="AuthorizeAdapter"
-                android:value="com.news.yazhidao.pages.CustomShareAdapter" />
+                android:value="com.news.yazhidao.pages.CustomShareAdapter"/>
             <intent-filter>
-                <data android:scheme="tencent100371282" />
-                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="tencent100371282"/>
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <!-- 微信回调activity -->
@@ -95,7 +97,7 @@
             android:name="com.news.yazhidao.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
 
         <!-- UmengPush监听通知点击或者忽略处理的广播 -->
@@ -108,14 +110,14 @@
             android:name="com.umeng.message.SystemReceiver"
             android:process=":push">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
             </intent-filter>
         </receiver>
 
@@ -124,7 +126,7 @@
             android:name="com.umeng.message.MessageReceiver"
             android:process=":push">
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.RECEIVE" />
+                <action android:name="org.agoo.android.intent.action.RECEIVE"/>
             </intent-filter>
         </receiver>
 
@@ -133,8 +135,8 @@
             android:name="com.umeng.message.ElectionReceiver"
             android:process=":push">
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4" />
-                <category android:name="umeng" />
+                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4"/>
+                <category android:name="umeng"/>
             </intent-filter>
         </receiver>
 
@@ -144,12 +146,12 @@
             android:name="com.umeng.message.RegistrationReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.news.yazhidao.intent.action.COMMAND" />
+                <action android:name="com.news.yazhidao.intent.action.COMMAND"/>
             </intent-filter>
         </receiver>
         <receiver android:name="com.umeng.message.UmengMessageBootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
         <!-- Umeng的长连服务，用来建立推送的长连接的 -->
@@ -160,21 +162,21 @@
             android:label="PushService"
             android:process=":push">
             <intent-filter>
-                <action android:name="com.news.yazhidao.intent.action.START" />
+                <action android:name="com.news.yazhidao.intent.action.START"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.news.yazhidao.intent.action.COCKROACH" />
+                <action android:name="com.news.yazhidao.intent.action.COCKROACH"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.PING_V4" />
-                <category android:name="umeng" />
+                <action android:name="org.agoo.android.intent.action.PING_V4"/>
+                <category android:name="umeng"/>
             </intent-filter>
         </service>
 
         <!-- Umeng的消息接收服务 -->
         <service
             android:name="com.umeng.message.UmengIntentService"
-            android:process=":push" />
+            android:process=":push"/>
 
         <!-- Umeng的消息路由服务 -->
         <service
@@ -182,10 +184,10 @@
             android:exported="true"
             android:process=":push">
             <intent-filter>
-                <action android:name="org.android.agoo.client.MessageReceiverService" />
+                <action android:name="org.android.agoo.client.MessageReceiverService"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="org.android.agoo.client.ElectionReceiverService" />
+                <action android:name="org.android.agoo.client.ElectionReceiverService"/>
             </intent-filter>
         </service>
 
@@ -194,38 +196,38 @@
             android:name="com.umeng.message.UmengMessageCallbackHandlerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.umeng.messge.registercallback.action" />
+                <action android:name="com.umeng.messge.registercallback.action"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.umeng.message.unregistercallback.action" />
+                <action android:name="com.umeng.message.unregistercallback.action"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.umeng.message.message.handler.action" />
+                <action android:name="com.umeng.message.message.handler.action"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="com.umeng.message.autoupdate.handler.action" />
+                <action android:name="com.umeng.message.autoupdate.handler.action"/>
             </intent-filter>
         </service>
 
         <!-- V1.3.0添加的service，负责下载通知的资源 -->
-        <service android:name="com.umeng.message.UmengDownloadResourceService" />
+        <service android:name="com.umeng.message.UmengDownloadResourceService"/>
 
         <!-- 魅族登录 -->
         <activity
             android:name="sdk.meizu.auth.ui.AuthActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
         </activity>
 
 
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme" />
+            android:theme="@style/SwipeBackTheme"/>
 
         <activity
             android:name=".pages.GuideAty"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".pages.NewsDetailAty"
@@ -242,19 +244,19 @@
 
         <activity
             android:name=".pages.ChatAty"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".pages.BaseTagActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".pages.ShareSdkAty" />
+        <activity android:name=".pages.ShareSdkAty"/>
         <activity
             android:name=".pages.SplashAty"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
         </activity>
@@ -262,51 +264,60 @@
             android:name=".pages.FeedBackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name=".pages.DiggerAty"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
 
         <receiver android:name=".receiver.TimeoOutAlarmReceiver">
             <intent-filter>
-                <action android:name="updateUI" />
+                <action android:name="updateUI"/>
             </intent-filter>
         </receiver>
         <!--网络状态发生变化-->
         <receiver android:name=".receiver.NetworkStateChangedReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
         </receiver>
 
         <activity
             android:name="com.news.yazhidao.widget.imagewall.WallActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".pages.AlbumListAty"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".pages.MainAty"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".pages.ChannelOperateAty"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".pages.TopicSearchAty"
+            android:screenOrientation="portrait"/>
         <!-- 配置Receiver(必须) -->
         <receiverdebuggable
             android:name="com.lostip.sdk.ad.custom.receiver.AdCocoaStateReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="custom.intent.action.PACKAGE_STATE_CHANGED" />
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="custom.intent.action.PACKAGE_STATE_CHANGED"/>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
 
-                <data android:scheme="package" />
+                <data android:scheme="package"/>
             </intent-filter>
         </receiverdebuggable>
     </application>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>
