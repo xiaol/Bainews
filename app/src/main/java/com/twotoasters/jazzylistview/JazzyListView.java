@@ -17,7 +17,6 @@ package com.twotoasters.jazzylistview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.AbsListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -35,10 +34,10 @@ public class JazzyListView extends PullToRefreshListView {
         mHelper = init(context, attrs);
     }
 
-    public JazzyListView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs,defStyle);
-        mHelper = init(context, attrs);
-    }
+//    public JazzyListView(Context context, AttributeSet attrs, int defStyle) {
+//        super(context, attrs,defStyle);
+//        mHelper = init(context, attrs);
+//    }
 
     private JazzyHelper init(Context context, AttributeSet attrs) {
         JazzyHelper helper = new JazzyHelper(context, attrs);
@@ -46,10 +45,10 @@ public class JazzyListView extends PullToRefreshListView {
         return helper;
     }
 
-    @Override
-    public final void setOnScrollListener(AbsListView.OnScrollListener l) {
-        mHelper.setOnScrollListener(l);
-    }
+//    @Override
+//    public final void setOnScrollListener(AbsListView.OnScrollListener l) {
+//        mHelper.setOnScrollListener(l);
+//    }
 
     /**
      * Sets the desired transition effect.

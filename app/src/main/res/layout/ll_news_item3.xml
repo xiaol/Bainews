@@ -1,226 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/itemroot">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffdfe6e9"
+    android:orientation="vertical"
+    android:paddingBottom="10.0dip">
 
     <RelativeLayout
-        android:id="@+id/rl_all_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/news_content_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:background="@drawable/bg_feedstream_list_table">
 
-        <include
-            android:id="@+id/ll_time_item"
-            layout="@layout/ll_time_layout" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/title_img_View"
+            android:layout_width="110.0dip"
+            android:layout_height="110.0dip"
+            android:layout_marginLeft="8.0dip"
+            android:layout_marginTop="8.0dip"
+            android:paddingBottom="10.0dip"
+            android:scaleType="centerCrop"
+            fresco:placeholderImage="@drawable/bg_load_default_small" />
 
-        <RelativeLayout
-            android:id="@+id/rl_divider"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_below="@+id/ll_time_item"
-            android:background="@color/bg_news_detail" />
-
-        <RelativeLayout
-            android:id="@+id/rl_title_content"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title_textView"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_below="@+id/rl_divider">
+            android:layout_margin="8.0dip"
+            android:layout_toRightOf="@+id/title_img_View"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="#ff2b2b2b"
+            android:textSize="16.0sp" />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/iv_title_img"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="8dp"
-                fresco:placeholderImage="@drawable/bg_load_default_small"
-                 />
-
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_toRightOf="@+id/iv_title_img"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="8dp"
-                android:maxLines="3"
-                android:ellipsize="end"
-                android:textSize="16sp"
-                android:textColor="#2b2b2b" />
-
-            <com.news.yazhidao.widget.LetterSpacingTextView
-                android:id="@+id/tv_news_category"
-                android:layout_width="36dp"
-                android:layout_height="20dp"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="26dp"
-                android:textColor="#ffffff"
-                android:background="@drawable/bg_category_shehui" />
-
-            <ImageView
-                android:id="@+id/img_source_sina"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/img_source_sina"
-                android:layout_toRightOf="@+id/iv_title_img"
-                android:layout_alignBottom="@+id/iv_title_img" />
-
-            <ImageView
-                android:id="@+id/img_source_baidu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="5dp"
-                android:layout_toRightOf="@+id/img_source_sina"
-                android:background="@drawable/img_source_baidu"
-                android:layout_alignBottom="@+id/iv_title_img" />
-
-            <ImageView
-                android:id="@+id/img_source_zhihu"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/img_source_zhihu"
-                android:layout_toRightOf="@+id/img_source_baidu"
-                android:layout_alignBottom="@+id/iv_title_img" />
-
-            <ImageView
-                android:id="@+id/img_source_biimgs"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/img_source_biimgs"
-                android:layout_toRightOf="@+id/img_source_zhihu"
-                android:layout_alignBottom="@+id/iv_title_img" />
-
-            <ImageView
-                android:id="@+id/img_source_comment"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/img_source_comment"
-                android:layout_toRightOf="@+id/img_source_biimgs"
-                android:layout_alignBottom="@+id/iv_title_img" />
-
-            <LinearLayout
-                android:id="@+id/ll_source_interest"
-                android:layout_width="40dp"
-                android:layout_height="24dp"
-                android:background="@drawable/bg_feedback_contact_way2"
-                android:layout_alignBottom="@+id/iv_title_img"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:layout_alignParentRight="true"
-                android:orientation="horizontal">
-
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/tv_interests"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10"
-                    android:textColor="#ff0000" />
-
-            </LinearLayout>
-
-
-            <com.news.yazhidao.widget.TextViewExtend
-                android:id="@+id/tv_sourcesite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:layout_alignBottom="@+id/iv_title_img"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:visibility="gone"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/black"
-                android:text="10" />
-
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_view_content"
-            android:layout_width="match_parent"
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/news_source_TextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/rl_title_content"
-            android:gravity="center_vertical"
-            android:layout_marginTop="10dp">
+            android:layout_alignBottom="@+id/title_img_View"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="8.0dip"
+            android:layout_toRightOf="@+id/title_img_View"
+            android:text="dddddddd"
+            android:textColor="@color/gray_black" />
 
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="1dp"
-                android:background="#dadada" />
-
-            <ImageView
-                android:id="@+id/cv_opinions"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:background="@drawable/ic_news_opinion"
-                android:layout_gravity="center" />
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dadada" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_source_content"
-            android:layout_below="@+id/ll_view_content"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_textView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="15dp" />
-
-        <RelativeLayout
-            android:id="@+id/rl_bottom_mark"
-            android:layout_width="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_height="70dp"
-            android:layout_below="@+id/ll_source_content"
-            android:visibility="gone"
-            android:background="#2f393d">
-
-            <TextView
-                android:id="@+id/tv_continue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="继续阅读"
-                android:layout_centerInParent="true"
-                android:textSize="23sp"
-                android:textColor="#ffffff" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/tv_continue"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/top_arrow" />
-
-        </RelativeLayout>
-
+            android:layout_alignBaseline="@+id/news_source_TextView"
+            android:layout_marginLeft="10.0dip"
+            android:layout_toRightOf="@+id/news_source_TextView"
+            android:text="dddd"
+            android:textColor="@color/Gray" />
     </RelativeLayout>
 
-    <include layout="@layout/ad_item" />
+    <LinearLayout
+        android:id="@+id/source_content_linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_feedstream_list_table"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_centerVertical="true"
+                android:background="#ffdadada" />
+
+            <ImageView
+                android:layout_width="23.0dip"
+                android:layout_height="23.0dip"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18.0dip"
+                android:background="@drawable/ic_news_opinion" />
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/relate_layout1"
+            layout="@layout/lv_source_item3" />
+
+        <include
+            android:id="@+id/relate_layout2"
+            layout="@layout/lv_source_item3" />
+
+        <include
+            android:id="@+id/relate_layout3"
+            layout="@layout/lv_source_item3" />
+    </LinearLayout>
 </LinearLayout>

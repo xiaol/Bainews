@@ -27,7 +27,6 @@ import android.webkit.WebView;
 
 import com.news.yazhidao.R;
 
-
 public class PullToRefreshWebView extends PullToRefreshBase<WebView> {
 
 	private static final OnRefreshListener<WebView> defaultOnRefreshListener = new OnRefreshListener<WebView>() {

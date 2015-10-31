@@ -35,12 +35,10 @@ import com.news.yazhidao.R;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
-	protected LoadingLayout mHeaderLoadingView;
+	private LoadingLayout mHeaderLoadingView;
 	private LoadingLayout mFooterLoadingView;
 
-	public FrameLayout mLvFooterLoadingFrame;
-    public FrameLayout mLvHeaderLoadingFrame;
-
+	private FrameLayout mLvFooterLoadingFrame;
 
 	private boolean mListViewExtrasEnabled;
 
@@ -51,10 +49,6 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 	public PullToRefreshListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-
-    public PullToRefreshListView(Context context, AttributeSet attrs,int defStyle) {
-        super(context, attrs);
-    }
 
 	public PullToRefreshListView(Context context, Mode mode) {
 		super(context, mode);
@@ -166,7 +160,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 				break;
 		}
 
-		// If the ListView header loading input_bar_view is showing, then we need to
+		// If the ListView header loading layout is showing, then we need to
 		// flip so that the original one is showing instead
 		if (listViewLoadingLayout.getVisibility() == View.VISIBLE) {
 
@@ -183,18 +177,13 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 			 */
 			if (scrollLvToEdge && getState() != State.MANUAL_REFRESHING) {
 				mRefreshableView.setSelection(selection);
-//				setHeaderScroll(scrollToHeight);
+				setHeaderScroll(scrollToHeight);
 			}
 		}
 
 		// Finally, call up to super
 		super.onReset();
 	}
-
-
-    protected  LoadingLayout getHeaderLoadingLayout(){
-        return getHeaderLayout();
-    }
 
 	@Override
 	protected LoadingLayoutProxy createLoadingLayoutProxy(final boolean includeStart, final boolean includeEnd) {
@@ -241,15 +230,14 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 		if (mListViewExtrasEnabled) {
 			final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.LEFT);
+					FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 
 			// Create Loading Views ready for use later
-            mLvHeaderLoadingFrame = new FrameLayout(getContext());
+			FrameLayout frame = new FrameLayout(getContext());
 			mHeaderLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_START, a);
-
-            mHeaderLoadingView.setVisibility(View.GONE);
-            mLvHeaderLoadingFrame.addView(mHeaderLoadingView, lp);
-			mRefreshableView.addHeaderView(mLvHeaderLoadingFrame, null, false);
+			mHeaderLoadingView.setVisibility(View.GONE);
+			frame.addView(mHeaderLoadingView, lp);
+			mRefreshableView.addHeaderView(frame, null, false);
 
 			mLvFooterLoadingFrame = new FrameLayout(getContext());
 			mFooterLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_END, a);

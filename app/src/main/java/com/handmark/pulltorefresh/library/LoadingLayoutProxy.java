@@ -19,7 +19,7 @@ public class LoadingLayoutProxy implements ILoadingLayout {
 	 * This allows you to add extra LoadingLayout instances to this proxy. This
 	 * is only necessary if you keep your own instances, and want to have them
 	 * included in any
-	 * {@link com.handmark.pulltorefresh.library.PullToRefreshBase#createLoadingLayoutProxy(boolean, boolean)
+	 * {@link PullToRefreshBase#createLoadingLayoutProxy(boolean, boolean)
 	 * createLoadingLayoutProxy(...)} calls.
 	 * 
 	 * @param layout - LoadingLayout to have included.

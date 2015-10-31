@@ -1,181 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/itemroot">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffdfe6e9"
+    android:orientation="vertical"
+    android:paddingBottom="10.0dip">
 
     <RelativeLayout
-        android:id="@+id/rl_all_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/news_content_relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:background="@drawable/bg_feedstream_list_table">
 
-        <include
-            layout="@layout/ll_time_layout"
-            android:id="@+id/ll_time_item" />
-
-        <RelativeLayout
-            android:id="@+id/rl_divider"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:layout_below="@+id/ll_time_item"
-            android:background="@color/bg_news_detail" />
+        <TextView
+            android:id="@+id/title_textView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8.0dip"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="#ff2b2b2b"
+            android:textSize="16.0sp" />
 
         <LinearLayout
-            android:id="@+id/ll_image_list"
-            android:layout_below="@id/rl_divider"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:id="@+id/image_list_LinearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_textView">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="90dp"
-                android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/bg_load_default_small"
-                />
+                android:layout_width="0.0dip"
+                android:layout_height="90.0dip"
+                android:layout_weight="1.0"
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="90dp"
-                android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/bg_load_default_small"
-                />
+                android:layout_width="0.0dip"
+                android:layout_height="90.0dip"
+                android:layout_weight="1.0"
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card3"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="90dp"
-                android:layout_margin="10dp"
-                fresco:placeholderImage="@drawable/bg_load_default_small"
-                />
-
+                android:layout_width="0.0dip"
+                android:layout_height="90.0dip"
+                android:layout_weight="1.0"
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
         </LinearLayout>
 
-
-        <com.news.yazhidao.widget.LetterSpacingTextView
-            android:id="@+id/tv_news_category"
-            android:layout_below="@+id/ll_image_list"
-            android:layout_width="36dp"
-            android:layout_height="20dp"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="2dp"
-            android:textSize="12sp"
-            android:textColor="#ffffff"
-            android:background="@drawable/bg_category_shehui" />
-
-        <com.news.yazhidao.widget.LetterSpacingTextView
-            android:id="@+id/tv_title"
-            android:layout_below="@+id/ll_image_list"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_textView"
             android:layout_width="wrap_content"
-            android:layout_toLeftOf="@+id/tv_news_category"
-            android:layout_alignParentLeft="true"
-            android:gravity="left"
             android:layout_height="wrap_content"
-            android:text="反馈文理分科我离开我吕蒙WMV物品"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-
-        <LinearLayout
-            android:id="@+id/ll_view_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@+id/tv_title"
-            android:gravity="center_vertical"
-            android:layout_marginTop="10dp">
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="1dp"
-                android:background="#dadada" />
-
-            <ImageView
-                android:id="@+id/cv_opinions"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:background="@drawable/ic_news_opinion"
-                android:layout_gravity="center" />
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#dadada" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_source_content"
-            android:layout_below="@+id/ll_view_content"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="15dp" />
-
-        <LinearLayout
-            android:id="@+id/ll_source_interest"
-            android:layout_width="46dp"
-            android:layout_height="22dp"
-            android:layout_below="@+id/ll_source_content"
-            android:background="@drawable/bg_feedback_contact_way2"
-            android:layout_marginRight="12dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
             android:layout_alignParentRight="true"
-            android:orientation="horizontal">
+            android:layout_below="@+id/image_list_LinearLayout"
+            android:layout_marginRight="8.0dip"
+            android:layout_marginTop="8.0dip"
+            android:text="dddd"
+            android:textColor="@color/Gray" />
 
-            <com.news.yazhidao.widget.TextViewExtend
-                android:id="@+id/tv_interests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10"
-                android:textColor="#ff0000" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_bottom_mark"
-            android:layout_width="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_height="70dp"
-            android:layout_below="@+id/ll_source_interest"
-            android:visibility="gone"
-            android:background="#2f393d">
-
-            <TextView
-                android:id="@+id/tv_continue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="继续阅读"
-                android:layout_centerInParent="true"
-                android:textSize="23sp"
-                android:textColor="#ffffff" />
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/tv_continue"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/top_arrow" />
-
-        </RelativeLayout>
-
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/news_source_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/comment_textView"
+            android:layout_marginRight="10.0dip"
+            android:layout_toLeftOf="@+id/comment_textView"
+            android:text="dddddddd"
+            android:textColor="@color/gray_black" />
     </RelativeLayout>
 
-    <include layout="@layout/ad_item" />
+    <LinearLayout
+        android:id="@+id/source_content_linearLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_feedstream_list_table"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="1.0dip"
+                android:layout_centerVertical="true"
+                android:background="#ffdadada" />
+
+            <ImageView
+                android:layout_width="23.0dip"
+                android:layout_height="23.0dip"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="18.0dip"
+                android:background="@drawable/ic_news_opinion" />
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/relate_layout1"
+            layout="@layout/lv_source_item3" />
+
+        <include
+            android:id="@+id/relate_layout2"
+            layout="@layout/lv_source_item3" />
+
+        <include
+            android:id="@+id/relate_layout3"
+            layout="@layout/lv_source_item3" />
+    </LinearLayout>
 </LinearLayout>

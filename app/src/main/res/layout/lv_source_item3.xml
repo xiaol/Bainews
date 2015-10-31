@@ -1,82 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_souce_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    >
-
-    <ImageView
-        android:id="@+id/iv_combine_line_top"
-        android:layout_width="1dp"
-        android:layout_height="15dp"
-        android:background="@drawable/source_item_combine_line"
-        android:layout_marginLeft="17dp"
-        />
-
+    android:id="@+id/souce_relativeLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_source"
-        android:layout_below="@+id/iv_combine_line_top"
-        android:layout_width="9dp"
-        android:layout_height="9dp"
-        android:layout_marginLeft="13dp"
-        android:background="@drawable/img_blue_point"
-        />
+        android:layout_width="9.0dip"
+        android:layout_height="9.0dip"
+        android:layout_marginLeft="25.0dip"
+        android:layout_marginTop="13.0dip"
+        android:background="@drawable/img_blue_point" />
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_news_source"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/iv_source"
-        android:lineSpacingExtra="3dp"
-        android:layout_marginTop="10dp"
-        android:gravity="left"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:layout_marginLeft="8dp"
-        android:textColor="#888888"
-        android:text="Fay苏"
-        android:textSize="11sp"
-        />
-
-    <TextView
-        android:id="@+id/tv_relate"
-        android:layout_width="38dp"
-        android:layout_height="20dp"
-        android:layout_toRightOf="@+id/tv_news_source"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/bg_sulist"
-        android:textColor="#b5b5b5"
-        android:text="99%相关"
-        android:paddingTop="-1dp"
-        android:textSize="11sp"
-        />
+    <ImageView
+        android:id="@+id/iv_combine_line_top"
+        android:layout_width="1.0dip"
+        android:layout_height="13.0dip"
+        android:layout_marginLeft="29.0dip"
+        android:background="@color/blue" />
 
     <ImageView
         android:id="@+id/iv_combine_line"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        android:layout_below="@id/iv_source"
-        android:background="@drawable/source_item_combine_line"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="-1dp"
-        android:layout_marginBottom="-1dp"
-        />
+        android:layout_width="1.0dip"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/iv_source"
+        android:layout_marginLeft="29.0dip"
+        android:background="@color/blue" />
 
+    <TextView
+        android:id="@+id/tv_relate"
+        android:layout_width="58.0dip"
+        android:layout_height="20.0dip"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginRight="8.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/bg_sulist"
+        android:gravity="center"
+        android:paddingTop="-1.0dip"
+        android:text="99%相关"
+        android:textColor="#ffb5b5b5"
+        android:textSize="11.0sp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_news_source"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8.0dip"
+        android:layout_marginTop="10.0dip"
+        android:layout_toLeftOf="@+id/tv_relate"
+        android:layout_toRightOf="@+id/iv_source"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:lineSpacingExtra="3.0dip"
+        android:maxLines="2"
+        android:paddingBottom="10.0dip"
+        android:text="Fay苏"
+        android:textColor="#ff888888"
+        android:textSize="11.0sp" />
 
     <TextView
         android:id="@+id/tv_devider_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/image_half_line"
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
         android:layout_below="@+id/tv_news_source"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="32dp"
-        />
-
+        android:layout_marginLeft="32.0dip"
+        android:layout_marginTop="10.0dip"
+        android:background="@drawable/image_half_line" />
 </RelativeLayout>

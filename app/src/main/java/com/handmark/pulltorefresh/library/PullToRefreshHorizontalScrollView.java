@@ -25,7 +25,6 @@ import android.widget.HorizontalScrollView;
 
 import com.news.yazhidao.R;
 
-
 public class PullToRefreshHorizontalScrollView extends PullToRefreshBase<HorizontalScrollView> {
 
 	public PullToRefreshHorizontalScrollView(Context context) {

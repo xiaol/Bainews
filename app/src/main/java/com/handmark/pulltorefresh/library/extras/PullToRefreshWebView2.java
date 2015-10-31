@@ -19,7 +19,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshWebView;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * <ul>
  * <li>{@link PullToRefreshWebView} doesn't work correctly because you're using
  * <code>overflow:scroll</code> or something else which means
- * {@link android.webkit.WebView#getScrollY()} doesn't return correct values.</li>
+ * {@link WebView#getScrollY()} doesn't return correct values.</li>
  * <li>You control the web content being displayed, as you need to write some
  * Javascript callbacks.</li>
  * </ul>
@@ -74,7 +73,7 @@ public class PullToRefreshWebView2 extends PullToRefreshWebView {
 		super(context, attrs);
 	}
 
-	public PullToRefreshWebView2(Context context, PullToRefreshBase.Mode mode) {
+	public PullToRefreshWebView2(Context context, Mode mode) {
 		super(context, mode);
 	}
 
