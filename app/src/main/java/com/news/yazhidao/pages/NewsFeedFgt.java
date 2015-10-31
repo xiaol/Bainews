@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -37,13 +39,18 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.TextViewVertical;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -63,6 +70,7 @@ public class NewsFeedFgt extends Fragment {
     private int mScreenWidth;
     private LinearLayout mllNoNetwork;
     private PullToRefreshListView mlvNewsFeed;
+    private String mstrDeviceId, mstrUserId, mstrChannelId = "TJ0001";
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -70,10 +78,16 @@ public class NewsFeedFgt extends Fragment {
         WindowManager localWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         mScreenWidth = localWindowManager.getDefaultDisplay().getWidth();
         mScreenHeight = localWindowManager.getDefaultDisplay().getHeight();
+        mstrDeviceId = DeviceInfoUtil.getUUID();
+        User user = SharedPreManager.getUser(mContext);
+        if (user != null)
+            mstrUserId = user.getUserId();
+        else
+            mstrUserId = "";
     }
 
-    public View onCreateView(LayoutInflater paramLayoutInflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = paramLayoutInflater.inflate(R.layout.activity_news, container, false);
+    public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -120,6 +134,10 @@ public class NewsFeedFgt extends Fragment {
         return rootView;
     }
 
+    public void setChannelId(String channelId) {
+        mstrChannelId = channelId;
+    }
+
     private void loadNewsFeedData(int position1, int position2, final boolean flag) {
         if (flag) {
             if (mNewsFeedProgressWheelWrapper != null)
@@ -128,7 +146,12 @@ public class NewsFeedFgt extends Fragment {
                 mAniNewsLoading.start();
         }
         mllNoNetwork.setVisibility(View.GONE);
-        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/newsFetchHome?channelId=&page=" + position2 + "&limit=50", NetworkRequest.RequestMethod.GET);
+        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
+        nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
+        nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
+        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/recommend", NetworkRequest.RequestMethod.POST);
+        mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
                 mlvNewsFeed.onRefreshComplete();
@@ -139,6 +162,7 @@ public class NewsFeedFgt extends Fragment {
             }
 
             public void success(ArrayList<NewsFeed> result) {
+                Log.i("tag", result + "re");
                 if (result != null && result.size() > 0) {
                     if (flag)
                         mArrNewsFeed = result;
@@ -183,12 +207,12 @@ public class NewsFeedFgt extends Fragment {
                     startActivity(intent);
                     //umeng statistic onclick url below the head news
                     HashMap<String, String> _MobMap = new HashMap<>();
-                    _MobMap.put("resource_site_name", source.getSourceSitename());
+                    _MobMap.put("resource_site_name", source.getSourceSiteName());
                     MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
                 }
             });
             if (source != null) {
-                String source_name = source.getSourceSitename();
+                String source_name = source.getSourceSiteName();
                 String finalText = "";
                 String source_title = source.getTitle();
                 String source_name_font = "";
@@ -219,7 +243,7 @@ public class NewsFeedFgt extends Fragment {
                     tvRelate.setVisibility(View.GONE);
                 }
             }
-        }else {
+        } else {
             rlRelate.setVisibility(View.GONE);
         }
     }
@@ -230,6 +254,45 @@ public class NewsFeedFgt extends Fragment {
                 RelativeLayout.LayoutParams lpVerticalLine = (RelativeLayout.LayoutParams) ivVerticalLine.getLayoutParams();
                 lpVerticalLine.height = (int) (rlRelate.getHeight() - ivVerticalLine.getY());
                 ivVerticalLine.setLayoutParams(lpVerticalLine);
+            }
+        });
+    }
+
+    private void setLoadImage(SimpleDraweeView imageView, String imageUrl) {
+        imageView.setVisibility(View.VISIBLE);
+        if (imageUrl != null && !"".equals(imageUrl)) {
+            imageView.setImageURI(Uri.parse(imageUrl));
+            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        }
+    }
+
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            tvTitle.setText(strTitle, TextView.BufferType.SPANNABLE);
+        }
+    }
+
+    private void setViewText(TextViewExtend textView, String strText) {
+        if (strText != null && !"".equals(strText)) {
+            textView.setText(strText);
+        }
+    }
+
+    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed, final int position) {
+        rlNewsContent.setOnClickListener(new View.OnClickListener() {
+            long firstClick = 0;
+
+            public void onClick(View paramAnonymousView) {
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return;
+                }
+                firstClick = System.currentTimeMillis();
+                Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
+                intent.putExtra("position", position);
+                startActivityForResult(intent, 0);
+                MobclickAgent.onEvent(mContext, "bainews_view_head_news");
             }
         });
     }
@@ -270,15 +333,15 @@ public class NewsFeedFgt extends Fragment {
 
         public View getView(final int position, View convertView, ViewGroup parent) {
             final NewsFeed feed = mArrNewsFeed.get(position);
-            ArrayList<NewsFeed.Source> sourceList = (ArrayList<NewsFeed.Source>) feed.getSublist();
-            String strSpecial = feed.getSpecial();
-            ViewHolder holder;
+            ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
+            String strType = feed.getType();
             //普通卡片
-            if (("400".equals(strSpecial)) || (strSpecial == null)) {
+            if ("one_pic".equals(strType) || "no_pic".equals(strType)) {
                 String platform = AnalyticsConfig.getChannel(getActivity());
                 if ("adcoco".equals(platform)) {
                     AdcocoUtil.update();
                 }
+                ViewHolder holder;
                 if (convertView == null || convertView.getTag().getClass() != ViewHolder.class) {
                     holder = new ViewHolder();
                     convertView = View.inflate(mContext, R.layout.ll_news_item3, null);
@@ -313,38 +376,25 @@ public class NewsFeedFgt extends Fragment {
                 }
 
                 if (DeviceInfoUtil.isFlyme()) {
-                    holder.rlNewsContent.setPadding(View.VISIBLE, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
+                    holder.rlNewsContent.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
                 }
 
-                String strImgUrl = feed.getImgUrl();
-                if ((strImgUrl != null) && (!"".equals(strImgUrl))) {
-                    holder.ivTitleImg.setImageURI(Uri.parse(strImgUrl));
+                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+                String strImg = strArrImgUrl.get(0);
+                if (strImg != null && !"".equals(strImg)) {
+                    holder.ivTitleImg.setVisibility(View.VISIBLE);
+                    holder.ivTitleImg.setImageURI(Uri.parse(strImg));
                     holder.ivTitleImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+                } else {
+                    holder.ivTitleImg.setVisibility(View.GONE);
                 }
 
-                String strTitle = feed.getTitle();
-                if ((strTitle != null) && (!"".equals(strTitle))) {
-                    holder.tvTitle.setText(strTitle, TextView.BufferType.SPANNABLE);
-                }
-
-                holder.rlNewsContent.setOnClickListener(new View.OnClickListener() {
-                    long firstClick = 0;
-
-                    public void onClick(View paramAnonymousView) {
-                        if (System.currentTimeMillis() - firstClick <= 1500L) {
-                            firstClick = System.currentTimeMillis();
-                            return;
-                        }
-                        firstClick = System.currentTimeMillis();
-                        Intent localIntent = new Intent(mContext, NewsDetailAty2.class);
-                        localIntent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
-                        localIntent.putExtra("position", position);
-                        startActivityForResult(localIntent, 0);
-                        MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-                    }
-                });
-                if (sourceList != null && sourceList.size() > 0) {
-                    int size = sourceList.size();
+                setTitleTextBySpannable(holder.tvTitle, feed.getTitle());
+                setViewText(holder.tvSource, feed.getSourceSiteName());
+                setViewText(holder.tvComment, feed.getCommentNum());
+                setNewsContentClick(holder.rlNewsContent, feed, position);
+                if (relatePointsList != null && relatePointsList.size() > 0) {
+                    int size = relatePointsList.size();
                     holder.llSourceContent.setVisibility(View.VISIBLE);
                     holder.ivVerticalLine1.setVisibility(View.VISIBLE);
                     holder.tvBottomLine1.setVisibility(View.VISIBLE);
@@ -353,15 +403,15 @@ public class NewsFeedFgt extends Fragment {
                     holder.ivVerticalLine3.setVisibility(View.VISIBLE);
                     holder.tvBottomLine3.setVisibility(View.VISIBLE);
                     if (size == 1) {
-                        NewsFeed.Source source = sourceList.get(0);
+                        NewsFeed.Source source = relatePointsList.get(0);
                         setRelateView(source, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
                         setRelateView(null, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, false);
                         setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false);
                         holder.ivVerticalLine1.setVisibility(View.GONE);
                         holder.tvBottomLine1.setVisibility(View.GONE);
                     } else if (size == 2) {
-                        NewsFeed.Source source1 = sourceList.get(0);
-                        NewsFeed.Source source2 = sourceList.get(1);
+                        NewsFeed.Source source1 = relatePointsList.get(0);
+                        NewsFeed.Source source2 = relatePointsList.get(1);
                         setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
                         setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true);
                         setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false);
@@ -369,9 +419,9 @@ public class NewsFeedFgt extends Fragment {
                         holder.ivVerticalLine2.setVisibility(View.GONE);
                         holder.tvBottomLine2.setVisibility(View.GONE);
                     } else if (size == 3) {
-                        NewsFeed.Source source1 = sourceList.get(0);
-                        NewsFeed.Source source2 = sourceList.get(1);
-                        NewsFeed.Source source3 = sourceList.get(2);
+                        NewsFeed.Source source1 = relatePointsList.get(0);
+                        NewsFeed.Source source2 = relatePointsList.get(1);
+                        NewsFeed.Source source3 = relatePointsList.get(2);
                         setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
                         setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true);
                         setRelateView(source3, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, true);
@@ -385,7 +435,7 @@ public class NewsFeedFgt extends Fragment {
                 }
             }
             //大图
-            else if ("1".equals(strSpecial)) {
+            else if ("big_pic".equals(strType)) {
                 ViewHolder2 holder2;
                 if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
                     holder2 = new ViewHolder2();
@@ -413,43 +463,26 @@ public class NewsFeedFgt extends Fragment {
                     holder2.tv_title.setText(title_news);
                 }
 
-                int textsize = DensityUtil.dip2px(mContext, 18);
-                holder2.tv_title.setTextSize(textsize);
+                int textSize = DensityUtil.dip2px(mContext, 18);
+                holder2.tv_title.setTextSize(textSize);
                 holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
                 holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 20));
                 holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
 
-                String strImgUrl = feed.getImgUrl();
-                if (feed.getImgUrl() != null && !("".equals(strImgUrl))) {
+                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+                String strImgUrl = strArrImgUrl.get(0);
+                if (strImgUrl != null && !"".equals(strImgUrl)) {
                     holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
-                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, .4f));
+                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
                 } else {
                     holder2.tv_title.setBackgroundResource(R.drawable.bg_load_default_big);
                 }
-
-                holder2.rl_item_content.setOnClickListener(new View.OnClickListener() {
-                    long firstClick = 0;
-
-                    @Override
-                    public void onClick(View v) {
-                        if (System.currentTimeMillis() - firstClick <= 1500) {
-                            firstClick = System.currentTimeMillis();
-                            return;
-                        }
-                        firstClick = System.currentTimeMillis();
-                        Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                        intent.putExtra(KEY_URL, feed.getSourceUrl());
-                        intent.putExtra("position", position);
-                        startActivityForResult(intent, 0);
-                        //uemng statistic view the head news
-                        MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_VIEW_HEAD_NEWS);
-                    }
-                });
+                setNewsContentClick(holder2.rl_item_content, feed, position);
             }
             //多图
-            else if ("9".equals(feed.getSpecial())) {
+            else if ("three_pic".equals(strType) || "two_pic".equals(strType)) {
                 ViewHolder3 holder3;
-                if ((convertView == null) || (convertView.getTag().getClass() != ViewHolder3.class)) {
+                if (convertView == null || convertView.getTag().getClass() != ViewHolder3.class) {
                     holder3 = new ViewHolder3();
                     convertView = View.inflate(mContext, R.layout.ll_news_card, null);
                     holder3.llImageList = (LinearLayout) convertView.findViewById(R.id.image_list_LinearLayout);
@@ -481,27 +514,14 @@ public class NewsFeedFgt extends Fragment {
                     holder3 = (ViewHolder3) convertView.getTag();
                 }
                 if (DeviceInfoUtil.isFlyme()) {
-                    holder3.rlNewsContent.setPadding(View.VISIBLE, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
+                    holder3.rlNewsContent.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
                 }
-                String[] images = feed.getImgUrl_ex();
-                String strImg1 = images[0];
-                if ((strImg1 != null) && (!"".equals(strImg1))) {
-                    holder3.ivCard1.setImageURI(Uri.parse(strImg1));
-                    holder3.ivCard1.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-                }
-                String strImg2 = images[1];
-                if ((strImg2 != null) && (!"".equals(strImg2))) {
-                    holder3.ivCard2.setImageURI(Uri.parse(strImg2));
-                    holder3.ivCard2.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-                }
+                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+                setLoadImage(holder3.ivCard1, strArrImgUrl.get(0));
+                setLoadImage(holder3.ivCard2, strArrImgUrl.get(1));
 
-                if (images.length == 3) {
-                    String strImg3 = images[2];
-                    holder3.ivCard3.setVisibility(View.VISIBLE);
-                    if (strImg3 != null && !"".equals(strImg3)) {
-                        holder3.ivCard3.setImageURI(Uri.parse(strImg3));
-                        holder3.ivCard3.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-                    }
+                if (strArrImgUrl.size() == 3) {
+                    setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
                     setCardMargin(holder3.ivCard1, 8, 4);
                     setCardMargin(holder3.ivCard2, 4, 4);
                     setCardMargin(holder3.ivCard3, 4, 8);
@@ -511,29 +531,12 @@ public class NewsFeedFgt extends Fragment {
                     setCardMargin(holder3.ivCard2, 4, 8);
                 }
 
-                String strTitle = feed.getTitle();
-                if (strTitle != null && !"".equals(strTitle)) {
-                    holder3.tvTitle.setText(strTitle, TextView.BufferType.SPANNABLE);
-                }
-
-                holder3.rlNewsContent.setOnClickListener(new View.OnClickListener() {
-                    long firstClick = 0L;
-
-                    public void onClick(View paramAnonymousView) {
-                        if (System.currentTimeMillis() - firstClick <= 1500L) {
-                            firstClick = System.currentTimeMillis();
-                            return;
-                        }
-                        firstClick = System.currentTimeMillis();
-                        Intent localIntent = new Intent(mContext, NewsDetailAty2.class);
-                        localIntent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
-                        localIntent.putExtra("position", position);
-                        startActivityForResult(localIntent, 0);
-                        MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-                    }
-                });
-                if (sourceList != null && sourceList.size() > 0) {
-                    int size = sourceList.size();
+                setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
+                setViewText(holder3.tvSource, feed.getSourceSiteName());
+                setViewText(holder3.tvComment, feed.getCommentNum());
+                setNewsContentClick(holder3.rlNewsContent, feed, position);
+                if (relatePointsList != null && relatePointsList.size() > 0) {
+                    int size = relatePointsList.size();
                     holder3.llSourceContent.setVisibility(View.VISIBLE);
                     holder3.ivVerticalLine1.setVisibility(View.VISIBLE);
                     holder3.tvBottomLine1.setVisibility(View.VISIBLE);
@@ -542,15 +545,15 @@ public class NewsFeedFgt extends Fragment {
                     holder3.ivVerticalLine3.setVisibility(View.VISIBLE);
                     holder3.tvBottomLine3.setVisibility(View.VISIBLE);
                     if (size == 1) {
-                        NewsFeed.Source source = sourceList.get(0);
+                        NewsFeed.Source source = relatePointsList.get(0);
                         setRelateView(source, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
                         setRelateView(null, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, false);
                         setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false);
                         holder3.ivVerticalLine1.setVisibility(View.GONE);
                         holder3.tvBottomLine1.setVisibility(View.GONE);
                     } else if (size == 2) {
-                        NewsFeed.Source source1 = sourceList.get(0);
-                        NewsFeed.Source source2 = sourceList.get(1);
+                        NewsFeed.Source source1 = relatePointsList.get(0);
+                        NewsFeed.Source source2 = relatePointsList.get(1);
                         setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
                         setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true);
                         setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false);
@@ -558,9 +561,9 @@ public class NewsFeedFgt extends Fragment {
                         holder3.ivVerticalLine2.setVisibility(View.GONE);
                         holder3.tvBottomLine2.setVisibility(View.GONE);
                     } else if (size == 3) {
-                        NewsFeed.Source source1 = sourceList.get(0);
-                        NewsFeed.Source source2 = sourceList.get(1);
-                        NewsFeed.Source source3 = sourceList.get(2);
+                        NewsFeed.Source source1 = relatePointsList.get(0);
+                        NewsFeed.Source source2 = relatePointsList.get(1);
+                        NewsFeed.Source source3 = relatePointsList.get(2);
                         setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
                         setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true);
                         setRelateView(source3, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, true);
@@ -573,33 +576,35 @@ public class NewsFeedFgt extends Fragment {
                     holder3.llSourceContent.setVisibility(View.GONE);
                 }
             }
-
             return convertView;
         }
     }
 
-    class ViewHolder {
-        SimpleDraweeView ivTitleImg;
+    class BaseHolder {
+        TextViewExtend tvSource;
+        TextViewExtend tvComment;
+        TextView tvTitle;
+        LinearLayout llSourceContent;
+        RelativeLayout rlNewsContent;
         ImageView ivVerticalLine1;
         ImageView ivVerticalLine2;
         ImageView ivVerticalLine3;
-        LinearLayout llSourceContent;
-        RelativeLayout rlNewsContent;
-        RelativeLayout rlRelate1;
-        RelativeLayout rlRelate2;
-        RelativeLayout rlRelate3;
         TextView tvBottomLine1;
         TextView tvBottomLine2;
         TextView tvBottomLine3;
-        TextViewExtend tvComment;
+        RelativeLayout rlRelate1;
+        RelativeLayout rlRelate2;
+        RelativeLayout rlRelate3;
         TextView tvRelate1;
         TextView tvRelate2;
         TextView tvRelate3;
-        TextViewExtend tvSource;
         TextViewExtend tvSource1;
         TextViewExtend tvSource2;
         TextViewExtend tvSource3;
-        TextView tvTitle;
+    }
+
+    class ViewHolder extends BaseHolder {
+        SimpleDraweeView ivTitleImg;
     }
 
     class ViewHolder2 {
@@ -608,30 +613,10 @@ public class NewsFeedFgt extends Fragment {
         TextViewVertical tv_title;
     }
 
-    class ViewHolder3 {
+    class ViewHolder3 extends BaseHolder {
         SimpleDraweeView ivCard1;
         SimpleDraweeView ivCard2;
         SimpleDraweeView ivCard3;
-        ImageView ivVerticalLine1;
-        ImageView ivVerticalLine2;
-        ImageView ivVerticalLine3;
         LinearLayout llImageList;
-        LinearLayout llSourceContent;
-        RelativeLayout rlNewsContent;
-        RelativeLayout rlRelate1;
-        RelativeLayout rlRelate2;
-        RelativeLayout rlRelate3;
-        TextView tvBottomLine1;
-        TextView tvBottomLine2;
-        TextView tvBottomLine3;
-        TextViewExtend tvComment;
-        TextView tvRelate1;
-        TextView tvRelate2;
-        TextView tvRelate3;
-        TextViewExtend tvSource;
-        TextViewExtend tvSource1;
-        TextViewExtend tvSource2;
-        TextViewExtend tvSource3;
-        TextView tvTitle;
     }
 }
