@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/mTopSearch"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12.0dip"
@@ -54,6 +54,19 @@
                 android:contentDescription="@string/app_name"
                 android:padding="3.0dip"
                 android:src="@drawable/refreshicon_titlebar"/>
+
+            <ProgressBar
+                android:id="@+id/mTopRefreshProgress"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3.0dip"
+                android:layout_toRightOf="@id/title_parent"
+                android:indeterminateOnly="true"
+                android:minHeight="20.0dip"
+                android:minWidth="20.0dip"
+                android:visibility="invisible"/>
         </RelativeLayout>
     </RelativeLayout>
 
@@ -102,11 +115,11 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="20dp"
+        app:actualImageScaleType="centerInside"
         app:placeholderImage="@drawable/ic_login"
         app:placeholderImageScaleType="centerCrop"
-        app:actualImageScaleType="centerInside"
         app:roundAsCircle="true"
-        app:roundingBorderWidth="1dp"
         app:roundingBorderColor="@color/black"
+        app:roundingBorderWidth="1dp"
         />
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -65,7 +64,7 @@ public class NewsFeedFgt extends Fragment {
     private NewsFeedAdapter mAdapter;
     private AnimationDrawable mAniNewsLoading;
     private ArrayList<NewsFeed> mArrNewsFeed;
-    private Context mContext;
+    private MainAty mContext;
     private View mNewsFeedProgressWheelWrapper;
     private ImageView mNewsLoadingImg;
     private NetworkRequest mRequest;
@@ -99,7 +98,7 @@ public class NewsFeedFgt extends Fragment {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mContext = getActivity();
+        mContext = (MainAty) getActivity();
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
@@ -138,12 +137,14 @@ public class NewsFeedFgt extends Fragment {
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                mContext.startTopRefresh();
+                Logger.e("jigang"," pull down refresh");
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                Logger.e("jigang"," pull up refresh");
+                mContext.startTopRefresh();
             }
         });
         mAdapter = new NewsFeedAdapter();
@@ -182,6 +183,7 @@ public class NewsFeedFgt extends Fragment {
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
                 Log.i("tag", "request feed fail~");
+                mContext.stopTopRefresh();
                 mlvNewsFeed.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
@@ -191,6 +193,7 @@ public class NewsFeedFgt extends Fragment {
 
             public void success(ArrayList<NewsFeed> result) {
                 Log.i("tag", result + " feed success ~");
+                mContext.stopTopRefresh();
                 if (result != null && result.size() > 0) {
                     if (flag)
                         mArrNewsFeed = result;
