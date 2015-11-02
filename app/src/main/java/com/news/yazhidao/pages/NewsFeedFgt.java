@@ -54,8 +54,11 @@ import java.util.List;
 
 public class NewsFeedFgt extends Fragment {
 
-    /**当前fragment 所对应的新闻频道*/
+    /**
+     * 当前fragment 所对应的新闻频道
+     */
     public static String KEY_CHANNEL_ID = "key_channel_id";
+    public static String KEY_WORD = "key_word";
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String KEY_URL = "key_url";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
@@ -74,11 +77,13 @@ public class NewsFeedFgt extends Fragment {
     private LinearLayout mllNoNetwork;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrDeviceId, mstrUserId, mstrChannelId = "TJ0001";
-    /**当前的fragment 是否已经加载过数据*/
+    private String mstrDeviceId, mstrUserId, mstrChannelId = "TJ0001", mstrKeyWord;
+    /**
+     * 当前的fragment 是否已经加载过数据
+     */
     private boolean isLoadedData;
 
-    public static NewsFeedFgt newInstance(String pChannelId){
+    public static NewsFeedFgt newInstance(String pChannelId) {
         NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_CHANNEL_ID, pChannelId);
@@ -86,11 +91,19 @@ public class NewsFeedFgt extends Fragment {
         return newsFeedFgt;
     }
 
+    public static NewsFeedFgt newInstanceByKeyWord(String pKeyWord) {
+        NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_WORD, pKeyWord);
+        newsFeedFgt.setArguments(bundle);
+        return newsFeedFgt;
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.e("jg", "setUserVisibleHint ---- "+mstrChannelId+"--" + isVisibleToUser);
-        if (rootView != null && isVisibleToUser && !isLoadedData){
+        Log.e("jg", "setUserVisibleHint ---- " + mstrChannelId + "--" + isVisibleToUser);
+        if (rootView != null && isVisibleToUser && !isLoadedData) {
             isLoadedData = true;
             loadData();
             Log.e("jg", "load data ---- " + mstrChannelId);
@@ -113,7 +126,8 @@ public class NewsFeedFgt extends Fragment {
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
-        Logger.e("jg","channelid ="+mstrChannelId);
+        mstrKeyWord = arguments.getString(KEY_WORD);
+        Logger.e("jg", "channelid =" + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
@@ -165,7 +179,7 @@ public class NewsFeedFgt extends Fragment {
         mstrChannelId = channelId;
     }
 
-    private void loadNewsFeedData(int position1, int position2, final boolean flag) {
+    private void loadNewsFeedData(String url, final boolean flag) {
         if (flag) {
             if (mNewsFeedProgressWheelWrapper != null)
                 mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
@@ -177,7 +191,8 @@ public class NewsFeedFgt extends Fragment {
         nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
         nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
         nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
-        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/recommend", NetworkRequest.RequestMethod.POST);
+        nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
+        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
@@ -296,6 +311,9 @@ public class NewsFeedFgt extends Fragment {
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
         if (strTitle != null && !"".equals(strTitle)) {
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#7d7d7d\">" + "<big>" + mstrKeyWord + "</big>" + "</font>");
+            }
             tvTitle.setText(strTitle, TextView.BufferType.SPANNABLE);
         }
     }
@@ -333,7 +351,10 @@ public class NewsFeedFgt extends Fragment {
     public void loadData() {
         if (NetUtil.checkNetWork(mContext)) {
             mllNoNetwork.setVisibility(View.GONE);
-            loadNewsFeedData(1, 10, true);
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord))
+                loadNewsFeedData("search", true);
+            else
+                loadNewsFeedData("recommend", true);
             mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
             mAniNewsLoading = ((AnimationDrawable) mNewsLoadingImg.getDrawable());
             mAniNewsLoading.start();
@@ -415,7 +436,7 @@ public class NewsFeedFgt extends Fragment {
 
                 setTitleTextBySpannable(holder.tvTitle, feed.getTitle());
                 setViewText(holder.tvSource, feed.getSourceSiteName());
-                setViewText(holder.tvComment, feed.getCommentNum()+"评论");
+                setViewText(holder.tvComment, feed.getCommentNum() + "评论");
                 setNewsContentClick(holder.rlNewsContent, feed, position);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
@@ -554,7 +575,7 @@ public class NewsFeedFgt extends Fragment {
 
                 setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
                 setViewText(holder3.tvSource, feed.getSourceSiteName());
-                setViewText(holder3.tvComment, feed.getCommentNum()+"评论");
+                setViewText(holder3.tvComment, feed.getCommentNum() + "评论");
                 setNewsContentClick(holder3.rlNewsContent, feed, position);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
