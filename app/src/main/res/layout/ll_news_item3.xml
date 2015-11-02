@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="#ffdfe6e9"
     android:orientation="vertical"
-    android:paddingBottom="10.0dip">
+    android:paddingBottom="10dp">
 
     <RelativeLayout
         android:id="@+id/news_content_relativeLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_feedstream_list_table">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/title_img_View"
-            android:layout_width="110.0dip"
-            android:layout_height="110.0dip"
-            android:layout_marginLeft="8.0dip"
-            android:layout_marginTop="8.0dip"
-            android:paddingBottom="10.0dip"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingBottom="8dp"
             android:scaleType="centerCrop"
             fresco:placeholderImage="@drawable/bg_load_default_small" />
 
         <TextView
             android:id="@+id/title_textView"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8.0dip"
+            android:layout_margin="8dp"
             android:layout_toRightOf="@+id/title_img_View"
             android:ellipsize="end"
             android:maxLines="3"
@@ -39,47 +38,49 @@
             android:id="@+id/news_source_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/title_img_View"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginLeft="8.0dip"
-            android:layout_toRightOf="@+id/title_img_View"
-            android:text="dddddddd"
+            android:layout_alignLeft="@+id/title_textView"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/title_textView"
+            android:ellipsize="end"
+            android:maxEms="8"
+            android:paddingBottom="8dp"
+            android:singleLine="true"
             android:textColor="@color/gray_black" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/comment_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/news_source_TextView"
-            android:layout_marginLeft="10.0dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/news_source_TextView"
-            android:text="dddd"
+            android:paddingBottom="8dp"
             android:textColor="@color/Gray" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/source_content_linearLayout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_feedstream_list_table"
         android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="1.0dip"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:layout_centerVertical="true"
                 android:background="#ffdadada" />
 
             <ImageView
-                android:layout_width="23.0dip"
-                android:layout_height="23.0dip"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
-                android:layout_marginLeft="18.0dip"
+                android:layout_marginLeft="18dp"
                 android:background="@drawable/ic_news_opinion" />
         </RelativeLayout>
 
