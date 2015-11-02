@@ -68,4 +68,9 @@
 
     <dimen name="title_bar_height">44.0dip</dimen>
     <dimen name="top_category_height">40.0dip</dimen>
+
+    <!--新闻feed流-->
+    <dimen name="news_feed_title">18sp</dimen>
+
+
 </resources>

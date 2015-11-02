@@ -8,10 +8,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
@@ -27,6 +30,7 @@ import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.umeng.update.UmengUpdateAgent;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
@@ -78,6 +82,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
         mTopSearch = (ImageView)findViewById(R.id.mTopSearch);
         mTopSearch.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        mViewPager.setOffscreenPageLimit(1);
         mChannelExpand = (ImageView)findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
@@ -146,37 +151,63 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == REQUEST_CODE){
             ArrayList<ChannelItem> channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
-            mViewPagerAdapter.setCatalogs(channelItems);
+            mViewPagerAdapter.setmChannelItems(channelItems);
             mViewPagerAdapter.notifyDataSetChanged();
             mChannelTabStrip.setViewPager(mViewPager);
         }
     }
 
-    public class MyViewPagerAdapter extends FragmentPagerAdapter {
+    public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
+        private boolean isFirstInit = true;
+        private final SparseArray<WeakReference<Fragment>> mFragmentArray = new SparseArray<WeakReference<Fragment>>();
 
-        private ArrayList<ChannelItem> catalogs = new ArrayList<>();
+        private ArrayList<ChannelItem> mChannelItems = new ArrayList<>();
 
         public MyViewPagerAdapter(FragmentManager fm) {
             super(fm);
-            catalogs = mChannelItemDao.queryForSelected();
+            mChannelItems = mChannelItemDao.queryForSelected();
         }
-        public void setCatalogs(ArrayList<ChannelItem> pChannelItems){
-            this.catalogs = pChannelItems;
+        public void setmChannelItems(ArrayList<ChannelItem> pChannelItems){
+            this.mChannelItems = pChannelItems;
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return catalogs.get(position).getName();
+            return mChannelItems.get(position).getName();
         }
 
         @Override
         public int getCount() {
-            return catalogs.size();
+            return mChannelItems.size();
         }
 
         @Override
         public Fragment getItem(int position) {
-            return NewsFeedFgt1.newInstance(position);
+            WeakReference<Fragment> mWeakFgt = mFragmentArray.get(position);
+            if (mWeakFgt != null && mWeakFgt.get() != null) {
+                return mWeakFgt.get();
+            }
+            return NewsFeedFgt.newInstance(mChannelItems.get(position).getId());
+        }
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Log.e("jigang", "instantiateItem:" + position);
+            WeakReference<Fragment> mWeakFragment = mFragmentArray.get(position);
+            if (mWeakFragment != null && mWeakFragment.get() != null) {
+                return mWeakFragment.get();
+            }
+            Fragment fgt = (Fragment) super.instantiateItem(container, position);
+            mFragmentArray.put(position, new WeakReference<>(fgt));
+            return fgt;
         }
 
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+//            super.destroyItem(container, position, object);
+            Log.e("jigang", "destroyItem:" + position);
+            WeakReference<Fragment> mWeakFragment = mFragmentArray.get(position);
+            if (mWeakFragment != null) {
+                mWeakFragment.clear();
+            }
+        }
     }
 }

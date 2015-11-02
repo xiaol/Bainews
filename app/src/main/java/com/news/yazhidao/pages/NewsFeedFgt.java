@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,6 +34,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -54,10 +54,13 @@ import java.util.List;
 
 public class NewsFeedFgt extends Fragment {
 
+    /**当前fragment 所对应的新闻频道*/
+    public static String KEY_CHANNEL_ID = "key_channel_id";
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String KEY_URL = "key_url";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static String VALUE_NEWS_SOURCE = "other_view";
+
     private Button btn_reload;
     private NewsFeedAdapter mAdapter;
     private AnimationDrawable mAniNewsLoading;
@@ -65,19 +68,40 @@ public class NewsFeedFgt extends Fragment {
     private Context mContext;
     private View mNewsFeedProgressWheelWrapper;
     private ImageView mNewsLoadingImg;
-    NetworkRequest mRequest;
+    private NetworkRequest mRequest;
     private int mScreenHeight;
     private int mScreenWidth;
     private LinearLayout mllNoNetwork;
     private PullToRefreshListView mlvNewsFeed;
+    private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId = "TJ0001";
+    /**当前的fragment 是否已经加载过数据*/
+    private boolean isLoadedData;
+
+    public static NewsFeedFgt newInstance(String pChannelId){
+        NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_CHANNEL_ID, pChannelId);
+        newsFeedFgt.setArguments(bundle);
+        return newsFeedFgt;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("jg", "setUserVisibleHint ---- "+mstrChannelId+"--" + isVisibleToUser);
+        if (rootView != null && isVisibleToUser && !isLoadedData){
+            isLoadedData = true;
+            loadData();
+            Log.e("jg", "load data ---- " + mstrChannelId);
+        }
+    }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mContext = getActivity();
-        WindowManager localWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        mScreenWidth = localWindowManager.getDefaultDisplay().getWidth();
-        mScreenHeight = localWindowManager.getDefaultDisplay().getHeight();
+        mScreenWidth = DeviceInfoUtil.getScreenWidth();
+        mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
@@ -87,7 +111,10 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
+        Bundle arguments = getArguments();
+        mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
+        Logger.e("jg","channelid ="+mstrChannelId);
+        rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
         mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -121,9 +148,9 @@ public class NewsFeedFgt extends Fragment {
         });
         mAdapter = new NewsFeedAdapter();
         mlvNewsFeed.setAdapter(mAdapter);
-        loadData();
+        setUserVisibleHint(getUserVisibleHint());
         String platform = AnalyticsConfig.getChannel(getActivity());
-        if ("adcoco".equals(platform)) {
+        if ("adcoco".equals(platform) && !TextUtil.isListEmpty(mArrNewsFeed)) {
             AdcocoUtil.setup(getActivity());
             try {
                 new AdcocoUtil().insertAdcoco(mArrNewsFeed, mlvNewsFeed.getRefreshableView(), mArrNewsFeed.size(), -1);
@@ -154,6 +181,7 @@ public class NewsFeedFgt extends Fragment {
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
+                Log.i("tag", "request feed fail~");
                 mlvNewsFeed.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
@@ -162,7 +190,7 @@ public class NewsFeedFgt extends Fragment {
             }
 
             public void success(ArrayList<NewsFeed> result) {
-                Log.i("tag", result + "re");
+                Log.i("tag", result + " feed success ~");
                 if (result != null && result.size() > 0) {
                     if (flag)
                         mArrNewsFeed = result;
@@ -170,7 +198,7 @@ public class NewsFeedFgt extends Fragment {
                     mlvNewsFeed.getRefreshableView().setSelection(0);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....  size 0");
+                    ToastUtil.toastLong("网络不给力,请检查网络....");
                     mllNoNetwork.setVisibility(View.VISIBLE);
                 }
                 mlvNewsFeed.onRefreshComplete();
