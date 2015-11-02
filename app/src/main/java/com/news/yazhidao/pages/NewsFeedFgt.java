@@ -403,10 +403,6 @@ public class NewsFeedFgt extends Fragment {
                     AdcocoUtil.ad(position, convertView, localArrayList2);
                 }
 
-                if (DeviceInfoUtil.isFlyme()) {
-                    holder.rlNewsContent.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
-                }
-
                 ArrayList<String> strArrImgUrl = feed.getImgUrls();
                 String strImg = strArrImgUrl.get(0);
                 if (strImg != null && !"".equals(strImg)) {
@@ -540,9 +536,6 @@ public class NewsFeedFgt extends Fragment {
                     convertView.setTag(holder3);
                 } else {
                     holder3 = (ViewHolder3) convertView.getTag();
-                }
-                if (DeviceInfoUtil.isFlyme()) {
-                    holder3.rlNewsContent.setPadding(0, 0, 0, DensityUtil.dip2px(getActivity(), 15.0F));
                 }
                 ArrayList<String> strArrImgUrl = feed.getImgUrls();
                 setLoadImage(holder3.ivCard1, strArrImgUrl.get(0));
