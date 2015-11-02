@@ -41,7 +41,10 @@
             android:layout_alignLeft="@+id/title_textView"
             android:layout_alignParentBottom="true"
             android:layout_below="@+id/title_textView"
+            android:ellipsize="end"
+            android:maxEms="8"
             android:paddingBottom="8dp"
+            android:singleLine="true"
             android:textColor="@color/gray_black" />
 
         <com.news.yazhidao.widget.TextViewExtend
@@ -50,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
-            android:paddingBottom="8dp"
             android:layout_toRightOf="@+id/news_source_TextView"
+            android:paddingBottom="8dp"
             android:textColor="@color/Gray" />
     </RelativeLayout>
 

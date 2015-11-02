@@ -415,7 +415,7 @@ public class NewsFeedFgt extends Fragment {
 
                 setTitleTextBySpannable(holder.tvTitle, feed.getTitle());
                 setViewText(holder.tvSource, feed.getSourceSiteName());
-                setViewText(holder.tvComment, feed.getCommentNum());
+                setViewText(holder.tvComment, feed.getCommentNum()+"评论");
                 setNewsContentClick(holder.rlNewsContent, feed, position);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
@@ -554,7 +554,7 @@ public class NewsFeedFgt extends Fragment {
 
                 setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
                 setViewText(holder3.tvSource, feed.getSourceSiteName());
-                setViewText(holder3.tvComment, feed.getCommentNum());
+                setViewText(holder3.tvComment, feed.getCommentNum()+"评论");
                 setNewsContentClick(holder3.rlNewsContent, feed, position);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
