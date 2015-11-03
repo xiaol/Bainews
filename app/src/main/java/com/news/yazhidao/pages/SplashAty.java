@@ -88,7 +88,7 @@ public class SplashAty extends BaseActivity {
                 tv_splash_news.setVisibility(View.VISIBLE);
                 final ScaleAnimation animation_scale = new ScaleAnimation(1.0f, 1.2f, 1.0f, 1.2f,
                         Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                animation_scale.setDuration(4000);//设置动画持续时间
+                animation_scale.setDuration(2000);//设置动画持续时间
                 animation_scale.setFillAfter(true);//动画执行完后是否停留在执行完的状态
                 animation_scale.setAnimationListener(new Animation.AnimationListener() {
                     @Override

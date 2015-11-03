@@ -314,7 +314,7 @@ public class NewsFeedFgt extends Fragment {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#7d7d7d\">" + "<big>" + mstrKeyWord + "</big>" + "</font>");
             }
-            tvTitle.setText(strTitle, TextView.BufferType.SPANNABLE);
+            tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
         }
     }
 
