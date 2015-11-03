@@ -61,6 +61,8 @@ public class NewsFeedFgt extends Fragment {
     public static String KEY_WORD = "key_word";
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String KEY_URL = "key_url";
+    public static String KEY_NEWS_ID = "key_news_id";
+    public static String Key_COLLECTION = "key_collection";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static String VALUE_NEWS_SOURCE = "other_view";
 
@@ -346,7 +348,7 @@ public class NewsFeedFgt extends Fragment {
         }
     }
 
-    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed, final int position) {
+    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
@@ -357,9 +359,9 @@ public class NewsFeedFgt extends Fragment {
                 }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
-                intent.putExtra("position", position);
-                startActivityForResult(intent, 0);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getNewsId());
+                intent.putExtra(NewsFeedFgt.Key_COLLECTION, feed.getCollection());
+                startActivity(intent);
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
             }
         });
@@ -459,7 +461,7 @@ public class NewsFeedFgt extends Fragment {
                 setTitleTextBySpannable(holder.tvTitle, feed.getTitle());
                 setViewText(holder.tvSource, feed.getSourceSiteName());
                 setViewText(holder.tvComment, feed.getCommentNum() + "评论");
-                setNewsContentClick(holder.rlNewsContent, feed, position);
+                setNewsContentClick(holder.rlNewsContent, feed);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
                     holder.llSourceContent.setVisibility(View.VISIBLE);
@@ -544,7 +546,7 @@ public class NewsFeedFgt extends Fragment {
                 } else {
                     holder2.tv_title.setBackgroundResource(R.drawable.bg_load_default_big);
                 }
-                setNewsContentClick(holder2.rl_item_content, feed, position);
+                setNewsContentClick(holder2.rl_item_content, feed);
             }
             //多图
             else if ("three_pic".equals(strType) || "two_pic".equals(strType)) {
@@ -598,7 +600,7 @@ public class NewsFeedFgt extends Fragment {
                 setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
                 setViewText(holder3.tvSource, feed.getSourceSiteName());
                 setViewText(holder3.tvComment, feed.getCommentNum() + "评论");
-                setNewsContentClick(holder3.rlNewsContent, feed, position);
+                setNewsContentClick(holder3.rlNewsContent, feed);
                 if (relatePointsList != null && relatePointsList.size() > 0) {
                     int size = relatePointsList.size();
                     holder3.llSourceContent.setVisibility(View.VISIBLE);

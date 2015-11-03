@@ -20,6 +20,7 @@ public class NewsFeed implements Serializable {
     private String newsId;
     private String channelId;
     private String type;
+    private String collection;
 
     public String getSourceSiteName() {
         return sourceSiteName;
@@ -107,6 +108,14 @@ public class NewsFeed implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getCollection() {
+        return collection;
+    }
+
+    public void setCollection(String collection) {
+        this.collection = collection;
     }
 
     public static class Source implements Serializable {
