@@ -9,7 +9,7 @@
         android:id="@+id/mSearchHeader"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height"
-        android:background="@drawable/bg_titlebar_main"
+        android:background="@color/theme_color"
         >
 
         <ImageView
@@ -89,39 +89,54 @@
             android:textSize="16sp"
             />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/mSearchHotLabel"
+    <fragment
+        android:layout_below="@id/mSearchHeader"
+        android:id="@+id/mSearchResultFgt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mSearchHeader"
-        android:layout_margin="16dp"
-        android:text="热门搜索"
-        android:textColor="@color/search_hot_label"
-        android:textSize="16sp"
+        android:name="com.news.yazhidao.pages.NewsFeedFgt"
         />
 
-    <TextView
-        android:id="@+id/mDoSearchChangeBatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+    <RelativeLayout
+        android:id="@+id/mSearchHotLabelLayout"
         android:layout_below="@id/mSearchHeader"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/bg_search_change_batch"
-        android:text="换一批"
-        android:textColor="@color/do_search_change_batch"
-        android:textSize="14sp"
-        />
-
-    <com.news.yazhidao.widget.HotLabelsLayout
-        android:id="@+id/mHotLabelsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/mSearchHotLabel"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        />
+        android:layout_height="match_parent"
+        android:background="@color/bg_seach_hot_label"
+        >
+
+        <TextView
+            android:id="@+id/mSearchHotLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="热门搜索"
+            android:textColor="@color/search_hot_label"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/mDoSearchChangeBatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_search_change_batch"
+            android:text="换一批"
+            android:textColor="@color/do_search_change_batch"
+            android:textSize="14sp"
+            />
+
+        <com.news.yazhidao.widget.HotLabelsLayout
+            android:id="@+id/mHotLabelsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mSearchHotLabel"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            />
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
@@ -52,6 +53,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
     private SimpleDraweeView mMainUserLogin;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
+    private ProgressBar mTopRefreshProgress;
+    private ImageView mTopRefresh;
 
     private class UserLoginReceiver extends BroadcastReceiver{
 
@@ -90,6 +93,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
         mChannelTabStrip.setViewPager(mViewPager);
         mMainUserLogin = (SimpleDraweeView)findViewById(R.id.mMainUserLogin);
         mMainUserLogin.setOnClickListener(this);
+        mTopRefreshProgress = (ProgressBar)findViewById(R.id.mTopRefreshProgress);
+        mTopRefresh = (ImageView)findViewById(R.id.mTopRefresh);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null){
@@ -103,6 +108,21 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
         registerReceiver(mReceiver,filter);
     }
 
+    /**
+     * 开始顶部 progress 刷新动画
+     */
+    public void startTopRefresh(){
+        mTopRefresh.setVisibility(View.INVISIBLE);
+        mTopRefreshProgress.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 停止顶部 progress 刷新动画
+     */
+    public void stopTopRefresh(){
+        mTopRefresh.setVisibility(View.VISIBLE);
+        mTopRefreshProgress.setVisibility(View.INVISIBLE);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

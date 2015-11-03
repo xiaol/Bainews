@@ -86,12 +86,12 @@
         <item name="android:windowExitAnimation">@anim/exit</item>
     </style>
     <style name="main_title_bar_style">
-        <item name="android:background">@drawable/bg_titlebar_main</item>
+        <item name="android:background">@color/theme_color</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">@dimen/title_bar_height</item>
     </style>
     <style name="title_bar_style">
-        <item name="android:background">@drawable/bg_titlebar</item>
+        <item name="android:background">@color/theme_color</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">44.0dip</item>
     </style>

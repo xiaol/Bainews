@@ -201,8 +201,9 @@
     <color name="subscribe_bg">#fff5f5f5</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
 
+    <color name="theme_color" >#35a6fb</color>
     <color name="do_search_not_do" >#c3c3c3</color>
-    <color name="do_search_can_do" >#50b5eb</color>
+    <color name="do_search_can_do" >@color/white</color>
     <color name="search_hot_label" >#959595</color>
     <color name="do_search_change_batch" >#393939</color>
     <color name="bg_seach_hot_label" >#EDEDED</color>

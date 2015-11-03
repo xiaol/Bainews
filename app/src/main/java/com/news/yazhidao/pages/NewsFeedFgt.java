@@ -77,7 +77,7 @@ public class NewsFeedFgt extends Fragment {
     private LinearLayout mllNoNetwork;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrDeviceId, mstrUserId, mstrChannelId = "TJ0001", mstrKeyWord;
+    private String mstrDeviceId, mstrUserId, mstrChannelId , mstrKeyWord;
     /**
      * 当前的fragment 是否已经加载过数据
      */
@@ -112,7 +112,7 @@ public class NewsFeedFgt extends Fragment {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mContext = getActivity();
+        mContext =  getActivity();
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
@@ -125,8 +125,10 @@ public class NewsFeedFgt extends Fragment {
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
-        mstrKeyWord = arguments.getString(KEY_WORD);
+        if (arguments != null){
+            mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
+            mstrKeyWord = arguments.getString(KEY_WORD);
+        }
         Logger.e("jg", "channelid =" + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
@@ -152,12 +154,14 @@ public class NewsFeedFgt extends Fragment {
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                startTopRefresh();
+                Logger.e("jigang"," pull down refresh");
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-
+                Logger.e("jigang"," pull up refresh");
+                startTopRefresh();
             }
         });
         mAdapter = new NewsFeedAdapter();
@@ -175,8 +179,31 @@ public class NewsFeedFgt extends Fragment {
         return rootView;
     }
 
-    public void setChannelId(String channelId) {
-        mstrChannelId = channelId;
+    /**
+     * 设置搜索热词
+     * @param pKeyWord
+     */
+    public void setSearchKeyWord(String pKeyWord) {
+        this.mstrKeyWord = pKeyWord;
+        loadData();
+    }
+
+    /**
+     * 当前新闻feed流fragment的父容器是否是MainAty,如果是则进行刷新动画
+     */
+    public void startTopRefresh(){
+        if (MainAty.class.equals(mContext.getClass())){
+            ((MainAty)mContext).startTopRefresh();
+        }
+    }
+    /**
+     * 当前新闻feed流fragment的父容器是否是MainAty,如果是则停止刷新动画
+     * @return
+     */
+    public void stopRefresh(){
+        if (MainAty.class.equals(mContext.getClass())){
+            ((MainAty)mContext).stopTopRefresh();
+        }
     }
 
     private void loadNewsFeedData(String url, final boolean flag) {
@@ -192,11 +219,13 @@ public class NewsFeedFgt extends Fragment {
         nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
         nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
         nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
+        nameValuePairList.add(new BasicNameValuePair("page", "1"));
         mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
                 Log.i("tag", "request feed fail~");
+                stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
                 mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
                 mAniNewsLoading.stop();
@@ -206,6 +235,7 @@ public class NewsFeedFgt extends Fragment {
 
             public void success(ArrayList<NewsFeed> result) {
                 Log.i("tag", result + " feed success ~");
+                stopRefresh();
                 if (result != null && result.size() > 0) {
                     if (flag)
                         mArrNewsFeed = result;
@@ -351,9 +381,9 @@ public class NewsFeedFgt extends Fragment {
     public void loadData() {
         if (NetUtil.checkNetWork(mContext)) {
             mllNoNetwork.setVisibility(View.GONE);
-            if (mstrKeyWord != null && !"".equals(mstrKeyWord))
+            if (!TextUtil.isEmptyString(mstrKeyWord)) {
                 loadNewsFeedData("search", true);
-            else
+            } else if(!TextUtil.isEmptyString(mstrChannelId))
                 loadNewsFeedData("recommend", true);
             mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
             mAniNewsLoading = ((AnimationDrawable) mNewsLoadingImg.getDrawable());

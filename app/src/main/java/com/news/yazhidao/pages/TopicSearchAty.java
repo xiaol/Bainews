@@ -1,13 +1,16 @@
 package com.news.yazhidao.pages;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +27,6 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.widget.HotLabelsLayout;
 
 import org.apache.http.NameValuePair;
@@ -46,10 +48,13 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private TextView mDoSearch;
     private HotLabelsLayout mHotLabelsLayout;
     private TextView mDoSearchChangeBatch;
+    private NewsFeedFgt mSearchResultFgt;
+    private View mSearchHotLabelLayout;
 
     private ArrayList<Element> mHotLabels;
     private int mTotalPage;
     private int mCurrPageIndex;
+
     @Override
     protected boolean translucentStatus() {
         return false;
@@ -72,6 +77,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mHotLabelsLayout = (HotLabelsLayout) findViewById(R.id.mHotLabelsLayout);
         mDoSearchChangeBatch = (TextView) findViewById(R.id.mDoSearchChangeBatch);
         mDoSearchChangeBatch.setOnClickListener(this);
+        mSearchHotLabelLayout = findViewById(R.id.mSearchHotLabelLayout);
+        mSearchResultFgt = (NewsFeedFgt)getSupportFragmentManager().findFragmentById(R.id.mSearchResultFgt);
     }
 
     @Override
@@ -84,7 +91,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 mSearchContent.setText(null);
                 break;
             case R.id.mDoSearch:
-                ToastUtil.toastShort("search " + mSearchContent.getText().toString());
+                hideKeyboard(v);
+                mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
+                mSearchHotLabelLayout.setVisibility(View.GONE);
                 break;
             case R.id.mDoSearchChangeBatch:
                 setHotLabelLayoutData(mCurrPageIndex++);
@@ -123,7 +132,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             List<Element> elements = mHotLabels.subList(index * PAGE_CAPACITY, index * PAGE_CAPACITY + ((index == mTotalPage -1) ? (mHotLabels.size() % PAGE_CAPACITY) : PAGE_CAPACITY));
             for (int i = 0; i < elements.size(); i ++){
                 TextView textView = new TextView(this);
-                Element element = elements.get(i);
+                final Element element = elements.get(i);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 int margin = DensityUtil.dip2px(this,6);
                 lp.setMargins(margin,margin,margin,margin);
@@ -131,16 +140,39 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 int padding = DensityUtil.dip2px(this,8);
                 textView.setPadding(padding, padding, padding, padding);
                 textView.setTextColor(Color.parseColor("#ffffff"));
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 Drawable drawable = getResources().getDrawable(R.drawable.bg_search_hotlabel);
                 drawable.setColorFilter(new
                         PorterDuffColorFilter(TextUtil.getRandomColor4Hotlabel(this), PorterDuff.Mode.SRC_IN));
                 textView.setBackgroundDrawable(drawable);
                 textView.setText(element.getTitle());
+                textView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        hideKeyboard(v);
+                        mSearchContent.setText(element.getTitle());
+                        mSearchContent.setSelection(element.getTitle().length());
+                        mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
+                        mSearchHotLabelLayout.setVisibility(View.GONE);
+                    }
+                });
                 mHotLabelsLayout.addView(textView);
             }
         }
 
+    }
+
+    /**
+     * 获取InputMethodManager，隐藏软键盘
+     *
+     * @param view
+     */
+    private void hideKeyboard(View view) {
+        IBinder token = view.getWindowToken();
+        if (token != null) {
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(token, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
     private class TopicTextWatcher implements TextWatcher {
 
