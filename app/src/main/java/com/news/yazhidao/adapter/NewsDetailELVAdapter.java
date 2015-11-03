@@ -533,7 +533,9 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                     convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
                 }
             }
-            mWeiboViewHolder.mDetailWeiboUserIcon.setImageURI(Uri.parse(weibo.profileImageUrl));
+            if (!TextUtil.isEmptyString(weibo.profileImageUrl)){
+                mWeiboViewHolder.mDetailWeiboUserIcon.setImageURI(Uri.parse(weibo.profileImageUrl));
+            }
             mWeiboViewHolder.mDetailWeiboUserName.setText(weibo.user);
             mWeiboViewHolder.mDetailWeiboUserSpeech.setText(weibo.title);
             if (!TextUtil.isEmptyString(weibo.img)) {

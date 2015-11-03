@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -59,10 +60,10 @@ public class NewsFeedFgt extends Fragment {
     public static String KEY_NEWS_SOURCE = "key_news_source";
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
-    public static String Key_COLLECTION = "key_collection";
+    public static String KEY_COLLECTION = "key_collection";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static String VALUE_NEWS_SOURCE = "other_view";
-    private static final int PULL_DOWN_REFRESH = 1;
+    public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed;
@@ -91,7 +92,13 @@ public class NewsFeedFgt extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (rootView != null && isVisibleToUser && !isLoadedData) {
             isLoadedData = true;
-            mlvNewsFeed.setRefreshing();
+            Logger.e("jigang", "setUserVisibleHint  " + isLoadedData);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mlvNewsFeed.setRefreshing();
+                }
+            },500);
         }
     }
 
@@ -327,7 +334,7 @@ public class NewsFeedFgt extends Fragment {
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getNewsId());
-                intent.putExtra(NewsFeedFgt.Key_COLLECTION, feed.getCollection());
+                intent.putExtra(NewsFeedFgt.KEY_COLLECTION, feed.getCollection());
                 startActivity(intent);
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
             }
@@ -340,6 +347,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void loadData(int flag) {
+        Logger.e("jigang","loaddata -----");
         if (NetUtil.checkNetWork(mContext)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
                 loadNewsFeedData("search", flag);
@@ -365,8 +373,8 @@ public class NewsFeedFgt extends Fragment {
         public long getItemId(int position) {
             return position;
         }
-
         public View getView(final int position, View convertView, ViewGroup parent) {
+        long start = System.currentTimeMillis();
             final NewsFeed feed = mArrNewsFeed.get(position);
             ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
             String strType = feed.getType();
@@ -607,6 +615,7 @@ public class NewsFeedFgt extends Fragment {
                     holder3.llSourceContent.setVisibility(View.GONE);
                 }
             }
+            Logger.e("jigang","getView consume time "+(System.currentTimeMillis() - start));
             return convertView;
         }
     }

@@ -206,7 +206,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
             if (mWeakFgt != null && mWeakFgt.get() != null) {
                 return mWeakFgt.get();
             }
-            return NewsFeedFgt.newInstance(mChannelItems.get(position).getId());
+            NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(mChannelItems.get(position).getId());
+            return feedFgt;
         }
         @Override
         public Object instantiateItem(ViewGroup container, int position) {

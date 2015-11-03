@@ -31,4 +31,6 @@ public class HttpConstant {
     public static final String URL_FETCH_ALBUM_SUBITEMS = "http://api.deeporiginalx.com/news/baijia/dredgeUpStatus?";
     /**获取热点话题标签*/
     public static final String URL_FETCH_ELEMENTS = "http://api.deeporiginalx.com/news/baijia/fetchElementary";
+    /**获取新闻详情 api*/
+    public static final String URL_POST_NEWS_DETAIL="http://api.deeporiginalx.com/news/baijia/fetchDetail";
 }

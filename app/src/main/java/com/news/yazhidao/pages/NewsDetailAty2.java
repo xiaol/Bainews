@@ -137,7 +137,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
                     int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
                     Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
-                    mDetailHeader.setBackground(drawable);
+                    mDetailHeader.setBackgroundDrawable(drawable);
                     mDetailHeader.getBackground().setAlpha(alpaha);
                 }
             }
@@ -161,15 +161,18 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
         mAniNewsLoading.start();
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
-        boolean isNewApi = getIntent().getBooleanExtra(AlbumListAty.KEY_IS_NEW_API, false);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
         String newsId = null;
+        String newsType = null;
         if (bundle != null) {
             isDigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
             albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
             newsId = albumSubItem.getInserteId();
 
+        }else {
+            newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
+            newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
         if (user != null) {
@@ -179,76 +182,47 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsDetailUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_URL);
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
-        String requestUrl = HttpConstant.URL_GET_NEWS_DETAIL + mNewsDetailUrl + "&userId=" + mUserId + "&platformType=" + mPlatformType;
-        /**是否是新的api,除了谷歌今日焦点,其他都是新api接口*/
-        if (!isNewApi) {
-            NetworkRequest _Request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
-            _Request.setCallback(new JsonCallback<NewsDetail>() {
 
-                @Override
-                public void success(NewsDetail result) {
-                    mAniNewsLoading.stop();
-                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                    mNewsDetail = result;
-                    mNewsDetailELVAdapter.setNewsDetail(result);
-                    if (result != null) {
-                        mDetailHeaderView.updateView(result);
-                        parseNewsDetail(result);
-                        //设置Listview默认展开
-                        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
-                            mDetailContentListView.expandGroup(i);
-                        }
-                    }
-                }
-
-                @Override
-                public void failed(MyAppException exception) {
-                    Logger.e("jigang", "network fail");
-                    mAniNewsLoading.stop();
-                    mNewsLoadingImg.setImageResource(R.drawable.ic_news_detail_reload);
-                }
-            }.setReturnType(new TypeToken<NewsDetail>() {
-            }.getType()));
-            _Request.execute();
+        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_POST_NEWS_DETAIL, NetworkRequest.RequestMethod.POST);
+        List<NameValuePair> pairs = new ArrayList<>();
+        /**是否是挖掘的新闻*/
+        if (isDigger) {
+            pairs.add(new BasicNameValuePair("news_id", newsId));
         } else {
-            NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_GET_NEWS_DETAIL_NEW, NetworkRequest.RequestMethod.POST);
-            List<NameValuePair> pairs = new ArrayList<>();
-            /**是否是挖掘的新闻*/
-            if (isDigger) {
-                pairs.add(new BasicNameValuePair("news_id", newsId));
-            } else {
-                pairs.add(new BasicNameValuePair("url", mNewsDetailUrl));
-            }
-            _Request.setParams(pairs);
-            _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
-
-                @Override
-                public void success(final NewsDetailAdd result) {
-                    mAniNewsLoading.stop();
-                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                    mNewsDetailAdd = result;
-                    mNewsDetailELVAdapter.setNewsDetail(result);
-                    if (result != null) {
-                        mDetailHeaderView.updateView(result);
-                        parseNewsDetail(result);
-                        //设置Listview默认展开
-                        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
-                            mDetailContentListView.expandGroup(i);
-                        }
-                    }
-
-                }
-
-                @Override
-                public void failed(MyAppException exception) {
-                    Logger.e("jigang", "network fail");
-                    mAniNewsLoading.stop();
-                    mNewsLoadingImg.setImageResource(R.drawable.ic_news_detail_reload);
-                }
-            }.setReturnType(new TypeToken<NewsDetailAdd>() {
-            }.getType()));
-            _Request.execute();
+            pairs.add(new BasicNameValuePair("newsid", newsId));
+            pairs.add(new BasicNameValuePair("devicetype", "android"));
+            pairs.add(new BasicNameValuePair("collection", newsType));
         }
+        pairs.add(new BasicNameValuePair("userid", mUserId));
+        pairs.add(new BasicNameValuePair("deviceid", uuid));
+        _Request.setParams(pairs);
+        _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+
+            @Override
+            public void success(final NewsDetailAdd result) {
+                mAniNewsLoading.stop();
+                mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                mNewsDetailAdd = result;
+                mNewsDetailELVAdapter.setNewsDetail(result);
+                if (result != null) {
+                    mDetailHeaderView.updateView(result);
+                    parseNewsDetail(result);
+                    //设置Listview默认展开
+                    for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
+                        mDetailContentListView.expandGroup(i);
+                    }
+                }
+            }
+
+            @Override
+            public void failed(MyAppException exception) {
+                Logger.e("jigang", "network fail");
+                mAniNewsLoading.stop();
+                mNewsLoadingImg.setImageResource(R.drawable.ic_news_detail_reload);
+            }
+        }.setReturnType(new TypeToken<NewsDetailAdd>() {
+        }.getType()));
+        _Request.execute();
     }
 
     @Override
