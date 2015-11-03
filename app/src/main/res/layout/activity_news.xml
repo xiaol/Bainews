@@ -1,60 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/refresh_num_textView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/news_feed_listView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#ffdfe6e9"
-        android:cacheColorHint="@color/new_encounter_cell_bg"
-        android:clipToPadding="false"
-        android:divider="@color/transparency"
-        android:listSelector="#fff3f3fa"
-        android:scrollbars="none" />
-
-    <LinearLayout
-        android:id="@+id/no_network_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#ffdfe6e9"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/btn_reload"
-            android:layout_width="50.0dip"
-            android:layout_height="55.0dip"
-            android:background="@drawable/loading_new_pic15" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10.0dip"
-            android:text="重新加载..."
-            android:textColor="#55000000"
-            android:textSize="15.0sp" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/mNewsFeedProgressWheelWrapper"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@color/bg_gray"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/mNewsLoadingImg"
-            android:layout_width="80.0dip"
-            android:layout_height="80.0dip"
-            android:layout_gravity="center" />
-    </FrameLayout>
-</RelativeLayout>
+<com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_feed_listView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffdfe6e9"
+    android:cacheColorHint="@color/new_encounter_cell_bg"
+    android:clipToPadding="false"
+    android:divider="@color/transparency"
+    android:listSelector="#fff3f3fa"
+    android:scrollbars="none" />

@@ -38,7 +38,6 @@
         android:background="@drawable/bg_sulist"
         android:gravity="center"
         android:paddingTop="-1dp"
-        android:text="99%相关"
         android:textColor="#ffb5b5b5"
         android:textSize="11sp" />
 
@@ -55,7 +54,6 @@
         android:lineSpacingExtra="3dp"
         android:maxLines="2"
         android:paddingBottom="10dp"
-        android:text="Fay苏"
         android:textColor="#ff888888"
         android:textSize="11sp" />
 
@@ -65,6 +63,5 @@
         android:layout_height="1dp"
         android:layout_below="@+id/tv_news_source"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="10dp"
         android:background="@drawable/image_half_line" />
 </RelativeLayout>

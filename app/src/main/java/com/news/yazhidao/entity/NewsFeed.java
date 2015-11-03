@@ -120,28 +120,11 @@ public class NewsFeed implements Serializable {
 
     public static class Source implements Serializable {
 
-        private String url;
+        private String sourceUrl;
         private String sourceSiteName;
-        private String user;
-        private String title;
+        private String compress;
         private String similarity;
-
-
-        public String getSimilarity() {
-            return similarity;
-        }
-
-        public void setSimilarity(String similarity) {
-            this.similarity = similarity;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
+        private String user;
 
         public String getUser() {
             return user;
@@ -149,6 +132,14 @@ public class NewsFeed implements Serializable {
 
         public void setUser(String user) {
             this.user = user;
+        }
+
+        public String getSimilarity() {
+            return similarity;
+        }
+
+        public void setSimilarity(String similarity) {
+            this.similarity = similarity;
         }
 
         public String getSourceSiteName() {
@@ -159,17 +150,20 @@ public class NewsFeed implements Serializable {
             this.sourceSiteName = sourceSiteName;
         }
 
-        public String getTitle() {
-            return title;
+        public String getSourceUrl() {
+            return sourceUrl;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
+        public void setSourceUrl(String sourceUrl) {
+            this.sourceUrl = sourceUrl;
         }
 
-        @Override
-        public String toString() {
-            return url + "," + sourceSiteName + "," + title;
+        public String getCompress() {
+            return compress;
+        }
+
+        public void setCompress(String compress) {
+            this.compress = compress;
         }
     }
 

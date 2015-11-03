@@ -4,17 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -65,21 +62,17 @@ public class NewsFeedFgt extends Fragment {
     public static String Key_COLLECTION = "key_collection";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static String VALUE_NEWS_SOURCE = "other_view";
-
-    private Button btn_reload;
+    private static final int PULL_DOWN_REFRESH = 1;
+    private static final int PULL_UP_REFRESH = 2;
     private NewsFeedAdapter mAdapter;
-    private AnimationDrawable mAniNewsLoading;
     private ArrayList<NewsFeed> mArrNewsFeed;
     private Context mContext;
-    private View mNewsFeedProgressWheelWrapper;
-    private ImageView mNewsLoadingImg;
     private NetworkRequest mRequest;
     private int mScreenHeight;
     private int mScreenWidth;
-    private LinearLayout mllNoNetwork;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
-    private String mstrDeviceId, mstrUserId, mstrChannelId , mstrKeyWord;
+    private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
     /**
      * 当前的fragment 是否已经加载过数据
      */
@@ -96,17 +89,15 @@ public class NewsFeedFgt extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.e("jg", "setUserVisibleHint ---- " + mstrChannelId + "--" + isVisibleToUser);
         if (rootView != null && isVisibleToUser && !isLoadedData) {
             isLoadedData = true;
-            loadData();
-            Log.e("jg", "load data ---- " + mstrChannelId);
+            mlvNewsFeed.setRefreshing();
         }
     }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mContext =  getActivity();
+        mContext = getActivity();
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
@@ -119,43 +110,24 @@ public class NewsFeedFgt extends Fragment {
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        if (arguments != null){
+        if (arguments != null) {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        Logger.e("jg", "channelid =" + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
-        mNewsFeedProgressWheelWrapper = rootView.findViewById(R.id.mNewsFeedProgressWheelWrapper);
-        mNewsLoadingImg = (ImageView) rootView.findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mllNoNetwork = (LinearLayout) rootView.findViewById(R.id.no_network_layout);
-        btn_reload = (Button) rootView.findViewById(R.id.btn_reload);
-        btn_reload.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View paramAnonymousView) {
-                if (NetUtil.checkNetWork(mContext)) {
-                    mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
-                    mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-                    mAniNewsLoading.start();
-                } else {
-                    mlvNewsFeed.setVisibility(View.GONE);
-                    mllNoNetwork.setVisibility(View.VISIBLE);
-                    ToastUtil.toastShort("您的网络出现问题，请检查网络设置...");
-                }
-            }
-        });
         mlvNewsFeed = ((PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView));
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                startTopRefresh();
-                Logger.e("jigang"," pull down refresh");
+                loadData(PULL_DOWN_REFRESH);
+                Logger.e("jigang", " pull down refresh");
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                Logger.e("jigang"," pull up refresh");
-                startTopRefresh();
+                loadData(PULL_UP_REFRESH);
+                Logger.e("jigang", " pull up refresh");
             }
         });
         mAdapter = new NewsFeedAdapter();
@@ -175,40 +147,35 @@ public class NewsFeedFgt extends Fragment {
 
     /**
      * 设置搜索热词
+     *
      * @param pKeyWord
      */
     public void setSearchKeyWord(String pKeyWord) {
         this.mstrKeyWord = pKeyWord;
-        loadData();
+        loadData(PULL_DOWN_REFRESH);
     }
 
     /**
      * 当前新闻feed流fragment的父容器是否是MainAty,如果是则进行刷新动画
      */
-    public void startTopRefresh(){
-        if (MainAty.class.equals(mContext.getClass())){
-            ((MainAty)mContext).startTopRefresh();
-        }
-    }
-    /**
-     * 当前新闻feed流fragment的父容器是否是MainAty,如果是则停止刷新动画
-     * @return
-     */
-    public void stopRefresh(){
-        if (MainAty.class.equals(mContext.getClass())){
-            ((MainAty)mContext).stopTopRefresh();
+    public void startTopRefresh() {
+        if (MainAty.class.equals(mContext.getClass())) {
+            ((MainAty) mContext).startTopRefresh();
         }
     }
 
-    private void loadNewsFeedData(String url, final boolean flag) {
-        if (flag) {
-            if (mNewsFeedProgressWheelWrapper != null)
-                mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
-            if (mAniNewsLoading != null)
-                mAniNewsLoading.start();
+    /**
+     * 当前新闻feed流fragment的父容器是否是MainAty,如果是则停止刷新动画
+     *
+     * @return
+     */
+    public void stopRefresh() {
+        if (MainAty.class.equals(mContext.getClass())) {
+            ((MainAty) mContext).stopTopRefresh();
         }
-        mlvNewsFeed.setRefreshing();
-        mllNoNetwork.setVisibility(View.GONE);
+    }
+
+    private void loadNewsFeedData(String url, final int flag) {
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
         nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
@@ -219,31 +186,30 @@ public class NewsFeedFgt extends Fragment {
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
-                Log.i("tag", "request feed fail~");
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
-                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
-                mAniNewsLoading.stop();
-                mllNoNetwork.setVisibility(View.VISIBLE);
-                mlvNewsFeed.setVisibility(View.GONE);
             }
 
             public void success(ArrayList<NewsFeed> result) {
-                Log.i("tag", result + " feed success ~");
                 stopRefresh();
                 if (result != null && result.size() > 0) {
-                    if (flag)
-                        mArrNewsFeed = result;
-                    mlvNewsFeed.setVisibility(View.VISIBLE);
-                    mlvNewsFeed.getRefreshableView().setSelection(0);
+                    switch (flag) {
+                        case PULL_DOWN_REFRESH:
+                            if (mArrNewsFeed == null)
+                                mArrNewsFeed = result;
+                            else
+                                mArrNewsFeed.addAll(0, result);
+                            mlvNewsFeed.getRefreshableView().setSelection(0);
+                            break;
+                        case PULL_UP_REFRESH:
+                            mArrNewsFeed.addAll(result);
+                            break;
+                    }
                     mAdapter.notifyDataSetChanged();
                 } else {
                     ToastUtil.toastLong("网络不给力,请检查网络....");
-                    mllNoNetwork.setVisibility(View.VISIBLE);
                 }
                 mlvNewsFeed.onRefreshComplete();
-                mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
-                mAniNewsLoading.stop();
             }
         }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
         }.getType()));
@@ -271,7 +237,7 @@ public class NewsFeedFgt extends Fragment {
                     }
                     firstClick = System.currentTimeMillis();
                     Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    intent.putExtra(KEY_URL, source.getUrl());
+                    intent.putExtra(KEY_URL, source.getSourceUrl());
                     startActivity(intent);
                     //umeng statistic onclick url below the head news
                     HashMap<String, String> _MobMap = new HashMap<>();
@@ -282,7 +248,7 @@ public class NewsFeedFgt extends Fragment {
             if (source != null) {
                 String source_name = source.getSourceSiteName();
                 String finalText = "";
-                String source_title = source.getTitle();
+                String source_title = source.getCompress();
                 String source_name_font = "";
                 source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
                 if (source_name != null) {
@@ -337,7 +303,7 @@ public class NewsFeedFgt extends Fragment {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#35a6fb\">"  + mstrKeyWord  + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#35a6fb\">" + mstrKeyWord + "</font>");
             }
             tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
         }
@@ -373,19 +339,14 @@ public class NewsFeedFgt extends Fragment {
             mRequest.cancel(true);
     }
 
-    public void loadData() {
+    public void loadData(int flag) {
         if (NetUtil.checkNetWork(mContext)) {
-            mllNoNetwork.setVisibility(View.GONE);
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
-                loadNewsFeedData("search", true);
-            } else if(!TextUtil.isEmptyString(mstrChannelId))
-                loadNewsFeedData("recommend", true);
-            mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
-            mAniNewsLoading = ((AnimationDrawable) mNewsLoadingImg.getDrawable());
-//            mAniNewsLoading.start();
+                loadNewsFeedData("search", flag);
+            } else if (!TextUtil.isEmptyString(mstrChannelId))
+                loadNewsFeedData("recommend", flag);
+            startTopRefresh();
         } else {
-            mlvNewsFeed.setVisibility(View.GONE);
-            mllNoNetwork.setVisibility(View.VISIBLE);
             ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
         }
     }
@@ -450,7 +411,10 @@ public class NewsFeedFgt extends Fragment {
                 }
 
                 ArrayList<String> strArrImgUrl = feed.getImgUrls();
-                String strImg = strArrImgUrl.get(0);
+                String strImg = null;
+                if ("one_pic".equals(strType)) {
+                    strImg = strArrImgUrl.get(0);
+                }
                 if (strImg != null && !"".equals(strImg)) {
                     holder.ivTitleImg.setVisibility(View.VISIBLE);
                     holder.ivTitleImg.setImageURI(Uri.parse(strImg));
