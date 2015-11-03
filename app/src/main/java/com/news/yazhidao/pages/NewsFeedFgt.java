@@ -31,7 +31,6 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -121,13 +120,11 @@ public class NewsFeedFgt extends Fragment {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 loadData(PULL_DOWN_REFRESH);
-                Logger.e("jigang", " pull down refresh");
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 loadData(PULL_UP_REFRESH);
-                Logger.e("jigang", " pull up refresh");
             }
         });
         mAdapter = new NewsFeedAdapter();
@@ -216,10 +213,19 @@ public class NewsFeedFgt extends Fragment {
         mRequest.execute();
     }
 
-    private void setCardMargin(SimpleDraweeView ivCard, int leftMargin, int rightMargin) {
+    private void setCardMargin(SimpleDraweeView ivCard, int leftMargin, int rightMargin, int pageNum) {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();
         localLayoutParams.leftMargin = DensityUtil.dip2px(mContext, leftMargin);
         localLayoutParams.rightMargin = DensityUtil.dip2px(mContext, rightMargin);
+        int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 12));
+        if (pageNum == 2) {
+            localLayoutParams.width = width;
+            localLayoutParams.height = (int) (width * 3 / 4.0f);
+        } else if (pageNum == 3) {
+            width = (int) (mScreenWidth / 3.0f - DensityUtil.dip2px(mContext, 12));
+            localLayoutParams.width = width;
+            localLayoutParams.height = (int) (width * 3 / 4.0f);
+        }
         ivCard.setLayoutParams(localLayoutParams);
     }
 
@@ -553,13 +559,13 @@ public class NewsFeedFgt extends Fragment {
 
                 if (strArrImgUrl.size() == 3) {
                     setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
-                    setCardMargin(holder3.ivCard1, 8, 4);
-                    setCardMargin(holder3.ivCard2, 4, 4);
-                    setCardMargin(holder3.ivCard3, 4, 8);
+                    setCardMargin(holder3.ivCard1, 8, 4, 3);
+                    setCardMargin(holder3.ivCard2, 4, 4, 3);
+                    setCardMargin(holder3.ivCard3, 4, 8, 3);
                 } else {
                     holder3.ivCard3.setVisibility(View.GONE);
-                    setCardMargin(holder3.ivCard1, 8, 4);
-                    setCardMargin(holder3.ivCard2, 4, 8);
+                    setCardMargin(holder3.ivCard1, 8, 4, 2);
+                    setCardMargin(holder3.ivCard2, 4, 8, 2);
                 }
 
                 setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
