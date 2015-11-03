@@ -215,6 +215,7 @@ public class NewsFeedFgt extends Fragment {
             if (mAniNewsLoading != null)
                 mAniNewsLoading.start();
         }
+        mlvNewsFeed.setRefreshing();
         mllNoNetwork.setVisibility(View.GONE);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
@@ -387,9 +388,9 @@ public class NewsFeedFgt extends Fragment {
                 loadNewsFeedData("search", true);
             } else if(!TextUtil.isEmptyString(mstrChannelId))
                 loadNewsFeedData("recommend", true);
-            mNewsFeedProgressWheelWrapper.setVisibility(View.VISIBLE);
+            mNewsFeedProgressWheelWrapper.setVisibility(View.GONE);
             mAniNewsLoading = ((AnimationDrawable) mNewsLoadingImg.getDrawable());
-            mAniNewsLoading.start();
+//            mAniNewsLoading.start();
         } else {
             mlvNewsFeed.setVisibility(View.GONE);
             mllNoNetwork.setVisibility(View.VISIBLE);
