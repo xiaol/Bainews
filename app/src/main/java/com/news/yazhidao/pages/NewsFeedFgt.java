@@ -91,14 +91,6 @@ public class NewsFeedFgt extends Fragment {
         return newsFeedFgt;
     }
 
-    public static NewsFeedFgt newInstanceByKeyWord(String pKeyWord) {
-        NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_WORD, pKeyWord);
-        newsFeedFgt.setArguments(bundle);
-        return newsFeedFgt;
-    }
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -342,7 +334,7 @@ public class NewsFeedFgt extends Fragment {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#7d7d7d\">" + "<big>" + mstrKeyWord + "</big>" + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#35a6fb\">"  + mstrKeyWord  + "</font>");
             }
             tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
         }

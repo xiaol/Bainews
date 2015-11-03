@@ -17,7 +17,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.news.yazhidao.common.GlobalParams;
 import com.news.yazhidao.utils.DensityUtil;
 
 public class TextViewVertical extends View {
@@ -39,14 +38,15 @@ public class TextViewVertical extends View {
     private Matrix matrix;
     private TextPaint mTextPaint;
     private Align textStartAlign = Align.RIGHT;//draw start left or right.//default right
+    private Context mContext;
     BitmapDrawable drawable = (BitmapDrawable) getBackground();
 
+    public TextViewVertical(Context context){
+        this(context, null);
+    }
     public TextViewVertical(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    public TextViewVertical(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        mContext = context;
         matrix = new Matrix();
         paint = new Paint();//新建画笔
         paint.setTextAlign(Align.CENTER);//文字居中
@@ -56,6 +56,10 @@ public class TextViewVertical extends View {
             mFontSize = Float.parseFloat(attrs.getAttributeValue(null, "textSize"));//获取字体大小属性
         } catch (Exception e) {
         }
+    }
+
+    public TextViewVertical(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
     /*
@@ -232,7 +236,7 @@ public class TextViewVertical extends View {
         int specSize = MeasureSpec.getSize(measureSpec);
 
         int result = 0;
-        result = DensityUtil.dip2px(GlobalParams.context,180);
+        result = DensityUtil.dip2px(mContext,180);
 
 //        if (specMode == MeasureSpec.AT_MOST) {
 //            result = specSize;
