@@ -92,22 +92,15 @@ public class NewsFeedFgt extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(!TextUtil.isEmptyString(mstrChannelId)){
-            long pre = SharedPreManager.getLong("channel_refresh", mstrChannelId);
-            Logger.e("jigang", "delta =" + (System.currentTimeMillis() - pre));
-            boolean forceRefresh = (System.currentTimeMillis() - pre) >= 1000 * 15;
-            if (rootView != null && isVisibleToUser && !isLoadedData || forceRefresh) {
-                isLoadedData = true;
-                SharedPreManager.save("channel_refresh", mstrChannelId, System.currentTimeMillis());
-                Logger.e("jigang", "setUserVisibleHint  " + isLoadedData + ",force refresh =" + forceRefresh);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mlvNewsFeed.setRefreshing();
-                    }
-                }, 800);
-            }
-
+        if (rootView != null && isVisibleToUser && !isLoadedData) {
+            isLoadedData = true;
+            Logger.e("jigang", "setUserVisibleHint  " + isLoadedData);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mlvNewsFeed.setRefreshing();
+                }
+            }, 800);
         }
     }
 
@@ -173,7 +166,7 @@ public class NewsFeedFgt extends Fragment {
             public void run() {
                 mlvNewsFeed.setRefreshing();
             }
-        }, 1000);
+        }, 800);
     }
 
     /**
@@ -223,7 +216,8 @@ public class NewsFeedFgt extends Fragment {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            mArrNewsFeed.addAll(result);
+                            if(mArrNewsFeed!=null)
+                                mArrNewsFeed.addAll(result);
                             break;
                     }
                     mAdapter.notifyDataSetChanged();
@@ -379,6 +373,8 @@ public class NewsFeedFgt extends Fragment {
             startTopRefresh();
         } else {
             ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
+            stopRefresh();
+            mlvNewsFeed.onRefreshComplete();
         }
     }
 

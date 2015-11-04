@@ -32,24 +32,24 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card1"
-                android:layout_width="0.0dip"
-                android:layout_height="90.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_small" />
+                fresco:placeholderImage="@drawable/bg_load_default_middle" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
-                android:layout_width="0.0dip"
-                android:layout_height="90.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_small" />
+                fresco:placeholderImage="@drawable/bg_load_default_middle" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card3"
-                android:layout_width="0.0dip"
-                android:layout_height="90.0dip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_small" />
+                fresco:placeholderImage="@drawable/bg_load_default_middle" />
         </LinearLayout>
 
         <com.news.yazhidao.widget.TextViewExtend
@@ -60,7 +60,7 @@
             android:layout_below="@+id/image_list_LinearLayout"
             android:layout_marginRight="8.0dip"
             android:layout_marginTop="8.0dip"
-            android:text="dddd"
+            android:textSize="10sp"
             android:textColor="@color/Gray" />
 
         <com.news.yazhidao.widget.TextViewExtend
@@ -70,7 +70,7 @@
             android:layout_alignBaseline="@+id/comment_textView"
             android:layout_marginRight="10.0dip"
             android:layout_toLeftOf="@+id/comment_textView"
-            android:text="dddddddd"
+            android:textSize="10sp"
             android:textColor="@color/gray_black" />
     </RelativeLayout>
 

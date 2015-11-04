@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -25,7 +26,9 @@ import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
@@ -55,6 +58,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
     private UserLoginReceiver mReceiver;
     private ProgressBar mTopRefreshProgress;
     private ImageView mTopRefresh;
+    private long mLastPressedBackKeyTime;
 
     private class UserLoginReceiver extends BroadcastReceiver{
 
@@ -137,7 +141,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                    UmengUpdateAgent.update(MainAty.this);
+                UmengUpdateAgent.update(MainAty.this);
             }
         }, 2000);
     }
@@ -176,7 +180,25 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
             mChannelTabStrip.setViewPager(mViewPager);
         }
     }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            long pressedBackKeyTime = System.currentTimeMillis();
+            if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
+                finish();
+            } else {
+                if (DeviceInfoUtil.isFlyme()) {
+                    ToastUtil.toastShort(getString(R.string.press_back_again_exit));
+                } else {
+                    ToastUtil.showToastWithIcon(getString(R.string.press_back_again_exit), R.drawable.release_time_logo);// (this, getString(R.string.press_back_again_exit));
+                }
+                mLastPressedBackKeyTime = pressedBackKeyTime;
+                return true;
+            }
+        }
 
+        return super.onKeyDown(keyCode, event);
+    }
     public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
         private boolean isFirstInit = true;
         private final SparseArray<WeakReference<Fragment>> mFragmentArray = new SparseArray<WeakReference<Fragment>>();

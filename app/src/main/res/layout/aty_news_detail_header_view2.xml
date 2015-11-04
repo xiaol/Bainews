@@ -23,14 +23,13 @@
         android:background="@drawable/bg_news_detail_header_gradient"
         android:gravity="bottom"
         android:orientation="vertical"
-        android:paddingTop="48dp"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
 
         <TextView
             android:id="@+id/mDetailTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"

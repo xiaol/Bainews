@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 /**
@@ -99,18 +101,25 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
             }
         }else if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
+            mDetailTitle.setText(detail.title);
+            mDetailDate.setText(detail.updateTime);
             if (!TextUtil.isEmptyString(detail.imgUrl)){
                 mDetailHeaderImg.setVisibility(VISIBLE);
                 mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
             }else {
                 mDetailHeaderImg.setVisibility(INVISIBLE);
-                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 148)));
+                Rect rect = new Rect();
+                mDetailTitle.getPaint().getTextBounds(detail.title, 0, detail.title.length(), rect);
+                Logger.e("jigang", mDetailTitle.getLineCount() +" >,title h=" +mDetailTitle.getHeight() + ",w=" +mDetailDate.getWidth());
+                int titleH = mDetailTitle.getHeight();
+                if (rect.width() >= mDetailTitle.getWidth()){
+                    titleH = mDetailTitle.getHeight() * 2 ;
+                }
+                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 52) + mDetailTitle.getLineCount() * mDetailTitle.getHeight() + mDetailDate.getHeight()));
                 mDetailTitleWrapper.setBackgroundColor(Color.parseColor("#E6E6E6"));
                 mDetailTitle.setTextColor(Color.BLACK);
                 mDetailDate.setTextColor(Color.BLACK);
             }
-            mDetailTitle.setText(detail.title);
-            mDetailDate.setText(detail.updateTime);
             /**语音评论和新闻描述有一个不为null*/
             if (!TextUtil.isEmptyString(detail.abs) || detail.isdoc){
                 if (!TextUtil.isEmptyString(detail.abs)){

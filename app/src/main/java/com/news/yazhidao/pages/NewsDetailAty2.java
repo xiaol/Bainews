@@ -33,6 +33,7 @@ import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
@@ -179,7 +180,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }else {
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
-//            newsId = "2226da70b80e9e28264642941f8180a1";
+//            newsId = "5565083c8aab5076b2c9caaa36dd856a";
 //            newsType = "NewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
@@ -213,12 +214,17 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 mNewsDetailAdd = result;
                 mNewsDetailELVAdapter.setNewsDetail(result);
                 if (result != null) {
+//                    result.abs = "这是一个神奇的网站,这是一个神奇的网站,这是一个神奇的网站,这是一个神奇的网站";
+//                    result.title = result.title + result.title +result.title;
                     mDetailHeaderView.updateView(result);
                     parseNewsDetail(result);
                     //设置Listview默认展开
                     for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
                         mDetailContentListView.expandGroup(i);
                     }
+                }else {
+                    ToastUtil.toastShort("此新闻暂时无法查看!");
+                    NewsDetailAty2.this.finish();
                 }
             }
 
@@ -427,7 +433,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
-                    if (hashMap.get("txt") != null) {
+                    if (hashMap != null && hashMap.get("txt") != null) {
                         NewsDetailContent content = new NewsDetailContent();
                         content.setContent(hashMap.get("txt"));//img img_info txt
                         content.setComments(new ArrayList<NewsDetail.Point>());
