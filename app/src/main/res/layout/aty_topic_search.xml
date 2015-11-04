@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mSearchHeader"
-        android:background="@color/bg_seach_hot_label">
+        android:background="#ffdfe6e9">
 
         <TextView
             android:id="@+id/mSearchHotLabel"
