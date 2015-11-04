@@ -127,7 +127,6 @@ public class NewsDetail implements Serializable{
         }
     }
 
-
     public class Weibo {
 //        public sourceSitename sourceSitename;
         public String url;
@@ -135,7 +134,12 @@ public class NewsDetail implements Serializable{
         public String user;
         public String title;
         public String img;
+        public String sourceSitename;
         public String isCommentFlag;
+        public String comments_count;
+        public int like_count;
+        public int reposts_count;
+        public ArrayList<String> imgs;
     }
 
     public class Article{

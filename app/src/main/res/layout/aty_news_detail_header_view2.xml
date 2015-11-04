@@ -12,8 +12,10 @@
         android:contentDescription="详情页头图"
         fresco:actualImageScaleType="focusCrop"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
-        fresco:placeholderImageScaleType="fitXY" />
+        fresco:placeholderImageScaleType="fitXY"
+        />
     <LinearLayout
+        android:id="@+id/mDetailTitleWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/mDetailHeaderImg"
@@ -21,6 +23,7 @@
         android:background="@drawable/bg_news_detail_header_gradient"
         android:gravity="bottom"
         android:orientation="vertical"
+        android:paddingTop="48dp"
         android:paddingBottom="10dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">

@@ -11,6 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -77,7 +78,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
-    float startY;
+    private ProgressBar mNewsDetailProgress;
+
+    private float startY;
     private String mSource;
 
     @Override
@@ -106,9 +109,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mNewsDetailLoaddingWrapper.setOnClickListener(this);
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+        mNewsLoadingImg.setOnClickListener(this);
+//        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
@@ -130,7 +134,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 View childAt = view.getChildAt(0);
-                if (childAt != null) {
+                if (childAt != null && mNewsDetailAdd != null && !TextUtil.isEmptyString(mNewsDetailAdd.imgUrl)) {
                     if (firstVisibleItem != 0 || childAt.getY() > 0) {
                         return;
                     }
@@ -157,9 +161,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     protected void loadData() {
-        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-        mAniNewsLoading.start();
+//        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
+//        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
+//        mAniNewsLoading.start();
+        mNewsLoadingImg.setVisibility(View.GONE);
+        mNewsDetailProgress.setVisibility(View.VISIBLE);
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
@@ -173,6 +179,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }else {
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
+//            newsId = "2226da70b80e9e28264642941f8180a1";
+//            newsType = "NewsItem";
+            Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
         if (user != null) {
@@ -200,7 +209,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void success(final NewsDetailAdd result) {
-                mAniNewsLoading.stop();
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                 mNewsDetailAdd = result;
                 mNewsDetailELVAdapter.setNewsDetail(result);
@@ -217,8 +225,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void failed(MyAppException exception) {
                 Logger.e("jigang", "network fail");
-                mAniNewsLoading.stop();
-                mNewsLoadingImg.setImageResource(R.drawable.ic_news_detail_reload);
+                mNewsLoadingImg.setVisibility(View.VISIBLE);
+                mNewsDetailProgress.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<NewsDetailAdd>() {
         }.getType()));
@@ -281,7 +289,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 }
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
-            case R.id.mNewsDetailLoaddingWrapper:
+            case R.id.mNewsLoadingImg:
                 loadData();
                 break;
         }

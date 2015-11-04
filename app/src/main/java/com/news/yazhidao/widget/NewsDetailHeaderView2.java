@@ -1,11 +1,13 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -23,6 +26,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
 
     private final SimpleDraweeView mDetailSpeechCommentUserIcon;
     private final SpeechView mDetailSpeechComment;
+    private final LinearLayout mDetailTitleWrapper;
     private int mScreenWidth,mScreenHeight;
     //语音评论父容器,评论父容器
     private View mDetailSpeechCommentWrapper,mDetailCommentWrapper;
@@ -30,7 +34,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
     private SimpleDraweeView mDetailHeaderImg;
     //新闻标题,新闻时间,新闻描述
     private TextView mDetailTitle,mDetailDate,mDetailDesc;
-
+    private Context mContext;
     public NewsDetailHeaderView2(Context context) {
         this(context, null);
     }
@@ -41,6 +45,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
 
     public NewsDetailHeaderView2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth(context);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(context);
         View root = View.inflate(context, R.layout.aty_news_detail_header_view2, this);
@@ -54,6 +59,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         mDetailSpeechCommentUserIcon = (SimpleDraweeView)root.findViewById(R.id.mDetailSpeechCommentUserIcon);
         mDetailSpeechComment = (SpeechView)root.findViewById(R.id.mDetailSpeechComment);
         mDetailDesc = (TextView)root.findViewById(R.id.mDetailDesc);
+        mDetailTitleWrapper = (LinearLayout)root.findViewById(R.id.mDetailTitleWrapper);
     }
 
     /**
@@ -64,7 +70,12 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         //FIXME 等接口改后,此处就不用这么费劲来写了,可以简化
         if(pNewsDetail instanceof NewsDetail){
             NewsDetail detail = (NewsDetail)pNewsDetail;
-            mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
+            if (!TextUtil.isEmptyString(detail.imgUrl)){
+                mDetailHeaderImg.setVisibility(VISIBLE);
+                mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
+            }else {
+                mDetailHeaderImg.setVisibility(GONE);
+            }
             mDetailTitle.setText(detail.title);
             mDetailDate.setText(detail.updateTime);
             /**语音评论和新闻描述有一个不为null*/
@@ -89,7 +100,14 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         }else if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
             if (!TextUtil.isEmptyString(detail.imgUrl)){
+                mDetailHeaderImg.setVisibility(VISIBLE);
                 mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
+            }else {
+                mDetailHeaderImg.setVisibility(INVISIBLE);
+                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 148)));
+                mDetailTitleWrapper.setBackgroundColor(Color.parseColor("#E6E6E6"));
+                mDetailTitle.setTextColor(Color.BLACK);
+                mDetailDate.setTextColor(Color.BLACK);
             }
             mDetailTitle.setText(detail.title);
             mDetailDate.setText(detail.updateTime);

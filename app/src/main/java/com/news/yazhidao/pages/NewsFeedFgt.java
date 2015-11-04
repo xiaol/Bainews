@@ -32,6 +32,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -73,6 +74,8 @@ public class NewsFeedFgt extends Fragment {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    /**第一次刷新的时间*/
+    private long mFirstRefresh;
     /**
      * 当前的fragment 是否已经加载过数据
      */
@@ -89,17 +92,25 @@ public class NewsFeedFgt extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (rootView != null && isVisibleToUser && !isLoadedData) {
-            isLoadedData = true;
-            Logger.e("jigang", "setUserVisibleHint  " + isLoadedData);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mlvNewsFeed.setRefreshing();
-                }
-            },500);
+        if(!TextUtil.isEmptyString(mstrChannelId)){
+            long pre = SharedPreManager.getLong("channel_refresh", mstrChannelId);
+            Logger.e("jigang", "delta =" + (System.currentTimeMillis() - pre));
+            boolean forceRefresh = (System.currentTimeMillis() - pre) >= 1000 * 15;
+            if (rootView != null && isVisibleToUser && !isLoadedData || forceRefresh) {
+                isLoadedData = true;
+                SharedPreManager.save("channel_refresh", mstrChannelId, System.currentTimeMillis());
+                Logger.e("jigang", "setUserVisibleHint  " + isLoadedData + ",force refresh =" + forceRefresh);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mlvNewsFeed.setRefreshing();
+                    }
+                }, 800);
+            }
+
         }
     }
+
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -136,6 +147,7 @@ public class NewsFeedFgt extends Fragment {
         });
         mAdapter = new NewsFeedAdapter();
         mlvNewsFeed.setAdapter(mAdapter);
+        mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
         String platform = AnalyticsConfig.getChannel(getActivity());
         if ("adcoco".equals(platform) && !TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -156,7 +168,12 @@ public class NewsFeedFgt extends Fragment {
      */
     public void setSearchKeyWord(String pKeyWord) {
         this.mstrKeyWord = pKeyWord;
-        loadData(PULL_DOWN_REFRESH);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.setRefreshing();
+            }
+        }, 1000);
     }
 
     /**
