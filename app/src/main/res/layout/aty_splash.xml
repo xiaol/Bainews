@@ -1,15 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/splash_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:background="@drawable/bg_splash">
 
     <ImageView
-        android:id="@+id/bg_imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:background="@drawable/ic_splash">
+        android:id="@+id/iv_bg_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="138dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/splash_bg_icon"
+        android:scaleType="centerCrop" />
 
-    </ImageView>
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/iv_bg_icon"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/splash_bg_title"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_splash_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:background="@drawable/splash_bg_content"
+        android:scaleType="centerCrop" />
+
+</RelativeLayout>
