@@ -207,7 +207,8 @@ public class NewsFeedFgt extends Fragment {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            mArrNewsFeed.addAll(result);
+                            if(mArrNewsFeed!=null)
+                                mArrNewsFeed.addAll(result);
                             break;
                     }
                     mAdapter.notifyDataSetChanged();
