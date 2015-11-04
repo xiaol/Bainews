@@ -32,6 +32,7 @@ import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -97,7 +98,7 @@ public class NewsFeedFgt extends Fragment {
                 public void run() {
                     mlvNewsFeed.setRefreshing();
                 }
-            },500);
+            }, 500);
         }
     }
 
