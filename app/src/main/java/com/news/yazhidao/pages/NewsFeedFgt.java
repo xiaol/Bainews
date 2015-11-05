@@ -352,6 +352,7 @@ public class NewsFeedFgt extends Fragment {
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getNewsId());
                 intent.putExtra(NewsFeedFgt.KEY_COLLECTION, feed.getCollection());
+                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
                 startActivity(intent);
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
             }
@@ -479,7 +480,7 @@ public class NewsFeedFgt extends Fragment {
                         setVerticalLineHeight(holder.rlRelate1, holder.ivVerticalLine1);
                         holder.ivVerticalLine2.setVisibility(View.GONE);
                         holder.tvBottomLine2.setVisibility(View.GONE);
-                    } else if (size == 3) {
+                    } else {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
                         NewsFeed.Source source3 = relatePointsList.get(2);
@@ -578,15 +579,16 @@ public class NewsFeedFgt extends Fragment {
                 setLoadImage(holder3.ivCard1, strArrImgUrl.get(0));
                 setLoadImage(holder3.ivCard2, strArrImgUrl.get(1));
 
-                if (strArrImgUrl.size() == 3) {
+                if (strArrImgUrl.size() == 2) {
+                    holder3.ivCard3.setVisibility(View.GONE);
+                    setCardMargin(holder3.ivCard1, 8, 4, 2);
+                    setCardMargin(holder3.ivCard2, 4, 8, 2);
+                } else {
+                    holder3.ivCard3.setVisibility(View.VISIBLE);
                     setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
                     setCardMargin(holder3.ivCard1, 8, 4, 3);
                     setCardMargin(holder3.ivCard2, 4, 4, 3);
                     setCardMargin(holder3.ivCard3, 4, 8, 3);
-                } else {
-                    holder3.ivCard3.setVisibility(View.GONE);
-                    setCardMargin(holder3.ivCard1, 8, 4, 2);
-                    setCardMargin(holder3.ivCard2, 4, 8, 2);
                 }
 
                 setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
@@ -618,7 +620,7 @@ public class NewsFeedFgt extends Fragment {
                         setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
                         holder3.ivVerticalLine2.setVisibility(View.GONE);
                         holder3.tvBottomLine2.setVisibility(View.GONE);
-                    } else if (size == 3) {
+                    } else{
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
                         NewsFeed.Source source3 = relatePointsList.get(2);

@@ -3,7 +3,6 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 /**
@@ -102,17 +100,17 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
         }else if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
             mDetailTitle.setText(detail.title);
-            mDetailDate.setText(detail.updateTime);
+            mDetailDate.setText(detail.updateTime.replace("/r","").replace("/n",""));
             if (!TextUtil.isEmptyString(detail.imgUrl)){
-                mDetailHeaderImg.setVisibility(VISIBLE);
                 mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
             }else {
-                mDetailHeaderImg.setVisibility(INVISIBLE);
-                Rect rect = new Rect();
-                mDetailTitle.getPaint().getTextBounds(detail.title, 0, detail.title.length(), rect);
-                Logger.e("jigang", mDetailTitle.getLineCount() +" >,title h=" +mDetailTitle.getHeight() + ",w=" +mDetailDate.getWidth());
-                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 80) + mDetailTitle.getLineCount() * mDetailTitle.getHeight() + mDetailDate.getHeight()));
+                mDetailHeaderImg.setVisibility(GONE);
                 mDetailTitleWrapper.setBackgroundColor(Color.parseColor("#E6E6E6"));
+                int paddingBottom = DensityUtil.dip2px(mContext,15);
+                if(TextUtil.isEmptyString(detail.abs)){
+                    paddingBottom = DensityUtil.dip2px(mContext,5);
+                }
+                mDetailDate.setPadding(0, 0,0,paddingBottom);
                 mDetailTitle.setTextColor(Color.BLACK);
                 mDetailDate.setTextColor(Color.BLACK);
             }
