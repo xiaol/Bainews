@@ -10,7 +10,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
 import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.FeedBackActivity;
-import com.news.yazhidao.pages.HomeAty;
+import com.news.yazhidao.pages.MainAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.CrashHandler;
@@ -100,7 +100,7 @@ public class YaZhiDaoApplication extends Application {
                 Logger.i("jigang", "receive custom extras=" + extras);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
                 if (extras == null||"{}".equals(extras)) {
-                    Intent HomeIntent = new Intent(context, HomeAty.class);
+                    Intent HomeIntent = new Intent(context, MainAty.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(HomeIntent);
                 } else {

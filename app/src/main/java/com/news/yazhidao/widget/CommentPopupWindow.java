@@ -20,8 +20,8 @@ import android.widget.RelativeLayout;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
-import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.NewsDetailAdd.Point;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.listener.UploadCommentListener;
@@ -42,6 +42,8 @@ import java.util.ArrayList;
 
 import cn.sharesdk.framework.PlatformDb;
 
+;
+
 
 /**
  * Created by h.yuan on 2015/3/23.
@@ -60,13 +62,13 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private double mRecordVolume;// 麦克风获取的音量值
     private TextViewExtend mtvTitle, mtvVoiceTips, mtvVoiceTimes;
     private ImageView mivRecord;
-    private ArrayList<NewsDetail.Point> marrPoints;
+    private ArrayList<NewsDetailAdd.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private IUpdatePraiseCount mIUpdatePraiseCount;
     private int mParagraphIndex;
     private String sourceUrl;
-    private ArrayList<NewsDetail.Point> marrPoint;
-    private NewsDetail.Point point;
+    private ArrayList<NewsDetailAdd.Point> marrPoint;
+    private NewsDetailAdd.Point point;
     private RelativeLayout rl_popup;
     private boolean praiseFlag = false;
     private int praiseCount;
@@ -82,7 +84,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
      * @param paraindex
      * @param updatePraiseCount
      */
-    public CommentPopupWindow(Context context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, IUpdatePraiseCount updatePraiseCount, SharePopupWindow.ShareDismiss shareDismiss) {
+    public CommentPopupWindow(Context context, ArrayList<NewsDetailAdd.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount, int paraindex, IUpdatePraiseCount updatePraiseCount, SharePopupWindow.ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
         mShareDismiss = shareDismiss;
@@ -167,9 +169,9 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
         if (marrPoints != null && marrPoints.size() > 0) {
-            NewsDetail.Point point = marrPoints.get(0);
+            NewsDetailAdd.Point point = marrPoints.get(0);
         }
-        final NewsDetail.Point newPoint = new NewsDetail.Point();
+        final NewsDetailAdd.Point newPoint = new NewsDetailAdd.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_PARAGRAPH;
@@ -196,7 +198,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         UploadCommentRequest.uploadComment(m_pContext, sourceUrl, argContent, mParagraphIndex + "", type, speechDuration, new UploadCommentListener() {
 
             @Override
-            public void success(NewsDetail.Point result) {
+            public void success(NewsDetailAdd.Point result) {
                 if (result != null) {
                     result.up = "0";
                     result.down = "0";
@@ -280,111 +282,6 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
         return false;
     }
 
-
-    private void setViewBgColor(RelativeLayout tv_comment_content) {
-
-        switch (GlobalParams.currentCatePos) {
-
-            case 0:
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff1652"));
-
-                break;
-
-            case 1:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#ee6270"));
-
-                break;
-
-            case 2:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#6279a3"));
-
-                break;
-
-            case 3:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#f788a2"));
-
-                break;
-
-            case 4:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#37ccd9"));
-
-                break;
-
-            case 5:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#b56f40"));
-
-                break;
-
-            case 6:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#35e4c1"));
-
-                break;
-
-            case 8:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#f633a2"));
-
-                break;
-
-            case 9:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#35a6fb"));
-
-                break;
-
-            case 10:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#e2ab4b"));
-
-                break;
-
-            case 11:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#2bc972"));
-
-                break;
-
-            case 12:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#9153c6"));
-
-                break;
-
-            case 13:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#ffda59"));
-
-                break;
-
-            case 14:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#7174ff"));
-
-                break;
-
-            case 15:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff44b2"));
-
-                break;
-
-            default:
-
-                tv_comment_content.setBackgroundColor(new Color().parseColor("#ff44b2"));
-
-                break;
-
-        }
-
-
-    }
-
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
@@ -394,7 +291,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             mContext = context;
         }
 
-        public void setData(ArrayList<NewsDetail.Point> arrPoint) {
+        public void setData(ArrayList<NewsDetailAdd.Point> arrPoint) {
             marrPoint = arrPoint;
             notifyDataSetChanged();
         }
@@ -430,7 +327,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            final NewsDetail.Point point = marrPoint.get(position);
+            final NewsDetailAdd.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
                 holder.ivHeadIcon.setImageURI(Uri.parse(point.userIcon));
             holder.tvName.setText(point.userName);
@@ -514,7 +411,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
                             String uuid = DeviceInfoUtil.getUUID();
 
-                            final NewsDetail.Point point_item = marrPoint.get(position);
+                            final NewsDetailAdd.Point point_item = marrPoint.get(position);
                             if (user != null) {
                                 PraiseRequest.Praise(mContext, user.getUserId(), user.getPlatformType(), uuid, sourceUrl, point_item.commentId, new PraiseListener() {
                                     @Override
@@ -548,7 +445,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(NewsDetail.Point point);
+        void updateCommentCount(NewsDetailAdd.Point point);
     }
 
 

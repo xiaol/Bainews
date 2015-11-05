@@ -8,13 +8,13 @@ import java.util.ArrayList;
  */
 public class NewsDetailSelfOpinion implements Serializable {
 
-    private ArrayList<NewsDetail.Article> self_opinion;
+    private ArrayList<NewsDetailAdd.Article> self_opinion;
 
-    public ArrayList<NewsDetail.Article> getSelf_opinion() {
+    public ArrayList<NewsDetailAdd.Article> getSelf_opinion() {
         return self_opinion;
     }
 
-    public void setSelf_opinion(ArrayList<NewsDetail.Article> self_opinion) {
+    public void setSelf_opinion(ArrayList<NewsDetailAdd.Article> self_opinion) {
         this.self_opinion = self_opinion;
     }
 }

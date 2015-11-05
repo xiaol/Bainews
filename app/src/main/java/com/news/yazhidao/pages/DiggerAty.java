@@ -124,7 +124,7 @@ public class DiggerAty extends BaseActivity {
     public void finish() {
         super.finish();
         if (isOpenHomeAty){
-            Intent intent = new Intent(this,HomeAty.class);
+            Intent intent = new Intent(this,MainAty.class);
             startActivity(intent);
         }
     }

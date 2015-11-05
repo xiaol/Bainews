@@ -9,10 +9,10 @@ import java.util.ArrayList;
  */
 public class NewsDetailContent implements Serializable {
     private String content;
-    private ArrayList<NewsDetail.Point> comments;
+    private ArrayList<NewsDetailAdd.Point> comments;
     public NewsDetailContent(){}
 
-    public NewsDetailContent(String content, ArrayList<NewsDetail.Point> comments) {
+    public NewsDetailContent(String content, ArrayList<NewsDetailAdd.Point> comments) {
         this.content = content;
         this.comments = comments;
     }
@@ -26,11 +26,11 @@ public class NewsDetailContent implements Serializable {
         this.content = content;
     }
 
-    public ArrayList<NewsDetail.Point> getComments() {
+    public ArrayList<NewsDetailAdd.Point> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<NewsDetail.Point> comments) {
+    public void setComments(ArrayList<NewsDetailAdd.Point> comments) {
         this.comments = comments;
     }
 

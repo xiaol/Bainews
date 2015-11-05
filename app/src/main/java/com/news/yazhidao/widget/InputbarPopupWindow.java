@@ -17,7 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UploadCommentListener;
@@ -56,14 +56,14 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     private ImageView mivRecord;
     private String mSourceUrl;
     private int comment_flag;
-    private ArrayList<NewsDetail.Point> marrPoints;
+    private ArrayList<NewsDetailAdd.Point> marrPoints;
     private IUpdateCommentCount mIUpdateCommentCount;
     private int miCount, mParagraphIndex = 0;
-    private NewsDetail.Point newPoint;
+    private NewsDetailAdd.Point newPoint;
     private RelativeLayout rl_inputbar_content;
     private boolean praiseFlag;
 
-    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount,int flag) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetailAdd.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount,int flag) {
         super(context);
         m_pContext = context;
         marrPoints = points;
@@ -86,7 +86,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
         loadData();
     }
 
-    public InputbarPopupWindow(Activity context, ArrayList<NewsDetail.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount,int flag,int paraindex) {
+    public InputbarPopupWindow(Activity context, ArrayList<NewsDetailAdd.Point> points, String sourceUrl, IUpdateCommentCount updateCommentCount,int flag,int paraindex) {
         super(context);
         m_pContext = context;
         marrPoints = points;
@@ -166,7 +166,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     @Override
     public void submitThisMessage(InputBarType argType, String argContent, int speechDuration) {
         mrlRecord.setVisibility(View.INVISIBLE);
-        newPoint = new NewsDetail.Point();
+        newPoint = new NewsDetailAdd.Point();
         String type;
         if (argType == InputBarType.eRecord) {
             type = UploadCommentRequest.SPEECH_DOC;
@@ -189,7 +189,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
         UploadCommentRequest.uploadComment(m_pContext, mSourceUrl, argContent, "0", type, speechDuration, new UploadCommentListener() {
 
             @Override
-            public void success(NewsDetail.Point result) {
+            public void success(NewsDetailAdd.Point result) {
 
             }
 
@@ -265,13 +265,13 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     class DateAdapter extends BaseAdapter {
 
         Context mContext;
-        ArrayList<NewsDetail.Point> marrPoint;
+        ArrayList<NewsDetailAdd.Point> marrPoint;
 
         DateAdapter(Context context) {
             mContext = context;
         }
 
-        public void setData(ArrayList<NewsDetail.Point> arrPoint) {
+        public void setData(ArrayList<NewsDetailAdd.Point> arrPoint) {
             if (arrPoint != null)
                 marrPoint = arrPoint;
         }
@@ -308,7 +308,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
             } else {
                 holder = (Holder) convertView.getTag();
             }
-            NewsDetail.Point point = marrPoint.get(position);
+            NewsDetailAdd.Point point = marrPoint.get(position);
             if (point.userIcon != null && !point.userIcon.equals(""))
                 ImageManager.getInstance(mContext).DisplayImage(point.userIcon, holder.ivHeadIcon, false,new DisplayImageListener() {
                     @Override
@@ -358,6 +358,6 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
     }
 
     public interface IUpdateCommentCount {
-        void updateCommentCount(int count, int paragraphIndex, NewsDetail.Point newPoint,int flag,boolean isPraiseFlag);
+        void updateCommentCount(int count, int paragraphIndex, NewsDetailAdd.Point newPoint,int flag,boolean isPraiseFlag);
     }
 }

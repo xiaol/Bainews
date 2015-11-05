@@ -3,7 +3,7 @@ package com.news.yazhidao.net.request;
 import android.content.Context;
 
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.net.JsonCallback;
@@ -70,9 +70,9 @@ public class UploadCommentRequest {
         pairs.add(new BasicNameValuePair("platformType", user.getPlatformType()));
 
         request.setParams(pairs);
-        request.setCallback(new JsonCallback<NewsDetail.Point>() {
+        request.setCallback(new JsonCallback<NewsDetailAdd.Point>() {
             @Override
-            public void success(NewsDetail.Point result) {
+            public void success(NewsDetailAdd.Point result) {
                 if (listener != null) {
                     listener.success(result);
                 }
@@ -84,7 +84,7 @@ public class UploadCommentRequest {
                     listener.failed();
                 }
             }
-        }.setReturnClass(NewsDetail.Point.class));
+        }.setReturnClass(NewsDetailAdd.Point.class));
         request.execute();
     }
 

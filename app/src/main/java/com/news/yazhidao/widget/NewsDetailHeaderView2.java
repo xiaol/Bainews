@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -68,8 +67,8 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
      */
     public void updateView(Object pNewsDetail){
         //FIXME 等接口改后,此处就不用这么费劲来写了,可以简化
-        if(pNewsDetail instanceof NewsDetail){
-            NewsDetail detail = (NewsDetail)pNewsDetail;
+        if(pNewsDetail instanceof NewsDetailAdd){
+            NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
             if (!TextUtil.isEmptyString(detail.imgUrl)){
                 mDetailHeaderImg.setVisibility(VISIBLE);
                 mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));

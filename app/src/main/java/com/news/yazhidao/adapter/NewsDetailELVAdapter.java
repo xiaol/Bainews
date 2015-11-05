@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.internal.LinkedTreeMap;
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
@@ -50,24 +49,14 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private final static String KEY_POSITION = "key_position";
     /**段落评论所对应的数据*/
     private final static String KEY_COMMENTS = "key_comments";
-    private NewsDetail mNewsDetail;
     private NewsDetailAdd mNewsDetailAdd;
     private ExpandableListView mExpListView;
 
     @Override
-    public void updateCommentCount(NewsDetail.Point point) {
-        if (mNewsDetail != null) {
-            if (mNewsDetail.point == null) {
-                ArrayList<NewsDetail.Point> list = new ArrayList<>();
-                list.add(point);
-                mNewsDetail.point = list;
-            } else {
-                mNewsDetail.point.add(point);
-            }
-            mNewsContentDataList = parseNewsDetail(mNewsDetail);
-        } else if (mNewsDetailAdd != null) {
+    public void updateCommentCount(NewsDetailAdd.Point point) {
+       if (mNewsDetailAdd != null) {
             if (mNewsDetailAdd.point == null) {
-                ArrayList<NewsDetail.Point> list = new ArrayList<>();
+                ArrayList<NewsDetailAdd.Point> list = new ArrayList<>();
                 list.add(point);
                 mNewsDetailAdd.point = list;
             } else {
@@ -83,9 +72,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
 
     @Override
     public void updataPraise() {
-        if (mNewsDetail != null) {
-            mNewsContentDataList = parseNewsDetail(mNewsDetail);
-        } else if (mNewsDetailAdd != null) {
+        if (mNewsDetailAdd != null) {
             mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
         }
         notifyDataSetChanged();
@@ -130,9 +117,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         this.mNewsUrl = mNewsDetailUrl;
     }
 
-    public void setNewsDetail(NewsDetail pNewsDetail) {
-        this.mNewsDetail = pNewsDetail;
-    }
 
     public void setNewsDetail(NewsDetailAdd pNewsDetailAdd) {
         this.mNewsDetailAdd = pNewsDetailAdd;
@@ -309,8 +293,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mDiffOpinionHolder = (DifferentOpinionViewHolder) convertView.getTag();
             }
-            ArrayList<NewsDetail.Article> list = mNewsContentDataList.get(groupPosition);
-            NewsDetail.Article opinion = list.get(childPosition);
+            ArrayList<NewsDetailAdd.Article> list = mNewsContentDataList.get(groupPosition);
+            NewsDetailAdd.Article opinion = list.get(childPosition);
             mDiffOpinionHolder.mDetailDiffOpinionContent.setText(opinion.self_opinion);
             mDiffOpinionHolder.mDetailDiffOpinionTitle.setText(opinion.title);
             //设置点击事件
@@ -334,8 +318,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mSelCommentHolder = (SelectionCommentViewHolder) convertView.getTag();
             }
-            ArrayList<NewsDetail.Point> list = mNewsContentDataList.get(groupPosition);
-            NewsDetail.Point point = list.get(childPosition);
+            ArrayList<NewsDetailAdd.Point> list = mNewsContentDataList.get(groupPosition);
+            NewsDetailAdd.Point point = list.get(childPosition);
             /**设置评论内容每一个item的背景,针对圆角*/
             if (list.size() == 1) {
                 mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
@@ -413,8 +397,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mRelateHolder = (RelateOpinionViewHolder) convertView.getTag();
             }
-            final ArrayList<NewsDetail.Relate> list = mNewsContentDataList.get(groupPosition);
-            NewsDetail.Relate relate = list.get(childPosition);
+            final ArrayList<NewsDetailAdd.Relate> list = mNewsContentDataList.get(groupPosition);
+            NewsDetailAdd.Relate relate = list.get(childPosition);
             if (relate.updateTime == null) {
                 relate.updateTime = DateUtil.getDate();
             }
@@ -517,8 +501,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mWeiboViewHolder = (WeiboViewHolder) convertView.getTag();
             }
-            ArrayList<NewsDetail.Weibo> list = mNewsContentDataList.get(groupPosition);
-            NewsDetail.Weibo weibo = list.get(childPosition);
+            ArrayList<NewsDetailAdd.Weibo> list = mNewsContentDataList.get(groupPosition);
+            NewsDetailAdd.Weibo weibo = list.get(childPosition);
             if (childPosition == list.size() - 1){
                 mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.INVISIBLE);
             }else {
@@ -560,8 +544,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mZhiHuHolder = (ZhiHuViewHolder) convertView.getTag();
             }
-            ArrayList<NewsDetail.ZhiHu> list = mNewsContentDataList.get(groupPosition);
-            NewsDetail.ZhiHu zhihu = list.get(childPosition);
+            ArrayList<NewsDetailAdd.ZhiHu> list = mNewsContentDataList.get(groupPosition);
+            NewsDetailAdd.ZhiHu zhihu = list.get(childPosition);
             mZhiHuHolder.mDetailZhiHuTitle.setText(zhihu.title);
             //影藏最后一个item的分割线
             if (childPosition == list.size() - 1){
@@ -598,17 +582,17 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             return ViewHolderType.CONTENT;
         } else if (obj instanceof NewsDetailImageWall) {
             return ViewHolderType.IMAGEWALL;
-        } else if (obj instanceof NewsDetail.Article) {
+        } else if (obj instanceof NewsDetailAdd.Article) {
             return ViewHolderType.DIFFERENT_OPINION;
-        } else if (obj instanceof NewsDetail.Point) {
+        } else if (obj instanceof NewsDetailAdd.Point) {
             return ViewHolderType.SELECTION_COMMENT;
         } else if (obj instanceof NewsDetailEntry) {
             return ViewHolderType.NEWS_ENTRY;
-        } else if (obj instanceof NewsDetail.Relate) {
+        } else if (obj instanceof NewsDetailAdd.Relate) {
             return ViewHolderType.RELATE_OPINION;
-        } else if (obj instanceof NewsDetail.Weibo) {
+        } else if (obj instanceof NewsDetailAdd.Weibo) {
             return ViewHolderType.WEIBO;
-        } else if (obj instanceof NewsDetail.ZhiHu) {
+        } else if (obj instanceof NewsDetailAdd.ZhiHu) {
             return ViewHolderType.ZHIHU;
         }
         return ViewHolderType.CONTENT;
@@ -621,7 +605,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             case R.id.mDetailCommentCount:
                 HashMap<String,Object> data = (HashMap<String, Object>) v.getTag(R.id.mDetailCommentCount);
                 Integer position = (Integer) data.get(KEY_POSITION);
-                ArrayList<NewsDetail.Point> comments = (ArrayList<NewsDetail.Point>) data.get(KEY_COMMENTS);
+                ArrayList<NewsDetailAdd.Point> comments = (ArrayList<NewsDetailAdd.Point>) data.get(KEY_COMMENTS);
                 if (TextUtil.isListEmpty(comments)){
                     openComment(null, mNewsUrl, position, this, this);
                 }else {
@@ -638,8 +622,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             case R.id.mDetailCommentCheckAll:
                 if (mNewsDetailAdd != null) {
                     openComment(mNewsDetailAdd.point, mNewsUrl, -1, this, this);
-                } else if (mNewsDetail != null) {
-                    openComment(mNewsDetail.point, mNewsUrl, -1, this, this);
                 }
                 break;
             case R.id.mDetailZhiHuWrapper:
@@ -679,123 +661,13 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
      * @param pNewsUrl
      * @param pParaindex 段落索引  -1 为全文
      */
-    public void openComment(ArrayList<NewsDetail.Point> pPoints, String pNewsUrl, int pParaindex, CommentPopupWindow.IUpdateCommentCount updateCommentCount, CommentPopupWindow.IUpdatePraiseCount updatePraiseCount) {
+    public void openComment(ArrayList<NewsDetailAdd.Point> pPoints, String pNewsUrl, int pParaindex, CommentPopupWindow.IUpdateCommentCount updateCommentCount, CommentPopupWindow.IUpdatePraiseCount updatePraiseCount) {
         CommentPopupWindow window = new CommentPopupWindow(mContext, pPoints, pNewsUrl, updateCommentCount, pParaindex, updatePraiseCount, (NewsDetailAty2) mContext);
         window.setFocusable(true);
         //防止虚拟软键盘被弹出菜单遮住
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         window.showAtLocation(((NewsDetailAty2) mContext).getWindow().getDecorView(), Gravity.BOTTOM
                 | Gravity.CENTER, 0, 0);
-    }
-
-    private ArrayList<ArrayList> parseNewsDetail(NewsDetail pNewsDetail) {
-        mNewsContentDataList.clear();
-        /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
-        if (pNewsDetail != null) {
-            /**计算新闻内容所在组*/
-            if (!TextUtil.isEmptyString(pNewsDetail.content)) {
-                ArrayList list = new ArrayList<>();
-                String[] contents = pNewsDetail.content.split("\n");
-                ArrayList<NewsDetail.Point> points = pNewsDetail.point;
-                for (int i = 0; i < contents.length; i++) {
-                    NewsDetailContent content = new NewsDetailContent();
-                    content.setContent(contents[i]);
-                    content.setComments(new ArrayList<NewsDetail.Point>());
-                    list.add(content);
-                }
-                if (!TextUtil.isListEmpty(points)) {
-                    for (int j = 0; j < points.size(); j++) {
-                        NewsDetail.Point point = points.get(j);
-                        try {
-                            int paragraphIndex = Integer.valueOf(point.paragraphIndex);
-                            if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                                if (paragraphIndex < list.size()) {
-                                    NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
-                                    content.getComments().add(point);
-                                }
-                            }
-                        } catch (NumberFormatException e) {
-
-                        }
-                    }
-                }
-                if (list.size() > 0) {
-                    mNewsContentDataList.add(list);
-                }
-            }
-            /**计算图片墙所在组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)) {
-                NewsDetailImageWall imageWall = new NewsDetailImageWall();
-                imageWall.setImgWall(pNewsDetail.imgWall);
-                ArrayList<NewsDetailImageWall> list = new ArrayList();
-                list.add(imageWall);
-                if (list.size() > 0) {
-                    mNewsContentDataList.add(list);
-                }
-            }
-            /**计算差异化观点所在组数据*/
-            if (pNewsDetail.relate_opinion != null) {
-                ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
-                if (!TextUtil.isListEmpty(self_opinion)) {
-                    mNewsContentDataList.add(self_opinion);
-                }
-            }
-            /**计算精选评论观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.point)) {
-                ArrayList<NewsDetail.Point> points = new ArrayList<>();
-                for (int j = 0; j < pNewsDetail.point.size(); j++) {
-                    NewsDetail.Point point = pNewsDetail.point.get(j);
-                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                        points.add(point);
-                    }
-                }
-                Collections.sort(points);
-                /**只要3条评论*/
-                if (points.size() > 3) {
-                    points = new ArrayList<>(points.subList(0, 3));
-                }
-                points.add(new NewsDetail.Point());
-                mNewsContentDataList.add(points);
-            }
-            /**计算新闻词条组数据*/
-            ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
-            if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
-                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike) {
-                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
-                }
-            }
-            if (!TextUtil.isListEmpty(pNewsDetail.douban)) {
-                for (ArrayList item : pNewsDetail.douban) {
-                    entryList.add(new NewsDetailEntry((String) item.get(0), NewsDetailEntry.EntyType.DOUBAN, (String) item.get(1)));
-                }
-            }
-            if (entryList.size() != 0) {
-                mNewsContentDataList.add(entryList);
-            }
-
-            /**相关观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                mNewsContentDataList.add(pNewsDetail.relate);
-            }
-            /**微博组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
-                if (pNewsDetail.weibo.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 5)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.weibo);
-                }
-            }
-            /**知乎组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
-                if (pNewsDetail.zhihu.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 5)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.zhihu);
-                }
-            }
-        }
-        Logger.e("jigang", "group size = " + mNewsContentDataList.size());
-        return mNewsContentDataList;
     }
 
     private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
@@ -805,20 +677,20 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**计算新闻内容所在组*/
             if (!TextUtil.isListEmpty(pNewsDetail.content)) {
                 ArrayList list = new ArrayList<>();
-                ArrayList<NewsDetail.Point> points = pNewsDetail.point;
+                ArrayList<NewsDetailAdd.Point> points = pNewsDetail.point;
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
                     if (hashMap.get("txt") != null) {
                         NewsDetailContent content = new NewsDetailContent();
                         content.setContent(hashMap.get("txt"));//img img_info txt
-                        content.setComments(new ArrayList<NewsDetail.Point>());
+                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
                         list.add(content);
                     }
                 }
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
-                        NewsDetail.Point point = points.get(j);
+                        NewsDetailAdd.Point point = points.get(j);
                         int paragraphIndex = Integer.valueOf(point.paragraphIndex);
                         if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
                             if (paragraphIndex < list.size()) {
@@ -853,16 +725,16 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
             /**计算差异化观点所在组数据*/
             if (pNewsDetail.relate_opinion != null) {
-                ArrayList<NewsDetail.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
+                ArrayList<NewsDetailAdd.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
                 if (!TextUtil.isListEmpty(self_opinion)) {
                     mNewsContentDataList.add(self_opinion);
                 }
             }
             /**计算精选评论观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.point)) {
-                ArrayList<NewsDetail.Point> points = new ArrayList<>();
+                ArrayList<NewsDetailAdd.Point> points = new ArrayList<>();
                 for (int j = 0; j < pNewsDetail.point.size(); j++) {
-                    NewsDetail.Point point = pNewsDetail.point.get(j);
+                    NewsDetailAdd.Point point = pNewsDetail.point.get(j);
                     if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
                         points.add(point);
                     }
@@ -872,13 +744,13 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 if (points.size() > 3) {
                     points = new ArrayList<>(points.subList(0, 3));
                 }
-                points.add(new NewsDetail.Point());
+                points.add(new NewsDetailAdd.Point());
                 mNewsContentDataList.add(points);
             }
             /**计算新闻词条组数据*/
             ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
             if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
-                for (NewsDetail.BaiDuBaiKe item : pNewsDetail.baike) {
+                for (NewsDetailAdd.BaiDuBaiKe item : pNewsDetail.baike) {
                     entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
                 }
             }

@@ -10,8 +10,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.news.yazhidao.common.GlobalParams;
-
 /**
  * Created by Berkeley on 3/30/15.
  */
@@ -143,59 +141,59 @@ public class ImageUtils {
      * @return
      */
     public static Bitmap zoomBitmap2(Bitmap bm, int screenWidth, int screenHeight, int type) {
-        boolean flag = false;
-        int newHeight = 0;
+//        boolean flag = false;
+//        int newHeight = 0;
+//
+//        Bitmap bitmap_big = null;
+//
+//        if(bm != null) {
+//            bitmap_big = zoomBitmap(bm, screenWidth);
+//        }
+//
+//        if(bitmap_big != null && bitmap_big.getHeight() < screenHeight * 0.4){
+//            bitmap_big = zoomBitmapWithHeight(bitmap_big,(int)(screenHeight * 0.4));
+//        }
+//
+//        if(bitmap_big != null) {
+//            newHeight = bitmap_big.getHeight();
+//        }
+//        int standardHeight = DensityUtil.dip2px(GlobalParams.context,450);
+//
+//        if(newHeight > standardHeight){
+//            flag = true;
+//        }
+//
+//        if (type == 1) {
+//            //textviewextend
+//            if (newHeight > screenHeight * 0.4) {
+//                newHeight = (int) (screenHeight * 0.4);
+//            }
+//        } else if (type == 2) {
+//            //textviewvertical
+//            if (newHeight > screenHeight * 0.4) {
+//                newHeight = (int) (screenHeight * 0.4);
+//            }else{
+//                newHeight = (int) (screenHeight * 0.4);
+//            }
+//
+//        }
+//
+//        Bitmap bitmap = null;
+//
+//        int shift = DensityUtil.dip2px(GlobalParams.context,100);
+//
+//        if(flag){
+//            if(bitmap_big.getHeight() > shift + newHeight) {
+//                bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
+//            }else{
+//                bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
+//            }
+//        }else {
+//            bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
+//        }
 
-        Bitmap bitmap_big = null;
 
-        if(bm != null) {
-            bitmap_big = zoomBitmap(bm, screenWidth);
-        }
-
-        if(bitmap_big != null && bitmap_big.getHeight() < screenHeight * 0.4){
-            bitmap_big = zoomBitmapWithHeight(bitmap_big,(int)(screenHeight * 0.4));
-        }
-
-        if(bitmap_big != null) {
-            newHeight = bitmap_big.getHeight();
-        }
-        int standardHeight = DensityUtil.dip2px(GlobalParams.context,450);
-
-        if(newHeight > standardHeight){
-            flag = true;
-        }
-
-        if (type == 1) {
-            //textviewextend
-            if (newHeight > screenHeight * 0.4) {
-                newHeight = (int) (screenHeight * 0.4);
-            }
-        } else if (type == 2) {
-            //textviewvertical
-            if (newHeight > screenHeight * 0.4) {
-                newHeight = (int) (screenHeight * 0.4);
-            }else{
-                newHeight = (int) (screenHeight * 0.4);
-            }
-
-        }
-
-        Bitmap bitmap = null;
-
-        int shift = DensityUtil.dip2px(GlobalParams.context,100);
-
-        if(flag){
-            if(bitmap_big.getHeight() > shift + newHeight) {
-                bitmap = Bitmap.createBitmap(bitmap_big, 0, shift, screenWidth, newHeight);
-            }else{
-                bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
-            }
-        }else {
-            bitmap = Bitmap.createBitmap(bitmap_big, 0, 0, screenWidth, newHeight);
-        }
-
-
-        return bitmap;
+        return bm;
     }
 
     /**

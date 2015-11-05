@@ -21,9 +21,7 @@ import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.UserCallback;
 import com.news.yazhidao.net.request.UploadJpushidRequest;
 import com.news.yazhidao.net.request.UserLoginRequest;
-import com.news.yazhidao.pages.HomeAty;
 import com.news.yazhidao.pages.MainAty;
-import com.news.yazhidao.pages.ShareSdkAty;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -200,16 +198,6 @@ public class ShareSdkHelper {
         SharedPreManager.deleteUser(mContext);
     }
 
-    /**
-     * 打开分享平台列表
-     *
-     * @param mContext
-     */
-    public static void share(Context mContext) {
-        Intent intent = new Intent(mContext, ShareSdkAty.class);
-        mContext.startActivity(intent);
-
-    }
 
     //分享内容到具体平台
     public static void ShareToPlatform(final Context context, final String argPlatform, final NewsFeed newsFeed) {
@@ -287,7 +275,7 @@ public class ShareSdkHelper {
 
     private static void meizuLogin() {
         MzAuthenticator mAuthenticator = new MzAuthenticator(CLIENT_ID, REDIRECT_URI);
-        mAuthenticator.requestCodeAuth((HomeAty) mContext, "uc_basic_info", new CodeCallback() {
+        mAuthenticator.requestCodeAuth((MainAty) mContext, "uc_basic_info", new CodeCallback() {
             @Override
             public void onError(OAuthError oAuthError) {
                 mUserLoginPopupStateListener.close();

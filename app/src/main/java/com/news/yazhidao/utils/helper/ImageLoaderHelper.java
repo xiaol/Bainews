@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.GlobalParams;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -74,7 +73,7 @@ public class ImageLoaderHelper {
     private static ImageLoaderConfiguration generateConfig(Context context) {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration
                 .Builder(context)
-                .memoryCacheExtraOptions(GlobalParams.screenWidth,GlobalParams.screenHeight)  // max width, max height，即保存的每个缓存文件的最大长宽
+                .memoryCacheExtraOptions(720,1280)  // max width, max height，即保存的每个缓存文件的最大长宽
                 .threadPoolSize(3)//线程池内加载的数量
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
