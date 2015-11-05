@@ -13,7 +13,7 @@
         android:paddingBottom="10.0dip"
         fresco:actualImageScaleType="focusCrop"
         fresco:placeholderImage="@drawable/bg_load_default_middle"
-        fresco:placeholderImageScaleType="fitXY" />
+        fresco:placeholderImageScaleType="centerCrop" />
 
     <com.news.yazhidao.widget.TextViewVertical
         android:id="@+id/tv_title"

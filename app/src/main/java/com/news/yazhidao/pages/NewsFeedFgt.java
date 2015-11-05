@@ -74,6 +74,8 @@ public class NewsFeedFgt extends Fragment {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    /**热词页面加载更多*/
+    private int mSerachPage = 1;
     /**
      * 第一次刷新的时间
      */
@@ -166,7 +168,8 @@ public class NewsFeedFgt extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mlvNewsFeed.setRefreshing();
+//                mlvNewsFeed.setRefreshing();
+                loadData(PULL_DOWN_REFRESH);
             }
         }, 800);
     }
@@ -197,7 +200,7 @@ public class NewsFeedFgt extends Fragment {
         nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
         nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
         nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
-        nameValuePairList.add(new BasicNameValuePair("page", "1"));
+        nameValuePairList.add(new BasicNameValuePair("page", mSerachPage + ""));
         mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
@@ -218,8 +221,10 @@ public class NewsFeedFgt extends Fragment {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            if (mArrNewsFeed != null)
+                            if (mArrNewsFeed != null){
                                 mArrNewsFeed.addAll(result);
+                                mSerachPage ++;
+                            }
                             break;
                     }
                     mAdapter.notifyDataSetChanged();
@@ -367,7 +372,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void loadData(int flag) {
-        Logger.e("jigang", "loaddata -----");
+        Logger.e("jigang", "loaddata -----" + flag);
         if (NetUtil.checkNetWork(mContext)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
                 loadNewsFeedData("search", flag);
