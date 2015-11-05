@@ -74,7 +74,9 @@ public class NewsFeedFgt extends Fragment {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
-    /**第一次刷新的时间*/
+    /**
+     * 第一次刷新的时间
+     */
     private long mFirstRefresh;
     /**
      * 当前的fragment 是否已经加载过数据
@@ -216,7 +218,7 @@ public class NewsFeedFgt extends Fragment {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            if(mArrNewsFeed!=null)
+                            if (mArrNewsFeed != null)
                                 mArrNewsFeed.addAll(result);
                             break;
                     }
@@ -365,7 +367,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void loadData(int flag) {
-        Logger.e("jigang","loaddata -----");
+        Logger.e("jigang", "loaddata -----");
         if (NetUtil.checkNetWork(mContext)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
                 loadNewsFeedData("search", flag);
@@ -393,8 +395,9 @@ public class NewsFeedFgt extends Fragment {
         public long getItemId(int position) {
             return position;
         }
+
         public View getView(final int position, View convertView, ViewGroup parent) {
-        long start = System.currentTimeMillis();
+            long start = System.currentTimeMillis();
             final NewsFeed feed = mArrNewsFeed.get(position);
             ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
             String strType = feed.getType();
@@ -636,7 +639,7 @@ public class NewsFeedFgt extends Fragment {
                     holder3.llSourceContent.setVisibility(View.GONE);
                 }
             }
-            Logger.e("jigang","getView consume time "+(System.currentTimeMillis() - start));
+            Logger.e("jigang", "getView consume time " + (System.currentTimeMillis() - start));
             return convertView;
         }
     }
