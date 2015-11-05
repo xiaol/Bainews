@@ -111,11 +111,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
                 Rect rect = new Rect();
                 mDetailTitle.getPaint().getTextBounds(detail.title, 0, detail.title.length(), rect);
                 Logger.e("jigang", mDetailTitle.getLineCount() +" >,title h=" +mDetailTitle.getHeight() + ",w=" +mDetailDate.getWidth());
-                int titleH = mDetailTitle.getHeight();
-                if (rect.width() >= mDetailTitle.getWidth()){
-                    titleH = mDetailTitle.getHeight() * 2 ;
-                }
-                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 52) + mDetailTitle.getLineCount() * mDetailTitle.getHeight() + mDetailDate.getHeight()));
+                mDetailHeaderImg.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 80) + mDetailTitle.getLineCount() * mDetailTitle.getHeight() + mDetailDate.getHeight()));
                 mDetailTitleWrapper.setBackgroundColor(Color.parseColor("#E6E6E6"));
                 mDetailTitle.setTextColor(Color.BLACK);
                 mDetailDate.setTextColor(Color.BLACK);
