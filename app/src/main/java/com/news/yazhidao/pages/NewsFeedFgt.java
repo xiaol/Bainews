@@ -7,6 +7,7 @@ import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class NewsFeedFgt extends Fragment {
+public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -74,6 +75,8 @@ public class NewsFeedFgt extends Fragment {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    private Handler mHandler;
+    private Runnable mRunnable;
     /**
      * 第一次刷新的时间
      */
@@ -94,16 +97,15 @@ public class NewsFeedFgt extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if (rootView != null && !isVisibleToUser) {
+            mlvNewsFeed.onRefreshComplete();
+            mHandler.removeCallbacks(mRunnable);
+        }
         if (rootView != null && isVisibleToUser && !isLoadedData) {
             isLoadedData = true;
-            Logger.e("jigang", "setUserVisibleHint  " + isLoadedData);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mlvNewsFeed.setRefreshing();
-                }
-            }, 800);
+            mHandler.postDelayed(mRunnable, 800);
         }
+
     }
 
 
@@ -113,11 +115,19 @@ public class NewsFeedFgt extends Fragment {
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
+        mHandler = new Handler(this);
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
         else
             mstrUserId = "";
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.setRefreshing();
+            }
+        };
+
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -381,6 +391,11 @@ public class NewsFeedFgt extends Fragment {
         }
     }
 
+    @Override
+    public boolean handleMessage(Message msg) {
+        return false;
+    }
+
 
     private class NewsFeedAdapter extends BaseAdapter {
 
@@ -623,7 +638,7 @@ public class NewsFeedFgt extends Fragment {
                         setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
                         holder3.ivVerticalLine2.setVisibility(View.GONE);
                         holder3.tvBottomLine2.setVisibility(View.GONE);
-                    } else{
+                    } else {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
                         NewsFeed.Source source3 = relatePointsList.get(2);
