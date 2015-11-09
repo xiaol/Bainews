@@ -559,8 +559,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 if (strImgUrl != null && !"".equals(strImgUrl)) {
                     holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
                     holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
-                } else {
-                    holder2.tv_title.setBackgroundResource(R.drawable.bg_load_default_big);
                 }
                 setNewsContentClick(holder2.rl_item_content, feed);
             }

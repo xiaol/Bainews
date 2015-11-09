@@ -27,6 +27,7 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -218,12 +219,19 @@ public class MainAty extends BaseActivity implements View.OnClickListener {
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            Logger.e("jigang","getItemPosition  =" +object.hashCode());
+            return POSITION_NONE;
+        }
+
+        @Override
         public int getCount() {
             return mChannelItems.size();
         }
 
         @Override
         public Fragment getItem(int position) {
+            Logger.e("jigang","getItem  =" + position);
             WeakReference<Fragment> mWeakFgt = mFragmentArray.get(position);
             if (mWeakFgt != null && mWeakFgt.get() != null) {
                 return mWeakFgt.get();

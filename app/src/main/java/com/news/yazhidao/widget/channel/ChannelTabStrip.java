@@ -124,6 +124,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
 	// 计算滑动过程中矩形高亮区域的上下左右位置
 	private void calculateIndicatorRect(Rect rect) {
 		ViewGroup currentTab = (ViewGroup)tabsContainer.getChildAt(currentPosition);
+		if(currentTab == null){
+			return;
+		}
 		TextView category_text = (TextView) currentTab.findViewById(R.id.category_text);
 
 		float left = (float) (currentTab.getLeft() + category_text.getLeft());

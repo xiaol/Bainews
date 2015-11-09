@@ -81,6 +81,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     private float startY;
     private String mSource;
+    private String newsId = null;
+    private String newsType = null;
 
     @Override
     protected boolean translucentStatus() {
@@ -168,8 +170,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
-        String newsId = null;
-        String newsType = null;
         if (bundle != null) {
             isDigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
             albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
@@ -275,8 +275,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 // FIXME: 15/11/5 有可能以后分享的时候有问题,遇到问题后改之
                 String type = "1", remark = "1";
                 HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("url", mNewsDetailUrl);
+                hashMap.put("newsid", newsId);
                 hashMap.put("type", type);
+                hashMap.put("collection", newsType);
                 String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
                 mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url,remark);
                 mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);

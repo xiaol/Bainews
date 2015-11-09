@@ -3,7 +3,6 @@ package com.news.yazhidao.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.news.yazhidao.common.CommonConstant;
@@ -16,16 +15,13 @@ import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.CrashHandler;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.NotificationHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.entity.UMessage;
-import com.umeng.update.UmengUpdateAgent;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -96,37 +92,24 @@ public class YaZhiDaoApplication extends Application {
                 //umeng statistic notification received and opened it
                 MobclickAgent.onEvent(context,CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
 
-                String extras = msg.extra.get("extra_extra");
-                Logger.i("jigang", "receive custom extras=" + extras);
+                String newsid = msg.extra.get("newsid");
+                String collection = msg.extra.get("collection");
+
+                Logger.i("jigang", "receive custom newsid=" + newsid + ",collection=" + collection);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
-                if (extras == null||"{}".equals(extras)) {
+                if (!TextUtil.isEmptyString(newsid) && !TextUtil.isEmptyString(collection)) {
+                    Intent detailIntent = new Intent(context, NewsDetailAty2.class);
+                    detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsid);
+                    detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
+                    detailIntent.putExtra(NewsFeedFgt.KEY_COLLECTION, collection);
+                    detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(detailIntent);
+                } else {
                     Intent HomeIntent = new Intent(context, MainAty.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(HomeIntent);
-                } else {
-                    try {
-//                        JSONObject urlObject = new JSONObject(extras);
-//                        String news_url = urlObject.getString("news_url");
-                        if (!TextUtils.isEmpty(extras)) {
-                            Intent detailIntent = new Intent(context, NewsDetailAty2.class);
-                            detailIntent.putExtra(NewsFeedFgt.KEY_URL, extras);
-                            detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
-                            detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(detailIntent);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        JSONObject versionObject = new JSONObject(extras);
-                        String new_version = versionObject.getString("new_version");
-                        if (!TextUtils.isEmpty(new_version)) {
-                            UmengUpdateAgent.silentUpdate(context);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
+
             }
         }
     };

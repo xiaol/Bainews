@@ -66,37 +66,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
      * @param pNewsDetail
      */
     public void updateView(Object pNewsDetail){
-        //FIXME 等接口改后,此处就不用这么费劲来写了,可以简化
-        if(pNewsDetail instanceof NewsDetailAdd){
-            NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
-            if (!TextUtil.isEmptyString(detail.imgUrl)){
-                mDetailHeaderImg.setVisibility(VISIBLE);
-                mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
-            }else {
-                mDetailHeaderImg.setVisibility(GONE);
-            }
-            mDetailTitle.setText(detail.title);
-            mDetailDate.setText(detail.updateTime);
-            /**语音评论和新闻描述有一个不为null*/
-            if (!TextUtil.isEmptyString(detail.abs) || detail.isdoc){
-                if (!TextUtil.isEmptyString(detail.abs)){
-                    mDetailDesc.setText(detail.abs.replace("\n",""));
-                    mDetailDesc.setVisibility(VISIBLE);
-                }else {
-                    mDetailDesc.setVisibility(GONE);
-                }
-                if (detail.isdoc){
-                    mDetailSpeechComment.setUrlAndDuration(detail.docUrl,Integer.valueOf(detail.docTime),true);
-                    mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(detail.docUserIcon));
-                    mDetailSpeechCommentWrapper.setVisibility(VISIBLE);
-                }else{
-                    mDetailSpeechCommentWrapper.setVisibility(GONE);
-                }
-                mDetailCommentWrapper.setVisibility(VISIBLE);
-            }else{
-                mDetailCommentWrapper.setVisibility(GONE);
-            }
-        }else if(pNewsDetail instanceof NewsDetailAdd){
+         if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
             mDetailTitle.setText(detail.title);
             mDetailDate.setText(detail.updateTime.replace("/r","").replace("/n",""));

@@ -47,7 +47,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 	/** 其它栏目列表 */
 	ArrayList<ChannelItem> otherChannelList = new ArrayList<ChannelItem>();
 	/** 用户栏目列表 */
-	ArrayList<ChannelItem> userChannelList = new ArrayList<ChannelItem>();
+	ArrayList<ChannelItem> selectedChannelList = new ArrayList<ChannelItem>();
 	/** 是否在移动，由于这边是动画结束后才进行的数据更替，设置这个限制为了避免操作太频繁造成的数据错乱。 */
 	boolean isMove = false;
 	private ChannelItemDao mDao = new ChannelItemDao(this);
@@ -80,9 +80,8 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 
 	@Override
 	protected void loadData() {
-		userChannelList = mDao.queryForSelected();
+		selectedChannelList = mDao.queryForSelected();
 		otherChannelList = mDao.queryForNormal();
-		userAdapter = new ChannelSelectedAdapter(this, userChannelList);
 		userGridView.setAdapter(userAdapter);
 		otherAdapter = new ChannelNormalAdapter(this, otherChannelList);
 		otherGridView.setAdapter(this.otherAdapter);
