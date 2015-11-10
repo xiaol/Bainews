@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 
 @DatabaseTable(tableName = "tb_news_channel")
-public class ChannelItem implements Serializable {
+public class ChannelItem implements Serializable,Comparable<ChannelItem> {
 	/**
 	 *
 	 */
@@ -81,7 +81,19 @@ public class ChannelItem implements Serializable {
 	}
 
 	public String toString() {
-		return "ChannelItem [id=" + this.id + ", name=" + this.name
+		return "ChannelItem [id=" + this.id + ",orderId = " + this.orderId + " name=" + this.name
 				+ ", selected=" + this.selected + "]";
+	}
+
+	@Override
+	public int compareTo(ChannelItem another) {
+		int anotherOrderId = another.getOrderId();
+		if (this.orderId > anotherOrderId){
+			return 1;
+		}else if (this.orderId < anotherOrderId){
+			return -1;
+		}else {
+			return 0;
+		}
 	}
 }

@@ -82,6 +82,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 	protected void loadData() {
 		selectedChannelList = mDao.queryForSelected();
 		otherChannelList = mDao.queryForNormal();
+		userAdapter = new ChannelSelectedAdapter(this,selectedChannelList);
 		userGridView.setAdapter(userAdapter);
 		otherAdapter = new ChannelNormalAdapter(this, otherChannelList);
 		otherGridView.setAdapter(this.otherAdapter);
