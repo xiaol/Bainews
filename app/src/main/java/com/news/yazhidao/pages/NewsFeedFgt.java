@@ -63,7 +63,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_NEWS_ID = "key_news_id";
     public static String KEY_COLLECTION = "key_collection";
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
-    public static String VALUE_NEWS_SOURCE = "other_view";
     public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
     private NewsFeedAdapter mAdapter;
@@ -82,18 +81,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private Handler mHandler;
     private Runnable mRunnable;
     /**
-     * 第一次刷新的时间
-     */
-    private long mFirstRefresh;
-    /**
      * 当前的fragment 是否已经加载过数据
      */
     private boolean isLoadedData;
     private NewsSaveDataCallBack mNewsSaveCallBack;
 
-    public interface NewsSaveDataCallBack{
-        void result(String channelId,ArrayList<NewsFeed> results);
+    public interface NewsSaveDataCallBack {
+        void result(String channelId, ArrayList<NewsFeed> results);
     }
+
     public static NewsFeedFgt newInstance(String pChannelId) {
         NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
         Bundle bundle = new Bundle();
@@ -101,15 +97,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         newsFeedFgt.setArguments(bundle);
         return newsFeedFgt;
     }
-    public void setNewsSaveDataCallBack(NewsSaveDataCallBack listener){
+
+    public void setNewsSaveDataCallBack(NewsSaveDataCallBack listener) {
         this.mNewsSaveCallBack = listener;
     }
-    public void setNewsFeed(ArrayList<NewsFeed> results){
+
+    public void setNewsFeed(ArrayList<NewsFeed> results) {
         this.mArrNewsFeed = results;
-        if (mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -117,7 +116,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mlvNewsFeed.onRefreshComplete();
             mHandler.removeCallbacks(mRunnable);
         }
-        if (rootView != null && isVisibleToUser && isLoadedData){
+        if (rootView != null && isVisibleToUser && isLoadedData) {
             isLoadedData = false;
             mHandler.postDelayed(mRunnable, 800);
             Logger.e("jigang", "refresh " + mstrChannelId);
@@ -125,17 +124,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     }
 
-    public void refreshData(){
+    public void refreshData() {
         isLoadedData = true;
     }
-    public void forceRefreshData(){
-//        if (mHandler != null){
-//            mHandler.postDelayed(mRunnable, 800);
-//        }
-    }
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        Logger.e("jigang","newsfeedfgt");
+        Logger.e("jigang", "newsfeedfgt");
         mContext = getActivity();
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
@@ -162,7 +157,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
-        mlvNewsFeed = ((PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView));
+        mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -196,7 +191,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public void onDestroyView() {
         super.onDestroyView();
         Logger.e("jigang", "newsfeedfgt onDestroyView");
-                ((ViewGroup) rootView.getParent()).removeView(rootView);
+        ((ViewGroup) rootView.getParent()).removeView(rootView);
     }
 
     /**
@@ -213,10 +208,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 loadData(PULL_DOWN_REFRESH);
             }
         }, 800);
-    }
-
-    public String getMstrChannelId() {
-        return mstrChannelId;
     }
 
     /**
@@ -272,8 +263,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             }
                             break;
                     }
-                    if (mNewsSaveCallBack != null){
-                        mNewsSaveCallBack.result(mstrChannelId,mArrNewsFeed);
+                    if (mNewsSaveCallBack != null) {
+                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
@@ -414,11 +405,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
             }
         });
-    }
-
-    public void CancelRequest() {
-        if (mRequest != null)
-            mRequest.cancel(true);
     }
 
     public void loadData(int flag) {

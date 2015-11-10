@@ -178,7 +178,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
                 Bundle arguments = feedFgt.getArguments();
                 String channelId = arguments.getString(NewsFeedFgt.KEY_CHANNEL_ID);
-                feedFgt.forceRefreshData();
+                Logger.e("jigang","onclick " +channelId);
+                feedFgt.loadData(NewsFeedFgt.PULL_DOWN_REFRESH);
                 Logger.e("jigang","onclick " +channelId);
                 break;
             case R.id.mMainUserLogin:
@@ -282,7 +283,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 feedFgt.refreshData();
                 Logger.e("jigang", "refresh data " + channelId);
             } else {
-
                 feedFgt.setNewsFeed(newsFeeds);
                 Logger.e("jigang", "reuse data " + channelId);
             }
