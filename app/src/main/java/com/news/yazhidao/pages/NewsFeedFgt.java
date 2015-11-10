@@ -75,7 +75,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
-    /**热词页面加载更多*/
+    /**
+     * 热词页面加载更多
+     */
     private int mSerachPage = 1;
     private Handler mHandler;
     private Runnable mRunnable;
@@ -231,9 +233,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            if (mArrNewsFeed != null){
+                            if (mArrNewsFeed != null) {
                                 mArrNewsFeed.addAll(result);
-                                mSerachPage ++;
+                                mSerachPage++;
                             }
                             break;
                     }
@@ -264,7 +266,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         ivCard.setLayoutParams(localLayoutParams);
     }
 
-    private void setRelateView(final NewsFeed.Source source, RelativeLayout rlRelate, TextView tvRelate, TextViewExtend tvSource, boolean IsVisible) {
+    private void setRelateView(final NewsFeed.Source source, RelativeLayout rlRelate, TextView tvRelate, TextViewExtend tvSource, boolean IsVisible, String strTitle) {
         if (IsVisible) {
             rlRelate.setVisibility(View.VISIBLE);
             rlRelate.setOnClickListener(new View.OnClickListener() {
@@ -290,6 +292,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 String source_name = source.getSourceSiteName();
                 String finalText = "";
                 String source_title = source.getCompress();
+                if (TextUtil.isEmptyString(source_title))
+                    source_title = strTitle;
                 String source_name_font = "";
                 source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
                 if (source_name != null) {
@@ -474,7 +478,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     holder.ivTitleImg.setVisibility(View.GONE);
                 }
 
-                setTitleTextBySpannable(holder.tvTitle, feed.getTitle());
+                String strTitle = feed.getTitle();
+                setTitleTextBySpannable(holder.tvTitle, strTitle);
                 setViewText(holder.tvSource, feed.getSourceSiteName());
                 setViewText(holder.tvComment, feed.getCommentNum() + "评论");
                 setNewsContentClick(holder.rlNewsContent, feed);
@@ -489,17 +494,17 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     holder.tvBottomLine3.setVisibility(View.VISIBLE);
                     if (size == 1) {
                         NewsFeed.Source source = relatePointsList.get(0);
-                        setRelateView(source, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
-                        setRelateView(null, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, false);
-                        setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false);
+                        setRelateView(source, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
+                        setRelateView(null, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, false, strTitle);
+                        setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false, strTitle);
                         holder.ivVerticalLine1.setVisibility(View.GONE);
                         holder.tvBottomLine1.setVisibility(View.GONE);
                     } else if (size == 2) {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
-                        setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
-                        setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true);
-                        setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false);
+                        setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
+                        setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true, strTitle);
+                        setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false, strTitle);
                         setVerticalLineHeight(holder.rlRelate1, holder.ivVerticalLine1);
                         holder.ivVerticalLine2.setVisibility(View.GONE);
                         holder.tvBottomLine2.setVisibility(View.GONE);
@@ -507,9 +512,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
                         NewsFeed.Source source3 = relatePointsList.get(2);
-                        setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true);
-                        setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true);
-                        setRelateView(source3, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, true);
+                        setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
+                        setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true, strTitle);
+                        setRelateView(source3, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, true, strTitle);
                         setVerticalLineHeight(holder.rlRelate1, holder.ivVerticalLine1);
                         setVerticalLineHeight(holder.rlRelate2, holder.ivVerticalLine2);
                         holder.ivVerticalLine3.setVisibility(View.GONE);
@@ -611,8 +616,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     setCardMargin(holder3.ivCard2, 4, 4, 3);
                     setCardMargin(holder3.ivCard3, 4, 8, 3);
                 }
-
-                setTitleTextBySpannable(holder3.tvTitle, feed.getTitle());
+                String strTitle = feed.getTitle();
+                setTitleTextBySpannable(holder3.tvTitle, strTitle);
                 setViewText(holder3.tvSource, feed.getSourceSiteName());
                 setViewText(holder3.tvComment, feed.getCommentNum() + "评论");
                 setNewsContentClick(holder3.rlNewsContent, feed);
@@ -627,17 +632,17 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     holder3.tvBottomLine3.setVisibility(View.VISIBLE);
                     if (size == 1) {
                         NewsFeed.Source source = relatePointsList.get(0);
-                        setRelateView(source, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
-                        setRelateView(null, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, false);
-                        setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false);
+                        setRelateView(source, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
+                        setRelateView(null, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, false, strTitle);
+                        setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false, strTitle);
                         holder3.ivVerticalLine1.setVisibility(View.GONE);
                         holder3.tvBottomLine1.setVisibility(View.GONE);
                     } else if (size == 2) {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
-                        setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
-                        setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true);
-                        setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false);
+                        setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
+                        setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true, strTitle);
+                        setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false, strTitle);
                         setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
                         holder3.ivVerticalLine2.setVisibility(View.GONE);
                         holder3.tvBottomLine2.setVisibility(View.GONE);
@@ -645,9 +650,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         NewsFeed.Source source1 = relatePointsList.get(0);
                         NewsFeed.Source source2 = relatePointsList.get(1);
                         NewsFeed.Source source3 = relatePointsList.get(2);
-                        setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true);
-                        setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true);
-                        setRelateView(source3, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, true);
+                        setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
+                        setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true, strTitle);
+                        setRelateView(source3, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, true, strTitle);
                         setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
                         setVerticalLineHeight(holder3.rlRelate2, holder3.ivVerticalLine2);
                         holder3.ivVerticalLine3.setVisibility(View.GONE);

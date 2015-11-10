@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
-import com.handmark.pulltorefresh.library.internal.IndicatorLayout;
 import com.news.yazhidao.R;
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
@@ -60,8 +59,8 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	private OnLastItemVisibleListener mOnLastItemVisibleListener;
 	private View mEmptyView;
 
-	private IndicatorLayout mIndicatorIvTop;
-	private IndicatorLayout mIndicatorIvBottom;
+//	private IndicatorLayout mIndicatorIvTop;
+//	private IndicatorLayout mIndicatorIvBottom;
 
 	private boolean mShowIndicator;
 	private boolean mScrollEmptyView = true;
@@ -250,10 +249,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		if (getShowIndicatorInternal()) {
 			switch (getCurrentMode()) {
 				case PULL_FROM_END:
-					mIndicatorIvBottom.pullToRefresh();
+//					mIndicatorIvBottom.pullToRefresh();
 					break;
 				case PULL_FROM_START:
-					mIndicatorIvTop.pullToRefresh();
+//					mIndicatorIvTop.pullToRefresh();
 					break;
 				default:
 					// NO-OP
@@ -277,10 +276,10 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 		if (getShowIndicatorInternal()) {
 			switch (getCurrentMode()) {
 				case PULL_FROM_END:
-					mIndicatorIvBottom.releaseToRefresh();
+//					mIndicatorIvBottom.releaseToRefresh();
 					break;
 				case PULL_FROM_START:
-					mIndicatorIvTop.releaseToRefresh();
+//					mIndicatorIvTop.releaseToRefresh();
 					break;
 				default:
 					// NO-OP
@@ -335,36 +334,36 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	private void addIndicatorViews() {
 		Mode mode = getMode();
 		FrameLayout refreshableViewWrapper = getRefreshableViewWrapper();
-
-		if (mode.showHeaderLoadingLayout() && null == mIndicatorIvTop) {
-			// If the mode can pull down, and we don't have one set already
-			mIndicatorIvTop = new IndicatorLayout(getContext(), Mode.PULL_FROM_START);
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-					ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.rightMargin = getResources().getDimensionPixelSize(R.dimen.indicator_right_padding);
-			params.gravity = Gravity.TOP | Gravity.RIGHT;
-			refreshableViewWrapper.addView(mIndicatorIvTop, params);
-
-		} else if (!mode.showHeaderLoadingLayout() && null != mIndicatorIvTop) {
-			// If we can't pull down, but have a View then remove it
-			refreshableViewWrapper.removeView(mIndicatorIvTop);
-			mIndicatorIvTop = null;
-		}
-
-		if (mode.showFooterLoadingLayout() && null == mIndicatorIvBottom) {
-			// If the mode can pull down, and we don't have one set already
-			mIndicatorIvBottom = new IndicatorLayout(getContext(), Mode.PULL_FROM_END);
-			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-					ViewGroup.LayoutParams.WRAP_CONTENT);
-			params.rightMargin = getResources().getDimensionPixelSize(R.dimen.indicator_right_padding);
-			params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-			refreshableViewWrapper.addView(mIndicatorIvBottom, params);
-
-		} else if (!mode.showFooterLoadingLayout() && null != mIndicatorIvBottom) {
-			// If we can't pull down, but have a View then remove it
-			refreshableViewWrapper.removeView(mIndicatorIvBottom);
-			mIndicatorIvBottom = null;
-		}
+//
+//		if (mode.showHeaderLoadingLayout() && null == mIndicatorIvTop) {
+//			// If the mode can pull down, and we don't have one set already
+//			mIndicatorIvTop = new IndicatorLayout(getContext(), Mode.PULL_FROM_START);
+//			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//					ViewGroup.LayoutParams.WRAP_CONTENT);
+//			params.rightMargin = getResources().getDimensionPixelSize(R.dimen.indicator_right_padding);
+//			params.gravity = Gravity.TOP | Gravity.RIGHT;
+//			refreshableViewWrapper.addView(mIndicatorIvTop, params);
+//
+//		} else if (!mode.showHeaderLoadingLayout() && null != mIndicatorIvTop) {
+//			// If we can't pull down, but have a View then remove it
+//			refreshableViewWrapper.removeView(mIndicatorIvTop);
+//			mIndicatorIvTop = null;
+//		}
+//
+//		if (mode.showFooterLoadingLayout() && null == mIndicatorIvBottom) {
+//			// If the mode can pull down, and we don't have one set already
+//			mIndicatorIvBottom = new IndicatorLayout(getContext(), Mode.PULL_FROM_END);
+//			FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//					ViewGroup.LayoutParams.WRAP_CONTENT);
+//			params.rightMargin = getResources().getDimensionPixelSize(R.dimen.indicator_right_padding);
+//			params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+//			refreshableViewWrapper.addView(mIndicatorIvBottom, params);
+//
+//		} else if (!mode.showFooterLoadingLayout() && null != mIndicatorIvBottom) {
+//			// If we can't pull down, but have a View then remove it
+//			refreshableViewWrapper.removeView(mIndicatorIvBottom);
+//			mIndicatorIvBottom = null;
+//		}
 	}
 
 	private boolean getShowIndicatorInternal() {
@@ -437,40 +436,40 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	private void removeIndicatorViews() {
-		if (null != mIndicatorIvTop) {
-			getRefreshableViewWrapper().removeView(mIndicatorIvTop);
-			mIndicatorIvTop = null;
-		}
-
-		if (null != mIndicatorIvBottom) {
-			getRefreshableViewWrapper().removeView(mIndicatorIvBottom);
-			mIndicatorIvBottom = null;
-		}
+//		if (null != mIndicatorIvTop) {
+//			getRefreshableViewWrapper().removeView(mIndicatorIvTop);
+//			mIndicatorIvTop = null;
+//		}
+//
+//		if (null != mIndicatorIvBottom) {
+//			getRefreshableViewWrapper().removeView(mIndicatorIvBottom);
+//			mIndicatorIvBottom = null;
+//		}
 	}
 
 	private void updateIndicatorViewsVisibility() {
-		if (null != mIndicatorIvTop) {
-			if (!isRefreshing() && isReadyForPullStart()) {
-				if (!mIndicatorIvTop.isVisible()) {
-					mIndicatorIvTop.show();
-				}
-			} else {
-				if (mIndicatorIvTop.isVisible()) {
-					mIndicatorIvTop.hide();
-				}
-			}
-		}
-
-		if (null != mIndicatorIvBottom) {
-			if (!isRefreshing() && isReadyForPullEnd()) {
-				if (!mIndicatorIvBottom.isVisible()) {
-					mIndicatorIvBottom.show();
-				}
-			} else {
-				if (mIndicatorIvBottom.isVisible()) {
-					mIndicatorIvBottom.hide();
-				}
-			}
-		}
+//		if (null != mIndicatorIvTop) {
+//			if (!isRefreshing() && isReadyForPullStart()) {
+//				if (!mIndicatorIvTop.isVisible()) {
+//					mIndicatorIvTop.show();
+//				}
+//			} else {
+//				if (mIndicatorIvTop.isVisible()) {
+//					mIndicatorIvTop.hide();
+//				}
+//			}
+//		}
+//
+//		if (null != mIndicatorIvBottom) {
+//			if (!isRefreshing() && isReadyForPullEnd()) {
+//				if (!mIndicatorIvBottom.isVisible()) {
+//					mIndicatorIvBottom.show();
+//				}
+//			} else {
+//				if (mIndicatorIvBottom.isVisible()) {
+//					mIndicatorIvBottom.hide();
+//				}
+//			}
+//		}
 	}
 }
