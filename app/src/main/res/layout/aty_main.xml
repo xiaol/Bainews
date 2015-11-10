@@ -23,34 +23,26 @@
             android:src="@drawable/main_search_drawer"/>
 
         <RelativeLayout
-            android:id="@+id/title_click_layout"
+            android:id="@+id/mTitleLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:paddingLeft="13.0dip"
             >
-
-            <FrameLayout
-                android:id="@+id/title_parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true">
-
                 <ImageView
                     android:id="@+id/mAppTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/title"/>
-            </FrameLayout>
 
             <ImageView
                 android:id="@+id/mTopRefresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/title_parent"
+                android:layout_toRightOf="@id/mAppTitle"
                 android:contentDescription="@string/app_name"
                 android:padding="3.0dip"
                 android:src="@drawable/refreshicon_titlebar"/>
@@ -62,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="3.0dip"
-                android:layout_toRightOf="@id/title_parent"
+                android:layout_toRightOf="@id/mAppTitle"
                 android:indeterminateOnly="true"
                 android:minHeight="20.0dip"
                 android:minWidth="20.0dip"

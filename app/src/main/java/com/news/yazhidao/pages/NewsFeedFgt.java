@@ -89,7 +89,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      * 当前的fragment 是否已经加载过数据
      */
     private boolean isLoadedData;
+    private NewsSaveDataCallBack mNewsSaveCallBack;
 
+    public interface NewsSaveDataCallBack{
+        void result(String channelId,ArrayList<NewsFeed> results);
+    }
     public static NewsFeedFgt newInstance(String pChannelId) {
         NewsFeedFgt newsFeedFgt = new NewsFeedFgt();
         Bundle bundle = new Bundle();
@@ -97,7 +101,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         newsFeedFgt.setArguments(bundle);
         return newsFeedFgt;
     }
-
+    public void setNewsSaveDataCallBack(NewsSaveDataCallBack listener){
+        this.mNewsSaveCallBack = listener;
+    }
+    public void setNewsFeed(ArrayList<NewsFeed> results){
+        this.mArrNewsFeed = results;
+        if (mAdapter != null){
+            mAdapter.notifyDataSetChanged();
+        }
+    }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -105,16 +117,25 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mlvNewsFeed.onRefreshComplete();
             mHandler.removeCallbacks(mRunnable);
         }
-        if (rootView != null && isVisibleToUser && !isLoadedData) {
-            isLoadedData = true;
+        if (rootView != null && isVisibleToUser && isLoadedData){
+            isLoadedData = false;
             mHandler.postDelayed(mRunnable, 800);
+            Logger.e("jigang", "refresh " + mstrChannelId);
         }
 
     }
 
-
+    public void refreshData(){
+        isLoadedData = true;
+    }
+    public void forceRefreshData(){
+//        if (mHandler != null){
+//            mHandler.postDelayed(mRunnable, 800);
+//        }
+    }
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        Logger.e("jigang","newsfeedfgt");
         mContext = getActivity();
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
@@ -167,7 +188,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 e.printStackTrace();
             }
         }
+
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Logger.e("jigang", "newsfeedfgt onDestroyView");
+                ((ViewGroup) rootView.getParent()).removeView(rootView);
     }
 
     /**
@@ -184,6 +213,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 loadData(PULL_DOWN_REFRESH);
             }
         }, 800);
+    }
+
+    public String getMstrChannelId() {
+        return mstrChannelId;
     }
 
     /**
@@ -238,6 +271,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                                 mSerachPage++;
                             }
                             break;
+                    }
+                    if (mNewsSaveCallBack != null){
+                        mNewsSaveCallBack.result(mstrChannelId,mArrNewsFeed);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
