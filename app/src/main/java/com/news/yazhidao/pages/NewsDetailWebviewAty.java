@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;
+import android.os.Message;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -157,6 +159,11 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         });
         mNewsSourcesiteWebview.setWebViewClient(new WebViewClient() {
             @Override
+            public void onFormResubmission(WebView view, Message dontResend, Message resend) {
+                resend.sendToTarget();
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 Logger.e(TAG, "xxxx shouldOverrideUrlLoading");
@@ -189,6 +196,20 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void loadData() {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mNewsSourcesiteWebview.canGoBack()){
+                mNewsSourcesiteWebview.goBack();
+                return true;
+            }else {
+                finish();
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
