@@ -6,6 +6,7 @@
     android:background="#ffdfe6e9"
     android:cacheColorHint="@color/new_encounter_cell_bg"
     android:clipToPadding="false"
+    android:overScrollMode="never"
     android:divider="@color/transparency"
     android:listSelector="#fff3f3fa"
     android:scrollbars="none" />
