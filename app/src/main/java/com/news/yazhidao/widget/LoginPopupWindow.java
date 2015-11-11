@@ -20,9 +20,9 @@ import com.news.yazhidao.listener.DisplayImageListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.pages.ChatAty;
+import com.news.yazhidao.pages.DiggerAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.pages.LengjingFgt;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -135,12 +135,12 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
                 dismiss();
                 break;
             case R.id.mDigger:
-//                Intent digger = new Intent(mContext, DiggerAty.class);
-//                mContext.startActivity(digger);
-                //获取红包页面
-                Intent redPacket = new Intent(mContext, NewsDetailWebviewAty.class);
-                redPacket.putExtra(NewsDetailWebviewAty.KEY_URL,"http://dwz.cn/1eBPim");
-                mContext.startActivity(redPacket);
+                Intent digger = new Intent(mContext, DiggerAty.class);
+                mContext.startActivity(digger);
+//                //获取红包页面
+//                Intent redPacket = new Intent(mContext, NewsDetailWebviewAty.class);
+//                redPacket.putExtra(NewsDetailWebviewAty.KEY_URL,"http://dwz.cn/1eBPim");
+//                mContext.startActivity(redPacket);
                 this.dismiss();
                 break;
         }

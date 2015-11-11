@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/obtain_red_packet"
+                android:text="@string/home_digger"
                 android:textColor="@color/black"
                 android:textSize="18sp"/>
 
