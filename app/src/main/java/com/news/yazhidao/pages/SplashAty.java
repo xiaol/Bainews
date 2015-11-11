@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.umeng.analytics.AnalyticsConfig;
 
 /**
  * Created by fengjigang on 15/3/30.
@@ -34,7 +35,7 @@ public class SplashAty extends BaseActivity {
         SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow", false);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
-        if (DeviceInfoUtil.isFlyme()) {
+        if (DeviceInfoUtil.isFlyme()|| AnalyticsConfig.getChannel(this).equals("meizu")) {
             iv_splash_background.setVisibility(View.VISIBLE);
         }
     }

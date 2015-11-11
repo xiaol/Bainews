@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -175,12 +173,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
             case R.id.mTitleLayout:
-                NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
-                Bundle arguments = feedFgt.getArguments();
-                String channelId = arguments.getString(NewsFeedFgt.KEY_CHANNEL_ID);
-                Logger.e("jigang","onclick " +channelId);
+                NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
                 feedFgt.loadData(NewsFeedFgt.PULL_DOWN_REFRESH);
-                Logger.e("jigang","onclick " +channelId);
                 break;
             case R.id.mMainUserLogin:
                 LoginPopupWindow window1 = new LoginPopupWindow(this, new PopupWindow.OnDismissListener() {
@@ -263,7 +257,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public int getItemPosition(Object object) {
-            Logger.e("jigang", "getItemPosition  =" + object.hashCode());
             return POSITION_NONE;
         }
 
@@ -274,32 +267,23 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Fragment getItem(int position) {
-            Logger.e("jigang", "getItem  =" + position);
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
             feedFgt.setNewsSaveDataCallBack(MainAty.this);
-            ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
-            if (TextUtil.isListEmpty(newsFeeds)) {
-                feedFgt.refreshData();
-                Logger.e("jigang", "refresh data " + channelId);
-            } else {
-                feedFgt.setNewsFeed(newsFeeds);
-                Logger.e("jigang", "reuse data " + channelId);
-            }
             return feedFgt;
         }
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Log.e("jigang", "instantiateItem:" + position);
-            Fragment fgt = (Fragment) super.instantiateItem(container, position);
+            String channelId = mSelChannelItems.get(position).getId();
+            NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
+            ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
+            if (TextUtil.isListEmpty(newsFeeds)) {
+                fgt.refreshData();
+            } else {
+                fgt.setNewsFeed(newsFeeds);
+            }
             return fgt;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-            Log.e("jigang", "destroyItem:" + position);
         }
     }
 }
