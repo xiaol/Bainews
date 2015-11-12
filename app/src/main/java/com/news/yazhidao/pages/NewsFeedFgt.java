@@ -248,6 +248,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void success(ArrayList<NewsFeed> result) {
                 stopRefresh();
                 if (result != null && result.size() > 0) {
+                    mSerachPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
                             if (mArrNewsFeed == null)
@@ -259,7 +260,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         case PULL_UP_REFRESH:
                             if (mArrNewsFeed != null) {
                                 mArrNewsFeed.addAll(result);
-                                mSerachPage++;
                             }
                             break;
                     }

@@ -137,7 +137,7 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             case R.id.mDigger:
                 Intent digger = new Intent(mContext, DiggerAty.class);
                 mContext.startActivity(digger);
-//                //获取红包页面
+                //获取红包页面
 //                Intent redPacket = new Intent(mContext, NewsDetailWebviewAty.class);
 //                redPacket.putExtra(NewsDetailWebviewAty.KEY_URL,"http://dwz.cn/1eBPim");
 //                mContext.startActivity(redPacket);
