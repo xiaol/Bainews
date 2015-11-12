@@ -1,15 +1,14 @@
 package com.news.yazhidao.widget.InputBar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,11 +21,11 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.listener.UserLoginListener;
+import com.news.yazhidao.pages.LoginModeFgt;
 import com.news.yazhidao.utils.AMRAudioRecorder;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.LoginModePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.File;
@@ -189,10 +188,7 @@ public class InputBar extends FrameLayout {
                 case MotionEvent.ACTION_DOWN:
                     //登录
                     if (SharedPreManager.getUser(mContext) == null) {
-//                        LoginPopupWindow window = new LoginPopupWindow(mContext);
-//                        window.showAtLocation(((NewsDetailAty) (mContext)).getWindow().getDecorView(), Gravity.CENTER
-//                                | Gravity.CENTER, 0, 0);
-                        final LoginModePopupWindow window = new LoginModePopupWindow(mContext, new UserLoginListener() {
+                        LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, new UserLoginListener() {
                             @Override
                             public void userLogin(String platform, PlatformDb platformDb) {
 
@@ -202,9 +198,8 @@ public class InputBar extends FrameLayout {
                             public void userLogout() {
 
                             }
-                        }, null);
-                        window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
+                        },null);
+                        loginModeFgt.show(((FragmentActivity)mContext).getSupportFragmentManager(),"loginModeFgt");
                         removeTextFieldFirstRespond();
                         return false;
                     }
@@ -292,7 +287,7 @@ public class InputBar extends FrameLayout {
             if (hasFocus) {
                 //登录
                 if (SharedPreManager.getUser(mContext) == null) {
-                    final LoginModePopupWindow window = new LoginModePopupWindow(mContext, new UserLoginListener() {
+                    LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
 
@@ -302,9 +297,8 @@ public class InputBar extends FrameLayout {
                         public void userLogout() {
 
                         }
-                    }, null);
-                    window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
-                            | Gravity.CENTER, 0, 0);
+                    },null);
+                    loginModeFgt.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loginModeFgt");
                     removeTextFieldFirstRespond();
                     return;
                 }

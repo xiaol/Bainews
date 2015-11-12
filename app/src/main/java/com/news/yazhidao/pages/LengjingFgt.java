@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,7 +38,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
-import com.news.yazhidao.widget.LoginModePopupWindow;
 
 import java.util.ArrayList;
 
@@ -91,7 +91,7 @@ public class LengjingFgt extends Fragment {
                     hotTopic = hotTopic.replace("#", "");
                 }
                 openEditWindow(hotTopic, "");
-            } else if (ACTION_USER_REFRESH_ALBUM.equals(action)){
+            } else if (ACTION_USER_REFRESH_ALBUM.equals(action)) {
                 refreshAlbumList();
             }
         }
@@ -121,7 +121,7 @@ public class LengjingFgt extends Fragment {
     public void onResume() {
         super.onResume();
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.size() >0){
+        if (bundle != null && bundle.size() > 0) {
             final String title = bundle.getString(DiggerAty.KEY_TITLE);
             final String url = bundle.getString(DiggerAty.KEY_URL);
             new Handler().postDelayed(new Runnable() {
@@ -133,6 +133,7 @@ public class LengjingFgt extends Fragment {
             bundle.clear();
         }
     }
+
     @Override
     public void onDetach() {
         super.onDetach();
@@ -150,7 +151,6 @@ public class LengjingFgt extends Fragment {
     }
 
 
-
     private void initVars() {
         mAlbumLvAdatpter = new MyAlbumLvAdatpter();
     }
@@ -163,7 +163,7 @@ public class LengjingFgt extends Fragment {
 
     private void findViews() {
         fl_lecture = rootView.findViewById(R.id.fl_lecture);
-        lstv_des = (TextView)rootView.findViewById(R.id.lstv_des);
+        lstv_des = (TextView) rootView.findViewById(R.id.lstv_des);
 
         //专辑显示列表
         mSpecialGv = (GridView) rootView.findViewById(R.id.mSpecialLv);
@@ -195,12 +195,13 @@ public class LengjingFgt extends Fragment {
 
                 @Override
                 public void failure() {
-                    Logger.e(TAG,"获取专辑失败!");
+                    Logger.e(TAG, "获取专辑失败!");
                     setDiggerAlbums(queryAlbumsFromDB());
                 }
             });
         }
     }
+
     /**
      * 打开新闻挖掘的标题和url编辑界面
      * 此方法主要用于从其他app分享进来或则从热门话题选择标签进来后挖掘
@@ -212,21 +213,21 @@ public class LengjingFgt extends Fragment {
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
         if (user == null) {
-            final LoginModePopupWindow window = new LoginModePopupWindow(getActivity(), new UserLoginListener() {
+            LoginModeFgt loginModeFgt = new LoginModeFgt(mActivity, new UserLoginListener() {
                 @Override
                 public void userLogin(String platform, PlatformDb platformDb) {
-                    /**获取专辑列表数据*/
                     FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-                        @Override
-                        public void success(ArrayList<DiggerAlbum> resultList) {
-                            handleAlbumsData(newsTitle, newsUrl, resultList);
-                        }
+                                @Override
+                                public void success(ArrayList<DiggerAlbum> resultList) {
+                                    handleAlbumsData(newsTitle, newsUrl, resultList);
+                                }
 
-                        @Override
-                        public void failure() {
-                            ToastUtil.toastShort("获取专辑失败!");
-                        }
-                    });
+                                @Override
+                                public void failure() {
+                                    ToastUtil.toastShort("获取专辑失败!");
+                                }
+                            }
+                    );
                 }
 
                 @Override
@@ -234,8 +235,7 @@ public class LengjingFgt extends Fragment {
 
                 }
             }, null);
-            window.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.CENTER
-                    | Gravity.CENTER, 0, 0);
+            loginModeFgt.show(((FragmentActivity) (mActivity)).getSupportFragmentManager(), "loginModeFgt");
         } else {
             //查看数据库中是否已经专辑数据,如果没有则联网获取
             ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
@@ -276,7 +276,7 @@ public class LengjingFgt extends Fragment {
      * @param resultList
      */
     private void handleAlbumsData(final String newsTitle, final String newsUrl, ArrayList<DiggerAlbum> resultList) {
-        Logger.e("jigang","--handleAlbumsData--"+resultList.size());
+        Logger.e("jigang", "--handleAlbumsData--" + resultList.size());
         if (!TextUtil.isListEmpty(resultList)) {
             albumList.clear();
             for (int i = 0; i < resultList.size(); i++) {
@@ -334,14 +334,15 @@ public class LengjingFgt extends Fragment {
     /**
      * 刷新列表
      */
-    public void refreshAlbumList(){
+    public void refreshAlbumList() {
         ArrayList<DiggerAlbum> diggerAlbums = queryAlbumsFromDB();
         mDiggerAlbums = diggerAlbums;
         mAlbumLvAdatpter.notifyDataSetChanged();
     }
+
     public void setDiggerAlbums(ArrayList<DiggerAlbum> mDiggerAlbums) {
         this.mDiggerAlbums = mDiggerAlbums;
-        if (fl_lecture!=null){
+        if (fl_lecture != null) {
             fl_lecture.setVisibility(View.GONE);
         }
         mSpecialGv.setVisibility(View.VISIBLE);

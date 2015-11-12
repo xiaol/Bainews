@@ -1,9 +1,7 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.Element;
@@ -22,7 +21,6 @@ import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CloudTagManager;
-import com.news.yazhidao.widget.LoginModePopupWindow;
 
 import org.apache.http.NameValuePair;
 
@@ -34,7 +32,7 @@ import cn.sharesdk.framework.PlatformDb;
 /**
  * Created by Berkeley on 7/20/15.
  */
-public class BaseTagActivity extends Activity implements View.OnClickListener {
+public class BaseTagActivity extends BaseActivity implements View.OnClickListener {
     /**热门话题key*/
     public final static String KEY_HOT_TOPIC = "key_hot_topic";
     public ArrayList<String> keywords;
@@ -66,6 +64,21 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
         loadElements();
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void setContentView() {
+
+    }
+
+    @Override
+    protected void initializeViews() {
+
+    }
+
+    @Override
+    protected void loadData() {
+
     }
 
     private static void feedKeywordsFlow(CloudTagManager keywordsFlow,
@@ -100,23 +113,22 @@ public class BaseTagActivity extends Activity implements View.OnClickListener {
             /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
             User user = SharedPreManager.getUser(this);
             if (user == null){
-                final LoginModePopupWindow window = new LoginModePopupWindow(this, new UserLoginListener() {
+                LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
                     @Override
                     public void userLogin(String platform, PlatformDb platformDb) {
-                    /**通知棱镜界面界面进行挖掘处理*/
-                    Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
-                    intent.putExtra(KEY_HOT_TOPIC,keyword);
-                    sendBroadcast(intent);
-                    BaseTagActivity.this.finish();
+                        /**通知棱镜界面界面进行挖掘处理*/
+                        Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
+                        intent.putExtra(KEY_HOT_TOPIC,keyword);
+                        sendBroadcast(intent);
+                        BaseTagActivity.this.finish();
                     }
 
                     @Override
                     public void userLogout() {
 
                     }
-                }, null);
-                window.showAtLocation(this.getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
+                },null);
+                loginModeFgt.show(getSupportFragmentManager(), "loginModeFgt");
                 return;
             }else{
                 /**通知棱镜界面界面进行挖掘处理*/

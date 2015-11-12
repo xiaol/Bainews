@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_home_login_mode"
-    android:gravity="center"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/bg_home_login_mode"
+              android:gravity="center"
+              android:minHeight="300dp"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/home_login_mode_join"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
         <com.news.yazhidao.widget.TextViewExtend
             android:layout_width="wrap_content"
@@ -24,7 +25,7 @@
             android:layout_marginTop="12dp"
             android:text="@string/home_login_mode_join_slogan"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <LinearLayout
             android:id="@+id/mLoginModeWeibo"
@@ -40,14 +41,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="24dp"
-                android:src="@drawable/ic_login_weibo" />
+                android:src="@drawable/ic_login_weibo"/>
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_login_mode_sina_weibo"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -64,14 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="24dp"
-                android:src="@drawable/ic_login_weixin" />
+                android:src="@drawable/ic_login_weixin"/>
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_login_mode_weixin"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -79,24 +80,24 @@
             android:layout_width="230dp"
             android:layout_height="55dp"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
             android:background="@color/bg_home_login_meizu"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="24dp"
-                android:src="@drawable/ic_login_meizu" />
+                android:src="@drawable/ic_login_meizu"/>
 
             <com.news.yazhidao.widget.TextViewExtend
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_login_mode_meizu"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"/>
         </LinearLayout>
 
 
@@ -104,21 +105,22 @@
             android:id="@+id/mLoginModeWarning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="25dp"
             android:text="@string/home_login_mode_login_warning"
             android:textColor="@color/white"
             android:textSize="11sp"
-            android:layout_gravity="center_horizontal"
             android:visibility="gone"
             />
+
         <ImageView
             android:id="@+id/mLoginModeCancel"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="22dp"
-            android:src="@drawable/bg_date_close"
-            android:scaleType="centerInside"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="22dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/bg_date_close"
             />
     </LinearLayout>
 </LinearLayout>
