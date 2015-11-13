@@ -88,6 +88,9 @@ public class TextViewVertical extends View {
     }
     public ArrayList<Integer> checkData(String data,String keyWord){
         ArrayList<Integer> locations = new ArrayList<>();
+        if (TextUtil.isEmptyString(keyWord)){
+            return locations;
+        }
         char[] keyArr = keyWord.toCharArray();
         int index = data.indexOf(keyWord);
         do {

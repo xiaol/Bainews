@@ -201,6 +201,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      */
     public void setSearchKeyWord(String pKeyWord) {
         this.mstrKeyWord = pKeyWord;
+        mArrNewsFeed = null;
+        mSerachPage = 1;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
