@@ -570,9 +570,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
 
                 if (title != null && !"".equals(title)) {
-                    holder2.tv_title.setText(title);
+                    holder2.tv_title.setText(title,mstrKeyWord);
                 } else {
-                    holder2.tv_title.setText(title_news);
+                    holder2.tv_title.setText(title_news,mstrKeyWord);
                 }
 
                 int textSize = DensityUtil.dip2px(mContext, 18);
