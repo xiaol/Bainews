@@ -35,7 +35,7 @@ public class SplashAty extends BaseActivity {
         SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow", false);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
-        if (DeviceInfoUtil.isFlyme()|| AnalyticsConfig.getChannel(this).equals("meizu")) {
+        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
             iv_splash_background.setVisibility(View.VISIBLE);
         }
     }

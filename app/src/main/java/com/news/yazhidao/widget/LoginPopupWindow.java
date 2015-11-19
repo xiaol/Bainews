@@ -1,12 +1,11 @@
 package com.news.yazhidao.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import com.news.yazhidao.pages.ChatAty;
 import com.news.yazhidao.pages.DiggerAty;
 import com.news.yazhidao.pages.FeedBackActivity;
 import com.news.yazhidao.pages.LengjingFgt;
+import com.news.yazhidao.pages.LoginModeFgt;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.image.ImageManager;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -137,6 +137,10 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
             case R.id.mDigger:
                 Intent digger = new Intent(mContext, DiggerAty.class);
                 mContext.startActivity(digger);
+                //获取红包页面
+//                Intent redPacket = new Intent(mContext, NewsDetailWebviewAty.class);
+//                redPacket.putExtra(NewsDetailWebviewAty.KEY_URL,"http://dwz.cn/1eBPim");
+//                mContext.startActivity(redPacket);
                 this.dismiss();
                 break;
         }
@@ -183,15 +187,15 @@ public class LoginPopupWindow extends PopupWindow implements View.OnClickListene
     }
 
     private void openLoginModeWindow() {
-        LoginModePopupWindow window = new LoginModePopupWindow(mContext, this, new UserLoginPopupStateListener() {
+        LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, this, new UserLoginPopupStateListener() {
 
             @Override
             public void close() {
                 LoginPopupWindow.this.dismiss();
             }
         });
-        window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
-                | Gravity.CENTER, 0, 0);
+        loginModeFgt.show(((FragmentActivity)(mContext)).getSupportFragmentManager(), "loginModeFgt");
+//        ((FragmentActivity)(mContext)).getSupportFragmentManager().beginTransaction().add(loginModeFgt,"loginModeFgt").commitAllowingStateLoss();
     }
 
 

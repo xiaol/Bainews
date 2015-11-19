@@ -162,6 +162,13 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <!--splashAty style-->
+    <style name="Theme.Splash" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowBackground">@drawable/bg_splash_display</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
     <style name="subscribe_more_tip_text" parent="@style/subscribe_my_tip_text">
         <item name="android:textSize">13.0sp</item>

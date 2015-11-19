@@ -53,6 +53,12 @@ public class WXEntryActivity extends WechatHandlerActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		Log.e("jigang", "------cccc");
+		Log.e("jigang", "------oncreate");
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		Log.e("jigang", "------finish");
 	}
 }

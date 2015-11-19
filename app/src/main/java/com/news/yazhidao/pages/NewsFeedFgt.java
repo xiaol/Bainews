@@ -208,6 +208,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      */
     public void setSearchKeyWord(String pKeyWord) {
         this.mstrKeyWord = pKeyWord;
+        mArrNewsFeed = null;
+        mSearchPage = 1;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -256,6 +258,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void success(ArrayList<NewsFeed> result) {
                 stopRefresh();
                 if (result != null && result.size() > 0) {
+                    mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
                             if (mArrNewsFeed == null)
@@ -267,7 +270,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         case PULL_UP_REFRESH:
                             if (mArrNewsFeed != null) {
                                 mArrNewsFeed.addAll(result);
-                                mSearchPage++;
                             }
                             break;
                     }
@@ -583,9 +585,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
 
                 if (title != null && !"".equals(title)) {
-                    holder2.tv_title.setText(title);
+                    holder2.tv_title.setText(title, mstrKeyWord);
                 } else {
-                    holder2.tv_title.setText(title_news);
+                    holder2.tv_title.setText(title_news, mstrKeyWord);
                 }
 
                 int textSize = DensityUtil.dip2px(mContext, 18);

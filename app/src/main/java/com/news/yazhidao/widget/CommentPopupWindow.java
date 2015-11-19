@@ -1,14 +1,13 @@
 package com.news.yazhidao.widget;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,13 @@ import android.widget.RelativeLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.entity.NewsDetailAdd.Point;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.PraiseListener;
 import com.news.yazhidao.listener.UploadCommentListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.request.PraiseRequest;
 import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.pages.LoginModeFgt;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -372,8 +371,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
                     User user = SharedPreManager.getUser(mContext);
                     if (user == null) {
-
-                        final LoginModePopupWindow window = new LoginModePopupWindow(mContext, new UserLoginListener() {
+                        LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, new UserLoginListener() {
                             @Override
                             public void userLogin(String platform, PlatformDb platformDb) {
 
@@ -383,10 +381,8 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
                             public void userLogout() {
 
                             }
-                        }, null);
-                        window.showAtLocation(((Activity) mContext).getWindow().getDecorView(), Gravity.CENTER
-                                | Gravity.CENTER, 0, 0);
-
+                        },null);
+                        loginModeFgt.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loginModeFgt");
                     } else {
                         if ("1".equals(point.isPraiseFlag)) {
                             ToastUtil.toastLong("您已经点过赞了");

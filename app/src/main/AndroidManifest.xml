@@ -227,20 +227,14 @@
 
         <activity
             android:name=".pages.GuideAty"
-            android:screenOrientation="portrait"/>
-
-        <activity
-            android:name=".pages.NewsDetailAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            />
+
         <activity
             android:name=".pages.NewsDetailAty2"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"></activity>
-        <activity
-            android:name=".pages.HomeAty"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".pages.ChatAty"
@@ -250,10 +244,11 @@
             android:name=".pages.BaseTagActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".pages.ShareSdkAty"/>
         <activity
             android:name=".pages.SplashAty"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Splash"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -276,11 +271,6 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".receiver.TimeoOutAlarmReceiver">
-            <intent-filter>
-                <action android:name="updateUI"/>
-            </intent-filter>
-        </receiver>
         <!--网络状态发生变化-->
         <receiver android:name=".receiver.NetworkStateChangedReceiver">
             <intent-filter>

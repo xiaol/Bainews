@@ -4,7 +4,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
+    lintOptions {
+        abortOnError false
+    }
     defaultConfig {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
@@ -17,6 +19,9 @@ android {
     productFlavors {
 //        googleplay {}
 //        yingyongbao {}
+        shanghai {}
+        hulizhushou {}
+        wangba {}
         xiaomi {}
 //        adcoco{}
 //        c360 {}

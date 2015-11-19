@@ -17,7 +17,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.news.yazhidao.R;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.TextUtil;
+
+import java.util.ArrayList;
 
 public class TextViewVertical extends View {
 
@@ -39,6 +43,7 @@ public class TextViewVertical extends View {
     private TextPaint mTextPaint;
     private Align textStartAlign = Align.RIGHT;//draw start left or right.//default right
     private Context mContext;
+    private ArrayList<Integer> mKeyWords;
     BitmapDrawable drawable = (BitmapDrawable) getBackground();
 
     public TextViewVertical(Context context){
@@ -74,13 +79,30 @@ public class TextViewVertical extends View {
     }*/
 
 
-    //设置文字
-    public final void setText(String text) {
+    //设置文字和搜索关键字
+    public final void setText(String text,String keyWord) {
         this.text = text;
         this.TextLength = text.length();
         if (mTextHeight > 0) GetTextInfo();
+        mKeyWords = checkData(text,keyWord);
     }
-
+    public ArrayList<Integer> checkData(String data,String keyWord){
+        ArrayList<Integer> locations = new ArrayList<>();
+        if (TextUtil.isEmptyString(keyWord)){
+            return locations;
+        }
+        char[] keyArr = keyWord.toCharArray();
+        int index = data.indexOf(keyWord);
+        do {
+            if (index != -1){
+                for (int i = 0; i < keyArr.length ; i++){
+                    locations.add(i + index);
+                }
+            }
+            index = data.indexOf(keyWord,index + 1);
+        }while (index != -1);
+        return locations;
+    }
     //设置字体大小
     public final void setTextSize(float size) {
         if (size != paint.getTextSize()) {
@@ -158,7 +180,13 @@ public class TextViewVertical extends View {
                     i--;
                     mTextPosy = 0;
                 } else {
-                    canvas.drawText(String.valueOf(ch), mTextPosx, mTextPosy, paint);
+                    if (!TextUtil.isListEmpty(mKeyWords) && mKeyWords.contains(i)){
+                        paint.setColor(mContext.getResources().getColor(R.color.theme_color));
+                        canvas.drawText(String.valueOf(ch), mTextPosx, mTextPosy, paint);
+                    }else {
+                        paint.setColor(Color.WHITE);
+                        canvas.drawText(String.valueOf(ch), mTextPosx, mTextPosy, paint);
+                    }
                 }
             }
         }

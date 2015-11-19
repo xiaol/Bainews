@@ -16,11 +16,12 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/title_img_View"
             android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_height="87dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:paddingBottom="8dp"
             android:scaleType="centerCrop"
+            fresco:placeholderImageScaleType="centerCrop"
             fresco:placeholderImage="@drawable/bg_load_default_small" />
 
         <TextView

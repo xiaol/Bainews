@@ -27,7 +27,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
-import com.news.yazhidao.widget.LoginModePopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -206,7 +205,7 @@ public class DiggerAty extends BaseActivity {
                 /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
                 User user = SharedPreManager.getUser(DiggerAty.this);
                 if (user == null){
-                    final LoginModePopupWindow window = new LoginModePopupWindow(DiggerAty.this, new UserLoginListener() {
+                    LoginModeFgt loginModeFgt = new LoginModeFgt(DiggerAty.this, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
                             /**获取专辑列表数据*/
@@ -228,8 +227,7 @@ public class DiggerAty extends BaseActivity {
 
                         }
                     }, null);
-                    window.showAtLocation(DiggerAty.this.getWindow().getDecorView(), Gravity.CENTER
-                            | Gravity.CENTER, 0, 0);
+                    loginModeFgt.show(getSupportFragmentManager(), "loginModeFgt");
                     return;
                 }
                 //查看数据库中是否已经专辑数据,如果没有则联网获取
