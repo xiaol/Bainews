@@ -19,6 +19,9 @@ android {
     productFlavors {
 //        googleplay {}
 //        yingyongbao {}
+        shanghai {}
+        hulizhushou {}
+        wangba {}
         xiaomi {}
 //        adcoco{}
 //        c360 {}
