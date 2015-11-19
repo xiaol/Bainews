@@ -1,25 +1,46 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by Ariesymark on 2015/3/25.
  */
+
+@DatabaseTable(tableName = "tb_news_feed")
 public class NewsFeed implements Serializable {
 
+    public static final String COLUMN_CHANNEL_ID = "channelId";
+    public static final String COLUMN_UPDATE_TIME = "updateTime";
+    @DatabaseField(generatedId = true)
+    private int id;
+    @DatabaseField
     private String sourceSiteName;
+    @DatabaseField
     private String updateTime;//更新时间
+    @DatabaseField
     private String sourceUrl;//来源地址
+    @DatabaseField
     private String description;
+    @DatabaseField
     private String title;
-    private Collection<Source> relatePointsList;
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<Source> relatePointsList;
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> imgUrls;
+    @DatabaseField
     private String commentNum;
+    @DatabaseField
     private String newsId;
+    @DatabaseField
     private String channelId;
+    @DatabaseField
     private String type;
+    @DatabaseField
     private String collection;
 
     public String getSourceSiteName() {
@@ -62,11 +83,11 @@ public class NewsFeed implements Serializable {
         this.title = title;
     }
 
-    public Collection<Source> getRelatePointsList() {
+    public ArrayList<Source> getRelatePointsList() {
         return relatePointsList;
     }
 
-    public void setRelatePointsList(Collection<Source> relatePointsList) {
+    public void setRelatePointsList(ArrayList<Source> relatePointsList) {
         this.relatePointsList = relatePointsList;
     }
 
@@ -119,7 +140,6 @@ public class NewsFeed implements Serializable {
     }
 
     public static class Source implements Serializable {
-
         private String sourceUrl;
         private String sourceSiteName;
         private String compress;

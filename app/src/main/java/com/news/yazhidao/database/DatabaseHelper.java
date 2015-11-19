@@ -14,6 +14,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.utils.Logger;
 
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 2);
+        super(context, TABLE_NAME, null, 7);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -59,6 +60,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, DiggerAlbum.class);
             TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
+            TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
             Logger.e("jigang", "DatabaseHelper  onCreate()");
             ChannelItemDao dao = new ChannelItemDao(mContext);
             dao.insertList(mChannels);
@@ -74,6 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
+            TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             onCreate(database, connectionSource);
             Logger.e("jigang", "DatabaseHelper  onUpgrade()");
         } catch (SQLException e) {

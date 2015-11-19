@@ -26,6 +26,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.JsonCallback;
@@ -74,12 +75,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
+    private NewsFeedDao mNewsFeedDao;
     /**
      * 热词页面加载更多
      */
-    private int mSerachPage = 1;
+    private int mSearchPage = 1;
     private Handler mHandler;
     private Runnable mRunnable;
+    private boolean mIsFirst = true;
     /**
      * 当前的fragment 是否已经加载过数据
      */
@@ -120,6 +123,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             isLoadedData = false;
             mHandler.postDelayed(mRunnable, 800);
             Logger.e("jigang", "refresh " + mstrChannelId);
+            if (mArrNewsFeed == null || mIsFirst) {
+                mArrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                mAdapter.notifyDataSetChanged();
+                mIsFirst = false;
+            }
         }
 
     }
@@ -130,8 +138,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        Logger.e("jigang", "newsfeedfgt");
         mContext = getActivity();
+        mNewsFeedDao = new NewsFeedDao(mContext);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         mstrDeviceId = DeviceInfoUtil.getUUID();
@@ -183,7 +191,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 e.printStackTrace();
             }
         }
-
         return rootView;
     }
 
@@ -236,13 +243,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
         nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
         nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
-        nameValuePairList.add(new BasicNameValuePair("page", mSerachPage + ""));
+        nameValuePairList.add(new BasicNameValuePair("page", mSearchPage + ""));
         mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
+                ToastUtil.toastLong("网络不给力,请检查网络....");
             }
 
             public void success(ArrayList<NewsFeed> result) {
@@ -259,16 +267,21 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         case PULL_UP_REFRESH:
                             if (mArrNewsFeed != null) {
                                 mArrNewsFeed.addAll(result);
-                                mSerachPage++;
+                                mSearchPage++;
                             }
                             break;
                     }
                     if (mNewsSaveCallBack != null) {
                         mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
                     }
+                    if (mstrChannelId != null && "TJ0001".equals(mstrChannelId)) {
+                        for (NewsFeed newsFeed : result)
+                            newsFeed.setChannelId("TJ0001");
+                    }
+                    mNewsFeedDao.insert(result);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.toastLong("网络不给力,请检查网络....");
+                    ToastUtil.toastLong("暂无更新,休息一会儿");
                 }
                 mlvNewsFeed.onRefreshComplete();
             }
