@@ -14,6 +14,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.DiggerAlbum;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -65,6 +66,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, DiggerAlbum.class);
             TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
+            TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
+
             /**初始化数据库或者升级数据库的时候,插入默认值*/
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             if (!TextUtil.isListEmpty(oldChannelItems)){
@@ -82,7 +85,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (!TextUtil.isListEmpty(oldDiggerAlbumItems)){
                 albumSubItemDao.insertList(oldDiggerAlbumItems);
             }
-
             Logger.e("jigang", "DatabaseHelper  onCreate()");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,6 +110,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
+            TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             onCreate(database, connectionSource);
             Logger.e("jigang", "DatabaseHelper  onUpgrade()");
         } catch (SQLException e) {

@@ -16,11 +16,12 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/title_img_View"
             android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_height="87dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:paddingBottom="8dp"
             android:scaleType="centerCrop"
+            fresco:placeholderImageScaleType="centerCrop"
             fresco:placeholderImage="@drawable/bg_load_default_small" />
 
         <TextView
@@ -30,7 +31,7 @@
             android:layout_margin="8dp"
             android:layout_toRightOf="@+id/title_img_View"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="2"
             android:textColor="#ff2b2b2b"
             android:textSize="@dimen/news_feed_title" />
 
@@ -39,7 +40,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/title_textView"
-            android:layout_alignParentBottom="true"
             android:layout_below="@+id/title_textView"
             android:ellipsize="end"
             android:maxEms="8"
@@ -52,8 +52,8 @@
             android:id="@+id/comment_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginLeft="10dp"
+            android:layout_alignTop="@+id/news_source_TextView"
             android:layout_toRightOf="@+id/news_source_TextView"
             android:paddingBottom="8dp"
             android:textSize="10sp"
