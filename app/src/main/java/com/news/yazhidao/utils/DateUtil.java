@@ -291,4 +291,13 @@ public class DateUtil {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
         return format.format(date);
     }
+    /**
+     * 获取当前系统的时间 带有毫秒值  格式:2015-06-04 12:12:34.578
+     * @return
+     */
+    public static String getDateWithMS() {
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        return format.format(date);
+    }
 }

@@ -15,6 +15,7 @@ import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,8 +26,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String TABLE_NAME = "yazhidao_news.db";
     private HashMap<String,Dao> mDaos;
     private Context mContext;
+    private ArrayList<ChannelItem> oldChannelItems;
+    private ArrayList<DiggerAlbum> oldDiggerAlbums;
+    private ArrayList<AlbumSubItem> oldDiggerAlbumItems;
+
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 2);
+        super(context, TABLE_NAME, null, 8);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -56,12 +61,29 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database,
                          ConnectionSource connectionSource) {
         try {
+
             TableUtils.createTableIfNotExists(connectionSource, DiggerAlbum.class);
             TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
+            /**初始化数据库或者升级数据库的时候,插入默认值*/
+            ChannelItemDao channelDao = new ChannelItemDao(mContext);
+            if (!TextUtil.isListEmpty(oldChannelItems)){
+                channelDao.insertList(oldChannelItems);
+            }else {
+                channelDao.insertList(mChannels);
+            }
+            /**升级数据库,保留以前的专辑*/
+            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
+            if (!TextUtil.isListEmpty(oldDiggerAlbums)){
+                albumDao.insertList(oldDiggerAlbums);
+            }
+            /**升级数据库,保留以前的专辑内容*/
+            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
+            if (!TextUtil.isListEmpty(oldDiggerAlbumItems)){
+                albumSubItemDao.insertList(oldDiggerAlbumItems);
+            }
+
             Logger.e("jigang", "DatabaseHelper  onCreate()");
-            ChannelItemDao dao = new ChannelItemDao(mContext);
-            dao.insertList(mChannels);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -71,6 +93,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
+            /***查询数据库升级前的频道列表*/
+            ChannelItemDao channelDao = new ChannelItemDao(mContext);
+            oldChannelItems = channelDao.queryForAll();
+            /**查询数据库升级前的专辑列表*/
+            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
+            oldDiggerAlbums = albumDao.querForAll();
+            /**查询专辑列表下的新闻*/
+            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
+            if (newVersion <= 8){
+                albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
+            }
+            oldDiggerAlbumItems = albumSubItemDao.queryForAll();
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);

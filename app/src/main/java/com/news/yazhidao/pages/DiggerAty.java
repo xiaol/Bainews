@@ -20,11 +20,9 @@ import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.FetchAlbumListListener;
 import com.news.yazhidao.listener.UserLoginListener;
-import com.news.yazhidao.net.request.FetchAlbumListRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
@@ -208,18 +206,21 @@ public class DiggerAty extends BaseActivity {
                     LoginModeFgt loginModeFgt = new LoginModeFgt(DiggerAty.this, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
-                            /**获取专辑列表数据*/
-                            FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
-                                @Override
-                                public void success(ArrayList<DiggerAlbum> resultList) {
-                                    handleAlbumsData(resultList);
-                                }
-
-                                @Override
-                                public void failure() {
-                                    ToastUtil.toastShort("获取专辑失败!");
-                                }
-                            });
+                            // FIXME: 15/11/23 此处先不处理服务器同步,直接从本地数据库中拿
+//                            /**获取专辑列表数据*/
+//                            FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
+//                                @Override
+//                                public void success(ArrayList<DiggerAlbum> resultList) {
+//                                    handleAlbumsData(resultList);
+//                                }
+//
+//                                @Override
+//                                public void failure() {
+//                                    ToastUtil.toastShort("获取专辑失败!");
+//                                }
+//                            });
+                            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
+                            handleAlbumsData(resultList);
                         }
 
                         @Override
@@ -232,23 +233,23 @@ public class DiggerAty extends BaseActivity {
                 }
                 //查看数据库中是否已经专辑数据,如果没有则联网获取
                 ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-                if (!TextUtil.isListEmpty(resultList)){
+//                if (!TextUtil.isListEmpty(resultList)){
                     handleAlbumsData(resultList);
-                }else{
-                    /**获取专辑列表数据*/
-                    FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
-                        @Override
-                        public void success(ArrayList<DiggerAlbum> resultList) {
-                            handleAlbumsData(resultList);
-                        }
-
-                        @Override
-                        public void failure() {
-                            ToastUtil.toastShort("获取专辑失败!");
-                        }
-                    });
-
-                }
+//                }else{
+                    // FIXME: 15/11/23 此处先不处理服务器同步
+//                    /**获取专辑列表数据*/
+//                    FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
+//                        @Override
+//                        public void success(ArrayList<DiggerAlbum> resultList) {
+//                            handleAlbumsData(resultList);
+//                        }
+//
+//                        @Override
+//                        public void failure() {
+//                            ToastUtil.toastShort("获取专辑失败!");
+//                        }
+//                    });
+//                }
 
 
                 leftCenterMenu.close(true);
@@ -313,6 +314,15 @@ public class DiggerAty extends BaseActivity {
      * @param resultList
      */
     private void handleAlbumsData(ArrayList<DiggerAlbum> resultList){
+        if (TextUtil.isListEmpty(resultList)){
+            /**此时专辑列表为空,需要插入一条默认的专辑*/
+            User user = SharedPreManager.getUser(this);
+            DiggerAlbumDao albumDao = new DiggerAlbumDao(this);
+            DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","0","2130837568","0");
+            albumDao.insert(album);
+            resultList = new ArrayList<>();
+            resultList.add(album);
+        }
         if (!TextUtil.isListEmpty(resultList)) {
             albumList.clear();
             for (int i = 0; i < resultList.size(); i++) {

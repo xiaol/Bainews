@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/mSpecialItemTopWrapper"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:layout_height="78dp"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="@color/white"
+              >
 
-    <RelativeLayout
-        android:id="@+id/mSpecialItemTopWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="78dp"
-        android:background="@color/white"
-        >
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/mSpecialItemIcon"
             android:layout_width="78dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
-            android:scaleType="centerCrop"
+            app:placeholderImage="@drawable/bg_load_default_small"
+            app:placeholderImageScaleType="centerCrop"
             />
 
         <TextView
@@ -25,11 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:layout_marginRight="8dp"
             android:layout_alignTop="@id/mSpecialItemIcon"
             android:layout_toRightOf="@id/mSpecialItemIcon"
+            android:layout_toLeftOf="@+id/mSpecialStatusIc"
             android:text="这是一群神秘的组织,里面有一群神秘的人."
-            android:lines="2"
+            android:maxLines="2"
             android:ellipsize="end"
             />
         <TextView
@@ -37,13 +35,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:layout_marginRight="8dp"
             android:textSize="16sp"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/mSpecialStatusIc"
             android:layout_toRightOf="@id/mSpecialItemIcon"
             android:drawableLeft="@drawable/ic_special_item_source"
             android:drawablePadding="4dp"
-            android:lines="1"
+            android:singleLine="true"
             android:ellipsize="end"
             android:visibility="gone"
             />
@@ -52,19 +50,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:layout_marginRight="8dp"
             android:textSize="11sp"
+            android:layout_toLeftOf="@+id/mSpecialStatusIc"
             android:layout_toRightOf="@id/mSpecialItemIcon"
             android:layout_alignBottom="@id/mSpecialItemIcon"
             android:drawableLeft="@drawable/ic_special_item_source"
             android:drawablePadding="4dp"
-            android:lines="1"
+            android:singleLine="true"
             android:ellipsize="end"
             />
-    </RelativeLayout>
-
-    <com.news.yazhidao.widget.digger.DigProgressView
-        android:id="@+id/mSpecialItemProgress"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"/>
-</LinearLayout>
+        <ImageView
+            android:id="@+id/mSpecialStatusIc"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_digger_refresh"
+            android:scaleType="centerInside"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            />
+</RelativeLayout>

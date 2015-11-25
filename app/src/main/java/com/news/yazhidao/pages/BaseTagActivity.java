@@ -67,6 +67,11 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
+
+    @Override
     protected void setContentView() {
 
     }
