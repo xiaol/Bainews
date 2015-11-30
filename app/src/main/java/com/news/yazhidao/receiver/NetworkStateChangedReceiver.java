@@ -36,8 +36,9 @@ public class NetworkStateChangedReceiver extends BroadcastReceiver {
         if(ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())){
             if(DeviceInfoUtil.isNetworkConnected(context)){
                 //查询数据库,看是否有新建的专辑没有上传成功,如果有则上传
-                reUploadAlbum(context);
-                reUPloadAlbumSubItem(context);
+                // FIXME: 15/11/23 以后上传到服务器
+//                reUploadAlbum(context);
+//                reUPloadAlbumSubItem(context);
             }
         }
     }

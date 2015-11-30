@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,9 +28,6 @@ import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.StringCallback;
-import com.news.yazhidao.net.request.DigNewsRequest;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -387,42 +383,43 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
                         DiggerAlbum diggerAlbum = mLengJingFgt.getDiggerAlbums().get(finalIndex);
                         mDiggerAlbum = diggerAlbum;
                     }
-                    mLengJingFgt.updateAlbumList(finalIndex, mDiggerAlbum);
                     /**(1).修改专辑数据*/
                     final DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(m_pContext);
-                    mDiggerAlbum.setAlbum_news_count((Integer.valueOf(mDiggerAlbum.getAlbum_news_count()) + 1) + "");
+                    final AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(m_pContext);
+                    mDiggerAlbum.setAlbum_news_count(((albumSubItemDao.queryByAlbumId(mDiggerAlbum.getAlbum_id()).size() + 1) + ""));
                     diggerAlbumDao.update(mDiggerAlbum);
                     /**(2).修改挖掘新闻数据*/
-                    final AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(m_pContext);
                     final AlbumSubItem albumSubItem = new AlbumSubItem(inputTitle, inputUrl);
                     albumSubItem.setDiggerAlbum(mDiggerAlbum);
                     AlbumSubItem existItem = albumSubItemDao.queryByTitleAndUrl(inputTitle, inputUrl);
                     if (existItem == null) {
+                        Logger.e("jigang","create time ==" + albumSubItem.getCreateTime());
                         albumSubItemDao.insert(albumSubItem);
                     } else {
                         ToastUtil.toastShort("您已挖掘过该新闻!");
                     }
-                    /**(3).开始向服务器请求挖掘数据*/
-                    DigNewsRequest.digNews(m_pContext, album.getAlbumId(), inputTitle, inputUrl, new StringCallback() {
-                        @Override
-                        public int retryCount() {
-                            return 3;
-                        }
-
-                        @Override
-                        public void success(String result) {
-                            if (!TextUtils.isEmpty(result)) {
-                                Logger.e("jigang", "---向服务器请求挖掘成功!" + result);
-                                albumSubItem.setIs_uploaded(albumSubItem.UPLOAD_DONE);
-                                albumSubItemDao.update(albumSubItem);
-                            }
-                        }
-
-                        @Override
-                        public void failed(MyAppException exception) {
-                            Logger.e("jigang", "---向服务器请求挖掘失败!" + exception.getMessage());
-                        }
-                    });
+                    mLengJingFgt.updateAlbumList(finalIndex, mDiggerAlbum);
+//                    /**(3).开始向服务器请求挖掘数据*/
+//                    DigNewsRequest.digNews(m_pContext, album.getAlbumId(), inputTitle, inputUrl, new StringCallback() {
+//                        @Override
+//                        public int retryCount() {
+//                            return 3;
+//                        }
+//
+//                        @Override
+//                        public void success(String result) {
+//                            if (!TextUtils.isEmpty(result)) {
+//                                Logger.e("jigang", "---向服务器请求挖掘成功!" + result);
+//                                albumSubItem.setIs_uploaded(albumSubItem.UPLOAD_DONE);
+//                                albumSubItemDao.update(albumSubItem);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void failed(MyAppException exception) {
+//                            Logger.e("jigang", "---向服务器请求挖掘失败!" + exception.getMessage());
+//                        }
+//                    });
                     DiggerPopupWindow.this.dismiss();
                 }
                 break;

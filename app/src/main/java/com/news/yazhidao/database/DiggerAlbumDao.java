@@ -54,6 +54,23 @@ public class DiggerAlbumDao {
     }
 
     /**
+     * 插入一个集合专辑数据
+     * @param pAlbumList 专辑对象集合
+     */
+    public void insertList(List<DiggerAlbum> pAlbumList){
+        try {
+            if (!TextUtil.isListEmpty(pAlbumList)){
+                for (DiggerAlbum album : pAlbumList){
+                    insert(album);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.e(TAG, "insert " + DiggerAlbum.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+    }
+
+    /**
      * 按照专辑id 来查询指定专辑
      * @param id 专辑id
      * @return 指定id的专辑对象

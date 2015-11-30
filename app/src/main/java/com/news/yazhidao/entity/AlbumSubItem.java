@@ -1,5 +1,6 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.news.yazhidao.utils.DateUtil;
@@ -40,6 +41,9 @@ public class AlbumSubItem implements Serializable {
     /**图片*/
     @DatabaseField(columnName = "img")
     private String img;
+    /**挖掘新闻的内容*/
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private NewsDetailForDigger detailForDigger;
 
     /**外键,该对象属于哪个专辑*/
     @DatabaseField(canBeNull = true,foreign = true,columnName = COLUMN_ALBUM_ID,foreignAutoRefresh = true)
@@ -52,7 +56,7 @@ public class AlbumSubItem implements Serializable {
         this.inserteId = "";
         this.search_key = search_key;
         this.is_uploaded = UPLOAD_NOT_DONE;
-        this.createTime = DateUtil.getDate();
+        this.createTime = DateUtil.getDateWithMS();
     }
 
     public void setStatus(String status) {
@@ -117,6 +121,14 @@ public class AlbumSubItem implements Serializable {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public NewsDetailForDigger getDetailForDigger() {
+        return detailForDigger;
+    }
+
+    public void setDetailForDigger(NewsDetailForDigger detailForDigger) {
+        this.detailForDigger = detailForDigger;
     }
 
     @Override

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mDetailWrapper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_news_detail">
+
+    <RelativeLayout
+        android:id="@+id/mDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/bg_home_login_header">
+
+        <ImageView
+            android:id="@+id/mDetailLeftBack"
+            android:layout_width="13dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="22dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="转到上一级"
+            android:src="@drawable/btn_detail_left_back" />
+
+
+        <TextView
+            android:id="@+id/mDiggerAlbum"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <!--暂时不用-->
+    <RelativeLayout
+        android:id="@+id/mNewsDetailLoaddingWrapper"
+        android:layout_below="@+id/mDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_gray">
+
+        <ImageView
+            android:id="@+id/mNewsLoadingImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="90dp"
+            android:maxWidth="90dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_news_detail_reload"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/mNewsDetailProgress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminateOnly="true"
+            android:minHeight="60.0dip"
+            android:minWidth="60.0dip" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/sv_news_detail"
+        android:layout_below="@+id/mDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/mDiggerNewsDetail"
+            android:layout_below="@+id/mDetailHeader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/rl_digger_news_detail"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_digger_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textSize="25sp"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="#151515" />
+
+                <TextView
+                    android:id="@+id/tv_digger_album"
+                    android:layout_below="@id/tv_digger_title"
+                    android:layout_marginTop="7dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textSize="16sp"
+                    android:textColor="#828080" />
+
+                <TextView
+                    android:id="@+id/tv_digger_time"
+                    android:layout_below="@id/tv_digger_title"
+                    android:layout_toRightOf="@id/tv_digger_album"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="#828080" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_below="@+id/tv_digger_album"
+                    android:id="@+id/ll_digger_news_detail"
+                    android:layout_marginTop="7dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/mDetailCommentGroupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_below="@+id/rl_digger_news_detail"
+                android:layout_marginTop="20dp"
+                android:text="知乎延伸"
+                android:textColor="@color/white"
+                android:background="@color/bg_home_login_header"
+                android:gravity="center"
+                android:textSize="18sp" />
+
+            <com.news.yazhidao.widget.MyListView
+                android:id="@+id/lv_digger_news_zhihu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/mDetailCommentGroupTitle"
+                android:listSelector="@android:color/transparent"
+                android:divider="#00000000"
+                />
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="invisible" />
+</RelativeLayout>

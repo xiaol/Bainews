@@ -53,6 +53,22 @@ public class AlbumSubItemDao {
             Logger.e(TAG, "insert " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
         }
     }
+    /**
+     * 向专辑里面插入一个集合数据
+     * @param pItemList 挖掘新闻对象
+     */
+    public void insertList(ArrayList<AlbumSubItem> pItemList){
+        try {
+            if (!TextUtil.isListEmpty(pItemList)){
+                for (AlbumSubItem item: pItemList){
+                    insert(item);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.e(TAG, "insert " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+    }
 
     /**
      * 按照搜索的title和url来查询指定的挖掘新闻对象
@@ -87,18 +103,16 @@ public class AlbumSubItemDao {
             if(existItem != null) {
                 existItem.setInserteId(pAlbumSubItem.getInserteId());
                 existItem.setStatus(pAlbumSubItem.getStatus());
-                if (existItem != null) {
+                existItem.setDetailForDigger(pAlbumSubItem.getDetailForDigger());
+                existItem.setImg(pAlbumSubItem.getImg());
+                existItem.setDiggerAlbum(pAlbumSubItem.getDiggerAlbum());
                     try {
-                        mAlbumSubItemDao.update(existItem);
+                        mAlbumSubItemDao.createOrUpdate(pAlbumSubItem);
                     } catch (SQLException e) {
                         e.printStackTrace();
                         Logger.e(TAG, "pAlbumSubItem update " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
                     }
-                }
-            }else{
-
             }
-
         }
     }
 
@@ -123,6 +137,24 @@ public class AlbumSubItemDao {
         }
         return new ArrayList<AlbumSubItem>(subItems);
     }
+
+    /**
+     * 获取所有的挖掘信息
+     * @return
+     */
+    public ArrayList<AlbumSubItem> queryForAll(){
+        List subItems = new ArrayList();
+        try {
+            subItems = mAlbumSubItemDao.queryForAll();
+            if (TextUtil.isListEmpty(subItems)){
+                return new ArrayList<>();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e(TAG, "queryForAll " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+        return new ArrayList<AlbumSubItem>(subItems);
+    }
     /**
      * 查询没有上传成功的挖掘新闻集合
      * @return
@@ -138,5 +170,15 @@ public class AlbumSubItemDao {
             e.printStackTrace();
         }
         return new ArrayList<AlbumSubItem>(subItems);
+    }
+
+    public int executeRaw(String sql){
+        try {
+            return mAlbumSubItemDao.executeRaw(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e(TAG, "executeRaw " + AlbumSubItem.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+        return -1;
     }
 }

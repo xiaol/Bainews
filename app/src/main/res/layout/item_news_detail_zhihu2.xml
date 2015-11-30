@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/mDetailZhiHuWrapper"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    >
+
+    <ImageView
+        android:id="@+id/rounded_imageView"
+        android:background="@drawable/white_relate_onedp_solid"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        />
+
+    <TextView
+        android:id="@+id/mDetailZhiHuTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/rounded_imageView"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="haha"
+        android:textColor="@color/news_detail_content"
+        android:layout_centerVertical="true"
+        android:textSize="14sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        />
+
+    <View
+        android:id="@+id/mDetailZhiHuDivider"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@id/mDetailZhiHuTitle"
+        android:layout_marginTop="8dp"
+        android:background="@color/news_detail_speech_divider"
+        />
+</RelativeLayout>

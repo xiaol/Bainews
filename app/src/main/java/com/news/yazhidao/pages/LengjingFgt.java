@@ -24,13 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.database.AlbumSubItemDao;
 import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
+import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.FetchAlbumListListener;
 import com.news.yazhidao.listener.UserLoginListener;
-import com.news.yazhidao.net.request.FetchAlbumListRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -171,34 +172,45 @@ public class LengjingFgt extends Fragment {
         mSpecialGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 openAlbumListAty(position, false, getActivity());
             }
         });
 
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
-        if (user == null) {
+        DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
+        ArrayList<DiggerAlbum> albums = albumDao.querForAll();
+        if (!TextUtil.isListEmpty(albums)){
+            AlbumSubItemDao itemDao = new AlbumSubItemDao(mActivity);
+            for (DiggerAlbum album: albums){
+                ArrayList<AlbumSubItem> albumSubItems = itemDao.queryByAlbumId(album.getAlbum_id());
+                album.setAlbum_news_count(albumSubItems.size() + "");
+            }
+        }
+        if (user == null || TextUtil.isListEmpty(albums)) {
             fl_lecture.setVisibility(View.VISIBLE);
             mSpecialGv.setVisibility(View.GONE);
         } else {
             fl_lecture.setVisibility(View.GONE);
             mSpecialGv.setVisibility(View.VISIBLE);
-            /**获取专辑列表数据*/
-            FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-                @Override
-                public void success(ArrayList<DiggerAlbum> resultList) {
-                    Logger.e("jigang", "--- " + resultList.size());
-                    if (resultList != null && resultList.size() > 0) {
-                        setDiggerAlbums(resultList);
-                    }
-                }
-
-                @Override
-                public void failure() {
-                    Logger.e(TAG, "获取专辑失败!");
-                    setDiggerAlbums(queryAlbumsFromDB());
-                }
-            });
+//            /**获取专辑列表数据*/
+//            FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+//                @Override
+//                public void success(ArrayList<DiggerAlbum> resultList) {
+//                    Logger.e("jigang", "--- " + resultList.size());
+//                    if (resultList != null && resultList.size() > 0) {
+//                        setDiggerAlbums(resultList);
+//                    }
+//                }
+//
+//                @Override
+//                public void failure() {
+//                    Logger.e(TAG, "获取专辑失败!");
+//                    setDiggerAlbums(queryAlbumsFromDB());
+//                }
+//            });
+            setDiggerAlbums(albums);
         }
     }
 
@@ -216,18 +228,22 @@ public class LengjingFgt extends Fragment {
             LoginModeFgt loginModeFgt = new LoginModeFgt(mActivity, new UserLoginListener() {
                 @Override
                 public void userLogin(String platform, PlatformDb platformDb) {
-                    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-                                @Override
-                                public void success(ArrayList<DiggerAlbum> resultList) {
-                                    handleAlbumsData(newsTitle, newsUrl, resultList);
-                                }
-
-                                @Override
-                                public void failure() {
-                                    ToastUtil.toastShort("获取专辑失败!");
-                                }
-                            }
-                    );
+                    //// FIXME: 15/11/23 以后再同步服务器
+//                    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+//                                @Override
+//                                public void success(ArrayList<DiggerAlbum> resultList) {
+//                                    handleAlbumsData(newsTitle, newsUrl, resultList);
+//                                }
+//
+//                                @Override
+//                                public void failure() {
+//                                    ToastUtil.toastShort("获取专辑失败!");
+//                                }
+//                            }
+//                    );
+                    DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
+                    ArrayList<DiggerAlbum> albums = albumDao.querForAll();
+                    handleAlbumsData(newsTitle, newsUrl, albums);
                 }
 
                 @Override
@@ -239,23 +255,23 @@ public class LengjingFgt extends Fragment {
         } else {
             //查看数据库中是否已经专辑数据,如果没有则联网获取
             ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-            if (!TextUtil.isListEmpty(resultList)) {
+//            if (!TextUtil.isListEmpty(resultList)) {
                 handleAlbumsData(newsTitle, newsUrl, resultList);
-            } else {
-                /**获取专辑列表数据*/
-                FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-                    @Override
-                    public void success(ArrayList<DiggerAlbum> resultList) {
-                        handleAlbumsData(newsTitle, newsUrl, resultList);
-                    }
-
-                    @Override
-                    public void failure() {
-                        ToastUtil.toastShort("获取专辑失败!");
-                    }
-                });
-
-            }
+//            } else {
+                //// FIXME: 15/11/23 以后再同步服务器
+//                /**获取专辑列表数据*/
+//                FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
+//                    @Override
+//                    public void success(ArrayList<DiggerAlbum> resultList) {
+//                        handleAlbumsData(newsTitle, newsUrl, resultList);
+//                    }
+//
+//                    @Override
+//                    public void failure() {
+//                        ToastUtil.toastShort("获取专辑失败!");
+//                    }
+//                });
+//            }
         }
 
     }
@@ -277,6 +293,15 @@ public class LengjingFgt extends Fragment {
      */
     private void handleAlbumsData(final String newsTitle, final String newsUrl, ArrayList<DiggerAlbum> resultList) {
         Logger.e("jigang", "--handleAlbumsData--" + resultList.size());
+        if (TextUtil.isListEmpty(resultList)){
+            /**此时专辑列表为空,需要插入一条默认的专辑*/
+                User user = SharedPreManager.getUser(getActivity());
+                DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
+                DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","2130837568","img","0");
+                albumDao.insert(album);
+                resultList = new ArrayList<>();
+                resultList.add(album);
+        }
         if (!TextUtil.isListEmpty(resultList)) {
             albumList.clear();
             for (int i = 0; i < resultList.size(); i++) {
@@ -306,9 +331,16 @@ public class LengjingFgt extends Fragment {
     private void openAlbumListAty(int position, boolean isNewAdd, Activity activity) {
         DiggerAlbum diggerAlbum = mDiggerAlbums.get(position);
         Logger.e("jigang", "update open =" + diggerAlbum.getAlbum_id());
+        AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(activity);
+        ArrayList<AlbumSubItem> albumSubItems = albumSubItemDao.queryByAlbumId(diggerAlbum.getAlbum_id());
+        if (TextUtil.isListEmpty(albumSubItems)){
+            ToastUtil.toastShort("您的专辑是空哒,无法打开!");
+            return;
+        }
         Intent specialAty = new Intent(activity, AlbumListAty.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, diggerAlbum);
+        bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_BUNDLE, albumSubItems);
+        bundle.putSerializable(AlbumListAty.KEY_DIG_SPECIAL_ALBUM,diggerAlbum);
         bundle.putBoolean(AlbumListAty.KEY_DIG_IS_NEW_ADD, isNewAdd);
         specialAty.putExtra(AlbumListAty.KEY_DIG_SPECIAL_INTENT, bundle);
         activity.startActivity(specialAty);
@@ -327,6 +359,7 @@ public class LengjingFgt extends Fragment {
             //添加一个新的专辑
             mDiggerAlbums.add(pDiggerAlbum);
         }
+        refreshAlbumList();
         mAlbumLvAdatpter.notifyDataSetChanged();
         openAlbumListAty(pAlbumIndex, true, getActivity());
     }

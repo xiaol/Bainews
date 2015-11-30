@@ -23,18 +23,11 @@ import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.BgAlbum;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.StringCallback;
-import com.news.yazhidao.net.request.CreateDiggerAlbumRequest;
 import com.news.yazhidao.pages.LengjingFgt;
 import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -142,41 +135,41 @@ public class AddAlbumPopupWindow extends PopupWindow {
                     Intent intent = new Intent(LengjingFgt.ACTION_USER_REFRESH_ALBUM);
                     m_pContext.sendBroadcast(intent);
 
-                    /**(3).把新创建好的专辑上传到服务器*/
-                    CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new StringCallback() {
-                        @Override
-                        public int retryCount() {
-                            return 3;
-                        }
-
-                        @Override
-                        public void success(String result) {
-                            String albumId = null;
-                            if (!TextUtil.isEmptyString(albumId)) {
-                                try {
-                                    JSONObject jsonObj = new JSONObject(result);
-                                    albumId = jsonObj.optString(CreateDiggerAlbumRequest.ALBUM_ID);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                Logger.e("jigang","---upload album "+diggerAlbum);
-                                if (!TextUtil.isEmptyString(albumId)) {
-                                    //TODO 上传专辑数据到服务器成功处理
-                                    Logger.e("jigang","---上传新建专辑成功");
-                                    diggerAlbum.setIs_uploaded(DiggerAlbum.UPLOAD_DONE);
-                                    diggerAlbumDao.update(diggerAlbum);
-                                } else {
-                                    Logger.e("jigang","---上传新建专辑失败");
-                                }
-
-                            }
-                        }
-
-                        @Override
-                        public void failed(MyAppException exception) {
-                            Logger.e("jigang","---上传新建专辑失败,"+exception.getMessage());
-                        }
-                    });
+//                    /**(3).把新创建好的专辑上传到服务器*/
+//                    CreateDiggerAlbumRequest.createDiggerAlbum(m_pContext, diggerAlbum, new StringCallback() {
+//                        @Override
+//                        public int retryCount() {
+//                            return 3;
+//                        }
+//
+//                        @Override
+//                        public void success(String result) {
+//                            String albumId = null;
+//                            if (!TextUtil.isEmptyString(albumId)) {
+//                                try {
+//                                    JSONObject jsonObj = new JSONObject(result);
+//                                    albumId = jsonObj.optString(CreateDiggerAlbumRequest.ALBUM_ID);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                Logger.e("jigang","---upload album "+diggerAlbum);
+//                                if (!TextUtil.isEmptyString(albumId)) {
+//                                    //TODO 上传专辑数据到服务器成功处理
+//                                    Logger.e("jigang","---上传新建专辑成功");
+//                                    diggerAlbum.setIs_uploaded(DiggerAlbum.UPLOAD_DONE);
+//                                    diggerAlbumDao.update(diggerAlbum);
+//                                } else {
+//                                    Logger.e("jigang","---上传新建专辑失败");
+//                                }
+//
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void failed(MyAppException exception) {
+//                            Logger.e("jigang","---上传新建专辑失败,"+exception.getMessage());
+//                        }
+//                    });
                     dismiss();
                 }
 
