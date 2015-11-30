@@ -79,6 +79,10 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
      * 刷新数据
      */
     public static final String ACTION_REFRESH_DATA = "com.news.yazhidao.ACTION_REFRESH_DATA";
+    public static final String KEY_SEARCH_KEY = "key_search_key";
+    public static final String KEY_ALBUM_TITLE = "key_album_title";
+    public static final String KEY_CREATETIME = "key_createtime";
+    public static final String KEY_NEWSDETAIL_FOR_DIGGER = "key_newsdetail_for_digger";
 
     private ListView mSpecialLv;
     private TextView mCommonHeaderTitle;
@@ -155,19 +159,19 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
                 if (DIGGER_STATUS_SUCCESS.equals(albumSubItem.getStatus())) {
                     //TODO 在这儿加入挖掘的新闻intent
                     NewsDetailForDigger detailForDigger = albumSubItem.getDetailForDigger();
-//                    new  intent.putExtra("key_detail_for_digger",detailForDigger);
-                    String key = albumSubItem.getSearch_key();
-                    String album = albumSubItem.getDiggerAlbum().getAlbum_title();
+                    String searchKey = albumSubItem.getSearch_key();
+                    String albumTitle = albumSubItem.getDiggerAlbum().getAlbum_title();
                     String createtime = albumSubItem.getCreateTime();
 
                     Intent intent1 = new Intent(AlbumListAty.this,DiggerNewsDetail.class);
-                    intent1.putExtra("key",key);
-                    intent1.putExtra("album",album);
-                    intent1.putExtra("createtime",createtime);
+                    intent1.putExtra(KEY_SEARCH_KEY,searchKey);
+                    intent1.putExtra(KEY_ALBUM_TITLE,albumTitle);
+                    intent1.putExtra(KEY_CREATETIME,createtime);
+                    intent1.putExtra(KEY_NEWSDETAIL_FOR_DIGGER,detailForDigger);
                     startActivity(intent1);
 
                 } else {
-                    ToastUtil.toastShort("正在挖掘中,请回退页面查看!");
+                    ToastUtil.toastShort("正在挖掘中...");
                 }
             }
         });
@@ -222,7 +226,7 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
                     }
                 }
         );
-        diggerRequest.setRetryPolicy(new DefaultRetryPolicy(500, 2, 1.0f));
+        diggerRequest.setRetryPolicy(new DefaultRetryPolicy(15 * 1000, 2, 1.0f));
         diggerRequest.setTag(AlbumListAty.this);
         mRequestQueue.add(diggerRequest);
     }

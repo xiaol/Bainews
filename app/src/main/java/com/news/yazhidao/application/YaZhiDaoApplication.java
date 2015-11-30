@@ -22,6 +22,7 @@ import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.entity.UMessage;
+import com.umeng.update.UmengUpdateAgent;
 
 /**
  * Created by fengjigang on 15/2/1.
@@ -39,6 +40,8 @@ public class YaZhiDaoApplication extends Application {
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
         //init fresco
         Fresco.initialize(this);
+        String device_token = UmengRegistrar.getRegistrationId(this);
+        Logger.e("device_token","token="+device_token);
         super.onCreate();
     }
     public static Context getAppContext(){
@@ -56,6 +59,7 @@ public class YaZhiDaoApplication extends Application {
             String messageAction = msg.extra.get("messageKey");
             if ("action_registration_id".equals(messageAction)) {
                 String device_token = UmengRegistrar.getRegistrationId(context);
+                Logger.e("device_token","token="+device_token);
                 UploadUmengPushIdRequest.uploadUmengPushId(context, device_token);
             } else if ("action_message_received".equals(messageAction)) {
                 String title =msg.extra.get("extra_title");
@@ -94,7 +98,7 @@ public class YaZhiDaoApplication extends Application {
 
                 String newsid = msg.extra.get("newsid");
                 String collection = msg.extra.get("collection");
-
+                String newVersion = msg.extra.get("version");
                 Logger.i("jigang", "receive custom newsid=" + newsid + ",collection=" + collection);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
                 if (!TextUtil.isEmptyString(newsid) && !TextUtil.isEmptyString(collection)) {
@@ -104,6 +108,9 @@ public class YaZhiDaoApplication extends Application {
                     detailIntent.putExtra(NewsFeedFgt.KEY_COLLECTION, collection);
                     detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailIntent);
+                } else if (!TextUtil.isEmptyString(newVersion)){
+                    UmengUpdateAgent.silentUpdate(context);
+                    Logger.e("jigang","need update");
                 } else {
                     Intent HomeIntent = new Intent(context, MainAty.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PointF;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,36 +10,22 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailForDigger;
-import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.MyListView;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by fengjigang on 15/9/6.
@@ -60,11 +45,8 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
      * 返回上一级,全文评论,分享
      */
     private View mDetailLeftBack, mDetailComment, mDetailShare, mDetailHeader, mNewsDetailLoaddingWrapper;
-    private ImageView mNewsLoadingImg;
-    private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
-    private ProgressBar mNewsDetailProgress;
     private RelativeLayout mDiggerNewsDetail;
     private MyListView lv_digger_news_zhihu;
     private LinearLayout ll_digger_news_detail;
@@ -82,12 +64,10 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
     private String mSource;
     private String newsId = null;
     private String newsType = null;
-    private String key;
-    private String album;
-    private String createtime;
-    private static final String SEARCH_KEY = "key";
-    private static final String ALBUM = "album";
-    private static final String CREATETIME = "createtime";
+    private String mSerachKey;
+    private String mAlbumTitle;
+    private String mCreatetime;
+    private NewsDetailForDigger mNewsDetailForDigger;
 
     @Override
     protected boolean translucentStatus() {
@@ -97,9 +77,10 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
     @Override
     protected void setContentView() {
 
-        key = getIntent().getStringExtra(SEARCH_KEY);
-        album = getIntent().getStringExtra(ALBUM);
-        createtime = getIntent().getStringExtra(CREATETIME);
+        mSerachKey = getIntent().getStringExtra(AlbumListAty.KEY_SEARCH_KEY);
+        mAlbumTitle = getIntent().getStringExtra(AlbumListAty.KEY_ALBUM_TITLE);
+        mCreatetime = getIntent().getStringExtra(AlbumListAty.KEY_CREATETIME);
+        mNewsDetailForDigger = (NewsDetailForDigger) getIntent().getSerializableExtra(AlbumListAty.KEY_NEWSDETAIL_FOR_DIGGER);
         setContentView(R.layout.aty_digger_news_detail_layout);
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
@@ -112,25 +93,21 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
-        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
-        mNewsLoadingImg.setOnClickListener(this);
-//        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
         mDiggerAlbum = (TextView) findViewById(R.id.mDiggerAlbum);
-        mDiggerAlbum.setText(album);
+        mDiggerAlbum.setText(mAlbumTitle);
 
         mDiggerNewsDetail = (RelativeLayout) findViewById(R.id.mDiggerNewsDetail);
         mDiggerNewsDetail.setVisibility(View.GONE);
         tv_digger_title = (TextView) findViewById(R.id.tv_digger_title);
-        tv_digger_title.setText(key);
+        tv_digger_title.setText(mSerachKey);
         tv_digger_album = (TextView) findViewById(R.id.tv_digger_album);
-        tv_digger_album.setText(album);
+        tv_digger_album.setText(mAlbumTitle);
         tv_digger_time = (TextView) findViewById(R.id.tv_digger_time);
-        if (createtime != null && createtime.length() > 0) {
-            tv_digger_time.setText(createtime.substring(0, 16));
+        if (mCreatetime != null && mCreatetime.length() > 0) {
+            tv_digger_time.setText(mCreatetime.substring(0, 16));
         } else {
             tv_digger_time.setText("");
         }
@@ -151,63 +128,19 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
 
     @Override
     protected void loadData() {
-//        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-//        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
-//        mAniNewsLoading.start();
-        mNewsLoadingImg.setVisibility(View.GONE);
-        mNewsDetailProgress.setVisibility(View.VISIBLE);
+        list = (ArrayList<NewsDetailForDigger.ContentEntity>) mNewsDetailForDigger.getContent();
+        //展现挖掘机挖掘出的新闻详情
+        viewDiggerNewsDetail();
 
-        User user = SharedPreManager.getUser(DiggerNewsDetail.this);
-        if (user != null) {
-            mUserId = user.getUserId();
-            mPlatformType = user.getPlatformType();
+        zhihuList = (ArrayList<NewsDetailForDigger.ZhihuEntity>) mNewsDetailForDigger.getZhihu();
+        if (zhihuList != null && zhihuList.size() > 0) {
+            adapter = new MyAdapter();
+            lv_digger_news_zhihu.setAdapter(adapter);
+        } else {
+            mDetailCommentGroupTitle.setVisibility(View.GONE);
+            lv_digger_news_zhihu.setVisibility(View.GONE);
         }
 
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_DIGGER_NEWS, NetworkRequest.RequestMethod.POST);
-        final List<NameValuePair> pairs = new ArrayList<>();
-        /**是否是挖掘的新闻*/
-        pairs.add(new BasicNameValuePair("uid", mUserId));
-        pairs.add(new BasicNameValuePair("albumid", "2"));
-        pairs.add(new BasicNameValuePair("key", key));
-        _Request.setParams(pairs);
-        _Request.setCallback(new JsonCallback<NewsDetailForDigger>() {
-
-            @Override
-            public void success(final NewsDetailForDigger result) {
-                if (result != null) {
-                    mNewsLoadingImg.setVisibility(View.GONE);
-                    mNewsDetailProgress.setVisibility(View.GONE);
-                    mDiggerNewsDetail.setVisibility(View.VISIBLE);
-
-                    list = (ArrayList<NewsDetailForDigger.ContentEntity>) result.getContent();
-
-                    //展现挖掘机挖掘出的新闻详情
-                    viewDiggerNewsDetail();
-
-                    zhihuList = (ArrayList<NewsDetailForDigger.ZhihuEntity>) result.getZhihu();
-                    if (zhihuList != null && zhihuList.size() > 0) {
-                        adapter = new MyAdapter();
-                        lv_digger_news_zhihu.setAdapter(adapter);
-                    } else {
-                        mDetailCommentGroupTitle.setVisibility(View.GONE);
-                        lv_digger_news_zhihu.setVisibility(View.GONE);
-                    }
-
-                } else {
-                    ToastUtil.toastShort("此新闻暂时无法查看!");
-                    DiggerNewsDetail.this.finish();
-                }
-            }
-
-            @Override
-            public void failed(MyAppException exception) {
-                Logger.e("jigang", "network fail");
-                mNewsLoadingImg.setVisibility(View.VISIBLE);
-                mNewsDetailProgress.setVisibility(View.GONE);
-            }
-        }.setReturnType(new TypeToken<NewsDetailForDigger>() {
-        }.getType()));
-        _Request.execute();
     }
 
     private void viewDiggerNewsDetail() {
@@ -230,7 +163,7 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
                     SimpleDraweeView img = new SimpleDraweeView(this);
                     img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, 0.35f));
                     img.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 350));
-                    DraweeController draweeController= Fresco.newDraweeControllerBuilder()
+                    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                             .setAutoPlayAnimations(true)
                             .setUri(Uri.parse(entity.getSrc()))//设置uri
                             .build();
