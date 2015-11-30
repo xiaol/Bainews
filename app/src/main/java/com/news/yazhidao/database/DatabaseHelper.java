@@ -32,7 +32,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ArrayList<AlbumSubItem> oldDiggerAlbumItems;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 8);
+        super(context, TABLE_NAME, null, 9);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -103,7 +103,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             oldDiggerAlbums = albumDao.querForAll();
             /**查询专辑列表下的新闻*/
             AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
-            if (newVersion <= 8){
+            if (newVersion <= 9){
                 albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
             }
             oldDiggerAlbumItems = albumSubItemDao.queryForAll();

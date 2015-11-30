@@ -33,34 +33,6 @@
     </RelativeLayout>
 
     <!--暂时不用-->
-    <RelativeLayout
-        android:id="@+id/mNewsDetailLoaddingWrapper"
-        android:layout_below="@+id/mDetailHeader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/bg_gray">
-
-        <ImageView
-            android:id="@+id/mNewsLoadingImg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxHeight="90dp"
-            android:maxWidth="90dp"
-            android:layout_centerInParent="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_news_detail_reload"
-            android:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/mNewsDetailProgress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminateOnly="true"
-            android:minHeight="60.0dip"
-            android:minWidth="60.0dip" />
-    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/sv_news_detail"
@@ -115,6 +87,8 @@
                     android:orientation="vertical"
                     android:layout_below="@+id/tv_digger_album"
                     android:id="@+id/ll_digger_news_detail"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
                     android:layout_marginTop="7dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
