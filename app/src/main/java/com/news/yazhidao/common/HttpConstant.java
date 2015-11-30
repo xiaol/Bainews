@@ -28,7 +28,7 @@ public class HttpConstant {
     /**往专辑中添加挖掘内容*/
     public static final String URL_DIGGER_ALBUM = "http://60.28.29.37:8080/excavator?";
     /**开始挖掘新闻*/
-    public static final String URL_DIGGER_NEWS = "http://121.40.34.56/news/baijia/dredgeUpStatusforiOS";
+    public static final String URL_DIGGER_NEWS = "http://api.deeporiginalx.com/news/baijia/dredgeUpStatusforiOS";
     /**获取指定专辑中的挖掘内容*/
     public static final String URL_FETCH_ALBUM_SUBITEMS = "http://api.deeporiginalx.com/news/baijia/dredgeUpStatus?";
     /**获取热点话题标签*/

@@ -284,6 +284,13 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".pages.DiggerNewsDetail"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
+
+        <activity
             android:name=".pages.AlbumListAty"
             android:screenOrientation="portrait"/>
         <activity

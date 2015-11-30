@@ -129,7 +129,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
             }
 
             @Override

@@ -154,9 +154,17 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
                 /**判断是否已经挖掘完毕,挖掘完事儿后,方可打开*/
                 if (DIGGER_STATUS_SUCCESS.equals(albumSubItem.getStatus())) {
                     //TODO 在这儿加入挖掘的新闻intent
-//                    NewsDetailForDigger detailForDigger = albumSubItem.getDetailForDigger();
+                    NewsDetailForDigger detailForDigger = albumSubItem.getDetailForDigger();
 //                    new  intent.putExtra("key_detail_for_digger",detailForDigger);
-//                    startActivity();
+                    String key = albumSubItem.getSearch_key();
+                    String album = albumSubItem.getDiggerAlbum().getAlbum_title();
+                    String createtime = albumSubItem.getCreateTime();
+
+                    Intent intent1 = new Intent(AlbumListAty.this,DiggerNewsDetail.class);
+                    intent1.putExtra("key",key);
+                    intent1.putExtra("album",album);
+                    intent1.putExtra("createtime",createtime);
+                    startActivity(intent1);
 
                 } else {
                     ToastUtil.toastShort("正在挖掘中,请回退页面查看!");
@@ -164,14 +172,6 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
             }
         });
 
-//        final AlbumSubItemDao dao = new AlbumSubItemDao(this);
-//        if (isNewAdd) {
-//            ArrayList<AlbumSubItem> subItems = dao.queryByAlbumId(mDiggerAlbum.getAlbum_id());
-//            mAlbumSubItems = subItems;
-//            mSpecialLvAdapter.notifyDataSetChanged();
-//        } else {
-//            loadDataFromServer(dao);
-//        }
     }
 
     /**
