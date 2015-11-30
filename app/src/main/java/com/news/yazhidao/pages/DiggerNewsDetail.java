@@ -218,7 +218,7 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
                 if (entity.getText() != null) {
                     TextView tv = new TextView(this);
                     tv.setText(entity.getText());
-                    tv.setTextColor(new Color().parseColor("#252525"));
+                    tv.setTextColor(new Color().parseColor("#494949"));
                     tv.setTextSize(14);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
