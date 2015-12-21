@@ -87,6 +87,8 @@
                     android:orientation="vertical"
                     android:layout_below="@+id/tv_digger_album"
                     android:id="@+id/ll_digger_news_detail"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
                     android:layout_marginTop="7dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
