@@ -100,7 +100,6 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
         mDiggerAlbum.setText(mAlbumTitle);
 
         mDiggerNewsDetail = (RelativeLayout) findViewById(R.id.mDiggerNewsDetail);
-        mDiggerNewsDetail.setVisibility(View.GONE);
         tv_digger_title = (TextView) findViewById(R.id.tv_digger_title);
         tv_digger_title.setText(mSerachKey);
         tv_digger_album = (TextView) findViewById(R.id.tv_digger_album);
@@ -151,7 +150,7 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
                 if (entity.getText() != null) {
                     TextView tv = new TextView(this);
                     tv.setText(entity.getText());
-                    tv.setTextColor(new Color().parseColor("#252525"));
+                    tv.setTextColor(new Color().parseColor("#494949"));
                     tv.setTextSize(14);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -162,7 +161,11 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
                 } else if (entity.getSrc() != null) {
                     SimpleDraweeView img = new SimpleDraweeView(this);
                     img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, 0.35f));
-                    img.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 350));
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(mScreenHeight * 0.3));
+                    params.topMargin = DensityUtil.dip2px(this, 7);
+                    params.bottomMargin = DensityUtil.dip2px(this, 7);
+
+                    img.setLayoutParams(params);
                     DraweeController draweeController = Fresco.newDraweeControllerBuilder()
                             .setAutoPlayAnimations(true)
                             .setUri(Uri.parse(entity.getSrc()))//设置uri

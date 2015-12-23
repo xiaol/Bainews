@@ -73,6 +73,7 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 		mLeftBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				onBackPressed();
 				ChannelOperateAty.this.finish();
 			}
 		});

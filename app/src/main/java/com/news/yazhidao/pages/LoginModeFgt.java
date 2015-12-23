@@ -25,6 +25,7 @@ import cn.sharesdk.wechat.friends.Wechat;
  * Created by fengjigang on 15/11/11.
  * 用户登录方式界面的fragment
  */
+@SuppressWarnings("ValidFragment")
 public class LoginModeFgt extends DialogFragment implements View.OnClickListener {
 
     private enum AuthorizeType {

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.2'
+    buildToolsVersion '21.1.2'
     lintOptions {
         abortOnError false
     }
@@ -11,19 +11,20 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 111
-        versionName "2.0.2"
+        versionCode 112
+        versionName "2.0.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
     productFlavors {
 //        googleplay {}
 //        yingyongbao {}
+        kuaiyou {}
         shanghai {}
         hulizhushou {}
         wangba {}
         xiaomi {}
-//        adcoco{}
+        adcoco{}
 //        c360 {}
 //        baidu {}
 //        wandoujia {}
