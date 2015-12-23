@@ -18,18 +18,6 @@
             <option value="$PROJECT_DIR$/sharesdk_onekeyshare" />
           </set>
         </option>
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/jazzylistviewlibrary" />
-            <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/library_action_menu" />
-            <option value="$PROJECT_DIR$/library_pageslidingtabstrip" />
-            <option value="$PROJECT_DIR$/sharesdk_mainlib" />
-            <option value="$PROJECT_DIR$/sharesdk_onekeyshare" />
-          </set>
-        </option>
       </GradleProjectSettings>
     </option>
   </component>
