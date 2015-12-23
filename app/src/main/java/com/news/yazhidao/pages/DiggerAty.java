@@ -87,6 +87,7 @@ public class DiggerAty extends BaseActivity {
         //判断是否是别的app分享进来的
         Intent intent = getIntent();
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
+        boolean needOpenHomeAty = intent.getBooleanExtra(TopicSearchAty.KEY_NOT_NEED_OPEN_HOME_ATY,false);
         String type = intent.getType();
 
         //FIXME 目前暂时酱紫写,后面有可能还有改动
@@ -99,7 +100,7 @@ public class DiggerAty extends BaseActivity {
             bundle.putString(KEY_TITLE,TextUtil.getNewsTitle(data));
             bundle.putString(KEY_URL,TextUtil.getNewsUrl(data));
             mLengJingFgt.setArguments(bundle);
-            isOpenHomeAty = true;
+            isOpenHomeAty = !needOpenHomeAty;
         }
         transaction.add(R.id.mDiggerLayout, mLengJingFgt);
         transaction.commit();

@@ -177,8 +177,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }else {
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
-            newsId = "8b988024754bd629e18b171adc1cab63";
-            newsType = "googleNewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);

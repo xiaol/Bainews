@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 public class TopicSearchAty extends BaseActivity implements View.OnClickListener {
 
+    public final static String KEY_NOT_NEED_OPEN_HOME_ATY = "KEY_NOT_NEED_OPEN_HOME_ATY";
     /**标签页的容量*/
     private final static int PAGE_CAPACITY = 10;
 
@@ -150,10 +152,15 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         hideKeyboard(v);
-                        mSearchContent.setText(element.getTitle());
-                        mSearchContent.setSelection(element.getTitle().length());
-                        mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
-                        mSearchHotLabelLayout.setVisibility(View.GONE);
+//                        mSearchContent.setText(element.getTitle());
+//                        mSearchContent.setSelection(element.getTitle().length());
+//                        mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
+//                        mSearchHotLabelLayout.setVisibility(View.GONE);
+                        Intent diggerIntent = new Intent(TopicSearchAty.this,DiggerAty.class);
+                        diggerIntent.setType("text/plain");
+                        diggerIntent.putExtra(Intent.EXTRA_TEXT,element.getTitle());
+                        diggerIntent.putExtra(KEY_NOT_NEED_OPEN_HOME_ATY,true);
+                        startActivity(diggerIntent);
                     }
                 });
                 mHotLabelsLayout.addView(textView);

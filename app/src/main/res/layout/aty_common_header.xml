@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/mCommonHeaderWrapper"
+<RelativeLayout android:id="@+id/mCommonHeaderWrapper"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
+                android:layout_height="48dp"
                 android:background="@color/bg_home_login_header"
                 android:orientation="vertical">
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/mCommonHeaderLeftBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:src="@drawable/btn_common_left_back"
-            />
-    </FrameLayout>
+        android:layout_gravity="center"
+        android:layout_marginLeft="12dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_detail_left_back"
+        />
 
     <TextView
         android:id="@+id/mCommonHeaderTitle"
