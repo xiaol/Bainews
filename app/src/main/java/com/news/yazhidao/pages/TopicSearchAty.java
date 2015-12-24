@@ -15,19 +15,34 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.Element;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.net.volley.SearchRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.HotLabelsLayout;
 
 import org.apache.http.NameValuePair;
@@ -50,12 +65,19 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private TextView mDoSearch;
     private HotLabelsLayout mHotLabelsLayout;
     private TextView mDoSearchChangeBatch;
-    private NewsFeedFgt mSearchResultFgt;
+    private PullToRefreshListView mSearchListView;
     private View mSearchHotLabelLayout;
-
+    private NewsFeedAdapter mNewsFeedAdapter;
+    private View mSearchLoaddingWrapper;
+    private ImageView mSearchTipImg;
+    private TextView mSearchTip;
+    private ProgressBar mSearchProgress;
     private ArrayList<Element> mHotLabels;
+    private ArrayList<NewsFeed> mNewsFeedLists = new ArrayList<>();
     private int mTotalPage;
     private int mCurrPageIndex;
+    private String mKeyWord;
+    private int mPageIndex = 1;//搜索index
 
     @Override
     protected boolean translucentStatus() {
@@ -80,7 +102,25 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mDoSearchChangeBatch = (TextView) findViewById(R.id.mDoSearchChangeBatch);
         mDoSearchChangeBatch.setOnClickListener(this);
         mSearchHotLabelLayout = findViewById(R.id.mSearchHotLabelLayout);
-        mSearchResultFgt = (NewsFeedFgt)getSupportFragmentManager().findFragmentById(R.id.mSearchResultFgt);
+        mSearchLoaddingWrapper = findViewById(R.id.mSearchLoaddingWrapper);
+        mSearchTipImg = (ImageView)findViewById(R.id.mSearchTipImg);
+        mSearchTip = (TextView)findViewById(R.id.mSearchTip);
+        mSearchProgress = (ProgressBar)findViewById(R.id.mSearchProgress);
+        mNewsFeedAdapter = new NewsFeedAdapter(this);
+        mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
+        mSearchListView.setAdapter(mNewsFeedAdapter);
+        mSearchListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mSearchListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                loadNewsData(mKeyWord,++mPageIndex + "");
+            }
+        });
     }
 
     @Override
@@ -94,7 +134,21 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDoSearch:
                 hideKeyboard(v);
-                mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
+                mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
+                mSearchTipImg.setVisibility(View.GONE);
+                mSearchTip.setVisibility(View.GONE);
+                mSearchTip.setText("暂无搜索结果");
+                mSearchProgress.setVisibility(View.VISIBLE);
+                List<String> oldlist = SharedPreManager.getSearchWord();
+                if (!TextUtil.isListEmpty(oldlist) &&!TextUtil.isEmptyString(oldlist.get(0)) && !mKeyWord.equals(oldlist.get(0))){
+                        mNewsFeedLists.clear();
+                        mNewsFeedAdapter.setSearchKeyWord(null);
+                        mNewsFeedAdapter.setNewsFeed(null);
+                }
+                mNewsFeedLists.clear();
+                SharedPreManager.saveSearchWord(mKeyWord);
+                mPageIndex = 1;
+                loadNewsData(mKeyWord,mPageIndex+"");
                 mSearchHotLabelLayout.setVisibility(View.GONE);
                 break;
             case R.id.mDoSearchChangeBatch:
@@ -103,8 +157,55 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * 获取新闻数据
+     */
+    private void loadNewsData(String pKeyWord,String pPageIndex){
+        RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
+        SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.POST,new TypeToken<ArrayList<NewsFeed>>(){}.getType(),"http://api.deeporiginalx.com/news/baijia/search",new Response.Listener<ArrayList<NewsFeed>>(){
+
+            @Override
+            public void onResponse(ArrayList<NewsFeed> response) {
+                mSearchListView.onRefreshComplete();
+                if (!TextUtil.isListEmpty(response)){
+                    mNewsFeedLists.addAll(response);
+                    mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
+                    mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
+                    mNewsFeedAdapter.notifyDataSetChanged();
+                    mSearchLoaddingWrapper.setVisibility(View.GONE);
+                }else {
+                    Logger.e("jigang","response is null");
+
+                    if (mPageIndex > 1){
+                        ToastUtil.toastShort("没有更多数据");
+                    }else {
+                        ToastUtil.toastShort("没有搜索到与\""+mKeyWord+"\"相关的数据");
+                        mSearchTipImg.setVisibility(View.VISIBLE);
+                        mSearchTip.setVisibility(View.VISIBLE);
+                        mSearchProgress.setVisibility(View.GONE);
+
+                    }
+                }
+            }
+        },new Response.ErrorListener(){
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mSearchListView.onRefreshComplete();
+                Logger.e("jigang",""+error.getMessage());
+                mSearchTipImg.setVisibility(View.VISIBLE);
+                mSearchTip.setVisibility(View.VISIBLE);
+            }
+        });
+        searchRequest.setKeyWordAndPageIndex(pKeyWord,pPageIndex);
+        searchRequest.setRetryPolicy(new DefaultRetryPolicy(15 * 1000, 1, 1.0f));
+        requestQueue.add(searchRequest);
+    }
+
     @Override
     protected void loadData() {
+        mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
+        mSearchTip.setText("暂无热门搜索热词");
         final NetworkRequest request = new NetworkRequest(HttpConstant.URL_FETCH_ELEMENTS, NetworkRequest.RequestMethod.POST);
         List<NameValuePair> pairs = new ArrayList<>();
         request.setParams(pairs);
@@ -116,12 +217,18 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     int temp = mHotLabels.size() % PAGE_CAPACITY;
                     mTotalPage = (temp == 0) ? mHotLabels.size() / PAGE_CAPACITY : mHotLabels.size() / PAGE_CAPACITY + 1;
                     setHotLabelLayoutData(mCurrPageIndex++);
+                    mSearchLoaddingWrapper.setVisibility(View.GONE);
+                }else {
+                        mSearchTipImg.setVisibility(View.VISIBLE);
+                        mSearchTip.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void failed(MyAppException exception) {
                 Logger.e("jigang", "-----fetch hot label fail~");
+                mSearchTipImg.setVisibility(View.VISIBLE);
+                mSearchTip.setVisibility(View.VISIBLE);
             }
         }.setReturnType(new TypeToken<ArrayList<Element>>() {
         }.getType()));
@@ -152,10 +259,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         hideKeyboard(v);
-//                        mSearchContent.setText(element.getTitle());
-//                        mSearchContent.setSelection(element.getTitle().length());
-//                        mSearchResultFgt.setSearchKeyWord(mSearchContent.getText().toString());
-//                        mSearchHotLabelLayout.setVisibility(View.GONE);
                         Intent diggerIntent = new Intent(TopicSearchAty.this,DiggerAty.class);
                         diggerIntent.setType("text/plain");
                         diggerIntent.putExtra(Intent.EXTRA_TEXT,element.getTitle());
@@ -197,10 +300,12 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         public void afterTextChanged(Editable s) {
             Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
+                mKeyWord = mSearchContent.getText().toString();
                 mSearchClear.setVisibility(View.VISIBLE);
                 mDoSearch.setTextColor(TopicSearchAty.this.getResources().getColor(R.color.do_search_can_do));
                 mDoSearch.setOnClickListener(TopicSearchAty.this);
             } else {
+                mKeyWord = "";
                 mSearchClear.setVisibility(View.GONE);
                 mDoSearch.setTextColor(TopicSearchAty.this.getResources().getColor(R.color.do_search_not_do));
                 mDoSearch.setOnClickListener(null);

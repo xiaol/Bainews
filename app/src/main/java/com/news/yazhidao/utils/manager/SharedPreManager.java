@@ -8,6 +8,11 @@ import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import cn.sharesdk.framework.ShareSDK;
 
@@ -30,6 +35,7 @@ public class SharedPreManager {
         boolean result = e.commit();
         Logger.d("jigang","save result = " + result + ",value="+value);
     }
+
     @Deprecated
     public static void saveJPushId(String value){
         SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_PRIVATE).edit();
@@ -49,6 +55,43 @@ public class SharedPreManager {
 
     public static String getUmengId(){
         return get(CommonConstant.FILE_UMENG,CommonConstant.KEY_UMENG_ID);
+    }
+
+    /**
+     * 保存搜索词
+     */
+    public static void saveSearchWord(String pKeyWord){
+        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
+        String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
+        if (!TextUtil.isEmptyString(oldWords)){
+            ArrayList<String> oldList = new ArrayList<>(Arrays.asList(oldWords.split(",")));
+            if (oldList.contains(pKeyWord)){
+                oldList.remove(pKeyWord);
+            }
+            oldList.add(0,pKeyWord);
+            StringBuilder sb = new StringBuilder();
+            for (String item:oldList){
+                sb.append(item + ",");
+            }
+            oldWords = sb.deleteCharAt(sb.length() - 1).toString();
+        }else {
+            oldWords = pKeyWord;
+        }
+        SharedPreferences.Editor e = sharedPreferences.edit();
+        e.putString(CommonConstant.KEY_SEARCH_WORDS,oldWords);
+        e.commit();
+    }
+
+    /**
+     * 获取搜索词列表
+     */
+    public static List<String> getSearchWord(){
+        SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
+        String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
+        if (!TextUtil.isEmptyString(oldWords)){
+           return Arrays.asList(oldWords.split(","));
+        }
+        return new ArrayList<>();
     }
 
     /**

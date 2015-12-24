@@ -34,7 +34,6 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.request.FetchAlbumSubItemsRequest;
 import com.news.yazhidao.net.volley.DiggerRequest;
-import com.news.yazhidao.net.volley.GsonRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -198,9 +197,9 @@ public class AlbumListAty extends BaseActivity implements View.OnClickListener {
     private void startDiggerNews(final AlbumSubItem item) {
         mRequestQueue = Volley.newRequestQueue(this);
         DiggerRequest<NewsDetailForDigger> diggerRequest = new DiggerRequest<>(AlbumListAty.this, item, HttpConstant.URL_DIGGER_NEWS,
-                new GsonRequest.SuccessListener<NewsDetailForDigger>() {
+                new Response.Listener<NewsDetailForDigger>() {
                     @Override
-                    public void success(NewsDetailForDigger result) {
+                    public void onResponse(NewsDetailForDigger result) {
                         int index = mAlbumSubItems.indexOf(item);
                         AlbumSubItem subItem = mAlbumSubItems.get(index);
                         if (result != null) {

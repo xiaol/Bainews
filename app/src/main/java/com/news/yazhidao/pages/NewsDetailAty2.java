@@ -200,6 +200,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
         pairs.add(new BasicNameValuePair("userid", mUserId));
         pairs.add(new BasicNameValuePair("deviceid", uuid));
+        pairs.add(new BasicNameValuePair("platformtype", user.getPlatformType()));
         _Request.setParams(pairs);
         _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
 

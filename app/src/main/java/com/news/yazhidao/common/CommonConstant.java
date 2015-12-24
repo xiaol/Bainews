@@ -37,4 +37,6 @@ public final class CommonConstant {
     public static final String KEY_JPUSH_ID = "jpush_id";
     public static final String KEY_UMENG_ID = "umeng_id";
     public static final String JINYU_JPUSH_ID = "0005150a7dd";
+    public static final String FILE_SEARCH_WORDS = "serach_words";//用户搜索词sp 存储文件名
+    public static final String KEY_SEARCH_WORDS = "key_search_words";
 }
