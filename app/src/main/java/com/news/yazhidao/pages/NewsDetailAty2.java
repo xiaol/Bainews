@@ -57,8 +57,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
     private SwipeBackLayout mSwipeBackLayout;
-    private String mUserId;
-    private String mPlatformType;
+    private String mUserId = "";
+    private String mPlatformType = "";
     private String uuid;
     private String mNewsDetailUrl;
     private ImageView mivShareBg;
@@ -200,7 +200,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
         pairs.add(new BasicNameValuePair("userid", mUserId));
         pairs.add(new BasicNameValuePair("deviceid", uuid));
-        pairs.add(new BasicNameValuePair("platformtype", user.getPlatformType()));
+        pairs.add(new BasicNameValuePair("platformtype", mPlatformType));
         _Request.setParams(pairs);
         _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
 
