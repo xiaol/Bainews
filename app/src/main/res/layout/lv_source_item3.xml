@@ -6,17 +6,17 @@
 
     <ImageView
         android:id="@+id/iv_source"
-        android:layout_width="9dp"
-        android:layout_height="9dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="13dp"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="28dp"
         android:background="@drawable/img_blue_point" />
 
     <ImageView
         android:id="@+id/iv_combine_line_top"
         android:layout_width="1dp"
         android:layout_height="13dp"
-        android:layout_marginLeft="29dp"
+        android:layout_marginLeft="31dp"
         android:background="@color/blue" />
 
     <ImageView
@@ -24,44 +24,37 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:layout_below="@+id/iv_source"
-        android:layout_marginLeft="29dp"
+        android:layout_marginLeft="31dp"
         android:background="@color/blue" />
 
     <TextView
         android:id="@+id/tv_relate"
-        android:layout_width="58dp"
-        android:layout_height="20dp"
+        android:layout_width="28dp"
+        android:layout_height="16dp"
         android:layout_alignParentRight="true"
-        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
         android:background="@drawable/bg_sulist"
         android:gravity="center"
-        android:paddingTop="-1dp"
         android:textColor="#ffb5b5b5"
-        android:textSize="11sp" />
+        android:textSize="@dimen/font6" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_news_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingRight="5dp"
         android:layout_toLeftOf="@+id/tv_relate"
         android:layout_toRightOf="@+id/iv_source"
         android:ellipsize="end"
         android:gravity="left"
+        android:layout_centerVertical="true"
         android:lineSpacingExtra="3dp"
         android:maxLines="2"
-        android:paddingBottom="10dp"
-        android:textColor="#ff888888"
-        android:textSize="11sp" />
+        android:textColor="@color/color4"
+        android:textSize="@dimen/font5" />
 
-    <TextView
-        android:id="@+id/tv_devider_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/tv_news_source"
-        android:layout_marginLeft="32dp"
-        android:background="@drawable/image_half_line" />
 </RelativeLayout>

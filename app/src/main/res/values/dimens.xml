@@ -72,5 +72,10 @@
     <!--新闻feed流-->
     <dimen name="news_feed_title">18sp</dimen>
 
-
+    <dimen name="font1">20sp</dimen>
+    <dimen name="font2">18sp</dimen>
+    <dimen name="font3">16sp</dimen>
+    <dimen name="font4">14sp</dimen>
+    <dimen name="font5">12sp</dimen>
+    <dimen name="font6">10sp</dimen>
 </resources>
