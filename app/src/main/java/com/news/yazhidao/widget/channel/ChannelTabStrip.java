@@ -114,6 +114,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 			TextView child = (TextView) tab.findViewById(R.id.category_text);
 				child.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
 				child.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+			child.setAlpha(1f);
 		}
 	}
 
@@ -296,9 +297,11 @@ public class ChannelTabStrip extends HorizontalScrollView {
 				if (i == position){
 				child.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
 				child.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+					child.setAlpha(1f);
 				}else {
 					child.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
 					child.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+					child.setAlpha(.8f);
 				}
 			}
 		}
