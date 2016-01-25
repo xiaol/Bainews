@@ -3,6 +3,7 @@ package com.news.yazhidao.widget.channel;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 public class ChannelTabStrip extends HorizontalScrollView {
 	private LayoutInflater mLayoutInflater;
@@ -33,6 +35,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 	private float currentPositionOffset = 0f;
 
 	private Rect indicatorRect;
+	private Rect sliderRect;//滑块
 
 	private LinearLayout.LayoutParams defaultTabLayoutParams;
 
@@ -40,6 +43,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 	private int lastScrollX = 0;
 
 	private Drawable indicator;
+	private Drawable sliderDrawable;
 	private TextDrawable[] drawables;
 	private Drawable left_edge;
 	private Drawable right_edge;
@@ -64,6 +68,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 		}
 
 		indicatorRect = new Rect();
+		sliderRect = new Rect();
 
 		setFillViewport(true);
 		setWillNotDraw(false);
@@ -80,6 +85,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
 		defaultTabLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		// 绘制高亮区域作为滑动分页指示器
 		indicator = getResources().getDrawable(R.drawable.bg_category_indicator);
+		sliderDrawable = getResources().getDrawable(R.drawable.bg_category_slider);
+
 		// 左右边界阴影效果
 		left_edge = getResources().getDrawable(R.drawable.ic_category_left_edge);
 		right_edge = getResources().getDrawable(R.drawable.ic_category_right_edge);
@@ -102,6 +109,12 @@ public class ChannelTabStrip extends HorizontalScrollView {
 		for (int i = 0; i < tabCount; i++) {
 			addTab(i, pager.getAdapter().getPageTitle(i).toString());
 		}
+		if (tabCount > 0){
+			ViewGroup tab = (ViewGroup)tabsContainer.getChildAt(0);
+			TextView child = (TextView) tab.findViewById(R.id.category_text);
+				child.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+				child.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+		}
 	}
 
 	// 添加一个标签到导航菜单
@@ -112,7 +125,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 		category_text.setGravity(Gravity.CENTER);
 		category_text.setSingleLine();
 		category_text.setFocusable(true);
-		category_text.setTextColor(getResources().getColor(R.color.category_tab_text));
+		category_text.setTextColor(getResources().getColor(R.color.white));
 		tab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -144,6 +157,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
 		rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
 				((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
+		sliderRect.set(((int) left) + getPaddingLeft(), getHeight() - 7 ,
+				((int) width) + getPaddingLeft(), getHeight() );
+		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
 	}
 
 	// 计算滚动范围
@@ -162,11 +178,11 @@ public class ChannelTabStrip extends HorizontalScrollView {
 		/**从左往右滑*/
 		if (indicatorRect.left < getScrollX() + scrollOffset) {
 			newScrollX = indicatorRect.left - scrollOffset;
-//			Log.e("jigang","1111>> left=" + indicatorRect.left + ",scrollX="+(newScrollX + scrollOffset));
+			Logger.e("jigang","1111>> left=" + indicatorRect.left + ",scrollX="+(newScrollX + scrollOffset));
 			/**从右往左滑*/
 		} else if (indicatorRect.right > getScrollX() + getWidth() - scrollOffset) {
 			newScrollX = indicatorRect.right - getWidth() + scrollOffset;
-//			Log.e("jigang","2222>> right=" + indicatorRect.left + ",scrollX="+(getScrollX() + getWidth() - scrollOffset));
+			Logger.e("jigang","2222>> right=" + indicatorRect.left + ",scrollX="+(getScrollX() + getWidth() - scrollOffset));
 		}
 		if (newScrollX != lastScrollX) {
 			lastScrollX = newScrollX;
@@ -182,38 +198,42 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
 		// 绘制高亮背景矩形红框
 		calculateIndicatorRect(indicatorRect);
-		if(indicator != null) {
-			indicator.setBounds(indicatorRect);
-			indicator.draw(canvas);
+//		if(indicator != null) {
+//			indicator.setBounds(indicatorRect);
+//			indicator.draw(canvas);
+//		}
+		if(sliderDrawable != null) {
+			sliderDrawable.setBounds(sliderRect);
+			sliderDrawable.draw(canvas);
 		}
 
 		// 绘制背景红框内标签文本
-		int i = 0;
-		while (i < tabsContainer.getChildCount()) {
-			if (i < currentPosition - 1 || i > currentPosition + 1) {
-				i++;
-			} else {
-				ViewGroup tab = (ViewGroup)tabsContainer.getChildAt(i);
-				TextView category_text = (TextView) tab.findViewById(R.id.category_text);
-				if (category_text != null) {
-//					Log.e("jigang","draw position = " + (i - currentPosition + 1));
-					TextDrawable textDrawable = drawables[i - currentPosition + 1];
-					int save = canvas.save();
-					calculateIndicatorRect(indicatorRect);
-					canvas.clipRect(indicatorRect);
-					textDrawable.setText(category_text.getText());
-					textDrawable.setTextSize(0, category_text.getTextSize());
-					textDrawable.setTextColor(getResources().getColor(R.color.category_tab_highlight_text));
-					int left = tab.getLeft() + category_text.getLeft() + (category_text.getWidth() - textDrawable.getIntrinsicWidth()) / 2 + getPaddingLeft();
-					int top = tab.getTop() + category_text.getTop() + (category_text.getHeight() - textDrawable.getIntrinsicHeight()) / 2 + getPaddingTop();
-					textDrawable.setBounds(left, top, textDrawable.getIntrinsicWidth() + left, textDrawable.getIntrinsicHeight() + top);
-					textDrawable.draw(canvas);
-					canvas.restoreToCount(save);
-				}
-				i++;
-			}
-//			Log.e("jigang","draw i = " + i);
-		}
+//		int i = 0;
+//		while (i < tabsContainer.getChildCount()) {
+//			if (i < currentPosition - 1 || i > currentPosition + 1) {
+//				i++;
+//			} else {
+//				ViewGroup tab = (ViewGroup)tabsContainer.getChildAt(i);
+//				TextView category_text = (TextView) tab.findViewById(R.id.category_text);
+//				if (category_text != null) {
+////					Log.e("jigang","draw position = " + (i - currentPosition + 1));
+//					TextDrawable textDrawable = drawables[i - currentPosition + 1];
+//					int save = canvas.save();
+//					calculateIndicatorRect(indicatorRect);
+//					canvas.clipRect(indicatorRect);
+//					textDrawable.setText(category_text.getText());
+//					textDrawable.setTextSize(0, category_text.getTextSize());
+//					textDrawable.setTextColor(getResources().getColor(R.color.category_tab_highlight_text));
+//					int left = tab.getLeft() + category_text.getLeft() + (category_text.getWidth() - textDrawable.getIntrinsicWidth()) / 2 + getPaddingLeft();
+//					int top = tab.getTop() + category_text.getTop() + (category_text.getHeight() - textDrawable.getIntrinsicHeight()) / 2 + getPaddingTop();
+//					textDrawable.setBounds(left, top, textDrawable.getIntrinsicWidth() + left, textDrawable.getIntrinsicHeight() + top);
+//					textDrawable.draw(canvas);
+//					canvas.restoreToCount(save);
+//				}
+//				i++;
+//			}
+////			Log.e("jigang","draw i = " + i);
+//		}
 //
 //		// 绘制左右边界阴影效果
 //		i = canvas.save();
@@ -261,11 +281,26 @@ public class ChannelTabStrip extends HorizontalScrollView {
 				} else {
 					scrollToChild(pager.getCurrentItem(), 0);
 				}
+				Logger.e("jigang","onPageScrollStateChanged = ");
 			}
+			Logger.e("jigang","onPageScrollStateChanged ==== ");
 		}
 
 		@Override
 		public void onPageSelected(int position) {
+			Logger.e("jigang","onPageSelected = " +position);
+			//此时设置其他所有的item的字体
+			for (int i = 0;i < tabCount;i++){
+				ViewGroup tab = (ViewGroup)tabsContainer.getChildAt(i);
+				TextView child = (TextView) tab.findViewById(R.id.category_text);
+				if (i == position){
+				child.setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+				child.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+				}else {
+					child.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+					child.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+				}
+			}
 		}
 	}
 }

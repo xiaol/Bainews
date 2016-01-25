@@ -24,7 +24,8 @@
             android:contentDescription="@string/app_name"
             android:scaleType="center"
             android:background="@color/theme_color"
-            android:src="@drawable/ic_category_expand"/>
+            android:src="@drawable/ic_home_category_expand"/>
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,6 +40,13 @@
                 android:layout_height="@dimen/top_category_height"
                 android:clipToPadding="false"/>
         </LinearLayout>
+        <ImageView
+            android:layout_width="10dp"
+            android:layout_height="@dimen/top_category_height"
+            android:layout_toLeftOf="@id/mChannelExpand"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_home_shadow"/>
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
