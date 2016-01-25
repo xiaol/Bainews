@@ -3,88 +3,81 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffdfe6e9"
-    android:orientation="vertical"
-    android:paddingBottom="10dp">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/news_content_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_feedstream_list_table">
+        android:layout_height="wrap_content">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/title_img_View"
-            android:layout_width="110dp"
-            android:layout_height="87dp"
+            android:layout_width="102dp"
+            android:layout_height="74dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingBottom="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="12dp"
             android:scaleType="centerCrop"
-            fresco:placeholderImageScaleType="centerCrop"
-            fresco:placeholderImage="@drawable/bg_load_default_small" />
+            fresco:placeholderImage="@drawable/bg_load_default_small"
+            fresco:placeholderImageScaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/title_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_toRightOf="@+id/title_img_View"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="#ff2b2b2b"
-            android:textSize="@dimen/news_feed_title" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/news_source_TextView"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/title_textView"
-            android:layout_below="@+id/title_textView"
-            android:ellipsize="end"
-            android:maxEms="8"
-            android:paddingBottom="8dp"
-            android:singleLine="true"
-            android:textSize="10sp"
-            android:textColor="@color/gray_black" />
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@+id/title_img_View">
 
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/comment_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_alignTop="@+id/news_source_TextView"
-            android:layout_toRightOf="@+id/news_source_TextView"
-            android:paddingBottom="8dp"
-            android:textSize="10sp"
-            android:textColor="@color/Gray" />
+            <TextView
+                android:id="@+id/title_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/color2"
+                android:textSize="@dimen/font4" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/news_source_TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/title_textView"
+                android:layout_below="@+id/title_textView"
+                android:ellipsize="end"
+                android:maxEms="8"
+                android:singleLine="true"
+                android:textColor="@color/color4"
+                android:textSize="@dimen/font6" />
+
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/comment_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/news_source_TextView"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/news_source_TextView"
+                android:textColor="@color/color4"
+                android:textSize="@dimen/font6" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/source_content_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_feedstream_list_table"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_centerVertical="true"
-                android:background="#ffdadada" />
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="18dp"
-                android:background="@drawable/ic_news_opinion" />
-        </RelativeLayout>
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/home_xiangguanguandian" />
 
         <include
             android:id="@+id/relate_layout1"
@@ -98,4 +91,12 @@
             android:id="@+id/relate_layout3"
             layout="@layout/lv_source_item3" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/color6" />
 </LinearLayout>
