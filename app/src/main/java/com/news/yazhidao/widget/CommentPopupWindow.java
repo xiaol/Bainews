@@ -419,6 +419,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
 
                                     @Override
                                     public void failed() {
+                                        Logger.e("jigang","praise fail~~");
                                     }
                                 });
                             }

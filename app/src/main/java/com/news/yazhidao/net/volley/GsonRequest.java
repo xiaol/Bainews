@@ -20,7 +20,7 @@ public class GsonRequest<T> extends Request<T> {
 
     private Type mReflectType;
     private Class mClazz;
-    private SuccessListener<T> mSuccessListener;
+    private Response.Listener mSuccessListener;
     private Gson mGson;
     private HashMap<String,String> mParams;
 
@@ -32,9 +32,6 @@ public class GsonRequest<T> extends Request<T> {
         this.mParams = mParams;
     }
 
-    public interface SuccessListener<T> {
-        void success(T result);
-    }
 
     private GsonRequest(int method, String url, Response.ErrorListener listener) {
         super(method, url, listener);
@@ -43,7 +40,7 @@ public class GsonRequest<T> extends Request<T> {
     /**
      * 使用volley进行网络请求
      */
-    public GsonRequest(int method,Type reflectType,String url,SuccessListener successListener,Response.ErrorListener listener){
+    public GsonRequest(int method, Type reflectType, String url, Response.Listener successListener, Response.ErrorListener listener){
         this(method, url, listener);
         this.mReflectType = reflectType;
         this.mSuccessListener = successListener;
@@ -53,7 +50,7 @@ public class GsonRequest<T> extends Request<T> {
     /**
      * 使用volley进行网络请求
      */
-    public GsonRequest(int method,Class clazz,String url,SuccessListener successListener,Response.ErrorListener listener){
+    public GsonRequest(int method,Class clazz,String url,Response.Listener successListener,Response.ErrorListener listener){
         this(method, url, listener);
         this.mClazz = clazz;
         this.mSuccessListener = successListener;
@@ -68,7 +65,6 @@ public class GsonRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String data = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            data = checkJsonData(data);
             T o = mGson.fromJson(data, mReflectType == null ? mClazz : mReflectType);
             return Response.success(o,HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
@@ -80,7 +76,7 @@ public class GsonRequest<T> extends Request<T> {
     @Override
     protected void deliverResponse(T response) {
         if (mSuccessListener != null){
-            mSuccessListener.success(response);
+            mSuccessListener.onResponse(response);
         }
     }
 

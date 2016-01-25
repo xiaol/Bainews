@@ -25,15 +25,15 @@ public class DiggerRequest<T> extends GsonRequest<T> {
     private AlbumSubItem mAlbumSubItem;
     private Context mContext;
 
-    private DiggerRequest(int method, Class clazz, String url, SuccessListener GsonListener, Response.ErrorListener listener) {
+    private DiggerRequest(int method, Class clazz, String url, Response.Listener GsonListener, Response.ErrorListener listener) {
         super(method, clazz, url, GsonListener, listener);
     }
 
-    private DiggerRequest(int method, Type reflectType, String url, SuccessListener GsonListener, Response.ErrorListener listener) {
+    private DiggerRequest(int method, Type reflectType, String url, Response.Listener GsonListener, Response.ErrorListener listener) {
         super(method, reflectType, url, GsonListener, listener);
     }
 
-    public DiggerRequest(Context mContext,AlbumSubItem albumItem,String url,SuccessListener successListener, Response.ErrorListener listener){
+    public DiggerRequest(Context mContext, AlbumSubItem albumItem, String url, Response.Listener successListener, Response.ErrorListener listener){
         this(Method.POST, NewsDetailForDigger.class,url,successListener,listener);
         this.mContext = mContext;
         this.mAlbumSubItem = albumItem;

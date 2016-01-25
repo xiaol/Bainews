@@ -56,7 +56,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     public void updateCommentCount(NewsDetailAdd.Point point) {
        if (mNewsDetailAdd != null) {
             if (mNewsDetailAdd.point == null) {
-                ArrayList<NewsDetailAdd.Point> list = new ArrayList<>();
+                ArrayList<NewsDetailAdd.Point> list =   new ArrayList<>();
                 list.add(point);
                 mNewsDetailAdd.point = list;
             } else {
@@ -338,6 +338,9 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }
                 mSelCommentHolder.mDetailCommentUserName.setText(point.userName);
                 mSelCommentHolder.mDetailCommentUserSpeech.setText(point.srcText);
+                if ("1".equals(point.isPraiseFlag)){
+                    mSelCommentHolder.mDetailCommentPraise.setImageResource(R.drawable.bg_praised);
+                }
                 mSelCommentHolder.mDetailCommentPraiseNum.setText(point.up);
                 mSelCommentHolder.mDetailCommentCheckAll.setVisibility(View.GONE);
                 mSelCommentHolder.mDetailCommentItemWrapper.setVisibility(View.VISIBLE);

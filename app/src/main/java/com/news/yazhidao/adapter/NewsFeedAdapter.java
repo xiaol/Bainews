@@ -442,7 +442,8 @@ public class NewsFeedAdapter extends BaseAdapter {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord, "<font color =\"#35a6fb\">" + mstrKeyWord + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
             }
             tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
         }

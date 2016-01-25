@@ -20,7 +20,7 @@ import java.util.List;
 public class PraiseRequest {
 
     /**
-     * 用于上传用户评论，评论可以段落评论，也可以是全文的评论，根据type来决定
+     * 用于用户点赞
      * @param mContext
      * @param userId 用户id
      * @param platformType 平台类型

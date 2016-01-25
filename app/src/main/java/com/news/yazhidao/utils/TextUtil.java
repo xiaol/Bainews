@@ -310,7 +310,7 @@ public class TextUtil {
         if (matcher.find()){
             data = matcher.group();
         }
-        return data;
+        return "";
     }
 
     /**
