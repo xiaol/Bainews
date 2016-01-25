@@ -379,20 +379,20 @@ public class NewsFeedAdapter extends BaseAdapter {
                 if (TextUtil.isEmptyString(source_title))
                     source_title = strTitle;
                 String source_name_font = "";
-                source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
+//                source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
                 if (source_name != null) {
                     if (source.getUser() != null && !"".equals(source.getUser())) {
-                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
-                        finalText = source_name_font + source_title;
+//                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
+                        finalText = source.getUser() + source_title;
                         tvSource.setText(Html.fromHtml(finalText));
                     } else {
-                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
-                        finalText = source_name_font + source_title;
+//                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
+                        finalText = source_name + source_title;
                         tvSource.setText(Html.fromHtml(finalText));
                     }
                 } else {
-                    String anonyStr = "<font color =\"#7d7d7d\">" + "<big>" + "匿名报道:" + "</big>" + "</font>" + ": ";
-                    finalText = anonyStr + source_title;
+//                    String anonyStr = "<font color =\"#7d7d7d\">" + "<big>" + "匿名报道:" + "</big>" + "</font>" + ": ";
+                    finalText = "匿名报道:" + source_title;
                     tvSource.setText(Html.fromHtml(finalText));
                 }
                 if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
