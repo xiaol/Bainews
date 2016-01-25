@@ -59,7 +59,7 @@
                 android:id="@+id/comment_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/news_source_TextView"
+                android:layout_alignBaseline="@+id/news_source_TextView"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/news_source_TextView"
                 android:textColor="@color/color4"
