@@ -10,14 +10,14 @@
         android:layout_height="7dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="28dp"
-        android:background="@drawable/img_blue_point" />
+        android:background="@drawable/bg_source" />
 
     <ImageView
         android:id="@+id/iv_combine_line_top"
         android:layout_width="1dp"
         android:layout_height="13dp"
         android:layout_marginLeft="31dp"
-        android:background="@color/blue" />
+        android:background="@color/color1" />
 
     <ImageView
         android:id="@+id/iv_combine_line"
@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/iv_source"
         android:layout_marginLeft="31dp"
-        android:background="@color/blue" />
+        android:background="@color/color1" />
 
     <TextView
         android:id="@+id/tv_relate"
@@ -43,16 +43,16 @@
         android:id="@+id/tv_news_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:paddingRight="8dp"
         android:layout_toLeftOf="@+id/tv_relate"
         android:layout_toRightOf="@+id/iv_source"
         android:ellipsize="end"
         android:gravity="left"
-        android:layout_centerVertical="true"
         android:maxLines="2"
+        android:paddingRight="8dp"
         android:textColor="@color/color4"
         android:textSize="@dimen/font5" />
 

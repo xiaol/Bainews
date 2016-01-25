@@ -22,7 +22,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/color2"
-            android:textSize="@dimen/font4" />
+            android:textSize="@dimen/font2" />
 
         <LinearLayout
             android:id="@+id/image_list_LinearLayout"
@@ -62,7 +62,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="12dp"
             android:textColor="@color/color4"
-            android:textSize="@dimen/font6" />
+            android:textSize="@dimen/font5" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/comment_textView"
@@ -71,7 +71,7 @@
             android:layout_alignBaseline="@+id/news_source_TextView"
             android:layout_toRightOf="@+id/news_source_TextView"
             android:textColor="@color/color4"
-            android:textSize="@dimen/font6" />
+            android:textSize="@dimen/font5" />
     </RelativeLayout>
 
     <LinearLayout

@@ -73,7 +73,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
         String strType = feed.getType();
         //普通卡片
-        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType)) {
+        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType)||"big_pic".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -117,7 +117,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
             ArrayList<String> strArrImgUrl = feed.getImgUrls();
             String strImg = null;
-            if ("one_pic".equals(strType) || "two_pic".equals(strType)) {
+            if ("one_pic".equals(strType) || "two_pic".equals(strType)||"big_pic".equals(strType)) {
                 strImg = strArrImgUrl.get(0);
             }
             if (strImg != null && !"".equals(strImg)) {
@@ -180,6 +180,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.llSourceContent.setVisibility(View.GONE);
             }
         }
+        /**
         //大图
         else if ("big_pic".equals(strType)) {
             ViewHolder2 holder2;
@@ -227,6 +228,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             setNewsContentClick(holder2.rl_item_content, feed);
         }
+         **/
         //多图
         else if ("three_pic".equals(strType)) {
             ViewHolder3 holder3;
