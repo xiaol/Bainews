@@ -6,67 +6,13 @@
     android:layout_height="fill_parent"
     android:background="@color/activity_bg_color">
 
-    <RelativeLayout
-        android:id="@+id/title_bar"
-        style="@style/main_title_bar_style">
-
-        <ImageView
-            android:id="@+id/mTopSearch"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12.0dip"
-            android:contentDescription="@string/app_name"
-            android:gravity="center"
-            android:scaleType="centerInside"
-            android:src="@drawable/main_search_drawer"/>
-
-        <RelativeLayout
-            android:id="@+id/mTitleLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:paddingLeft="13.0dip"
-            >
-                <ImageView
-                    android:id="@+id/mAppTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:contentDescription="@string/app_name"
-                    android:src="@drawable/title"/>
-
-            <ImageView
-                android:id="@+id/mTopRefresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/mAppTitle"
-                android:contentDescription="@string/app_name"
-                android:padding="3.0dip"
-                android:src="@drawable/refreshicon_titlebar"/>
-
-            <ProgressBar
-                android:id="@+id/mTopRefreshProgress"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="3.0dip"
-                android:layout_toRightOf="@id/mAppTitle"
-                android:indeterminateOnly="true"
-                android:minHeight="20.0dip"
-                android:minWidth="20.0dip"
-                android:visibility="invisible"/>
-        </RelativeLayout>
-    </RelativeLayout>
+    <include layout="@layout/home_actionbar" android:id="@+id/mActionbar"/>
 
     <RelativeLayout
         android:id="@+id/mChannelLayout"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/top_category_height"
-        android:layout_below="@id/title_bar"
+        android:layout_below="@id/mActionbar"
         android:background="@drawable/bg_category_bar">
 
         <ImageView
@@ -77,6 +23,7 @@
             android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
             android:scaleType="center"
+            android:background="@color/theme_color"
             android:src="@drawable/ic_category_expand"/>
 
         <LinearLayout
@@ -100,18 +47,5 @@
         android:layout_height="fill_parent"
         android:layout_below="@id/mChannelLayout"/>
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/mMainUserLogin"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="20dp"
-        app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/ic_login"
-        app:placeholderImageScaleType="centerCrop"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="@color/black"
-        app:roundingBorderWidth="1dp"
-        />
+
 </RelativeLayout>

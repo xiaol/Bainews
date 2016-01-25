@@ -10,14 +10,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -63,15 +64,16 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private SimpleDraweeView mMainUserLogin;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
-    private ProgressBar mTopRefreshProgress;
-    private ImageView mTopRefresh;
-    private View mTitleLayout;
+//    private ProgressBar mTopRefreshProgress;
+//    private ImageView mTopRefresh;
+//    private View mTitleLayout;
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    private Toolbar mActionbar;
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
@@ -187,9 +189,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home,menu);
+        return true;
+    }
+
+    @Override
     protected void initializeViews() {
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
+//        mActionbar = (Toolbar)findViewById(R.id.mActionbar);
+//        mActionbar.setTitle(R.string.app_name);
+//        setSupportActionBar(mActionbar);
+//        getSupportActionBar().setLogo(R.drawable.app_icon);
+//        getSupportActionBar().setCustomView(R.layout.home_actionbar);
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mTopSearch = (ImageView) findViewById(R.id.mTopSearch);
         mTopSearch.setOnClickListener(this);
@@ -202,10 +215,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelTabStrip.setViewPager(mViewPager);
         mMainUserLogin = (SimpleDraweeView) findViewById(R.id.mMainUserLogin);
         mMainUserLogin.setOnClickListener(this);
-        mTopRefreshProgress = (ProgressBar) findViewById(R.id.mTopRefreshProgress);
-        mTopRefresh = (ImageView) findViewById(R.id.mTopRefresh);
-        mTitleLayout = findViewById(R.id.mTitleLayout);
-        mTitleLayout.setOnClickListener(this);
 
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -229,16 +238,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
      * 开始顶部 progress 刷新动画
      */
     public void startTopRefresh() {
-        mTopRefresh.setVisibility(View.INVISIBLE);
-        mTopRefreshProgress.setVisibility(View.VISIBLE);
     }
 
     /**
      * 停止顶部 progress 刷新动画
      */
     public void stopTopRefresh() {
-        mTopRefresh.setVisibility(View.VISIBLE);
-        mTopRefreshProgress.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -271,10 +276,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
-            case R.id.mTitleLayout:
-                NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-                feedFgt.loadData(NewsFeedFgt.PULL_DOWN_REFRESH);
-                break;
+//            case R.id.mTitleLayout:
+//                NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
+//                feedFgt.loadData(NewsFeedFgt.PULL_DOWN_REFRESH);
+//                break;
             case R.id.mMainUserLogin:
                 LoginPopupWindow window1 = new LoginPopupWindow(this, new PopupWindow.OnDismissListener() {
 

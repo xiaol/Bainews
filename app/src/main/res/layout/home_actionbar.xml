@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="@color/theme_color"
+                android:minHeight="?actionBarSize"
+                android:orientation="vertical"
+    >
+
+    <ImageView
+        android:id="@+id/mHomeAppIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/app_icon"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="6dp"
+        android:layout_toRightOf="@id/mHomeAppIcon"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        />
+
+    <ImageView
+        android:id="@+id/mTopSearch"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/mMainUserLogin"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_home_search"
+        />
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/mMainUserLogin"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:actualImageScaleType="centerInside"
+        app:placeholderImage="@drawable/btn_home_mycenter"
+        app:placeholderImageScaleType="centerInside"
+        app:roundAsCircle="true"
+        app:roundingBorderColor="@color/black"
+        />
+
+</RelativeLayout>

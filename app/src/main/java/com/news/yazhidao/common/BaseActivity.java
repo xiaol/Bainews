@@ -3,7 +3,7 @@ package com.news.yazhidao.common;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.news.yazhidao.R;
@@ -17,11 +17,12 @@ import cn.sharesdk.framework.ShareSDK;
 /**
  *  Created by feng on 3/23/15.
  */
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     protected SwipeBackActivityHelper mHelper;
 
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         ShareSDK.initSDK(this);
         if (isNeedAnimation()){
