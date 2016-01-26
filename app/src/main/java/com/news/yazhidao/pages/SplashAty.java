@@ -29,11 +29,12 @@ public class SplashAty extends BaseActivity {
     protected boolean isNeedAnimation() {
         return false;
     }
+
     @Override
     protected void setContentView() {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         //全屏
-        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN , WindowManager.LayoutParams. FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
     }
 
@@ -44,12 +45,17 @@ public class SplashAty extends BaseActivity {
         flag = sp.getBoolean("isshow", false);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
-        mSplashMask =  (ImageView)findViewById(R.id.mSplashMask);
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
+        mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
+        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
         mSplashSlogan.setAnimation(animation);
-        mSplashLine = (ImageView)findViewById(R.id.mSplashLine);
-        Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
-        mSplashMask.setAnimation(mask);
+        mSplashLine = (ImageView) findViewById(R.id.mSplashLine);
+        final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSplashMask.setAnimation(mask);
+            }
+        }, 100);
         mask.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -66,7 +72,7 @@ public class SplashAty extends BaseActivity {
 
             }
         });
-        Logger.e("jigang","h="+mSplashLine.getHeight()+",w="+mSplashLine.getWidth());
+        Logger.e("jigang", "h=" + mSplashLine.getHeight() + ",w=" + mSplashLine.getWidth());
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);
 //        }
@@ -97,6 +103,7 @@ public class SplashAty extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
     private static class ViewWrapper {
         private View mTarget;
 
