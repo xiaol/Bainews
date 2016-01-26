@@ -20,6 +20,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -28,7 +29,10 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -73,7 +77,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
         String strType = feed.getType();
         //普通卡片
-        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType)||"big_pic".equals(strType)) {
+        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType) || "big_pic".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -114,10 +118,24 @@ public class NewsFeedAdapter extends BaseAdapter {
                 ArrayList localArrayList2 = mArrNewsFeed;
                 AdcocoUtil.ad(position, convertView, localArrayList2);
             }
-
+            RelativeLayout.LayoutParams lpTitle = (RelativeLayout.LayoutParams) holder.tvTitle.getLayoutParams();
+            if ("no_pic".equals(strType)) {
+                lpTitle.topMargin = DensityUtil.dip2px(mContext, 10);
+                lpTitle.bottomMargin = DensityUtil.dip2px(mContext, 8);
+                lpTitle.leftMargin = DensityUtil.dip2px(mContext, 12);
+//                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 10));
+//                holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 10));
+            } else {
+                lpTitle.topMargin = DensityUtil.dip2px(mContext, 16);
+                lpTitle.bottomMargin = DensityUtil.dip2px(mContext, 0);
+                lpTitle.leftMargin = DensityUtil.dip2px(mContext, 8);
+//                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 16));
+//                holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 16));
+            }
+            holder.tvTitle.setLayoutParams(lpTitle);
             ArrayList<String> strArrImgUrl = feed.getImgUrls();
             String strImg = null;
-            if ("one_pic".equals(strType) || "two_pic".equals(strType)||"big_pic".equals(strType)) {
+            if ("one_pic".equals(strType) || "two_pic".equals(strType) || "big_pic".equals(strType)) {
                 strImg = strArrImgUrl.get(0);
             }
             if (strImg != null && !"".equals(strImg)) {
@@ -127,11 +145,11 @@ public class NewsFeedAdapter extends BaseAdapter {
             } else {
                 holder.ivTitleImg.setVisibility(View.GONE);
             }
-
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle);
             setViewText(holder.tvSource, feed.getSourceSiteName());
-            setViewText(holder.tvComment, feed.getCommentNum() + "评论");
+            if (feed.getUpdateTime() != null)
+                setNewsTime(holder.tvComment, feed.getUpdateTime());
             setNewsContentClick(holder.rlNewsContent, feed);
             if (relatePointsList != null && relatePointsList.size() > 0) {
                 int size = relatePointsList.size();
@@ -181,53 +199,53 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
         }
         /**
-        //大图
-        else if ("big_pic".equals(strType)) {
-            ViewHolder2 holder2;
-            if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
-                holder2 = new ViewHolder2();
-                convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-                holder2.rl_item_content = (RelativeLayout) convertView.findViewById(R.id.rl_item_content);
-                holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
-                holder2.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-                RelativeLayout.LayoutParams lpImg = (RelativeLayout.LayoutParams) holder2.iv_title_img.getLayoutParams();
-                lpImg.width = mScreenWidth;
-                lpImg.height = (int) (mScreenWidth * (182 / 320.0f));
-                holder2.iv_title_img.setLayoutParams(lpImg);
-                convertView.setTag(holder2);
-            } else {
-                holder2 = (ViewHolder2) convertView.getTag();
-            }
-            String title_news = feed.getTitle();
-            String title = "";
-            if (title_news != null && title_news.length() > 0) {
-                title = TextUtil.getNewsTitle(title_news);
-            }
-            if (title != null && !"".equals(title)) {
-                holder2.tv_title.setText(title);
-            } else {
-                holder2.tv_title.setText(title_news);
-            }
-//            if (title != null && !"".equals(title)) {
-//                holder2.tv_title.setText(title, mstrKeyWord);
-//            } else {
-//                holder2.tv_title.setText(title_news, mstrKeyWord);
-//            }
-//
-//            int textSize = DensityUtil.dip2px(mContext, 18);
-//            holder2.tv_title.setTextSize(textSize);
-//            holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
-//            holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 20));
-//            holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
+         //大图
+         else if ("big_pic".equals(strType)) {
+         ViewHolder2 holder2;
+         if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
+         holder2 = new ViewHolder2();
+         convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
+         holder2.rl_item_content = (RelativeLayout) convertView.findViewById(R.id.rl_item_content);
+         holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
+         holder2.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
+         RelativeLayout.LayoutParams lpImg = (RelativeLayout.LayoutParams) holder2.iv_title_img.getLayoutParams();
+         lpImg.width = mScreenWidth;
+         lpImg.height = (int) (mScreenWidth * (182 / 320.0f));
+         holder2.iv_title_img.setLayoutParams(lpImg);
+         convertView.setTag(holder2);
+         } else {
+         holder2 = (ViewHolder2) convertView.getTag();
+         }
+         String title_news = feed.getTitle();
+         String title = "";
+         if (title_news != null && title_news.length() > 0) {
+         title = TextUtil.getNewsTitle(title_news);
+         }
+         if (title != null && !"".equals(title)) {
+         holder2.tv_title.setText(title);
+         } else {
+         holder2.tv_title.setText(title_news);
+         }
+         //            if (title != null && !"".equals(title)) {
+         //                holder2.tv_title.setText(title, mstrKeyWord);
+         //            } else {
+         //                holder2.tv_title.setText(title_news, mstrKeyWord);
+         //            }
+         //
+         //            int textSize = DensityUtil.dip2px(mContext, 18);
+         //            holder2.tv_title.setTextSize(textSize);
+         //            holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
+         //            holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 20));
+         //            holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
 
-            ArrayList<String> strArrImgUrl = feed.getImgUrls();
-            String strImgUrl = strArrImgUrl.get(0);
-            if (strImgUrl != null && !"".equals(strImgUrl)) {
-                holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
-                holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
-            }
-            setNewsContentClick(holder2.rl_item_content, feed);
-        }
+         ArrayList<String> strArrImgUrl = feed.getImgUrls();
+         String strImgUrl = strArrImgUrl.get(0);
+         if (strImgUrl != null && !"".equals(strImgUrl)) {
+         holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
+         holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
+         }
+         setNewsContentClick(holder2.rl_item_content, feed);
+         }
          **/
         //多图
         else if ("three_pic".equals(strType)) {
@@ -277,14 +295,15 @@ public class NewsFeedAdapter extends BaseAdapter {
 //            } else {
             holder3.ivCard3.setVisibility(View.VISIBLE);
             setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
-            setCardMargin(holder3.ivCard1, 8, 4, 3);
-            setCardMargin(holder3.ivCard2, 4, 4, 3);
-            setCardMargin(holder3.ivCard3, 4, 8, 3);
+            setCardMargin(holder3.ivCard1, 12, 6, 3);
+            setCardMargin(holder3.ivCard2, 6, 6, 3);
+            setCardMargin(holder3.ivCard3, 6, 12, 3);
 //            }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle);
             setViewText(holder3.tvSource, feed.getSourceSiteName());
-            setViewText(holder3.tvComment, feed.getCommentNum() + "评论");
+            if (feed.getUpdateTime() != null)
+                setNewsTime(holder3.tvComment, feed.getUpdateTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
             if (relatePointsList != null && relatePointsList.size() > 0) {
                 int size = relatePointsList.size();
@@ -385,11 +404,11 @@ public class NewsFeedAdapter extends BaseAdapter {
                 if (source_name != null) {
                     if (source.getUser() != null && !"".equals(source.getUser())) {
 //                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
-                        finalText = source.getUser() + source_title;
+                        finalText = source.getUser() + ":" + source_title;
                         tvSource.setText(Html.fromHtml(finalText));
                     } else {
 //                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
-                        finalText = source_name + source_title;
+                        finalText = source_name + ":" + source_title;
                         tvSource.setText(Html.fromHtml(finalText));
                     }
                 } else {
@@ -414,13 +433,13 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setVerticalTopLineHeight(final ImageView ivSource, final ImageView ivVerticalLine) {
-        ivVerticalLine.post(new Runnable() {
-            public void run() {
-                RelativeLayout.LayoutParams lpVerticalLine = (RelativeLayout.LayoutParams) ivVerticalLine.getLayoutParams();
-                lpVerticalLine.height = (int) ivSource.getY();
-                ivVerticalLine.setLayoutParams(lpVerticalLine);
-            }
-        });
+//        ivVerticalLine.post(new Runnable() {
+//            public void run() {
+//                RelativeLayout.LayoutParams lpVerticalLine = (RelativeLayout.LayoutParams) ivVerticalLine.getLayoutParams();
+//                lpVerticalLine.height = (int) ivSource.getY();
+//                ivVerticalLine.setLayoutParams(lpVerticalLine);
+//            }
+//        });
     }
 
     private void setVerticalLineHeight(final RelativeLayout rlRelate, final ImageView ivVerticalLine) {
@@ -439,6 +458,30 @@ public class NewsFeedAdapter extends BaseAdapter {
             imageView.setImageURI(Uri.parse(imageUrl));
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
+    }
+
+    private void setNewsTime(TextViewExtend tvComment, String updateTime) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = dateFormat.parse(updateTime);
+            long between = dateFormat.parse(DateUtil.getDate()).getTime() - date.getTime();
+            if (between >= (24 * 3600000)) {
+                tvComment.setText("23小时前");
+            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
+                tvComment.setText(between / 3600000 + "小时前");
+            } else {
+                if (between / 3600000 / 60 == 0) {
+                    tvComment.setText("刚刚");
+                } else {
+                    tvComment.setText(between / 3600000 / 60 + "分钟前");
+                }
+            }
+        } catch (ParseException e) {
+            tvComment.setText("一天前");
+            e.printStackTrace();
+        }
+
+
     }
 
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
