@@ -123,14 +123,14 @@ public class NewsFeedAdapter extends BaseAdapter {
                 lpTitle.topMargin = DensityUtil.dip2px(mContext, 8);
                 lpTitle.bottomMargin = DensityUtil.dip2px(mContext, 8);
                 lpTitle.leftMargin = DensityUtil.dip2px(mContext, 12);
-//                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 10));
-//                holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 10));
+                holder.tvSource.setPadding(0, 0, 0, 0);
+                holder.tvComment.setPadding(0, 0, 0, 0);
             } else {
                 lpTitle.topMargin = DensityUtil.dip2px(mContext, 16);
                 lpTitle.bottomMargin = DensityUtil.dip2px(mContext, 0);
                 lpTitle.leftMargin = DensityUtil.dip2px(mContext, 8);
-//                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 16));
-//                holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 16));
+                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 4));
+                holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 4));
             }
             holder.tvTitle.setLayoutParams(lpTitle);
             ArrayList<String> strArrImgUrl = feed.getImgUrls();
