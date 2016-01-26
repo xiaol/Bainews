@@ -25,16 +25,30 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         >
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_home_no_internet"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            >
+        <ImageView
+            android:id="@+id/mRetryIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_home_no_internet"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_below="@id/mRetryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="网络不好\n点击从新加载"
-            android:textColor="#787878"
+            android:text="\n网络不好\n点击重新加载"
+            android:textColor="@color/color5"
             android:layout_centerInParent="true"
             />
+
+        </LinearLayout>
 
     </RelativeLayout>
 </RelativeLayout>

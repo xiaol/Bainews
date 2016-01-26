@@ -20,6 +20,13 @@
             android:layout_marginTop="11dp"
             fresco:actualImageScaleType="centerCrop"
             fresco:placeholderImage="@drawable/bg_load_default_small"
+            fresco:roundBottomLeft="false"
+            fresco:roundTopLeft="false"
+            fresco:roundTopRight="false"
+            fresco:roundBottomRight="false"
+            fresco:roundedCornerRadius="2dp"
+            fresco:roundingBorderWidth="1px"
+            fresco:roundingBorderColor="@color/color5"
             fresco:placeholderImageScaleType="centerCrop" />
 
         <TextView
