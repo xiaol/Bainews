@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="11dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/color2"
@@ -103,7 +103,7 @@
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.55dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
         android:layout_marginLeft="12dp"

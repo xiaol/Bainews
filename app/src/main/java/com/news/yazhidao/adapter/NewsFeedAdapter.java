@@ -120,7 +120,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             RelativeLayout.LayoutParams lpTitle = (RelativeLayout.LayoutParams) holder.tvTitle.getLayoutParams();
             if ("no_pic".equals(strType)) {
-                lpTitle.topMargin = DensityUtil.dip2px(mContext, 10);
+                lpTitle.topMargin = DensityUtil.dip2px(mContext, 8);
                 lpTitle.bottomMargin = DensityUtil.dip2px(mContext, 8);
                 lpTitle.leftMargin = DensityUtil.dip2px(mContext, 12);
 //                holder.tvSource.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 10));
