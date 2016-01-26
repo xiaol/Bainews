@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -64,16 +63,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private SimpleDraweeView mMainUserLogin;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
-//    private ProgressBar mTopRefreshProgress;
-//    private ImageView mTopRefresh;
-//    private View mTitleLayout;
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
-    private Toolbar mActionbar;
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
@@ -198,16 +193,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     protected void initializeViews() {
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
-//        mActionbar = (Toolbar)findViewById(R.id.mActionbar);
-//        mActionbar.setTitle(R.string.app_name);
-//        setSupportActionBar(mActionbar);
-//        getSupportActionBar().setLogo(R.drawable.app_icon);
-//        getSupportActionBar().setCustomView(R.layout.home_actionbar);
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mTopSearch = (ImageView) findViewById(R.id.mTopSearch);
         mTopSearch.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
@@ -276,10 +266,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
-//            case R.id.mTitleLayout:
-//                NewsFeedFgt feedFgt = (NewsFeedFgt) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-//                feedFgt.loadData(NewsFeedFgt.PULL_DOWN_REFRESH);
-//                break;
             case R.id.mMainUserLogin:
                 LoginPopupWindow window1 = new LoginPopupWindow(this, new PopupWindow.OnDismissListener() {
 
@@ -363,7 +349,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         public int getItemPosition(Object object) {
             return POSITION_NONE;
         }
-
         @Override
         public int getCount() {
             return mSelChannelItems.size();

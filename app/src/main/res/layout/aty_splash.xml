@@ -3,26 +3,36 @@
     android:id="@+id/splash_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/bg_splash">
 
     <ImageView
-        android:id="@+id/iv_bg_icon"
+        android:id="@+id/mSplashSlogan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="138dp"
+        android:layout_marginTop="130dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/splash_bg_icon"
+        android:background="@drawable/ic_splash_slogan"
         android:scaleType="centerCrop" />
 
     <ImageView
+        android:id="@+id/mSplashLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_below="@+id/iv_bg_icon"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/mSplashSlogan"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/splash_bg_title"
+        android:background="@drawable/ic_splash_line"
         android:scaleType="centerCrop" />
-
+    <ImageView
+        android:id="@+id/mSplashMask"
+        android:layout_below="@+id/mSplashSlogan"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/bg_splash"
+        android:layout_alignLeft="@id/mSplashLine"
+        android:layout_alignRight="@id/mSplashLine"
+        />
     <ImageView
         android:id="@+id/iv_splash_background"
         android:layout_width="wrap_content"
@@ -39,8 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:background="@drawable/splash_bg_content"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/ic_splash_bottom"
         android:scaleType="centerCrop" />
 
 </RelativeLayout>

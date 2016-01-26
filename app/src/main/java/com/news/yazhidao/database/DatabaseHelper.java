@@ -103,7 +103,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             oldDiggerAlbums = albumDao.querForAll();
             /**查询专辑列表下的新闻*/
             AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
-            if (newVersion <= 9){
+            if (oldVersion <= 9){
                 albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
             }
             oldDiggerAlbumItems = albumSubItemDao.queryForAll();

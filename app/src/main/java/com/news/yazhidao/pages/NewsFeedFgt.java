@@ -62,13 +62,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      * 热词页面加载更多
      */
     private int mSearchPage = 1;
-    private Handler mHandler;
-    private Runnable mRunnable;
-    private boolean mIsFirst = true;
+//    private Handler mHandler;
+//    private Runnable mRunnable;
+//    private boolean mIsFirst = true;
     /**
      * 当前的fragment 是否已经加载过数据
      */
-    private boolean isLoadedData;
+//    private boolean isLoadedData;
     private NewsSaveDataCallBack mNewsSaveCallBack;
 
     public interface NewsSaveDataCallBack {
@@ -97,25 +97,25 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (rootView != null && !isVisibleToUser) {
-            mlvNewsFeed.onRefreshComplete();
-            mHandler.removeCallbacks(mRunnable);
-        }
-        if (rootView != null && isVisibleToUser && isLoadedData) {
-            isLoadedData = false;
-            mHandler.postDelayed(mRunnable, 800);
-            Logger.e("jigang", "refresh " + mstrChannelId);
-            if (mArrNewsFeed == null || mIsFirst) {
-                mArrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
-                mAdapter.notifyDataSetChanged();
-                mIsFirst = false;
-            }
-        }
+//        if (rootView != null && !isVisibleToUser) {
+//            mlvNewsFeed.onRefreshComplete();
+//            mHandler.removeCallbacks(mRunnable);
+//        }
+//        if (rootView != null && isVisibleToUser && isLoadedData) {
+//            isLoadedData = false;
+//            mHandler.postDelayed(mRunnable, 800);
+//            Logger.e("jigang", "refresh " + mstrChannelId);
+//            if (mArrNewsFeed == null || mIsFirst) {
+//                mArrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+//                mAdapter.notifyDataSetChanged();
+//                mIsFirst = false;
+//            }
+//        }
 
     }
 
     public void refreshData() {
-        isLoadedData = true;
+//        isLoadedData = true;
     }
 
     public void onCreate(Bundle bundle) {
@@ -123,18 +123,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
         mstrDeviceId = DeviceInfoUtil.getUUID();
-        mHandler = new Handler(this);
+//        mHandler = new Handler(this);
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
         else
             mstrUserId = "";
-        mRunnable = new Runnable() {
-            @Override
-            public void run() {
-                mlvNewsFeed.setRefreshing();
-            }
-        };
+//        mRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                mlvNewsFeed.setRefreshing();
+//            }
+//        };
 
     }
 
@@ -171,6 +171,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 e.printStackTrace();
             }
         }
+        //load news data
+        loadData(PULL_DOWN_REFRESH);
         return rootView;
     }
 
@@ -285,6 +287,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         } else {
             ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
             stopRefresh();
+            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+            mAdapter.setNewsFeed(newsFeeds);
+            mAdapter.notifyDataSetChanged();
             mlvNewsFeed.onRefreshComplete();
         }
     }
