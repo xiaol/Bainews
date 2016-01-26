@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/mHomeAppIcon"
-        android:layout_width="132dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_home_logo"
@@ -23,6 +23,7 @@
         android:layout_height="48dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/mMainUserLogin"
+        android:layout_marginRight="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/btn_home_search"
         />
@@ -32,6 +33,7 @@
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
         app:actualImageScaleType="centerInside"
         app:placeholderImage="@drawable/btn_home_mycenter"
         app:placeholderImageScaleType="centerInside"
