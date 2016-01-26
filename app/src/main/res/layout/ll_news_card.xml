@@ -36,21 +36,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:actualImageScaleType="centerCrop"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
+                fresco:placeholderImageScaleType="centerCrop"/>
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:actualImageScaleType="centerCrop"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
+                fresco:placeholderImageScaleType="centerCrop"/>
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:actualImageScaleType="centerCrop"
+                fresco:placeholderImage="@drawable/bg_load_default_small"
+                fresco:placeholderImageScaleType="centerCrop"/>
         </LinearLayout>
 
         <com.news.yazhidao.widget.TextViewExtend
