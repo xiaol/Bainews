@@ -489,8 +489,10 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            }else {
+                tvTitle.setText(strTitle);
             }
-            tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
         }
     }
 

@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/color2"
-            android:textSize="@dimen/font2" />
+            android:textSize="17sp" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/news_source_TextView"
