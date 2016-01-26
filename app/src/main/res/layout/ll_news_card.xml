@@ -9,7 +9,8 @@
     <RelativeLayout
         android:id="@+id/news_content_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_feed_item_selector">
 
         <TextView
             android:id="@+id/title_textView"
