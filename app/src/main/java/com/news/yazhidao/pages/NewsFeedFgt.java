@@ -70,6 +70,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      */
 //    private boolean isLoadedData;
     private NewsSaveDataCallBack mNewsSaveCallBack;
+    private View mHomeRelative;
+    private View mHomeRetry;
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -145,6 +147,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
+        mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
+        mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
+        mHomeRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mlvNewsFeed.setRefreshing();
+            }
+        });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -233,12 +243,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
+                mHomeRetry.setVisibility(View.VISIBLE);
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
                 ToastUtil.toastLong("网络不给力,请检查网络....");
             }
 
             public void success(ArrayList<NewsFeed> result) {
+                mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
                     mSearchPage++;
@@ -285,9 +297,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 loadNewsFeedData("recommend", flag);
             startTopRefresh();
         } else {
-            ToastUtil.toastLong("您的网络有点不给力，请检查网络....");
             stopRefresh();
             ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+            if (TextUtil.isListEmpty(newsFeeds)){
+                mHomeRetry.setVisibility(View.VISIBLE);
+            }else {
+                mHomeRetry.setVisibility(View.GONE);
+            }
             mAdapter.setNewsFeed(newsFeeds);
             mAdapter.notifyDataSetChanged();
             mlvNewsFeed.onRefreshComplete();

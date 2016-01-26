@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/mHomeAppIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="132dp"
+        android:layout_height="30dp"
         android:layout_marginLeft="12dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_home_logo"

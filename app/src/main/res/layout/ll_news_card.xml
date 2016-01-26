@@ -36,21 +36,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                fresco:placeholderImage="@drawable/bg_load_default_middle" />
+                fresco:placeholderImage="@drawable/bg_load_default_small" />
         </LinearLayout>
 
         <com.news.yazhidao.widget.TextViewExtend
