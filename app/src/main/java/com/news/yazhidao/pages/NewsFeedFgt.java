@@ -279,7 +279,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mAdapter.setNewsFeed(mArrNewsFeed);
                     mAdapter.notifyDataSetChanged();
                 } else {
-                    ToastUtil.toastLong("暂无更新,休息一会儿");
+                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
+                    mHomeRetry.setVisibility(View.VISIBLE);
                 }
                 mlvNewsFeed.onRefreshComplete();
             }

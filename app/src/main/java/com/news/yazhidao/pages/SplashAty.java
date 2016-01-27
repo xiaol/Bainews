@@ -12,6 +12,8 @@ import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 
 /**
@@ -24,6 +26,7 @@ public class SplashAty extends BaseActivity {
     private ImageView mSplashLine;
     private ImageView mSplashSlogan;
     private ImageView mSplashMask;
+    private View mSplashContent;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -46,6 +49,9 @@ public class SplashAty extends BaseActivity {
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
         mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
+        mSplashContent = findViewById(R.id.mSplashContent);
+        int screenHeight = DeviceInfoUtil.getScreenHeight(this);
+        mSplashContent.setPadding(0,screenHeight/3 - DensityUtil.dip2px(this,34),0,0);
         final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
         mSplashSlogan.setAnimation(animation);
         mSplashLine = (ImageView) findViewById(R.id.mSplashLine);
