@@ -9,8 +9,7 @@
     <RelativeLayout
         android:id="@+id/news_content_relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_feed_item_selector">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/title_textView"
@@ -28,8 +27,8 @@
             android:id="@+id/image_list_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/title_textView">
+            android:layout_below="@+id/title_textView"
+            android:layout_marginTop="12dp">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card1"
@@ -38,7 +37,7 @@
                 android:layout_weight="1.0"
                 fresco:actualImageScaleType="centerCrop"
                 fresco:placeholderImage="@drawable/bg_load_default_small"
-                fresco:placeholderImageScaleType="centerCrop"/>
+                fresco:placeholderImageScaleType="centerCrop" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card2"
@@ -47,7 +46,7 @@
                 android:layout_weight="1.0"
                 fresco:actualImageScaleType="centerCrop"
                 fresco:placeholderImage="@drawable/bg_load_default_small"
-                fresco:placeholderImageScaleType="centerCrop"/>
+                fresco:placeholderImageScaleType="centerCrop" />
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/image_card3"
@@ -56,7 +55,7 @@
                 android:layout_weight="1.0"
                 fresco:actualImageScaleType="centerCrop"
                 fresco:placeholderImage="@drawable/bg_load_default_small"
-                fresco:placeholderImageScaleType="centerCrop"/>
+                fresco:placeholderImageScaleType="centerCrop" />
         </LinearLayout>
 
         <com.news.yazhidao.widget.TextViewExtend
@@ -89,8 +88,8 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="16dp"
-            android:layout_marginTop="12dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/home_xiangguanguandian" />
 
         <include
@@ -111,8 +110,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.55dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp"
         android:background="@color/color6" />
 </LinearLayout>

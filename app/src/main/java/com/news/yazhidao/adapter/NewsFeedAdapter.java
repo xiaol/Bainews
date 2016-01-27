@@ -1,12 +1,17 @@
 package com.news.yazhidao.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +49,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     private int mScreenWidth;
     private Context mContext;
     public static String KEY_URL = "key_url";
+
 
     public NewsFeedAdapter(Context context) {
         mContext = context;
@@ -110,10 +116,12 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.tvRelate3 = (TextView) holder.rlRelate3.findViewById(R.id.tv_relate);
                 holder.tvSource3 = (TextViewExtend) holder.rlRelate3.findViewById(R.id.tv_news_source);
                 holder.llSourceContent = (LinearLayout) convertView.findViewById(R.id.source_content_linearLayout);
+                holder.valueAnimator = ValueAnimator.ofFloat(0, 360);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
+
             if ("adcoco".equals(platform)) {
                 ArrayList localArrayList2 = mArrNewsFeed;
                 AdcocoUtil.ad(position, convertView, localArrayList2);
@@ -151,6 +159,15 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getUpdateTime() != null)
                 setNewsTime(holder.tvComment, feed.getUpdateTime());
             setNewsContentClick(holder.rlNewsContent, feed);
+            if (holder.valueAnimator.isRunning()) {
+                holder.tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
+                if (holder.ivTitleImg != null) {
+                    holder.ivTitleImg.setScaleX(1.0f);
+                    holder.ivTitleImg.setScaleY(1.0f);
+                    holder.valueAnimator.end();
+                }
+            }
+            setContentAnim(holder.rlNewsContent, holder.ivTitleImg, holder.tvTitle,holder.valueAnimator);
             if (relatePointsList != null && relatePointsList.size() > 0) {
                 int size = relatePointsList.size();
                 holder.llSourceContent.setVisibility(View.VISIBLE);
@@ -490,7 +507,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
-            }else {
+            } else {
                 tvTitle.setText(strTitle);
             }
         }
@@ -521,6 +538,69 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
         });
     }
+
+    private void setContentAnim(RelativeLayout rlNewsContent, final SimpleDraweeView imageView, final TextView tvTitle, final ValueAnimator valueAnimator) {
+
+        rlNewsContent.setOnTouchListener(new View.OnTouchListener() {
+            float event1Y = 0;
+            float event2Y = 0;
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        event1Y = event.getY(0);
+                        if (imageView != null) {
+                            imageView.setScaleX(2.0f);
+                            imageView.setScaleY(2.0f);
+                            final float xx = imageView.getX();
+                            final float yy = imageView.getY();
+                            valueAnimator.setInterpolator(new LinearInterpolator());
+                            valueAnimator.setDuration(200000);
+                            valueAnimator.start();
+                            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    int r = DensityUtil.dip2px(mContext, 10);
+                                    float degree = animation.getAnimatedFraction() * 360;
+                                    imageView.setX((float) (-r / 4 + r * Math.cos(degree)));
+                                    imageView.setY((float) (r * Math.sin(degree)));
+                                }
+                            });
+                            valueAnimator.addListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    imageView.setX(xx);
+                                    imageView.setY(yy);
+                                }
+                            });
+                        }
+                        tvTitle.setTextColor(mContext.getResources().getColor(R.color.color8));
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        event2Y = event.getY(0);
+                        tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
+                        if (Math.abs(event2Y - event1Y) > 3 && imageView != null) {
+                            imageView.setScaleX(1.0f);
+                            imageView.setScaleY(1.0f);
+                            valueAnimator.end();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
+                        if (imageView != null) {
+                            imageView.setScaleX(1.0f);
+                            imageView.setScaleY(1.0f);
+                            valueAnimator.end();
+                        }
+                        break;
+                }
+                return false;
+            }
+        });
+
+    }
+
 
     class BaseHolder {
         TextViewExtend tvSource;
@@ -553,6 +633,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
     class ViewHolder extends BaseHolder {
         SimpleDraweeView ivTitleImg;
+        ValueAnimator valueAnimator;
     }
 
     class ViewHolder2 {
