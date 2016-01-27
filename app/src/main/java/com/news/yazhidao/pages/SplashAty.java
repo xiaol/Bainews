@@ -83,15 +83,15 @@ public class SplashAty extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (flag) {
+//                if (flag) {
                     Intent intent = new Intent(SplashAty.this, MainAty.class);
                     startActivity(intent);
                     SplashAty.this.finish();
-                } else {
-                    Intent intent_guide = new Intent(SplashAty.this, GuideAty.class);
-                    startActivity(intent_guide);
-                    SplashAty.this.finish();
-                }
+//                } else {
+//                    Intent intent_guide = new Intent(SplashAty.this, GuideAty.class);
+//                    startActivity(intent_guide);
+//                    SplashAty.this.finish();
+//                }
             }
         }, 2000);
     }
