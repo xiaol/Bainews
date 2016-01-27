@@ -108,7 +108,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 //				mPullLabel = context.getString(R.string.pull_to_refresh_pull_label);
 //				mRefreshingLabel = context.getString(R.string.pull_to_refresh_refreshing_label);
 //				mReleaseLabel = context.getString(R.string.pull_to_refresh_release_label);
-				mPullLabel = "下拉推荐";
+				mPullLabel = "下拉刷新";
 				mRefreshingLabel = "推荐中";
 				mReleaseLabel = "松开推荐";
 				break;

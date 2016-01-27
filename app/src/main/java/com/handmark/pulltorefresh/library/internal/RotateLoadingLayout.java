@@ -17,25 +17,24 @@ package com.handmark.pulltorefresh.library.internal;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Matrix;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageView.ScaleType;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Orientation;
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 public class RotateLoadingLayout extends LoadingLayout {
 
 	static final int ROTATION_ANIMATION_DURATION = 1200;
 
-	private final Animation mRotateAnimation;
-	private final Matrix mHeaderImageMatrix;
+//	private final Animation mRotateAnimation;
+//	private final Matrix mHeaderImageMatrix;
+	private final AnimationDrawable mAnimation;
 
 	private float mRotationPivotX, mRotationPivotY;
-
+	private boolean isExe;
 	private final boolean mRotateDrawableWhilePulling;
 
 	public RotateLoadingLayout(Context context, Mode mode, Orientation scrollDirection, TypedArray attrs) {
@@ -43,16 +42,18 @@ public class RotateLoadingLayout extends LoadingLayout {
 
 		mRotateDrawableWhilePulling = attrs.getBoolean(R.styleable.PullToRefresh_ptrRotateDrawableWhilePulling, true);
 
-		mHeaderImage.setScaleType(ScaleType.MATRIX);
-		mHeaderImageMatrix = new Matrix();
-		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+//		mHeaderImage.setScaleType(ScaleType.MATRIX);
+//		mHeaderImageMatrix = new Matrix();
+//		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+//
+//		mRotateAnimation = new RotateAnimation(0, 720, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+//				0.5f);
+//		mRotateAnimation.setInterpolator(ANIMATION_INTERPOLATOR);
+//		mRotateAnimation.setDuration(ROTATION_ANIMATION_DURATION);
+//		mRotateAnimation.setRepeatCount(Animation.INFINITE);
+//		mRotateAnimation.setRepeatMode(Animation.RESTART);
 
-		mRotateAnimation = new RotateAnimation(0, 720, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-				0.5f);
-		mRotateAnimation.setInterpolator(ANIMATION_INTERPOLATOR);
-		mRotateAnimation.setDuration(ROTATION_ANIMATION_DURATION);
-		mRotateAnimation.setRepeatCount(Animation.INFINITE);
-		mRotateAnimation.setRepeatMode(Animation.RESTART);
+		mAnimation = (AnimationDrawable) mHeaderImage.getBackground();
 	}
 
 	public void onLoadingDrawableSet(Drawable imageDrawable) {
@@ -63,32 +64,35 @@ public class RotateLoadingLayout extends LoadingLayout {
 	}
 
 	protected void onPullImpl(float scaleOfLayout) {
-		float angle;
-		if (mRotateDrawableWhilePulling) {
-			angle = scaleOfLayout * 90f;
-		} else {
-			angle = Math.max(0f, Math.min(180f, scaleOfLayout * 360f - 180f));
-		}
-
-		mHeaderImageMatrix.setRotate(angle, mRotationPivotX, mRotationPivotY);
-		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+		Logger.e("jigang","onPullImpl");
+//		float angle;
+//		if (mRotateDrawableWhilePulling) {
+//			angle = scaleOfLayout * 90f;
+//		} else {
+//			angle = Math.max(0f, Math.min(180f, scaleOfLayout * 360f - 180f));
+//		}
+//
+//		mHeaderImageMatrix.setRotate(angle, mRotationPivotX, mRotationPivotY);
+//		mHeaderImage.setImageMatrix(mHeaderImageMatrix);
 	}
 
 	@Override
 	protected void refreshingImpl() {
-		mHeaderImage.startAnimation(mRotateAnimation);
 	}
 
 	@Override
 	protected void resetImpl() {
-		mHeaderImage.clearAnimation();
+//		mHeaderImage.clearAnimation();
 		resetImageRotation();
 	}
 
 	private void resetImageRotation() {
-		if (null != mHeaderImageMatrix) {
-			mHeaderImageMatrix.reset();
-			mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+//		if (null != mHeaderImageMatrix) {
+//			mHeaderImageMatrix.reset();
+//			mHeaderImage.setImageMatrix(mHeaderImageMatrix);
+//		}
+		if (mAnimation != null){
+			mAnimation.stop();
 		}
 	}
 
@@ -104,7 +108,8 @@ public class RotateLoadingLayout extends LoadingLayout {
 
 	@Override
 	protected int getDefaultDrawableResId() {
-		return R.drawable.default_ptr_rotate;
+//		return R.drawable.ic_refresh_upright;
+		return R.anim.listview_refresh;
 	}
 
 }

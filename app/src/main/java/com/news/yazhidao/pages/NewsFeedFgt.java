@@ -25,7 +25,6 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.umeng.analytics.AnalyticsConfig;
@@ -246,7 +245,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.VISIBLE);
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
-                ToastUtil.toastLong("网络不给力,请检查网络....");
+//                ToastUtil.toastLong("网络不给力,请检查网络....");
             }
 
             public void success(ArrayList<NewsFeed> result) {
@@ -280,7 +279,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mAdapter.notifyDataSetChanged();
                 } else {
                     //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
-                    mHomeRetry.setVisibility(View.VISIBLE);
+                    if (TextUtil.isListEmpty(mArrNewsFeed)){
+                        mHomeRetry.setVisibility(View.VISIBLE);
+                    }
                 }
                 mlvNewsFeed.onRefreshComplete();
             }
