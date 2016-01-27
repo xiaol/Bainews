@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -167,7 +166,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (ACTION_USER_LOGIN.equals(intent.getAction())) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
                 if (!TextUtil.isEmptyString(url)) {
-                    mMainUserLogin.setImageURI(Uri.parse(url));
+//                    mMainUserLogin.setImageURI(Uri.parse(url));
                 }
             }
         }
@@ -210,7 +209,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         User user = SharedPreManager.getUser(this);
         if (user != null) {
             if (!TextUtil.isEmptyString(user.getUserIcon())) {
-                mMainUserLogin.setImageURI(Uri.parse(user.getUserIcon()));
+//                mMainUserLogin.setImageURI(Uri.parse(user.getUserIcon()));
             }
         }
         /**注册用户登录广播*/
@@ -271,7 +270,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
                     @Override
                     public void onDismiss() {
-                        mMainUserLogin.setImageURI(null);
+//                        mMainUserLogin.setImageURI(null);
                     }
                 });
                 window1.showAtLocation(getWindow().getDecorView(), Gravity.CENTER
