@@ -11,8 +11,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 112
-        versionName "2.0.3"
+        versionCode 113
+        versionName "2.1"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -25,6 +25,7 @@ android {
         wangba {}
         xiaomi {}
         adcoco{}
+        red {}
 //        c360 {}
 //        baidu {}
 //        wandoujia {}

@@ -152,6 +152,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void onClick(View view) {
                 mlvNewsFeed.setRefreshing();
+                mHomeRetry.setVisibility(View.GONE);
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
@@ -181,7 +182,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
         //load news data
-        loadData(PULL_DOWN_REFRESH);
+//        loadData(PULL_DOWN_REFRESH);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.setRefreshing();
+            }
+        }, 800);
         return rootView;
     }
 
@@ -242,7 +249,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mRequest.setParams(nameValuePairList);
         mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
             public void failed(MyAppException paramAnonymousMyAppException) {
-                mHomeRetry.setVisibility(View.VISIBLE);
+                if (TextUtil.isListEmpty(mArrNewsFeed)){
+                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                    if (TextUtil.isListEmpty(newsFeeds)){
+                        mHomeRetry.setVisibility(View.VISIBLE);
+                    }else {
+                        mHomeRetry.setVisibility(View.GONE);
+                        mAdapter.setNewsFeed(newsFeeds);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
                 stopRefresh();
                 mlvNewsFeed.onRefreshComplete();
 //                ToastUtil.toastLong("网络不给力,请检查网络....");
@@ -280,7 +296,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 } else {
                     //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
                     if (TextUtil.isListEmpty(mArrNewsFeed)){
-                        mHomeRetry.setVisibility(View.VISIBLE);
+                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                        if (TextUtil.isListEmpty(newsFeeds)){
+                            mHomeRetry.setVisibility(View.VISIBLE);
+                        }else {
+                            mHomeRetry.setVisibility(View.GONE);
+                            mAdapter.setNewsFeed(newsFeeds);
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 }
                 mlvNewsFeed.onRefreshComplete();

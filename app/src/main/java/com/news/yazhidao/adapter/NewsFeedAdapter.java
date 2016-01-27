@@ -116,7 +116,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.tvRelate3 = (TextView) holder.rlRelate3.findViewById(R.id.tv_relate);
                 holder.tvSource3 = (TextViewExtend) holder.rlRelate3.findViewById(R.id.tv_news_source);
                 holder.llSourceContent = (LinearLayout) convertView.findViewById(R.id.source_content_linearLayout);
-                holder.valueAnimator = ValueAnimator.ofFloat(0, 360);
+//                holder.valueAnimator = ValueAnimator.ofFloat(0, 360);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -147,11 +147,11 @@ public class NewsFeedAdapter extends BaseAdapter {
                 strImg = strArrImgUrl.get(0);
             }
             if (strImg != null && !"".equals(strImg)) {
-                holder.ivTitleImg.setVisibility(View.VISIBLE);
+                ((View)holder.ivTitleImg.getParent()).setVisibility(View.VISIBLE);
                 holder.ivTitleImg.setImageURI(Uri.parse(strImg));
                 holder.ivTitleImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
             } else {
-                holder.ivTitleImg.setVisibility(View.GONE);
+                ((View)holder.ivTitleImg.getParent()).setVisibility(View.GONE);
             }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle);
@@ -159,15 +159,15 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getUpdateTime() != null)
                 setNewsTime(holder.tvComment, feed.getUpdateTime());
             setNewsContentClick(holder.rlNewsContent, feed);
-            if (holder.valueAnimator.isRunning()) {
-                holder.tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
-                if (holder.ivTitleImg != null) {
-                    holder.ivTitleImg.setScaleX(1.0f);
-                    holder.ivTitleImg.setScaleY(1.0f);
-                    holder.valueAnimator.end();
-                }
-            }
-            setContentAnim(holder.rlNewsContent, holder.ivTitleImg, holder.tvTitle,holder.valueAnimator);
+//            if (holder.valueAnimator.isRunning()) {
+//                holder.tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
+//                if (holder.ivTitleImg != null) {
+//                    holder.ivTitleImg.setScaleX(1.0f);
+//                    holder.ivTitleImg.setScaleY(1.0f);
+//                    holder.valueAnimator.end();
+//                }
+//            }
+//            setContentAnim(holder.rlNewsContent, holder.ivTitleImg, holder.tvTitle,holder.valueAnimator);
             if (relatePointsList != null && relatePointsList.size() > 0) {
                 int size = relatePointsList.size();
                 holder.llSourceContent.setVisibility(View.VISIBLE);
@@ -580,7 +580,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                     case MotionEvent.ACTION_MOVE:
                         event2Y = event.getY(0);
                         tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
-                        if (Math.abs(event2Y - event1Y) > 3 && imageView != null) {
+                        if (Math.abs(event2Y - event1Y) > 0 && imageView != null) {
                             imageView.setScaleX(1.0f);
                             imageView.setScaleY(1.0f);
                             valueAnimator.end();
