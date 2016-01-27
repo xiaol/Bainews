@@ -28,31 +28,36 @@
         android:layout_marginLeft="25dp"
         android:background="@color/color1" />
 
-    <TextView
-        android:id="@+id/tv_relate"
-        android:layout_width="28dp"
-        android:layout_height="16dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="12dp"
-        android:background="@drawable/bg_sulist"
-        android:gravity="center"
-        android:textColor="#ffb5b5b5"
-        android:textSize="@dimen/font6" />
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/tv_news_source"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="12dp"
-        android:layout_toLeftOf="@+id/tv_relate"
-        android:layout_toRightOf="@+id/iv_source"
-        android:ellipsize="end"
-        android:gravity="left"
-        android:maxLines="2"
-        android:paddingRight="8dp"
-        android:textColor="@color/color4"
-        android:textSize="@dimen/font5" />
+        android:layout_toRightOf="@+id/iv_source">
+
+        <TextView
+            android:id="@+id/tv_relate"
+            android:layout_width="28dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/bg_sulist"
+            android:gravity="center"
+            android:textColor="#ffb5b5b5"
+            android:textSize="@dimen/font6" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/tv_news_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/tv_relate"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:maxLines="2"
+            android:paddingRight="8dp"
+            android:textColor="@color/color4"
+            android:textSize="@dimen/font5" />
+    </RelativeLayout>
 
 </RelativeLayout>
