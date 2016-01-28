@@ -33,7 +33,7 @@
         android:lines="1"
         android:text="@string/mNewsDetailHeaderDesc"
         android:textColor="@color/news_detail_desc"
-        android:textSize="12sp"
+        android:textSize="@dimen/detail_weibo_username"
         />
 
     <LinearLayout
@@ -59,7 +59,7 @@
             android:maxLines="2"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/detail_weibo_username_speech"
             />
 
         <com.facebook.drawee.view.SimpleDraweeView

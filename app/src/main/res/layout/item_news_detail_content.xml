@@ -30,7 +30,7 @@
             android:lineSpacingMultiplier="1.15"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/detail_content"
             />
 
         <TextView
@@ -43,7 +43,7 @@
             android:gravity="center"
             android:text="234"
             android:textColor="@color/news_detail_comment_count"
-            android:textSize="11sp"
+            android:textSize="@dimen/detail_content_comments"
             />
 
         <!--<ImageView-->

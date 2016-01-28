@@ -15,7 +15,7 @@
         android:gravity="center"
         android:padding="3dp"
         android:textColor="@color/DarkGray"
-        android:textSize="12sp" />
+        android:textSize="@dimen/detail_relate_opinion_time" />
 
 
     <RelativeLayout
@@ -85,7 +85,7 @@
             android:gravity="left"
             android:maxLines="2"
             android:textColor="@color/news_detail_content"
-            android:textSize="14sp" />
+            android:textSize="@dimen/detail_relate_opinion_content" />
     </RelativeLayout>
 
 </RelativeLayout>

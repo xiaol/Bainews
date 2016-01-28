@@ -31,7 +31,7 @@
             android:lineSpacingMultiplier="1.15"
             android:text="@string/mNewsDetailHeaderContent"
             android:textColor="@color/news_detail_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/detail_diffopinion_content"
 
             />
 
@@ -56,7 +56,7 @@
                 android:layout_marginRight="14dp"
                 android:text="@string/mNewsDetailHeaderDesc"
                 android:textColor="@color/news_detail_different_opinion_title"
-                android:textSize="12dp"
+                android:textSize="@dimen/detail_diffopinion_title"
                 />
 
             <ImageView

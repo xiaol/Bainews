@@ -46,7 +46,7 @@
             android:lines="1"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_desc"
-            android:textSize="12sp"
+            android:textSize="@dimen/detail_comments_username"
             />
 
         <TextView
@@ -60,7 +60,7 @@
             android:lineSpacingMultiplier="1.15"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/detail_comments_userspeech"
             />
 
         <LinearLayout
@@ -91,7 +91,7 @@
                 android:layout_marginTop="-24dp"
                 android:text="12345"
                 android:textColor="@color/red"
-                android:textSize="10sp"
+                android:textSize="@dimen/detail_comments_praisenum"
                 />
 
         </LinearLayout>
@@ -118,7 +118,7 @@
             android:padding="8dp"
             android:text="查看全部"
             android:textColor="@color/news_detail_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/detail_comments_checkall"
             android:visibility="visible"
             />
 </RelativeLayout>
