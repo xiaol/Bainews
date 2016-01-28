@@ -25,9 +25,9 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
-import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -478,10 +478,11 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
+        long start = System.currentTimeMillis();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = dateFormat.parse(updateTime);
-            long between = dateFormat.parse(DateUtil.getDate()).getTime() - date.getTime();
+            long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
                 tvComment.setText("23小时前");
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
@@ -497,7 +498,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             tvComment.setText("一天前");
             e.printStackTrace();
         }
-
+        Logger.e("jigang","time="+(System.currentTimeMillis() - start));
 
     }
 
