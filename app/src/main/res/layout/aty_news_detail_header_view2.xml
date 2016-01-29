@@ -35,7 +35,9 @@
             android:maxLines="2"
             android:text="@string/mNewsDetailTitle"
             android:textColor="@color/white"
-            android:textSize="@dimen/detail_title" />
+            android:textSize="@dimen/detail_title"
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/mDetailDate"
@@ -107,6 +109,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/mNewsDetailHeaderDesc"
             android:textColor="@color/news_detail_desc"
-            android:textSize="@dimen/detail_description" />
+            android:textSize="@dimen/detail_description"
+            />
     </LinearLayout>
 </RelativeLayout>

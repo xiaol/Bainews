@@ -25,6 +25,7 @@ android {
         wangba {}
         xiaomi {}
         adcoco{}
+        adcocoa{}
         red {}
 //        c360 {}
 //        baidu {}

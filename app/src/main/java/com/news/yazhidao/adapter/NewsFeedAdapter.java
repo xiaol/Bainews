@@ -27,7 +27,6 @@ import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -297,6 +296,9 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder3.tvRelate3 = (TextView) holder3.rlRelate3.findViewById(R.id.tv_relate);
                 holder3.tvSource3 = (TextViewExtend) holder3.rlRelate3.findViewById(R.id.tv_news_source);
                 holder3.llSourceContent = (LinearLayout) convertView.findViewById(R.id.source_content_linearLayout);
+                setCardMargin(holder3.ivCard1, 12, 6, 3);
+                setCardMargin(holder3.ivCard2, 6, 6, 3);
+                setCardMargin(holder3.ivCard3, 6, 12, 3);
                 convertView.setTag(holder3);
             } else {
                 holder3 = (ViewHolder3) convertView.getTag();
@@ -312,9 +314,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 //            } else {
             holder3.ivCard3.setVisibility(View.VISIBLE);
             setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
-            setCardMargin(holder3.ivCard1, 12, 6, 3);
-            setCardMargin(holder3.ivCard2, 6, 6, 3);
-            setCardMargin(holder3.ivCard3, 6, 12, 3);
+
 //            }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle);
@@ -478,7 +478,6 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
-        long start = System.currentTimeMillis();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             Date date = dateFormat.parse(updateTime);
@@ -498,7 +497,6 @@ public class NewsFeedAdapter extends BaseAdapter {
             tvComment.setText("一天前");
             e.printStackTrace();
         }
-        Logger.e("jigang","time="+(System.currentTimeMillis() - start));
 
     }
 

@@ -157,13 +157,14 @@
     <color name="dig_special_title">#a0a0a0</color>
 
     <!--NewsDetailAty HeaderView color-->
-    <color name="bg_news_detail">#E6E6E6</color>
+    <!--<color name="bg_news_detail">#E6E6E6</color>-->
+    <color name="bg_news_detail">#ffffff</color>
     <color name="news_detail_speech_divider">#F0F0F0</color>
-    <color name="news_detail_desc">#2b2b2b</color>
+    <color name="news_detail_desc">#464646</color>
     <color name="news_detail_desc_shadow">#d8d8d8</color>
 
     <!--NewsDetailAty news content color-->
-    <color name="news_detail_content">#494949</color>
+    <color name="news_detail_content">#060606</color>
     <color name="news_detail_comment_count">#676767</color>
     <color name="news_detail_imagewall">#55000000</color>
     <color name="news_detail_different_opinion_title">#b8b8b8</color>

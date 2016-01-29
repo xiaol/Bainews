@@ -74,7 +74,7 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
                 mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
             }else {
                 mDetailHeaderImg.setVisibility(GONE);
-                mDetailTitleWrapper.setBackgroundColor(Color.parseColor("#E6E6E6"));
+                mDetailTitleWrapper.setBackgroundColor(mContext.getResources().getColor(R.color.bg_news_detail));
                 int paddingBottom = DensityUtil.dip2px(mContext,15);
                 if(TextUtil.isEmptyString(detail.abs)){
                     paddingBottom = DensityUtil.dip2px(mContext,5);

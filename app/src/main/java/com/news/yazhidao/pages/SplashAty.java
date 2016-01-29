@@ -14,7 +14,6 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 
 /**
  * Created by fengjigang on 15/3/30.
@@ -78,7 +77,7 @@ public class SplashAty extends BaseActivity {
 
             }
         });
-        Logger.e("jigang", "h=" + mSplashLine.getHeight() + ",w=" + mSplashLine.getWidth());
+//        Logger.e("jigang", "h=" + mSplashLine.getHeight() + ",w=" + mSplashLine.getWidth());
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);
 //        }
