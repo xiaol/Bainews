@@ -17,6 +17,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailELVAdapter;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetailAdd;
@@ -29,6 +30,7 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -83,6 +85,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private String mSource;
     private String newsId = null;
     private String newsType = null;
+    private long mDurationStart;//统计用户读此条新闻时话费的时间
+    private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
+    private String channelId;
 
     @Override
     protected boolean translucentStatus() {
@@ -157,6 +162,34 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 return true;
             }
         });
+        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE){
+                    if(view.getLastVisiblePosition() == view.getCount() - 1){
+                        isReadOver = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDurationStart = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        long readDuration = System.currentTimeMillis() - mDurationStart;
+        Logger.e("jigang","time = "+ DateUtil.getDate()+",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid ="+newsId+",type="+newsType +",channelId =" +channelId+ ",uuid="+uuid+",userid="+mUserId+",location="+SharedPreManager.get(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION));
     }
 
     @Override
@@ -177,6 +210,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }else {
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
+            channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);

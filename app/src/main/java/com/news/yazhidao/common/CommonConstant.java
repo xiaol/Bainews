@@ -39,4 +39,7 @@ public final class CommonConstant {
     public static final String JINYU_JPUSH_ID = "0005150a7dd";
     public static final String FILE_SEARCH_WORDS = "serach_words";//用户搜索词sp 存储文件名
     public static final String KEY_SEARCH_WORDS = "key_search_words";
+    public static final String FILE_USER_LOCATION = "file_user_location";
+    public static final String KEY_USER_LOCATION = "key_user_location";
+    public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
 }

@@ -12,8 +12,10 @@ import android.widget.ImageView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 
 /**
  * Created by fengjigang on 15/3/30.
@@ -99,6 +101,18 @@ public class SplashAty extends BaseActivity {
 //                }
             }
         }, 2000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        long openTimes = SharedPreManager.getLong(CommonConstant.FILE_USER, CommonConstant.KEY_USER_OPEN_APP);
+        if (openTimes == 0){
+            SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,1);
+
+        }else {
+            SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,openTimes + 1);
+        }
     }
 
     @Override

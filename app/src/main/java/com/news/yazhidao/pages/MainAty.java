@@ -26,11 +26,13 @@ import com.baidu.location.Poi;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -71,7 +73,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
         int span=1000;
@@ -152,7 +154,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
                 }
             }
-            Log.i("BaiduLocationApiDem", sb.toString());
+            Log.i("BaiduLocationApiDem", sb.toString() );
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION,GsonUtil.serialized(location.getAddress()));
         }
     }
 

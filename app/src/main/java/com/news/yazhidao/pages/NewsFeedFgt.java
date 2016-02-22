@@ -37,6 +37,7 @@ import java.util.List;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
+    public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     /**
      * 当前fragment 所对应的新闻频道
      */
@@ -304,6 +305,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             mAdapter.setNewsFeed(newsFeeds);
                             mAdapter.notifyDataSetChanged();
                         }
+                    }else {
+                        mAdapter.setNewsFeed(mArrNewsFeed);
+                        mAdapter.notifyDataSetChanged();
                     }
                 }
                 mlvNewsFeed.onRefreshComplete();
