@@ -3,6 +3,7 @@ package com.news.yazhidao.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -16,7 +17,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.AbstractDraweeController;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.google.gson.internal.LinkedTreeMap;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailAdd;
@@ -51,6 +56,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private final static String KEY_COMMENTS = "key_comments";
     private NewsDetailAdd mNewsDetailAdd;
     private ExpandableListView mExpListView;
+    private int mDeviceWidth;
 
     @Override
     public void updateCommentCount(NewsDetailAdd.Point point) {
@@ -106,6 +112,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         this.mSreenWidth = DeviceInfoUtil.getScreenWidth(pContext);
         this.mSreenHeight = DeviceInfoUtil.getScreenHeight(pContext);
         this.mNewsContentDataList = pNewsContentDataList;
+        this.mDeviceWidth = DeviceInfoUtil.getScreenWidth(mContext);
     }
 
     public void setmNewsContentDataList(ArrayList<ArrayList> mNewsContentDataList) {
@@ -217,6 +224,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContentViewHolder.mDetailCommentCount = (TextView) convertView.findViewById(R.id.mDetailCommentCount);
                 mContentViewHolder.mNewsDetailContentWrapper = convertView.findViewById(R.id.mNewsDetailContentWrapper);
                 mContentViewHolder.mDetailGroupDivider = convertView.findViewById(R.id.mDetailGroupDivider);
+                mContentViewHolder.mDetailText = convertView.findViewById(R.id.mDetailText);
+                mContentViewHolder.mDetailImage = (SimpleDraweeView) convertView.findViewById(R.id.mDetailImage);
                 convertView.setTag(mContentViewHolder);
             } else {
                 mContentViewHolder = (ContentViewHolder) convertView.getTag();
@@ -247,7 +256,56 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**设置分组之间的间隔*/
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
-            mContentViewHolder.mDetailContent.setText(content.getContent());
+            if (content.getContent().startsWith("http:")){
+                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new ControllerListener<ImageInfo>() {
+                    @Override
+                    public void onSubmit(String id, Object callerContext) {
+
+                    }
+
+                    @Override
+                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                        if (imageInfo != null){
+                            if (imageInfo.getWidth() > mDeviceWidth){
+                                mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
+                                mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
+                            }else {
+                                mContentViewHolder.mDetailImage.getLayoutParams().width = imageInfo.getWidth();
+                                mContentViewHolder.mDetailImage.getLayoutParams().height = imageInfo.getHeight();
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
+
+                    }
+
+                    @Override
+                    public void onIntermediateImageFailed(String id, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String id, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onRelease(String id) {
+
+                    }
+                }).setUri(Uri.parse(content.getContent())).build();
+
+                mContentViewHolder.mDetailImage.setController(controller);
+                mContentViewHolder.mDetailText.setVisibility(View.GONE);
+                mContentViewHolder.mDetailImage.setVisibility(View.VISIBLE);
+            }else {
+                mContentViewHolder.mDetailContent.setText(content.getContent());
+                mContentViewHolder.mDetailText.setVisibility(View.VISIBLE);
+                mContentViewHolder.mDetailImage.setVisibility(View.GONE);
+            }
             /**设置该段落的评论数*/
             if (!TextUtil.isListEmpty(content.getComments())) {
                 mContentViewHolder.mDetailCommentCount.setText("" + content.getComments().size());
@@ -684,11 +742,19 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
-                    if (hashMap.get("txt") != null) {
-                        NewsDetailContent content = new NewsDetailContent();
-                        content.setContent(hashMap.get("txt"));//img img_info txt
-                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                        list.add(content);
+                    if (hashMap != null) {
+                        if (!TextUtil.isEmptyString(hashMap.get("txt"))){
+                            NewsDetailContent content = new NewsDetailContent();
+                            content.setContent(hashMap.get("txt"));//img img_info txt
+                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                            list.add(content);
+                        }
+                        if (!TextUtil.isEmptyString(hashMap.get("img"))){
+                            NewsDetailContent content = new NewsDetailContent();
+                            content.setContent(hashMap.get("img"));//img img_info txt
+                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                            list.add(content);
+                        }
                     }
                 }
                 if (!TextUtil.isListEmpty(points)) {
@@ -816,6 +882,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         TextView mDetailCommentCount;
         View mNewsDetailContentWrapper;
         View mDetailGroupDivider;
+        SimpleDraweeView mDetailImage;
+        View mDetailText;
     }
 
     /**

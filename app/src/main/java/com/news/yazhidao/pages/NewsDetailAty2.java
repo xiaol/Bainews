@@ -134,10 +134,16 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE){
+                    if(view.getLastVisiblePosition() == view.getCount() - 1){
+                        isReadOver = true;
+                    }
+                }
             }
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
                 View childAt = view.getChildAt(0);
                 if (childAt != null && mNewsDetailAdd != null && !TextUtil.isEmptyString(mNewsDetailAdd.imgUrl)) {
                     if (firstVisibleItem != 0 || childAt.getY() > 0) {
@@ -160,21 +166,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 return true;
-            }
-        });
-        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE){
-                    if(view.getLastVisiblePosition() == view.getCount() - 1){
-                        isReadOver = true;
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
             }
         });
     }
@@ -211,6 +202,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
             channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
+
+//            newsId = "377bee892c873fc910343f22635c328f";
+//            newsType = "NewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
@@ -338,11 +332,19 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
-                    if (hashMap != null && hashMap.get("txt") != null) {
-                        NewsDetailContent content = new NewsDetailContent();
-                        content.setContent(hashMap.get("txt"));//img img_info txt
-                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                        list.add(content);
+                    if (hashMap != null) {
+                        if (!TextUtil.isEmptyString(hashMap.get("txt"))){
+                            NewsDetailContent content = new NewsDetailContent();
+                            content.setContent(hashMap.get("txt"));//img img_info txt
+                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                            list.add(content);
+                        }
+                        if (!TextUtil.isEmptyString(hashMap.get("img"))){
+                            NewsDetailContent content = new NewsDetailContent();
+                            content.setContent(hashMap.get("img"));//img img_info txt
+                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                            list.add(content);
+                        }
                     }
                 }
                 if (!TextUtil.isListEmpty(points)) {

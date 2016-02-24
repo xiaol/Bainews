@@ -106,6 +106,7 @@ public class YaZhiDaoApplication extends Application {
                     detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsid);
                     detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
                     detailIntent.putExtra(NewsFeedFgt.KEY_COLLECTION, collection);
+                    detailIntent.putExtra(NewsFeedFgt.KEY_PUSH_NEWS, collection);
                     detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailIntent);
                 } else if (!TextUtil.isEmptyString(newVersion)){

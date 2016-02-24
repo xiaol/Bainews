@@ -38,6 +38,8 @@ import java.util.List;
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
+    public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
+
     /**
      * 当前fragment 所对应的新闻频道
      */
@@ -216,7 +218,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //                mlvNewsFeed.setRefreshing();
                 loadData(PULL_DOWN_REFRESH);
             }
-        }, 800);
+        }, 1000);
     }
 
     /**

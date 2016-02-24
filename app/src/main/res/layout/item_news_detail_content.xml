@@ -1,59 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
     >
 
-    <View
-        android:id="@+id/mDetailGroupDivider"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@color/bg_news_detail"
-        />
-
+        <View
+            android:id="@+id/mDetailGroupDivider"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/bg_news_detail"
+            />
     <RelativeLayout
-        android:id="@+id/mNewsDetailContentWrapper"
+        android:id="@+id/mDetailText"
         android:layout_below="@id/mDetailGroupDivider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_item_news_detail_content_middle"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="8dp"
-        >
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/mDetailContent"
+
+        <RelativeLayout
+            android:id="@+id/mNewsDetailContentWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.4"
-            android:text="@string/mNewsDetailHeaderDesc"
-            android:textColor="@color/news_detail_content"
-            android:textSize="@dimen/detail_content"
-            />
+            android:background="@drawable/bg_item_news_detail_content_middle"
+            android:paddingBottom="8dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="4dp"
+            >
 
-        <TextView
-            android:id="@+id/mDetailCommentCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/mDetailContent"
-            android:background="@drawable/btn_news_detail_comment_count"
-            android:gravity="center"
-            android:text="234"
-            android:textColor="@color/news_detail_comment_count"
-            android:textSize="@dimen/detail_content_comments"
-            />
+            <TextView
+                android:id="@+id/mDetailContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.4"
+                android:text="@string/mNewsDetailHeaderDesc"
+                android:textColor="@color/news_detail_content"
+                android:textSize="@dimen/detail_content"
+                />
 
-        <!--<ImageView-->
-            <!--android:id="@+id/mDetailAddComment"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_below="@id/mDetailContent"-->
-            <!--android:src="@drawable/btn_news_detail_add_comment"-->
-            <!--/>-->
+            <TextView
+                android:id="@+id/mDetailCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/mDetailContent"
+                android:background="@drawable/btn_news_detail_comment_count"
+                android:gravity="center"
+                android:text="234"
+                android:textColor="@color/news_detail_comment_count"
+                android:textSize="@dimen/detail_content_comments"
+                />
+
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/mDetailImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mDetailGroupDivider"
+        android:visibility="gone"
+        app:viewAspectRatio="1.77"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        app:placeholderImage="@drawable/bg_load_default_middle"
+        app:placeholderImageScaleType="centerCrop"
+        app:failureImage="@drawable/bg_load_default_middle"
+        app:failureImageScaleType="centerCrop"
+        />
 </RelativeLayout>

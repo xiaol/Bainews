@@ -535,6 +535,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_CHANNEL, feed.getChannelId());
                 mContext.startActivity(intent);
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
+                MobclickAgent.onEvent(mContext, "user_read_detail");
             }
         });
     }
