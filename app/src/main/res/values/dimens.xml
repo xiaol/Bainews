@@ -82,20 +82,28 @@
     <!--新闻详情页字体大小-->
     <dimen name="detail_title">23sp</dimen>
     <dimen name="detail_source_time">14sp</dimen>
-    <dimen name="detail_description">18sp</dimen>
+    <dimen name="detail_description">17sp</dimen>
     <dimen name="detail_content">18sp</dimen>
     <dimen name="detail_content_comments">11sp</dimen>
     <dimen name="detail_imagewall_size">14sp</dimen>
     <dimen name="detail_diffopinion_content">14sp</dimen>
     <dimen name="detail_diffopinion_title">12sp</dimen>
     <dimen name="detail_comments_username">14sp</dimen>
-    <dimen name="detail_comments_userspeech">18sp</dimen>
+    <dimen name="detail_comments_userspeech">14sp</dimen>
     <dimen name="detail_comments_praisenum">10sp</dimen>
     <dimen name="detail_comments_checkall">16sp</dimen>
-    <dimen name="detail_entry_title">16sp</dimen>
+    <dimen name="detail_entry_title">14sp</dimen>
     <dimen name="detail_relate_opinion_time">12sp</dimen>
     <dimen name="detail_relate_opinion_content">14sp</dimen>
     <dimen name="detail_weibo_username">14sp</dimen>
-    <dimen name="detail_weibo_username_speech">18sp</dimen>
-    <dimen name="detail_zhihu_title">18sp</dimen>
+    <dimen name="detail_weibo_username_speech">14sp</dimen>
+    <dimen name="detail_zhihu_title">14sp</dimen>
+
+    <dimen name="detail_padding_left">18dp</dimen>
+    <dimen name="detail_padding_right">18dp</dimen>
+    <dimen name="detail_padding_outer">0dp</dimen>
+
+
+    <!--用户评论dialog -->
+    <dimen name="detail_user_comment_dialog_height">160dp</dimen>
 </resources>

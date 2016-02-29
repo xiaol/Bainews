@@ -43,6 +43,16 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String collection;
 
+    private boolean isRead;//用户是否看过
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     public String getSourceSiteName() {
         return sourceSiteName;
     }

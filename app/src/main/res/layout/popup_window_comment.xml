@@ -16,7 +16,7 @@
             android:layout_marginLeft="12dp"
             android:scaleType="centerInside"
             android:layout_centerVertical="true"
-            android:src="@drawable/btn_detail_left_back" />
+            android:src="@drawable/btn_comment_left_back" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/title_textView"
@@ -44,6 +44,8 @@
         android:layout_below="@+id/mDetailHeader"
         android:background="@color/white"
         android:scrollbars="none"
+        android:divider="@drawable/comment_list_divider"
+        android:dividerHeight="1px"
         android:transcriptMode="normal" />
 
     <include

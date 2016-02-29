@@ -5,17 +5,19 @@
                 android:layout_height="wrap_content"
     >
 
-        <View
-            android:id="@+id/mDetailGroupDivider"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:background="@color/bg_news_detail"
-            />
+    <View
+        android:id="@+id/mDetailGroupDivider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/bg_news_detail"
+        />
+
     <RelativeLayout
         android:id="@+id/mDetailText"
-        android:layout_below="@id/mDetailGroupDivider"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        android:layout_below="@id/mDetailGroupDivider">
 
 
         <RelativeLayout
@@ -24,8 +26,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_item_news_detail_content_middle"
             android:paddingBottom="8dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
+            android:paddingLeft="@dimen/detail_padding_left"
+            android:paddingRight="@dimen/detail_padding_right"
             android:paddingTop="4dp"
             >
 
@@ -50,6 +52,7 @@
                 android:text="234"
                 android:textColor="@color/news_detail_comment_count"
                 android:textSize="@dimen/detail_content_comments"
+                android:visibility="gone"
                 />
 
 
@@ -62,15 +65,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mDetailGroupDivider"
-        android:visibility="gone"
-        app:viewAspectRatio="1.77"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp"
-        android:layout_marginTop="8dp"
         android:layout_centerHorizontal="true"
-        app:placeholderImage="@drawable/bg_load_default_middle"
-        app:placeholderImageScaleType="centerCrop"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/detail_padding_left"
+        android:paddingRight="@dimen/detail_padding_right"
+        android:visibility="gone"
         app:failureImage="@drawable/bg_load_default_middle"
         app:failureImageScaleType="centerCrop"
+        app:placeholderImage="@drawable/bg_load_default_middle"
+        app:placeholderImageScaleType="centerCrop"
+        app:viewAspectRatio="1.77"
         />
 </RelativeLayout>

@@ -3,13 +3,13 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
+import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.widget.TextViewExtend;
 
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -347,6 +347,34 @@ public class TextUtil {
         }
         if (pString.length() == 0 || pString.trim().length() == 0){
             return true;
+        }
+        return false;
+    }
+
+    public static String List2String (ArrayList<ChannelItem> list){
+        if (isListEmpty(list)){
+            return "";
+        }
+        StringBuilder sb = new StringBuilder("");
+        for (ChannelItem item: list){
+            sb.append(item.getName()).append(",");
+        }
+        return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+    public static boolean isChannelChanged(ArrayList<ChannelItem> oldList,ArrayList<ChannelItem> newList){
+        if (isListEmpty(oldList) || isListEmpty(newList)) {
+            return false;
+        }
+        for (int i = 0; i < oldList.size(); i++) {
+            ChannelItem oldItem = oldList.get(i);
+            for (int j = 0; j < newList.size(); j++) {
+                ChannelItem newItem = newList.get(j);
+                if (oldItem.getId().equals(newItem.getId())) {
+                    if (!oldItem.getOrderId().equals(newItem.getOrderId())) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

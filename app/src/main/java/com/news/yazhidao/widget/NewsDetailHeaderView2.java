@@ -1,21 +1,13 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.utils.DensityUtil;
-import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 
 /**
@@ -23,17 +15,10 @@ import com.news.yazhidao.utils.TextUtil;
  */
 public class NewsDetailHeaderView2 extends RelativeLayout {
 
-    private final SimpleDraweeView mDetailSpeechCommentUserIcon;
-    private final SpeechView mDetailSpeechComment;
-    private final LinearLayout mDetailTitleWrapper;
-    private int mScreenWidth,mScreenHeight;
-    //语音评论父容器,评论父容器
-    private View mDetailSpeechCommentWrapper,mDetailCommentWrapper;
-    //新闻大头图
-    private SimpleDraweeView mDetailHeaderImg;
+    private final TextView mNewsDetailSourceAndTime;
+    private final TextView mNewsDetailTitle;
+
     //新闻标题,新闻时间,新闻描述
-    private TextView mDetailTitle,mDetailDate,mDetailDesc;
-    private Context mContext;
     public NewsDetailHeaderView2(Context context) {
         this(context, null);
     }
@@ -44,21 +29,9 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
 
     public NewsDetailHeaderView2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
-        mScreenWidth = DeviceInfoUtil.getScreenWidth(context);
-        mScreenHeight = DeviceInfoUtil.getScreenHeight(context);
         View root = View.inflate(context, R.layout.aty_news_detail_header_view2, this);
-        mDetailHeaderImg = (SimpleDraweeView)root.findViewById(R.id.mDetailHeaderImg);
-        mDetailHeaderImg.getHierarchy().setActualImageFocusPoint(new PointF(.5f,0.35f));
-        mDetailHeaderImg.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(int)(mScreenWidth*520.0f/720)));
-        mDetailTitle = (TextView)root.findViewById(R.id.mDetailTitle);
-        mDetailDate = (TextView)root.findViewById(R.id.mDetailDate);
-        mDetailCommentWrapper = root.findViewById(R.id.mDetailCommentWrapper);
-        mDetailSpeechCommentWrapper = root.findViewById(R.id.mDetailSpeechCommentWrapper);
-        mDetailSpeechCommentUserIcon = (SimpleDraweeView)root.findViewById(R.id.mDetailSpeechCommentUserIcon);
-        mDetailSpeechComment = (SpeechView)root.findViewById(R.id.mDetailSpeechComment);
-        mDetailDesc = (TextView)root.findViewById(R.id.mDetailDesc);
-        mDetailTitleWrapper = (LinearLayout)root.findViewById(R.id.mDetailTitleWrapper);
+        mNewsDetailSourceAndTime = (TextView)root.findViewById(R.id.mNewsDetailSourceAndTime);
+        mNewsDetailTitle = (TextView)root.findViewById(R.id.mNewsDetailTitle);
     }
 
     /**
@@ -68,40 +41,21 @@ public class NewsDetailHeaderView2 extends RelativeLayout {
     public void updateView(Object pNewsDetail){
          if(pNewsDetail instanceof NewsDetailAdd){
             NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
-            mDetailTitle.setText(detail.title);
-            mDetailDate.setText(detail.updateTime.replace("/r","").replace("/n",""));
-            if (!TextUtil.isEmptyString(detail.imgUrl)){
-                mDetailHeaderImg.setImageURI(Uri.parse(detail.imgUrl));
-            }else {
-                mDetailHeaderImg.setVisibility(GONE);
-                mDetailTitleWrapper.setBackgroundColor(mContext.getResources().getColor(R.color.bg_news_detail));
-                int paddingBottom = DensityUtil.dip2px(mContext,15);
-                if(TextUtil.isEmptyString(detail.abs)){
-                    paddingBottom = DensityUtil.dip2px(mContext,5);
-                }
-                mDetailDate.setPadding(0, 0,0,paddingBottom);
-                mDetailTitle.setTextColor(Color.BLACK);
-                mDetailDate.setTextColor(Color.BLACK);
-            }
-            /**语音评论和新闻描述有一个不为null*/
-            if (!TextUtil.isEmptyString(detail.abs) || detail.isdoc){
-                if (!TextUtil.isEmptyString(detail.abs)){
-                    mDetailDesc.setText(detail.abs.replace("\n",""));
-                    mDetailDesc.setVisibility(VISIBLE);
-                }else {
-                    mDetailDesc.setVisibility(GONE);
-                }
-                if (detail.isdoc){
-                    mDetailSpeechComment.setUrlAndDuration(detail.docUrl,Integer.valueOf(detail.docTime),true);
-                    mDetailSpeechCommentUserIcon.setImageURI(Uri.parse(detail.docUserIcon));
-                    mDetailSpeechCommentWrapper.setVisibility(VISIBLE);
-                }else{
-                    mDetailSpeechCommentWrapper.setVisibility(GONE);
-                }
-                mDetailCommentWrapper.setVisibility(VISIBLE);
-            }else{
-                mDetailCommentWrapper.setVisibility(GONE);
-            }
+             mNewsDetailTitle.setText(detail.title);
+             String source = detail.sourceSiteName;
+             String time = detail.updateTime;
+             if (!TextUtil.isEmptyString(source)){
+                 source = source.replace("\n","") + "  ";
+             }else {
+                 source ="";
+             }
+             if (!TextUtil.isEmptyString(time)){
+                 time = time.replace("\n","");
+             }
+             if (TextUtil.isEmptyString(source + time)){
+                 mNewsDetailSourceAndTime.setVisibility(GONE);
+             }
+             mNewsDetailSourceAndTime.setText(source+time);
         }
     }
 }

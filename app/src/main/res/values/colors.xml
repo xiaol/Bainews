@@ -8,6 +8,7 @@
     <color name="color6">#e6e6e6</color>
     <color name="color7">#f5f5f5</color>
     <color name="color8">#8cc3fa</color>
+    <color name="color9">#505050</color>
     <color name="news_list_table_channelname">#ff7f66</color>
     <color name="news_list_table_devider">#e1e1e1</color>
     <color name="white">#ffffff</color>
@@ -133,7 +134,7 @@
     <color name="btn_unpress_color">#22000000</color>
 
     <!--login portion-->
-    <color name="bg_home_login_header">#50b5eb</color>
+    <color name="bg_home_login_header">@color/white</color>
     <color name="home_login_chat">#2b2b2b</color>
     <color name="home_logout">#ff7878</color>
     <color name="bg_home_login_weixin">#00e17f</color>
@@ -160,11 +161,11 @@
     <!--<color name="bg_news_detail">#E6E6E6</color>-->
     <color name="bg_news_detail">#ffffff</color>
     <color name="news_detail_speech_divider">#F0F0F0</color>
-    <color name="news_detail_desc">#464646</color>
+    <color name="news_detail_desc">@color/color3</color>
     <color name="news_detail_desc_shadow">#d8d8d8</color>
 
     <!--NewsDetailAty news content color-->
-    <color name="news_detail_content">#060606</color>
+    <color name="news_detail_content">#606060</color>
     <color name="news_detail_comment_count">#676767</color>
     <color name="news_detail_imagewall">#55000000</color>
     <color name="news_detail_different_opinion_title">#b8b8b8</color>

@@ -24,8 +24,10 @@ import com.news.yazhidao.adapter.ChannelSelectedAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.channel.NormalGridView;
 import com.news.yazhidao.widget.channel.SelectedGridView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -261,6 +263,10 @@ public class ChannelOperateAty extends BaseActivity implements OnItemClickListen
 		mDao.deletaForAll();
 		mDao.insertSelectedList(userAdapter.getChannnelList());
 		mDao.insertNormalList(otherAdapter.getChannnelLst());
+		//统计用户是否编辑了频道
+		if (selectedChannelList.size() != userAdapter.getChannnelList().size() || TextUtil.isChannelChanged(selectedChannelList,userAdapter.getChannnelList())){
+			MobclickAgent.onEvent(this,"user_eidted_channel");
+		}
 	}
 
 	@Override

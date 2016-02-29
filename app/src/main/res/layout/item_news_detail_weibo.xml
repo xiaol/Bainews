@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_item_news_detail_content"
-    android:paddingLeft="26dp"
-    android:paddingRight="26dp"
+    android:paddingLeft="@dimen/detail_padding_left"
+    android:paddingRight="@dimen/detail_padding_right"
     >
 
 
@@ -80,7 +80,6 @@
         android:layout_height="1px"
         android:layout_alignLeft="@id/mDetailWeiboUserName"
         android:layout_below="@id/mDetailWeiboContentAndIcon"
-        android:background="@color/bg_news_detail"
+        android:background="@color/news_detail_speech_divider"
         />
-
 </RelativeLayout>

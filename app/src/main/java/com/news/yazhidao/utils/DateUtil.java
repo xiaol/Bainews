@@ -288,7 +288,7 @@ public class DateUtil {
      */
     public static String getDate() {
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
     /**
@@ -298,6 +298,12 @@ public class DateUtil {
     public static String getDateWithMS() {
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        return format.format(date);
+    }
+
+    public static String getFormatDate(String pDate){
+        Date date = new Date(pDate);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
         return format.format(date);
     }
 }

@@ -13,6 +13,8 @@ import java.util.HashMap;
 public class NewsDetailAdd implements Serializable{
     //新闻来源
     public String originsourceSiteName;
+    public String sourceSiteName;
+    public String createTime;
     //新闻描述
     public String abs;
     //新闻内容

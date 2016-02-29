@@ -5,57 +5,44 @@
     android:orientation="vertical">
 
 
-
-    <LinearLayout
-        android:id="@+id/mNewsSourcesiteHeader"
+    <RelativeLayout
+        android:id="@+id/mDetailWebHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
+        android:layout_height="48dp"
+        android:background="@color/bg_home_login_header"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.3"
+            android:background="@color/black"
+            />
         <ImageView
-            android:id="@+id/mNewsSourcesiteLeftBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:src="@drawable/btn_news_sourcesite_left_back" />
+            android:id="@+id/mLeftBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:contentDescription="转到上一级"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_left_back"/>
 
-        <TextView
-            android:id="@+id/mNewsSourcesiteUrl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:lines="1"
-            android:text="https://github.com/xiaol/Bainews/commits/master" />
-
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/mNewsSourcesiteTopDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_below="@id/mNewsSourcesiteHeader"
-        android:background="@color/news_sourcesite_divider"
-        android:visibility="gone"
-        />
-
-
-    <WebView
-        android:id="@+id/mNewsSourcesiteWebview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mNewsSourcesiteTopDivider">
-
-    </WebView>
     <ProgressBar
         android:id="@+id/mNewsSourcesiteProgress"
+        android:layout_alignParentBottom="true"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:progressDrawable="@drawable/detail_page_progressbar_horizontal" />
+    </RelativeLayout>
+    <WebView
+        android:id="@+id/mNewsSourcesiteWebview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mDetailWebHeader">
+
+    </WebView>
     <ImageView
         android:id="@+id/mNewsSourcesiteBottomDivider"
         android:layout_width="match_parent"
@@ -167,11 +154,4 @@
         </FrameLayout>
 
     </LinearLayout>
-    <ImageView
-        android:id="@+id/mLeftBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="25dp"
-        android:src="@drawable/btn_news_detail_left_back"
-        />
 </RelativeLayout>

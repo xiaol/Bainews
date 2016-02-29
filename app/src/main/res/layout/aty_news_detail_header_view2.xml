@@ -1,115 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_news_detail">
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/mDetailHeaderImg"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:contentDescription="详情页头图"
-        fresco:actualImageScaleType="focusCrop"
-        fresco:placeholderImage="@drawable/bg_load_default_middle"
-        fresco:placeholderImageScaleType="fitXY"
-        />
-    <LinearLayout
-        android:id="@+id/mDetailTitleWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/mDetailHeaderImg"
-        android:layout_alignTop="@id/mDetailHeaderImg"
-        android:background="@drawable/bg_news_detail_header_gradient"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
-
-        <TextView
-            android:id="@+id/mDetailTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="52dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/mNewsDetailTitle"
-            android:textColor="@color/white"
-            android:textSize="@dimen/detail_title"
-            android:textStyle="bold"
-            />
-
-        <TextView
-            android:id="@+id/mDetailDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/mNewsDetailHeaderTime"
-            android:textColor="@color/white"
-            android:textSize="@dimen/detail_source_time" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/mDetailCommentWrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/mDetailTitleWrapper"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="-10dp"
-        android:background="@drawable/bg_detail_desc"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/mDetailSpeechCommentWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:background="@color/white">
-
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/mDetailSpeechCommentUserIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="22dp"
-                android:layout_marginTop="8dp"
-                fresco:placeholderImage="@drawable/ic_user_login_default"
-                fresco:roundAsCircle="true"
-                fresco:roundingBorderColor="@color/bg_home_login_header"
-                fresco:roundingBorderWidth="2dp" />
-
-            <com.news.yazhidao.widget.SpeechView
-                android:id="@+id/mDetailSpeechComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/mDetailSpeechCommentUserIcon" />
-
-            <View
-                android:id="@+id/mDetailSpeechDivider"
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_below="@id/mDetailSpeechCommentUserIcon"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/news_detail_speech_divider" />
-        </RelativeLayout>
+                android:layout_height="match_parent"
+                android:background="@color/bg_news_detail"
+                android:paddingLeft="@dimen/detail_padding_left"
+                android:paddingRight="@dimen/detail_padding_right"
+                android:paddingTop="18dp"
+    >
 
-        <TextView
-            android:id="@+id/mDetailDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/mNewsDetailHeaderDesc"
-            android:textColor="@color/news_detail_desc"
-            android:textSize="@dimen/detail_description"
-            />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/mNewsDetailTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/mNewsDetailTitle"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font1"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:id="@+id/mNewsDetailSourceAndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mNewsDetailTitle"
+        android:layout_marginRight="8dp"
+        android:text="新华网"
+        android:textColor="@color/color3"
+        android:textSize="@dimen/font4"
+        />
+
 </RelativeLayout>

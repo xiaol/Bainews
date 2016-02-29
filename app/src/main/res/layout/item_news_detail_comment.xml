@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/mDetailCommentDivider"
         android:background="@drawable/bg_item_news_detail_content"
-        android:paddingLeft="26dp"
-        android:paddingRight="26dp"
+        android:paddingLeft="@dimen/detail_padding_left"
+        android:paddingRight="@dimen/detail_padding_left"
         >
 
 
@@ -30,10 +30,9 @@
             android:layout_height="32dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="16dp"
-            app:placeholderImage="@drawable/ic_user_login_default"
+            app:failureImage="@drawable/ic_user_comment_default"
+            app:placeholderImage="@drawable/ic_user_comment_default"
             app:roundAsCircle="true"
-            app:roundingBorderColor="@color/bg_home_login_header"
-            app:roundingBorderWidth="2px"
             />
 
         <TextView
@@ -42,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/mDetailCommentUserIcon"
             android:layout_toRightOf="@id/mDetailCommentUserIcon"
+            android:layout_toLeftOf="@+id/mDetailCommentPraiseWrapper"
             android:ellipsize="end"
             android:lines="1"
             android:text="@string/mNewsDetailHeaderDesc"
@@ -59,7 +59,7 @@
             android:layout_toRightOf="@id/mDetailCommentUserIcon"
             android:lineSpacingMultiplier="1.15"
             android:text="@string/mNewsDetailHeaderDesc"
-            android:textColor="@color/news_detail_content"
+            android:textColor="@color/color9"
             android:textSize="@dimen/detail_comments_userspeech"
             />
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="-10dp"
-            android:layout_alignTop="@id/mDetailCommentUserSpeech"
+            android:layout_alignTop="@id/mDetailCommentUserIcon"
             android:orientation="vertical"
             >
 
@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/mDetailCommentPraise"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-24dp"
+                android:layout_marginTop="-30dp"
                 android:text="12345"
                 android:textColor="@color/red"
                 android:textSize="@dimen/detail_comments_praisenum"
@@ -118,7 +118,7 @@
             android:padding="8dp"
             android:text="查看全部"
             android:textColor="@color/news_detail_content"
-            android:textSize="@dimen/detail_comments_checkall"
+            android:textSize="@dimen/font4"
             android:visibility="visible"
             />
 </RelativeLayout>

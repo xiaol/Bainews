@@ -2,8 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/bg_news_detail"/>
     <item
-        android:left="10dp"
-        android:right="10dp"
+        android:left="@dimen/detail_padding_outer"
+        android:right="@dimen/detail_padding_outer"
         >
         <shape>
             <solid android:color="@color/white"/>
@@ -13,19 +13,19 @@
         </shape>
     </item>
     <item
-        android:left="10dp"
-        android:right="10dp"
+        android:left="@dimen/detail_padding_outer"
+        android:right="@dimen/detail_padding_outer"
         >
         <shape>
-            <solid android:color="@color/news_detail_desc_shadow"/>
+            <solid android:color="@color/white"/>
             <corners
                 android:bottomLeftRadius="3dp"
                 android:bottomRightRadius="3dp"/>
         </shape>
     </item>
     <item
-        android:left="10dp"
-        android:right="10dp"
+        android:left="@dimen/detail_padding_outer"
+        android:right="@dimen/detail_padding_outer"
         android:bottom="2px"
         >
         <shape>

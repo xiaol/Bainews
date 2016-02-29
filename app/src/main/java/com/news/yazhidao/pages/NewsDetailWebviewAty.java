@@ -28,8 +28,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     public static final String KEY_URL = "key_url";
     private WebView mNewsSourcesiteWebview;
     private String mNewsUrl;
-    private View mNewsSourcesiteLeftBack;
-    private TextView mNewsSourcesiteUrl;
     private View mNewsSourcesiteFooterPraise;
     private View mNewsSourcesiteFooterBlame;
     private View mNewsSourcesiteFooterShare;
@@ -52,9 +50,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
         mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
-        mNewsSourcesiteLeftBack=findViewById(R.id.mNewsSourcesiteLeftBack);
-        mNewsSourcesiteLeftBack.setOnClickListener(this);
-        mNewsSourcesiteUrl=(TextView)findViewById(R.id.mNewsSourcesiteUrl);
         mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
         mLeftBack=findViewById(R.id.mLeftBack);
         mLeftBack.setOnClickListener(this);
@@ -73,9 +68,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mNewsSourcesiteLeftBack:
-                this.finish();
-                break;
             case R.id.mNewsSourcesiteFooterPraise:
                 if(mClickNum==0){
                     mClickNum++;
@@ -137,7 +129,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     protected void initializeViews() {
 
         mNewsUrl=getIntent().getStringExtra(KEY_URL);
-        mNewsSourcesiteUrl.setText(mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);

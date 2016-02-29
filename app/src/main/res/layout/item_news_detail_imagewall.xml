@@ -5,8 +5,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="185dp"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="@dimen/detail_padding_left"
+                android:paddingRight="@dimen/detail_padding_left"
     >
 
     <com.facebook.drawee.view.SimpleDraweeView

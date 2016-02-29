@@ -109,6 +109,7 @@ public class YaZhiDaoApplication extends Application {
                     detailIntent.putExtra(NewsFeedFgt.KEY_PUSH_NEWS, collection);
                     detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailIntent);
+                    MobclickAgent.onEvent(YaZhiDaoApplication.this,"notification_open");
                 } else if (!TextUtil.isEmptyString(newVersion)){
                     UmengUpdateAgent.silentUpdate(context);
                     Logger.e("jigang","need update");

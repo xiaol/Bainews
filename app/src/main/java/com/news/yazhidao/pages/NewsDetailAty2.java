@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
@@ -39,6 +39,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
@@ -88,6 +89,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private long mDurationStart;//统计用户读此条新闻时话费的时间
     private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
     private String channelId;
+    private String mImgUrl;
+    private View mDetailAddComment;
+    private TextView mDetailCommentNum;
 
     @Override
     protected boolean translucentStatus() {
@@ -127,6 +131,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailComment.setOnClickListener(this);
         mDetailShare = findViewById(R.id.mDetailShare);
         mDetailShare.setOnClickListener(this);
+        mDetailAddComment = findViewById(R.id.mDetailAddComment);
+        mDetailAddComment.setOnClickListener(this);
+        mDetailCommentNum = (TextView) findViewById(R.id.mDetailCommentNum);
 
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
@@ -143,18 +150,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                View childAt = view.getChildAt(0);
-                if (childAt != null && mNewsDetailAdd != null && !TextUtil.isEmptyString(mNewsDetailAdd.imgUrl)) {
-                    if (firstVisibleItem != 0 || childAt.getY() > 0) {
-                        return;
-                    }
-                    double move = (Math.abs(childAt.getY()) * 1.5 > childAt.getHeight()) ? childAt.getHeight() : Math.abs(childAt.getY()) * 1.1;
-                    int alpaha = (int) (move * 1.0f / childAt.getHeight() * 255);
-                    Drawable drawable = NewsDetailAty2.this.getResources().getDrawable(R.color.bg_home_login_header);
-                    mDetailHeader.setBackgroundDrawable(drawable);
-                    mDetailHeader.getBackground().setAlpha(alpaha);
-                }
             }
         });
         //设置Listview默认展开
@@ -202,9 +197,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
             channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
-
-//            newsId = "377bee892c873fc910343f22635c328f";
-//            newsType = "NewsItem";
+            mImgUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMG_URL);
+            mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
+//            newsId = "2db1dee5be4fb31d16f9bd5fb3ba8f5f";
+//            newsType = "googleNewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
@@ -238,9 +234,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 mNewsDetailAdd = result;
                 mNewsDetailELVAdapter.setNewsDetail(result);
                 if (result != null) {
-//                    result.abs = "这是一个神奇的网站,这是一个神奇的网站,这是一个神奇的网站,这是一个神奇的网站";
-//                    result.title = result.title + result.title +result.title;
                     mDetailHeaderView.updateView(result);
+                    if(!TextUtil.isListEmpty(result.point)){
+                        mDetailCommentNum.setVisibility(View.VISIBLE);
+                        mDetailCommentNum.setText(result.point.size()+"");
+                    }
                     parseNewsDetail(result);
                     //设置Listview默认展开
                     for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
@@ -278,6 +276,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
                 onBackPressed();
+                break;
+            case R.id.mDetailAddComment:
+                UserCommentDialog commentDialog = new UserCommentDialog(this);
+                commentDialog.show(this.getSupportFragmentManager(), "UserCommentDialog");
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetailAdd.Point> points;
@@ -329,6 +331,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             if (!TextUtil.isListEmpty(pNewsDetail.content)) {
                 ArrayList list = new ArrayList<>();
                 ArrayList<NewsDetailAdd.Point> points = pNewsDetail.point;
+                boolean isHaveImgs = false;
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
@@ -344,9 +347,17 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                             content.setContent(hashMap.get("img"));//img img_info txt
                             content.setComments(new ArrayList<NewsDetailAdd.Point>());
                             list.add(content);
+                            isHaveImgs = true;
                         }
                     }
                 }
+                    //如果feed流中有图片,而详情页中没有的话,此处要确保详情页中有一张图
+                    if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)){
+                        NewsDetailContent content = new NewsDetailContent();
+                        content.setContent(mImgUrl);
+                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                        list.add(0,content);
+                    }
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
                         NewsDetailAdd.Point point = points.get(j);
@@ -419,25 +430,32 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 }
             }
             if (entryList.size() != 0) {
+                if (entryList.size() > 3){
+                    entryList = new ArrayList<>(entryList.subList(0,3));
+                }
                 mNewsContentDataList.add(entryList);
             }
 
             /**相关观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                mNewsContentDataList.add(pNewsDetail.relate);
+                if(pNewsDetail.relate.size() > 3){
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0,3)));
+                }else {
+                    mNewsContentDataList.add(pNewsDetail.relate);
+                }
             }
             /**微博组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
-                if (pNewsDetail.weibo.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 5)));
+                if (pNewsDetail.weibo.size() > 3) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 3)));
                 } else {
                     mNewsContentDataList.add(pNewsDetail.weibo);
                 }
             }
             /**知乎组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
-                if (pNewsDetail.zhihu.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 5)));
+                if (pNewsDetail.zhihu.size() > 3) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 3)));
                 } else {
                     mNewsContentDataList.add(pNewsDetail.zhihu);
                 }
@@ -467,7 +485,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             }
             mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
         }
-
+        //更新评论显示数字
+        mDetailCommentNum.setText(mNewsDetailAdd.point.size() + "");
+        mDetailCommentNum.setVisibility(View.VISIBLE);
         mNewsDetailELVAdapter.notifyDataSetChanged();
         //设置Listview默认展开
         expandedChildViews();

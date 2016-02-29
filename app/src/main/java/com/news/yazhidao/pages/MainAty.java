@@ -39,6 +39,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
+    private  ArrayList<ChannelItem> mUnSelChannelItems;
 
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
@@ -269,6 +271,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 break;
             case R.id.mChannelExpand:
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
+                MobclickAgent.onEvent(this,"user_open_channel_edit_page");
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
             case R.id.mMainUserLogin:
@@ -339,6 +342,17 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         public MyViewPagerAdapter(FragmentManager fm) {
             super(fm);
             mSelChannelItems = mChannelItemDao.queryForSelected();
+            mUnSelChannelItems = mChannelItemDao.queryForNormal();
+
+            //统计用户频道订阅/非订阅 频道数
+            HashMap<String,String> unSubChannel = new HashMap<>();
+            unSubChannel.put("unsubscribed_channels",TextUtil.List2String(mUnSelChannelItems));
+            MobclickAgent.onEventValue(MainAty.this,"user_unsubscribe_channels",unSubChannel,mUnSelChannelItems.size());
+
+            HashMap<String,String> subChannel = new HashMap<>();
+            subChannel.put("subscribed_channels",TextUtil.List2String(mSelChannelItems));
+            MobclickAgent.onEventValue(MainAty.this,"user_subscribed_channels",subChannel,mSelChannelItems.size());
+
         }
 
         public void setmChannelItems(ArrayList<ChannelItem> pChannelItems) {

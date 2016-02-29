@@ -57,6 +57,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private NewsDetailAdd mNewsDetailAdd;
     private ExpandableListView mExpListView;
     private int mDeviceWidth;
+    private String mImgUrl;
 
     @Override
     public void updateCommentCount(NewsDetailAdd.Point point) {
@@ -84,6 +85,10 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         notifyDataSetChanged();
     }
 
+    public void setNewsImgUrl(String newsImgUrl) {
+        this.mImgUrl = newsImgUrl;
+    }
+
     /**
      * viewholder 的类型
      */
@@ -96,6 +101,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private String mNewsUrl;
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<HashMap<String, String>> mImageWallMap;
+    private int mItemLeftPadding,mItemRightPadding;
 
     private GroupViewHolder mGroupViewHolder;
     private ContentViewHolder mContentViewHolder;
@@ -113,6 +119,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         this.mSreenHeight = DeviceInfoUtil.getScreenHeight(pContext);
         this.mNewsContentDataList = pNewsContentDataList;
         this.mDeviceWidth = DeviceInfoUtil.getScreenWidth(mContext);
+        this.mItemLeftPadding = DensityUtil.dip2px(mContext,mContext.getResources().getDimension(R.dimen.detail_padding_left));
+        this.mItemRightPadding = DensityUtil.dip2px(mContext,mContext.getResources().getDimension(R.dimen.detail_padding_right));
     }
 
     public void setmNewsContentDataList(ArrayList<ArrayList> mNewsContentDataList) {
@@ -231,28 +239,28 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContentViewHolder = (ContentViewHolder) convertView.getTag();
             }
             NewsDetailContent content = (NewsDetailContent) arrayList.get(childPosition);
-            /**设置新闻内容每一个item的背景,针对圆角*/
-            if (arrayList.size() == 1) {
-                /**判断是否有只有当前一个组*/
-                if (mNewsContentDataList.size() > 0) {
-                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
-                } else {
-                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
-                }
-            } else if (arrayList.size() > 1) {
-                if (childPosition == 0) {
-                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
-                } else if (childPosition == arrayList.size() - 1) {
-                    if (mNewsContentDataList.size() > 0) {
-                        mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-                    } else {
-                        mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
-                    }
-                } else {
-                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
-                }
-            }
-            mContentViewHolder.mNewsDetailContentWrapper.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 4), DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 8));
+//            /**设置新闻内容每一个item的背景,针对圆角*/
+//            if (arrayList.size() == 1) {
+//                /**判断是否有只有当前一个组*/
+//                if (mNewsContentDataList.size() > 0) {
+//                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
+//                } else {
+//                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
+//                }
+//            } else if (arrayList.size() > 1) {
+//                if (childPosition == 0) {
+//                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
+//                } else if (childPosition == arrayList.size() - 1) {
+//                    if (mNewsContentDataList.size() > 0) {
+//                        mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//                    } else {
+//                        mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
+//                    }
+//                } else {
+//                    mContentViewHolder.mNewsDetailContentWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
+//                }
+//            }
+//            mContentViewHolder.mNewsDetailContentWrapper.setPadding(mItemLeftPadding, DensityUtil.dip2px(mContext, 4), mItemRightPadding, DensityUtil.dip2px(mContext, 8));
             /**设置分组之间的间隔*/
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
@@ -266,13 +274,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                     @Override
                     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                         if (imageInfo != null){
-                            if (imageInfo.getWidth() > mDeviceWidth){
                                 mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
                                 mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
-                            }else {
-                                mContentViewHolder.mDetailImage.getLayoutParams().width = imageInfo.getWidth();
-                                mContentViewHolder.mDetailImage.getLayoutParams().height = imageInfo.getHeight();
-                            }
 
                         }
                     }
@@ -306,7 +309,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContentViewHolder.mDetailText.setVisibility(View.VISIBLE);
                 mContentViewHolder.mDetailImage.setVisibility(View.GONE);
             }
-            /**设置该段落的评论数*/
+            //TODO 以后有可能彻底不要了 /**设置该段落的评论数*/
             if (!TextUtil.isListEmpty(content.getComments())) {
                 mContentViewHolder.mDetailCommentCount.setText("" + content.getComments().size());
                 mContentViewHolder.mDetailCommentCount.setBackgroundResource(R.drawable.btn_news_detail_comment_count);
@@ -378,18 +381,18 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }
             ArrayList<NewsDetailAdd.Point> list = mNewsContentDataList.get(groupPosition);
             NewsDetailAdd.Point point = list.get(childPosition);
-            /**设置评论内容每一个item的背景,针对圆角*/
-            if (list.size() == 1) {
-                mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
-            } else {
-                if (childPosition == 0) {
-                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
-                } else if (childPosition == list.size() - 1) {
-                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-                } else {
-                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
-                }
-            }
+//            /**设置评论内容每一个item的背景,针对圆角*/
+//            if (list.size() == 1) {
+//                mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content);
+//            } else {
+//                if (childPosition == 0) {
+//                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_header);
+//                } else if (childPosition == list.size() - 1) {
+//                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//                } else {
+//                    mSelCommentHolder.mDetailCommentItemWrapper.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
+//                }
+//            }
             if (childPosition != list.size() - 1) {
                 if (!TextUtil.isEmptyString(point.userIcon)) {
                     mSelCommentHolder.mDetailCommentUserIcon.setImageURI(Uri.parse(point.userIcon));
@@ -407,7 +410,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mSelCommentHolder.mDetailCommentItemWrapper.setVisibility(View.GONE);
             }
             mSelCommentHolder.mDetailCommentDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
-            mSelCommentHolder.mDetailCommentItemWrapper.setPadding(DensityUtil.dip2px(mContext, 26), 0, DensityUtil.dip2px(mContext, 26), 0);
+//            mSelCommentHolder.mDetailCommentItemWrapper.setPadding(DensityUtil.dip2px(mContext, 26), 0, DensityUtil.dip2px(mContext, 26), 0);
             mSelCommentHolder.mDetailCommentPraiseWrapper.setOnClickListener(NewsDetailELVAdapter.this);
             mSelCommentHolder.mDetailCommentCheckAll.setOnClickListener(NewsDetailELVAdapter.this);
         } else if (getViewHolderType(groupPosition) == ViewHolderType.NEWS_ENTRY) {
@@ -429,18 +432,18 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }else {
                 mEntryHolder.mDetailEntryDivider.setVisibility(View.VISIBLE);
             }
-            if (list.size() == 1) {
-                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-            } else {
-                if (childPosition != list.size() - 1) {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
-                } else {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-                }
-            }
+//            if (list.size() == 1) {
+//                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//            } else {
+//                if (childPosition != list.size() - 1) {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
+//                } else {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//                }
+//            }
             mEntryHolder.mDetailEntryTitle.setText(entry.getTitle());
             mEntryHolder.mDetailEntryIcon.setImageResource(entry.getType() == NewsDetailEntry.EntyType.BAIDUBAIKE ? R.drawable.ic_news_detail_entry_baike : R.drawable.ic_news_detail_entry_douban);
-            convertView.setPadding(DensityUtil.dip2px(mContext, 22), DensityUtil.dip2px(mContext, 8), 0, 0);
+//            convertView.setPadding(mItemLeftPadding, DensityUtil.dip2px(mContext, 8), 0, 0);
             convertView.setTag(R.id.mDetailEntryWrapper, entry.getUrl());
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         } else if (getViewHolderType(groupPosition) == ViewHolderType.RELATE_OPINION) {
@@ -545,7 +548,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mRelateHolder.ivLineBottom.setVisibility(View.VISIBLE);
             }
-            convertView.setPadding(DensityUtil.dip2px(mContext, 22), 0, DensityUtil.dip2px(mContext, 12), 0);
+            convertView.setPadding(DensityUtil.dip2px(mContext, 18), 0, DensityUtil.dip2px(mContext, 12), 0);
             convertView.setTag(R.id.mDetailRelateOpinionWrapper, relate.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         } else if (getViewHolderType(groupPosition) == ViewHolderType.WEIBO) {
@@ -569,15 +572,15 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }else {
                 mWeiboViewHolder.mDetailWeiboContentDivider.setVisibility(View.VISIBLE);
             }
-            if (list.size() == 1) {
-                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-            } else {
-                if (childPosition != list.size() - 1) {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
-                } else {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-                }
-            }
+//            if (list.size() == 1) {
+//                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//            } else {
+//                if (childPosition != list.size() - 1) {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
+//                } else {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//                }
+//            }
             if (!TextUtil.isEmptyString(weibo.profileImageUrl)){
                 mWeiboViewHolder.mDetailWeiboUserIcon.setImageURI(Uri.parse(weibo.profileImageUrl));
             }
@@ -590,7 +593,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mWeiboViewHolder.mDetailWeiboImg.setVisibility(View.GONE);
 
             }
-            convertView.setPadding(DensityUtil.dip2px(mContext, 22), 0, DensityUtil.dip2px(mContext, 22), 0);
+//            convertView.setPadding(mItemLeftPadding, 0, mItemRightPadding, 0);
 
             convertView.setTag(R.id.mDetailWeiBoWrapper, weibo.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
@@ -614,16 +617,15 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             }else {
                 mZhiHuHolder.mDetailZhiHuDivider.setVisibility(View.VISIBLE);
             }
-            if (list.size() == 1) {
-                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-            } else {
-                if (childPosition != list.size() - 1) {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
-                } else {
-                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
-                }
-            }
-            convertView.setPadding(DensityUtil.dip2px(mContext, 22), 0, DensityUtil.dip2px(mContext, 22), 0);
+//            if (list.size() == 1) {
+//                convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//            } else {
+//                if (childPosition != list.size() - 1) {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_middle);
+//                } else {
+//                    convertView.setBackgroundResource(R.drawable.bg_item_news_detail_content_footer);
+//                }
+//            }
             convertView.setTag(R.id.mDetailZhiHuWrapper, zhihu.url);
             convertView.setOnClickListener(NewsDetailELVAdapter.this);
         }
@@ -739,6 +741,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             if (!TextUtil.isListEmpty(pNewsDetail.content)) {
                 ArrayList list = new ArrayList<>();
                 ArrayList<NewsDetailAdd.Point> points = pNewsDetail.point;
+                boolean isHaveImgs = false;
                 for (int i = 0; i < pNewsDetail.content.size(); i++) {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
@@ -757,6 +760,13 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                         }
                     }
                 }
+                    //如果feed流中有图片,而详情页中没有的话,此处要确保详情页中有一张图
+                    if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)){
+                        NewsDetailContent content = new NewsDetailContent();
+                        content.setContent(mImgUrl);
+                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
+                        list.add(0,content);
+                    }
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
                         NewsDetailAdd.Point point = points.get(j);
@@ -829,25 +839,32 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 }
             }
             if (entryList.size() != 0) {
+                if (entryList.size() > 3){
+                    entryList = new ArrayList<>(entryList.subList(0,3));
+                }
                 mNewsContentDataList.add(entryList);
             }
 
             /**相关观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                mNewsContentDataList.add(pNewsDetail.relate);
+                if(pNewsDetail.relate.size() > 3){
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0,3)));
+                }else {
+                    mNewsContentDataList.add(pNewsDetail.relate);
+                }
             }
             /**微博组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
-                if (pNewsDetail.weibo.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 5)));
+                if (pNewsDetail.weibo.size() > 3) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 3)));
                 } else {
                     mNewsContentDataList.add(pNewsDetail.weibo);
                 }
             }
             /**知乎组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
-                if (pNewsDetail.zhihu.size() > 5) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 5)));
+                if (pNewsDetail.zhihu.size() > 3) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 3)));
                 } else {
                     mNewsContentDataList.add(pNewsDetail.zhihu);
                 }

@@ -10,6 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -18,9 +24,8 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
@@ -29,16 +34,14 @@ import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.umeng.analytics.AnalyticsConfig;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
+    public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -242,32 +245,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     private void loadNewsFeedData(String url, final int flag) {
-        List<NameValuePair> nameValuePairList = new ArrayList<>();
-        nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
-        nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
-        nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
-        nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
-        nameValuePairList.add(new BasicNameValuePair("page", mSearchPage + ""));
-        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
-        mRequest.setParams(nameValuePairList);
-        mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
-            public void failed(MyAppException paramAnonymousMyAppException) {
-                if (TextUtil.isListEmpty(mArrNewsFeed)){
-                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-                    if (TextUtil.isListEmpty(newsFeeds)){
-                        mHomeRetry.setVisibility(View.VISIBLE);
-                    }else {
-                        mHomeRetry.setVisibility(View.GONE);
-                        mAdapter.setNewsFeed(newsFeeds);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-                stopRefresh();
-                mlvNewsFeed.onRefreshComplete();
-//                ToastUtil.toastLong("网络不给力,请检查网络....");
-            }
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.POST, new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType(), "http://api.deeporiginalx.com/news/baijia/" + url, new Response.Listener<ArrayList<NewsFeed>>(){
 
-            public void success(ArrayList<NewsFeed> result) {
+            @Override
+            public void onResponse(ArrayList<NewsFeed> result) {
+
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
@@ -314,9 +298,108 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 mlvNewsFeed.onRefreshComplete();
             }
-        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType()));
-        mRequest.execute();
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (TextUtil.isListEmpty(mArrNewsFeed)){
+                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                    if (TextUtil.isListEmpty(newsFeeds)){
+                        mHomeRetry.setVisibility(View.VISIBLE);
+                    }else {
+                        mHomeRetry.setVisibility(View.GONE);
+                        mAdapter.setNewsFeed(newsFeeds);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                stopRefresh();
+                mlvNewsFeed.onRefreshComplete();
+            }
+        });
+        HashMap<String,String> params = new HashMap<String,String>();
+        params.put("userid", mstrUserId);
+        params.put("deviceid", mstrDeviceId);
+        params.put("channelid", mstrChannelId);
+        params.put("keyword", mstrKeyWord + "");
+        params.put("page", mSearchPage + "");
+        feedRequest.setRequestParams(params);
+        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000,0,0));
+        requestQueue.add(feedRequest);
+        Logger.e("jigang","deviceid = " +  mstrDeviceId + ",channelid =" +mstrChannelId);
+//        List<NameValuePair> nameValuePairList = new ArrayList<>();
+//        nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
+//        nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
+//        nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
+//        nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
+//        nameValuePairList.add(new BasicNameValuePair("page", mSearchPage + ""));
+//        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
+//        mRequest.setParams(nameValuePairList);
+//        mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
+//            public void failed(MyAppException paramAnonymousMyAppException) {
+//                if (TextUtil.isListEmpty(mArrNewsFeed)){
+//                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+//                    if (TextUtil.isListEmpty(newsFeeds)){
+//                        mHomeRetry.setVisibility(View.VISIBLE);
+//                    }else {
+//                        mHomeRetry.setVisibility(View.GONE);
+//                        mAdapter.setNewsFeed(newsFeeds);
+//                        mAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//                stopRefresh();
+//                mlvNewsFeed.onRefreshComplete();
+////                ToastUtil.toastLong("网络不给力,请检查网络....");
+//            }
+//
+//            public void success(ArrayList<NewsFeed> result) {
+//                mHomeRetry.setVisibility(View.GONE);
+//                stopRefresh();
+//                if (result != null && result.size() > 0) {
+//                    mSearchPage++;
+//                    switch (flag) {
+//                        case PULL_DOWN_REFRESH:
+//                            if (mArrNewsFeed == null)
+//                                mArrNewsFeed = result;
+//                            else
+//                                mArrNewsFeed.addAll(0, result);
+//                            mlvNewsFeed.getRefreshableView().setSelection(0);
+//                            break;
+//                        case PULL_UP_REFRESH:
+//                            if (mArrNewsFeed != null) {
+//                                mArrNewsFeed.addAll(result);
+//                            }
+//                            break;
+//                    }
+//                    if (mNewsSaveCallBack != null) {
+//                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
+//                    }
+//                    if (mstrChannelId != null && "TJ0001".equals(mstrChannelId)) {
+//                        for (NewsFeed newsFeed : result)
+//                            newsFeed.setChannelId("TJ0001");
+//                    }
+//                    mNewsFeedDao.insert(result);
+//                    mAdapter.setNewsFeed(mArrNewsFeed);
+//                    mAdapter.notifyDataSetChanged();
+//                } else {
+//                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
+//                    if (TextUtil.isListEmpty(mArrNewsFeed)){
+//                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+//                        if (TextUtil.isListEmpty(newsFeeds)){
+//                            mHomeRetry.setVisibility(View.VISIBLE);
+//                        }else {
+//                            mHomeRetry.setVisibility(View.GONE);
+//                            mAdapter.setNewsFeed(newsFeeds);
+//                            mAdapter.notifyDataSetChanged();
+//                        }
+//                    }else {
+//                        mAdapter.setNewsFeed(mArrNewsFeed);
+//                        mAdapter.notifyDataSetChanged();
+//                    }
+//                }
+//                mlvNewsFeed.onRefreshComplete();
+//            }
+//        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
+//        }.getType()));
+//        mRequest.execute();
     }
 
     public void loadData(int flag) {

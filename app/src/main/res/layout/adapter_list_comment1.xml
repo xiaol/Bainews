@@ -12,7 +12,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="16dp"
-        app:placeholderImage="@drawable/ic_user_login_default"
+        app:failureImage="@drawable/ic_user_comment_default"
+        app:placeholderImage="@drawable/ic_user_comment_default"
         app:roundAsCircle="true"
         app:roundingBorderColor="@color/bg_home_login_header"
         app:roundingBorderWidth="2px" />
@@ -68,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_praise"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-13dp"
+            android:layout_marginTop="-16dp"
             android:textColor="@color/red"
             android:paddingBottom="15dp"
             android:textSize="10sp" />
