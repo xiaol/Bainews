@@ -272,6 +272,23 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NewsFeedAdapter.REQUEST_CODE){
+            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
+            Logger.e("jigang","newsid = " + newsId);
+            if (!TextUtil.isListEmpty(mNewsFeedLists)){
+                for (NewsFeed item : mNewsFeedLists){
+                    if (item != null && newsId.equals(item.getNewsId())){
+                        item.setRead(true);
+                    }
+                }
+                mNewsFeedAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     /**
      * 获取InputMethodManager，隐藏软键盘
      *

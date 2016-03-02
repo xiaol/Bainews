@@ -44,7 +44,7 @@
             android:layout_toRightOf="@+id/title_layout"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/color2"
+            android:textColor="@color/title_user_not_read"
             android:textSize="17sp" />
 
         <com.news.yazhidao.widget.TextViewExtend

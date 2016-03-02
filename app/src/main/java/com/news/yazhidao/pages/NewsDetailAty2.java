@@ -13,23 +13,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailELVAdapter;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.entity.NewsDetailContent;
-import com.news.yazhidao.entity.NewsDetailEntry;
-import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
-import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -47,7 +43,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -178,6 +173,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         Logger.e("jigang","time = "+ DateUtil.getDate()+",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid ="+newsId+",type="+newsType +",channelId =" +channelId+ ",uuid="+uuid+",userid="+mUserId+",location="+SharedPreManager.get(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION));
     }
 
+
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -239,7 +235,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                         mDetailCommentNum.setVisibility(View.VISIBLE);
                         mDetailCommentNum.setText(result.point.size()+"");
                     }
-                    parseNewsDetail(result);
+                    TextUtil.parseNewsDetail(mNewsContentDataList,result,mImgUrl);
                     //设置Listview默认展开
                     for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
                         mDetailContentListView.expandGroup(i);
@@ -263,11 +259,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID,newsId);
+        setResult(NewsFeedAdapter.REQUEST_CODE,intent);
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
         if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
-            Intent intent = new Intent(this, MainAty.class);
-            startActivity(intent);
+            Intent main = new Intent(this, MainAty.class);
+            startActivity(main);
         }
     }
 
@@ -316,154 +315,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
-
-    /**
-     * 解析新闻详情POJO,转换成expandablelistview 所须POJO
-     *
-     * @param pNewsDetail
-     * @return
-     */
-    private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
-        mNewsContentDataList.clear();
-        /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
-        if (pNewsDetail != null) {
-            /**计算新闻内容所在组*/
-            if (!TextUtil.isListEmpty(pNewsDetail.content)) {
-                ArrayList list = new ArrayList<>();
-                ArrayList<NewsDetailAdd.Point> points = pNewsDetail.point;
-                boolean isHaveImgs = false;
-                for (int i = 0; i < pNewsDetail.content.size(); i++) {
-                    LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
-                    HashMap<String, String> hashMap = treeMap.get(i + "");
-                    if (hashMap != null) {
-                        if (!TextUtil.isEmptyString(hashMap.get("txt"))){
-                            NewsDetailContent content = new NewsDetailContent();
-                            content.setContent(hashMap.get("txt"));//img img_info txt
-                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                            list.add(content);
-                        }
-                        if (!TextUtil.isEmptyString(hashMap.get("img"))){
-                            NewsDetailContent content = new NewsDetailContent();
-                            content.setContent(hashMap.get("img"));//img img_info txt
-                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                            list.add(content);
-                            isHaveImgs = true;
-                        }
-                    }
-                }
-                    //如果feed流中有图片,而详情页中没有的话,此处要确保详情页中有一张图
-                    if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)){
-                        NewsDetailContent content = new NewsDetailContent();
-                        content.setContent(mImgUrl);
-                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                        list.add(0,content);
-                    }
-                if (!TextUtil.isListEmpty(points)) {
-                    for (int j = 0; j < points.size(); j++) {
-                        NewsDetailAdd.Point point = points.get(j);
-                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                            if (paragraphIndex < list.size()) {
-                                NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
-                                content.getComments().add(point);
-                            }
-                        }
-                    }
-                }
-                if (list.size() > 0) {
-                    mNewsContentDataList.add(list);
-                }
-            }
-            /**计算图片墙所在组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)) {
-                NewsDetailImageWall imageWall = new NewsDetailImageWall();
-                imageWall.setImgWall(pNewsDetail.imgWall);
-                ArrayList<NewsDetailImageWall> list = new ArrayList();
-                list.add(imageWall);
-                mNewsContentDataList.add(list);
-                if (!TextUtil.isListEmpty(pNewsDetail.content)) {
-                    for (int i = 0; i < pNewsDetail.content.size(); i++) {
-                        LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
-                        HashMap<String, String> hashMap = treeMap.get(i + "");
-                        if (hashMap.get("img") != null) {
-                            HashMap<String, String> image = new HashMap<>();//img img_info txt
-                            image.put("img", hashMap.get("img"));
-                            imageWall.getImgWall().add(image);
-                        }
-                    }
-                }
-            }
-            /**计算差异化观点所在组数据*/
-            if (pNewsDetail.relate_opinion != null) {
-                ArrayList<NewsDetailAdd.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
-                if (!TextUtil.isListEmpty(self_opinion)) {
-                    mNewsContentDataList.add(self_opinion);
-                }
-            }
-            /**计算精选评论观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.point)) {
-                ArrayList<NewsDetailAdd.Point> points = new ArrayList<>();
-                for (int j = 0; j < pNewsDetail.point.size(); j++) {
-                    NewsDetailAdd.Point point = pNewsDetail.point.get(j);
-                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                        points.add(point);
-                    }
-                }
-                Collections.sort(points);
-                /**只要3条评论*/
-                if (points.size() > 3) {
-                    points = new ArrayList<>(points.subList(0, 3));
-                }
-                points.add(new NewsDetailAdd.Point());
-                mNewsContentDataList.add(points);
-            }
-            /**计算新闻词条组数据*/
-            ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
-            if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
-                for (NewsDetailAdd.BaiDuBaiKe item : pNewsDetail.baike) {
-                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
-                }
-            }
-            if (!TextUtil.isListEmpty(pNewsDetail.douban)) {
-                for (ArrayList item : pNewsDetail.douban) {
-                    entryList.add(new NewsDetailEntry((String) item.get(0), NewsDetailEntry.EntyType.DOUBAN, (String) item.get(1)));
-                }
-            }
-            if (entryList.size() != 0) {
-                if (entryList.size() > 3){
-                    entryList = new ArrayList<>(entryList.subList(0,3));
-                }
-                mNewsContentDataList.add(entryList);
-            }
-
-            /**相关观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                if(pNewsDetail.relate.size() > 3){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0,3)));
-                }else {
-                    mNewsContentDataList.add(pNewsDetail.relate);
-                }
-            }
-            /**微博组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
-                if (pNewsDetail.weibo.size() > 3) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 3)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.weibo);
-                }
-            }
-            /**知乎组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
-                if (pNewsDetail.zhihu.size() > 3) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 3)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.zhihu);
-                }
-            }
-        }
-        return mNewsContentDataList;
-    }
-
     /**
      * 展开所有的childview
      */
@@ -483,7 +334,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             } else {
                 mNewsDetailAdd.point.add(point);
             }
-            mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            mNewsContentDataList = TextUtil.parseNewsDetail(mNewsContentDataList,mNewsDetailAdd,mImgUrl);
         }
         //更新评论显示数字
         mDetailCommentNum.setText(mNewsDetailAdd.point.size() + "");

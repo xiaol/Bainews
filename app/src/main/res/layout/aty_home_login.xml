@@ -142,7 +142,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="-35dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_user_login_default"
+        android:src="@drawable/ic_user_comment_default"
         android:background="@drawable/bg_home_user_icon"
         app:border_color="@color/white"
         app:border_width="3dp"

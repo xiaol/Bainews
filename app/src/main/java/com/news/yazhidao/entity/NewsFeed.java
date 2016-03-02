@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class NewsFeed implements Serializable {
 
     public static final String COLUMN_CHANNEL_ID = "channelId";
+    public static final String COLUMN_NEWS_ID = "newsId";
     public static final String COLUMN_UPDATE_TIME = "updateTime";
     @DatabaseField(generatedId = true)
     private int id;
@@ -42,7 +43,7 @@ public class NewsFeed implements Serializable {
     private String type;
     @DatabaseField
     private String collection;
-
+    @DatabaseField(dataType = DataType.BOOLEAN)
     private boolean isRead;//用户是否看过
 
     public boolean isRead() {

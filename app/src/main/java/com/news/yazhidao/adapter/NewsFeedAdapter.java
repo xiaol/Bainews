@@ -3,6 +3,7 @@ package com.news.yazhidao.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PointF;
@@ -42,18 +43,24 @@ import java.util.HashMap;
 
 public class NewsFeedAdapter extends BaseAdapter {
 
+    private final NewsFeedFgt mNewsFeedFgt;
     private ArrayList<NewsFeed> mArrNewsFeed;
     private String mstrKeyWord;
     private int mScreenHeight;
     private int mScreenWidth;
     private Context mContext;
     public static String KEY_URL = "key_url";
+    public static String KEY_NEWS_ID = "key_news_id";
+    public static int REQUEST_CODE = 10002;
 
-
-    public NewsFeedAdapter(Context context) {
+    public NewsFeedAdapter(Context context,NewsFeedFgt newsFeedFgt) {
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
+        this.mNewsFeedFgt = newsFeedFgt;
+    }
+    public NewsFeedAdapter(Context context) {
+        this(context,null);
     }
 
     public void setNewsFeed(ArrayList<NewsFeed> arrNewsFeed) {
@@ -153,7 +160,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 ((View)holder.ivTitleImg.getParent()).setVisibility(View.GONE);
             }
             String strTitle = feed.getTitle();
-            setTitleTextBySpannable(holder.tvTitle, strTitle);
+            setTitleTextBySpannable(holder.tvTitle, strTitle,feed.isRead());
             setViewText(holder.tvSource, feed.getSourceSiteName());
             if (feed.getUpdateTime() != null)
                 setNewsTime(holder.tvComment, feed.getUpdateTime());
@@ -317,7 +324,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
 //            }
             String strTitle = feed.getTitle();
-            setTitleTextBySpannable(holder3.tvTitle, strTitle);
+            setTitleTextBySpannable(holder3.tvTitle, strTitle, feed.isRead());
             setViewText(holder3.tvSource, feed.getSourceSiteName());
             if (feed.getUpdateTime() != null)
                 setNewsTime(holder3.tvComment, feed.getUpdateTime());
@@ -500,7 +507,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 
     }
 
-    private void setTitleTextBySpannable(TextView tvTitle, String strTitle) {
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
                 strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
@@ -508,6 +515,11 @@ public class NewsFeedAdapter extends BaseAdapter {
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
+            }
+            if (isRead){
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.title_user_had_read));
+            }else {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
             }
         }
     }
@@ -534,7 +546,11 @@ public class NewsFeedAdapter extends BaseAdapter {
                 intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
                 intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0) );
-                mContext.startActivity(intent);
+                if (mNewsFeedFgt != null){
+                    mNewsFeedFgt.startActivityForResult(intent,REQUEST_CODE);
+                }else {
+                    ((Activity)mContext).startActivityForResult(intent,REQUEST_CODE);
+                }
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
                 MobclickAgent.onEvent(mContext, "user_read_detail");
             }

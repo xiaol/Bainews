@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -145,6 +146,26 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.e("jigang","requestCode = " + requestCode);
+        if (requestCode == NewsFeedAdapter.REQUEST_CODE){
+            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
+            Logger.e("jigang","newsid = " + newsId);
+            if (!TextUtil.isListEmpty(mArrNewsFeed)){
+                for (NewsFeed item : mArrNewsFeed){
+                    if (item != null && newsId.equals(item.getNewsId())){
+                        item.setRead(true);
+                        mNewsFeedDao.update(item);
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -174,7 +195,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 loadData(PULL_UP_REFRESH);
             }
         });
-        mAdapter = new NewsFeedAdapter(getActivity());
+        mAdapter = new NewsFeedAdapter(getActivity(),this);
         mlvNewsFeed.setAdapter(mAdapter);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
@@ -287,6 +308,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         if (TextUtil.isListEmpty(newsFeeds)){
                             mHomeRetry.setVisibility(View.VISIBLE);
                         }else {
+                            mArrNewsFeed = newsFeeds;
                             mHomeRetry.setVisibility(View.GONE);
                             mAdapter.setNewsFeed(newsFeeds);
                             mAdapter.notifyDataSetChanged();
@@ -306,6 +328,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     if (TextUtil.isListEmpty(newsFeeds)){
                         mHomeRetry.setVisibility(View.VISIBLE);
                     }else {
+                        mArrNewsFeed = newsFeeds;
                         mHomeRetry.setVisibility(View.GONE);
                         mAdapter.setNewsFeed(newsFeeds);
                         mAdapter.notifyDataSetChanged();
@@ -325,81 +348,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000,0,0));
         requestQueue.add(feedRequest);
         Logger.e("jigang","deviceid = " +  mstrDeviceId + ",channelid =" +mstrChannelId);
-//        List<NameValuePair> nameValuePairList = new ArrayList<>();
-//        nameValuePairList.add(new BasicNameValuePair("userid", mstrUserId));
-//        nameValuePairList.add(new BasicNameValuePair("deviceid", mstrDeviceId));
-//        nameValuePairList.add(new BasicNameValuePair("channelid", mstrChannelId));
-//        nameValuePairList.add(new BasicNameValuePair("keyword", mstrKeyWord));
-//        nameValuePairList.add(new BasicNameValuePair("page", mSearchPage + ""));
-//        mRequest = new NetworkRequest("http://api.deeporiginalx.com/news/baijia/" + url, NetworkRequest.RequestMethod.POST);
-//        mRequest.setParams(nameValuePairList);
-//        mRequest.setCallback(new JsonCallback<ArrayList<NewsFeed>>() {
-//            public void failed(MyAppException paramAnonymousMyAppException) {
-//                if (TextUtil.isListEmpty(mArrNewsFeed)){
-//                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-//                    if (TextUtil.isListEmpty(newsFeeds)){
-//                        mHomeRetry.setVisibility(View.VISIBLE);
-//                    }else {
-//                        mHomeRetry.setVisibility(View.GONE);
-//                        mAdapter.setNewsFeed(newsFeeds);
-//                        mAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//                stopRefresh();
-//                mlvNewsFeed.onRefreshComplete();
-////                ToastUtil.toastLong("网络不给力,请检查网络....");
-//            }
-//
-//            public void success(ArrayList<NewsFeed> result) {
-//                mHomeRetry.setVisibility(View.GONE);
-//                stopRefresh();
-//                if (result != null && result.size() > 0) {
-//                    mSearchPage++;
-//                    switch (flag) {
-//                        case PULL_DOWN_REFRESH:
-//                            if (mArrNewsFeed == null)
-//                                mArrNewsFeed = result;
-//                            else
-//                                mArrNewsFeed.addAll(0, result);
-//                            mlvNewsFeed.getRefreshableView().setSelection(0);
-//                            break;
-//                        case PULL_UP_REFRESH:
-//                            if (mArrNewsFeed != null) {
-//                                mArrNewsFeed.addAll(result);
-//                            }
-//                            break;
-//                    }
-//                    if (mNewsSaveCallBack != null) {
-//                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
-//                    }
-//                    if (mstrChannelId != null && "TJ0001".equals(mstrChannelId)) {
-//                        for (NewsFeed newsFeed : result)
-//                            newsFeed.setChannelId("TJ0001");
-//                    }
-//                    mNewsFeedDao.insert(result);
-//                    mAdapter.setNewsFeed(mArrNewsFeed);
-//                    mAdapter.notifyDataSetChanged();
-//                } else {
-//                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
-//                    if (TextUtil.isListEmpty(mArrNewsFeed)){
-//                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-//                        if (TextUtil.isListEmpty(newsFeeds)){
-//                            mHomeRetry.setVisibility(View.VISIBLE);
-//                        }else {
-//                            mHomeRetry.setVisibility(View.GONE);
-//                            mAdapter.setNewsFeed(newsFeeds);
-//                            mAdapter.notifyDataSetChanged();
-//                        }
-//                    }else {
-//                        mAdapter.setNewsFeed(mArrNewsFeed);
-//                        mAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//                mlvNewsFeed.onRefreshComplete();
-//            }
-//        }.setReturnType(new TypeToken<ArrayList<NewsFeed>>() {
-//        }.getType()));
-//        mRequest.execute();
     }
 
     public void loadData(int flag) {

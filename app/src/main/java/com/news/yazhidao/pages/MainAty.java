@@ -290,6 +290,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
         if (resultCode == REQUEST_CODE) {
             ArrayList<ChannelItem> channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
             int currPosition = mViewPager.getCurrentItem();

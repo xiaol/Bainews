@@ -135,6 +135,7 @@
 
     <!--login portion-->
     <color name="bg_home_login_header">@color/white</color>
+    <color name="bg_home_login">@color/theme_color</color>
     <color name="home_login_chat">#2b2b2b</color>
     <color name="home_logout">#ff7878</color>
     <color name="bg_home_login_weixin">#00e17f</color>
@@ -218,4 +219,8 @@
     <color name="do_search_change_batch" >#393939</color>
     <color name="bg_seach_hot_label" >#EDEDED</color>
     <color name="bg_splash" >#fdfdfe</color>
+
+    //feed 流
+    <color name="title_user_had_read" >#aaaaaa</color>
+    <color name="title_user_not_read" >@color/color2</color>
 </resources>

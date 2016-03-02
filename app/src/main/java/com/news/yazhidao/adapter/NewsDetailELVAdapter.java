@@ -19,16 +19,14 @@ import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.AbstractDraweeController;
-import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.google.gson.internal.LinkedTreeMap;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
-import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DateUtil;
@@ -41,7 +39,6 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.imagewall.WallActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -58,7 +55,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private ExpandableListView mExpListView;
     private int mDeviceWidth;
     private String mImgUrl;
-
+    private HashMap<String, String> mContentImgs = new HashMap<>();//存储新闻中所有的图片
     @Override
     public void updateCommentCount(NewsDetailAdd.Point point) {
        if (mNewsDetailAdd != null) {
@@ -69,7 +66,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mNewsDetailAdd.point.add(point);
             }
-            mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            mNewsContentDataList = TextUtil.parseNewsDetail(mNewsContentDataList,mNewsDetailAdd,mImgUrl);
         }
 
         notifyDataSetChanged();
@@ -80,7 +77,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     @Override
     public void updataPraise() {
         if (mNewsDetailAdd != null) {
-            mNewsContentDataList = parseNewsDetail(mNewsDetailAdd);
+            mNewsContentDataList = TextUtil.parseNewsDetail(mNewsContentDataList,mNewsDetailAdd,mImgUrl);
         }
         notifyDataSetChanged();
     }
@@ -238,7 +235,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             } else {
                 mContentViewHolder = (ContentViewHolder) convertView.getTag();
             }
-            NewsDetailContent content = (NewsDetailContent) arrayList.get(childPosition);
+            final NewsDetailContent content = (NewsDetailContent) arrayList.get(childPosition);
 //            /**设置新闻内容每一个item的背景,针对圆角*/
 //            if (arrayList.size() == 1) {
 //                /**判断是否有只有当前一个组*/
@@ -265,42 +262,19 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
             if (content.getContent().startsWith("http:")){
-                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new ControllerListener<ImageInfo>() {
-                    @Override
-                    public void onSubmit(String id, Object callerContext) {
-
-                    }
-
+                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>(){
                     @Override
                     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
                         if (imageInfo != null){
-                                mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
-                                mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
-
+                            Logger.e("jigang","id="+id);
+                            mContentImgs.put(id,content.getContent());
+                            mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
+                            mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
                         }
                     }
-
-                    @Override
-                    public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
-
-                    }
-
-                    @Override
-                    public void onIntermediateImageFailed(String id, Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onRelease(String id) {
-
-                    }
                 }).setUri(Uri.parse(content.getContent())).build();
-
+                Logger.e("jigang","id id="+controller.getId());
                 mContentViewHolder.mDetailImage.setController(controller);
                 mContentViewHolder.mDetailText.setVisibility(View.GONE);
                 mContentViewHolder.mDetailImage.setVisibility(View.VISIBLE);
@@ -731,147 +705,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         window.showAtLocation(((NewsDetailAty2) mContext).getWindow().getDecorView(), Gravity.BOTTOM
                 | Gravity.CENTER, 0, 0);
-    }
-
-    private ArrayList<ArrayList> parseNewsDetail(NewsDetailAdd pNewsDetail) {
-        mNewsContentDataList.clear();
-        /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
-        if (pNewsDetail != null) {
-            /**计算新闻内容所在组*/
-            if (!TextUtil.isListEmpty(pNewsDetail.content)) {
-                ArrayList list = new ArrayList<>();
-                ArrayList<NewsDetailAdd.Point> points = pNewsDetail.point;
-                boolean isHaveImgs = false;
-                for (int i = 0; i < pNewsDetail.content.size(); i++) {
-                    LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
-                    HashMap<String, String> hashMap = treeMap.get(i + "");
-                    if (hashMap != null) {
-                        if (!TextUtil.isEmptyString(hashMap.get("txt"))){
-                            NewsDetailContent content = new NewsDetailContent();
-                            content.setContent(hashMap.get("txt"));//img img_info txt
-                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                            list.add(content);
-                        }
-                        if (!TextUtil.isEmptyString(hashMap.get("img"))){
-                            NewsDetailContent content = new NewsDetailContent();
-                            content.setContent(hashMap.get("img"));//img img_info txt
-                            content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                            list.add(content);
-                        }
-                    }
-                }
-                    //如果feed流中有图片,而详情页中没有的话,此处要确保详情页中有一张图
-                    if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)){
-                        NewsDetailContent content = new NewsDetailContent();
-                        content.setContent(mImgUrl);
-                        content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                        list.add(0,content);
-                    }
-                if (!TextUtil.isListEmpty(points)) {
-                    for (int j = 0; j < points.size(); j++) {
-                        NewsDetailAdd.Point point = points.get(j);
-                        int paragraphIndex = Integer.valueOf(point.paragraphIndex);
-                        if (UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                            if (paragraphIndex < list.size()) {
-                                NewsDetailContent content = (NewsDetailContent) list.get(paragraphIndex);
-                                content.getComments().add(point);
-                            }
-                        }
-                    }
-                }
-                if (list.size() > 0) {
-                    mNewsContentDataList.add(list);
-                }
-            }
-            /**计算图片墙所在组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.imgWall)) {
-                NewsDetailImageWall imageWall = new NewsDetailImageWall();
-                imageWall.setImgWall(pNewsDetail.imgWall);
-                ArrayList<NewsDetailImageWall> list = new ArrayList();
-                list.add(imageWall);
-                mNewsContentDataList.add(list);
-                if (!TextUtil.isListEmpty(pNewsDetail.content)) {
-                    for (int i = 0; i < pNewsDetail.content.size(); i++) {
-                        LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
-                        HashMap<String, String> hashMap = treeMap.get(i + "");
-                        if (hashMap.get("img") != null) {
-                            HashMap<String, String> image = new HashMap<>();//img img_info txt
-                            image.put("img", hashMap.get("img"));
-                            imageWall.getImgWall().add(image);
-                        }
-                    }
-                }
-            }
-            /**计算差异化观点所在组数据*/
-            if (pNewsDetail.relate_opinion != null) {
-                ArrayList<NewsDetailAdd.Article> self_opinion = pNewsDetail.relate_opinion.getSelf_opinion();
-                if (!TextUtil.isListEmpty(self_opinion)) {
-                    mNewsContentDataList.add(self_opinion);
-                }
-            }
-            /**计算精选评论观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.point)) {
-                ArrayList<NewsDetailAdd.Point> points = new ArrayList<>();
-                for (int j = 0; j < pNewsDetail.point.size(); j++) {
-                    NewsDetailAdd.Point point = pNewsDetail.point.get(j);
-                    if (UploadCommentRequest.TEXT_DOC.equals(point.type) || UploadCommentRequest.TEXT_PARAGRAPH.equals(point.type)) {
-                        points.add(point);
-                    }
-                }
-                Collections.sort(points);
-                /**只要3条评论*/
-                if (points.size() > 3) {
-                    points = new ArrayList<>(points.subList(0, 3));
-                }
-                points.add(new NewsDetailAdd.Point());
-                mNewsContentDataList.add(points);
-            }
-            /**计算新闻词条组数据*/
-            ArrayList<NewsDetailEntry> entryList = new ArrayList<>();
-            if (!TextUtil.isListEmpty(pNewsDetail.baike)) {
-                for (NewsDetailAdd.BaiDuBaiKe item : pNewsDetail.baike) {
-                    entryList.add(new NewsDetailEntry(item.title, NewsDetailEntry.EntyType.BAIDUBAIKE, item.url));
-                }
-            }
-            if (!TextUtil.isListEmpty(pNewsDetail.douban)) {
-                for (ArrayList item : pNewsDetail.douban) {
-                    entryList.add(new NewsDetailEntry((String) item.get(0), NewsDetailEntry.EntyType.DOUBAN, (String) item.get(1)));
-                }
-            }
-            if (entryList.size() != 0) {
-                if (entryList.size() > 3){
-                    entryList = new ArrayList<>(entryList.subList(0,3));
-                }
-                mNewsContentDataList.add(entryList);
-            }
-
-            /**相关观点组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                if(pNewsDetail.relate.size() > 3){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0,3)));
-                }else {
-                    mNewsContentDataList.add(pNewsDetail.relate);
-                }
-            }
-            /**微博组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.weibo)) {
-                if (pNewsDetail.weibo.size() > 3) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.weibo.subList(0, 3)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.weibo);
-                }
-            }
-            /**知乎组数据*/
-            if (!TextUtil.isListEmpty(pNewsDetail.zhihu)) {
-                if (pNewsDetail.zhihu.size() > 3) {
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.zhihu.subList(0, 3)));
-                } else {
-                    mNewsContentDataList.add(pNewsDetail.zhihu);
-                }
-            }
-        }
-        Logger.e("jigang", "group size = " + mNewsContentDataList.size());
-        return mNewsContentDataList;
     }
 
     /**
