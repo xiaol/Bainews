@@ -150,7 +150,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang","requestCode = " + requestCode);
-        if (requestCode == NewsFeedAdapter.REQUEST_CODE){
+        if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null){
             String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
             Logger.e("jigang","newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)){
