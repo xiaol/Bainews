@@ -16,6 +16,7 @@ android {
     }
 
     productFlavors {
+        daoyoudao {}
 //        googleplay {}
 //        yingyongbao {}
         kuaiyou {}

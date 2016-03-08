@@ -273,7 +273,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                             mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
                         }
                     }
-                }).setUri(Uri.parse(content.getContent())).build();
+                }).setUri(Uri.parse(content.getContent())).setAutoPlayAnimations(true).build();
                 Logger.e("jigang","id id="+controller.getId());
                 mContentViewHolder.mDetailImage.setController(controller);
                 mContentViewHolder.mDetailText.setVisibility(View.GONE);

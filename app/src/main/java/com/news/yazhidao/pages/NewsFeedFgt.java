@@ -271,7 +271,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }.getType(), "http://api.deeporiginalx.com/news/baijia/" + url, new Response.Listener<ArrayList<NewsFeed>>(){
 
             @Override
-            public void onResponse(ArrayList<NewsFeed> result) {
+            public void onResponse(final ArrayList<NewsFeed> result) {
 
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
@@ -298,7 +298,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         for (NewsFeed newsFeed : result)
                             newsFeed.setChannelId("TJ0001");
                     }
-                    mNewsFeedDao.insert(result);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mNewsFeedDao.insert(result);
+                        }
+                    }).start();
                     mAdapter.setNewsFeed(mArrNewsFeed);
                     mAdapter.notifyDataSetChanged();
                 } else {
