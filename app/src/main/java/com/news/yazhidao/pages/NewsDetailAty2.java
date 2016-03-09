@@ -2,9 +2,15 @@ package com.news.yazhidao.pages;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
@@ -13,10 +19,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailELVAdapter;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
@@ -27,6 +35,7 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -36,7 +45,6 @@ import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 
 import org.apache.http.NameValuePair;
@@ -50,7 +58,9 @@ import java.util.List;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
+public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
+
+    public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -63,6 +73,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     //新闻内容POJO
     private NewsDetailAdd mNewsDetailAdd;
     private ArrayList<ArrayList> mNewsContentDataList;
+    private ArrayList<View> mImageViews;
+    private ArrayList<HashMap<String, String>> mImages;
     private NewsDetailELVAdapter mNewsDetailELVAdapter;
     private NewsDetailHeaderView2 mDetailHeaderView;
     private ExpandableListView mDetailContentListView;
@@ -70,7 +82,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     /**
      * 返回上一级,全文评论,分享
      */
-    private View mDetailLeftBack, mDetailComment, mDetailShare, mDetailHeader, mNewsDetailLoaddingWrapper;
+    private View mDetailComment,mDetailHeader, mNewsDetailLoaddingWrapper;
+    private ImageView mDetailLeftBack,mDetailShare;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -87,6 +100,12 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private String mImgUrl;
     private View mDetailAddComment;
     private TextView mDetailCommentNum;
+    private String mNewsType;
+    private View mImageWallWrapper;
+    private ViewPager mImageWallVPager;
+    private TextView mImageWallDesc;
+    private View mDetailBottomBanner;
+    private ImageView mDetailCommentPic;
 
     @Override
     protected boolean translucentStatus() {
@@ -99,6 +118,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
+        mImageViews = new ArrayList<>();
         mNewsDetailELVAdapter = new NewsDetailELVAdapter(this, mNewsContentDataList);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
@@ -108,8 +128,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     protected void initializeViews() {
-        mSwipeBackLayout = getSwipeBackLayout();
-        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+//        mSwipeBackLayout = getSwipeBackLayout();
+//        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
@@ -120,15 +140,21 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
-        mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-        mDetailComment = findViewById(R.id.mDetailComment);
+        mDetailComment =  findViewById(R.id.mDetailComment);
+        mDetailCommentPic =  (ImageView)findViewById(R.id.mDetailCommentPic);
         mDetailComment.setOnClickListener(this);
-        mDetailShare = findViewById(R.id.mDetailShare);
+        mDetailShare = (ImageView) findViewById(R.id.mDetailShare);
         mDetailShare.setOnClickListener(this);
         mDetailAddComment = findViewById(R.id.mDetailAddComment);
         mDetailAddComment.setOnClickListener(this);
         mDetailCommentNum = (TextView) findViewById(R.id.mDetailCommentNum);
+        mDetailBottomBanner = findViewById(R.id.mDetailBottomBanner);
+        mImageWallWrapper =  findViewById(R.id.mImageWallWrapper);
+        mImageWallVPager = (ViewPager)findViewById(R.id.mImageWallVPager);
+        mImageWallDesc = (TextView)findViewById(R.id.mImageWallDesc);
+        mImageWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
@@ -181,7 +207,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 //        mAniNewsLoading.start();
         mNewsLoadingImg.setVisibility(View.GONE);
         mNewsDetailProgress.setVisibility(View.VISIBLE);
-        Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
+        final Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
         if (bundle != null) {
@@ -194,8 +220,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
             channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
             mImgUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMG_URL);
+            mNewsType = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_TYPE);
+//            mNewsType = "big_pic";
             mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
-//            newsId = "2db1dee5be4fb31d16f9bd5fb3ba8f5f";
+//            newsId = "ebc3a57f2c3a5153103a1b1875f25a96";
 //            newsType = "googleNewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
@@ -227,9 +255,38 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void success(final NewsDetailAdd result) {
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+//                    StringBuilder builder = new StringBuilder();
+//                    try {
+//                    InputStream open = NewsDetailAty2.this.getAssets().open("test.json");
+//                        byte[] buffer = new byte[1024 * 8];
+//                        int length = 0;
+//                        while ((length = open.read(buffer)) != -1) {
+//                            builder.append(new String(buffer, 0, length));
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ArrayList<LinkedTreeMap<String,HashMap<String,String>>> content  = GsonUtil.deSerializedByType(builder.toString(), new TypeToken<ArrayList<LinkedTreeMap<String,HashMap<String,String>>>>() {
+//                    }.getType());
+//                    Logger.e("jigang","--content="+content);
+//                    result.content = content;
                 mNewsDetailAdd = result;
                 mNewsDetailELVAdapter.setNewsDetail(result);
                 if (result != null) {
+                    //此处判断是否是图片新闻
+                    if ("big_pic".equals(mNewsType)){
+                        if (!TextUtil.isListEmpty(result.imgWall)){
+                            mImages = result.imgWall;
+                            //隐藏listview 展示imagewall fragment
+                            mDetailContentListView.setVisibility(View.GONE);
+                            mImageWallWrapper.setVisibility(View.VISIBLE);
+                            configViewPagerViews();
+                        }else {
+                            mDetailContentListView.setVisibility(View.VISIBLE);
+                            mImageWallWrapper.setVisibility(View.GONE);
+                        }
+
+                    }
                     mDetailHeaderView.updateView(result);
                     if(!TextUtil.isListEmpty(result.point)){
                         mDetailCommentNum.setVisibility(View.VISIBLE);
@@ -354,5 +411,62 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     public void shareDismiss() {
         mivShareBg.startAnimation(mAlphaAnimationOut);
         mivShareBg.setVisibility(View.INVISIBLE);
+    }
+
+    private void configViewPagerViews(){
+        mDetailHeader.setBackgroundColor(getResources().getColor(R.color.black));
+        mDetailBottomBanner.setBackgroundColor(getResources().getColor(R.color.black));
+        mDetailAddComment.setBackgroundResource(R.drawable.user_add_comment_black);
+        int padding = DensityUtil.dip2px(this,8);
+        mDetailLeftBack.setImageResource(R.drawable.btn_detail_left_white);
+        mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment_white);
+        mDetailShare.setImageResource(R.drawable.btn_detail_share_white);
+        mDetailAddComment.setPadding(padding,padding,padding,padding);
+        for (int i = 0; i < mImages.size(); i++) {
+            final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            ViewGroup.LayoutParams  params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            imageView.setLayoutParams(params);
+            mImageViews.add(imageView);
+            imageView.setImageURI(Uri.parse(mImages.get(i).get("img")));
+        }
+        mImageWallVPager.setAdapter(new ImagePagerAdapter(mImageViews));
+        mImageWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImages.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImages.get(0).get("note")));
+        mImageWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                mImageWallDesc.setText(Html.fromHtml(position + 1 + "<small>" + "/" + mImages.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImages.get(position).get("note")));
+            }
+        });
+    }
+
+    class ImagePagerAdapter extends PagerAdapter {
+
+
+        private List<View> views = new ArrayList<View>();
+
+        public ImagePagerAdapter(List<View> views) {
+            this.views = views;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public int getCount() {
+            return views.size();
+        }
+
+        @Override
+        public void destroyItem(View container, int position, Object object) {
+            ((ViewPager) container).removeView(views.get(position));
+        }
+
+        @Override
+        public Object instantiateItem(View container, int position) {
+            ((ViewPager) container).addView(views.get(position));
+            return views.get(position);
+        }
     }
 }

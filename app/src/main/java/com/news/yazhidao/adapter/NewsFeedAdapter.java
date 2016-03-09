@@ -227,7 +227,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
         }
          //大图
-         else if ("big_pic0".equals(strType)) {
+         else if ("big_pic".equals(strType)) {
             //是网易的大图新闻
             boolean isNeteaseBigPic = feed.getSourceSiteName().startsWith("网易");
 //            if (isNeteaseBigPic) {
@@ -579,7 +579,8 @@ public class NewsFeedAdapter extends BaseAdapter {
                 intent.putExtra(NewsFeedFgt.KEY_COLLECTION, feed.getCollection());
                 intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
                 intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0) );
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE,feed.getType());
                 if (mNewsFeedFgt != null){
                     mNewsFeedFgt.startActivityForResult(intent,REQUEST_CODE);
                 }else {

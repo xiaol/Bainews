@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><!-- 顶部带圆角 白色背景 灰色边框 无下边框 长方体 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <shape >
-            <solid android:color="@color/white" />
+        <shape>
+            <solid android:color="#30ffffff"/>
             <corners
                 android:topLeftRadius="60dp"
                 android:topRightRadius="60dp"
@@ -10,7 +10,7 @@
                 android:bottomLeftRadius="60dp" />
             <stroke
                 android:width="2px"
-                android:color="@color/color6" />
+                android:color="#30ffffff" />
         </shape>
     </item>
 </layer-list>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -267,10 +268,11 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                         super.onFinalImageSet(id, imageInfo, animatable);
                         if (imageInfo != null){
-                            Logger.e("jigang","id="+id);
+                            Logger.e("jigang","id="+id + ",w=" +imageInfo.getWidth()+ ",h="+imageInfo.getHeight());
                             mContentImgs.put(id,content.getContent());
-                            mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
-                            mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mDeviceWidth,(int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext)));
+                            params.setMargins(0,DensityUtil.dip2px(mContext,8),0,DensityUtil.dip2px(mContext,16));
+                            mContentViewHolder.mDetailImage.setLayoutParams(params);
                         }
                     }
                 }).setUri(Uri.parse(content.getContent())).setAutoPlayAnimations(true).build();
@@ -279,7 +281,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                 mContentViewHolder.mDetailText.setVisibility(View.GONE);
                 mContentViewHolder.mDetailImage.setVisibility(View.VISIBLE);
             }else {
-                mContentViewHolder.mDetailContent.setText(content.getContent());
+                mContentViewHolder.mDetailContent.setText(Html.fromHtml(content.getContent()));
                 mContentViewHolder.mDetailText.setVisibility(View.VISIBLE);
                 mContentViewHolder.mDetailImage.setVisibility(View.GONE);
             }

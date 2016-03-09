@@ -222,7 +222,7 @@
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"/>
+            />
 
         <activity
             android:name=".pages.GuideAty"

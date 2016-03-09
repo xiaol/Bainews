@@ -43,6 +43,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
     public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
+    public static final String KEY_NEWS_TYPE = "KEY_NEWS_TYPE";//新闻类型,是否是大图新闻
 
     /**
      * 当前fragment 所对应的新闻频道
