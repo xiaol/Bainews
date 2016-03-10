@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -257,7 +258,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
 //                    StringBuilder builder = new StringBuilder();
 //                    try {
-//                    InputStream open = NewsDetailAty2.this.getAssets().open("test.json");
+//                    InputStream open = NewsDetailAty2.this.getAssets().open("test2.json");
 //                        byte[] buffer = new byte[1024 * 8];
 //                        int length = 0;
 //                        while ((length = open.read(buffer)) != -1) {
@@ -426,10 +427,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             final SimpleDraweeView imageView = new SimpleDraweeView(this);
             ViewGroup.LayoutParams  params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             imageView.setLayoutParams(params);
+            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
             mImageViews.add(imageView);
             imageView.setImageURI(Uri.parse(mImages.get(i).get("img")));
         }
         mImageWallVPager.setAdapter(new ImagePagerAdapter(mImageViews));
+        mImageWallVPager.setOffscreenPageLimit(3);
         mImageWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImages.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImages.get(0).get("note")));
         mImageWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override

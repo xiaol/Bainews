@@ -33,12 +33,17 @@ import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -585,6 +590,28 @@ public class NewsFeedAdapter extends BaseAdapter {
                     mNewsFeedFgt.startActivityForResult(intent,REQUEST_CODE);
                 }else {
                     ((Activity)mContext).startActivityForResult(intent,REQUEST_CODE);
+                }
+                //推送人员使用
+                if(DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3") && "WM0005".equals(feed.getChannelId())){
+                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
+                    BufferedWriter bis = null;
+                    try {
+                        bis = new BufferedWriter(new FileWriter(file));
+                        bis.write(feed.getTitle() + ",newsid="+feed.getNewsId()+",collection="+feed.getCollection());
+                        bis.newLine();
+                        bis.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if(bis != null){
+                            try {
+                                bis.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
                 }
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
                 MobclickAgent.onEvent(mContext, "user_read_detail");

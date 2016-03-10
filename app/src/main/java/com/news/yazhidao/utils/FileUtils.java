@@ -359,4 +359,34 @@ public class FileUtils {
         }
         return path;
     }
+
+    /**
+     * 创建推送文件
+     */
+    public static File getSavePushInfoPath(Context mContext,String fileName) {
+        File file = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !Environment.isExternalStorageRemovable()) {
+            file = new File(Environment.getExternalStorageDirectory().toString());
+        } else {
+            file = new File(mContext.getFilesDir().toString());
+        }
+        if(file!=null){
+            file=new File(file+File.separator+"yazhidao");
+            if(!file.exists()){
+                try {
+                    file.mkdirs();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else {
+                file.delete();
+            }
+        }
+        return new File(file,fileName);
+    }
+
+    public void saveSelNewsIdInFile(){
+
+    }
 }

@@ -1,40 +1,33 @@
 package com.news.yazhidao.widget.imagewall;
 
 import android.content.Intent;
-import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.widget.TextViewExtend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WallActivity extends BaseActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class WallActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String KEY_IMAGE_WALL_DATA = "key_image_wall_data";
-    private ViewPager mViewPager;
+    private ViewPager mWallVPager;
     private PagerAdapter mPagerAdapter;
     private ArrayList<View> mViews;
-    private ImageView mivBack;
-    private TextViewExtend mtvTitle, mtvPagerNum, mtvContent;
-    private String mTotalSize;
-    private int mScreenWidth;
+    private ImageView mWallLeftBack;
+    private TextView mWallDesc;
     private ArrayList<HashMap<String,String>> mImageWalls;
 
 
@@ -57,7 +50,6 @@ public class WallActivity extends BaseActivity implements ViewPager.OnPageChange
     protected void initializeViews() {
         initVars();
         findViews();
-        setListener();
     }
 
     @Override
@@ -66,88 +58,54 @@ public class WallActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void initVars() {
-        mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         Intent intent = getIntent();
         mImageWalls = (ArrayList<HashMap<String, String>>) intent.getSerializableExtra(KEY_IMAGE_WALL_DATA);
         mViews = new ArrayList<View>();
-        mTotalSize = String.valueOf(mImageWalls.size());
     }
 
     // 初始化视图
     private void findViews() {
         // 实例化视图控件
-        mViewPager = (ViewPager) findViewById(R.id.wall_viewPager);
-        mtvTitle = (TextViewExtend) findViewById(R.id.title_textView);
-        mtvPagerNum = (TextViewExtend) findViewById(R.id.pager_num_textView);
-        mtvContent = (TextViewExtend) findViewById(R.id.content_textView);
-        mivBack = (ImageView) findViewById(R.id.back_imageView);
-        mtvContent.setMovementMethod(ScrollingMovementMethod.getInstance());
+        mWallVPager = (ViewPager) findViewById(R.id.mWallVPager);
+        mWallDesc = (TextView) findViewById(R.id.mWallDesc);
+        mWallLeftBack = (ImageView) findViewById(R.id.mWallLeftBack);
+        mWallLeftBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WallActivity.this.finish();
+            }
+        });
+        mWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
         for (int i = 0; i < mImageWalls.size(); i++) {
             final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            ViewGroup.LayoutParams  params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            imageView.setLayoutParams(params);
+            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
             mViews.add(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(Uri.parse(mImageWalls.get(i).get("img")))
-                    .setTapToRetryEnabled(true)
-                    .setOldController(imageView.getController())
-                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                        @Override
-                        public void onFinalImageSet(
-                                String id,
-                                @Nullable ImageInfo imageInfo,
-                                @Nullable Animatable anim) {
-                            if (imageInfo == null) {
-                                return;
-                            }
-                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mViewPager.getLayoutParams();
-                            lp.width = mScreenWidth;
-                            lp.height = (int) (mScreenWidth * imageInfo.getHeight() / (float) imageInfo.getWidth());
-                            mViewPager.setLayoutParams(lp);
-                        }
-                    })
-                    .build();
-            imageView.setController(controller);
+            imageView.setImageURI(Uri.parse(mImageWalls.get(i).get("img")));
         }
-        mPagerAdapter = new WallPagerAdapter(mViews);
-        mViewPager.setAdapter(mPagerAdapter);
-        HashMap<String, String> imageFirst = mImageWalls.get(0);
-        mtvTitle.setText("");
-        mtvPagerNum.setText("1/" + mTotalSize);
-        mtvContent.setText(imageFirst.get("note"));
-    }
+        mWallVPager.setAdapter(new WallPagerAdapter(mViews));
+        mWallVPager.setOffscreenPageLimit(3);
+        mWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(0).get("note")));
+        mWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                mWallDesc.setText(Html.fromHtml(position + 1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(position).get("note")));
+            }
+        });
 
-    private void setListener() {
-        mViewPager.setOnPageChangeListener(this);
-        mivBack.setOnClickListener(this);
     }
 
     //按钮的点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_imageView:
+            case R.id.mWallLeftBack:
                 onBackPressed();
                 break;
         }
     }
 
-    @Override
-    public void onPageScrollStateChanged(int arg0) {
-
-    }
-
-    @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-    }
-
-    // 监听viewpage
-    @Override
-    public void onPageSelected(int pageIndex) {
-        mtvTitle.setText("");
-        mtvPagerNum.setText(pageIndex + 1 + "/" + mTotalSize);
-        mtvContent.setText(mImageWalls.get(pageIndex).get("note"));
-    }
 
     public class WallPagerAdapter extends PagerAdapter {
         private List<View> views = new ArrayList<View>();
