@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_news_detail">
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/mDetailHeader"
@@ -69,15 +69,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#50000000"
+            android:background="#45000000"
             android:maxHeight="120dp"
             android:paddingBottom="6dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="6dp"
             android:text="sssss"
-            android:lineSpacingExtra="2dp"
-            android:lineSpacingMultiplier="1.2"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="4"
+            android:scrollbars="vertical"
             android:textColor="@color/color7"
             android:textSize="@dimen/font4"
             />

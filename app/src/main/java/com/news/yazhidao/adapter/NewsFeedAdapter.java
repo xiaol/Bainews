@@ -166,6 +166,15 @@ public class NewsFeedAdapter extends BaseAdapter {
                 ((View)holder.ivTitleImg.getParent()).setVisibility(View.VISIBLE);
                 holder.ivTitleImg.setImageURI(Uri.parse(strImg));
                 holder.ivTitleImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+                int width = DensityUtil.dip2px(mContext,102), height = DensityUtil.dip2px(mContext,74);
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(strImg))
+                        .setResizeOptions(new ResizeOptions(width, height))
+                        .build();
+                PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                        .setOldController(holder.ivTitleImg.getController())
+                        .setImageRequest(request)
+                        .build();
+                holder.ivTitleImg.setController(controller);
             } else {
                 ((View)holder.ivTitleImg.getParent()).setVisibility(View.GONE);
             }

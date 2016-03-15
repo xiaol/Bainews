@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
@@ -7,8 +8,9 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -17,6 +19,7 @@ import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -91,7 +94,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private SharePopupWindow mSharePopupWindow;
     private ProgressBar mNewsDetailProgress;
 
-    private float startY;
+    private boolean isDisplay = true;
+    private int defaultH;//图片新闻文本描述的默认高度
     private String mSource;
     private String newsId = null;
     private String newsType = null;
@@ -155,7 +159,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallWrapper =  findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager)findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView)findViewById(R.id.mImageWallDesc);
-        mImageWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
@@ -224,8 +227,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mNewsType = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_TYPE);
 //            mNewsType = "big_pic";
             mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
-//            newsId = "ebc3a57f2c3a5153103a1b1875f25a96";
-//            newsType = "googleNewsItem";
+//            newsId = "2ffae38a585d31376be0465de6e591ee";
+//            newsId = "64bd38470cb881dc0940e1295ba39103";
+//            newsId = "705715e8ee4bc0e2fdd41e27f9b08de2";
+//            newsType = "NewsItem";
             Logger.e("jigang","newsid ="+newsId+",type="+newsType);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
@@ -256,21 +261,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void success(final NewsDetailAdd result) {
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-//                    StringBuilder builder = new StringBuilder();
-//                    try {
-//                    InputStream open = NewsDetailAty2.this.getAssets().open("test2.json");
-//                        byte[] buffer = new byte[1024 * 8];
-//                        int length = 0;
-//                        while ((length = open.read(buffer)) != -1) {
-//                            builder.append(new String(buffer, 0, length));
-//                        }
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                    ArrayList<LinkedTreeMap<String,HashMap<String,String>>> content  = GsonUtil.deSerializedByType(builder.toString(), new TypeToken<ArrayList<LinkedTreeMap<String,HashMap<String,String>>>>() {
-//                    }.getType());
-//                    Logger.e("jigang","--content="+content);
-//                    result.content = content;
                 mNewsDetailAdd = result;
                 mNewsDetailELVAdapter.setNewsDetail(result);
                 if (result != null) {
@@ -422,6 +412,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailLeftBack.setImageResource(R.drawable.btn_detail_left_white);
         mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment_white);
         mDetailShare.setImageResource(R.drawable.btn_detail_share_white);
+        mDetailView.setBackgroundColor(getResources().getColor(R.color.black));
         mDetailAddComment.setPadding(padding,padding,padding,padding);
         for (int i = 0; i < mImages.size(); i++) {
             final SimpleDraweeView imageView = new SimpleDraweeView(this);
@@ -431,13 +422,100 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mImageViews.add(imageView);
             imageView.setImageURI(Uri.parse(mImages.get(i).get("img")));
         }
+        final int margin = DensityUtil.dip2px(this,12);
+        mImageWallVPager.setPadding(0, 0, 0, 0);
+        mImageWallVPager.setClipToPadding(false);
+        mImageWallVPager.setPageMargin(margin);
         mImageWallVPager.setAdapter(new ImagePagerAdapter(mImageViews));
         mImageWallVPager.setOffscreenPageLimit(3);
+        Logger.e("jigang","sssss =" + mImageWallDesc.getLineHeight());
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageWallDesc.getLayoutParams();
+        params.height = (int) (mImageWallDesc.getLineHeight() * 4.5);
+        mImageWallDesc.setMaxLines(4);
+        mImageWallDesc.setLayoutParams(params);
+//        mImageWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        mImages.get(1).put("note","随着越来越多的大众直播平台推出，网络主播尤其是在中国年轻人中颇具人气。杨希月就是数十万网络主播的一员，今年刚满20岁，四川某传媒学院在校生，从事网络主播两年时间，已是某平台上金牌签约主播，每月收入约10万元。杨希月在某平台上数万主播中目前排名前100名，每天受到20万粉丝拥护，一方面也得益于她的舞蹈功底，自己从小便喜欢上了舞蹈。");
         mImageWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImages.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImages.get(0).get("note")));
         mImageWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+
             @Override
             public void onPageSelected(int position) {
                 mImageWallDesc.setText(Html.fromHtml(position + 1 + "<small>" + "/" + mImages.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImages.get(position).get("note")));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageWallDesc.getLayoutParams();
+                params.height = (int) (mImageWallDesc.getLineHeight() * 4.5);
+                mImageWallDesc.setMaxLines(4);
+                mImageWallDesc.setLayoutParams(params);
+                Logger.e("jigang","change =" + mImageWallDesc.getHeight());
+            }
+        });
+        mImageWallDesc.setOnTouchListener(new View.OnTouchListener() {
+            float startY;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (defaultH == 0){
+                        defaultH = mImageWallDesc.getHeight();
+                }
+                Logger.e("jigang","default =" + defaultH);
+                int lineCount = mImageWallDesc.getLineCount();
+                int maxHeight = mImageWallDesc.getLineHeight() * lineCount;
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        Logger.e("jigang","---down");
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaY = event.getRawY() - startY;
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageWallDesc.getLayoutParams();
+                        int height = mImageWallDesc.getHeight();
+                        Logger.e("jigang","height="+height + ",maxHeight="+maxHeight);
+                        if (Math.abs(deltaY) > 1 && lineCount > 4){
+                            height -= deltaY;
+                            if (deltaY > 0){
+                                if (height < defaultH){
+                                    height = defaultH;
+                                }
+                            }else {
+                            if (height > maxHeight){
+                                height = maxHeight + DensityUtil.dip2px(NewsDetailAty2.this,6 * 2 + 4);
+                            }
+                            }
+                            params.height = height;
+                            mImageWallDesc.setMaxLines(Integer.MAX_VALUE);
+                            mImageWallDesc.setLayoutParams(params);
+                        }
+                        Logger.e("jigang",event.getRawY() + "---move " + deltaY);
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Logger.e("jigang","---up");
+                        break;
+                }
+                return true;
+            }
+        });
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (isDisplay){
+                    isDisplay = false;
+                    ObjectAnimator.ofFloat(mDetailHeader,"alpha",1.0f,0).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mImageWallDesc,"alpha",1.0f,0).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mDetailBottomBanner,"alpha",1.0f,0).setDuration(200).start();
+                }else {
+                    isDisplay = true;
+                    ObjectAnimator.ofFloat(mDetailHeader,"alpha",0,1.0f).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mImageWallDesc,"alpha",0,1.0f).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mDetailBottomBanner,"alpha",0,1.0f).setDuration(200).start();
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+        });
+
+        mImageWallVPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return false;
             }
         });
     }

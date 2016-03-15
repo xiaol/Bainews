@@ -1,20 +1,26 @@
 package com.news.yazhidao.widget.imagewall;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ public class WallActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mWallLeftBack;
     private TextView mWallDesc;
     private ArrayList<HashMap<String,String>> mImageWalls;
+    private boolean isDisplay = true;
+    private View mWallHeader;
 
 
     @Override
@@ -69,6 +77,7 @@ public class WallActivity extends BaseActivity implements View.OnClickListener {
         mWallVPager = (ViewPager) findViewById(R.id.mWallVPager);
         mWallDesc = (TextView) findViewById(R.id.mWallDesc);
         mWallLeftBack = (ImageView) findViewById(R.id.mWallLeftBack);
+        mWallHeader =  findViewById(R.id.mWallHeader);
         mWallLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,16 +93,97 @@ public class WallActivity extends BaseActivity implements View.OnClickListener {
             mViews.add(imageView);
             imageView.setImageURI(Uri.parse(mImageWalls.get(i).get("img")));
         }
+        final int margin = DensityUtil.dip2px(this,12);
+        mWallVPager.setPadding(0, 0, 0, 0);
+        mWallVPager.setClipToPadding(false);
+        mWallVPager.setPageMargin(margin);
         mWallVPager.setAdapter(new WallPagerAdapter(mViews));
         mWallVPager.setOffscreenPageLimit(3);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+        params.height = (int) (mWallDesc.getLineHeight() * 4.5);
+        mWallDesc.setMaxLines(4);
+        mWallDesc.setLayoutParams(params);
         mWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(0).get("note")));
         mWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
                 mWallDesc.setText(Html.fromHtml(position + 1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(position).get("note")));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+                params.height = (int) (mWallDesc.getLineHeight() * 4.5);
+                mWallDesc.setMaxLines(4);
+                mWallDesc.setLayoutParams(params);
+                Logger.e("jigang","change =" + mWallDesc.getHeight());
+            }
+        });
+        mWallDesc.setOnTouchListener(new View.OnTouchListener() {
+            float startY;
+            int defaultH;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (defaultH == 0){
+                    defaultH = mWallDesc.getHeight();
+                }
+                Logger.e("jigang","default =" + defaultH);
+                int lineCount = mWallDesc.getLineCount();
+                int maxHeight = mWallDesc.getLineHeight() * lineCount;
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        Logger.e("jigang","---down");
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaY = event.getRawY() - startY;
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+                        int height = mWallDesc.getHeight();
+                        Logger.e("jigang","height="+height + ",maxHeight="+maxHeight);
+                        if (Math.abs(deltaY) > 1 && lineCount > 4){
+                            height -= deltaY;
+                            if (deltaY > 0){
+                                if (height < defaultH){
+                                    height = defaultH;
+                                }
+                            }else {
+                                if (height > maxHeight){
+                                    height = maxHeight + DensityUtil.dip2px(WallActivity.this,6 * 2 + 4);
+                                }
+                            }
+                            params.height = height;
+                            mWallDesc.setMaxLines(Integer.MAX_VALUE);
+                            mWallDesc.setLayoutParams(params);
+                        }
+                        Logger.e("jigang",event.getRawY() + "---move " + deltaY);
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Logger.e("jigang","---up");
+                        break;
+                }
+                return true;
+            }
+        });
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (isDisplay){
+                    isDisplay = false;
+                    ObjectAnimator.ofFloat(mWallHeader,"alpha",1.0f,0).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mWallDesc,"alpha",1.0f,0).setDuration(200).start();
+                }else {
+                    isDisplay = true;
+                    ObjectAnimator.ofFloat(mWallHeader,"alpha",0,1.0f).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mWallDesc,"alpha",0,1.0f).setDuration(200).start();
+                }
+                return super.onSingleTapConfirmed(e);
             }
         });
 
+        mWallVPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return false;
+            }
+        });
     }
 
     //按钮的点击事件

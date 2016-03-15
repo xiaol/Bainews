@@ -262,6 +262,7 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**设置分组之间的间隔*/
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
+//        content.setContent("http://img4.jiecaojingxuan.com/2016/3/9/d11ddb79-facd-4ae7-b80d-2cb74d339fc5.jpg");
             if (content.getContent().startsWith("http:")){
                 AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>(){
                     @Override
@@ -270,7 +271,8 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
                         if (imageInfo != null){
                             Logger.e("jigang","id="+id + ",w=" +imageInfo.getWidth()+ ",h="+imageInfo.getHeight());
                             mContentImgs.put(id,content.getContent());
-                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mDeviceWidth,(int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext)));
+                            int height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
+                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mDeviceWidth,height);
                             params.setMargins(0,DensityUtil.dip2px(mContext,8),0,DensityUtil.dip2px(mContext,16));
                             mContentViewHolder.mDetailImage.setLayoutParams(params);
                         }
