@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
@@ -34,6 +35,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
@@ -57,6 +59,8 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import cn.sharesdk.framework.PlatformDb;
 
 /**
  * Created by fengjigang on 15/9/6.
@@ -325,8 +329,25 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.mDetailAddComment:
-                UserCommentDialog commentDialog = new UserCommentDialog(this);
-                commentDialog.show(this.getSupportFragmentManager(), "UserCommentDialog");
+                User user = SharedPreManager.getUser(this);
+                if (user == null) {
+                    LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
+                        @Override
+                        public void userLogin(String platform, PlatformDb platformDb) {
+                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this);
+                    commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+                        }
+
+                        @Override
+                        public void userLogout() {
+
+                        }
+                    }, null);
+                    loginModeFgt.show(((FragmentActivity) this).getSupportFragmentManager(), "loginModeFgt");
+                } else {
+                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this);
+                    commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+                }
                 break;
             case R.id.mDetailComment:
                 ArrayList<NewsDetailAdd.Point> points;
