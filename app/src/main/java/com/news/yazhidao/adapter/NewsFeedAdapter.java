@@ -538,7 +538,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-                tvComment.setText("23小时前");
+                tvComment.setText(updateTime);
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
                 tvComment.setText(between / 3600000 + "小时前");
             } else {
@@ -549,7 +549,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 }
             }
         } catch (ParseException e) {
-            tvComment.setText("一天前");
+            tvComment.setText(updateTime);
             e.printStackTrace();
         }
 

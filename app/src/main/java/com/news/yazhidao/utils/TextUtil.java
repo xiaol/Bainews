@@ -415,6 +415,12 @@ public class TextUtil {
                         if (!TextUtil.isEmptyString(hashMap.get("img"))){
                             NewsDetailContent content = new NewsDetailContent();
                             content.setContent(hashMap.get("img"));//img img_info txt
+                            String imgWidth = (hashMap.get("width") == null)?"0":hashMap.get("width");
+                            String imgHeight = (hashMap.get("height") == null)?"0":hashMap.get("height");
+                            String imgSize = (hashMap.get("size") == null)?"0":hashMap.get("size");
+                            content.setImgWidth(Integer.parseInt(imgWidth));
+                            content.setImgHeight(Integer.parseInt(imgHeight));
+                            content.setImgSize(Integer.parseInt(imgSize));
                             content.setComments(new ArrayList<NewsDetailAdd.Point>());
                             list.add(content);
                             isHaveImgs = true;

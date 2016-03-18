@@ -9,6 +9,9 @@ import java.util.ArrayList;
  */
 public class NewsDetailContent implements Serializable {
     private String content;
+    private int imgWidth;
+    private int imgHeight;
+    private int imgSize;
     private ArrayList<NewsDetailAdd.Point> comments;
     public NewsDetailContent(){}
 
@@ -34,4 +37,27 @@ public class NewsDetailContent implements Serializable {
         this.comments = comments;
     }
 
+    public int getImgHeight() {
+        return imgHeight;
+    }
+
+    public void setImgHeight(int imgHeight) {
+        this.imgHeight = imgHeight;
+    }
+
+    public int getImgSize() {
+        return imgSize;
+    }
+
+    public void setImgSize(int imgSize) {
+        this.imgSize = imgSize;
+    }
+
+    public int getImgWidth() {
+        return imgWidth;
+    }
+
+    public void setImgWidth(int imgWidth) {
+        this.imgWidth = imgWidth;
+    }
 }
