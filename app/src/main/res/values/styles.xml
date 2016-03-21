@@ -51,7 +51,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-<!--自定义dialog样式-->
+    <!--自定义dialog样式-->
     <style name="DialogWindowTitle">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/text_color</item>

@@ -57,6 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("ZKW0014","重口味",3,false));
         mChannels.add(new ChannelItem("MC0015","萌宠",4,false));
         mChannels.add(new ChannelItem("ECY0016","二次元",5,false));
+        mChannels.add(new ChannelItem("BDY0016","本地",6,false));
     }
     @Override
     public void onCreate(SQLiteDatabase database,

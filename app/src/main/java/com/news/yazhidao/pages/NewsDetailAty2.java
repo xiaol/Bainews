@@ -11,6 +11,7 @@ import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
@@ -75,7 +76,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
-    private ProgressBar mNewsDetailProgress;
+//    private ProgressBar mNewsDetailProgress;
+    private RelativeLayout bgLayout;
 
     private float startY;
     private String mSource;
@@ -117,7 +119,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
         mNewsLoadingImg.setOnClickListener(this);
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
-        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
+//        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
@@ -180,7 +183,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
         mNewsLoadingImg.setVisibility(View.GONE);
-        mNewsDetailProgress.setVisibility(View.VISIBLE);
+        bgLayout.setVisibility(View.VISIBLE);
         Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
         boolean isDigger = false;
         AlbumSubItem albumSubItem;
@@ -250,7 +253,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             public void failed(MyAppException exception) {
                 Logger.e("jigang", "network fail");
                 mNewsLoadingImg.setVisibility(View.VISIBLE);
-                mNewsDetailProgress.setVisibility(View.GONE);
+                bgLayout.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<NewsDetailAdd>() {
         }.getType()));

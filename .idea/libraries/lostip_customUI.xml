@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="lostip_customUI">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/lostip_customUI.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

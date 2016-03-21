@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -78,6 +79,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRelative;
     private View mHomeRetry;
+    private RelativeLayout bgLayout;
+    private boolean  isListRefresh = false;
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -99,6 +102,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         this.mArrNewsFeed = results;
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
+            if(bgLayout.getVisibility() == View.VISIBLE){
+                bgLayout.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -161,6 +167,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     }
                 }
                 mAdapter.notifyDataSetChanged();
+                if(bgLayout.getVisibility() == View.VISIBLE){
+                    bgLayout.setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -173,6 +182,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
+        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
@@ -182,17 +192,22 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.GONE);
             }
         });
+
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isListRefresh = true;
                 loadData(PULL_DOWN_REFRESH);
+
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isListRefresh = true;
                 loadData(PULL_UP_REFRESH);
+
             }
         });
         mAdapter = new NewsFeedAdapter(getActivity(),this);
@@ -209,11 +224,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
         //load news data
-//        loadData(PULL_DOWN_REFRESH);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mlvNewsFeed.setRefreshing();
+//                mlvNewsFeed.setRefreshing();
+                loadData(PULL_DOWN_REFRESH);
+                isListRefresh = false;
+
             }
         }, 800);
         return rootView;
@@ -241,6 +259,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void run() {
 //                mlvNewsFeed.setRefreshing();
                 loadData(PULL_DOWN_REFRESH);
+                isListRefresh = false;
             }
         }, 1000);
     }
@@ -301,6 +320,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mNewsFeedDao.insert(result);
                     mAdapter.setNewsFeed(mArrNewsFeed);
                     mAdapter.notifyDataSetChanged();
+                    if(bgLayout.getVisibility() == View.VISIBLE){
+                        bgLayout.setVisibility(View.GONE);
+                    }
                 } else {
                     //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
                     if (TextUtil.isListEmpty(mArrNewsFeed)){
@@ -316,6 +338,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     }else {
                         mAdapter.setNewsFeed(mArrNewsFeed);
                         mAdapter.notifyDataSetChanged();
+
+                    }
+                    if(bgLayout.getVisibility() == View.VISIBLE){
+                        bgLayout.setVisibility(View.GONE);
                     }
                 }
                 mlvNewsFeed.onRefreshComplete();
@@ -332,6 +358,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         mHomeRetry.setVisibility(View.GONE);
                         mAdapter.setNewsFeed(newsFeeds);
                         mAdapter.notifyDataSetChanged();
+                        if(bgLayout.getVisibility() == View.VISIBLE){
+                            bgLayout.setVisibility(View.GONE);
+                        }
                     }
                 }
                 stopRefresh();
@@ -351,6 +380,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void loadData(int flag) {
+        if(!isListRefresh){
+            bgLayout.setVisibility(View.VISIBLE);
+        }
+
         Logger.e("jigang", "loaddata -----" + flag);
         if (NetUtil.checkNetWork(mContext)) {
             if (!TextUtil.isEmptyString(mstrKeyWord)) {
@@ -366,10 +399,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }else {
                 mHomeRetry.setVisibility(View.GONE);
             }
+
             mAdapter.setNewsFeed(newsFeeds);
             mAdapter.notifyDataSetChanged();
             mlvNewsFeed.onRefreshComplete();
+            if(bgLayout.getVisibility() == View.VISIBLE){
+                bgLayout.setVisibility(View.GONE);
+            }
+
         }
+
     }
 
     @Override
