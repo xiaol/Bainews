@@ -29,18 +29,42 @@
             android:textSize="18sp" />
 
     </RelativeLayout>
-
+    <!--暂时先不用-->
     <com.news.yazhidao.widget.InputBar.InputBar
         android:id="@+id/input_bar_view"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        />
+    <RelativeLayout
+        android:id="@+id/mAddCommentWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#ecedef"
+        android:layout_alignParentBottom="true"
+        >
+    <TextView
+        android:id="@+id/mAddComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/user_add_comment"
+        android:textColor="@color/user_add_comment_color"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:paddingLeft="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="写点什么吧..."
+        android:textSize="14sp"
+        />
 
+    </RelativeLayout>
     <ListView
         android:id="@+id/comment_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/input_bar_view"
+        android:layout_above="@+id/mAddCommentWrapper"
         android:layout_below="@+id/mDetailHeader"
         android:background="@color/white"
         android:scrollbars="none"

@@ -37,14 +37,22 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
  */
 @SuppressLint("ValidFragment")
 public class UserCommentDialog extends DialogFragment implements View.OnClickListener {
+
+    public interface IRefreshCommentPage{
+        void refreshComment(NewsDetailAdd.Point point);
+    }
+
     private  CommentPopupWindow.IUpdateCommentCount mIUpdateCommentCount;
     private Context mContext;
     private EditText mCommentContent;
     private TextView mCommentCommit;
     private String mUserCommentMsg;
+    private IRefreshCommentPage mRefreshCommentPage;
+
     public UserCommentDialog(){}
-    public UserCommentDialog(CommentPopupWindow.IUpdateCommentCount updateCommentCount) {
+    public UserCommentDialog(CommentPopupWindow.IUpdateCommentCount updateCommentCount,IRefreshCommentPage iRefreshCommentPage) {
         this.mIUpdateCommentCount = updateCommentCount;
+        this.mRefreshCommentPage = iRefreshCommentPage;
     }
 
     @Override
@@ -116,7 +124,11 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     result.down = "0";
                     //通知刷新外面新闻展示界面
                     if (mIUpdateCommentCount != null) {
-                        mIUpdateCommentCount.updateCommentCount(result);
+                        if (mRefreshCommentPage == null){
+                            mIUpdateCommentCount.updateCommentCount(result);
+                        }else {
+                            mRefreshCommentPage.refreshComment(result);
+                        }
                     }
                 }else {
                     ToastUtil.toastShort("评论失败");

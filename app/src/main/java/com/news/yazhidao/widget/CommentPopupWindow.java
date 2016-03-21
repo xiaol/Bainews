@@ -27,6 +27,7 @@ import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.request.PraiseRequest;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.pages.LoginModeFgt;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -72,6 +73,7 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     private boolean praiseFlag = false;
     private int praiseCount;
     private SharePopupWindow.ShareDismiss mShareDismiss;
+    private View mAddComment;
 
     /**
      * 评论界面
@@ -115,6 +117,43 @@ public class CommentPopupWindow extends PopupWindow implements InputBarDelegate,
     }
 
     private void findHeadPortraitImageViews() {
+        mAddComment = mMenuView.findViewById(R.id.mAddComment);
+        mAddComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                User user = SharedPreManager.getUser(m_pContext);
+                if (user == null) {
+                    LoginModeFgt loginModeFgt = new LoginModeFgt(m_pContext, new UserLoginListener() {
+                        @Override
+                        public void userLogin(String platform, PlatformDb platformDb) {
+                            UserCommentDialog commentDialog = new UserCommentDialog(((NewsDetailAty2) m_pContext), new UserCommentDialog.IRefreshCommentPage() {
+                                @Override
+                                public void refreshComment(NewsDetailAdd.Point point) {
+                                    marrPoints.add(0,point);
+                                    mCommentAdapter.setData(marrPoints);
+                                }
+                            });
+                            commentDialog.show(((NewsDetailAty2)m_pContext).getSupportFragmentManager(), "UserCommentDialog");
+                        }
+
+                        @Override
+                        public void userLogout() {
+
+                        }
+                    }, null);
+                    loginModeFgt.show(((FragmentActivity) m_pContext).getSupportFragmentManager(), "loginModeFgt");
+                } else {
+                    UserCommentDialog commentDialog = new UserCommentDialog(((NewsDetailAty2) m_pContext), new UserCommentDialog.IRefreshCommentPage() {
+                        @Override
+                        public void refreshComment(NewsDetailAdd.Point point) {
+                            marrPoints.add(0,point);
+                            mCommentAdapter.setData(marrPoints);
+                        }
+                    });
+                    commentDialog.show(((NewsDetailAty2)m_pContext).getSupportFragmentManager(), "UserCommentDialog");
+                }
+            }
+        });
         mtvTitle = (TextViewExtend) mMenuView.findViewById(R.id.title_textView);
         //录音动画
         mrlRecord = (RelativeLayout) mMenuView.findViewById(R.id.voice_record_layout_wins);

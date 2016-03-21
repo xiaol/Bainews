@@ -334,8 +334,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
-                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this);
-                    commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+                            UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+                            commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                         }
 
                         @Override
@@ -345,24 +345,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }, null);
                     loginModeFgt.show(((FragmentActivity) this).getSupportFragmentManager(), "loginModeFgt");
                 } else {
-                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this);
+                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
                     commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 }
                 break;
             case R.id.mDetailComment:
-                ArrayList<NewsDetailAdd.Point> points;
-                if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
-                    points = mNewsDetailAdd.point;
-                } else {
-                    points = null;
-                }
-                mivShareBg.startAnimation(mAlphaAnimationIn);
-                mivShareBg.setVisibility(View.VISIBLE);
-                CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this, this);
-                window.setFocusable(true);
-                //防止虚拟软键盘被弹出菜单遮住
-                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-                window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                openCommentPage();
                 break;
             case R.id.mDetailShare:
                 mivShareBg.startAnimation(mAlphaAnimationIn);
@@ -385,6 +373,25 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     /**
+     * 打开新闻评论页
+     */
+    private void openCommentPage(){
+        ArrayList<NewsDetailAdd.Point> points;
+        if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
+            points = mNewsDetailAdd.point;
+        } else {
+            points = null;
+        }
+        mivShareBg.startAnimation(mAlphaAnimationIn);
+        mivShareBg.setVisibility(View.VISIBLE);
+        CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this, this);
+        window.setFocusable(true);
+        //防止虚拟软键盘被弹出菜单遮住
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    /**
      * 展开所有的childview
      */
     private void expandedChildViews() {
@@ -398,10 +405,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         if (mNewsDetailAdd != null) {
             if (mNewsDetailAdd.point == null) {
                 ArrayList<NewsDetailAdd.Point> list = new ArrayList<>();
-                list.add(point);
+                list.add(0,point);
                 mNewsDetailAdd.point = list;
             } else {
-                mNewsDetailAdd.point.add(point);
+                mNewsDetailAdd.point.add(0,point);
             }
             mNewsContentDataList = TextUtil.parseNewsDetail(mNewsContentDataList,mNewsDetailAdd,mImgUrl);
         }
@@ -411,6 +418,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailELVAdapter.notifyDataSetChanged();
         //设置Listview默认展开
         expandedChildViews();
+        openCommentPage();
     }
 
 
