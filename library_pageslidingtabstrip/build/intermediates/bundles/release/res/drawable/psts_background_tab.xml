@@ -5,4 +5,4 @@
     <item android:state_focused="true" android:drawable="@color/psts_background_tab_pressed" />
     <item android:drawable="@android:color/transparent" />
 
-</selector><!-- From: file:/D:/AndroidStudioProject/Bainews/library_pageslidingtabstrip/res/drawable/psts_background_tab.xml -->
+</selector><!-- From: file:/Users/fengjigang/AndroidStudioProjects/BaiNews/library_pageslidingtabstrip/res/drawable/psts_background_tab.xml -->

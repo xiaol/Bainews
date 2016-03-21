@@ -30,9 +30,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ArrayList<ChannelItem> oldChannelItems;
     private ArrayList<DiggerAlbum> oldDiggerAlbums;
     private ArrayList<AlbumSubItem> oldDiggerAlbumItems;
+    private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 10);
+        super(context, TABLE_NAME, null, 11);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -42,7 +43,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         /**默认用户选择的频道*/
         mChannels.add(new ChannelItem("TJ0001","推荐",1,true));
         mChannels.add(new ChannelItem("RD0002","热点",2,true));
-        mChannels.add(new ChannelItem("JX0003","精选",3,true));
+//        mChannels.add(new ChannelItem("JX0003","精选",3,true));//目前该频道新闻太少,先删除之
         mChannels.add(new ChannelItem("SH0004","社会",4,true));
         mChannels.add(new ChannelItem("WM0005","外媒",5,true));
         mChannels.add(new ChannelItem("YL0006","娱乐",6,true));
@@ -70,7 +71,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
 
             /**初始化数据库或者升级数据库的时候,插入默认值*/
-            ChannelItemDao channelDao = new ChannelItemDao(mContext);
+            channelDao = new ChannelItemDao(mContext);
             if (!TextUtil.isListEmpty(oldChannelItems)){
                 channelDao.insertList(oldChannelItems);
             }else {
@@ -99,6 +100,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             /***查询数据库升级前的频道列表*/
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             oldChannelItems = channelDao.queryForAll();
+            //暂时删除精选频道
+            if (oldVersion <= 10){
+                if (!TextUtil.isListEmpty(oldChannelItems)){
+                    for (ChannelItem item:oldChannelItems){
+                        if ("JX0003".equals(item.getId())){
+                            oldChannelItems.remove(item);
+                            break;
+                        }
+                    }
+                }
+            }
             /**查询数据库升级前的专辑列表*/
             DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
             oldDiggerAlbums = albumDao.querForAll();
@@ -113,6 +125,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
             }
             oldDiggerAlbumItems = albumSubItemDao.queryForAll();
+
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
