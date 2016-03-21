@@ -27,128 +27,485 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="856200f8-2965-43a2-b20d-08cb7f338fc5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/MobLogCollector.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/MobTools.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/MzOpenSDK_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Core_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Core_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Douban_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Douban_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Email_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_QQ_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_QZone_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Renren_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Renren_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_ShortMessage_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_SinaWeibo_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_SinaWeibo_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_TencentWeibo_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_TencentWeibo_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Core_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Core_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Favorite_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Favorite_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Moments_2_5_9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ShareSDK_Wechat_Moments_2_6_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/analytics_5_4_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_21_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/bolts_android_1_1_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/com_umeng_message_lib_v2_4_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/drawee_0_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fbcore_0_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fresco_0_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/gson_2_3_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/imagepipeline_0_6_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/jpush_sdk_release1_7_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/library_1_0_19.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/library_2_4_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/locSDK_6_13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/lostip_customUI.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/mframework.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ormlite_android_4_48.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/ormlite_core_4_48.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/oss_android_sdk_1_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/parallaxscroll_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_22_2_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_19_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_22_2_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/systembartint_1_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/task.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/textjustify_android_2_1_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/umeng_update_v2_6_0_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/manifests/tmp/manifestMerger1746326474694412643.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/library/build/intermediates/manifests/tmp/manifestMerger1402675882488126333.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/manifests/tmp/manifestMerger1285819482540149830.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/manifests/tmp/manifestMerger7772105065094119119.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties.lock" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileHashes.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/outputFileStates.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/taskArtifacts.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/bundles/debug/classes.jar" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/bundles/debug/classes.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/JazzyHelper.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/JazzyHelper.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/CardsEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/CardsEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/CurlEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/CurlEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FadeEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FadeEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FanEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FanEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FlipEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FlipEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FlyEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/FlyEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/GrowEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/GrowEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/HelixEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/HelixEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/ReverseFlyEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/ReverseFlyEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/TiltEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/TiltEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/TwirlEffect.class" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/classes/debug/com/twotoasters/jazzylistview/effects/TwirlEffect.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/resources/resources-debug-androidTest.ap_" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/resources/resources-debug-androidTest.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/outputs/aar/jazzylistviewlibrary-debug.aar" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/outputs/aar/jazzylistviewlibrary-debug.aar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/bundles/debug/classes.jar" afterPath="$PROJECT_DIR$/library/build/intermediates/bundles/debug/classes.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/bundles/release/classes.jar" afterPath="$PROJECT_DIR$/library/build/intermediates/bundles/release/classes.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState$2.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ClassLoaderSavedState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$AdapterDataSetObserver.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$AdapterDataSetObserver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$CheckForLongPress.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$CheckForLongPress.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$CheckForTap.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$CheckForTap.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$FixedViewInfo.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$FixedViewInfo.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$FlingRunnable.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$FlingRunnable.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$ListSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$ListSavedState$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$ListSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$ListSavedState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$PerformClick.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$PerformClick.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$RecycleBin.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$RecycleBin.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$WindowRunnnable.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView$WindowRunnnable.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/ExtendableListView.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/HeaderViewListAdapter.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/HeaderViewListAdapter.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridItemRecord$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridItemRecord$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridItemRecord.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridItemRecord.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridLayoutParams.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridLayoutParams.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridListSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridListSavedState$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridListSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView$GridListSavedState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/release/com/etsy/android/grid/StaggeredGridView.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState$2.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ClassLoaderSavedState.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$AdapterDataSetObserver.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$AdapterDataSetObserver.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$CheckForLongPress.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$CheckForLongPress.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$CheckForTap.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$CheckForTap.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$FixedViewInfo.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$FixedViewInfo.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$FlingRunnable.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$FlingRunnable.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$ListSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$ListSavedState$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$ListSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$ListSavedState.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$PerformClick.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$PerformClick.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$RecycleBin.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$RecycleBin.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$WindowRunnnable.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView$WindowRunnnable.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/ExtendableListView.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/HeaderViewListAdapter.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/HeaderViewListAdapter.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridItemRecord$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridItemRecord$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridItemRecord.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridItemRecord.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridLayoutParams.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridLayoutParams.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridListSavedState$1.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridListSavedState$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridListSavedState.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView$GridListSavedState.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView.class" afterPath="$PROJECT_DIR$/library/build/intermediates/classes/debug/com/etsy/android/grid/StaggeredGridView.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/resources/resources-debug-androidTest.ap_" afterPath="$PROJECT_DIR$/library/build/intermediates/resources/resources-debug-androidTest.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/outputs/aar/library-debug.aar" afterPath="$PROJECT_DIR$/library/build/outputs/aar/library-debug.aar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/outputs/aar/library-release.aar" afterPath="$PROJECT_DIR$/library/build/outputs/aar/library-release.aar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/classes.jar" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/classes.jar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/classes.jar" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/classes.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$1.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$2.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$3.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$PageListener.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$PageListener.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$PagerAdapterObserver.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$PagerAdapterObserver.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$SavedState$1.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$SavedState$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$SavedState.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip$SavedState.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/release/com/astuetz/PagerSlidingTabStrip.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$1.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$2.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$3.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$PageListener.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$PageListener.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$PagerAdapterObserver.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$PagerAdapterObserver.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$SavedState$1.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$SavedState$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$SavedState.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip$SavedState.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip.class" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/classes/debug/com/astuetz/PagerSlidingTabStrip.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/resources/resources-debug-androidTest.ap_" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/resources/resources-debug-androidTest.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/outputs/aar/library_pageslidingtabstrip-debug.aar" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/outputs/aar/library_pageslidingtabstrip-debug.aar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/outputs/aar/library_pageslidingtabstrip-release.aar" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/outputs/aar/library_pageslidingtabstrip-release.aar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/classes.jar" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/classes.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/EditPageFakeActivity$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/EditPageFakeActivity$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/EditPageFakeActivity.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/EditPageFakeActivity.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/FollowerListFakeActivity.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/FollowerListFakeActivity.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShare$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShare$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShare.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShare.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShareTheme.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/OnekeyShareTheme.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PicViewer.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PicViewer.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PlatformListFakeActivity$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PlatformListFakeActivity$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PlatformListFakeActivity.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/PlatformListFakeActivity.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/Shake2Share.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/Shake2Share.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/ShareCore.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/ShareCore.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$1$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$1$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$2.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$3.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$4.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$5.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$5.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$6.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$6.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$7.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$7.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$8.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage$8.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/EditPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$FollowAdapter.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$FollowAdapter.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$FollowListItem.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$FollowListItem.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$PRTHeader.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage$PRTHeader.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/FollowListPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$GridView.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$GridView.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$PlatformAdapter.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView$PlatformAdapter.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformGridView.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage$2.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/classic/PlatformListPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$2.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$3.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$4.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage$4.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/EditPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$FollowAdapter.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$FollowAdapter.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$FollowListItem.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$FollowListItem.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$PRTHeader.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage$PRTHeader.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/FollowListPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformGridViewAdapter.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformGridViewAdapter.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformListPage$1.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformListPage$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformListPage.class" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/classes/debug/cn/sharesdk/onekeyshare/theme/skyblue/PlatformListPage.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/jars/classes.jar" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/jars/classes.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/resources/resources-debug-androidTest.ap_" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/resources/resources-debug-androidTest.ap_" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/outputs/aar/sharesdk_onekeyshare-debug.aar" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/outputs/aar/sharesdk_onekeyshare-debug.aar" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bainews.iml" afterPath="$PROJECT_DIR$/Bainews.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/release/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/release/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/packageResources/release/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/packageResources/release/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/tmp/packageReleaseJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/library/build/tmp/packageReleaseJar/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_action_menu/library_action_menu.iml" afterPath="$PROJECT_DIR$/library_action_menu/library_action_menu.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/drawable/psts_background_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/drawable/psts_background_tab.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/layout/psts_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/layout/psts_tab.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/values/values.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/release/res/values/values.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/release/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/release/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/release/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/release/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/packageResources/release/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/packageResources/release/merger.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/drawable/psts_background_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/drawable/psts_background_tab.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/layout/psts_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/layout/psts_tab.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/values/values.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/release/values/values.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/tmp/packageReleaseJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/tmp/packageReleaseJar/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" afterPath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeAssets/debug/merger.xml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeAssets/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeResources/debug/merger.xml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/mergeResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/packageResources/debug/merger.xml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/intermediates/incremental/packageResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/build/tmp/packageDebugJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/build/tmp/packageDebugJar/MANIFEST.MF" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/debug/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeAssets/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/intermediates/incremental/packageResources/debug/merger.xml" afterPath="$PROJECT_DIR$/library/build/intermediates/incremental/packageResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/build/tmp/packageDebugJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/library/build/tmp/packageDebugJar/MANIFEST.MF" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/drawable/psts_background_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/drawable/psts_background_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/layout/psts_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/layout/psts_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/values/values.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/bundles/debug/res/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/debug/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeAssets/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/debug/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/mergeResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/packageResources/debug/merger.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/incremental/packageResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/drawable/psts_background_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/drawable/psts_background_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/layout/psts_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/layout/psts_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/values/values.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/androidTest/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/drawable/psts_background_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/drawable/psts_background_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/layout/psts_tab.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/layout/psts_tab.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/values/values.xml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/intermediates/res/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/build/tmp/packageDebugJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/build/tmp/packageDebugJar/MANIFEST.MF" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/classic_platform_corners_bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/classic_platform_corners_bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_item_selected.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_item_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_selector.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/drawable/skyblue_platform_list_selector.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage_at_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage_at_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage_inc_image_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_editpage_inc_image_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_actionbar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_actionbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_platform_list.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_platform_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/layout/skyblue_share_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/values-en/values-en.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/values-en/values-en.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/values/values.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/bundles/debug/res/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/drawable/ssdk_recomm_def_app_image.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/drawable/ssdk_recomm_def_app_image.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/drawable/ssdk_recomm_friends_share_msg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/drawable/ssdk_recomm_friends_share_msg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/values-en/values-en.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/values-en/values-en.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/values/values.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/exploded-aar/Bainews/sharesdk_mainlib/unspecified/res/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeAssets/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeAssets/debug/merger.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeAssets/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeResources/androidTest/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeResources/debug/merger.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/mergeResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/packageResources/debug/merger.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/incremental/packageResources/debug/merger.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_fade_in.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_fade_in.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_fade_out.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_fade_out.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_in_bottom.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_in_bottom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_in_top.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_in_top.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_out_bottom.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_out_bottom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_out_top.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/anim/abc_slide_out_top.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_background_cache_hint_selector_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_background_cache_hint_selector_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_background_cache_hint_selector_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_background_cache_hint_selector_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_disable_only_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_disable_only_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_disable_only_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_disable_only_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_primary_text_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_search_url_text.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_search_url_text.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_secondary_text_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_secondary_text_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_secondary_text_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/color/abc_secondary_text_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_btn_check_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_btn_check_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_btn_radio_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_btn_radio_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_cab_background_internal_bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_cab_background_internal_bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_cab_background_top_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_cab_background_top_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_edit_text_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_edit_text_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_item_background_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_item_background_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_item_background_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_item_background_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_background_transition_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_background_transition_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_background_transition_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_background_transition_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_list_selector_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_switch_thumb_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_switch_thumb_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_tab_indicator_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_tab_indicator_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_textfield_search_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/abc_textfield_search_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/classic_platform_corners_bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/classic_platform_corners_bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_item_selected.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_item_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_selector.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/skyblue_platform_list_selector.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/ssdk_recomm_def_app_image.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/ssdk_recomm_def_app_image.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/ssdk_recomm_friends_share_msg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/drawable/ssdk_recomm_friends_share_msg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout-v11/abc_screen_content_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout-v11/abc_screen_content_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_title_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_title_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_up_container.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_up_container.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_view_list_nav_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_bar_view_list_nav_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_menu_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_menu_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_mode_bar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_mode_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_mode_close_item_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_action_mode_close_item_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_activity_chooser_view_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_expanded_menu_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_expanded_menu_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_checkbox.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_checkbox.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_icon.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_icon.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_radio.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_list_menu_item_radio.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_popup_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_popup_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_content_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_content_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_simple.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_simple.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_simple_overlay_action_mode.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_simple_overlay_action_mode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_toolbar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_screen_toolbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_search_dropdown_item_icons_2line.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_search_dropdown_item_icons_2line.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_search_view.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_search_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_simple_dropdown_hint.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/abc_simple_dropdown_hint.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage_at_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage_at_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage_inc_image_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_editpage_inc_image_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_actionbar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_actionbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_platform_list.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_platform_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/skyblue_share_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/support_simple_spinner_dropdown_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/layout/support_simple_spinner_dropdown_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-af/values-af.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-af/values-af.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-am/values-am.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-am/values-am.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ar/values-ar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ar/values-ar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-bg/values-bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-bg/values-bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-bn-rBD/values-bn-rBD.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-bn-rBD/values-bn-rBD.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ca/values-ca.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ca/values-ca.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-cs/values-cs.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-cs/values-cs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-da/values-da.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-da/values-da.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-de/values-de.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-de/values-de.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-el/values-el.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-el/values-el.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en-rGB/values-en-rGB.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en-rGB/values-en-rGB.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en-rIN/values-en-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en-rIN/values-en-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en/values-en.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-en/values-en.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-es-rUS/values-es-rUS.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-es-rUS/values-es-rUS.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-es/values-es.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-es/values-es.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-et-rEE/values-et-rEE.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-et-rEE/values-et-rEE.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-eu-rES/values-eu-rES.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-eu-rES/values-eu-rES.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fa/values-fa.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fa/values-fa.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fi/values-fi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fi/values-fi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fr-rCA/values-fr-rCA.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fr-rCA/values-fr-rCA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fr/values-fr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-fr/values-fr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-gl-rES/values-gl-rES.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-gl-rES/values-gl-rES.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hi/values-hi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hi/values-hi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hr/values-hr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hr/values-hr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hu/values-hu.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hu/values-hu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hy-rAM/values-hy-rAM.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-hy-rAM/values-hy-rAM.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-in/values-in.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-in/values-in.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-is-rIS/values-is-rIS.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-is-rIS/values-is-rIS.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-it/values-it.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-it/values-it.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-iw/values-iw.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-iw/values-iw.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ja/values-ja.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ja/values-ja.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ka-rGE/values-ka-rGE.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ka-rGE/values-ka-rGE.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-kk-rKZ/values-kk-rKZ.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-kk-rKZ/values-kk-rKZ.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-km-rKH/values-km-rKH.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-km-rKH/values-km-rKH.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-kn-rIN/values-kn-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-kn-rIN/values-kn-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ko/values-ko.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ko/values-ko.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ky-rKG/values-ky-rKG.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ky-rKG/values-ky-rKG.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-land/values-land.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-land/values-land.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-large/values-large.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-large/values-large.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lo-rLA/values-lo-rLA.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lo-rLA/values-lo-rLA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lt/values-lt.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lt/values-lt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lv/values-lv.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-lv/values-lv.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mk-rMK/values-mk-rMK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mk-rMK/values-mk-rMK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ml-rIN/values-ml-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ml-rIN/values-ml-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mn-rMN/values-mn-rMN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mn-rMN/values-mn-rMN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mr-rIN/values-mr-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-mr-rIN/values-mr-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ms-rMY/values-ms-rMY.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ms-rMY/values-ms-rMY.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-my-rMM/values-my-rMM.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-my-rMM/values-my-rMM.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-nb/values-nb.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-nb/values-nb.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ne-rNP/values-ne-rNP.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ne-rNP/values-ne-rNP.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-nl/values-nl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-nl/values-nl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pl/values-pl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pl/values-pl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-port/values-port.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-port/values-port.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pt-rPT/values-pt-rPT.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pt-rPT/values-pt-rPT.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pt/values-pt.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-pt/values-pt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ro/values-ro.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ro/values-ro.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ru/values-ru.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ru/values-ru.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-si-rLK/values-si-rLK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-si-rLK/values-si-rLK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sk/values-sk.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sk/values-sk.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sl/values-sl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sl/values-sl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sr/values-sr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sr/values-sr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sv/values-sv.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sv/values-sv.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sw/values-sw.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sw/values-sw.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sw600dp/values-sw600dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-sw600dp/values-sw600dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ta-rIN/values-ta-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ta-rIN/values-ta-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-te-rIN/values-te-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-te-rIN/values-te-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-th/values-th.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-th/values-th.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-tl/values-tl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-tl/values-tl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-tr/values-tr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-tr/values-tr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-uk/values-uk.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-uk/values-uk.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ur-rPK/values-ur-rPK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-ur-rPK/values-ur-rPK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-uz-rUZ/values-uz-rUZ.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-uz-rUZ/values-uz-rUZ.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v11/values-v11.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v11/values-v11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v14/values-v14.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v14/values-v14.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v17/values-v17.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v17/values-v17.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v21/values-v21.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-v21/values-v21.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-vi/values-vi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-vi/values-vi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w360dp/values-w360dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w360dp/values-w360dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w480dp/values-w480dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w480dp/values-w480dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w500dp/values-w500dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w500dp/values-w500dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w600dp/values-w600dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w600dp/values-w600dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w720dp/values-w720dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-w720dp/values-w720dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-xlarge-land/values-xlarge-land.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-xlarge-land/values-xlarge-land.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-xlarge/values-xlarge.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-xlarge/values-xlarge.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rCN/values-zh-rCN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rCN/values-zh-rCN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rHK/values-zh-rHK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rHK/values-zh-rHK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rTW/values-zh-rTW.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zh-rTW/values-zh-rTW.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zu/values-zu.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values-zu/values-zu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values/values.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/androidTest/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_fade_in.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_fade_in.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_fade_out.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_fade_out.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_in_bottom.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_in_bottom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_in_top.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_in_top.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_out_bottom.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_out_bottom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_out_top.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/anim/abc_slide_out_top.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_background_cache_hint_selector_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_background_cache_hint_selector_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_background_cache_hint_selector_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_background_cache_hint_selector_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_disable_only_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_disable_only_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_disable_only_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_disable_only_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_primary_text_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_search_url_text.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_search_url_text.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_secondary_text_material_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_secondary_text_material_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_secondary_text_material_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/color/abc_secondary_text_material_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable-xhdpi/ssdk_oks_shake_to_share_back.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_btn_check_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_btn_check_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_btn_radio_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_btn_radio_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_cab_background_internal_bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_cab_background_internal_bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_cab_background_top_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_cab_background_top_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_edit_text_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_edit_text_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_item_background_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_item_background_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_item_background_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_item_background_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_background_transition_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_background_transition_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_background_transition_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_background_transition_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_holo_dark.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_holo_dark.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_holo_light.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_list_selector_holo_light.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_switch_thumb_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_switch_thumb_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_tab_indicator_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_tab_indicator_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_textfield_search_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/abc_textfield_search_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/classic_platform_corners_bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/classic_platform_corners_bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_item_selected.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_item_selected.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_selector.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/skyblue_platform_list_selector.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/ssdk_recomm_def_app_image.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/ssdk_recomm_def_app_image.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/ssdk_recomm_friends_share_msg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/drawable/ssdk_recomm_friends_share_msg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout-v11/abc_screen_content_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout-v11/abc_screen_content_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_title_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_title_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_up_container.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_up_container.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_view_list_nav_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_bar_view_list_nav_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_menu_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_menu_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_mode_bar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_mode_bar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_mode_close_item_material.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_action_mode_close_item_material.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_activity_chooser_view_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_expanded_menu_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_expanded_menu_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_checkbox.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_checkbox.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_icon.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_icon.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_radio.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_list_menu_item_radio.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_popup_menu_item_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_popup_menu_item_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_content_include.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_content_include.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_simple.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_simple.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_simple_overlay_action_mode.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_simple_overlay_action_mode.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_toolbar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_screen_toolbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_search_dropdown_item_icons_2line.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_search_dropdown_item_icons_2line.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_search_view.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_search_view.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_simple_dropdown_hint.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/abc_simple_dropdown_hint.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage_at_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage_at_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage_inc_image_layout.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_editpage_inc_image_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_actionbar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_actionbar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_platform_list.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_platform_list.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_platform_list_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/skyblue_share_platform_list_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/support_simple_spinner_dropdown_item.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/layout/support_simple_spinner_dropdown_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-af/values-af.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-af/values-af.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-am/values-am.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-am/values-am.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ar/values-ar.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ar/values-ar.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-bg/values-bg.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-bg/values-bg.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-bn-rBD/values-bn-rBD.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-bn-rBD/values-bn-rBD.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ca/values-ca.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ca/values-ca.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-cs/values-cs.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-cs/values-cs.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-da/values-da.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-da/values-da.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-de/values-de.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-de/values-de.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-el/values-el.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-el/values-el.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en-rGB/values-en-rGB.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en-rGB/values-en-rGB.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en-rIN/values-en-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en-rIN/values-en-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en/values-en.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-en/values-en.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-es-rUS/values-es-rUS.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-es-rUS/values-es-rUS.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-es/values-es.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-es/values-es.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-et-rEE/values-et-rEE.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-et-rEE/values-et-rEE.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-eu-rES/values-eu-rES.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-eu-rES/values-eu-rES.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fa/values-fa.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fa/values-fa.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fi/values-fi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fi/values-fi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fr-rCA/values-fr-rCA.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fr-rCA/values-fr-rCA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fr/values-fr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-fr/values-fr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-gl-rES/values-gl-rES.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-gl-rES/values-gl-rES.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hi/values-hi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hi/values-hi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hr/values-hr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hr/values-hr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hu/values-hu.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hu/values-hu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hy-rAM/values-hy-rAM.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-hy-rAM/values-hy-rAM.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-in/values-in.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-in/values-in.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-is-rIS/values-is-rIS.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-is-rIS/values-is-rIS.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-it/values-it.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-it/values-it.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-iw/values-iw.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-iw/values-iw.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ja/values-ja.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ja/values-ja.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ka-rGE/values-ka-rGE.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ka-rGE/values-ka-rGE.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-kk-rKZ/values-kk-rKZ.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-kk-rKZ/values-kk-rKZ.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-km-rKH/values-km-rKH.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-km-rKH/values-km-rKH.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-kn-rIN/values-kn-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-kn-rIN/values-kn-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ko/values-ko.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ko/values-ko.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ky-rKG/values-ky-rKG.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ky-rKG/values-ky-rKG.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-land/values-land.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-land/values-land.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-large/values-large.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-large/values-large.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lo-rLA/values-lo-rLA.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lo-rLA/values-lo-rLA.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lt/values-lt.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lt/values-lt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lv/values-lv.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-lv/values-lv.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mk-rMK/values-mk-rMK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mk-rMK/values-mk-rMK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ml-rIN/values-ml-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ml-rIN/values-ml-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mn-rMN/values-mn-rMN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mn-rMN/values-mn-rMN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mr-rIN/values-mr-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-mr-rIN/values-mr-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ms-rMY/values-ms-rMY.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ms-rMY/values-ms-rMY.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-my-rMM/values-my-rMM.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-my-rMM/values-my-rMM.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-nb/values-nb.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-nb/values-nb.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ne-rNP/values-ne-rNP.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ne-rNP/values-ne-rNP.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-nl/values-nl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-nl/values-nl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pl/values-pl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pl/values-pl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-port/values-port.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-port/values-port.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pt-rPT/values-pt-rPT.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pt-rPT/values-pt-rPT.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pt/values-pt.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-pt/values-pt.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ro/values-ro.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ro/values-ro.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ru/values-ru.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ru/values-ru.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-si-rLK/values-si-rLK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-si-rLK/values-si-rLK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sk/values-sk.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sk/values-sk.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sl/values-sl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sl/values-sl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sr/values-sr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sr/values-sr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sv/values-sv.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sv/values-sv.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sw/values-sw.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sw/values-sw.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sw600dp/values-sw600dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-sw600dp/values-sw600dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ta-rIN/values-ta-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ta-rIN/values-ta-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-te-rIN/values-te-rIN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-te-rIN/values-te-rIN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-th/values-th.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-th/values-th.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-tl/values-tl.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-tl/values-tl.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-tr/values-tr.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-tr/values-tr.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-uk/values-uk.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-uk/values-uk.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ur-rPK/values-ur-rPK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-ur-rPK/values-ur-rPK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-uz-rUZ/values-uz-rUZ.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-uz-rUZ/values-uz-rUZ.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v11/values-v11.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v11/values-v11.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v14/values-v14.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v14/values-v14.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v17/values-v17.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v17/values-v17.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v21/values-v21.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-v21/values-v21.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-vi/values-vi.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-vi/values-vi.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w360dp/values-w360dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w360dp/values-w360dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w480dp/values-w480dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w480dp/values-w480dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w500dp/values-w500dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w500dp/values-w500dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w600dp/values-w600dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w600dp/values-w600dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w720dp/values-w720dp.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-w720dp/values-w720dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-xlarge-land/values-xlarge-land.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-xlarge-land/values-xlarge-land.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-xlarge/values-xlarge.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-xlarge/values-xlarge.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rCN/values-zh-rCN.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rCN/values-zh-rCN.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rHK/values-zh-rHK.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rHK/values-zh-rHK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rTW/values-zh-rTW.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zh-rTW/values-zh-rTW.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zu/values-zu.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values-zu/values-zu.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values/values.xml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/intermediates/res/debug/values/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/build/tmp/packageDebugJar/MANIFEST.MF" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/build/tmp/packageDebugJar/MANIFEST.MF" />
     </list>
     <ignored path="Bainews.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -189,56 +546,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="loading_view_anim.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/loading_view_anim.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="25" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="156" column="39" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
+            <state vertical-scroll-proportion="-2.6153846">
+              <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NewsFeedAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/adapter/NewsFeedAdapter.java">
+      <file leaf-file-name="CommentPopupWindow.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/CommentPopupWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="612" column="44" selection-start-line="612" selection-start-column="44" selection-end-line="612" selection-end-column="44" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#2587#2588#0" expanded="false" />
-                <element signature="e#2621#2622#0" expanded="false" />
-                <element signature="e#2685#2686#0" expanded="false" />
-                <element signature="e#2727#2728#0" expanded="false" />
-                <element signature="e#2876#2877#0" expanded="false" />
-                <element signature="e#2945#2946#0" expanded="false" />
-                <element signature="e#2988#2989#0" expanded="false" />
-                <element signature="e#3037#3038#0" expanded="false" />
-                <element signature="e#3080#3081#0" expanded="false" />
-                <element signature="e#3111#3112#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NewsDetailAty2.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsDetailAty2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="228" column="0" selection-start-line="228" selection-start-column="0" selection-end-line="229" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.84753364">
+              <caret line="491" column="0" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -254,11 +576,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DatabaseHelper.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DatabaseHelper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.77272725">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="50" column="45" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserCommentDialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/UserCommentDialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="160" column="71" selection-start-line="160" selection-start-column="71" selection-end-line="160" selection-end-column="71" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="local.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/local.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -288,17 +642,7 @@
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="55" column="16" selection-start-line="55" selection-start-column="16" selection-end-line="55" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.225564">
-              <caret line="6" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+              <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -20645,6 +20989,11 @@
         </entry>
       </map>
     </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$" value="13094445097000" />
+      </map>
+    </option>
     <option name="projectBuildClasspath">
       <map>
         <entry key="$PROJECT_DIR$">
@@ -21443,11 +21792,12 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/adapter/NewsDetailELVAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/load_progress.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/loading_view_anim.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/aty_news_detail_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsDetailAty2.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/build.gradle" />
       </list>
     </option>
   </component>
@@ -21693,9 +22043,10 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/toutiaobaoke.keystore" />
     <property name="ExportApk.ApkPath" value="$USER_HOME$/Desktop" />
-    <property name="ExportApk.Flavors" value="official" />
+    <property name="ExportApk.Flavors" value="meizu&#10;wandoujia&#10;xiaomi" />
     <property name="ExportApk.BuildType" value="release" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="625" />
+    <property name="SearchEverywhereHistoryKey" value="pop&#9;PSI&#9;JAVA://com.news.yazhidao.widget.CommentPopupWindow&#10;user&#9;PSI&#9;JAVA://com.news.yazhidao.widget.UserCommentDialog" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -21998,11 +22349,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="815" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.32905984" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="false" weight="0.3071581" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="1330" y="93" width="591" height="760" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3272921" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32664755" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5127932" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4312321" sideWeight="0.49786323" order="7" side_tool="false" content_ui="tabs" />
@@ -22014,7 +22365,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5042644" order="5" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32808024" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32808024" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.4914712" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24946581" sideWeight="0.49573562" order="9" side_tool="false" content_ui="tabs" />
@@ -22078,64 +22429,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsFeedFgt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
-          <folding>
-            <element signature="docComment;field#KEY_CHANNEL_ID#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="docComment;field#mSearchPage#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="docComment;field#mNewsSaveCallBack#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="docComment;method#setSearchKeyWord#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="docComment;method#startTopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="docComment;method#stopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
-            <element signature="e#11968#11969#0" expanded="false" />
-            <element signature="e#12051#12052#0" expanded="false" />
-            <element signature="e#16071#16072#0" expanded="false" />
-            <element signature="e#16099#16100#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/loading_view_anim.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="25" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="156" column="39" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/adapter/NewsFeedAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="612" column="44" selection-start-line="612" selection-start-column="44" selection-end-line="612" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2587#2588#0" expanded="false" />
-            <element signature="e#2621#2622#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2727#2728#0" expanded="false" />
-            <element signature="e#2876#2877#0" expanded="false" />
-            <element signature="e#2945#2946#0" expanded="false" />
-            <element signature="e#2988#2989#0" expanded="false" />
-            <element signature="e#3037#3038#0" expanded="false" />
-            <element signature="e#3080#3081#0" expanded="false" />
-            <element signature="e#3111#3112#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/MainAty.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -22178,13 +22471,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7377423">
           <caret line="176" column="32" selection-start-line="176" selection-start-column="32" selection-end-line="176" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build/generated/source/buildConfig/adcoco/debug/com/news/yazhidao/BuildConfig.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.2857144">
-          <caret line="6" column="30" selection-start-line="6" selection-start-column="30" selection-end-line="6" selection-end-column="30" />
         </state>
       </provider>
     </entry>
@@ -22374,6 +22660,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3971223">
           <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -22472,14 +22759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="156" column="39" selection-start-line="156" selection-start-column="39" selection-end-line="156" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/loading_view_anim.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -22562,6 +22841,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/local.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -22570,18 +22865,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="16" selection-start-line="55" selection-start-column="16" selection-end-line="55" selection-end-column="16" />
+          <caret line="50" column="45" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/DatabaseHelper.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.77272725">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+        <state vertical-scroll-proportion="-2.6153846">
+          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/UserCommentDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="160" column="71" selection-start-line="160" selection-start-column="71" selection-end-line="160" selection-end-column="71" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/widget/CommentPopupWindow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.84753364">
+          <caret line="491" column="0" selection-start-line="491" selection-start-column="0" selection-end-line="491" selection-end-column="0" />
           <folding />
         </state>
       </provider>
