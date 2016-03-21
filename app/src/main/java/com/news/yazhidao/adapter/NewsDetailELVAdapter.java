@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -55,7 +56,6 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
     private ExpandableListView mExpListView;
     private int mDeviceWidth;
     private String mImgUrl;
-    private HashMap<String, String> mContentImgs = new HashMap<>();//存储新闻中所有的图片
     @Override
     public void updateCommentCount(NewsDetailAdd.Point point) {
        if (mNewsDetailAdd != null) {
@@ -261,25 +261,40 @@ public class NewsDetailELVAdapter extends BaseExpandableListAdapter implements V
             /**设置分组之间的间隔*/
             mContentViewHolder.mDetailGroupDivider.setVisibility(childPosition == 0 ? View.VISIBLE : View.GONE);
             /**设置新闻详情*/
+//        content.setContent("http://img4.jiecaojingxuan.com/2016/3/9/d11ddb79-facd-4ae7-b80d-2cb74d339fc5.jpg");
             if (content.getContent().startsWith("http:")){
-                AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>(){
-                    @Override
-                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-                        super.onFinalImageSet(id, imageInfo, animatable);
-                        if (imageInfo != null){
-                            Logger.e("jigang","id="+id);
-                            mContentImgs.put(id,content.getContent());
-                            mContentViewHolder.mDetailImage.getLayoutParams().width = mDeviceWidth;
-                            mContentViewHolder.mDetailImage.getLayoutParams().height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * DeviceInfoUtil.getScreenWidth(mContext));
-                        }
-                    }
-                }).setUri(Uri.parse(content.getContent())).build();
-                Logger.e("jigang","id id="+controller.getId());
-                mContentViewHolder.mDetailImage.setController(controller);
+                    int imgWidth = content.getImgWidth();
+                    int imgHeight = content.getImgHeight();
+                    int imgSize = content.getImgSize();
+                    if (imgSize != 0){
+                    int height = (int) (imgHeight * 1.0f /imgWidth * mDeviceWidth);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mDeviceWidth,height);
+                    params.setMargins(0,DensityUtil.dip2px(mContext,8),0,DensityUtil.dip2px(mContext,16));
+                    mContentViewHolder.mDetailImage.setLayoutParams(params);
+                    AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setUri(Uri.parse(content.getContent() + "@"+mDeviceWidth+"w")).setAutoPlayAnimations(true).build();
+                    mContentViewHolder.mDetailImage.setController(controller);
+                }else {
+                        AbstractDraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>(){
+                            @Override
+                            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                                super.onFinalImageSet(id, imageInfo, animatable);
+                                if (imageInfo != null){
+                                    Logger.e("jigang","id="+id + ",w=" +imageInfo.getWidth()+ ",h="+imageInfo.getHeight());
+                                    int height = (int) (imageInfo.getHeight() * 1.0f /imageInfo.getWidth() * mDeviceWidth);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mDeviceWidth,height);
+                                    params.setMargins(0,DensityUtil.dip2px(mContext,8),0,DensityUtil.dip2px(mContext,16));
+                                    mContentViewHolder.mDetailImage.setLayoutParams(params);
+                                }
+
+                            }
+                        }).setUri(Uri.parse(content.getContent())).setAutoPlayAnimations(true).build();
+                        mContentViewHolder.mDetailImage.setController(controller);
+                }
+
                 mContentViewHolder.mDetailText.setVisibility(View.GONE);
                 mContentViewHolder.mDetailImage.setVisibility(View.VISIBLE);
             }else {
-                mContentViewHolder.mDetailContent.setText(content.getContent());
+                mContentViewHolder.mDetailContent.setText(Html.fromHtml(content.getContent()));
                 mContentViewHolder.mDetailText.setVisibility(View.VISIBLE);
                 mContentViewHolder.mDetailImage.setVisibility(View.GONE);
             }

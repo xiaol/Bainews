@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/mDetailWrapper"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_news_detail">
+<RelativeLayout
+    android:id="@+id/mDetailWrapper"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <RelativeLayout
         android:id="@+id/mDetailHeader"
@@ -35,15 +36,54 @@
         android:id="@+id/mDetailContentListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mDetailHeader"
         android:layout_above="@+id/mDetailBottomBanner"
+        android:layout_below="@id/mDetailHeader"
         android:cacheColorHint="@android:color/transparent"
         android:clipToPadding="false"
         android:divider="@null"
+        android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never"
         android:paddingBottom="10dp"
         />
+
+    <RelativeLayout
+        android:id="@+id/mImageWallWrapper"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mDetailBottomBanner"
+        android:layout_below="@id/mDetailHeader"
+        android:visibility="gone"
+        >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/mImageWallVPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+
+        <TextView
+            android:id="@+id/mImageWallDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#45000000"
+            android:maxHeight="120dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="6dp"
+            android:text="sssss"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="4"
+            android:scrollbars="vertical"
+            android:textColor="@color/color7"
+            android:textSize="@dimen/font4"
+            />
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/mDetailBottomBanner"
         android:layout_width="match_parent"
@@ -51,62 +91,68 @@
         android:layout_alignParentBottom="true"
         android:background="@color/bg_home_login_header"
         >
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:alpha="0.3"
             android:background="@color/black"
             />
+
         <TextView
             android:id="@+id/mDetailAddComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/user_add_comment"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/mDetailComment"
-            android:text="写点什么吧..."
-            android:textSize="14sp"
-            android:textColor="@color/user_add_comment_color"
-            android:padding="8dp"
-            android:paddingLeft="16dp"
-            android:layout_weight="30"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/mDetailComment"
+            android:layout_weight="30"
+            android:padding="8dp"
+            android:background="@drawable/user_add_comment"
+            android:paddingLeft="16dp"
+            android:text="写点什么吧..."
+            android:textColor="@color/user_add_comment_color"
+            android:textSize="14sp"
             />
+
         <FrameLayout
             android:id="@+id/mDetailComment"
-            android:layout_toLeftOf="@+id/mDetailShare"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="评论"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_comment"
-            />
-        <TextView
-            android:id="@+id/mDetailCommentNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginLeft="12dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"
-            android:singleLine="true"
-            android:text="123"
-            android:textSize="8sp"
-            android:includeFontPadding="false"
-            android:textColor="@color/white"
-            android:background="@drawable/bg_news_detail_commit_num"
-            />
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/mDetailShare">
+
+            <ImageView
+                android:id="@+id/mDetailCommentPic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="评论"
+                android:scaleType="centerInside"
+                android:src="@drawable/btn_detail_comment"
+                />
+
+            <TextView
+                android:id="@+id/mDetailCommentNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_news_detail_commit_num"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:singleLine="true"
+                android:text="123"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                android:visibility="gone"
+                />
         </FrameLayout>
+
         <ImageView
             android:id="@+id/mDetailShare"
             android:layout_width="40dp"

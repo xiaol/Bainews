@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/mBigPicWrapper"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/mBigPicTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="11dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/title_user_not_read"
+        android:textSize="17sp"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/mBigPicImg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mBigPicTitle"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/pure_red"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@drawable/bg_load_default_small"
+        fresco:placeholderImageScaleType="centerCrop"
+        fresco:viewAspectRatio="1.7777"
+        fresco:roundBottomLeft="false"
+        fresco:roundBottomRight="false"
+        fresco:roundTopLeft="false"
+        fresco:roundTopRight="false"
+        fresco:roundedCornerRadius="2dp"
+        fresco:roundingBorderColor="@color/color5"
+        fresco:roundingBorderWidth="1px"
+        />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/mBigPicSource"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mBigPicImg"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/color4"
+        android:textSize="@dimen/font5"
+        />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/mBigPicTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/mBigPicSource"
+        android:layout_toRightOf="@+id/mBigPicSource"
+        android:textColor="@color/color4"
+        android:textSize="@dimen/font5"/>
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_below="@id/mBigPicSource"
+        android:layout_width="match_parent"
+        android:layout_height="0.55dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:background="@color/color6" />
+</RelativeLayout>

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -25,16 +24,12 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UploadCommentListener;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.request.UploadCommentRequest;
-import com.news.yazhidao.pages.LoginModeFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-
-import cn.sharesdk.framework.PlatformDb;
 
 
 /**
@@ -42,14 +37,22 @@ import cn.sharesdk.framework.PlatformDb;
  */
 @SuppressLint("ValidFragment")
 public class UserCommentDialog extends DialogFragment implements View.OnClickListener {
+
+    public interface IRefreshCommentPage{
+        void refreshComment(NewsDetailAdd.Point point);
+    }
+
     private  CommentPopupWindow.IUpdateCommentCount mIUpdateCommentCount;
     private Context mContext;
     private EditText mCommentContent;
     private TextView mCommentCommit;
     private String mUserCommentMsg;
+    private IRefreshCommentPage mRefreshCommentPage;
+
     public UserCommentDialog(){}
-    public UserCommentDialog(CommentPopupWindow.IUpdateCommentCount updateCommentCount) {
+    public UserCommentDialog(CommentPopupWindow.IUpdateCommentCount updateCommentCount,IRefreshCommentPage iRefreshCommentPage) {
         this.mIUpdateCommentCount = updateCommentCount;
+        this.mRefreshCommentPage = iRefreshCommentPage;
     }
 
     @Override
@@ -101,23 +104,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        User user = SharedPreManager.getUser(mContext);
-        if (user == null) {
-            LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, new UserLoginListener() {
-                @Override
-                public void userLogin(String platform, PlatformDb platformDb) {
-                    submitComment();
-                }
-
-                @Override
-                public void userLogout() {
-
-                }
-            }, null);
-            loginModeFgt.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loginModeFgt");
-        } else {
             submitComment();
-        }
     }
     private void submitComment(){
         final NewsDetailAdd.Point newPoint = new NewsDetailAdd.Point();
@@ -137,7 +124,11 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     result.down = "0";
                     //通知刷新外面新闻展示界面
                     if (mIUpdateCommentCount != null) {
-                        mIUpdateCommentCount.updateCommentCount(result);
+                        if (mRefreshCommentPage == null){
+                            mIUpdateCommentCount.updateCommentCount(result);
+                        }else {
+                            mRefreshCommentPage.refreshComment(result);
+                        }
                     }
                 }else {
                     ToastUtil.toastShort("评论失败");

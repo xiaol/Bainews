@@ -1,41 +1,42 @@
 package com.news.yazhidao.widget.imagewall;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WallActivity extends BaseActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+public class WallActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String KEY_IMAGE_WALL_DATA = "key_image_wall_data";
-    private ViewPager mViewPager;
+    private ViewPager mWallVPager;
     private PagerAdapter mPagerAdapter;
     private ArrayList<View> mViews;
-    private ImageView mivBack;
-    private TextViewExtend mtvTitle, mtvPagerNum, mtvContent;
-    private String mTotalSize;
-    private int mScreenWidth;
+    private ImageView mWallLeftBack;
+    private TextView mWallDesc;
     private ArrayList<HashMap<String,String>> mImageWalls;
+    private boolean isDisplay = true;
+    private View mWallHeader;
 
 
     @Override
@@ -57,7 +58,6 @@ public class WallActivity extends BaseActivity implements ViewPager.OnPageChange
     protected void initializeViews() {
         initVars();
         findViews();
-        setListener();
     }
 
     @Override
@@ -66,88 +66,136 @@ public class WallActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void initVars() {
-        mScreenWidth = DeviceInfoUtil.getScreenWidth(this);
         Intent intent = getIntent();
         mImageWalls = (ArrayList<HashMap<String, String>>) intent.getSerializableExtra(KEY_IMAGE_WALL_DATA);
         mViews = new ArrayList<View>();
-        mTotalSize = String.valueOf(mImageWalls.size());
     }
 
     // 初始化视图
     private void findViews() {
         // 实例化视图控件
-        mViewPager = (ViewPager) findViewById(R.id.wall_viewPager);
-        mtvTitle = (TextViewExtend) findViewById(R.id.title_textView);
-        mtvPagerNum = (TextViewExtend) findViewById(R.id.pager_num_textView);
-        mtvContent = (TextViewExtend) findViewById(R.id.content_textView);
-        mivBack = (ImageView) findViewById(R.id.back_imageView);
-        mtvContent.setMovementMethod(ScrollingMovementMethod.getInstance());
+        mWallVPager = (ViewPager) findViewById(R.id.mWallVPager);
+        mWallDesc = (TextView) findViewById(R.id.mWallDesc);
+        mWallLeftBack = (ImageView) findViewById(R.id.mWallLeftBack);
+        mWallHeader =  findViewById(R.id.mWallHeader);
+        mWallLeftBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WallActivity.this.finish();
+            }
+        });
+        mWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
         for (int i = 0; i < mImageWalls.size(); i++) {
             final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            ViewGroup.LayoutParams  params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            imageView.setLayoutParams(params);
+            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
             mViews.add(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(Uri.parse(mImageWalls.get(i).get("img")))
-                    .setTapToRetryEnabled(true)
-                    .setOldController(imageView.getController())
-                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                        @Override
-                        public void onFinalImageSet(
-                                String id,
-                                @Nullable ImageInfo imageInfo,
-                                @Nullable Animatable anim) {
-                            if (imageInfo == null) {
-                                return;
-                            }
-                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mViewPager.getLayoutParams();
-                            lp.width = mScreenWidth;
-                            lp.height = (int) (mScreenWidth * imageInfo.getHeight() / (float) imageInfo.getWidth());
-                            mViewPager.setLayoutParams(lp);
-                        }
-                    })
-                    .build();
-            imageView.setController(controller);
+            imageView.setImageURI(Uri.parse(mImageWalls.get(i).get("img")));
         }
-        mPagerAdapter = new WallPagerAdapter(mViews);
-        mViewPager.setAdapter(mPagerAdapter);
-        HashMap<String, String> imageFirst = mImageWalls.get(0);
-        mtvTitle.setText("");
-        mtvPagerNum.setText("1/" + mTotalSize);
-        mtvContent.setText(imageFirst.get("note"));
-    }
+        final int margin = DensityUtil.dip2px(this,12);
+        mWallVPager.setPadding(0, 0, 0, 0);
+        mWallVPager.setClipToPadding(false);
+        mWallVPager.setPageMargin(margin);
+        mWallVPager.setAdapter(new WallPagerAdapter(mViews));
+        mWallVPager.setOffscreenPageLimit(3);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+        params.height = (int) (mWallDesc.getLineHeight() * 4.5);
+        mWallDesc.setMaxLines(4);
+        mWallDesc.setLayoutParams(params);
+        mWallDesc.setText(Html.fromHtml(1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(0).get("note")));
+        mWallVPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                mWallDesc.setText(Html.fromHtml(position + 1 + "<small>" + "/" + mImageWalls.size() + "</small>" + "&nbsp;&nbsp;&nbsp;"+mImageWalls.get(position).get("note")));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+                params.height = (int) (mWallDesc.getLineHeight() * 4.5);
+                mWallDesc.setMaxLines(4);
+                mWallDesc.setLayoutParams(params);
+                Logger.e("jigang","change =" + mWallDesc.getHeight());
+            }
+        });
+        mWallDesc.setOnTouchListener(new View.OnTouchListener() {
+            float startY;
+            int defaultH;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (defaultH == 0){
+                    defaultH = mWallDesc.getHeight();
+                }
+                Logger.e("jigang","default =" + defaultH);
+                int lineCount = mWallDesc.getLineCount();
+                int maxHeight = mWallDesc.getLineHeight() * lineCount;
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        Logger.e("jigang","---down");
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaY = event.getRawY() - startY;
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mWallDesc.getLayoutParams();
+                        int height = mWallDesc.getHeight();
+                        Logger.e("jigang","height="+height + ",maxHeight="+maxHeight);
+                        if (Math.abs(deltaY) > 1 && lineCount > 4){
+                            height -= deltaY;
+                            if (deltaY > 0){
+                                if (height < defaultH){
+                                    height = defaultH;
+                                }
+                            }else {
+                                if (height > maxHeight){
+                                    height = maxHeight + DensityUtil.dip2px(WallActivity.this,6 * 2 + 4);
+                                }
+                            }
+                            params.height = height;
+                            mWallDesc.setMaxLines(Integer.MAX_VALUE);
+                            mWallDesc.setLayoutParams(params);
+                        }
+                        Logger.e("jigang",event.getRawY() + "---move " + deltaY);
+                        startY = event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Logger.e("jigang","---up");
+                        break;
+                }
+                return true;
+            }
+        });
+        final GestureDetector tapGestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (isDisplay){
+                    isDisplay = false;
+                    ObjectAnimator.ofFloat(mWallHeader,"alpha",1.0f,0).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mWallDesc,"alpha",1.0f,0).setDuration(200).start();
+                }else {
+                    isDisplay = true;
+                    ObjectAnimator.ofFloat(mWallHeader,"alpha",0,1.0f).setDuration(200).start();
+                    ObjectAnimator.ofFloat(mWallDesc,"alpha",0,1.0f).setDuration(200).start();
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+        });
 
-    private void setListener() {
-        mViewPager.setOnPageChangeListener(this);
-        mivBack.setOnClickListener(this);
+        mWallVPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                tapGestureDetector.onTouchEvent(event);
+                return false;
+            }
+        });
     }
 
     //按钮的点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_imageView:
+            case R.id.mWallLeftBack:
                 onBackPressed();
                 break;
         }
     }
 
-    @Override
-    public void onPageScrollStateChanged(int arg0) {
-
-    }
-
-    @Override
-    public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-    }
-
-    // 监听viewpage
-    @Override
-    public void onPageSelected(int pageIndex) {
-        mtvTitle.setText("");
-        mtvPagerNum.setText(pageIndex + 1 + "/" + mTotalSize);
-        mtvContent.setText(mImageWalls.get(pageIndex).get("note"));
-    }
 
     public class WallPagerAdapter extends PagerAdapter {
         private List<View> views = new ArrayList<View>();

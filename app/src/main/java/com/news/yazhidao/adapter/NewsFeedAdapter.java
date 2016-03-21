@@ -19,7 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
@@ -28,12 +33,17 @@ import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,7 +99,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
         String strType = feed.getType();
         //普通卡片
-        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType) || "big_pic".equals(strType)) {
+        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -149,13 +159,22 @@ public class NewsFeedAdapter extends BaseAdapter {
             holder.tvTitle.setLayoutParams(lpTitle);
             ArrayList<String> strArrImgUrl = feed.getImgUrls();
             String strImg = null;
-            if ("one_pic".equals(strType) || "two_pic".equals(strType) || "big_pic".equals(strType)) {
+            if ("one_pic".equals(strType) || "two_pic".equals(strType)) {
                 strImg = strArrImgUrl.get(0);
             }
             if (strImg != null && !"".equals(strImg)) {
                 ((View)holder.ivTitleImg.getParent()).setVisibility(View.VISIBLE);
                 holder.ivTitleImg.setImageURI(Uri.parse(strImg));
                 holder.ivTitleImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+                int width = DensityUtil.dip2px(mContext,102), height = DensityUtil.dip2px(mContext,74);
+                ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(strImg))
+                        .setResizeOptions(new ResizeOptions(width, height))
+                        .build();
+                PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                        .setOldController(holder.ivTitleImg.getController())
+                        .setImageRequest(request)
+                        .build();
+                holder.ivTitleImg.setController(controller);
             } else {
                 ((View)holder.ivTitleImg.getParent()).setVisibility(View.GONE);
             }
@@ -221,55 +240,84 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.llSourceContent.setVisibility(View.GONE);
             }
         }
-        /**
          //大图
          else if ("big_pic".equals(strType)) {
-         ViewHolder2 holder2;
-         if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
-         holder2 = new ViewHolder2();
-         convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-         holder2.rl_item_content = (RelativeLayout) convertView.findViewById(R.id.rl_item_content);
-         holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
-         holder2.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-         RelativeLayout.LayoutParams lpImg = (RelativeLayout.LayoutParams) holder2.iv_title_img.getLayoutParams();
-         lpImg.width = mScreenWidth;
-         lpImg.height = (int) (mScreenWidth * (182 / 320.0f));
-         holder2.iv_title_img.setLayoutParams(lpImg);
-         convertView.setTag(holder2);
-         } else {
-         holder2 = (ViewHolder2) convertView.getTag();
-         }
-         String title_news = feed.getTitle();
-         String title = "";
-         if (title_news != null && title_news.length() > 0) {
-         title = TextUtil.getNewsTitle(title_news);
-         }
-         if (title != null && !"".equals(title)) {
-         holder2.tv_title.setText(title);
-         } else {
-         holder2.tv_title.setText(title_news);
-         }
-         //            if (title != null && !"".equals(title)) {
-         //                holder2.tv_title.setText(title, mstrKeyWord);
-         //            } else {
-         //                holder2.tv_title.setText(title_news, mstrKeyWord);
-         //            }
-         //
-         //            int textSize = DensityUtil.dip2px(mContext, 18);
-         //            holder2.tv_title.setTextSize(textSize);
-         //            holder2.tv_title.setTextColor(new Color().parseColor("#f7f7f7"));
-         //            holder2.tv_title.setLineWidth(DensityUtil.dip2px(mContext, 20));
-         //            holder2.tv_title.setShadowLayer(4f, 1, 2, new Color().parseColor("#000000"));
+            //是网易的大图新闻
+            boolean isNeteaseBigPic = feed.getSourceSiteName().startsWith("网易");
+//            if (isNeteaseBigPic) {
+//                ViewHolder2 holder2;
+//                if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
+//                    holder2 = new ViewHolder2();
+//                    convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
+//                    holder2.rl_item_content = (RelativeLayout) convertView.findViewById(R.id.rl_item_content);
+//                    holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
+//                    holder2.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
+//                    RelativeLayout.LayoutParams lpImg = (RelativeLayout.LayoutParams) holder2.iv_title_img.getLayoutParams();
+//                    lpImg.width = mScreenWidth;
+//                    lpImg.height = (int) (mScreenWidth * (182 / 320.0f));
+//                    holder2.iv_title_img.setLayoutParams(lpImg);
+//                    convertView.setTag(holder2);
+//                } else {
+//                    holder2 = (ViewHolder2) convertView.getTag();
+//                }
+//                String title_news = feed.getTitle();
+//                String title = "";
+//                if (title_news != null && title_news.length() > 0) {
+//                    title = TextUtil.getNewsTitle(title_news);
+//                }
+//                if (title != null && !"".equals(title)) {
+//                    holder2.tv_title.setText(title);
+//                } else {
+//                    holder2.tv_title.setText(title_news);
+//                }
+//                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+//                String strImgUrl = strArrImgUrl.get(0);
+//                if (strImgUrl != null && !"".equals(strImgUrl)) {
+//                    holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
+//                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
+//                }
+//                setNewsContentClick(holder2.rl_item_content, feed);
+//            } else {
 
-         ArrayList<String> strArrImgUrl = feed.getImgUrls();
-         String strImgUrl = strArrImgUrl.get(0);
-         if (strImgUrl != null && !"".equals(strImgUrl)) {
-         holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
-         holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
+                if (isNeteaseBigPic){
+                ViewHolder4 holder4;
+                if (convertView == null || convertView.getTag().getClass() != ViewHolder4.class) {
+                    holder4 = new ViewHolder4();
+                    convertView = View.inflate(mContext, R.layout.ll_news_big_pic2, null);
+                    holder4.mBigPicTitle = (TextViewExtend) convertView.findViewById(R.id.mBigPicTitle);
+                    holder4.mBigPicImg = (SimpleDraweeView) convertView.findViewById(R.id.mBigPicImg);
+                    holder4.mBigPicSource = (TextViewExtend) convertView.findViewById(R.id.mBigPicSource);
+                    holder4.mBigPicTime = (TextViewExtend) convertView.findViewById(R.id.mBigPicTime);
+                    holder4.mBigPicWrapper = (RelativeLayout) convertView.findViewById(R.id.mBigPicWrapper);
+                    convertView.setTag(holder4);
+                } else {
+                    holder4 = (ViewHolder4) convertView.getTag();
+                }
+                holder4.mBigPicTitle.setText(feed.getTitle());
+                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+                String strImgUrl = strArrImgUrl.get(0);
+                if (strImgUrl != null && !"".equals(strImgUrl)) {
+                    holder4.mBigPicImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
+                    int width = DeviceInfoUtil.getScreenWidth(mContext), height = (int) (DeviceInfoUtil.getScreenWidth(mContext) * 9.0f / 16.0f);
+                    ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(strImgUrl))
+                            .setResizeOptions(new ResizeOptions(width, height))
+                            .build();
+                    PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
+                            .setOldController(holder4.mBigPicImg.getController())
+                            .setImageRequest(request)
+                            .build();
+                    holder4.mBigPicImg.setController(controller);
+
+                }
+                setViewText(holder4.mBigPicSource,feed.getSourceSiteName());
+                if (feed.getUpdateTime() != null){
+                    setNewsTime(holder4.mBigPicTime, feed.getUpdateTime());
+                }
+                setNewsContentClick(holder4.mBigPicWrapper, feed);
+
+                }
+//            }
          }
-         setNewsContentClick(holder2.rl_item_content, feed);
-         }
-         **/
         //多图
         else if ("three_pic".equals(strType)) {
             ViewHolder3 holder3;
@@ -490,7 +538,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-                tvComment.setText("23小时前");
+                tvComment.setText(updateTime);
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
                 tvComment.setText(between / 3600000 + "小时前");
             } else {
@@ -501,7 +549,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 }
             }
         } catch (ParseException e) {
-            tvComment.setText("一天前");
+            tvComment.setText(updateTime);
             e.printStackTrace();
         }
 
@@ -545,11 +593,34 @@ public class NewsFeedAdapter extends BaseAdapter {
                 intent.putExtra(NewsFeedFgt.KEY_COLLECTION, feed.getCollection());
                 intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
                 intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0) );
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE,feed.getType());
                 if (mNewsFeedFgt != null){
                     mNewsFeedFgt.startActivityForResult(intent,REQUEST_CODE);
                 }else {
                     ((Activity)mContext).startActivityForResult(intent,REQUEST_CODE);
+                }
+                //推送人员使用
+                if(DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3") && "WM0005".equals(feed.getChannelId())){
+                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
+                    BufferedWriter bis = null;
+                    try {
+                        bis = new BufferedWriter(new FileWriter(file));
+                        bis.write(feed.getTitle() + ",newsid="+feed.getNewsId()+",collection="+feed.getCollection());
+                        bis.newLine();
+                        bis.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if(bis != null){
+                            try {
+                                bis.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
                 }
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
                 MobclickAgent.onEvent(mContext, "user_read_detail");
@@ -665,5 +736,13 @@ public class NewsFeedAdapter extends BaseAdapter {
         SimpleDraweeView ivCard2;
         SimpleDraweeView ivCard3;
         LinearLayout llImageList;
+    }
+
+    class ViewHolder4 extends BaseHolder {
+        TextViewExtend mBigPicTitle;
+        SimpleDraweeView mBigPicImg;
+        TextViewExtend mBigPicSource;
+        TextViewExtend mBigPicTime;
+        RelativeLayout mBigPicWrapper;
     }
 }

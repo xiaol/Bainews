@@ -3,56 +3,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/content_textView"
+    <RelativeLayout
+        android:id="@+id/mWallHeader"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:maxLines="8"
-        android:scrollbars="vertical"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:layout_height="48dp"
+        android:background="@color/black"
+        >
 
+        <ImageView
+            android:id="@+id/mWallLeftBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:contentDescription="转到上一级"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_left_white"/>
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/pager_num_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/content_textView"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:textColor="@color/white"
-        android:textSize="15sp" />
-
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/title_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/content_textView"
-        android:layout_marginLeft="15dp"
-        android:ellipsize="end"
-        android:gravity="left"
-        android:maxLines="2"
-        android:paddingRight="80dp"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/wall_viewPager"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.3"
+            android:background="@color/black"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/mWallWrapper"
+        android:background="@color/black"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/title_textView"
-        android:layout_marginBottom="10dp"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mWallBottomBanner"
+        android:layout_below="@id/mWallHeader"
+        >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/mWallVPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+
+        <TextView
+            android:id="@+id/mWallDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#50000000"
+            android:maxHeight="120dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="6dp"
+            android:text="sssss"
+            android:maxLines="4"
+            android:scrollbars="vertical"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/color7"
+            android:textSize="@dimen/font4"
+            />
+    </RelativeLayout>
     <ImageView
-        android:id="@+id/back_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@drawable/btn_news_detail_left_back" />
+        android:id="@+id/mWallBottomBanner"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
 </RelativeLayout>

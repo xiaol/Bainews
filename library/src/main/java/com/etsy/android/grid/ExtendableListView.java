@@ -139,7 +139,7 @@ public abstract class ExtendableListView extends AbsListView {
 
     protected boolean mClipToPadding;
     private PerformClick mPerformClick;
-    
+
     private Runnable mPendingCheckForTap;
     private CheckForLongPress mPendingCheckForLongPress;
 
@@ -872,7 +872,7 @@ public abstract class ExtendableListView extends AbsListView {
             }
         }
     }
-    
+
     private boolean onTouchDown(final MotionEvent event) {
         final int x = (int) event.getX();
         final int y = (int) event.getY();
@@ -956,11 +956,11 @@ public abstract class ExtendableListView extends AbsListView {
         setPressed(false);
         invalidate(); // redraw selector
         final Handler handler = getHandler();
-        
+
         if (handler != null) {
             handler.removeCallbacks(mPendingCheckForLongPress);
         }
-        
+
         recycleVelocityTracker();
         mActivePointerId = INVALID_POINTER;
         return true;
@@ -979,14 +979,14 @@ public abstract class ExtendableListView extends AbsListView {
 
         setPressed(false);
         invalidate(); // redraw selector
-        
+
         final Handler handler = getHandler();
         if (handler != null) {
             handler.removeCallbacks(mPendingCheckForLongPress);
         }
-        
+
         recycleVelocityTracker();
-        
+
         mActivePointerId = INVALID_POINTER;
         return true;
     }
@@ -1029,18 +1029,18 @@ public abstract class ExtendableListView extends AbsListView {
                 if (mTouchMode != TOUCH_MODE_DOWN) {
                     child.setPressed(false);
                 }
-    
+
                 if (mPerformClick == null) {
                     invalidate();
                     mPerformClick = new PerformClick();
                 }
-    
+
                 final PerformClick performClick = mPerformClick;
                 performClick.mClickMotionPosition = motionPosition;
                 performClick.rememberWindowAttachCount();
-    
+
     //            mResurrectToPosition = motionPosition;
-    
+
                 if (mTouchMode == TOUCH_MODE_DOWN || mTouchMode == TOUCH_MODE_TAP) {
                     final Handler handler = getHandler();
                     if (handler != null) {
@@ -2600,7 +2600,7 @@ public abstract class ExtendableListView extends AbsListView {
                 final ArrayList<View> scrap = mCurrentScrap;
                 final int scrapCount = scrap.size();
                 for (int i = 0; i < scrapCount; i++) {
-                    scrap.get(i).setDrawingCacheBackgroundColor(color);
+//                    scrap.get(i).setDrawingCacheBackgroundColor(color);
                 }
             }
             else {
@@ -2609,7 +2609,7 @@ public abstract class ExtendableListView extends AbsListView {
                     final ArrayList<View> scrap = mScrapViews[i];
                     final int scrapCount = scrap.size();
                     for (int j = 0; j < scrapCount; j++) {
-                        scrap.get(j).setDrawingCacheBackgroundColor(color);
+//                        scrap.get(j).setDrawingCacheBackgroundColor(color);
                     }
                 }
             }
@@ -2619,7 +2619,7 @@ public abstract class ExtendableListView extends AbsListView {
             for (int i = 0; i < count; ++i) {
                 final View victim = activeViews[i];
                 if (victim != null) {
-                    victim.setDrawingCacheBackgroundColor(color);
+//                    victim.setDrawingCacheBackgroundColor(color);
                 }
             }
         }
@@ -2875,7 +2875,7 @@ public abstract class ExtendableListView extends AbsListView {
             }
         }
     }
-    
+
     private boolean performLongPress(final View child,
             final int longPressPosition, final long longPressId) {
         boolean handled = false;
@@ -2893,7 +2893,7 @@ public abstract class ExtendableListView extends AbsListView {
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
         }
         return handled;
-    }    
+    }
 
     /**
      * A base class for Runnables that will check that their view is still attached to
