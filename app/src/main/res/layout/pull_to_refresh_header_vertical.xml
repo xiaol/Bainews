@@ -11,6 +11,7 @@
         android:paddingTop="@dimen/header_footer_top_bottom_padding">
 
         <RelativeLayout
+            android:id="@+id/pull_to_loadMoreLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -29,7 +30,7 @@
                     android:singleLine="true"
                     android:textColor="@color/Gray"
                     android:textAppearance="?android:attr/textAppearance"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/pull_to_refresh_sub_text"
@@ -46,13 +47,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
-                android:layout_toLeftOf="@+id/view_layout">
+                android:layout_toLeftOf="@+id/view_layout"
+                android:layout_centerInParent="true">
 
                 <ImageView
                     android:id="@+id/pull_to_refresh_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:src="@drawable/jz_xl_1"/>
 
                 <ProgressBar
                     android:id="@+id/pull_to_refresh_progress"
@@ -62,8 +65,27 @@
                     android:layout_gravity="center"
                     android:indeterminate="true"
                     android:visibility="gone" />
+
+
+
             </FrameLayout>
+            <RelativeLayout
+                android:id="@+id/pull_to_loadRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffdfe6e9"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/pull_to_loadRefreshLayout_Image"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/load_refresh_head"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
         </RelativeLayout>
+
     </FrameLayout>
 
 </merge>

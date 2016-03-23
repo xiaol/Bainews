@@ -33,6 +33,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -50,6 +51,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 	private FrameLayout mInnerLayout;
 
 	protected final ImageView mHeaderImage;
+	protected final RelativeLayout pull_to_loadRefreshLayout;
 	protected final ProgressBar mHeaderProgress;
 
 	private boolean mUseIntrinsicAnimation;
@@ -84,6 +86,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		mHeaderProgress = (ProgressBar) mInnerLayout.findViewById(R.id.pull_to_refresh_progress);
 		mSubHeaderText = (TextView) mInnerLayout.findViewById(R.id.pull_to_refresh_sub_text);
 		mHeaderImage = (ImageView) mInnerLayout.findViewById(R.id.pull_to_refresh_image);
+		pull_to_loadRefreshLayout = (RelativeLayout) mInnerLayout.findViewById(R.id.pull_to_loadRefreshLayout);
 
 		FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mInnerLayout.getLayoutParams();
 
@@ -98,6 +101,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				mPullLabel = "更多推荐";
 				mRefreshingLabel = "推荐中";
 				mReleaseLabel = "松开推荐";
+				if(pull_to_loadRefreshLayout.getVisibility() == View.VISIBLE){
+					pull_to_loadRefreshLayout.setVisibility(View.GONE);
+				}
 				break;
 
 			case PULL_FROM_START:
@@ -111,6 +117,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 				mPullLabel = "下拉刷新";
 				mRefreshingLabel = "推荐中";
 				mReleaseLabel = "松开推荐";
+				if(pull_to_loadRefreshLayout.getVisibility() == View.GONE){
+					pull_to_loadRefreshLayout.setVisibility(View.VISIBLE);
+				}
+
 				break;
 		}
 
@@ -218,6 +228,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		if (View.VISIBLE == mHeaderImage.getVisibility()) {
 			mHeaderImage.setVisibility(View.INVISIBLE);
 		}
+		if (View.VISIBLE == pull_to_loadRefreshLayout.getVisibility()) {
+			pull_to_loadRefreshLayout.setVisibility(View.INVISIBLE);
+		}
+
 		if (View.VISIBLE == mSubHeaderText.getVisibility()) {
 			mSubHeaderText.setVisibility(View.INVISIBLE);
 		}
@@ -268,6 +282,7 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		if (null != mHeaderText) {
 			mHeaderText.setText(mPullLabel);
 		}
+		pull_to_loadRefreshLayout.setVisibility(View.VISIBLE);
 		mHeaderImage.setVisibility(View.VISIBLE);
 
 		if (mUseIntrinsicAnimation) {
@@ -324,6 +339,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 		if (View.INVISIBLE == mHeaderProgress.getVisibility()) {
 			mHeaderProgress.setVisibility(View.VISIBLE);
 		}
+		if (View.INVISIBLE == pull_to_loadRefreshLayout.getVisibility()) {
+			pull_to_loadRefreshLayout.setVisibility(View.VISIBLE);
+		}
+
 		if (View.INVISIBLE == mHeaderImage.getVisibility()) {
 			mHeaderImage.setVisibility(View.VISIBLE);
 		}
