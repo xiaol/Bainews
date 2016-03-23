@@ -27,11 +27,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="856200f8-2965-43a2-b20d-08cb7f338fc5" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties.lock" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileHashes.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileSnapshots.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/outputFileStates.bin" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/taskArtifacts.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" afterPath="$PROJECT_DIR$/jazzylistviewlibrary/jazzylistviewlibrary.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" afterPath="$PROJECT_DIR$/library_pageslidingtabstrip/library_pageslidingtabstrip.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" afterPath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
     </list>
     <ignored path="Bainews.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,7 +79,19 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="64" column="28" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="docComment;field#KEY_CHANNEL_ID#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="docComment;field#mSearchPage#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="docComment;field#mNewsSaveCallBack#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="docComment;method#setSearchKeyWord#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="docComment;method#startTopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="docComment;method#stopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
+                <element signature="e#11968#11969#0" expanded="false" />
+                <element signature="e#12051#12052#0" expanded="false" />
+                <element signature="e#16071#16072#0" expanded="false" />
+                <element signature="e#16099#16100#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,9 +99,28 @@
       <file leaf-file-name="PullToRefreshListView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/PullToRefreshListView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.857142">
+            <state vertical-scroll-proportion="0.0">
               <caret line="154" column="43" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
-              <folding />
+              <folding>
+                <element signature="e#0#753#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#1713#1714#0" expanded="false" />
+                <element signature="e#1734#1735#0" expanded="false" />
+                <element signature="e#1804#1805#0" expanded="false" />
+                <element signature="e#1832#1833#0" expanded="false" />
+                <element signature="e#1893#1894#0" expanded="false" />
+                <element signature="e#1920#1921#0" expanded="false" />
+                <element signature="e#2111#2112#0" expanded="false" />
+                <element signature="e#2145#2146#0" expanded="false" />
+                <element signature="e#8342#8343#0" expanded="false" />
+                <element signature="e#8372#8373#0" expanded="false" />
+                <element signature="e#9112#9113#0" expanded="false" />
+                <element signature="e#9142#9143#0" expanded="false" />
+                <element signature="e#10322#10323#0" expanded="false" />
+                <element signature="e#10381#10382#0" expanded="false" />
+                <element signature="e#10447#10448#0" expanded="false" />
+                <element signature="e#10485#10486#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -98,18 +131,156 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="93" column="23" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
               <folding>
-                <element signature="e#18527#18528#0" expanded="true" />
-                <element signature="e#18571#18572#0" expanded="true" />
+                <element signature="e#0#753#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#5383#5384#0" expanded="false" />
+                <element signature="e#5409#5410#0" expanded="false" />
+                <element signature="e#5468#5469#0" expanded="false" />
+                <element signature="e#5500#5501#0" expanded="false" />
+                <element signature="e#5567#5568#0" expanded="false" />
+                <element signature="e#5614#5615#0" expanded="false" />
+                <element signature="e#5828#5829#0" expanded="false" />
+                <element signature="e#5847#5848#0" expanded="false" />
+                <element signature="e#5898#5899#0" expanded="false" />
+                <element signature="e#5928#5929#0" expanded="false" />
+                <element signature="e#5993#5994#0" expanded="false" />
+                <element signature="e#6031#6032#0" expanded="false" />
+                <element signature="e#6076#6077#0" expanded="false" />
+                <element signature="e#6096#6097#0" expanded="false" />
+                <element signature="docComment;method#isDisableScrollingWhileRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#6344#6345#0" expanded="false" />
+                <element signature="e#6386#6387#0" expanded="false" />
+                <element signature="docComment;method#setDisableScrollingWhileRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#10919#10920#0" expanded="false" />
+                <element signature="e#10959#10960#0" expanded="false" />
+                <element signature="docComment;method#setLastUpdatedLabel#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setLoadingDrawable#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setLoadingDrawable#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setPullLabel#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setPullLabel#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setPullToRefreshEnabled#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#13514#13515#0" expanded="false" />
+                <element signature="e#13540#13541#0" expanded="false" />
+                <element signature="docComment;method#setRefreshingLabel#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setRefreshingLabel#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setReleaseLabel#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setReleaseLabel#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#getPullToRefreshScrollDirection#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#addViewInternal#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#addViewInternal#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#createLoadingLayoutProxy#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#createRefreshableView#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#18106#18107#0" expanded="false" />
+                <element signature="e#18133#18134#0" expanded="false" />
+                <element signature="e#18173#18174#0" expanded="false" />
+                <element signature="e#18217#18218#0" expanded="false" />
+                <element signature="e#18269#18270#0" expanded="false" />
+                <element signature="e#18296#18297#0" expanded="false" />
+                <element signature="e#18336#18337#0" expanded="false" />
+                <element signature="e#18380#18381#0" expanded="false" />
+                <element signature="e#18431#18432#0" expanded="false" />
+                <element signature="e#18470#18471#0" expanded="false" />
+                <element signature="e#18625#18626#0" expanded="false" />
+                <element signature="e#18662#18663#0" expanded="false" />
+                <element signature="docComment;method#handleStyledAttributes#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#isReadyForPullEnd#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#isReadyForPullStart#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPtrRestoreInstanceState#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPtrSaveInstanceState#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPullToRefresh#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#21093#21094#0" expanded="false" />
+                <element signature="e#21129#21130#0" expanded="false" />
+                <element signature="docComment;method#onReleaseToRefresh#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onReset#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#24395#24396#0" expanded="false" />
+                <element signature="e#24421#24422#0" expanded="false" />
+                <element signature="docComment;method#refreshLoadingViewsSize#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#setHeaderScroll#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#smoothScrollTo#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#smoothScrollTo#1;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#smoothScrollToLonger#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#updateUIForMode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#pullEvent#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#smoothScrollTo#2;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#ROTATE#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#FLIP#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#37277#37278#0" expanded="false" />
+                <element signature="e#37299#37300#0" expanded="false" />
+                <element signature="docComment;method#mapIntToValue#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#DISABLED#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#PULL_FROM_START#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#PULL_FROM_END#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#BOTH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#MANUAL_REFRESH_ONLY#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#PULL_DOWN_TO_REFRESH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#PULL_UP_TO_REFRESH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#mapIntToValue#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#39731#39732#0" expanded="false" />
+                <element signature="e#39762#39763#0" expanded="false" />
+                <element signature="e#39870#39871#0" expanded="false" />
+                <element signature="e#39898#39899#0" expanded="false" />
+                <element signature="docComment;method#permitsPullToRefresh#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#40000#40001#0" expanded="false" />
+                <element signature="e#40066#40067#0" expanded="false" />
+                <element signature="docComment;method#showHeaderLoadingLayout#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#40199#40200#0" expanded="false" />
+                <element signature="e#40254#40255#0" expanded="false" />
+                <element signature="docComment;method#showFooterLoadingLayout#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#40494#40495#0" expanded="false" />
+                <element signature="e#40519#40520#0" expanded="false" />
+                <element signature="docComment;class#OnLastItemVisibleListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onLastItemVisible#0;class#OnLastItemVisibleListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;class#OnPullEventListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPullEvent#0;class#OnPullEventListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;class#OnRefreshListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onRefresh#0;class#OnRefreshListener#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPullDownToRefresh#0;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#onPullUpToRefresh#0;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#RESET#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#PULL_TO_REFRESH#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#RELEASE_TO_REFRESH#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#REFRESHING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#MANUAL_REFRESHING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;field#OVERSCROLLING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="docComment;method#mapIntToValue#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+                <element signature="e#44526#44527#0" expanded="false" />
+                <element signature="e#44555#44556#0" expanded="false" />
+                <element signature="e#44578#44579#0" expanded="false" />
+                <element signature="e#44603#44604#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LoadingLayout.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LoadingLayout.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/internal/LoadingLayout.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.237721">
+            <state vertical-scroll-proportion="0.0">
               <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#753#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#9493#9494#0" expanded="false" />
+                <element signature="e#9523#9524#0" expanded="false" />
+                <element signature="e#9850#9851#0" expanded="false" />
+                <element signature="e#9879#9880#0" expanded="false" />
+                <element signature="e#10044#10045#0" expanded="false" />
+                <element signature="e#10079#10080#0" expanded="false" />
+                <element signature="e#10135#10136#0" expanded="false" />
+                <element signature="e#10169#10170#0" expanded="false" />
+                <element signature="docComment;method#getDefaultDrawableResId#0;class#LoadingLayout#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="library.iml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/library/library.iml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.44606414">
+              <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -120,17 +291,10 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="local.properties" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/local.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-              <folding />
+              <folding>
+                <element signature="e#0#753#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -21379,8 +21543,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane />
       </pane>
@@ -21412,7 +21574,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
+              <option name="myItemId" value="library" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -21427,116 +21589,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="yazhidao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BaiNews" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="yazhidao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -21570,6 +21622,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -21887,14 +21941,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="813" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.32905984" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="false" weight="0.3071581" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="1330" y="93" width="591" height="760" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32664755" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5127932" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22701149" sideWeight="0.49786323" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.46551725" sideWeight="0.49786323" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5042644" order="3" side_tool="true" content_ui="tabs" />
@@ -21909,7 +21963,7 @@
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24946581" sideWeight="0.49573562" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.48720682" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.4880763" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295129" sideWeight="0.49786323" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32902297" sideWeight="0.49786323" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -21924,14 +21978,14 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.49786323" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.9282655" sideWeight="0.50213677" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5042644" order="5" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5042644" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.4914712" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32942432" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.4880763" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.49786323" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32976446" sideWeight="0.49786323" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="false" weight="0.3071581" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="1330" y="93" width="591" height="760" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -21946,8 +22000,8 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32869378" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24946581" sideWeight="0.49573562" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.48720682" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.48720682" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
@@ -21967,13 +22021,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsDetailAty2.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/database/AlbumSubItemDao.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -22044,18 +22091,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/bg_load_default_big.9.png">
-      <provider selected="true" editor-type-id="ninepatcheditor">
+      <provider editor-type-id="images">
         <state />
       </provider>
-      <provider editor-type-id="images">
+      <provider selected="true" editor-type-id="ninepatcheditor">
         <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-xhdpi/bg_load_default_middle.9.png">
-      <provider selected="true" editor-type-id="ninepatcheditor">
+      <provider editor-type-id="images">
         <state />
       </provider>
-      <provider editor-type-id="images">
+      <provider selected="true" editor-type-id="ninepatcheditor">
         <state />
       </provider>
     </entry>
@@ -22228,19 +22275,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="612" column="44" selection-start-line="612" selection-start-column="44" selection-end-line="612" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2587#2588#0" expanded="false" />
-            <element signature="e#2621#2622#0" expanded="false" />
-            <element signature="e#2685#2686#0" expanded="false" />
-            <element signature="e#2727#2728#0" expanded="false" />
-            <element signature="e#2876#2877#0" expanded="false" />
-            <element signature="e#2945#2946#0" expanded="false" />
-            <element signature="e#2988#2989#0" expanded="false" />
-            <element signature="e#3037#3038#0" expanded="false" />
-            <element signature="e#3080#3081#0" expanded="false" />
-            <element signature="e#3111#3112#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -22288,7 +22322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="478" column="3" selection-start-line="478" selection-start-column="3" selection-end-line="478" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -22304,7 +22337,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="50" column="45" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="45" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -22312,17 +22344,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="160" column="71" selection-start-line="160" selection-start-column="71" selection-end-line="160" selection-end-column="71" />
-          <folding>
-            <element signature="docComment;class#UserCommentDialog#0" expanded="false" />
-            <element signature="e#3504#3505#0" expanded="false" />
-            <element signature="e#3543#3544#0" expanded="false" />
-            <element signature="e#3586#3587#0" expanded="false" />
-            <element signature="e#3617#3618#0" expanded="false" />
-            <element signature="e#3666#3667#0" expanded="false" />
-            <element signature="e#3701#3702#0" expanded="false" />
-            <element signature="e#4997#4998#0" expanded="false" />
-            <element signature="e#5072#5073#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -22330,7 +22351,219 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsFeedFgt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="64" column="28" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="docComment;field#KEY_CHANNEL_ID#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="docComment;field#mSearchPage#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="docComment;field#mNewsSaveCallBack#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="docComment;method#setSearchKeyWord#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="docComment;method#startTopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="docComment;method#stopRefresh#0;class#NewsFeedFgt#0" expanded="false" />
+            <element signature="e#11968#11969#0" expanded="false" />
+            <element signature="e#12051#12052#0" expanded="false" />
+            <element signature="e#16071#16072#0" expanded="false" />
+            <element signature="e#16099#16100#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/PullToRefreshListView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="154" column="43" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#753#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1713#1714#0" expanded="false" />
+            <element signature="e#1734#1735#0" expanded="false" />
+            <element signature="e#1804#1805#0" expanded="false" />
+            <element signature="e#1832#1833#0" expanded="false" />
+            <element signature="e#1893#1894#0" expanded="false" />
+            <element signature="e#1920#1921#0" expanded="false" />
+            <element signature="e#2111#2112#0" expanded="false" />
+            <element signature="e#2145#2146#0" expanded="false" />
+            <element signature="e#8342#8343#0" expanded="false" />
+            <element signature="e#8372#8373#0" expanded="false" />
+            <element signature="e#9112#9113#0" expanded="false" />
+            <element signature="e#9142#9143#0" expanded="false" />
+            <element signature="e#10322#10323#0" expanded="false" />
+            <element signature="e#10381#10382#0" expanded="false" />
+            <element signature="e#10447#10448#0" expanded="false" />
+            <element signature="e#10485#10486#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/PullToRefreshBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="93" column="23" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#753#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#5383#5384#0" expanded="false" />
+            <element signature="e#5409#5410#0" expanded="false" />
+            <element signature="e#5468#5469#0" expanded="false" />
+            <element signature="e#5500#5501#0" expanded="false" />
+            <element signature="e#5567#5568#0" expanded="false" />
+            <element signature="e#5614#5615#0" expanded="false" />
+            <element signature="e#5828#5829#0" expanded="false" />
+            <element signature="e#5847#5848#0" expanded="false" />
+            <element signature="e#5898#5899#0" expanded="false" />
+            <element signature="e#5928#5929#0" expanded="false" />
+            <element signature="e#5993#5994#0" expanded="false" />
+            <element signature="e#6031#6032#0" expanded="false" />
+            <element signature="e#6076#6077#0" expanded="false" />
+            <element signature="e#6096#6097#0" expanded="false" />
+            <element signature="docComment;method#isDisableScrollingWhileRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#6344#6345#0" expanded="false" />
+            <element signature="e#6386#6387#0" expanded="false" />
+            <element signature="docComment;method#setDisableScrollingWhileRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#10919#10920#0" expanded="false" />
+            <element signature="e#10959#10960#0" expanded="false" />
+            <element signature="docComment;method#setLastUpdatedLabel#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setLoadingDrawable#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setLoadingDrawable#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setPullLabel#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setPullLabel#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setPullToRefreshEnabled#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#13514#13515#0" expanded="false" />
+            <element signature="e#13540#13541#0" expanded="false" />
+            <element signature="docComment;method#setRefreshingLabel#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setRefreshingLabel#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setReleaseLabel#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setReleaseLabel#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#getPullToRefreshScrollDirection#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#addViewInternal#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#addViewInternal#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#createLoadingLayoutProxy#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#createRefreshableView#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#18106#18107#0" expanded="false" />
+            <element signature="e#18133#18134#0" expanded="false" />
+            <element signature="e#18173#18174#0" expanded="false" />
+            <element signature="e#18217#18218#0" expanded="false" />
+            <element signature="e#18269#18270#0" expanded="false" />
+            <element signature="e#18296#18297#0" expanded="false" />
+            <element signature="e#18336#18337#0" expanded="false" />
+            <element signature="e#18380#18381#0" expanded="false" />
+            <element signature="e#18431#18432#0" expanded="false" />
+            <element signature="e#18470#18471#0" expanded="false" />
+            <element signature="e#18625#18626#0" expanded="false" />
+            <element signature="e#18662#18663#0" expanded="false" />
+            <element signature="docComment;method#handleStyledAttributes#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#isReadyForPullEnd#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#isReadyForPullStart#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPtrRestoreInstanceState#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPtrSaveInstanceState#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPullToRefresh#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onRefreshing#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#21093#21094#0" expanded="false" />
+            <element signature="e#21129#21130#0" expanded="false" />
+            <element signature="docComment;method#onReleaseToRefresh#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onReset#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#24395#24396#0" expanded="false" />
+            <element signature="e#24421#24422#0" expanded="false" />
+            <element signature="docComment;method#refreshLoadingViewsSize#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#setHeaderScroll#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#smoothScrollTo#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#smoothScrollTo#1;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#smoothScrollToLonger#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#updateUIForMode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#pullEvent#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#smoothScrollTo#2;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#ROTATE#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#FLIP#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#37277#37278#0" expanded="false" />
+            <element signature="e#37299#37300#0" expanded="false" />
+            <element signature="docComment;method#mapIntToValue#0;class#AnimationStyle#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#DISABLED#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#PULL_FROM_START#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#PULL_FROM_END#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#BOTH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#MANUAL_REFRESH_ONLY#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#PULL_DOWN_TO_REFRESH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#PULL_UP_TO_REFRESH#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#mapIntToValue#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#39731#39732#0" expanded="false" />
+            <element signature="e#39762#39763#0" expanded="false" />
+            <element signature="e#39870#39871#0" expanded="false" />
+            <element signature="e#39898#39899#0" expanded="false" />
+            <element signature="docComment;method#permitsPullToRefresh#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#40000#40001#0" expanded="false" />
+            <element signature="e#40066#40067#0" expanded="false" />
+            <element signature="docComment;method#showHeaderLoadingLayout#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#40199#40200#0" expanded="false" />
+            <element signature="e#40254#40255#0" expanded="false" />
+            <element signature="docComment;method#showFooterLoadingLayout#0;class#Mode#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#40494#40495#0" expanded="false" />
+            <element signature="e#40519#40520#0" expanded="false" />
+            <element signature="docComment;class#OnLastItemVisibleListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onLastItemVisible#0;class#OnLastItemVisibleListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;class#OnPullEventListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPullEvent#0;class#OnPullEventListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;class#OnRefreshListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onRefresh#0;class#OnRefreshListener#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPullDownToRefresh#0;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#onPullUpToRefresh#0;class#OnRefreshListener2#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#RESET#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#PULL_TO_REFRESH#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#RELEASE_TO_REFRESH#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#REFRESHING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#MANUAL_REFRESHING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;field#OVERSCROLLING#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="docComment;method#mapIntToValue#0;class#State#0;class#PullToRefreshBase#0" expanded="false" />
+            <element signature="e#44526#44527#0" expanded="false" />
+            <element signature="e#44555#44556#0" expanded="false" />
+            <element signature="e#44578#44579#0" expanded="false" />
+            <element signature="e#44603#44604#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/internal/LoadingLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#753#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#9493#9494#0" expanded="false" />
+            <element signature="e#9523#9524#0" expanded="false" />
+            <element signature="e#9850#9851#0" expanded="false" />
+            <element signature="e#9879#9880#0" expanded="false" />
+            <element signature="e#10044#10045#0" expanded="false" />
+            <element signature="e#10079#10080#0" expanded="false" />
+            <element signature="e#10135#10136#0" expanded="false" />
+            <element signature="e#10169#10170#0" expanded="false" />
+            <element signature="docComment;method#getDefaultDrawableResId#0;class#LoadingLayout#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/library.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44606414">
+          <caret line="31" column="22" selection-start-line="31" selection-start-column="22" selection-end-line="31" selection-end-column="22" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#753#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -22373,49 +22606,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/news/yazhidao/pages/NewsFeedFgt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="28" selection-start-line="64" selection-start-column="28" selection-end-line="64" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/PullToRefreshListView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.857142">
-          <caret line="154" column="43" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/PullToRefreshBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="93" column="23" selection-start-line="93" selection-start-column="23" selection-end-line="93" selection-end-column="23" />
-          <folding>
-            <element signature="e#18527#18528#0" expanded="true" />
-            <element signature="e#18571#18572#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="57" column="0" selection-start-line="57" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/handmark/pulltorefresh/library/internal/LoadingLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.237721">
-          <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="23" />
           <folding />
         </state>
       </provider>
