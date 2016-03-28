@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/mDetailLeftBack"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
             android:contentDescription="转到上一级"
             android:scaleType="centerInside"
             android:src="@drawable/btn_detail_left_back"/>

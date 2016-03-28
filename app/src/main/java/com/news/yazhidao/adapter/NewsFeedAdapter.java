@@ -601,7 +601,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                     ((Activity)mContext).startActivityForResult(intent,REQUEST_CODE);
                 }
                 //推送人员使用
-                if(DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3") && "WM0005".equals(feed.getChannelId())){
+                if(DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")){
                     File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
                     BufferedWriter bis = null;
                     try {
