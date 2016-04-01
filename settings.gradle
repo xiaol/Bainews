@@ -1,4 +1,4 @@
-include ':app', ':jazzylistviewlibrary', ':library_pageslidingtabstrip', ':library_action_menu'
+include ':app', ':jazzylistviewlibrary', ':library_pageslidingtabstrip', ':library_action_menu', ':social_sdk_library_project'
 include ':app', ':sharesdk_mainlib'
 include ':library'
 include ':sharesdk_onekeyshare'
