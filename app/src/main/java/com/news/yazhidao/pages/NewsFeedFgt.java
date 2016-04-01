@@ -23,28 +23,29 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.umeng.analytics.AnalyticsConfig;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
     public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
-    public static final String KEY_NEWS_TYPE = "KEY_NEWS_TYPE";//新闻类型,是否是大图新闻
+    public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
+    public static final String KEY_NEWS_DOCID = "key_news_docid";
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -162,7 +163,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             Logger.e("jigang","newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)){
                 for (NewsFeed item : mArrNewsFeed){
-                    if (item != null && newsId.equals(item.getNewsId())){
+                    if (item != null && newsId.equals(item.getUrl())){
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                     }
@@ -216,21 +217,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
         setUserVisibleHint(getUserVisibleHint());
         String platform = AnalyticsConfig.getChannel(getActivity());
-        if ("adcoco".equals(platform) && !TextUtil.isListEmpty(mArrNewsFeed)) {
-            AdcocoUtil.setup(getActivity());
-            try {
-                new AdcocoUtil().insertAdcoco(mArrNewsFeed, mlvNewsFeed.getRefreshableView(), mArrNewsFeed.size(), -1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         //load news data
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 //                mlvNewsFeed.setRefreshing();
-                loadData(PULL_DOWN_REFRESH);
+                loadData(PULL_UP_REFRESH);
                 isListRefresh = false;
 
             }
@@ -284,11 +277,26 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             ((MainAty) mContext).stopTopRefresh();
         }
     }
-
     private void loadNewsFeedData(String url, final int flag) {
+        String requestUrl;
+        String tstart = System.currentTimeMillis() + "";
+        String fixedParams = "&cid=" + mstrChannelId + "&userid=" + mstrUserId + "&deviceid=" + mstrDeviceId + "&uid=" + SharedPreManager.getUUID();
+        if (flag == PULL_DOWN_REFRESH){
+            if (!TextUtil.isListEmpty(mArrNewsFeed)){
+                NewsFeed firstItem = mArrNewsFeed.get(0);
+                tstart = DateUtil.dateStr2Long(firstItem.getPubTime()) + "";
+            }
+            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
+        }else {
+            if (!TextUtil.isListEmpty(mArrNewsFeed)){
+                NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
+                tstart = DateUtil.dateStr2Long(lastItem.getPubTime()) + "";
+            }
+            requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
+        }
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.POST, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), "http://api.deeporiginalx.com/news/baijia/" + url, new Response.Listener<ArrayList<NewsFeed>>(){
+        FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>(){
 
             @Override
             public void onResponse(final ArrayList<NewsFeed> result) {
@@ -306,7 +314,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            if (mArrNewsFeed != null) {
+                            if (mArrNewsFeed == null) {
+                                mArrNewsFeed = result;
+                            }else {
                                 mArrNewsFeed.addAll(result);
                             }
                             break;
@@ -314,9 +324,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     if (mNewsSaveCallBack != null) {
                         mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
                     }
-                    if (mstrChannelId != null && "TJ0001".equals(mstrChannelId)) {
+                    //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+                    if (mstrChannelId != null && "1".equals(mstrChannelId)) {
                         for (NewsFeed newsFeed : result)
-                            newsFeed.setChannelId("TJ0001");
+                            newsFeed.setChannelId("1");
                     }
                     new Thread(new Runnable() {
                         @Override
@@ -373,16 +384,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mlvNewsFeed.onRefreshComplete();
             }
         });
-        HashMap<String,String> params = new HashMap<String,String>();
-        params.put("userid", mstrUserId);
-        params.put("deviceid", mstrDeviceId);
-        params.put("channelid", mstrChannelId);
-        params.put("keyword", mstrKeyWord + "");
-        params.put("page", mSearchPage + "");
-        feedRequest.setRequestParams(params);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000,0,0));
         requestQueue.add(feedRequest);
-        Logger.e("jigang","deviceid = " +  mstrDeviceId + ",channelid =" +mstrChannelId);
+        Logger.e("jigang","uuid = " +  SharedPreManager.getUUID() + ",channelid =" +mstrChannelId + ",tstart =" + tstart);
     }
 
     public void loadData(int flag) {

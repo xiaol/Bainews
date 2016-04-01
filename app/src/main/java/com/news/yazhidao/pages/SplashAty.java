@@ -113,6 +113,8 @@ public class SplashAty extends BaseActivity {
         }else {
             SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,openTimes + 1);
         }
+        //产生用户UUID
+        SharedPreManager.saveUUID();
     }
 
     @Override

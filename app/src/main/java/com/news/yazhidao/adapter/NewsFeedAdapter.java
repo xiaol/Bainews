@@ -26,10 +26,8 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -48,7 +46,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 
 public class NewsFeedAdapter extends BaseAdapter {
@@ -96,10 +93,9 @@ public class NewsFeedAdapter extends BaseAdapter {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         final NewsFeed feed = mArrNewsFeed.get(position);
-        ArrayList<NewsFeed.Source> relatePointsList = (ArrayList<NewsFeed.Source>) feed.getRelatePointsList();
-        String strType = feed.getType();
+        String strType = feed.getImgStyle();
         //普通卡片
-        if ("one_pic".equals(strType) || "no_pic".equals(strType) || "two_pic".equals(strType)) {
+        if ("1".equals(strType) || "0".equals(strType) || "2".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -157,9 +153,9 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.tvComment.setPadding(0, 0, 0, DensityUtil.dip2px(mContext, 2));
             }
             holder.tvTitle.setLayoutParams(lpTitle);
-            ArrayList<String> strArrImgUrl = feed.getImgUrls();
+            ArrayList<String> strArrImgUrl = feed.getImgList();
             String strImg = null;
-            if ("one_pic".equals(strType) || "two_pic".equals(strType)) {
+            if ("1".equals(strType) || "2".equals(strType)) {
                 strImg = strArrImgUrl.get(0);
             }
             if (strImg != null && !"".equals(strImg)) {
@@ -180,70 +176,15 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle,feed.isRead());
-            setViewText(holder.tvSource, feed.getSourceSiteName());
-            if (feed.getUpdateTime() != null)
-                setNewsTime(holder.tvComment, feed.getUpdateTime());
+            setViewText(holder.tvSource, feed.getPubName());
+            if (feed.getPubTime() != null)
+                setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
-//            if (holder.valueAnimator.isRunning()) {
-//                holder.tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
-//                if (holder.ivTitleImg != null) {
-//                    holder.ivTitleImg.setScaleX(1.0f);
-//                    holder.ivTitleImg.setScaleY(1.0f);
-//                    holder.valueAnimator.end();
-//                }
-//            }
-//            setContentAnim(holder.rlNewsContent, holder.ivTitleImg, holder.tvTitle,holder.valueAnimator);
-            if (relatePointsList != null && relatePointsList.size() > 0) {
-                int size = relatePointsList.size();
-                holder.llSourceContent.setVisibility(View.VISIBLE);
-                holder.ivVerticalLine1.setVisibility(View.VISIBLE);
-//                holder.tvBottomLine1.setVisibility(View.VISIBLE);
-                holder.ivVerticalLine2.setVisibility(View.VISIBLE);
-//                holder.tvBottomLine2.setVisibility(View.VISIBLE);
-                holder.ivVerticalLine3.setVisibility(View.VISIBLE);
-//                holder.tvBottomLine3.setVisibility(View.VISIBLE);
-                if (size == 1) {
-                    NewsFeed.Source source = relatePointsList.get(0);
-                    setRelateView(source, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
-                    setRelateView(null, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, false, strTitle);
-                    setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false, strTitle);
-                    setVerticalTopLineHeight(holder.ivSource1, holder.ivVerticalTopLine1);
-                    holder.ivVerticalLine1.setVisibility(View.GONE);
-//                    holder.tvBottomLine1.setVisibility(View.GONE);
-                } else if (size == 2) {
-                    NewsFeed.Source source1 = relatePointsList.get(0);
-                    NewsFeed.Source source2 = relatePointsList.get(1);
-                    setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
-                    setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true, strTitle);
-                    setRelateView(null, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, false, strTitle);
-                    setVerticalLineHeight(holder.rlRelate1, holder.ivVerticalLine1);
-                    setVerticalTopLineHeight(holder.ivSource1, holder.ivVerticalTopLine1);
-                    setVerticalTopLineHeight(holder.ivSource2, holder.ivVerticalTopLine2);
-                    holder.ivVerticalLine2.setVisibility(View.GONE);
-//                    holder.tvBottomLine2.setVisibility(View.GONE);
-                } else {
-                    NewsFeed.Source source1 = relatePointsList.get(0);
-                    NewsFeed.Source source2 = relatePointsList.get(1);
-                    NewsFeed.Source source3 = relatePointsList.get(2);
-                    setRelateView(source1, holder.rlRelate1, holder.tvRelate1, holder.tvSource1, true, strTitle);
-                    setRelateView(source2, holder.rlRelate2, holder.tvRelate2, holder.tvSource2, true, strTitle);
-                    setRelateView(source3, holder.rlRelate3, holder.tvRelate3, holder.tvSource3, true, strTitle);
-                    setVerticalLineHeight(holder.rlRelate1, holder.ivVerticalLine1);
-                    setVerticalLineHeight(holder.rlRelate2, holder.ivVerticalLine2);
-                    setVerticalTopLineHeight(holder.ivSource1, holder.ivVerticalTopLine1);
-                    setVerticalTopLineHeight(holder.ivSource2, holder.ivVerticalTopLine2);
-                    setVerticalTopLineHeight(holder.ivSource3, holder.ivVerticalTopLine3);
-                    holder.ivVerticalLine3.setVisibility(View.GONE);
-//                    holder.tvBottomLine3.setVisibility(View.GONE);
-                }
-            } else {
-                holder.llSourceContent.setVisibility(View.GONE);
-            }
         }
          //大图
          else if ("big_pic".equals(strType)) {
             //是网易的大图新闻
-            boolean isNeteaseBigPic = feed.getSourceSiteName().startsWith("网易");
+            boolean isNeteaseBigPic = feed.getPubName().startsWith("网易");
 //            if (isNeteaseBigPic) {
 //                ViewHolder2 holder2;
 //                if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
@@ -294,7 +235,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                     holder4 = (ViewHolder4) convertView.getTag();
                 }
                 holder4.mBigPicTitle.setText(feed.getTitle());
-                ArrayList<String> strArrImgUrl = feed.getImgUrls();
+                ArrayList<String> strArrImgUrl = feed.getImgList();
                 String strImgUrl = strArrImgUrl.get(0);
                 if (strImgUrl != null && !"".equals(strImgUrl)) {
                     holder4.mBigPicImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
@@ -309,9 +250,9 @@ public class NewsFeedAdapter extends BaseAdapter {
                     holder4.mBigPicImg.setController(controller);
 
                 }
-                setViewText(holder4.mBigPicSource,feed.getSourceSiteName());
-                if (feed.getUpdateTime() != null){
-                    setNewsTime(holder4.mBigPicTime, feed.getUpdateTime());
+                setViewText(holder4.mBigPicSource,feed.getPubName());
+                if (feed.getPubTime() != null){
+                    setNewsTime(holder4.mBigPicTime, feed.getPubTime());
                 }
                 setNewsContentClick(holder4.mBigPicWrapper, feed);
 
@@ -319,7 +260,7 @@ public class NewsFeedAdapter extends BaseAdapter {
 //            }
          }
         //多图
-        else if ("three_pic".equals(strType)) {
+        else if ("3".equals(strType)) {
             ViewHolder3 holder3;
             if (convertView == null || convertView.getTag().getClass() != ViewHolder3.class) {
                 holder3 = new ViewHolder3();
@@ -358,7 +299,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             } else {
                 holder3 = (ViewHolder3) convertView.getTag();
             }
-            ArrayList<String> strArrImgUrl = feed.getImgUrls();
+            ArrayList<String> strArrImgUrl = feed.getImgList();
             setLoadImage(holder3.ivCard1, strArrImgUrl.get(0));
             setLoadImage(holder3.ivCard2, strArrImgUrl.get(1));
 
@@ -373,56 +314,10 @@ public class NewsFeedAdapter extends BaseAdapter {
 //            }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle, feed.isRead());
-            setViewText(holder3.tvSource, feed.getSourceSiteName());
-            if (feed.getUpdateTime() != null)
-                setNewsTime(holder3.tvComment, feed.getUpdateTime());
+            setViewText(holder3.tvSource, feed.getPubName());
+            if (feed.getPubTime() != null)
+                setNewsTime(holder3.tvComment, feed.getPubTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
-            if (relatePointsList != null && relatePointsList.size() > 0) {
-                int size = relatePointsList.size();
-                holder3.llSourceContent.setVisibility(View.VISIBLE);
-                holder3.ivVerticalLine1.setVisibility(View.VISIBLE);
-//                holder3.tvBottomLine1.setVisibility(View.VISIBLE);
-                holder3.ivVerticalLine2.setVisibility(View.VISIBLE);
-//                holder3.tvBottomLine2.setVisibility(View.VISIBLE);
-                holder3.ivVerticalLine3.setVisibility(View.VISIBLE);
-//                holder3.tvBottomLine3.setVisibility(View.VISIBLE);
-                if (size == 1) {
-                    NewsFeed.Source source = relatePointsList.get(0);
-                    setRelateView(source, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
-                    setRelateView(null, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, false, strTitle);
-                    setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false, strTitle);
-                    setVerticalTopLineHeight(holder3.ivSource1, holder3.ivVerticalTopLine1);
-                    holder3.ivVerticalLine1.setVisibility(View.GONE);
-//                    holder3.tvBottomLine1.setVisibility(View.GONE);
-                } else if (size == 2) {
-                    NewsFeed.Source source1 = relatePointsList.get(0);
-                    NewsFeed.Source source2 = relatePointsList.get(1);
-                    setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
-                    setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true, strTitle);
-                    setRelateView(null, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, false, strTitle);
-                    setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
-                    setVerticalTopLineHeight(holder3.ivSource1, holder3.ivVerticalTopLine1);
-                    setVerticalTopLineHeight(holder3.ivSource2, holder3.ivVerticalTopLine2);
-                    holder3.ivVerticalLine2.setVisibility(View.GONE);
-//                    holder3.tvBottomLine2.setVisibility(View.GONE);
-                } else {
-                    NewsFeed.Source source1 = relatePointsList.get(0);
-                    NewsFeed.Source source2 = relatePointsList.get(1);
-                    NewsFeed.Source source3 = relatePointsList.get(2);
-                    setRelateView(source1, holder3.rlRelate1, holder3.tvRelate1, holder3.tvSource1, true, strTitle);
-                    setRelateView(source2, holder3.rlRelate2, holder3.tvRelate2, holder3.tvSource2, true, strTitle);
-                    setRelateView(source3, holder3.rlRelate3, holder3.tvRelate3, holder3.tvSource3, true, strTitle);
-                    setVerticalLineHeight(holder3.rlRelate1, holder3.ivVerticalLine1);
-                    setVerticalLineHeight(holder3.rlRelate2, holder3.ivVerticalLine2);
-                    setVerticalTopLineHeight(holder3.ivSource1, holder3.ivVerticalTopLine1);
-                    setVerticalTopLineHeight(holder3.ivSource2, holder3.ivVerticalTopLine2);
-                    setVerticalTopLineHeight(holder3.ivSource3, holder3.ivVerticalTopLine3);
-                    holder3.ivVerticalLine3.setVisibility(View.GONE);
-//                    holder3.tvBottomLine3.setVisibility(View.GONE);
-                }
-            } else {
-                holder3.llSourceContent.setVisibility(View.GONE);
-            }
         }
         return convertView;
     }
@@ -441,67 +336,6 @@ public class NewsFeedAdapter extends BaseAdapter {
             localLayoutParams.height = (int) (width * 74 / 102.0f);
         }
         ivCard.setLayoutParams(localLayoutParams);
-    }
-
-    private void setRelateView(final NewsFeed.Source source, RelativeLayout rlRelate, TextView tvRelate, TextViewExtend tvSource, boolean IsVisible, String strTitle) {
-        if (IsVisible) {
-            rlRelate.setVisibility(View.VISIBLE);
-            rlRelate.setOnClickListener(new View.OnClickListener() {
-                long firstClick = 0;
-
-                @Override
-                public void onClick(View v) {
-                    if (System.currentTimeMillis() - firstClick <= 1500) {
-                        firstClick = System.currentTimeMillis();
-                        return;
-                    }
-                    firstClick = System.currentTimeMillis();
-                    Intent intent = new Intent(mContext, NewsDetailWebviewAty.class);
-                    intent.putExtra(KEY_URL, source.getSourceUrl());
-                    mContext.startActivity(intent);
-                    //umeng statistic onclick url below the head news
-                    HashMap<String, String> _MobMap = new HashMap<>();
-                    _MobMap.put("resource_site_name", source.getSourceSiteName());
-                    MobclickAgent.onEvent(mContext, CommonConstant.US_BAINEWS_CLICK_URL_BELOW_HEAD_VEWS, _MobMap);
-                }
-            });
-            if (source != null) {
-                String source_name = source.getSourceSiteName();
-                String finalText = "";
-                String source_title = source.getCompress();
-                if (TextUtil.isEmptyString(source_title))
-                    source_title = strTitle;
-                String source_name_font = "";
-//                source_title = "<font color =\"#888888\">" + "<big>" + source_title + "</big>" + "</font>";
-                if (source_name != null) {
-                    if (source.getUser() != null && !"".equals(source.getUser())) {
-//                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source.getUser() + "</big>" + "</font>" + ": ";
-                        finalText = source.getUser() + ":" + source_title;
-                        tvSource.setText(Html.fromHtml(finalText));
-                    } else {
-//                        source_name_font = "<font color =\"#7d7d7d\">" + "<big>" + source_name + "</big>" + "</font>" + ": ";
-                        finalText = source_name + ":" + source_title;
-                        tvSource.setText(Html.fromHtml(finalText));
-                    }
-                } else {
-//                    String anonyStr = "<font color =\"#7d7d7d\">" + "<big>" + "匿名报道:" + "</big>" + "</font>" + ": ";
-                    finalText = "匿名报道:" + source_title;
-                    tvSource.setText(Html.fromHtml(finalText));
-                }
-                if (source.getSimilarity() != null && !"".equals(source.getSimilarity())) {
-                    if (source.getSimilarity().length() > 4) {
-                        String ss = source.getSimilarity().substring(2, 4);
-                        tvRelate.setText(ss + "%");
-                    } else {
-                        tvRelate.setVisibility(View.GONE);
-                    }
-                } else {
-                    tvRelate.setVisibility(View.GONE);
-                }
-            }
-        } else {
-            rlRelate.setVisibility(View.GONE);
-        }
     }
 
     private void setVerticalTopLineHeight(final ImageView ivSource, final ImageView ivVerticalLine) {
@@ -589,12 +423,12 @@ public class NewsFeedAdapter extends BaseAdapter {
                 }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getNewsId());
-                intent.putExtra(NewsFeedFgt.KEY_COLLECTION, feed.getCollection());
-                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getSourceUrl());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
+                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
                 intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgUrls())?null:feed.getImgUrls().get(0));
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE,feed.getType());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL,TextUtil.isListEmpty(feed.getImgList())?null:feed.getImgList().get(0));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE,feed.getImgStyle());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID,feed.getDocid());
                 if (mNewsFeedFgt != null){
                     mNewsFeedFgt.startActivityForResult(intent,REQUEST_CODE);
                 }else {
@@ -606,7 +440,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                     BufferedWriter bis = null;
                     try {
                         bis = new BufferedWriter(new FileWriter(file));
-                        bis.write(feed.getTitle() + ",newsid="+feed.getNewsId()+",collection="+feed.getCollection());
+                        bis.write(feed.getTitle() + ",newsid="+feed.getUrl());
                         bis.newLine();
                         bis.flush();
                     } catch (Exception e) {

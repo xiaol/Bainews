@@ -280,7 +280,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             Logger.e("jigang","newsid = " + newsId);
             if (!TextUtil.isListEmpty(mNewsFeedLists)){
                 for (NewsFeed item : mNewsFeedLists){
-                    if (item != null && newsId.equals(item.getNewsId())){
+                    if (item != null && newsId.equals(item.getUrl())){
                         item.setRead(true);
                     }
                 }
