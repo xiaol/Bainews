@@ -33,7 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 11);
+        super(context, TABLE_NAME, null, 12);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -41,24 +41,33 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static ArrayList<ChannelItem> mChannels = new ArrayList<>();
     static {
         /**默认用户选择的频道*/
-        mChannels.add(new ChannelItem("TJ0001","推荐",1,true));
-        mChannels.add(new ChannelItem("RD0002","热点",2,true));
-//        mChannels.add(new ChannelItem("JX0003","精选",3,true));//目前该频道新闻太少,先删除之
-        mChannels.add(new ChannelItem("SH0004","社会",4,true));
-        mChannels.add(new ChannelItem("WM0005","外媒",5,true));
-        mChannels.add(new ChannelItem("YL0006","娱乐",6,true));
-        mChannels.add(new ChannelItem("KJ0007","科技",7,true));
-        mChannels.add(new ChannelItem("TY0008","体育",8,true));
-        mChannels.add(new ChannelItem("CJ0009","财经",9,true));
-        mChannels.add(new ChannelItem("SS0010","时尚",10,true));
-        mChannels.add(new ChannelItem("GX0011","搞笑",11,true));
+        mChannels.add(new ChannelItem("1","奇点",1,true));
+        mChannels.add(new ChannelItem("4","科技",2,true));
+        mChannels.add(new ChannelItem("2","社会",3,true));
+        mChannels.add(new ChannelItem("7","财经",4,true));
+        mChannels.add(new ChannelItem("6","体育",5,true));
+        mChannels.add(new ChannelItem("5","汽车",6,true));
+        mChannels.add(new ChannelItem("9","国际",7,true));
+        mChannels.add(new ChannelItem("10","时尚",8,true));
+        mChannels.add(new ChannelItem("14","探索",9,true));
+        mChannels.add(new ChannelItem("25","科学",10,true));
+        mChannels.add(new ChannelItem("3","娱乐",11,true));
+        mChannels.add(new ChannelItem("23","趣图",12,true));
+        mChannels.add(new ChannelItem("21","搞笑",13,true));
+        mChannels.add(new ChannelItem("17","养生",14,true));
+        mChannels.add(new ChannelItem("11","游戏",15,true));
+        mChannels.add(new ChannelItem("16","育儿",16,true));
         /**默认用户未选择的频道,并可选添加*/
-        mChannels.add(new ChannelItem("YS0012","影视",1,false));
-        mChannels.add(new ChannelItem("YY0013","音乐",2,false));
-        mChannels.add(new ChannelItem("ZKW0014","重口味",3,false));
-        mChannels.add(new ChannelItem("MC0015","萌宠",4,false));
-        mChannels.add(new ChannelItem("ECY0016","二次元",5,false));
-        mChannels.add(new ChannelItem("BDY0016","本地",6,false));
+        mChannels.add(new ChannelItem("24","健康",1,false));
+        mChannels.add(new ChannelItem("22","互联网",2,false));
+        mChannels.add(new ChannelItem("20","股票",3,false));
+        mChannels.add(new ChannelItem("8","军事",4,false));
+        mChannels.add(new ChannelItem("13","历史",5,false));
+        mChannels.add(new ChannelItem("18","故事",6,false));
+        mChannels.add(new ChannelItem("12","旅游",7,false));
+        mChannels.add(new ChannelItem("19","美文",8,false));
+        mChannels.add(new ChannelItem("15","美食",9,false));
+        mChannels.add(new ChannelItem("26","美女",10,false));
     }
     @Override
     public void onCreate(SQLiteDatabase database,
@@ -100,16 +109,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             /***查询数据库升级前的频道列表*/
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             oldChannelItems = channelDao.queryForAll();
-            //暂时删除精选频道
-            if (oldVersion <= 10){
-                if (!TextUtil.isListEmpty(oldChannelItems)){
-                    for (ChannelItem item:oldChannelItems){
-                        if ("JX0003".equals(item.getId())){
-                            oldChannelItems.remove(item);
-                            break;
-                        }
-                    }
-                }
+            //删除所有老版本上的频道
+            if (oldVersion <= 11){
+               oldChannelItems.clear();
             }
             /**查询数据库升级前的专辑列表*/
             DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);

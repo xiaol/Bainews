@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,16 +21,30 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UploadCommentListener;
-import com.news.yazhidao.net.request.UploadCommentRequest;
+import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.UUID;
 
 
 /**
@@ -37,6 +52,9 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
  */
 @SuppressLint("ValidFragment")
 public class UserCommentDialog extends DialogFragment implements View.OnClickListener {
+
+    public static final String KEY_ADD_COMMENT = "key_add_comment";
+    private String mDocid;
 
     public interface IRefreshCommentPage{
         void refreshComment(NewsDetailAdd.Point point);
@@ -102,44 +120,59 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         super.dismiss();
     }
 
+    public void setDocid(String docid){
+        this.mDocid = docid;
+    }
     @Override
     public void onClick(View v) {
             submitComment();
     }
     private void submitComment(){
-        final NewsDetailAdd.Point newPoint = new NewsDetailAdd.Point();
-        User user = SharedPreManager.getUser(mContext);
-        newPoint.userIcon = user.getUserIcon();
-        newPoint.userName = user.getUserName();
-        newPoint.type = UploadCommentRequest.TEXT_DOC;
-        newPoint.srcText = mUserCommentMsg;
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        JSONObject json = null;
+        User user = SharedPreManager.getUser(getActivity());
+        final String nickeName = user.getUserName();
+        String uuid = SharedPreManager.getUUID();
+        final String createTime = DateUtil.getDate();
+        final String profile = user.getUserIcon();
+        final String docid = mDocid;
+        final String comment_id = UUID.randomUUID().toString();
+        try {
+            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ uuid +"\",\"love\":1,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        UploadCommentRequest.uploadComment(mContext, "", mUserCommentMsg, "0", UploadCommentRequest.TEXT_DOC, 0, new UploadCommentListener() {
-
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json, new Response.Listener<JSONObject>() {
             @Override
-            public void success(NewsDetailAdd.Point result) {
-                if (result != null) {
-                    UserCommentDialog.this.dismiss();
-                    result.up = "0";
-                    result.down = "0";
-                    //通知刷新外面新闻展示界面
-                    if (mIUpdateCommentCount != null) {
-                        if (mRefreshCommentPage == null){
-                            mIUpdateCommentCount.updateCommentCount(result);
-                        }else {
-                            mRefreshCommentPage.refreshComment(result);
-                        }
+            public void onResponse(JSONObject response) {
+                Logger.e("jigang","add comment success =" + response);
+                try {
+                    String code = response.getString("code");
+                    String message = response.getString("message");
+                    int data = response.getInt("data");
+                    if ("0".equals(code) && "success".equals(message)){
+                        ToastUtil.toastShort("评论成功!");
+                        Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,1,nickeName,profile);
+                        intent.putExtra(KEY_ADD_COMMENT,comment);
+                        getActivity().sendBroadcast(intent);
+                        UserCommentDialog.this.dismiss();
+
                     }
-                }else {
-                    ToastUtil.toastShort("评论失败");
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-
+        }, new Response.ErrorListener() {
             @Override
-            public void failed() {
-                Logger.e("jigang", "+++++++comment fail==");
+            public void onErrorResponse(VolleyError error) {
+                Logger.e("jigang","add comment fail =" + error.getMessage());
+                ToastUtil.toastShort("评论失败!");
             }
         });
+        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(jsonRequest);
     }
     private class CommentTextWatcher implements TextWatcher {
 

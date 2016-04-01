@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,6 +12,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.ChannelItem;
+import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailContent;
 import com.news.yazhidao.entity.NewsDetailEntry;
@@ -538,5 +540,75 @@ public class TextUtil {
             }
         }
         return mNewsContentDataList;
+    }
+
+    /**
+     * 获取字符串的Base64格式
+     */
+    public static String getBase64(String target){
+        String url = "";
+        if(!TextUtils.isEmpty(target)){
+            byte[] bytes = Base64.encode(target.getBytes(), Base64.DEFAULT);
+            try {
+                url = new String(bytes,"utf-8");
+                Logger.e("jigang","base 64= "+ url);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            url = url.replace("=","").replace("\n","").replace("\r","");
+        }
+        return url;
+    }
+
+    /**
+     * 生成新闻详情中的css样式
+     */
+    public static String generateCSS(){
+        StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
+        cssBuilder.append("" +
+                "body { margin: 16px 22px 16px 22px; } " +
+                "h3 { margin: 0px; } " +
+                ".top { color: #aaaaaa; border-bottom: 1px solid #aaaaaa; padding: 0px 0px 14px 0px; } " +
+                ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
+                ".content img { width: 100%; }" +
+                ".p_img { text-align: center; }");
+        cssBuilder.append("</style>");
+        return cssBuilder.toString();
+    }
+
+    /**
+     * 生成新闻详情的html
+     */
+    public static String genarateHTML(NewsDetail detail){
+        if (detail == null){
+            return "";
+        }
+        StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
+                generateCSS() +
+                "</head>" +
+                "<body><h3>" +
+                detail.getTitle() +
+                "</h3><br><div class=\"top\"><span>" +
+                detail.getPubName() +
+                "</span>&nbsp; <span>" +
+                detail.getPubTime() +
+                "</span>&nbsp; <span>" +
+                detail.getCommentSize()+"评论" +
+                "</span></div><div class=\"content\">");
+        ArrayList<HashMap<String, String>> content = detail.getContent();
+        if (!TextUtil.isListEmpty(content)){
+            for (HashMap<String,String> map: content){
+                String txt = map.get("txt");
+                String img = map.get("img");
+                if (!TextUtil.isEmptyString(txt)){
+                    contentBuilder.append("<p>" + txt +"</p>");
+                }
+                if (!TextUtil.isEmptyString(img)){
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + img +"\"></p>");
+                }
+            }
+        }
+        contentBuilder.append("</div></body></html>");
+        return contentBuilder.toString();
     }
 }

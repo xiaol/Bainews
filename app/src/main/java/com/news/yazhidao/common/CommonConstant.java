@@ -42,4 +42,5 @@ public final class CommonConstant {
     public static final String FILE_USER_LOCATION = "file_user_location";
     public static final String KEY_USER_LOCATION = "key_user_location";
     public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
+    public static final String KEY_UUID = "key_uuid";//确保用户唯一的uuid
 }

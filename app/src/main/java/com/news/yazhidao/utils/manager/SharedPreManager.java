@@ -13,6 +13,7 @@ import com.news.yazhidao.utils.TextUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import cn.sharesdk.framework.ShareSDK;
 
@@ -41,6 +42,18 @@ public class SharedPreManager {
         SharedPreferences.Editor e = getSettings(CommonConstant.FILE_JPUSH, Context.MODE_PRIVATE).edit();
         e.putString(CommonConstant.KEY_JPUSH_ID, value);
         e.commit();
+    }
+
+    public static void saveUUID(){
+        if (TextUtil.isEmptyString(getUUID())){
+            SharedPreferences.Editor e = getSettings(CommonConstant.FILE_USER, Context.MODE_PRIVATE).edit();
+            e.putString(CommonConstant.KEY_UUID, UUID.randomUUID().toString());
+            e.commit();
+        }
+    }
+
+    public static String getUUID(){
+        return get(CommonConstant.FILE_USER,CommonConstant.KEY_UUID);
     }
 
     public static String getJPushId(){

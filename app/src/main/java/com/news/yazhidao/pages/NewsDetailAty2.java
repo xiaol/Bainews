@@ -1,11 +1,15 @@
 package com.news.yazhidao.pages;
 
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
@@ -16,13 +20,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
+import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
@@ -33,13 +43,12 @@ import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
+import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.HttpClientUtil;
-import com.news.yazhidao.net.JsonCallback;
-import com.news.yazhidao.net.MyAppException;
-import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -52,9 +61,6 @@ import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +75,7 @@ import cn.sharesdk.framework.PlatformDb;
 public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
+    public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
     private int mScreenWidth, mScreenHeight;
     //滑动关闭当前activity布局
@@ -106,6 +113,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private String newsType = null;
     private long mDurationStart;//统计用户读此条新闻时话费的时间
     private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
+    private boolean isDetailFgt;//是否是新闻详情页
     private String channelId;
     private String mImgUrl;
     private View mDetailAddComment;
@@ -116,11 +124,27 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private TextView mImageWallDesc;
     private View mDetailBottomBanner;
     private ImageView mDetailCommentPic;
+    private WebView mDetailWebView;
+    private ViewPager mNewsDetailViewPager;
+    private String mNewsDocId;
+    private RefreshPageBroReceiber mRefreshReceiber;
+    /**通知新闻详情页和评论fragment刷新评论*/
+    public  class RefreshPageBroReceiber extends BroadcastReceiver {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+                Logger.e("jigang","comment fgt refresh br");
+            String number = mDetailCommentNum.getText().toString();
+            mDetailCommentNum.setText(Integer.valueOf(number) + 1 + "");
+        }
+    }
 
     @Override
     protected boolean translucentStatus() {
         return false;
     }
+
 
     @Override
     protected void setContentView() {
@@ -165,6 +189,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallWrapper =  findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager)findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView)findViewById(R.id.mImageWallDesc);
+        mDetailWebView = (WebView)findViewById(R.id.mDetailWebView);
+        mNewsDetailViewPager = (ViewPager)findViewById(R.id.mNewsDetailViewPager);
 
         mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
         mDetailContentListView.addHeaderView(mDetailHeaderView);
@@ -194,12 +220,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 return true;
             }
         });
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mDurationStart = System.currentTimeMillis();
+        if(mRefreshReceiber == null){
+            mRefreshReceiber = new RefreshPageBroReceiber();
+            IntentFilter filter = new IntentFilter(ACTION_REFRESH_COMMENT);
+            registerReceiver(mRefreshReceiber, filter);
+        }
     }
 
     @Override
@@ -209,7 +241,44 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         Logger.e("jigang","time = "+ DateUtil.getDate()+",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid ="+newsId+",type="+newsType +",channelId =" +channelId+ ",uuid="+uuid+",userid="+mUserId+",location="+SharedPreManager.get(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mRefreshReceiber != null){
+            unregisterReceiver(mRefreshReceiber);
+            mRefreshReceiber = null;
+        }
+    }
 
+    /**
+     *  显示新闻详情和评论
+     * @param result
+     */
+    private void displayDetailAndComment(final NewsDetail result){
+        mNewsDetailViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                if (position == 0){
+                    NewsDetailFgt detailFgt = new NewsDetailFgt();
+                    Bundle args = new Bundle();
+                    args.putSerializable(NewsDetailFgt.KEY_DETAIL_RESULT,result);
+                    detailFgt.setArguments(args);
+                    return detailFgt;
+                }else {
+                    NewsCommentFgt commentFgt = new NewsCommentFgt();
+                    Bundle args = new Bundle();
+                    args.putString(NewsCommentFgt.KEY_NEWS_DOCID,result.getDocid());
+                    commentFgt.setArguments(args);
+                    return commentFgt;
+                }
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+        });
+    }
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -233,6 +302,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
             mImgUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMG_URL);
             mNewsType = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_TYPE);
+            mNewsDocId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_DOCID);
 //            mNewsType = "big_pic";
             mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
 //            newsId = "2ffae38a585d31376be0465de6e591ee";
@@ -250,32 +320,21 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
 
-        NetworkRequest _Request = new NetworkRequest(HttpConstant.URL_POST_NEWS_DETAIL, NetworkRequest.RequestMethod.POST);
-        List<NameValuePair> pairs = new ArrayList<>();
-        /**是否是挖掘的新闻*/
-        if (isDigger) {
-            pairs.add(new BasicNameValuePair("news_id", newsId));
-        } else {
-            pairs.add(new BasicNameValuePair("newsid", newsId));
-            pairs.add(new BasicNameValuePair("devicetype", "android"));
-            pairs.add(new BasicNameValuePair("collection", newsType));
-        }
-        pairs.add(new BasicNameValuePair("userid", mUserId));
-        pairs.add(new BasicNameValuePair("deviceid", uuid));
-        pairs.add(new BasicNameValuePair("platformtype", mPlatformType));
-        _Request.setParams(pairs);
-        _Request.setCallback(new JsonCallback<NewsDetailAdd>() {
+        Logger.e("jigang","detail url=" + HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(newsId));
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
+        }.getType(), HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(newsId), new Response.Listener<NewsDetail>(){
 
             @Override
-            public void success(final NewsDetailAdd result) {
+            public void onResponse(NewsDetail result) {
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                mNewsDetailAdd = result;
-                mNewsDetailELVAdapter.setNewsDetail(result);
+                Logger.e("jigang", "network success~~" + result);
                 if (result != null) {
+                    displayDetailAndComment(result);
                     //此处判断是否是图片新闻
                     if ("big_pic".equals(mNewsType)){
-                        if (!TextUtil.isListEmpty(result.imgWall)){
-                            mImages = result.imgWall;
+                        if (!TextUtil.isListEmpty(null)){
+//                            mImages = result.imgWall;
                             //隐藏listview 展示imagewall fragment
                             mDetailContentListView.setVisibility(View.GONE);
                             mImageWallWrapper.setVisibility(View.VISIBLE);
@@ -287,30 +346,25 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
                     }
                     mDetailHeaderView.updateView(result);
-                    if(!TextUtil.isListEmpty(result.point)){
+                    if(result.getCommentSize() != 0){
                         mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(result.point.size()+"");
-                    }
-                    TextUtil.parseNewsDetail(mNewsContentDataList,result,mImgUrl);
-                    //设置Listview默认展开
-                    for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
-                        mDetailContentListView.expandGroup(i);
+                        mDetailCommentNum.setText(result.getCommentSize()+"");
                     }
                 }else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
                     NewsDetailAty2.this.finish();
                 }
             }
-
+        }, new Response.ErrorListener() {
             @Override
-            public void failed(MyAppException exception) {
+            public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
                 mNewsLoadingImg.setVisibility(View.VISIBLE);
                 bgLayout.setVisibility(View.GONE);
             }
-        }.setReturnType(new TypeToken<NewsDetailAdd>() {
-        }.getType()));
-        _Request.execute();
+        });
+        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000,0,0));
+        requestQueue.add(feedRequest);
     }
 
     @Override
@@ -339,6 +393,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                         @Override
                         public void userLogin(String platform, PlatformDb platformDb) {
                             UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+                            commentDialog.setDocid(mNewsDocId);
                             commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                         }
 
@@ -347,14 +402,22 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
                         }
                     }, null);
-                    loginModeFgt.show(((FragmentActivity) this).getSupportFragmentManager(), "loginModeFgt");
+                    loginModeFgt.show((NewsDetailAty2.this).getSupportFragmentManager(), "loginModeFgt");
                 } else {
                     UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+                    commentDialog.setDocid(mNewsDocId);
                     commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 }
                 break;
             case R.id.mDetailComment:
-                openCommentPage();
+//                openCommentPage();
+                if (!isDetailFgt){
+                    isDetailFgt = false;
+                    mNewsDetailViewPager.setCurrentItem(1);
+                }else {
+                    isDetailFgt = true;
+                    mNewsDetailViewPager.setCurrentItem(0);
+                }
                 break;
             case R.id.mDetailShare:
                 mivShareBg.startAnimation(mAlphaAnimationIn);
