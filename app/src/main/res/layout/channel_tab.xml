@@ -3,19 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
-    android:paddingLeft="6.0dip"
-    android:paddingRight="6.0dip">
+    >
 
     <TextView
         android:id="@+id/category_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:alpha="0.8"
         android:paddingLeft="8.0dip"
         android:paddingRight="8.0dip"
-        android:paddingTop="4.0dip"
-        android:paddingBottom="4.0dp"
-        android:textColor="@color/white"
-        android:textSize="16sp"/>
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textColor="@color/new_color1"
+        android:textSize="18sp"/>
 </FrameLayout>
