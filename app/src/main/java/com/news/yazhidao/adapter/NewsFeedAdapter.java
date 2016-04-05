@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,7 +29,9 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
+import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -104,7 +107,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
                 convertView.setTag(holder);
             } else {
-                holder = (ViewHolder) convertView.getTag();
+                holder = (BaseHolder) convertView.getTag();
             }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle, feed.isRead());
@@ -410,8 +413,15 @@ public class NewsFeedAdapter extends BaseAdapter {
         });
     }
 
-    private void setDeleteClick(ImageView imageView, NewsFeed feed) {
-
+    private void setDeleteClick(final ImageView imageView, final NewsFeed feed) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.toastShort(feed.getPubName());
+                FeedDislikePopupWindow dislikePopupWindow = new FeedDislikePopupWindow(mContext);
+                dislikePopupWindow.showAtLocation(imageView, Gravity.BOTTOM,0,0);
+            }
+        });
     }
 
 
