@@ -123,7 +123,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
             }
-            ViewHolder holder;
+            final ViewHolder holder;
             if (convertView == null || convertView.getTag().getClass() != ViewHolder.class) {
                 holder = new ViewHolder();
                 convertView = View.inflate(mContext, R.layout.ll_news_item_one_pic, null);
@@ -152,20 +152,25 @@ public class NewsFeedAdapter extends BaseAdapter {
                     holder.ivTitleImg.setImageURI(Uri.parse(strImg));
                 }
             }
-            String strTitle = feed.getTitle();
+            final String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle, feed.isRead());
+            holder.tvTitle.post(new Runnable() {
+                @Override
+                public void run() {
+                    RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) holder.llSourceContent.getLayoutParams();
+                    RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) holder.ivBottomLine.getLayoutParams();
+                    if (holder.tvTitle.getLineCount() >= 3) {
+                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+                    } else {
+                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                    }
+                    holder.llSourceContent.setLayoutParams(lpSourceContent);
+                    holder.ivBottomLine.setLayoutParams(lpBottomLine);
+                }
+            });
 
-            RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) holder.llSourceContent.getLayoutParams();
-            RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) holder.ivBottomLine.getLayoutParams();
-            if (strTitle.length() >= 10) {
-                lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
-                lpBottomLine.addRule(RelativeLayout.BELOW,R.id.source_content_linearLayout);
-            } else {
-                lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
-                lpBottomLine.addRule(RelativeLayout.BELOW,R.id.title_img_View);
-            }
-            holder.llSourceContent.setLayoutParams(lpSourceContent);
-            holder.ivBottomLine.setLayoutParams(lpBottomLine);
             setViewText(holder.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
