@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/mBigPicWrapper"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6">
 
     <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/mBigPicTitle"
+        android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/title_user_not_read"
-        android:textSize="17sp"/>
+        android:textSize="17sp" />
 
     <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/mBigPicImg"
+        android:id="@+id/title_img_View"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mBigPicTitle"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_below="@id/title_textView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:background="@color/pure_red"
         fresco:actualImageScaleType="centerCrop"
         fresco:placeholderImage="@drawable/bg_load_default_small"
         fresco:placeholderImageScaleType="centerCrop"
-        fresco:viewAspectRatio="1.7777"
         fresco:roundBottomLeft="false"
         fresco:roundBottomRight="false"
         fresco:roundTopLeft="false"
@@ -38,35 +37,69 @@
         fresco:roundedCornerRadius="2dp"
         fresco:roundingBorderColor="@color/color5"
         fresco:roundingBorderWidth="1px"
-        />
+        fresco:viewAspectRatio="1.7777" />
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/mBigPicSource"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/source_content_linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mBigPicImg"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/color4"
-        android:textSize="@dimen/font5"
-        />
+        android:layout_below="@+id/title_img_View"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp">
 
-    <com.news.yazhidao.widget.TextViewExtend
-        android:id="@+id/mBigPicTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/mBigPicSource"
-        android:layout_toRightOf="@+id/mBigPicSource"
-        android:textColor="@color/color4"
-        android:textSize="@dimen/font5"/>
+        <ImageView
+            android:id="@+id/type_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:visibility="gone" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/news_source_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:textColor="@color/color3"
+            android:textSize="@dimen/font6" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:textColor="@color/color3"
+            android:textSize="@dimen/font6" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/comment_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/source_content_linearLayout"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/delete_imageView"
+            android:text="111评"
+            android:textColor="@color/color3"
+            android:textSize="@dimen/font6" />
+
+        <ImageView
+            android:id="@+id/delete_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/btn_news_feed_delete" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/line_bottom_imageView"
-        android:layout_below="@id/mBigPicSource"
+        android:layout_below="@+id/source_content_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0.55dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:background="@color/color6" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/color5" />
 </RelativeLayout>
