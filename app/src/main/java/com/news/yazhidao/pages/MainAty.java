@@ -62,8 +62,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private MyViewPagerAdapter mViewPagerAdapter;
     private ImageView mChannelExpand;
     private ChannelItemDao mChannelItemDao;
-    private ImageView mTopSearch;
-    private SimpleDraweeView mMainUserLogin;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
@@ -72,6 +70,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    private SimpleDraweeView mUserCenter;
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
@@ -201,17 +200,15 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
-        mTopSearch = (ImageView) findViewById(R.id.mTopSearch);
-        mTopSearch.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        mUserCenter = (SimpleDraweeView) findViewById(R.id.mUserCenter);
+        mUserCenter.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
-        mMainUserLogin = (SimpleDraweeView) findViewById(R.id.mMainUserLogin);
-        mMainUserLogin.setOnClickListener(this);
 
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -284,6 +281,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 });
                 window1.showAtLocation(getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
+                break;
+            case R.id.mUserCenter:
+                ToastUtil.toastShort("user center");
                 break;
         }
     }
