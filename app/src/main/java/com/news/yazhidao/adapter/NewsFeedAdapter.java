@@ -107,7 +107,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             setDeleteClick(holder.ivDelete, feed);
         }
         //普通卡片
-        if ("1".equals(strType) || "2".equals(strType)) {
+        if ("10".equals(strType) || "2".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -164,84 +164,52 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
+            setDeleteClick(holder.ivDelete, feed);
         }
         //大图
         else if ("big_pic".equals(strType)) {
+//            ||"1".equals(strType)
             //是网易的大图新闻
             boolean isNeteaseBigPic = feed.getPubName().startsWith("网易");
-//            if (isNeteaseBigPic) {
-//                ViewHolder2 holder2;
-//                if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
-//                    holder2 = new ViewHolder2();
-//                    convertView = View.inflate(mContext, R.layout.ll_news_item_top, null);
-//                    holder2.rl_item_content = (RelativeLayout) convertView.findViewById(R.id.rl_item_content);
-//                    holder2.iv_title_img = (SimpleDraweeView) convertView.findViewById(R.id.iv_title_img);
-//                    holder2.tv_title = (TextViewExtend) convertView.findViewById(R.id.tv_title);
-//                    RelativeLayout.LayoutParams lpImg = (RelativeLayout.LayoutParams) holder2.iv_title_img.getLayoutParams();
-//                    lpImg.width = mScreenWidth;
-//                    lpImg.height = (int) (mScreenWidth * (182 / 320.0f));
-//                    holder2.iv_title_img.setLayoutParams(lpImg);
-//                    convertView.setTag(holder2);
-//                } else {
-//                    holder2 = (ViewHolder2) convertView.getTag();
-//                }
-//                String title_news = feed.getTitle();
-//                String title = "";
-//                if (title_news != null && title_news.length() > 0) {
-//                    title = TextUtil.getNewsTitle(title_news);
-//                }
-//                if (title != null && !"".equals(title)) {
-//                    holder2.tv_title.setText(title);
-//                } else {
-//                    holder2.tv_title.setText(title_news);
-//                }
-//                ArrayList<String> strArrImgUrl = feed.getImgUrls();
-//                String strImgUrl = strArrImgUrl.get(0);
-//                if (strImgUrl != null && !"".equals(strImgUrl)) {
-//                    holder2.iv_title_img.setImageURI(Uri.parse(strImgUrl));
-//                    holder2.iv_title_img.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
-//                }
-//                setNewsContentClick(holder2.rl_item_content, feed);
-//            } else {
-
+//            isNeteaseBigPic = true;
             if (isNeteaseBigPic) {
-                ViewHolder4 holder4;
-                if (convertView == null || convertView.getTag().getClass() != ViewHolder4.class) {
-                    holder4 = new ViewHolder4();
+                ViewHolder2 holder;
+                if (convertView == null || convertView.getTag().getClass() != ViewHolder2.class) {
+                    holder = new ViewHolder2();
                     convertView = View.inflate(mContext, R.layout.ll_news_big_pic2, null);
-                    holder4.mBigPicTitle = (TextViewExtend) convertView.findViewById(R.id.mBigPicTitle);
-                    holder4.mBigPicImg = (SimpleDraweeView) convertView.findViewById(R.id.mBigPicImg);
-                    holder4.mBigPicSource = (TextViewExtend) convertView.findViewById(R.id.mBigPicSource);
-                    holder4.mBigPicTime = (TextViewExtend) convertView.findViewById(R.id.mBigPicTime);
-                    holder4.mBigPicWrapper = (RelativeLayout) convertView.findViewById(R.id.mBigPicWrapper);
-                    convertView.setTag(holder4);
+                    holder.ivTitleImg = (SimpleDraweeView) convertView.findViewById(R.id.title_img_View);
+                    holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
+                    holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
+                    holder.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
+                    holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
+                    holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                    convertView.setTag(holder);
                 } else {
-                    holder4 = (ViewHolder4) convertView.getTag();
+                    holder = (ViewHolder2) convertView.getTag();
                 }
-                holder4.mBigPicTitle.setText(feed.getTitle());
+                String strTitle = feed.getTitle();
+                setTitleTextBySpannable(holder.tvTitle, strTitle, feed.isRead());
                 ArrayList<String> strArrImgUrl = feed.getImgList();
                 String strImgUrl = strArrImgUrl.get(0);
                 if (strImgUrl != null && !"".equals(strImgUrl)) {
-                    holder4.mBigPicImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
+                    holder.ivTitleImg.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.4f));
                     int width = DeviceInfoUtil.getScreenWidth(mContext), height = (int) (DeviceInfoUtil.getScreenWidth(mContext) * 9.0f / 16.0f);
                     ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(strImgUrl))
                             .setResizeOptions(new ResizeOptions(width, height))
                             .build();
                     PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
-                            .setOldController(holder4.mBigPicImg.getController())
+                            .setOldController(holder.ivTitleImg.getController())
                             .setImageRequest(request)
                             .build();
-                    holder4.mBigPicImg.setController(controller);
-
+                    holder.ivTitleImg.setController(controller);
                 }
-                setViewText(holder4.mBigPicSource, feed.getPubName());
-                if (feed.getPubTime() != null) {
-                    setNewsTime(holder4.mBigPicTime, feed.getPubTime());
-                }
-                setNewsContentClick(holder4.mBigPicWrapper, feed);
-
+                setViewText(holder.tvSource, feed.getPubName());
+                if (feed.getPubTime() != null)
+                    setNewsTime(holder.tvComment, feed.getPubTime());
+                setNewsContentClick(holder.rlNewsContent, feed);
+                setDeleteClick(holder.ivDelete, feed);
             }
-//            }
         }
         //多图
         else if ("3".equals(strType)) {
@@ -257,9 +225,10 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder3.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
                 holder3.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
                 holder3.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
-                setCardMargin(holder3.ivCard1, 12, 6, 3);
-                setCardMargin(holder3.ivCard2, 6, 6, 3);
-                setCardMargin(holder3.ivCard3, 6, 12, 3);
+                holder3.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                setCardMargin(holder3.ivCard1, 15, 1, 3);
+                setCardMargin(holder3.ivCard2, 1, 1, 3);
+                setCardMargin(holder3.ivCard3, 1, 15, 3);
                 convertView.setTag(holder3);
             } else {
                 holder3 = (ViewHolder3) convertView.getTag();
@@ -267,22 +236,14 @@ public class NewsFeedAdapter extends BaseAdapter {
             ArrayList<String> strArrImgUrl = feed.getImgList();
             setLoadImage(holder3.ivCard1, strArrImgUrl.get(0));
             setLoadImage(holder3.ivCard2, strArrImgUrl.get(1));
-
-//            if (strArrImgUrl.size() == 2) {
-//                holder3.ivCard3.setVisibility(View.GONE);
-//                setCardMargin(holder3.ivCard1, 8, 4, 2);
-//                setCardMargin(holder3.ivCard2, 4, 8, 2);
-//            } else {
-            holder3.ivCard3.setVisibility(View.VISIBLE);
             setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
-
-//            }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle, feed.isRead());
             setViewText(holder3.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
+            setDeleteClick(holder3.ivDelete, feed);
         }
         return convertView;
     }
@@ -291,20 +252,19 @@ public class NewsFeedAdapter extends BaseAdapter {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();
         localLayoutParams.leftMargin = DensityUtil.dip2px(mContext, leftMargin);
         localLayoutParams.rightMargin = DensityUtil.dip2px(mContext, rightMargin);
-        int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 12));
+        int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 15));
         if (pageNum == 2) {
             localLayoutParams.width = width;
-            localLayoutParams.height = (int) (width * 74 / 102.0f);
+            localLayoutParams.height = (int) (width * 71 / 108.5f);
         } else if (pageNum == 3) {
-            width = (int) (mScreenWidth / 3.0f - DensityUtil.dip2px(mContext, 12));
+            width = (int) (mScreenWidth / 3.0f - DensityUtil.dip2px(mContext, 15));
             localLayoutParams.width = width;
-            localLayoutParams.height = (int) (width * 74 / 102.0f);
+            localLayoutParams.height = (int) (width * 71 / 108.5f);
         }
         ivCard.setLayoutParams(localLayoutParams);
     }
 
     private void setLoadImage(SimpleDraweeView imageView, String imageUrl) {
-        imageView.setVisibility(View.VISIBLE);
         if (imageUrl != null && !"".equals(imageUrl)) {
             imageView.setImageURI(Uri.parse(imageUrl));
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
@@ -344,9 +304,9 @@ public class NewsFeedAdapter extends BaseAdapter {
                 tvTitle.setText(strTitle);
             }
             if (isRead) {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.title_user_had_read));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color3));
             } else {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color2));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color1));
             }
         }
     }
@@ -434,10 +394,8 @@ public class NewsFeedAdapter extends BaseAdapter {
         ImageView ivBottomLine;
     }
 
-    class ViewHolder2 {
-        SimpleDraweeView iv_title_img;
-        RelativeLayout rl_item_content;
-        TextViewExtend tv_title;
+    class ViewHolder2 extends BaseHolder {
+        SimpleDraweeView ivTitleImg;
     }
 
     class ViewHolder3 extends BaseHolder {
@@ -447,11 +405,4 @@ public class NewsFeedAdapter extends BaseAdapter {
         LinearLayout llImageList;
     }
 
-    class ViewHolder4 extends BaseHolder {
-        TextViewExtend mBigPicTitle;
-        SimpleDraweeView mBigPicImg;
-        TextViewExtend mBigPicSource;
-        TextViewExtend mBigPicTime;
-        RelativeLayout mBigPicWrapper;
-    }
 }
