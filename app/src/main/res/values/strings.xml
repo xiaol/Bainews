@@ -101,6 +101,9 @@
     <string name="subscribe_more_category_info">单击添加频道</string>
     <string name="subscribe_manager_category_info">单击增删频道</string>
     <string name="subscribe_manager_category_info_2">单击增删频道，长按拖拽排序</string>
+    <string name="aty_guide_login_txt1">智能推荐您喜欢的文章</string>
+    <string name="aty_guide_login_txt2">只需一键登录</string>
+    <string name="aty_guide_login_txt3">先随便看看</string>
 
 
 </resources>

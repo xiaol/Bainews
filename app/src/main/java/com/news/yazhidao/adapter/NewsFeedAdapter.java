@@ -107,7 +107,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             setDeleteClick(holder.ivDelete, feed);
         }
         //普通卡片
-        if ("10".equals(strType) || "2".equals(strType)) {
+        if ("1".equals(strType) || "2".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -226,6 +226,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder3.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
                 holder3.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
                 holder3.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder3.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
                 setCardMargin(holder3.ivCard1, 15, 1, 3);
                 setCardMargin(holder3.ivCard2, 1, 1, 3);
                 setCardMargin(holder3.ivCard3, 1, 15, 3);

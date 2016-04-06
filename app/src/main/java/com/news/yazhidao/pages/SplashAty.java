@@ -91,7 +91,7 @@ public class SplashAty extends BaseActivity {
             @Override
             public void run() {
 //                if (flag) {
-                    Intent intent = new Intent(SplashAty.this, MainAty.class);
+                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
                     startActivity(intent);
                     SplashAty.this.finish();
 //                } else {
