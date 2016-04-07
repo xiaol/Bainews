@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -54,6 +55,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
     public static int REQUEST_CODE = 10002;
+    private  int Color1 =10;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
@@ -111,11 +113,11 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
-            setNewsContentClick(holder.rlNewsContent, feed);
+//            setNewsContentClick(holder.rlNewsContent, feed);
             setDeleteClick(holder.ivDelete, feed);
         }
         //普通卡片
-        if ("10".equals(strType) || "2".equals(strType)) {
+        if ("1".equals(strType) || "2".equals(strType)) {
             String platform = AnalyticsConfig.getChannel(mContext);
             if ("adcoco".equals(platform)) {
                 AdcocoUtil.update();
@@ -171,8 +173,9 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
-            setNewsContentClick(holder.rlNewsContent, feed);
+//            setNewsContentClick(holder.rlNewsContent, feed);
             setDeleteClick(holder.ivDelete, feed);
+            set(holder.tvTitle);
         }
         //大图
         else if ("big_pic".equals(strType)) {
@@ -217,6 +220,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                     setNewsTime(holder.tvComment, feed.getPubTime());
                 setNewsContentClick(holder.rlNewsContent, feed);
                 setDeleteClick(holder.ivDelete, feed);
+                set(holder.tvTitle);
             }
         }
         //多图
@@ -234,6 +238,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder3.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
                 holder3.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
                 holder3.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder3.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
                 setCardMargin(holder3.ivCard1, 15, 1, 3);
                 setCardMargin(holder3.ivCard2, 1, 1, 3);
                 setCardMargin(holder3.ivCard3, 1, 15, 3);
@@ -250,8 +255,9 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder3.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
-            setNewsContentClick(holder3.rlNewsContent, feed);
+//            setNewsContentClick(holder3.rlNewsContent, feed);
             setDeleteClick(holder3.ivDelete, feed);
+            set(holder3.tvTitle);
         }
         return convertView;
     }
@@ -314,8 +320,9 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (isRead) {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.color3));
             } else {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color1));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
             }
+            tvTitle.setTextSize(Color1);
         }
     }
 
@@ -378,7 +385,23 @@ public class NewsFeedAdapter extends BaseAdapter {
     private void setDeleteClick(ImageView imageView, NewsFeed feed) {
 
     }
+    void set(final TextView textView){
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Color1==10){
+                    Color1 = 20;
+                    Log.i("tag","11");
+                }else {
+                    Color1 =10;
+                    Log.i("tag","22");
+                }
+//                textView.setTextSize(30);
+                notifyDataSetChanged();
+            }
+        });
 
+    }
 
     class BaseHolder {
         TextViewExtend tvSource;

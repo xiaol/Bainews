@@ -34,7 +34,7 @@
         android:layout_toLeftOf="@+id/title_img_View"
         android:ellipsize="end"
         android:maxLines="3"
-        android:textColor="@color/color1"
+        android:textColor="@color/new_color1"
         android:textSize="@dimen/font2" />
 
     <LinearLayout

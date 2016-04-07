@@ -15,7 +15,7 @@
         android:layout_marginTop="10dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/color1"
+        android:textColor="@color/new_color1"
         android:textSize="@dimen/font2" />
 
     <LinearLayout

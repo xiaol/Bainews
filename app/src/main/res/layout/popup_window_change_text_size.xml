@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/new_color9">
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="字体大小"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2" />
+
+        <ImageView
+            android:id="@+id/close_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_close_text_size_setting" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="44dp"
+            android:background="@color/color5" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="58dp"
+            android:text="标准"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="58dp"
+            android:text="大"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="58dp"
+            android:text="超大"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3" />
+
+        <SeekBar
+            android:id="@+id/change_text_size_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginTop="7dp"
+            android:focusable="true"
+            android:max="100"
+            android:maxHeight="1dp"
+            android:minHeight="1dp"
+            android:paddingLeft="16.0dip"
+            android:paddingRight="16.0dip"
+            android:progressDrawable="@drawable/bg_change_text_size_bar"
+            android:thumb="@drawable/bg_btn_seekbar_change_text_size" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/content_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_change_text_stze" />
+
+</RelativeLayout>
