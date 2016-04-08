@@ -1,7 +1,10 @@
 package com.news.yazhidao.pages;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,6 +27,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
@@ -41,7 +45,7 @@ import com.umeng.analytics.AnalyticsConfig;
 
 import java.util.ArrayList;
 
-public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTextSizePopupWindow.IUpdateUI {
+public class NewsFeedFgt extends Fragment implements Handler.Callback{
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -70,6 +74,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
     private NewsFeedDao mNewsFeedDao;
     private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
+    private boolean mFlag;
+    private SharedPreferences mSharedPreferences;
+    private RefreshReceiver mRefreshReciver;
     /**
      * 热词页面加载更多
      */
@@ -86,11 +93,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
     private View mHomeRetry;
     private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
-
-    @Override
-    public void refreshUI(String date, String type) {
-        mAdapter.notifyDataSetChanged();
-    }
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -153,13 +155,17 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
             mstrUserId = user.getUserId();
         else
             mstrUserId = "";
+        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
+        mFlag = mSharedPreferences.getBoolean("isshow", false);
 //        mRunnable = new Runnable() {
 //            @Override
 //            public void run() {
 //                mlvNewsFeed.setRefreshing();
 //            }
 //        };
-
+        mRefreshReciver = new RefreshReceiver();
+        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
+        mContext.registerReceiver(mRefreshReciver, intentFilter);
     }
 
     @Override
@@ -243,6 +249,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView");
         ((ViewGroup) rootView.getParent()).removeView(rootView);
     }
@@ -350,6 +357,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
+                    showChangeTextSizeView();
                 } else {
                     //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
                     if (TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -426,16 +434,33 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback, ChangeTex
             if (bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
             }
-
-        }
-        if (mChangeTextSizePopWindow == null) {
-            mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity(), this);
-            mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            showChangeTextSizeView();
         }
     }
 
     @Override
     public boolean handleMessage(Message msg) {
         return false;
+    }
+
+    private void showChangeTextSizeView() {
+        if (mstrChannelId.equals("1") && mFlag == false)
+            if (mChangeTextSizePopWindow == null) {
+                mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
+                mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            }
+    }
+
+    private class RefreshReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
+                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+                mSharedPreferences.edit().putInt("textSize", size).commit();
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

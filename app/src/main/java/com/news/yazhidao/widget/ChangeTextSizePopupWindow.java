@@ -2,6 +2,7 @@ package com.news.yazhidao.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.PopupWindow;
 import android.widget.SeekBar;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 
 
 /**
@@ -23,16 +25,14 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
     private ImageView mivClose;
     private View mMenuView;
     private Activity m_pContext;
-    private IUpdateUI mUpdateUI;
     private SeekBar mSeekBar;
 
-    public ChangeTextSizePopupWindow(Activity context, IUpdateUI updateUI) {
+    public ChangeTextSizePopupWindow(Activity context) {
         super(context);
         m_pContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_change_text_size, null);
-        mUpdateUI = updateUI;
         findHeadPortraitImageViews();
         loadData();
     }
@@ -84,14 +84,19 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = mSeekBar.getProgress();
+                Intent intent = new Intent();
                 if (progress < 25) {
                     mSeekBar.setProgress(0);
+                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
                 } else if (progress >= 25 && progress <= 75) {
                     mSeekBar.setProgress(50);
+                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIG);
                 } else {
                     mSeekBar.setProgress(100);
+                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIGGER);
                 }
-                mUpdateUI.refreshUI("", "");
+                intent.setAction(CommonConstant.CHANGE_TEXT_ACTION);
+                m_pContext.sendBroadcast(intent);
             }
         });
     }

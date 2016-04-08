@@ -1,6 +1,7 @@
 package com.news.yazhidao.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
@@ -19,6 +20,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
@@ -46,13 +48,14 @@ public class NewsFeedAdapter extends BaseAdapter {
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
     public static int REQUEST_CODE = 10002;
-    private  int Color1 =10;
+    private SharedPreferences mSharedPreferences;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
     }
 
     public NewsFeedAdapter(Context context) {
@@ -310,7 +313,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             } else {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
             }
-            tvTitle.setTextSize(Color1);
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
 
