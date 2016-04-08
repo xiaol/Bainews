@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -55,15 +54,15 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
-        mMenuView.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    dismiss();
-                }
-                return true;
-            }
-        });
+//        mMenuView.setOnTouchListener(new View.OnTouchListener() {
+//
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    dismiss();
+//                }
+//                return true;
+//            }
+//        });
         mivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

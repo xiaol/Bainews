@@ -4,7 +4,7 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f6f6f6">
+    android:background="@color/new_color9">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/title_img_View"
@@ -35,7 +35,7 @@
         android:ellipsize="end"
         android:maxLines="3"
         android:textColor="@color/new_color1"
-        android:textSize="@dimen/font2" />
+        android:textSize="@dimen/new_font2" />
 
     <LinearLayout
         android:id="@+id/source_content_linearLayout"
@@ -59,8 +59,8 @@
             android:ellipsize="end"
             android:maxEms="8"
             android:singleLine="true"
-            android:textColor="@color/color3"
-            android:textSize="@dimen/font6" />
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font6" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/comment_textView"
@@ -68,8 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_weight="1"
-            android:textColor="@color/color3"
-            android:textSize="@dimen/font6" />
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font6" />
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/comment_num_textView"
@@ -78,9 +78,8 @@
             android:layout_alignTop="@+id/source_content_linearLayout"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/delete_imageView"
-            android:text="111评"
-            android:textColor="@color/color3"
-            android:textSize="@dimen/font6" />
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/new_font6" />
 
         <ImageView
             android:id="@+id/delete_imageView"
@@ -98,5 +97,5 @@
         android:layout_marginTop="12dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@color/color5" />
+        android:background="@color/new_color5" />
 </RelativeLayout>

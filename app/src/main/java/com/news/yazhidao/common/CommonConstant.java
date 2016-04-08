@@ -44,7 +44,7 @@ public final class CommonConstant {
     public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
     public static final String KEY_UUID = "key_uuid";//确保用户唯一的uuid
     public static final int TEXT_SIZE_NORMAL = 17;
-    public static final int TEXT_SIZE_BIG = 30;
-    public static final int TEXT_SIZE_BIGGER = 40;
+    public static final int TEXT_SIZE_BIG = 19;
+    public static final int TEXT_SIZE_BIGGER = 21;
     public static final String CHANGE_TEXT_ACTION = "change_text";
 }

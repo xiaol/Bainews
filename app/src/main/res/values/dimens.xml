@@ -78,6 +78,13 @@
     <dimen name="font4">14sp</dimen>
     <dimen name="font5">12sp</dimen>
     <dimen name="font6">10sp</dimen>
+    <dimen name="new_font1">18sp</dimen>
+    <dimen name="new_font2">17sp</dimen>
+    <dimen name="new_font3">14sp</dimen>
+    <dimen name="new_font4">13sp</dimen>
+    <dimen name="new_font5">11sp</dimen>
+    <dimen name="new_font6">10sp</dimen>
+    <dimen name="new_font7">8sp</dimen>
 
     <!--新闻详情页字体大小-->
     <dimen name="detail_title">23sp</dimen>
