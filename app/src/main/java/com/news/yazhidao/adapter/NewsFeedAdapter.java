@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -113,7 +112,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
-//            setNewsContentClick(holder.rlNewsContent, feed);
+            setNewsContentClick(holder.rlNewsContent, feed);
             setDeleteClick(holder.ivDelete, feed);
         }
         //普通卡片
@@ -173,9 +172,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
-//            setNewsContentClick(holder.rlNewsContent, feed);
+            setNewsContentClick(holder.rlNewsContent, feed);
             setDeleteClick(holder.ivDelete, feed);
-            set(holder.tvTitle);
         }
         //大图
         else if ("big_pic".equals(strType)) {
@@ -220,7 +218,6 @@ public class NewsFeedAdapter extends BaseAdapter {
                     setNewsTime(holder.tvComment, feed.getPubTime());
                 setNewsContentClick(holder.rlNewsContent, feed);
                 setDeleteClick(holder.ivDelete, feed);
-                set(holder.tvTitle);
             }
         }
         //多图
@@ -255,9 +252,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             setViewText(holder3.tvSource, feed.getPubName());
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
-//            setNewsContentClick(holder3.rlNewsContent, feed);
+            setNewsContentClick(holder3.rlNewsContent, feed);
             setDeleteClick(holder3.ivDelete, feed);
-            set(holder3.tvTitle);
         }
         return convertView;
     }
@@ -383,23 +379,6 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setDeleteClick(ImageView imageView, NewsFeed feed) {
-
-    }
-    void set(final TextView textView){
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(Color1==10){
-                    Color1 = 20;
-                    Log.i("tag","11");
-                }else {
-                    Color1 =10;
-                    Log.i("tag","22");
-                }
-//                textView.setTextSize(30);
-                notifyDataSetChanged();
-            }
-        });
 
     }
 
