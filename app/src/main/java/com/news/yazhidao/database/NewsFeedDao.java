@@ -128,4 +128,18 @@ public class NewsFeedDao {
         }
         return -1;
     }
+
+    /**
+     * 删除整个表的数据
+     */
+    public int deleteAllData() {
+        try {
+            int delete = mNewsFeedDao.delete(mNewsFeedDao.queryForAll());
+            Logger.e(TAG, "delete size =" + delete);
+            return delete;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -12,6 +12,7 @@ import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
 import com.news.yazhidao.listener.UserLoginRequestListener;
@@ -58,6 +59,12 @@ import sdk.meizu.auth.callback.CodeCallback;
  * ShareSdk 分享和授权帮助类
  */
 public class ShareSdkHelper {
+
+
+    public static enum AuthorizePlatform {
+        WEIXIN,WEIBO,MEIZU
+    }
+
     private static final String TAG = "ShareSdkHelper";
     private static String CLIENT_ID = "tsGKllOEx2MnUVmBmRey";
     private static String REDIRECT_URI = "http://www.deeporiginalx.com/";
@@ -67,6 +74,7 @@ public class ShareSdkHelper {
     private static Handler mHandler = new Handler();
     private static UserLoginListener mUserLoginListener;
     private static UserLoginPopupStateListener mUserLoginPopupStateListener;
+    private static UserAuthorizeListener mAuthorizeListener;
     private static PlatformActionListener mActionListener = new PlatformActionListener() {
         @Override
         public void onComplete(final Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
@@ -80,21 +88,15 @@ public class ShareSdkHelper {
                 String token = platformDb.getToken();
                 //关注官方微博
                 if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
-                    platform.followFriend("头条百家");
+                    platform.followFriend(mContext.getResources().getString(R.string.app_name));
                 }
                 Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token);
-                Log.i("jigang", "share complete uuid=" + DeviceInfoUtil.getUUID());
-                Log.i("jigang", "share complete userId=" + platformDb.getUserId());
-                Log.i("jigang", "share complete expiresIn=" + platformDb.getExpiresIn());
-                Log.i("jigang", "share complete expiresTime=" + platformDb.getExpiresTime());
-                Log.i("jigang", "share complete token=" + platformDb.getToken());
-                Log.i("jigang", "share complete userGender=" + platformDb.getUserGender());
-                Log.i("jigang", "share complete userIcon=" + platformDb.getUserIcon());
-                Log.i("jigang", "share complete userName=" + platformDb.getUserName());
-                Log.i("jigang", "share complete platformType=" + platformDb.getPlatformNname());
                 UserLoginRequest.userLogin(platformDb, new UserLoginRequestListener() {
                     @Override
                     public void success(User user) {
+                        if (mAuthorizeListener != null){
+                            mAuthorizeListener.success(user);
+                        }
                         //保存user json串到sp 中
                         SharedPreManager.saveUser(user);
                         String jPushId = SharedPreManager.getJPushId();
@@ -107,20 +109,14 @@ public class ShareSdkHelper {
                         intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
                         mContext.sendBroadcast(intent);
 
-                        if (mUserLoginListener != null) {
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mUserLoginPopupStateListener.close();
-                                    mUserLoginListener.userLogin(platform.getName(), platform.getDb());
-                                }
-                            });
-                        }
                     }
 
                     @Override
                     public void failed(MyAppException exception) {
                         Logger.e(TAG, "UserLoginRequest exception");
+                        if (mAuthorizeListener != null){
+                            mAuthorizeListener.failure(exception.getMessage());
+                        }
                     }
                 });
 
@@ -128,7 +124,7 @@ public class ShareSdkHelper {
         }
 
         @Override
-        public void onError(Platform platform, int i, final Throwable throwable) {
+        public void onError(final Platform platform, int i, final Throwable throwable) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -137,25 +133,58 @@ public class ShareSdkHelper {
                         ToastUtil.toastShort("您手机还未安装微信客户端");
                     }
 
-                    mUserLoginPopupStateListener.close();
+//                    mUserLoginPopupStateListener.close();
                 }
             });
             throwable.printStackTrace();
+            if (mAuthorizeListener != null){
+                mAuthorizeListener.failure(throwable.getMessage());
+            }
             Logger.e(TAG, "authorize error-----" + i + ",,," + throwable.toString());
         }
 
         @Override
         public void onCancel(Platform platform, int i) {
             Logger.e(TAG, "authorize cancel-----");
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mUserLoginPopupStateListener.close();
-
-                }
-            });
+            if (mAuthorizeListener != null){
+                mAuthorizeListener.cancel();
+            }
+//            mHandler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mUserLoginPopupStateListener.close();
+//
+//                }
+//            });
         }
     };
+
+
+    public static void authorize(Context pContext, AuthorizePlatform pPlatform, UserAuthorizeListener pAuthorizeListener){
+        mContext = pContext;
+        mAuthorizeListener = pAuthorizeListener;
+        String shareSdkPlatform = null;
+        if (pPlatform == AuthorizePlatform.WEIBO){
+            shareSdkPlatform = SinaWeibo.NAME;
+        }else if (pPlatform == AuthorizePlatform.WEIXIN){
+            shareSdkPlatform = Wechat.NAME;
+        }
+        Platform _Plateform = ShareSDK.getPlatform(mContext, shareSdkPlatform);
+        //判断指定平台是否已经完成授权
+        User user = SharedPreManager.getUser(mContext);
+        if (_Plateform.isAuthValid() && user != null) {
+            String userId = _Plateform.getDb().getUserId();
+            if (userId != null) {
+                if (pAuthorizeListener != null){
+                    pAuthorizeListener.success(user);
+                }
+                return;
+            }
+        }
+        _Plateform.SSOSetting(false);
+        _Plateform.setPlatformActionListener(mActionListener);
+        _Plateform.authorize();
+    }
 
     /**
      * sharesdk 授权认证

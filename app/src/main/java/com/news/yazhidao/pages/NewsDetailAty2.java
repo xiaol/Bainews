@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.DateUtil;
@@ -65,8 +65,6 @@ import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import cn.sharesdk.framework.PlatformDb;
 
 /**
  * Created by fengjigang on 15/9/6.
@@ -128,6 +126,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private ViewPager mNewsDetailViewPager;
     private String mNewsDocId;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private UserCommentDialog mCommentDialog;
+
     /**通知新闻详情页和评论fragment刷新评论*/
     public  class RefreshPageBroReceiber extends BroadcastReceiver {
 
@@ -368,6 +368,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+                Logger.e("jigang","back aty ------");
+            if (mCommentDialog != null){
+                mCommentDialog.dismiss();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
     public void finish() {
         Intent intent = new Intent();
         intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID,newsId);
@@ -387,27 +398,29 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.mDetailAddComment:
-                User user = SharedPreManager.getUser(this);
-                if (user == null) {
-                    LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
-                        @Override
-                        public void userLogin(String platform, PlatformDb platformDb) {
-                            UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
-                            commentDialog.setDocid(mNewsDocId);
-                            commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
-                        }
-
-                        @Override
-                        public void userLogout() {
-
-                        }
-                    }, null);
-                    loginModeFgt.show((NewsDetailAty2.this).getSupportFragmentManager(), "loginModeFgt");
-                } else {
-                    UserCommentDialog commentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
-                    commentDialog.setDocid(mNewsDocId);
-                    commentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
-                }
+//                if (user == null) {
+//                    LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
+//                        @Override
+//                        public void userLogin(String platform, PlatformDb platformDb) {
+//                            UserCommentDialog mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+//                            mCommentDialog.setDocid(mNewsDocId);
+//                            mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+//                        }
+//
+//                        @Override
+//                        public void userLogout() {
+//
+//                        }
+//                    }, null);
+//                    loginModeFgt.show((NewsDetailAty2.this).getSupportFragmentManager(), "loginModeFgt");
+//                } else {
+//                    UserCommentDialog mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+//                    mCommentDialog.setDocid(mNewsDocId);
+//                    mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+//                }
+                mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
+                mCommentDialog.setDocid(mNewsDocId);
+                mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 break;
             case R.id.mDetailComment:
 //                openCommentPage();

@@ -13,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
@@ -53,6 +55,7 @@ import java.util.UUID;
 @SuppressLint("ValidFragment")
 public class UserCommentDialog extends DialogFragment implements View.OnClickListener {
 
+    public static final int REQUEST_CODE = 1005;
     public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
 
@@ -108,6 +111,16 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 inManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }, 50);
+        getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK){
+                    Logger.e("jigang","dialog  back");
+                    UserCommentDialog.this.dismiss();
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -123,14 +136,34 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     public void setDocid(String docid){
         this.mDocid = docid;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == LoginAty.REQUEST_CODE && data != null){
+            User user = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+            submitComment(user);
+        }
+    }
+
     @Override
     public void onClick(View v) {
-            submitComment();
+        switch (v.getId()){
+            case R.id.mCommentCommit:
+                User user = SharedPreManager.getUser(getActivity());
+                if (user == null){
+                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+                    startActivityForResult(loginAty,REQUEST_CODE);
+                }else {
+                    submitComment(user);
+                }
+                break;
+        }
     }
-    private void submitComment(){
+
+    private void submitComment(User user){
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JSONObject json = null;
-        User user = SharedPreManager.getUser(getActivity());
         final String nickeName = user.getUserName();
         String uuid = SharedPreManager.getUUID();
         final String createTime = DateUtil.getDate();
@@ -138,7 +171,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         final String docid = mDocid;
         final String comment_id = UUID.randomUUID().toString();
         try {
-            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ uuid +"\",\"love\":1,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
+            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ uuid +"\",\"love\":0,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
         } catch (JSONException e) {
             e.printStackTrace();
         }

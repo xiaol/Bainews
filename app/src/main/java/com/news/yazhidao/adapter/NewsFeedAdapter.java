@@ -1,6 +1,8 @@
 package com.news.yazhidao.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
@@ -20,15 +22,23 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -319,53 +329,53 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
-//        rlNewsContent.setOnClickListener(new View.OnClickListener() {
-//            long firstClick = 0;
-//
-//            public void onClick(View paramAnonymousView) {
-//                if (System.currentTimeMillis() - firstClick <= 1500L) {
-//                    firstClick = System.currentTimeMillis();
-//                    return;
-//                }
-//                firstClick = System.currentTimeMillis();
-//                Intent intent = new Intent(mContext, NewsDetailAty2.class);
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
-//                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
-//                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
-//                if (mNewsFeedFgt != null) {
-//                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-//                } else {
-//                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-//                }
-//                //推送人员使用
-//                if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
-//                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
-//                    BufferedWriter bis = null;
-//                    try {
-//                        bis = new BufferedWriter(new FileWriter(file));
-//                        bis.write(feed.getTitle() + ",newsid=" + feed.getUrl());
-//                        bis.newLine();
-//                        bis.flush();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    } finally {
-//                        if (bis != null) {
-//                            try {
-//                                bis.close();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                }
-//                MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-//                MobclickAgent.onEvent(mContext, "user_read_detail");
-//            }
-//        });
+        rlNewsContent.setOnClickListener(new View.OnClickListener() {
+            long firstClick = 0;
+
+            public void onClick(View paramAnonymousView) {
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return;
+                }
+                firstClick = System.currentTimeMillis();
+                Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
+                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
+                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
+                if (mNewsFeedFgt != null) {
+                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                }
+                //推送人员使用
+                if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
+                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
+                    BufferedWriter bis = null;
+                    try {
+                        bis = new BufferedWriter(new FileWriter(file));
+                        bis.write(feed.getTitle() + ",newsid=" + feed.getUrl());
+                        bis.newLine();
+                        bis.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (bis != null) {
+                            try {
+                                bis.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+                MobclickAgent.onEvent(mContext, "bainews_view_head_news");
+                MobclickAgent.onEvent(mContext, "user_read_detail");
+            }
+        });
     }
 
     private void setDeleteClick(final ImageView imageView, final NewsFeed feed) {

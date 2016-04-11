@@ -10,25 +10,26 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
-import static  com.news.yazhidao.utils.helper.ShareSdkHelper.*;
+
+import static com.news.yazhidao.utils.helper.ShareSdkHelper.AuthorizePlatform;
 
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class GuideLoginAty extends BaseActivity implements View.OnClickListener {
-    private View mGuideWeiboLogin;
-    private View mGuideWinxinLogin;
-    private View mGuideSkip;
+public class LoginAty extends BaseActivity implements View.OnClickListener {
+
+    public static final String KEY_USER_LOGIN = "key_user_login";
+    public static final int REQUEST_CODE = 1006;
+    private View mLoginWeibo,mLoginWeixin,mLoginCancel,mLoginSetting;
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
-            Intent mainAty = new Intent(GuideLoginAty.this,MainAty.class);
-            startActivity(mainAty);
-            Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
-            intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
-            sendBroadcast(intent);
+            Intent intent = new Intent();
+            intent.putExtra(KEY_USER_LOGIN,user);
+            setResult(REQUEST_CODE,intent);
+            LoginAty.this.finish();
         }
 
         @Override
@@ -44,22 +45,24 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.aty_guide_login);
+        setContentView(R.layout.aty_login);
     }
 
     @Override
     protected void initializeViews() {
-        mGuideWeiboLogin = findViewById(R.id.mGuideWeiboLogin);
-        mGuideWeiboLogin.setOnClickListener(this);
-        mGuideWinxinLogin = findViewById(R.id.mGuideWinxinLogin);
-        mGuideWinxinLogin.setOnClickListener(this);
-        mGuideSkip = findViewById(R.id.mGuideSkip);
-        mGuideSkip.setOnClickListener(this);
+        mLoginWeibo = findViewById(R.id.mLoginWeibo);
+        mLoginWeibo.setOnClickListener(this);
+        mLoginWeixin = findViewById(R.id.mLoginWeixin);
+        mLoginWeixin.setOnClickListener(this);
+        mLoginCancel = findViewById(R.id.mLoginCancel);
+        mLoginCancel.setOnClickListener(this);
+        mLoginSetting = findViewById(R.id.mLoginSetting);
+        mLoginSetting.setOnClickListener(this);
     }
 
     @Override
-    protected boolean isNeedAnimation() {
-        return true;
+    protected boolean translucentStatus() {
+        return false;
     }
 
     @Override
@@ -68,9 +71,19 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (getIntent().getBooleanExtra(SettingAty.KEY_NEED_NOT_SETTING,false)){
+            mLoginSetting.setVisibility(View.GONE);
+        }else {
+            mLoginSetting.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.mGuideWeiboLogin:
+            case R.id.mLoginWeibo:
                 showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
                     return;
@@ -79,7 +92,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIBO, mAuthorizeListener);
                 break;
-            case R.id.mGuideWinxinLogin:
+            case R.id.mLoginWeixin:
                 showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
                     return;
@@ -88,10 +101,13 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIXIN, mAuthorizeListener);
                 break;
-            case R.id.mGuideSkip:
+            case R.id.mLoginCancel:
                 this.finish();
-                Intent mainAty = new Intent(this,MainAty.class);
-                startActivity(mainAty);
+                break;
+            case R.id.mLoginSetting:
+                Intent settingAty = new Intent(this,SettingAty.class);
+                startActivity(settingAty);
+                this.finish();
                 break;
         }
     }

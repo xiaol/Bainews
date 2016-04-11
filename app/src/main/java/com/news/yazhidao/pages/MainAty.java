@@ -4,19 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -37,7 +36,6 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -54,6 +52,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
+    public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
     private  ArrayList<ChannelItem> mUnSelChannelItems;
 
@@ -173,8 +172,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (ACTION_USER_LOGIN.equals(intent.getAction())) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
                 if (!TextUtil.isEmptyString(url)) {
-//                    mMainUserLogin.setImageURI(Uri.parse(url));
+                    mUserCenter.setImageURI(Uri.parse(url));
                 }
+            }else if (ACTION_USER_LOGOUT.equals(intent.getAction())){
+                mUserCenter.setImageURI(null);
             }
         }
     }
@@ -210,16 +211,19 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
 
+//                mUserCenter.setImageURI(Uri.parse("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0"));
+
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null) {
             if (!TextUtil.isEmptyString(user.getUserIcon())) {
-//                mMainUserLogin.setImageURI(Uri.parse(user.getUserIcon()));
+                mUserCenter.setImageURI(Uri.parse(user.getUserIcon()));
             }
         }
         /**注册用户登录广播*/
         mReceiver = new UserLoginReceiver();
         IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
+        filter.addAction(ACTION_USER_LOGOUT);
         registerReceiver(mReceiver, filter);
         //baidu Map
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
@@ -254,6 +258,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                UmengUpdateAgent.setUpdateAutoPopup(true);
                 UmengUpdateAgent.update(MainAty.this);
             }
         }, 2000);
@@ -271,19 +276,21 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 MobclickAgent.onEvent(this,"user_open_channel_edit_page");
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
-            case R.id.mMainUserLogin:
-                LoginPopupWindow window1 = new LoginPopupWindow(this, new PopupWindow.OnDismissListener() {
-
-                    @Override
-                    public void onDismiss() {
-//                        mMainUserLogin.setImageURI(null);
-                    }
-                });
-                window1.showAtLocation(getWindow().getDecorView(), Gravity.CENTER
-                        | Gravity.CENTER, 0, 0);
-                break;
             case R.id.mUserCenter:
-                ToastUtil.toastShort("user center");
+                User user = SharedPreManager.getUser(this);
+//                //FIXME debug
+//                if (user == null){
+//                    user = new User();
+//                    user.setUserName("forward_one");
+//                    user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
+//                }
+                if (user == null){
+                    Intent loginAty = new Intent(this,LoginAty.class);
+                    startActivity(loginAty);
+                }else {
+                    Intent userCenterAty = new Intent(this,UserCenterAty.class);
+                    startActivity(userCenterAty);
+                }
                 break;
         }
     }
