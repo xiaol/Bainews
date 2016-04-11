@@ -1026,6 +1026,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		// direction
 		final LinearLayout.LayoutParams lp = getLoadingLayoutLayoutParams();
 
+
 		// Remove Header, and then add Header Loading View again if needed
 		if (this == mHeaderLayout.getParent()) {
 			removeView(mHeaderLayout);

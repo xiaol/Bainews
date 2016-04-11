@@ -35,6 +35,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
@@ -93,6 +94,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
     private View mHomeRetry;
     private RelativeLayout bgLayout;
     private boolean isListRefresh = false;
+
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -200,6 +202,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
+
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,9 +229,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
 
             }
         });
-        mAdapter = new NewsFeedAdapter(getActivity(), this);
+
+
+        mAdapter = new NewsFeedAdapter(getActivity(),this);
+        mAdapter.setClickShowPopWindow(mClickShowPopWindow);
+
         mlvNewsFeed.setAdapter(mAdapter);
+
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
+
         setUserVisibleHint(getUserVisibleHint());
         String platform = AnalyticsConfig.getChannel(getActivity());
         //load news data
@@ -245,6 +254,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
         return rootView;
     }
 
+    NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
+        @Override
+        public void showPopWindow(int x, int y) {
+            mNewsFeedFgtPopWindow.showPopWindow(x, y);
+        }
+    } ;
 
     @Override
     public void onDestroyView() {
@@ -443,6 +458,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
         return false;
     }
 
+
+    NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
+    public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow){
+        this.mNewsFeedFgtPopWindow = mNewsFeedFgtPopWindow;
+    }
+
+    public interface NewsFeedFgtPopWindow {
+        public void showPopWindow(int x, int y);
+    }
+
     private void showChangeTextSizeView() {
         if (mstrChannelId.equals("1") && mFlag == false)
             if (mChangeTextSizePopWindow == null) {
@@ -462,5 +487,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
                 mAdapter.notifyDataSetChanged();
             }
         }
+
     }
 }

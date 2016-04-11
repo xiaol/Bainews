@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -395,13 +396,24 @@ public class NewsFeedAdapter extends BaseAdapter {
         });
     }
 
+    clickShowPopWindow mClickShowPopWindow;
+    public void setClickShowPopWindow(clickShowPopWindow mClickShowPopWindow){
+        this.mClickShowPopWindow = mClickShowPopWindow;
+    }
+
     private void setDeleteClick(final ImageView imageView, final NewsFeed feed) {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToastUtil.toastShort(feed.getPubName());
-                FeedDislikePopupWindow dislikePopupWindow = new FeedDislikePopupWindow(mContext);
-                dislikePopupWindow.showAsDropDown(imageView);
+
+//
+                int[] LocationInWindow = new int[2];
+                int[] LocationOnScreen = new int[2];
+                imageView.getLocationInWindow(LocationInWindow);
+
+                mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth()/2, LocationInWindow[1] + imageView.getHeight()/2);
+
             }
         });
     }
@@ -431,6 +443,9 @@ public class NewsFeedAdapter extends BaseAdapter {
         SimpleDraweeView ivCard2;
         SimpleDraweeView ivCard3;
         LinearLayout llImageList;
+    }
+    public interface clickShowPopWindow{
+        public void showPopWindow(int x,int y);
     }
 
 }
