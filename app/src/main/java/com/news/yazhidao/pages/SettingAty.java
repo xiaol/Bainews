@@ -12,6 +12,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.DataCleanManager;
@@ -63,13 +64,13 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.mRadioNormal:
-                        ToastUtil.toastShort("标准");
+                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_NORMAL);
                         break;
                     case R.id.mRadioBig:
-                        ToastUtil.toastShort("大");
+                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_BIG);
                         break;
                     case R.id.mRadioHuge:
-                        ToastUtil.toastShort("超大");
+                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_BIGGER);
                         break;
                 }
             }

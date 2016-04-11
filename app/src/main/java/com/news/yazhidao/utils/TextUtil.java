@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.gson.internal.LinkedTreeMap;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
@@ -45,17 +46,17 @@ public class TextUtil {
         return "";
     }
 
-    public static String trimBlankSpace(String data){
-        if(data.contains("  ")){
-        int index=data.indexOf("  ");
-        StringBuilder before=new StringBuilder(data.replace("  ","").substring(0,index));
-        StringBuilder after=new StringBuilder(data.replace("  ","").substring(index));
-        return before+"  "+after;
+    public static String trimBlankSpace(String data) {
+        if (data.contains("  ")) {
+            int index = data.indexOf("  ");
+            StringBuilder before = new StringBuilder(data.replace("  ", "").substring(0, index));
+            StringBuilder after = new StringBuilder(data.replace("  ", "").substring(index));
+            return before + "  " + after;
         }
         return data;
     }
 
-    public static void setTopLineBackground(String category,LinearLayout ll_top_line) {
+    public static void setTopLineBackground(String category, LinearLayout ll_top_line) {
 
         if ("焦点".equals(category)) {
             ll_top_line.setBackgroundColor(new Color().parseColor("#ff4341"));
@@ -81,7 +82,7 @@ public class TextUtil {
 
     }
 
-    public static void setViewCompatBackground(String category,LoadingLayout loadingLayout) {
+    public static void setViewCompatBackground(String category, LoadingLayout loadingLayout) {
 
 //        if ("焦点".equals(category)) {
 //            loadingLayout.setHeaderBackground("#ff4341");
@@ -156,7 +157,7 @@ public class TextUtil {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_right_guonei);
         } else if ("娱乐".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_right_yule);
-        } else{
+        } else {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_right_keji);
         }
     }
@@ -181,24 +182,25 @@ public class TextUtil {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_shehui);
         } else if ("国内".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_guonei);
-        }else if ("娱乐".equals(category)) {
+        } else if ("娱乐".equals(category)) {
             tv_news_category.setBackgroundResource(R.drawable.bg_category_yule);
         }
 
     }
+
     public static void setResourceSiteIcon(ImageView iv_source, String source_name) {
 
-        if(TextUtils.isEmpty(source_name)){
+        if (TextUtils.isEmpty(source_name)) {
             return;
         }
     }
 
     public static String trimEnterInContent(String[] split) {
-        StringBuilder _StringB=new StringBuilder();
-        for(int i=0;i<split.length;i++){
-            if(i!=split.length-1){
-                _StringB.append(split[i]+"\n");
-            }else{
+        StringBuilder _StringB = new StringBuilder();
+        for (int i = 0; i < split.length; i++) {
+            if (i != split.length - 1) {
+                _StringB.append(split[i] + "\n");
+            } else {
                 _StringB.append(split[i]);
             }
         }
@@ -207,6 +209,7 @@ public class TextUtil {
 
     /**
      * 获取inputStream中的数据
+     *
      * @param in
      * @return
      */
@@ -215,13 +218,13 @@ public class TextUtil {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         try {
             String line = null;
-            while((line=br.readLine())!=null){
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
         } catch (IOException e) {
             e.printStackTrace();
-        }finally{
+        } finally {
             try {
                 br.close();
             } catch (IOException e) {
@@ -229,7 +232,7 @@ public class TextUtil {
             }
         }
         try {
-            Logger.i("jigang","gzip json="+new String(sb.toString().getBytes(),"utf-8"));
+            Logger.i("jigang", "gzip json=" + new String(sb.toString().getBytes(), "utf-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -238,6 +241,7 @@ public class TextUtil {
 
     /**
      * InputStream 转换成byte[]
+     *
      * @param input
      * @return
      * @throws IOException
@@ -255,19 +259,21 @@ public class TextUtil {
     //把 所有的半角符号转化为全角符号
     public static String ToDBC(String input) {
         char[] c = input.toCharArray();
-        for (int i = 0; i< c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             if (c[i] == 12288) {
                 c[i] = (char) 32;
                 continue;
-            }if (c[i]> 65280&& c[i]< 65375)
+            }
+            if (c[i] > 65280 && c[i] < 65375)
                 c[i] = (char) (c[i] - 65248);
         }
         return new String(c);
     }
+
     /**
      * 随机产生一个颜色值给热词搜索做背景色
      */
-    public static int getRandomColor4Hotlabel(Context mContext){
+    public static int getRandomColor4Hotlabel(Context mContext) {
         String[] colorArr = mContext.getResources().getStringArray(R.array.bg_special_colors);
         Random random = new Random();
         int index = random.nextInt(colorArr.length);
@@ -276,40 +282,43 @@ public class TextUtil {
 
     /**
      * 专辑列表获取对应的背景
+     *
      * @return
      */
-    public static int getSpecialBgPic(int positon){
+    public static int getSpecialBgPic(int positon) {
         return 0;
     }
 
 
     /**
      * 获取别的app分享进来的新闻链接中的url
+     *
      * @param data
      */
-    public static String  getNewsTitle(String data) {
+    public static String getNewsTitle(String data) {
         String regEx4Title = "[\\((][\\s\\S]*[\\))]";
         String regEx4Url = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?";
         //去除多余文字
         Pattern patternTitle = Pattern.compile(regEx4Title);
         Matcher matcherTitle = patternTitle.matcher(data);
         while (matcherTitle.find()) {
-            data = data.replace(matcherTitle.group(),"");
+            data = data.replace(matcherTitle.group(), "");
         }
-        data = data.replace("【","").replace("】", "");
+        data = data.replace("【", "").replace("】", "");
 
         //去除多余的url
 
         Pattern patternUrl = Pattern.compile(regEx4Url);
         Matcher matcherUrl = patternUrl.matcher(data);
-        while (matcherUrl.find()){
-            data = data.replace(matcherUrl.group(),"");
+        while (matcherUrl.find()) {
+            data = data.replace(matcherUrl.group(), "");
         }
         return data.replace("\n", "");
     }
 
     /**
      * 获取别的app分享进来的新闻链接中的标题
+     *
      * @param data
      * @return
      */
@@ -317,7 +326,7 @@ public class TextUtil {
         String regEx4Url = "(https://|http://)?([\\w-]+\\.)+[\\w-]+(/[\\w-./?%&=]*)?";
         Pattern pattern = Pattern.compile(regEx4Url);
         Matcher matcher = pattern.matcher(data);
-        if (matcher.find()){
+        if (matcher.find()) {
             data = matcher.group();
         }
         return "";
@@ -325,14 +334,15 @@ public class TextUtil {
 
     /**
      * 判断一个List 是否为null 或者是否长度为0
+     *
      * @param list
      * @return
      */
-    public static boolean isListEmpty(List list){
-        if (list == null){
+    public static boolean isListEmpty(List list) {
+        if (list == null) {
             return true;
         }
-        if (list.size() == 0){
+        if (list.size() == 0) {
             return true;
         }
         return false;
@@ -340,38 +350,41 @@ public class TextUtil {
 
     /**
      * 获取数据库表id
+     *
      * @return 24位十六进制字符串
      */
-    public static String getDatabaseId(){
+    public static String getDatabaseId() {
         return new ObjectId().toString();
     }
 
     /**
      * 判断字符串是否为null 或者 长度为0 或者 只包含空字符
+     *
      * @param pString
      * @return
      */
-    public static boolean isEmptyString(String pString){
-        if (pString == null){
+    public static boolean isEmptyString(String pString) {
+        if (pString == null) {
             return true;
         }
-        if (pString.length() == 0 || pString.trim().length() == 0){
+        if (pString.length() == 0 || pString.trim().length() == 0) {
             return true;
         }
         return false;
     }
 
-    public static String List2String (ArrayList<ChannelItem> list){
-        if (isListEmpty(list)){
+    public static String List2String(ArrayList<ChannelItem> list) {
+        if (isListEmpty(list)) {
             return "";
         }
         StringBuilder sb = new StringBuilder("");
-        for (ChannelItem item: list){
+        for (ChannelItem item : list) {
             sb.append(item.getName()).append(",");
         }
         return sb.deleteCharAt(sb.length() - 1).toString();
     }
-    public static boolean isChannelChanged(ArrayList<ChannelItem> oldList,ArrayList<ChannelItem> newList){
+
+    public static boolean isChannelChanged(ArrayList<ChannelItem> oldList, ArrayList<ChannelItem> newList) {
         if (isListEmpty(oldList) || isListEmpty(newList)) {
             return false;
         }
@@ -395,7 +408,7 @@ public class TextUtil {
      * @param pNewsDetail
      * @return
      */
-    public static ArrayList<ArrayList> parseNewsDetail(ArrayList<ArrayList> mNewsContentDataList ,NewsDetailAdd pNewsDetail,String mImgUrl) {
+    public static ArrayList<ArrayList> parseNewsDetail(ArrayList<ArrayList> mNewsContentDataList, NewsDetailAdd pNewsDetail, String mImgUrl) {
         mNewsContentDataList.clear();
         /**计算展示内容需要多少个组,其中包括 新闻内容,多图集合,差异化观点,精选评论,新闻词条(百度百科,豆瓣),相关观点,微博热点,知乎推荐*/
         if (pNewsDetail != null) {
@@ -408,18 +421,18 @@ public class TextUtil {
                     LinkedTreeMap<String, HashMap<String, String>> treeMap = pNewsDetail.content.get(i);
                     HashMap<String, String> hashMap = treeMap.get(i + "");
                     if (hashMap != null) {
-                        if (!TextUtil.isEmptyString(hashMap.get("txt"))){
+                        if (!TextUtil.isEmptyString(hashMap.get("txt"))) {
                             NewsDetailContent content = new NewsDetailContent();
                             content.setContent(hashMap.get("txt"));//img img_info txt
                             content.setComments(new ArrayList<NewsDetailAdd.Point>());
                             list.add(content);
                         }
-                        if (!TextUtil.isEmptyString(hashMap.get("img"))){
+                        if (!TextUtil.isEmptyString(hashMap.get("img"))) {
                             NewsDetailContent content = new NewsDetailContent();
                             content.setContent(hashMap.get("img"));//img img_info txt
-                            String imgWidth = (hashMap.get("width") == null)?"0":hashMap.get("width");
-                            String imgHeight = (hashMap.get("height") == null)?"0":hashMap.get("height");
-                            String imgSize = (hashMap.get("size") == null)?"0":hashMap.get("size");
+                            String imgWidth = (hashMap.get("width") == null) ? "0" : hashMap.get("width");
+                            String imgHeight = (hashMap.get("height") == null) ? "0" : hashMap.get("height");
+                            String imgSize = (hashMap.get("size") == null) ? "0" : hashMap.get("size");
                             content.setImgWidth(Integer.parseInt(imgWidth));
                             content.setImgHeight(Integer.parseInt(imgHeight));
                             content.setImgSize(Integer.parseInt(imgSize));
@@ -430,11 +443,11 @@ public class TextUtil {
                     }
                 }
                 //如果feed流中有图片,而详情页中没有的话,此处要确保详情页中有一张图
-                if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)){
+                if (!isHaveImgs && !TextUtil.isEmptyString(mImgUrl)) {
                     NewsDetailContent content = new NewsDetailContent();
                     content.setContent(mImgUrl);
                     content.setComments(new ArrayList<NewsDetailAdd.Point>());
-                    list.add(0,content);
+                    list.add(0, content);
                 }
                 if (!TextUtil.isListEmpty(points)) {
                     for (int j = 0; j < points.size(); j++) {
@@ -508,17 +521,17 @@ public class TextUtil {
                 }
             }
             if (entryList.size() != 0) {
-                if (entryList.size() > 3){
-                    entryList = new ArrayList<>(entryList.subList(0,3));
+                if (entryList.size() > 3) {
+                    entryList = new ArrayList<>(entryList.subList(0, 3));
                 }
                 mNewsContentDataList.add(entryList);
             }
 
             /**相关观点组数据*/
             if (!TextUtil.isListEmpty(pNewsDetail.relate)) {
-                if(pNewsDetail.relate.size() > 3){
-                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0,3)));
-                }else {
+                if (pNewsDetail.relate.size() > 3) {
+                    mNewsContentDataList.add(new ArrayList(pNewsDetail.relate.subList(0, 3)));
+                } else {
                     mNewsContentDataList.add(pNewsDetail.relate);
                 }
             }
@@ -545,17 +558,17 @@ public class TextUtil {
     /**
      * 获取字符串的Base64格式
      */
-    public static String getBase64(String target){
+    public static String getBase64(String target) {
         String url = "";
-        if(!TextUtils.isEmpty(target)){
+        if (!TextUtils.isEmpty(target)) {
             byte[] bytes = Base64.encode(target.getBytes(), Base64.DEFAULT);
             try {
-                url = new String(bytes,"utf-8");
-                Logger.e("jigang","base 64= "+ url);
+                url = new String(bytes, "utf-8");
+                Logger.e("jigang", "base 64= " + url);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            url = url.replace("=","").replace("\n","").replace("\r","");
+            url = url.replace("=", "").replace("\n", "").replace("\r", "");
         }
         return url;
     }
@@ -563,7 +576,7 @@ public class TextUtil {
     /**
      * 生成新闻详情中的css样式
      */
-    public static String generateCSS(){
+    public static String generateCSS() {
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
                 "body { margin: 16px 22px 16px 22px; } " +
@@ -579,32 +592,46 @@ public class TextUtil {
     /**
      * 生成新闻详情的html
      */
-    public static String genarateHTML(NewsDetail detail){
-        if (detail == null){
+    public static String genarateHTML(NewsDetail detail, int textSize) {
+        if (detail == null) {
             return "";
+        }
+        int titleTextSize, commentTextSize, contentTextSize;
+        if (textSize == CommonConstant.TEXT_SIZE_NORMAL) {
+            titleTextSize = 40;
+            commentTextSize = 26;
+            contentTextSize = 32;
+        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
+            titleTextSize = 46;
+            commentTextSize = 30;
+            contentTextSize = 34;
+        } else {
+            titleTextSize = 48;
+            commentTextSize = 32;
+            contentTextSize = 38;
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() +
                 "</head>" +
-                "<body><h3>" +
+                "<body><div style=\"font-size:" + titleTextSize / 2 + "px\">" +
                 detail.getTitle() +
-                "</h3><br><div class=\"top\"><span>" +
+                "</div><br><div style=\"font-size:" + commentTextSize / 2 + "px\" class=\"top\"><span>" +
                 detail.getPubName() +
                 "</span>&nbsp; <span>" +
                 detail.getPubTime() +
                 "</span>&nbsp; <span>" +
-                detail.getCommentSize()+"评论" +
+                detail.getCommentSize() + "评论" +
                 "</span></div><div class=\"content\">");
         ArrayList<HashMap<String, String>> content = detail.getContent();
-        if (!TextUtil.isListEmpty(content)){
-            for (HashMap<String,String> map: content){
+        if (!TextUtil.isListEmpty(content)) {
+            for (HashMap<String, String> map : content) {
                 String txt = map.get("txt");
                 String img = map.get("img");
-                if (!TextUtil.isEmptyString(txt)){
-                    contentBuilder.append("<p>" + txt +"</p>");
+                if (!TextUtil.isEmptyString(txt)) {
+                    contentBuilder.append("<p style=\"font-size:" + contentTextSize / 2 + "px\">" + txt + "</p>");
                 }
-                if (!TextUtil.isEmptyString(img)){
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + img +"\"></p>");
+                if (!TextUtil.isEmptyString(img)) {
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + img + "\"></p>");
                 }
             }
         }

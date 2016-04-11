@@ -51,7 +51,7 @@
         <attr name="drawSelectorOnTop" format="boolean" />
         <attr name="numColumns" format="integer" />
     </declare-styleable>
-<!--the styleable for ProgressWheel-->
+    <!--the styleable for ProgressWheel-->
     <declare-styleable name="ProgressWheel">
         <attr name="text" format="string" />
         <attr name="textColor" format="color" />
@@ -120,5 +120,13 @@
         <attr name="only_animate_fling" format="boolean" />
         <attr name="simulate_grid_with_list" format="boolean" />
         <attr name="max_velocity" format="integer" />
+    </declare-styleable>
+    <!--Poowindow-->
+    <declare-styleable name="TagCloudLayout">
+        <attr name="lineSpacing" format="dimension" />
+        <attr name="tagSpacing" format="dimension" />
+        <!-- 是否是固定布局 -->
+        <attr name="isFixed" format="boolean" />
+        <attr name="columnSize" format="integer" />
     </declare-styleable>
 </resources>

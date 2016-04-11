@@ -17,6 +17,7 @@
         android:overScrollMode="never"
         android:scrollbars="none"/>
 
+
     <RelativeLayout
         android:id="@+id/mHomeRetry"
         android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.webkit.WebView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseFragment;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -21,11 +23,13 @@ public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private WebView mDetailWebView;
     private NewsDetail result;
+    private SharedPreferences mSharedPreferences;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         result = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
+        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
     }
 
     @Nullable
@@ -37,7 +41,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        mDetailWebView.loadData(TextUtil.genarateHTML(result),"text/html;charset=UTF-8",null);
+        mDetailWebView.loadData(TextUtil.genarateHTML(result, (int) mSharedPreferences.getLong("textSize", CommonConstant.TEXT_SIZE_NORMAL)),"text/html;charset=UTF-8",null);
         return rootView;
     }
 }

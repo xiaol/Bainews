@@ -13,8 +13,11 @@
     <color name="new_color2">#009afa</color>
     <color name="new_color2_15a">#15009afa</color>
     <color name="new_color3">#9a9a9a</color>
+    <color name="new_color4">#e6e6e6</color>
     <color name="new_color5">#d3d3d3</color>
+    <color name="new_color6">#bb1c1c</color>
     <color name="new_color7">#666666</color>
+    <color name="new_color8">#d9effe</color>
     <color name="new_color9">#f6f6f6</color>
     <color name="new_color10">#efefef</color>
     <color name="news_list_table_channelname">#ff7f66</color>

@@ -3,9 +3,11 @@ package com.news.yazhidao.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,6 +23,7 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
@@ -56,12 +59,14 @@ public class NewsFeedAdapter extends BaseAdapter {
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
     public static int REQUEST_CODE = 10002;
+    private SharedPreferences mSharedPreferences;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
     }
 
     public NewsFeedAdapter(Context context) {
@@ -110,7 +115,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle, feed.isRead());
-            setViewText(holder.tvSource, feed.getPubName());
+            setSourceViewText(holder.tvSource, feed.getPubName());
+            setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
@@ -170,7 +176,8 @@ public class NewsFeedAdapter extends BaseAdapter {
                 }
             });
 
-            setViewText(holder.tvSource, feed.getPubName());
+            setSourceViewText(holder.tvSource, feed.getPubName());
+            setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
@@ -214,7 +221,8 @@ public class NewsFeedAdapter extends BaseAdapter {
                             .build();
                     holder.ivTitleImg.setController(controller);
                 }
-                setViewText(holder.tvSource, feed.getPubName());
+                setSourceViewText(holder.tvSource, feed.getPubName());
+                setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
                 if (feed.getPubTime() != null)
                     setNewsTime(holder.tvComment, feed.getPubTime());
                 setNewsContentClick(holder.rlNewsContent, feed);
@@ -250,7 +258,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle, feed.isRead());
-            setViewText(holder3.tvSource, feed.getPubName());
+            setSourceViewText(holder3.tvSource, feed.getPubName());
+            setCommentViewText(holder3.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
@@ -315,16 +324,25 @@ public class NewsFeedAdapter extends BaseAdapter {
                 tvTitle.setText(strTitle);
             }
             if (isRead) {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color3));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
             } else {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color1));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
             }
+            tvTitle.setTextSize(mSharedPreferences.getLong("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
 
-    private void setViewText(TextViewExtend textView, String strText) {
+    private void setSourceViewText(TextViewExtend textView, String strText) {
         if (strText != null && !"".equals(strText)) {
             textView.setText(strText);
+        }
+    }
+
+    private void setCommentViewText(TextViewExtend textView, String strText) {
+        if (strText != null && !"".equals(strText)) {
+            textView.setText(strText + "评");
+        } else {
+            textView.setText("0评");
         }
     }
 
@@ -378,13 +396,22 @@ public class NewsFeedAdapter extends BaseAdapter {
         });
     }
 
+    clickShowPopWindow mClickShowPopWindow;
+    public void setClickShowPopWindow(clickShowPopWindow mClickShowPopWindow){
+        this.mClickShowPopWindow = mClickShowPopWindow;
+    }
+
     private void setDeleteClick(final ImageView imageView, final NewsFeed feed) {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.toastShort(feed.getPubName());
-                FeedDislikePopupWindow dislikePopupWindow = new FeedDislikePopupWindow(mContext);
-                dislikePopupWindow.showAsDropDown(imageView);
+//                ToastUtil.toastShort(feed.getPubName());
+                int[] LocationInWindow = new int[2];
+                int[] LocationOnScreen = new int[2];
+                imageView.getLocationInWindow(LocationInWindow);
+
+                mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth()/2, LocationInWindow[1] + imageView.getHeight()/2);
+
             }
         });
     }
@@ -414,6 +441,9 @@ public class NewsFeedAdapter extends BaseAdapter {
         SimpleDraweeView ivCard2;
         SimpleDraweeView ivCard3;
         LinearLayout llImageList;
+    }
+    public interface clickShowPopWindow{
+        public void showPopWindow(int x,int y);
     }
 
 }
