@@ -1,6 +1,9 @@
 package com.news.yazhidao.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
@@ -20,16 +23,25 @@ import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,12 +59,14 @@ public class NewsFeedAdapter extends BaseAdapter {
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
     public static int REQUEST_CODE = 10002;
+    private SharedPreferences mSharedPreferences;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
     }
 
     public NewsFeedAdapter(Context context) {
@@ -101,7 +115,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder.tvTitle, strTitle, feed.isRead());
-            setViewText(holder.tvSource, feed.getPubName());
+            setSourceViewText(holder.tvSource, feed.getPubName());
+            setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
@@ -161,7 +176,8 @@ public class NewsFeedAdapter extends BaseAdapter {
                 }
             });
 
-            setViewText(holder.tvSource, feed.getPubName());
+            setSourceViewText(holder.tvSource, feed.getPubName());
+            setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
@@ -205,7 +221,8 @@ public class NewsFeedAdapter extends BaseAdapter {
                             .build();
                     holder.ivTitleImg.setController(controller);
                 }
-                setViewText(holder.tvSource, feed.getPubName());
+                setSourceViewText(holder.tvSource, feed.getPubName());
+                setCommentViewText(holder.tvCommentNum, feed.getCommentsCount());
                 if (feed.getPubTime() != null)
                     setNewsTime(holder.tvComment, feed.getPubTime());
                 setNewsContentClick(holder.rlNewsContent, feed);
@@ -241,7 +258,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             setLoadImage(holder3.ivCard3, strArrImgUrl.get(2));
             String strTitle = feed.getTitle();
             setTitleTextBySpannable(holder3.tvTitle, strTitle, feed.isRead());
-            setViewText(holder3.tvSource, feed.getPubName());
+            setSourceViewText(holder3.tvSource, feed.getPubName());
+            setCommentViewText(holder3.tvCommentNum, feed.getCommentsCount());
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
@@ -306,67 +324,76 @@ public class NewsFeedAdapter extends BaseAdapter {
                 tvTitle.setText(strTitle);
             }
             if (isRead) {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color3));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
             } else {
-                tvTitle.setTextColor(mContext.getResources().getColor(R.color.color1));
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
             }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
 
-    private void setViewText(TextViewExtend textView, String strText) {
+    private void setSourceViewText(TextViewExtend textView, String strText) {
         if (strText != null && !"".equals(strText)) {
             textView.setText(strText);
         }
     }
 
+    private void setCommentViewText(TextViewExtend textView, String strText) {
+        if (strText != null && !"".equals(strText)) {
+            textView.setText(strText + "评");
+        } else {
+            textView.setText("0评");
+        }
+    }
+
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
-//        rlNewsContent.setOnClickListener(new View.OnClickListener() {
-//            long firstClick = 0;
-//
-//            public void onClick(View paramAnonymousView) {
-//                if (System.currentTimeMillis() - firstClick <= 1500L) {
-//                    firstClick = System.currentTimeMillis();
-//                    return;
-//                }
-//                firstClick = System.currentTimeMillis();
-//                Intent intent = new Intent(mContext, NewsDetailAty2.class);
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
-//                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
-//                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
-//                if (mNewsFeedFgt != null) {
-//                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-//                } else {
-//                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-//                }
-//                //推送人员使用
-//                if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
-//                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
-//                    BufferedWriter bis = null;
-//                    try {
-//                        bis = new BufferedWriter(new FileWriter(file));
-//                        bis.write(feed.getTitle() + ",newsid=" + feed.getUrl());
-//                        bis.newLine();
-//                        bis.flush();
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    } finally {
-//                        if (bis != null) {
-//                            try {
-//                                bis.close();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//
-//                }
-//                MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-//                MobclickAgent.onEvent(mContext, "user_read_detail");
-//            }
-//        });
+        rlNewsContent.setOnClickListener(new View.OnClickListener() {
+            long firstClick = 0;
+
+            public void onClick(View paramAnonymousView) {
+                if (System.currentTimeMillis() - firstClick <= 1500L) {
+                    firstClick = System.currentTimeMillis();
+                    return;
+                }
+                firstClick = System.currentTimeMillis();
+                Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
+                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
+                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
+                if (mNewsFeedFgt != null) {
+                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                } else {
+                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                }
+                //推送人员使用
+                if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {
+                    File file = FileUtils.getSavePushInfoPath(mContext, "push.txt");
+                    BufferedWriter bis = null;
+                    try {
+                        bis = new BufferedWriter(new FileWriter(file));
+                        bis.write(feed.getTitle() + ",newsid=" + feed.getUrl());
+                        bis.newLine();
+                        bis.flush();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (bis != null) {
+                            try {
+                                bis.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+                MobclickAgent.onEvent(mContext, "bainews_view_head_news");
+                MobclickAgent.onEvent(mContext, "user_read_detail");
+            }
+        });
     }
 
     clickShowPopWindow mClickShowPopWindow;
