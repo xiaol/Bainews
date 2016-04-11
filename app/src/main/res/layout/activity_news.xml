@@ -13,11 +13,10 @@
         android:background="@color/color7"
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:clipToPadding="false"
-        android:divider="@color/white"
-        android:dividerHeight="1dp"
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never"
         android:scrollbars="none"/>
+
 
     <RelativeLayout
         android:id="@+id/mHomeRetry"

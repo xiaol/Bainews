@@ -2,6 +2,10 @@ package com.news.yazhidao.net.volley;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
+import com.news.yazhidao.utils.Logger;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -22,6 +26,23 @@ public class FeedRequest<T> extends GsonRequest<T> {
     }
     public void setRequestParams(HashMap params){
         this.mParams = params;
+    }
+    @Override
+    protected String checkJsonData(String data) {
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            String code = jsonObject.optString("code", "");
+            String message = jsonObject.optString("message", "");
+            Logger.e("jigang","code = "+code + ",message=" + message);
+            if ("0".equals(code) && "success".equals(message)){
+                return jsonObject.optString("data","");
+            }else {
+                return "";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {

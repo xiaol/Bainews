@@ -91,7 +91,7 @@ public class SplashAty extends BaseActivity {
             @Override
             public void run() {
 //                if (flag) {
-                    Intent intent = new Intent(SplashAty.this, MainAty.class);
+                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
                     startActivity(intent);
                     SplashAty.this.finish();
 //                } else {
@@ -113,6 +113,8 @@ public class SplashAty extends BaseActivity {
         }else {
             SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,openTimes + 1);
         }
+        //产生用户UUID
+        SharedPreManager.saveUUID();
     }
 
     @Override

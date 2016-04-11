@@ -31,12 +31,14 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.umeng.analytics.MobclickAgent;
@@ -62,8 +64,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private MyViewPagerAdapter mViewPagerAdapter;
     private ImageView mChannelExpand;
     private ChannelItemDao mChannelItemDao;
-    private ImageView mTopSearch;
-    private SimpleDraweeView mMainUserLogin;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
     private long mLastPressedBackKeyTime;
@@ -72,6 +72,14 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    private SimpleDraweeView mUserCenter;
+
+    /**
+     * 自定义的PopWindow
+     */
+    FeedDislikePopupWindow dislikePopupWindow;
+
+
 
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
@@ -201,17 +209,18 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
-        mTopSearch = (ImageView) findViewById(R.id.mTopSearch);
-        mTopSearch.setOnClickListener(this);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        mUserCenter = (SimpleDraweeView) findViewById(R.id.mUserCenter);
+        mUserCenter.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
-        mMainUserLogin = (SimpleDraweeView) findViewById(R.id.mMainUserLogin);
-        mMainUserLogin.setOnClickListener(this);
+
+        dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
+        dislikePopupWindow.setVisibility(View.GONE);
 
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -284,6 +293,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 });
                 window1.showAtLocation(getWindow().getDecorView(), Gravity.CENTER
                         | Gravity.CENTER, 0, 0);
+                break;
+            case R.id.mUserCenter:
+                ToastUtil.toastShort("user center");
                 break;
         }
     }
@@ -378,6 +390,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         public Fragment getItem(int position) {
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
+            feedFgt.setNewsFeedFgtPopWindow(mNewsFeedFgtPopWindow);
             feedFgt.setNewsSaveDataCallBack(MainAty.this);
             return feedFgt;
         }
@@ -402,4 +415,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //        }
 
     }
+    NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
+        @Override
+        public void showPopWindow(int x, int y) {
+            dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
+
+        }
+    };
 }

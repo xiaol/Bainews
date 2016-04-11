@@ -2,6 +2,7 @@ package com.news.yazhidao.utils;
 
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -301,9 +302,17 @@ public class DateUtil {
         return format.format(date);
     }
 
-    public static String getFormatDate(String pDate){
-        Date date = new Date(pDate);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:MM:ss");
-        return format.format(date);
+    /**
+     * 把字符串转换成毫秒值
+     */
+    public static long dateStr2Long(String dateStr) {
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr));
+            return c.getTimeInMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }
