@@ -35,7 +35,6 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DateUtil;
-import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
