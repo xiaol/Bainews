@@ -45,7 +45,7 @@ import com.umeng.analytics.AnalyticsConfig;
 
 import java.util.ArrayList;
 
-public class NewsFeedFgt extends Fragment implements Handler.Callback{
+public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -230,7 +230,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
         });
 
 
-        mAdapter = new NewsFeedAdapter(getActivity(),this);
+        mAdapter = new NewsFeedAdapter(getActivity(), this);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
 
         mlvNewsFeed.setAdapter(mAdapter);
@@ -258,7 +258,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
         public void showPopWindow(int x, int y) {
             mNewsFeedFgtPopWindow.showPopWindow(x, y);
         }
-    } ;
+    };
 
     @Override
     public void onDestroyView() {
@@ -459,7 +459,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback{
 
 
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
-    public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow){
+
+    public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
         this.mNewsFeedFgtPopWindow = mNewsFeedFgtPopWindow;
     }
 
