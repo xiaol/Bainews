@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,9 +30,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
-import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -328,7 +325,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             } else {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
             }
-            tvTitle.setTextSize(mSharedPreferences.getLong("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
 
@@ -339,10 +336,10 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
-        if (strText != null && !"".equals(strText)) {
+        if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
             textView.setText(strText + "评");
         } else {
-            textView.setText("0评");
+            textView.setText("");
         }
     }
 

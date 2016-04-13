@@ -17,7 +17,10 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="16dp"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/btn_left_back"
+            android:clickable="true"
+            android:background="@drawable/bg_left_back_selector"
             />
 
         <TextView
@@ -52,7 +55,7 @@
         <RelativeLayout
             android:id="@+id/mSettingPushSwitch"
             android:layout_width="match_parent"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_top_selector"
             android:clickable="true"
             android:layout_height="48dp"
             >
@@ -84,7 +87,7 @@
             android:id="@+id/mSettingFont"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_top_selector"
             >
 
             <ImageView
@@ -173,7 +176,7 @@
 
         <TextView
             android:id="@+id/mSettingClearCache"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_all_selector"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -205,7 +208,7 @@
             android:id="@+id/mSettingAbout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_top_selector"
             android:clickable="true"
             >
 
@@ -235,7 +238,7 @@
             android:id="@+id/mSettingPrivacyPolicy"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_middle_selector"
             android:clickable="true"
             >
 
@@ -273,7 +276,7 @@
             android:id="@+id/mSettingUpdate"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/bg_setting_item_selector"
+            android:background="@drawable/bg_setting_item_bottom_selector"
             android:clickable="true"
             >
 

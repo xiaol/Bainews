@@ -471,10 +471,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private void showChangeTextSizeView() {
         if (mstrChannelId.equals("1") && mFlag == false)
             if (mChangeTextSizePopWindow == null) {
-//                mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class RefreshReceiver extends BroadcastReceiver {

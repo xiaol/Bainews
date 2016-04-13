@@ -18,6 +18,8 @@
             android:layout_height="48dp"
             android:padding="16dp"
             android:src="@drawable/btn_left_back"
+            android:clickable="true"
+            android:background="@drawable/bg_left_back_selector"
             />
 
         <TextView
