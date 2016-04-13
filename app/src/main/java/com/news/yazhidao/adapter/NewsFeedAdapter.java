@@ -201,11 +201,19 @@ public class NewsFeedAdapter extends BaseAdapter {
                 @Override
                 public void run() {
                     RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) holder.llSourceContent.getLayoutParams();
+                    RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) holder.tvTitle.getLayoutParams();
                     RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) holder.ivBottomLine.getLayoutParams();
-                    if (holder.tvTitle.getLineCount() >= 3) {
+                    int lineCount = holder.tvTitle.getLineCount();
+                    if (lineCount >= 3) {
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,10),DensityUtil.dip2px(mContext,15),0);
                         lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
                         lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                    } else {
+                    } else if (lineCount == 1){
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,21),DensityUtil.dip2px(mContext,15),0);
+                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                    }else {
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,10),DensityUtil.dip2px(mContext,15),0);
                         lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
                         lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
                     }
