@@ -142,4 +142,15 @@ public class NewsFeedDao {
         }
         return 0;
     }
+    /**
+     * 删除某一条数据
+     */
+    public void deleteOnceDate(NewsFeed feed) {
+        try {
+            int delete = mNewsFeedDao.delete(feed);
+            Logger.e(TAG, "deleteOnceDate =" + delete);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

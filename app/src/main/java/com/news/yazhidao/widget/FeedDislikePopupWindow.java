@@ -123,7 +123,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mList.add("不喜欢");
         mList.add("重复、旧闻");
         mList.add("内容质量差");
-        mList.add("来源：地球在线");
+        mList.add("");
         mAdapter = new TagBaseAdapter(context, mList);
         mContainer.setAdapter(mAdapter);
 
@@ -197,7 +197,13 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mClickX = clickX;
         mClickY = clickY;
         invalidate();
-
+    }
+    public void setSourceList(String tagName){
+        mList.set(3, tagName);
+        mAdapter.notifyDataSetChanged();
+    }
+    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer){
+        mContainer.setItemClickListener(listerer);
     }
 
 }

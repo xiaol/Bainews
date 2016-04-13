@@ -24,6 +24,7 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
@@ -40,6 +41,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
+import com.news.yazhidao.widget.tag.TagCloudLayout;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -224,7 +226,29 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //                mUserCenter.setImageURI(Uri.parse("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0"));
         dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
         dislikePopupWindow.setVisibility(View.GONE);
+        dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
+            @Override
+            public void itemClick(int position) {
+                switch (position) {
+                    case 0://不喜欢
+//
+//                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
+//                        newsFeedFgt.disLikeItem();
+                        mNewsFeedAdapter.disLikeDeleteItem();
+                        dislikePopupWindow.setVisibility(View.GONE);
+                        break;
+                    case 1://重复、旧闻
 
+                        break;
+                    case 2://内容质量差
+
+                        break;
+                    case 3://不喜欢
+
+                        break;
+                }
+            }
+        });
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null) {
@@ -422,11 +446,16 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //        }
 
     }
+    NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y) {
+        public void showPopWindow(int x, int y,String PubName, NewsFeedAdapter mAdapter) {
+            mNewsFeedAdapter = mAdapter;
+            dislikePopupWindow.setSourceList("来源："+PubName);
             dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
 
         }
+
     };
+
 }
