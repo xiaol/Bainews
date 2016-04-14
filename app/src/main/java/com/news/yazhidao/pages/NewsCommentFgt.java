@@ -11,9 +11,12 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -51,11 +54,12 @@ public class NewsCommentFgt extends BaseFragment {
 
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     private PullToRefreshListView mNewsCommentList;
-    private String mDocid;
+    private String mDocid , mTitle , mPubName , mPubTime, mCommentCount;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private RelativeLayout bgLayout;
     /**通知新闻详情页和评论fragment刷新评论*/
     public  class RefreshPageBroReceiber extends BroadcastReceiver {
 
@@ -74,6 +78,11 @@ public class NewsCommentFgt extends BaseFragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
+        mTitle = arguments.getString(NewsFeedFgt.KEY_TITLE);
+        mPubName = arguments.getString(NewsFeedFgt.KEY_PUBNAME);
+        mPubTime = arguments.getString(NewsFeedFgt.KEY_PUBTIME);
+        mCommentCount = arguments.getString(NewsFeedFgt.KEY_COMMENTCOUNT);
+
         if(mRefreshReceiber == null){
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
@@ -89,14 +98,28 @@ public class NewsCommentFgt extends BaseFragment {
         }
     }
 
+    private TextView news_comment_Title,news_comment_content;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
+        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
         mNewsCommentList.setAdapter(mCommentsAdapter);
+
+        View mCommentHeaderView = inflater.inflate(R.layout.news_comment_fragment_headerview, null);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        mCommentHeaderView.setLayoutParams(layoutParams);
+        ListView lv = mNewsCommentList.getRefreshableView();
+        lv.addHeaderView(mCommentHeaderView);
+
+        news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
+        news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
+        news_comment_Title.setText(mTitle);
+        news_comment_content.setText(mPubName+"  "+mPubTime+"  "+mCommentCount+"评");
+
         mNewsCommentList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -113,6 +136,9 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void loadData() {
+        if( bgLayout.getVisibility() == View.GONE){
+            bgLayout.setVisibility(View.VISIBLE);
+        }
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
@@ -125,6 +151,9 @@ public class NewsCommentFgt extends BaseFragment {
                 if (!TextUtil.isListEmpty(result)) {
                     mComments.addAll(result);
                     mCommentsAdapter.setData(mComments);
+                    if( bgLayout.getVisibility() == View.VISIBLE){
+                        bgLayout.setVisibility(View.GONE);
+                    }
                 }
             }
         }, new Response.ErrorListener() {

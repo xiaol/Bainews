@@ -44,7 +44,7 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
     /**
      * 返回上一级,全文评论,分享
      */
-    private View mDetailLeftBack, mDetailComment, mDetailShare, mDetailHeader, mNewsDetailLoaddingWrapper;
+    private View mDetailLeftBack, mDetailComment, mDetailShare, mDetailHeader;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     private RelativeLayout mDiggerNewsDetail;
@@ -92,7 +92,6 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
-        mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);

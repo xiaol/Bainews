@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -64,6 +65,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_URL = "key_url";
     public static String KEY_NEWS_ID = "key_news_id";
     public static String KEY_COLLECTION = "key_collection";
+
+    public static String KEY_TITLE = "key_title";
+    public static String KEY_PUBNAME = "key_pubname";
+    public static String KEY_PUBTIME = "key_pubtime";
+    public static String KEY_COMMENTCOUNT = "key_commentcount";
+
+
+
+
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
@@ -93,7 +103,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRelative;
     private View mHomeRetry;
-    private RelativeLayout bgLayout;
+    private RelativeLayout bgLayout,mSearch_layout;
     private boolean isListRefresh = false;
 
 
@@ -214,6 +224,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         });
 
+
+
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -223,12 +235,25 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 loadData(PULL_DOWN_REFRESH);
 
             }
-
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_UP_REFRESH);
 
+            }
+        });
+
+        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        mSearchHeaderView.setLayoutParams(layoutParams);
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        lv.addHeaderView(mSearchHeaderView);
+        mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
+        mSearch_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(getActivity(), TopicSearchAty.class);
+                getActivity().startActivity(in);
             }
         });
 

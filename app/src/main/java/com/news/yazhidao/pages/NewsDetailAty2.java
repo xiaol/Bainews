@@ -66,6 +66,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.news.yazhidao.pages.NewsFeedFgt.*;
+
 /**
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
@@ -95,7 +97,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     /**
      * 返回上一级,全文评论,分享
      */
-    private View mDetailComment,mDetailHeader, mNewsDetailLoaddingWrapper;
+    private View mDetailComment,mDetailHeader,mNewsDetailLoaddingWrapper;
     private ImageView mDetailLeftBack,mDetailShare;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
@@ -164,7 +166,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     protected void initializeViews() {
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
+        mSource = getIntent().getStringExtra(KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -268,6 +270,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     NewsCommentFgt commentFgt = new NewsCommentFgt();
                     Bundle args = new Bundle();
                     args.putString(NewsCommentFgt.KEY_NEWS_DOCID,result.getDocid());
+                    args.putString(KEY_TITLE,getIntent().getStringExtra(KEY_TITLE));
+                    args.putString(KEY_PUBNAME,getIntent().getStringExtra(KEY_PUBNAME));
+                    args.putString(KEY_PUBTIME,getIntent().getStringExtra(KEY_PUBTIME));
+                    args.putString(KEY_COMMENTCOUNT,getIntent().getStringExtra(KEY_COMMENTCOUNT));
+
                     commentFgt.setArguments(args);
                     return commentFgt;
                 }
@@ -297,12 +304,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             newsId = albumSubItem.getInserteId();
 
         }else {
-            newsId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
-            newsType = getIntent().getStringExtra(NewsFeedFgt.KEY_COLLECTION);
-            channelId = getIntent().getStringExtra(NewsFeedFgt.KEY_CHANNEL_ID);
-            mImgUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMG_URL);
-            mNewsType = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_TYPE);
-            mNewsDocId = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_DOCID);
+            newsId = getIntent().getStringExtra(KEY_NEWS_ID);
+            newsType = getIntent().getStringExtra(KEY_COLLECTION);
+            channelId = getIntent().getStringExtra(KEY_CHANNEL_ID);
+            mImgUrl = getIntent().getStringExtra(KEY_NEWS_IMG_URL);
+            mNewsType = getIntent().getStringExtra(KEY_NEWS_TYPE);
+            mNewsDocId = getIntent().getStringExtra(KEY_NEWS_DOCID);
 //            mNewsType = "big_pic";
             mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
 //            newsId = "2ffae38a585d31376be0465de6e591ee";
@@ -316,7 +323,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mUserId = user.getUserId();
             mPlatformType = user.getPlatformType();
         }
-        mNewsDetailUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_URL);
+        mNewsDetailUrl = getIntent().getStringExtra(KEY_URL);
         mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
 
@@ -385,7 +392,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         setResult(NewsFeedAdapter.REQUEST_CODE,intent);
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
-        if (NewsFeedFgt.VALUE_NEWS_NOTIFICATION.equals(mSource)) {
+        if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
             Intent main = new Intent(this, MainAty.class);
             startActivity(main);
         }

@@ -434,6 +434,13 @@ public class NewsFeedAdapter extends BaseAdapter {
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
+                intent.putExtra(NewsFeedFgt.KEY_TITLE, feed.getTitle());
+                intent.putExtra(NewsFeedFgt.KEY_PUBNAME, feed.getPubName());
+                intent.putExtra(NewsFeedFgt.KEY_PUBTIME, feed.getPubTime());
+                intent.putExtra(NewsFeedFgt.KEY_COMMENTCOUNT, feed.getCommentsCount());
+
+
+
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
                 } else {

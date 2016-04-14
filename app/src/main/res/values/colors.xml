@@ -234,4 +234,8 @@
     //feed 流
     <color name="title_user_had_read" >#aaaaaa</color>
     <color name="title_user_not_read" >@color/color2</color>
+
+    <color name="news_comment_line1" >#FE6946</color>
+
+
 </resources>
