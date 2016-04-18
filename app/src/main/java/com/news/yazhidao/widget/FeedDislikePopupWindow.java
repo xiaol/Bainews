@@ -45,16 +45,17 @@ public class FeedDislikePopupWindow extends RelativeLayout {
     LinearLayout mPopWindowLayout;
     LinearLayout mAllLayout;
     ImageView mTriangle;
-    TextView mTitle,mLine;
+    TextView mTitle, mLine;
 
     private TagCloudLayout mContainer;
     private TagBaseAdapter mAdapter;
     private List<String> mList;
 
     private final List<Tag> mTags = new ArrayList<Tag>();
-    private final String[] titles = { "不喜欢", "重复、旧闻", "内容质量差", "来源：地球在线" };
+    private final String[] titles = {"不喜欢", "重复、旧闻", "内容质量差", "来源：地球在线"};
 
     private Context mContext;
+
     public FeedDislikePopupWindow(Context context) {
         super(context);
         initView(context);
@@ -64,6 +65,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         super(context, attrs);
         initView(context);
     }
+
     public FeedDislikePopupWindow(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -76,7 +78,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mPopWindowLayout = new LinearLayout(context);
         mPopWindowLayout.setOrientation(LinearLayout.VERTICAL);
-        mPopWindowLayout.setPadding(mInPopMargin,mInPopMargin,mInPopMargin,mInPopMargin);
+        mPopWindowLayout.setPadding(mInPopMargin, mInPopMargin, mInPopMargin, mInPopMargin);
 
         mPopWindowLayout.setBackgroundResource(R.drawable.popwindow_linear_bg);
         mPopWindowLayout.setOnClickListener(new OnClickListener() {
@@ -102,7 +104,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mTitle = new TextView(context);
         mTitle.setTextSize(16f);
         mTitle.setIncludeFontPadding(false);
-        mTitle.setText("这是标题");
+        mTitle.setText("请选择不感兴趣原因:");
         mTitle.setTextColor(getResources().getColor(R.color.black));
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
@@ -114,14 +116,14 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         LinearLayout.LayoutParams params0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
         params1.setMargins(0, mInPopMargin, 0, 0);
-        mLine.setBackgroundColor(getResources().getColor(R.color.black));
+        mLine.setBackgroundColor(getResources().getColor(R.color.new_color5));
 
         mContainer = new TagCloudLayout(context);
         mList = new ArrayList<>();
         mList.add("不喜欢");
         mList.add("重复、旧闻");
         mList.add("内容质量差");
-        mList.add("来源：地球在线");
+        mList.add("");
         mAdapter = new TagBaseAdapter(context, mList);
         mContainer.setAdapter(mAdapter);
 
@@ -129,19 +131,12 @@ public class FeedDislikePopupWindow extends RelativeLayout {
                 , mLayoutHeight);//这里给他一个固定的大小
         params2.setMargins(0, mInPopMargin, 0, 0);
 
-
-
-
-
-
         mPopWindowLayout.addView(mTitle, params0);
-        mPopWindowLayout.addView(mLine,params1);
-        mPopWindowLayout.addView(mContainer,params2);
+        mPopWindowLayout.addView(mLine, params1);
+        mPopWindowLayout.addView(mContainer, params2);
         addView(mAllLayout);
         addView(mPopWindowLayout);
         addView(mTriangle);
-
-
 
 
     }
@@ -154,44 +149,43 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mLayoutWidth = r - mMarginLorR * 2;
         mScreeHeight = b;
         mScreeWidth = r;
-        mLayoutHeight = mContainer.getLayoutHeight()+mInPopMargin*4+mTitleHeight+1;
-
+        mLayoutHeight = mContainer.getLayoutHeight() + mInPopMargin * 4 + mTitleHeight + 1;
 
 
         mAllLayout.layout(l, t, mScreeWidth, mScreeHeight);
         if (mClickY == -1 && mClickX == -1) {
             mPopWindowLayout.layout(mMarginLorR, mMarginLorR, mScreeWidth - mMarginLorR, mLayoutHeight);
             mTriangle.layout(mMarginLorR, mMarginLorR, mMarginLorR + mTriangleWidth, mMarginLorR + mTriangleHeight);
-        }else{
+        } else {
             if (mScreeHeight - mClickY >= mLayoutHeight) {
                 isDirection = true;
                 mTriangle.setImageResource(R.drawable.triangle_downward);
-                mPopWindowLayout.layout(mMarginLorR, mClickY+mTriangleHeight, mScreeWidth - mMarginLorR, mClickY + mLayoutHeight+mTriangleHeight);
+                mPopWindowLayout.layout(mMarginLorR, mClickY + mTriangleHeight, mScreeWidth - mMarginLorR, mClickY + mLayoutHeight + mTriangleHeight);
                 mTriangle.layout(mClickX - mTriangleWidth, mClickY, mClickX, mClickY + mTriangleHeight);
 
-            }else{
+            } else {
                 isDirection = false;
                 mTriangle.setImageResource(R.drawable.triangle_upward);
-                mPopWindowLayout.layout(mMarginLorR, mClickY - mLayoutHeight-mTriangleHeight, mScreeWidth - mMarginLorR, mClickY-mTriangleHeight);
+                mPopWindowLayout.layout(mMarginLorR, mClickY - mLayoutHeight - mTriangleHeight, mScreeWidth - mMarginLorR, mClickY - mTriangleHeight);
                 mTriangle.layout(mClickX - mTriangleWidth, mClickY - mTriangleHeight, mClickX, mClickY);
 
             }
         }
-        float aminX = (float)(mClickX - mMarginLorR) / mLayoutWidth;
-        int   scale  =   2;//设置位数
-        int   roundingMode  =  4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.
-        BigDecimal bd  =   new  BigDecimal((double)aminX);
-        bd   =  bd.setScale(scale,roundingMode);
-        aminX   =  bd.floatValue();
+        float aminX = (float) (mClickX - mMarginLorR) / mLayoutWidth;
+        int scale = 2;//设置位数
+        int roundingMode = 4;//表示四舍五入，可以选择其他舍值方式，例如去尾，等等.
+        BigDecimal bd = new BigDecimal((double) aminX);
+        bd = bd.setScale(scale, roundingMode);
+        aminX = bd.floatValue();
 
         ScaleAnimation scaleAnim = new ScaleAnimation(0f, 1f, 0f, 1f,
                 Animation.RELATIVE_TO_SELF, aminX,
-                Animation.RELATIVE_TO_SELF, isDirection?0f:1f);
-        scaleAnim.setDuration(500);
+                Animation.RELATIVE_TO_SELF, isDirection ? 0f : 1f);
+        scaleAnim.setDuration(200);
         ScaleAnimation scaleAnim2 = new ScaleAnimation(0f, 1f, 0f, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, isDirection?1f:0f);
-        scaleAnim2.setDuration(500);
+                Animation.RELATIVE_TO_SELF, isDirection ? 1f : 0f);
+        scaleAnim2.setDuration(200);
 
         mPopWindowLayout.startAnimation(scaleAnim);
         mTriangle.startAnimation(scaleAnim2);
@@ -203,19 +197,13 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mClickX = clickX;
         mClickY = clickY;
         invalidate();
-
     }
-    /**
-     * 将sp值转换为px值，保证文字大小不变
-     *
-     * @param spValue
-     * @param fontScale
-     *            （DisplayMetrics类中属性scaledDensity）
-     * @return
-     */
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+    public void setSourceList(String tagName){
+        mList.set(3, tagName);
+        mAdapter.notifyDataSetChanged();
+    }
+    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer){
+        mContainer.setItemClickListener(listerer);
     }
 
 }

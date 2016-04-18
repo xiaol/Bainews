@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 
@@ -46,7 +46,7 @@ public class TagBaseAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.tagview, null);
             holder = new ViewHolder();
-            holder.tagBtn = (Button) convertView.findViewById(R.id.tag_btn);
+            holder.tagBtn = (TextView) convertView.findViewById(R.id.tag_btn);
             convertView.setTag(holder);
         }else{
             holder = (ViewHolder)convertView.getTag();
@@ -57,6 +57,6 @@ public class TagBaseAdapter extends BaseAdapter {
     }
 
     static class ViewHolder {
-        Button tagBtn;
+        TextView tagBtn;
     }
 }

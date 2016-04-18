@@ -202,6 +202,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
 
+
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,8 +256,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
         @Override
-        public void showPopWindow(int x, int y) {
-            mNewsFeedFgtPopWindow.showPopWindow(x, y);
+        public void showPopWindow(int x, int y, NewsFeed feed) {
+            mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPubName(), mAdapter);
+
         }
     };
 
@@ -465,16 +467,22 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public interface NewsFeedFgtPopWindow {
-        public void showPopWindow(int x, int y);
+        public void showPopWindow(int x, int y,String pubName, NewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {
         if (mstrChannelId.equals("1") && mFlag == false)
             if (mChangeTextSizePopWindow == null) {
-//                mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class RefreshReceiver extends BroadcastReceiver {
@@ -487,6 +495,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mAdapter.notifyDataSetChanged();
             }
         }
-
     }
+
+
+
 }

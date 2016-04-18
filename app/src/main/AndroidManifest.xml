@@ -2,7 +2,7 @@
 <manifest package="com.news.yazhidao"
           xmlns:android="http://schemas.android.com/apk/res/android"
           android:versionCode="117"
-          android:versionName="2.2.2">
+          android:versionName="@string/app_version">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -305,6 +305,23 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".pages.GuideLoginAty"
                   android:screenOrientation="portrait"/>
+        <activity android:name=".pages.LoginAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.UserCenterAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.SettingAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.MyCommentAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.MyFavoriteAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.MyMessageAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.AboutAty"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".pages.PrivacyPolicyAty"
+                  android:screenOrientation="portrait"/>
+
         <!-- 配置Receiver(必须) -->
         <receiverdebuggable
             android:name="com.lostip.sdk.ad.custom.receiver.AdCocoaStateReceiver"

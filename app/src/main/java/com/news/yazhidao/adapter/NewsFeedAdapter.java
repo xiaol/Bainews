@@ -7,9 +7,11 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.Transformation;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,16 +26,16 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
-import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -60,6 +62,8 @@ public class NewsFeedAdapter extends BaseAdapter {
     public static String KEY_NEWS_ID = "key_news_id";
     public static int REQUEST_CODE = 10002;
     private SharedPreferences mSharedPreferences;
+    private NewsFeedDao mNewsFeedDao;
+    private final int DELETEANIMTIME = 500;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
@@ -67,6 +71,7 @@ public class NewsFeedAdapter extends BaseAdapter {
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
+        mNewsFeedDao = new NewsFeedDao(mContext);
     }
 
     public NewsFeedAdapter(Context context) {
@@ -75,6 +80,9 @@ public class NewsFeedAdapter extends BaseAdapter {
 
     public void setNewsFeed(ArrayList<NewsFeed> arrNewsFeed) {
         mArrNewsFeed = arrNewsFeed;
+    }
+    public ArrayList<NewsFeed> getNewsFeed() {
+        return mArrNewsFeed;
     }
 
     public void setSearchKeyWord(String pKeyWord) {
@@ -94,6 +102,8 @@ public class NewsFeedAdapter extends BaseAdapter {
         return position;
     }
 
+
+
     public View getView(final int position, View convertView, ViewGroup parent) {
         final NewsFeed feed = mArrNewsFeed.get(position);
         String strType = feed.getImgStyle();
@@ -101,15 +111,28 @@ public class NewsFeedAdapter extends BaseAdapter {
         if ("0".equals(strType)) {
             BaseHolder holder;
             if (convertView == null || convertView.getTag().getClass() != BaseHolder.class) {
-                holder = new BaseHolder();
                 convertView = View.inflate(mContext, R.layout.ll_news_item_no_pic, null);
+                holder = new BaseHolder();
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
                 holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
                 holder.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
                 holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
                 holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
                 holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder.needInflate = false;
                 convertView.setTag(holder);
+            }else if (((BaseHolder)convertView.getTag()).needInflate) {
+                convertView = View.inflate(mContext, R.layout.ll_news_item_no_pic, null);
+                holder = new BaseHolder();
+                holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
+                holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
+                holder.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
+                holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
+                holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder.needInflate = false;
+                convertView.setTag(holder);
+
             } else {
                 holder = (BaseHolder) convertView.getTag();
             }
@@ -120,7 +143,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
-            setDeleteClick(holder.ivDelete, feed);
+            setDeleteClick(holder.ivDelete, feed,convertView);
         }
         //普通卡片
         if ("1".equals(strType) || "2".equals(strType)) {
@@ -130,8 +153,8 @@ public class NewsFeedAdapter extends BaseAdapter {
             }
             final ViewHolder holder;
             if (convertView == null || convertView.getTag().getClass() != ViewHolder.class) {
-                holder = new ViewHolder();
                 convertView = View.inflate(mContext, R.layout.ll_news_item_one_pic, null);
+                holder = new ViewHolder();
                 holder.ivTitleImg = (SimpleDraweeView) convertView.findViewById(R.id.title_img_View);
                 holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
                 holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
@@ -141,6 +164,21 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
                 holder.llSourceContent = (LinearLayout) convertView.findViewById(R.id.source_content_linearLayout);
                 holder.ivBottomLine = (ImageView) convertView.findViewById(R.id.line_bottom_imageView);
+                holder.needInflate = false;
+                convertView.setTag(holder);
+            }else if (((ViewHolder)convertView.getTag()).needInflate) {
+                convertView = View.inflate(mContext, R.layout.ll_news_item_one_pic, null);
+                holder = new ViewHolder();
+                holder.ivTitleImg = (SimpleDraweeView) convertView.findViewById(R.id.title_img_View);
+                holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
+                holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
+                holder.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
+                holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
+                holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder.llSourceContent = (LinearLayout) convertView.findViewById(R.id.source_content_linearLayout);
+                holder.ivBottomLine = (ImageView) convertView.findViewById(R.id.line_bottom_imageView);
+                holder.needInflate = false;
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -163,11 +201,19 @@ public class NewsFeedAdapter extends BaseAdapter {
                 @Override
                 public void run() {
                     RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) holder.llSourceContent.getLayoutParams();
+                    RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) holder.tvTitle.getLayoutParams();
                     RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) holder.ivBottomLine.getLayoutParams();
-                    if (holder.tvTitle.getLineCount() >= 3) {
+                    int lineCount = holder.tvTitle.getLineCount();
+                    if (lineCount >= 3) {
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,10),DensityUtil.dip2px(mContext,15),0);
                         lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
                         lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                    } else {
+                    } else if (lineCount == 1){
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,21),DensityUtil.dip2px(mContext,15),0);
+                        lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                        lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                    }else {
+                        titleLp.setMargins(DensityUtil.dip2px(mContext,15),DensityUtil.dip2px(mContext,10),DensityUtil.dip2px(mContext,15),0);
                         lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
                         lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
                     }
@@ -181,7 +227,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getPubTime() != null)
                 setNewsTime(holder.tvComment, feed.getPubTime());
             setNewsContentClick(holder.rlNewsContent, feed);
-            setDeleteClick(holder.ivDelete, feed);
+            setDeleteClick(holder.ivDelete, feed,convertView);
         }
         //大图
         else if ("big_pic".equals(strType)) {
@@ -201,6 +247,19 @@ public class NewsFeedAdapter extends BaseAdapter {
                     holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
                     holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
                     holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                    holder.needInflate = false;
+                    convertView.setTag(holder);
+                }else if (((ViewHolder2)convertView.getTag()).needInflate) {
+                    holder = new ViewHolder2();
+                    convertView = View.inflate(mContext, R.layout.ll_news_big_pic2, null);
+                    holder.ivTitleImg = (SimpleDraweeView) convertView.findViewById(R.id.title_img_View);
+                    holder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
+                    holder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
+                    holder.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
+                    holder.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
+                    holder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    holder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                    holder.needInflate = false;
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder2) convertView.getTag();
@@ -226,7 +285,7 @@ public class NewsFeedAdapter extends BaseAdapter {
                 if (feed.getPubTime() != null)
                     setNewsTime(holder.tvComment, feed.getPubTime());
                 setNewsContentClick(holder.rlNewsContent, feed);
-                setDeleteClick(holder.ivDelete, feed);
+                setDeleteClick(holder.ivDelete, feed,convertView);
             }
         }
         //多图
@@ -245,6 +304,25 @@ public class NewsFeedAdapter extends BaseAdapter {
                 holder3.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
                 holder3.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
                 holder3.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                holder3.needInflate = false;
+                setCardMargin(holder3.ivCard1, 15, 1, 3);
+                setCardMargin(holder3.ivCard2, 1, 1, 3);
+                setCardMargin(holder3.ivCard3, 1, 15, 3);
+                convertView.setTag(holder3);
+            }else if (((ViewHolder3)convertView.getTag()).needInflate) {
+                holder3 = new ViewHolder3();
+                convertView = View.inflate(mContext, R.layout.ll_news_card, null);
+                holder3.llImageList = (LinearLayout) convertView.findViewById(R.id.image_list_LinearLayout);
+                holder3.rlNewsContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
+                holder3.ivCard1 = (SimpleDraweeView) convertView.findViewById(R.id.image_card1);
+                holder3.ivCard2 = (SimpleDraweeView) convertView.findViewById(R.id.image_card2);
+                holder3.ivCard3 = (SimpleDraweeView) convertView.findViewById(R.id.image_card3);
+                holder3.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
+                holder3.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
+                holder3.tvComment = (TextViewExtend) convertView.findViewById(R.id.comment_textView);
+                holder3.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
+                holder3.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                holder3.needInflate = false;
                 setCardMargin(holder3.ivCard1, 15, 1, 3);
                 setCardMargin(holder3.ivCard2, 1, 1, 3);
                 setCardMargin(holder3.ivCard3, 1, 15, 3);
@@ -263,7 +341,7 @@ public class NewsFeedAdapter extends BaseAdapter {
             if (feed.getPubTime() != null)
                 setNewsTime(holder3.tvComment, feed.getPubTime());
             setNewsContentClick(holder3.rlNewsContent, feed);
-            setDeleteClick(holder3.ivDelete, feed);
+            setDeleteClick(holder3.ivDelete, feed,convertView);
         }
         return convertView;
     }
@@ -339,10 +417,10 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
-        if (strText != null && !"".equals(strText)) {
+        if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
             textView.setText(strText + "评");
         } else {
-            textView.setText("0评");
+            textView.setText("");
         }
     }
 
@@ -401,25 +479,107 @@ public class NewsFeedAdapter extends BaseAdapter {
         this.mClickShowPopWindow = mClickShowPopWindow;
     }
 
-    private void setDeleteClick(final ImageView imageView, final NewsFeed feed) {
+    NewsFeed DeleteClickBean;
+    View DeleteView;
+    private void setDeleteClick(final ImageView imageView, final NewsFeed feed,final View view) {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtil.toastShort(feed.getPubName());
-
-//
+//                ToastUtil.toastShort(feed.getPubName());
+                DeleteView = view;
+                DeleteClickBean = feed;
                 int[] LocationInWindow = new int[2];
                 int[] LocationOnScreen = new int[2];
                 imageView.getLocationInWindow(LocationInWindow);
 
-                mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth()/2, LocationInWindow[1] + imageView.getHeight()/2);
+                mClickShowPopWindow.showPopWindow(LocationInWindow[0] + imageView.getWidth()/2, LocationInWindow[1] + imageView.getHeight()/2,
+                        feed);
+
 
             }
         });
     }
 
+    public void disLikeDeleteItem(){
+
+        deleteCell(DeleteView);
+
+    }
+    private void deleteCell(final View v) {
+        AnimationListener al = new AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                Logger.d("aaa","getTitle"+DeleteClickBean.getTitle());
+
+                String strType = DeleteClickBean.getImgStyle();
+                //没图
+                if ("0".equals(strType)) {
+                    BaseHolder vh = (BaseHolder) v.getTag();
+                    vh.needInflate = true;
+                }
+
+                //普通卡片
+                if ("1".equals(strType) || "2".equals(strType)) {
+                    ViewHolder vh1 = (ViewHolder) v.getTag();
+                    vh1.needInflate = true;
+                }
+                //大图
+                else if ("big_pic".equals(strType)) {
+                    ViewHolder2 vh2 = (ViewHolder2) v.getTag();
+                    vh2.needInflate = true;
+                }
+                //多图
+                else if ("3".equals(strType)) {
+                    ViewHolder3 vh3 = (ViewHolder3) v.getTag();
+                    vh3.needInflate = true;
+                }
+
+                mNewsFeedDao.deleteOnceDate(DeleteClickBean);
+                ArrayList<NewsFeed> arrayList = getNewsFeed();
+                arrayList.remove(DeleteClickBean);
+                setNewsFeed(arrayList);
+                notifyDataSetChanged();
+//                DeleteView = null;
+            }
+            @Override public void onAnimationRepeat(Animation animation) {}
+            @Override public void onAnimationStart(Animation animation) {}
+        };
+
+        collapse(v, al);
+    }
+
+    private void collapse(final View v, AnimationListener al) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation anim = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    v.setVisibility(View.GONE);
+                }
+                else {
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        if (al!=null) {
+            anim.setAnimationListener(al);
+        }
+        anim.setDuration(DELETEANIMTIME);
+        v.startAnimation(anim);
+    }
+
+
 
     class BaseHolder {
+        boolean needInflate;
         TextViewExtend tvSource;
         TextViewExtend tvComment;
         TextView tvTitle;
@@ -430,22 +590,25 @@ public class NewsFeedAdapter extends BaseAdapter {
     }
 
     class ViewHolder extends BaseHolder {
+        boolean needInflate;
         SimpleDraweeView ivTitleImg;
         ImageView ivBottomLine;
     }
 
     class ViewHolder2 extends BaseHolder {
+        boolean needInflate;
         SimpleDraweeView ivTitleImg;
     }
 
     class ViewHolder3 extends BaseHolder {
+        boolean needInflate;
         SimpleDraweeView ivCard1;
         SimpleDraweeView ivCard2;
         SimpleDraweeView ivCard3;
         LinearLayout llImageList;
     }
     public interface clickShowPopWindow{
-        public void showPopWindow(int x,int y);
+        public void showPopWindow(int x, int y, NewsFeed feed);
     }
 
 }

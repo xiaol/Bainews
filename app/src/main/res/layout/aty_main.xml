@@ -19,10 +19,12 @@
             android:id="@+id/mUserCenter"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:padding="12dp"
             android:layout_centerVertical="true"
-            fresco:actualImageScaleType="center"
-            fresco:placeholderImageScaleType="center"
             fresco:placeholderImage="@drawable/btn_user_center"
+            fresco:roundAsCircle="true"
+            fresco:roundingBorderWidth="1px"
+            fresco:roundingBorderColor="@color/white"
             />
 
 

@@ -41,7 +41,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
-        mDetailWebView.loadData(TextUtil.genarateHTML(result,mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),"text/html;charset=UTF-8",null);
+        mDetailWebView.loadData(TextUtil.genarateHTML(result, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),"text/html;charset=UTF-8",null);
         return rootView;
     }
 }
