@@ -231,7 +231,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
 
-        mAdapter = new NewsFeedAdapter(getActivity(), this);
+        mAdapter = new NewsFeedAdapter(getActivity(), this,null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
 
         mlvNewsFeed.setAdapter(mAdapter);

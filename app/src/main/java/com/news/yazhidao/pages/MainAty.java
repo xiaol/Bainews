@@ -31,7 +31,6 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
@@ -39,7 +38,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
-import com.news.yazhidao.widget.LoginPopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
 import com.umeng.analytics.MobclickAgent;
@@ -238,13 +236,16 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                         dislikePopupWindow.setVisibility(View.GONE);
                         break;
                     case 1://重复、旧闻
-
+                        mNewsFeedAdapter.disLikeDeleteItem();
+                        dislikePopupWindow.setVisibility(View.GONE);
                         break;
                     case 2://内容质量差
-
+                        mNewsFeedAdapter.disLikeDeleteItem();
+                        dislikePopupWindow.setVisibility(View.GONE);
                         break;
                     case 3://不喜欢
-
+                        mNewsFeedAdapter.disLikeDeleteItem();
+                        dislikePopupWindow.setVisibility(View.GONE);
                         break;
                 }
             }

@@ -106,7 +106,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mSearchTipImg = (ImageView)findViewById(R.id.mSearchTipImg);
         mSearchTip = (TextView)findViewById(R.id.mSearchTip);
         mSearchProgress = (ProgressBar)findViewById(R.id.mSearchProgress);
-        mNewsFeedAdapter = new NewsFeedAdapter(this);
+        mNewsFeedAdapter = new NewsFeedAdapter(this,null,null);
         mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
         mSearchListView.setAdapter(mNewsFeedAdapter);
         mSearchListView.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
