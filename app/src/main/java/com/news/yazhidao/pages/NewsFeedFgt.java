@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -233,7 +231,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
 
-        mAdapter = new NewsFeedAdapter(getActivity(), this);
+        mAdapter = new NewsFeedAdapter(getActivity(), this,null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
 
         mlvNewsFeed.setAdapter(mAdapter);
