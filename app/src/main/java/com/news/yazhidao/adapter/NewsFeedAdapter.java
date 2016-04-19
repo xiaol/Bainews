@@ -1,14 +1,15 @@
 package com.news.yazhidao.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.Transformation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +28,6 @@ import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
@@ -40,7 +40,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -56,7 +55,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private final int DELETEANIMTIME = 500;
-    public static HashSet<Integer> mSaveData = new HashSet<>();
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -124,9 +122,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgList().get(0));
                 final String strTitle = feed.getTitle();
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
-                final TextView tvTitle = (TextView) holder.getView(R.id.title_textView);
-                final LinearLayout llSourceContent = (LinearLayout) holder.getView(R.id.source_content_linearLayout);
-                final ImageView ivBottomLine = (ImageView) holder.getView(R.id.line_bottom_imageView);
+                final TextView tvTitle =  holder.getView(R.id.title_textView);
+                final LinearLayout llSourceContent =  holder.getView(R.id.source_content_linearLayout);
+                final ImageView ivBottomLine =  holder.getView(R.id.line_bottom_imageView);
                 tvTitle.post(new Runnable() {
                     @Override
                     public void run() {
@@ -329,67 +327,39 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     public void disLikeDeleteItem() {
-
-        deleteCell(DeleteView);
-
-    }
-
-    private void deleteCell(final View v) {
-        AnimationListener al = new AnimationListener() {
+        final ViewWrapper wrapper = new ViewWrapper(DeleteView);
+        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(400);
+        changeH.start();
+        changeH.setInterpolator(new LinearInterpolator());
+        changeH.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animation arg0) {
-                Logger.d("jigang", "getTitle" + DeleteClickBean.getTitle());
+            public void onAnimationEnd(Animator animation) {
                 mNewsFeedDao.deleteOnceDate(DeleteClickBean);
+                ObjectAnimator.ofFloat(wrapper, "height", 0, DeleteView.getHeight()).setDuration(0).start();
                 ArrayList<NewsFeed> arrayList = getNewsFeed();
-                for (NewsFeed feed : arrayList) {
-                    Logger.e("jigang", "title+++++" + feed.getTitle());
-                }
                 arrayList.remove(DeleteClickBean);
-                for (NewsFeed feed : arrayList) {
-                    Logger.e("jigang", "title-----" + feed.getTitle());
-                }
-//                setNewsFeed(arrayList);
-                CommonViewHolder holder = (CommonViewHolder) v.getTag();
-                mSaveData.add(holder.getLayoutId());
                 notifyDataSetChanged();
             }
+        });
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-        };
-        collapse(v, al);
     }
 
-    private int mItemHeight;
-    private void collapse(final View v, AnimationListener al) {
-        mItemHeight = v.getMeasuredHeight();
-        Animation anim = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime == 1) {
-                    v.setVisibility(View.GONE);
-                } else {
-                    v.getLayoutParams().height = mItemHeight - (int) (mItemHeight * interpolatedTime);
-                    v.requestLayout();
-                }
-            }
+    class ViewWrapper {
+        private View mTarget;
 
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        if (al != null) {
-            anim.setAnimationListener(al);
+        public ViewWrapper(View mTarget) {
+            this.mTarget = mTarget;
         }
-        anim.setDuration(DELETEANIMTIME);
-        v.startAnimation(anim);
+
+        public int getHeight() {
+            int height = mTarget.getLayoutParams().height;
+            return height;
+        }
+
+        public void setHeight(int height) {
+            mTarget.getLayoutParams().height = height;
+            mTarget.requestLayout();
+        }
     }
 
 

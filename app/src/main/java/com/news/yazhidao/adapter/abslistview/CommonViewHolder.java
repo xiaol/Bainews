@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.utils.TextUtil;
 
 /**
@@ -31,27 +30,10 @@ public class CommonViewHolder {
     }
 
     public static CommonViewHolder get(Context mContext, View mConvertView, ViewGroup mViewGroup,int mLayoutId, int mPosition){
-//        View itemView = LayoutInflater.from(mContext).inflate(mLayoutId, mViewGroup, false);
-//        CommonViewHolder viewHolder = new CommonViewHolder(mContext, itemView, mViewGroup, mPosition);
-//        viewHolder.mLayoutId = mLayoutId;
-//        return viewHolder;
-        int tempLayout = 0;
-        boolean needInflate = false;
-        if (mConvertView != null){
-            CommonViewHolder viewHolder = (CommonViewHolder) mConvertView.getTag();
-            tempLayout = viewHolder.getLayoutId();
-        }
-        for (Integer layoutId: NewsFeedAdapter.mSaveData){
-            if (layoutId == tempLayout){
-                needInflate = true;
-                break;
-            }
-        }
-        if (mConvertView == null || needInflate){
+        if (mConvertView == null){
             View itemView = LayoutInflater.from(mContext).inflate(mLayoutId, mViewGroup, false);
             CommonViewHolder viewHolder = new CommonViewHolder(mContext, itemView, mViewGroup, mPosition);
             viewHolder.mLayoutId = mLayoutId;
-            NewsFeedAdapter.mSaveData.clear();
             return viewHolder;
         }else {
             CommonViewHolder viewHolder = (CommonViewHolder) mConvertView.getTag();
