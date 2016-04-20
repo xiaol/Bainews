@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -43,7 +44,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     private View mSettingAbout;
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
-
+    private SharedPreferences mSharedPreferences;
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_setting);
@@ -59,18 +60,31 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mSettingPushSwitch.setOnClickListener(this);
         mSettingPushImg = (ImageView) findViewById(R.id.mSettingPushImg);
         mRadioGroup = (RadioGroup) findViewById(R.id.mRadioGroup);
+        mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
+        int saveFont = mSharedPreferences.getInt("textSize", 0);
+        switch (saveFont){
+            case CommonConstant.TEXT_SIZE_NORMAL:
+                mRadioGroup.check(R.id.mRadioNormal);
+                break;
+            case CommonConstant.TEXT_SIZE_BIG:
+                mRadioGroup.check(R.id.mRadioBig);
+                break;
+            case CommonConstant.TEXT_SIZE_BIGGER:
+                mRadioGroup.check(R.id.mRadioHuge);
+                break;
+        }
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.mRadioNormal:
-                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_NORMAL);
+                        mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_NORMAL).commit();
                         break;
                     case R.id.mRadioBig:
-                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_BIG);
+                        mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIG).commit();
                         break;
                     case R.id.mRadioHuge:
-                        SharedPreManager.save("showflag","textSize",CommonConstant.TEXT_SIZE_BIGGER);
+                        mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIGGER).commit();
                         break;
                 }
             }

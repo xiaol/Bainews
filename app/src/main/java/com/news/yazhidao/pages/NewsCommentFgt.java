@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,6 @@ import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.Logger;
@@ -44,14 +42,13 @@ import com.news.yazhidao.widget.UserCommentDialog;
 
 import java.util.ArrayList;
 
-import cn.sharesdk.framework.PlatformDb;
-
 /**
  * Created by fengjigang on 16/3/31.
  * 新闻评论页
  */
 public class NewsCommentFgt extends BaseFragment {
 
+    public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     private PullToRefreshListView mNewsCommentList;
     private String mDocid , mTitle , mPubName , mPubTime, mCommentCount;
@@ -60,6 +57,10 @@ public class NewsCommentFgt extends BaseFragment {
     private int mPageIndex = 1;
     private RefreshPageBroReceiber mRefreshReceiber;
     private RelativeLayout bgLayout;
+    private User mUser;
+    private NewsDetailComment mComment;
+    private Holder mHolder;
+
     /**通知新闻详情页和评论fragment刷新评论*/
     public  class RefreshPageBroReceiber extends BroadcastReceiver {
 
@@ -167,6 +168,14 @@ public class NewsCommentFgt extends BaseFragment {
         requestQueue.add(feedRequest);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == LoginAty.REQUEST_CODE && data != null){
+            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+            addNewsLove(mUser, mComment, mHolder);
+        }
+    }
+
     class CommentsAdapter extends BaseAdapter {
 
         private Context mContext;
@@ -212,6 +221,8 @@ public class NewsCommentFgt extends BaseFragment {
                 holder = (Holder) convertView.getTag();
             }
             final NewsDetailComment comment = comments.get(position);
+            mComment = comment;
+            mHolder = holder;
             if (!TextUtil.isEmptyString(comment.getProfile())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
             }
@@ -225,48 +236,42 @@ public class NewsCommentFgt extends BaseFragment {
 
                     User user = SharedPreManager.getUser(mContext);
                     if (user == null) {
-                        LoginModeFgt loginModeFgt = new LoginModeFgt(mContext, new UserLoginListener() {
-                            @Override
-                            public void userLogin(String platform, PlatformDb platformDb) {
-
-                            }
-
-                            @Override
-                            public void userLogout() {
-
-                            }
-                        }, null);
-                        loginModeFgt.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loginModeFgt");
+                        Intent loginAty = new Intent(mContext,LoginAty.class);
+                        startActivityForResult(loginAty,REQUEST_CODE);
                     } else {
-                        Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
-                        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-                        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
-                        }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
-
-                            @Override
-                            public void onResponse(String result) {
-                                mNewsCommentList.onRefreshComplete();
-                                Logger.e("jigang", "network success, love" + result);
-                                if (!TextUtil.isEmptyString(result)) {
-                                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                                    holder.tvPraiseCount.setText(result);
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                mNewsCommentList.onRefreshComplete();
-                                Logger.e("jigang", "network fail");
-                            }
-                        });
-                        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-                        requestQueue.add(loveRequest);
+                        addNewsLove(user, comment, holder);
                     }
 
                 }
             });
             return convertView;
         }
+    }
+
+    private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
+        Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
+        }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String result) {
+                mNewsCommentList.onRefreshComplete();
+                Logger.e("jigang", "network success, love" + result);
+                if (!TextUtil.isEmptyString(result)) {
+                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
+                    holder.tvPraiseCount.setText(result);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mNewsCommentList.onRefreshComplete();
+                Logger.e("jigang", "network fail");
+            }
+        });
+        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(loveRequest);
     }
 
 

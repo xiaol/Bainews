@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -272,7 +270,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
 
-        mAdapter = new NewsFeedAdapter(getActivity(), this);
+        mAdapter = new NewsFeedAdapter(getActivity(), this,null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
 
         mlvNewsFeed.setAdapter(mAdapter);
@@ -519,10 +517,16 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private void showChangeTextSizeView() {
         if (mstrChannelId.equals("1") && mFlag == false)
             if (mChangeTextSizePopWindow == null) {
-//                mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
     }
 
     private class RefreshReceiver extends BroadcastReceiver {
@@ -544,9 +548,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             uploadLogDataEntity.setTid(bean.getTitle());//需要改成typeID
             uploadLogDataEntity.setCid(bean.getChannelId());
             uploadLogDataEntities.add(uploadLogDataEntity);
-            Gson gson = new Gson();
         }
         int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId,CommonConstant.UPLOAD_LOG_MAIN,uploadLogDataEntities);
+        Logger.d("aaa", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
         if(saveNum > 200){
             RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String url =HttpConstant.URL_UPLOAD_LOG+"uid=" + mstrUserId + "&clas=1" +

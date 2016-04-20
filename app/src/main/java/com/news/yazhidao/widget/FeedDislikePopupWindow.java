@@ -181,11 +181,11 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         ScaleAnimation scaleAnim = new ScaleAnimation(0f, 1f, 0f, 1f,
                 Animation.RELATIVE_TO_SELF, aminX,
                 Animation.RELATIVE_TO_SELF, isDirection ? 0f : 1f);
-        scaleAnim.setDuration(500);
+        scaleAnim.setDuration(200);
         ScaleAnimation scaleAnim2 = new ScaleAnimation(0f, 1f, 0f, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, isDirection ? 1f : 0f);
-        scaleAnim2.setDuration(500);
+        scaleAnim2.setDuration(200);
 
         mPopWindowLayout.startAnimation(scaleAnim);
         mTriangle.startAnimation(scaleAnim2);

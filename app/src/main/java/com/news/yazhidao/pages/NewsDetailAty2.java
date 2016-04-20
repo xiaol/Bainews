@@ -330,6 +330,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         uploadLogDataEntity.setStime(lastTime/1000+"");
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
        int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL,locationJsonString , uploadLogDataEntity);
+        Logger.d("aaa", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         if(saveNum >= 30){
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);

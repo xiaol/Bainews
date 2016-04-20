@@ -52,7 +52,7 @@ public class SplashAty extends BaseActivity {
         mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
         mSplashContent = findViewById(R.id.mSplashContent);
         int screenHeight = DeviceInfoUtil.getScreenHeight(this);
-        mSplashContent.setPadding(0,screenHeight/3 - DensityUtil.dip2px(this,34),0,0);
+        mSplashContent.setPadding(0, screenHeight / 3 - DensityUtil.dip2px(this, 34), 0, 0);
         final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
         mSplashSlogan.setAnimation(animation);
         mSplashLine = (ImageView) findViewById(R.id.mSplashLine);
@@ -87,31 +87,27 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                if (flag) {
-                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
-                    startActivity(intent);
-                    SplashAty.this.finish();
-//                } else {
-//                    Intent intent_guide = new Intent(SplashAty.this, GuideAty.class);
-//                    startActivity(intent_guide);
-//                    SplashAty.this.finish();
-//                }
-            }
-        }, 2000);
+        boolean showGuidePage = SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
+        if (!showGuidePage){
+            Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
+            startActivity(intent);
+            SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE,true);
+        }else {
+            Intent mainAty = new Intent(this,MainAty.class);
+            startActivity(mainAty);
+        }
+        SplashAty.this.finish();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         long openTimes = SharedPreManager.getLong(CommonConstant.FILE_USER, CommonConstant.KEY_USER_OPEN_APP);
-        if (openTimes == 0){
-            SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,1);
+        if (openTimes == 0) {
+            SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_OPEN_APP, 1);
 
-        }else {
-            SharedPreManager.save(CommonConstant.FILE_USER,CommonConstant.KEY_USER_OPEN_APP,openTimes + 1);
+        } else {
+            SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_OPEN_APP, openTimes + 1);
         }
         //产生用户UUID
         SharedPreManager.saveUUID();
