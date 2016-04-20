@@ -31,8 +31,6 @@ public class NewsDetailFgt extends BaseFragment {
         result = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
     }
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_detail, null);

@@ -111,7 +111,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private String newsType = null;
     private long mDurationStart;//统计用户读此条新闻时话费的时间
     private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
-    private boolean isDetailFgt;//是否是新闻详情页
+    private boolean isCommentPage;//是否是评论页
     private String channelId;
     private String mImgUrl;
     private View mDetailAddComment;
@@ -255,6 +255,20 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @param result
      */
     private void displayDetailAndComment(final NewsDetail result){
+        mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1){
+                    isCommentPage = true;
+                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentNum.setVisibility(View.INVISIBLE);
+                }else {
+                    isCommentPage = false;
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
+                    mDetailCommentNum.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         mNewsDetailViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -371,8 +385,16 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
                 Logger.e("jigang","back aty ------");
-            if (mCommentDialog != null){
+            if (mCommentDialog != null && mCommentDialog.isVisible()){
                 mCommentDialog.dismiss();
+                return true;
+            }
+            if (isCommentPage){
+                isCommentPage = false;
+                mNewsDetailViewPager.setCurrentItem(0,true);
+                mDetailCommentNum.setVisibility(View.VISIBLE);
+                mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
@@ -398,38 +420,21 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.mDetailAddComment:
-//                if (user == null) {
-//                    LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
-//                        @Override
-//                        public void userLogin(String platform, PlatformDb platformDb) {
-//                            UserCommentDialog mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
-//                            mCommentDialog.setDocid(mNewsDocId);
-//                            mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
-//                        }
-//
-//                        @Override
-//                        public void userLogout() {
-//
-//                        }
-//                    }, null);
-//                    loginModeFgt.show((NewsDetailAty2.this).getSupportFragmentManager(), "loginModeFgt");
-//                } else {
-//                    UserCommentDialog mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
-//                    mCommentDialog.setDocid(mNewsDocId);
-//                    mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
-//                }
                 mCommentDialog = new UserCommentDialog(NewsDetailAty2.this,null);
                 mCommentDialog.setDocid(mNewsDocId);
                 mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 break;
             case R.id.mDetailComment:
-//                openCommentPage();
-                if (!isDetailFgt){
-                    isDetailFgt = false;
+                if (!isCommentPage){
+                    isCommentPage = true;
                     mNewsDetailViewPager.setCurrentItem(1);
+                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentNum.setVisibility(View.INVISIBLE);
                 }else {
-                    isDetailFgt = true;
+                    isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
+                    mDetailCommentNum.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.mDetailShare:

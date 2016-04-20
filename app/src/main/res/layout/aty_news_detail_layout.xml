@@ -153,7 +153,6 @@
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"
                 android:singleLine="true"
-                android:text="123"
                 android:textColor="@color/white"
                 android:textSize="8sp"
                 android:visibility="gone"
