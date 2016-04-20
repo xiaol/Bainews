@@ -41,7 +41,6 @@ public class NewsDetailFgt extends BaseFragment {
         } else {
             mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);

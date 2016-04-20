@@ -259,6 +259,12 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
+        try {
+            String name = URLEncoder.encode(user.getUserName(),"utf-8");
+            user.setUserName(name);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
