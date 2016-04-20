@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:id="@+id/news_comment_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="小红的一天天的生活"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:textColor="@color/black"/>
+    <TextView
+        android:id="@+id/news_comment_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="渠道"
+        android:textSize="@dimen/font4"
+        android:textColor="@color/color5"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        >
+        <TextView
+            android:id="@+id/news_comment_hotComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="热门评论"
+            android:textSize="@dimen/font3"
+            android:textColor="@color/color3"/>
+
+        <View
+            android:id="@+id/news_comment_hotComment_Line1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/news_comment_line1"
+            android:layout_below="@id/news_comment_hotComment"
+            android:layout_marginTop="8dp"
+            android:layout_alignRight="@id/news_comment_hotComment"/>
+        <View
+            android:id="@+id/news_comment_hotComment_Line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color6"
+            android:layout_below="@id/news_comment_hotComment"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/news_comment_hotComment_Line1"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

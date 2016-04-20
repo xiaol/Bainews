@@ -151,6 +151,9 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         switch (v.getId()){
             case R.id.mCommentCommit:
                 User user = SharedPreManager.getUser(getActivity());
+//                user = new User();
+//                user.setUserName("zhangsan");
+//                user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
                 if (user == null){
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty,REQUEST_CODE);
@@ -164,6 +167,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     private void submitComment(User user){
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JSONObject json = null;
+
         final String nickeName = user.getUserName();
         String uuid = SharedPreManager.getUUID();
         final String createTime = DateUtil.getDate();
@@ -183,11 +187,11 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 try {
                     String code = response.getString("code");
                     String message = response.getString("message");
-                    int data = response.getInt("data");
+                    String data = response.optString("data");
                     if ("0".equals(code) && "success".equals(message)){
                         ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,1,nickeName,profile);
+                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,0,nickeName,profile);
                         intent.putExtra(KEY_ADD_COMMENT,comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();

@@ -44,6 +44,10 @@ public final class CommonConstant {
     public static final String KEY_USER_NEED_SHOW_GUIDE_PAGE = "key_user_need_show_guide_page";
     public static final String KEY_USER_OPEN_APP = "key_user_open_app";//用户打开app的次数
     public static final String KEY_UUID = "key_uuid";//确保用户唯一的uuid
+    public static final String UPLOAD_LOG = "uploadlog";//用户上传日志
+    public static final String UPLOAD_LOG_MAIN = "uploadlog_main";//用户上传日志
+    public static final String UPLOAD_LOG_DETAIL = "uploadlog_detali";//用户上传日志
+
     public static final int TEXT_SIZE_NORMAL = 17;
     public static final int TEXT_SIZE_BIG = 19;
     public static final int TEXT_SIZE_BIGGER = 21;

@@ -21,7 +21,7 @@ public class NewsDetailComment implements Serializable{
 
     private String docid;
     private String comment_id;
-    private int id;
+    private String id;
     private String profile;
     private int love;
     private String content;
@@ -29,7 +29,7 @@ public class NewsDetailComment implements Serializable{
     private String nickname;
 
     public NewsDetailComment(){}
-    public NewsDetailComment(String comment_id, String content, String create_time, String docid, int id, int love, String nickname, String profile) {
+    public NewsDetailComment(String comment_id, String content, String create_time, String docid, String id, int love, String nickname, String profile) {
         this.comment_id = comment_id;
         this.content = content;
         this.create_time = create_time;
@@ -56,11 +56,11 @@ public class NewsDetailComment implements Serializable{
         this.comment_id = comment_id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import org.apache.http.util.EncodingUtils;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -389,4 +391,47 @@ public class FileUtils {
     public void saveSelNewsIdInFile(){
 
     }
+
+    /**
+     * 读文件
+     * @param file 这个是SDCard 下的txt文件
+     * @return
+     * @throws IOException
+     */
+    public static String readSDFile(File file) throws IOException {
+
+//        File file = new File(fileName);
+
+        FileInputStream fis = new FileInputStream(file);
+
+        int length = fis.available();
+
+        byte [] buffer = new byte[length];
+        fis.read(buffer);
+
+       String  res = EncodingUtils.getString(buffer, "UTF-8");
+
+        fis.close();
+        return res;
+    }
+
+    /**
+     * 写文件
+     * @param file 这个是SDCard 下的txt文件
+     * @param write_str
+     * @throws IOException
+     */
+    public static void writeSDFile(File file, String write_str) throws IOException{
+
+//        File file = new File(fileName);
+
+        FileOutputStream fos = new FileOutputStream(file);
+
+        byte [] bytes = write_str.getBytes();
+
+        fos.write(bytes);
+
+        fos.close();
+    }
+
 }
