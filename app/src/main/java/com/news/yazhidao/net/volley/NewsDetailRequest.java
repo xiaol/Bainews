@@ -1,6 +1,7 @@
 package com.news.yazhidao.net.volley;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.news.yazhidao.utils.Logger;
 
@@ -28,7 +29,7 @@ public class NewsDetailRequest<T> extends GsonRequest<T> {
         this.mParams = params;
     }
     @Override
-    protected String checkJsonData(String data) {
+    protected String checkJsonData(String data,NetworkResponse response) {
         try {
             JSONObject jsonObject = new JSONObject(data);
             String code = jsonObject.optString("code", "");

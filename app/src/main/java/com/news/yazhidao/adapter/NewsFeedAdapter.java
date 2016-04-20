@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -29,6 +33,9 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.ZipperUtil;
+import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -55,6 +62,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private final int DELETEANIMTIME = 500;
+    private File mNewsFile;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -103,6 +111,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         this.mNewsFeedFgt = newsFeedFgt;
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
+        mNewsFile = ZipperUtil.getSaveFontPath(context);
+
     }
 
     public void setSearchKeyWord(String pKeyWord) {
@@ -260,6 +270,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
+    /**
+     * item的点击事件
+     * @param rlNewsContent
+     * @param feed
+     */
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
@@ -269,6 +284,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
+//                Gson gson = new Gson();
+//
+//                try {
+//                    FileUtils.writeSDFile(mNewsFile,gson.toJson(feed));
+//                    Logger.d("aaa","读取的内容===="+FileUtils.readSDFile(mNewsFile));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
@@ -277,6 +300,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
+                intent.putExtra(NewsFeedFgt.KEY_TITLE, feed.getTitle());
+                intent.putExtra(NewsFeedFgt.KEY_PUBNAME, feed.getPubName());
+                intent.putExtra(NewsFeedFgt.KEY_PUBTIME, feed.getPubTime());
+                intent.putExtra(NewsFeedFgt.KEY_COMMENTCOUNT, feed.getCommentsCount());
+
+
+
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
                 } else {

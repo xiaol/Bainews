@@ -20,6 +20,7 @@ public class ZipperUtil {
     public static boolean PASSED;
     public static File path;
     public static String name = "wryh.ttf";
+    public static String fileName = "news.txt";
     private static final int buffer = 1024 * 1024;
 
     public static void unzip(final Context mContext, final ZipCompleteListener listener) {
@@ -91,7 +92,7 @@ public class ZipperUtil {
                 }
             }
         }
-        return new File(file,name);
+        return new File(file,fileName);
     }
 
 }

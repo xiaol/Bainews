@@ -3,6 +3,7 @@ package com.news.yazhidao.net.volley;
 import android.content.Context;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.NewsDetailForDigger;
@@ -40,7 +41,7 @@ public class DiggerRequest<T> extends GsonRequest<T> {
     }
 
     @Override
-    protected String checkJsonData(String data) {
+    protected String checkJsonData(String data,NetworkResponse response) {
         try {
             JSONObject jsonObject = new JSONObject(data);
             String status = jsonObject.optString("status", "");
@@ -53,7 +54,7 @@ public class DiggerRequest<T> extends GsonRequest<T> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return super.checkJsonData(data);
+        return super.checkJsonData(data,response);
     }
 
     @Override

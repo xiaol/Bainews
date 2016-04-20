@@ -365,6 +365,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(dislikePopupWindow.getVisibility() == View.VISIBLE){//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
+                dislikePopupWindow.setVisibility(View.GONE);
+                return true;
+            }
             long pressedBackKeyTime = System.currentTimeMillis();
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();

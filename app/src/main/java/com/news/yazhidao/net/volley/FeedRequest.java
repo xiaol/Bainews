@@ -1,6 +1,7 @@
 package com.news.yazhidao.net.volley;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.news.yazhidao.utils.Logger;
 
@@ -28,16 +29,16 @@ public class FeedRequest<T> extends GsonRequest<T> {
         this.mParams = params;
     }
     @Override
-    protected String checkJsonData(String data) {
+    protected String checkJsonData(String data,NetworkResponse response) {
         try {
             JSONObject jsonObject = new JSONObject(data);
-            String code = jsonObject.optString("code", "");
-            String message = jsonObject.optString("message", "");
-            Logger.e("jigang","code = "+code + ",message=" + message);
-            if ("0".equals(code) && "success".equals(message)){
-                return jsonObject.optString("data","");
-            }else {
-                return "";
+                String code = jsonObject.optString("code", "");
+                String message = jsonObject.optString("message", "");
+                Logger.e("jigang","code = "+code + ",message=" + message);
+                if ("0".equals(code) && "success".equals(message)){
+                    return jsonObject.optString("data","");
+                }else {
+                    return "";
             }
         } catch (JSONException e) {
             e.printStackTrace();
