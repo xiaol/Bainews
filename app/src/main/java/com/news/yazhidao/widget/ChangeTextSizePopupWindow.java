@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
@@ -37,6 +38,8 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
     }
 
     private void findHeadPortraitImageViews() {
+        //防止被下面的虚拟键盘遮挡
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mSeekBar = (SeekBar) mMenuView.findViewById(R.id.change_text_size_bar);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
         //设置SelectPicPopupWindow的View

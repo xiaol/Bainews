@@ -1,6 +1,7 @@
 package com.news.yazhidao.net.volley;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.news.yazhidao.utils.Logger;
 
@@ -29,7 +30,7 @@ public class SearchRequest<T> extends GsonRequest<T> {
     }
 
 
-    protected String checkJsonData(String data) {
+    protected String checkJsonData(String data,NetworkResponse response) {
         try {
 //            Logger.d("aaa","data = "+data );
 //            JSONArray jsonArray = new JSONArray(data);

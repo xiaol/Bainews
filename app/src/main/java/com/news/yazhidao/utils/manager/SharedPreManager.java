@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.LocationEntity;
+import com.news.yazhidao.entity.UploadLogDataEntity;
+import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -107,6 +111,8 @@ public class SharedPreManager {
         return new ArrayList<>();
     }
 
+
+
     /**
      * 保存User json
      * @param user
@@ -202,5 +208,58 @@ public class SharedPreManager {
         }
         e.commit();
     }
+
+    public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
+
+        String mReadData = upLoadLogGet(key);
+        Gson gson = new Gson();
+        UploadLogEntity uploadLogEntity = new UploadLogEntity();
+        if (mReadData != null && mReadData.length() != 0) {
+            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+
+        }
+        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
+
+        uploadLogEntity.getData().add(uploadLogDataEntity);
+
+        uploadLogEntity.setUid(mUserId);
+        uploadLogEntity.setCou(locationEntity.getCountry());
+        uploadLogEntity.setPro(locationEntity.getProvince());
+        uploadLogEntity.setCity(locationEntity.getCity());
+        uploadLogEntity.setDis(locationEntity.getDistrict());
+        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+
+        upLoadLogDelter(key);
+        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
+        return uploadLogEntity.getData().size();
+    }
+    public static int upLoadLogSaveList(String mUserId, String key,  List<UploadLogDataEntity> list) {
+
+        String mReadData = upLoadLogGet(key);
+        Gson gson = new Gson();
+        UploadLogEntity uploadLogEntity = new UploadLogEntity();
+        if (mReadData != null && mReadData.length() != 0) {
+            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+
+        }
+
+        uploadLogEntity.getData().addAll(list);
+
+        uploadLogEntity.setUid(mUserId);
+        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+
+        upLoadLogDelter(key);
+        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
+        return uploadLogEntity.getData().size();
+    }
+    public static String upLoadLogGet(String key){
+
+        return get(CommonConstant.UPLOAD_LOG,key);
+    }
+    public static void upLoadLogDelter(String key){
+
+        remove(CommonConstant.UPLOAD_LOG, key);
+    }
+
 
 }

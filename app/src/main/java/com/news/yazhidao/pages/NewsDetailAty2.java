@@ -5,14 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,6 +40,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailELVAdapter;
@@ -44,27 +49,40 @@ import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AlbumSubItem;
+import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.UploadLogDataEntity;
+import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.HttpClientUtil;
+import com.news.yazhidao.net.TextUtils;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
+import com.umeng.analytics.MobclickAgent;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.news.yazhidao.pages.NewsFeedFgt.*;
 
@@ -103,7 +121,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
-//    private ProgressBar mNewsDetailProgress;
+    //    private ProgressBar mNewsDetailProgress;
     private RelativeLayout bgLayout;
 
     private boolean isDisplay = true;
@@ -136,11 +154,14 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         @Override
         public void onReceive(Context context, Intent intent) {
-                Logger.e("jigang","comment fgt refresh br");
+            Logger.e("jigang","comment fgt refresh br");
             String number = mDetailCommentNum.getText().toString();
             mDetailCommentNum.setText(Integer.valueOf(number) + 1 + "");
         }
     }
+
+
+
 
     @Override
     protected boolean translucentStatus() {
@@ -160,6 +181,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
+
     }
 
     @Override
@@ -224,10 +246,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         });
 
     }
-
+    long lastTime , nowTime ;
     @Override
     protected void onResume() {
         super.onResume();
+        nowTime = System.currentTimeMillis();
+        MobclickAgent.onPause(this);
         mDurationStart = System.currentTimeMillis();
         if(mRefreshReceiber == null){
             mRefreshReceiber = new RefreshPageBroReceiber();
@@ -239,9 +263,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void onStop() {
         super.onStop();
+        lastTime = System.currentTimeMillis()-nowTime+lastTime;
         long readDuration = System.currentTimeMillis() - mDurationStart;
-        Logger.e("jigang","time = "+ DateUtil.getDate()+",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid ="+newsId+",type="+newsType +",channelId =" +channelId+ ",uuid="+uuid+",userid="+mUserId+",location="+SharedPreManager.get(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION));
+
+
+
+
+
+        Logger.e("jigang","time = "+ DateUtil.getDate()+",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid ="+
+                newsId+",type="+newsType +",channelId =" +channelId+ ",uuid="+uuid+",userid="+mUserId+",location=" +
+                ""+SharedPreManager.get(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION));
     }
+
 
     @Override
     protected void onDestroy() {
@@ -250,6 +283,99 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
+
+
+//        try {
+            upLoadLog();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /**
+     * 上报日志
+     * @throws IOException
+     */
+    private void upLoadLog()  {
+//
+//        File mNewsFile = ZipperUtil.getSaveFontPath(NewsDetailAty2.this);
+//        Gson gson = new Gson();
+//        String readData = null;
+//        try {
+//            readData = FileUtils.readSDFile(mNewsFile);
+//        }catch (IOException e){
+//            mNewsFile.createNewFile();
+//        }
+//
+//        UploadLogEntity uploadLogEntity = new UploadLogEntity();
+//        UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+//        LocationEntity locationEntity = gson.fromJson(SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION)
+//                , LocationEntity.class);
+//        if(readData != null && readData.length() != 0){
+//            uploadLogEntity = gson.fromJson(readData, UploadLogEntity.class);
+//
+//        }
+//
+//        for(UploadLogDataEntity data : uploadLogEntity.getData()){
+//            if (data.getNid().equals(uploadLogDataEntity.getNid())) {// && data.getTid().equals(uploadLogDataEntity.getTid())
+//
+//                return;
+//            }
+//        }
+//
+        UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+        uploadLogDataEntity.setNid(newsId);
+        uploadLogDataEntity.setCid(channelId);
+        uploadLogDataEntity.setTid(newsType);
+        uploadLogDataEntity.setStime(lastTime/1000+"");
+        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
+       int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL,locationJsonString , uploadLogDataEntity);
+        if(saveNum >= 30){
+            Gson gson = new Gson();
+            LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String url = "http://bdp.deeporiginalx.com/rep?uid=" + mUserId + "&cou=" + locationEntity.getCountry() +
+                    "&pro=" + locationEntity.getProvince() + "&city=" + locationEntity.getCity() + "&dis=" + locationEntity.getDistrict() +
+                    "&clas=0" + "&data=" +TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+            Logger.d("aaa", "url===" + url);
+
+            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
+            requestQueue.add(request);
+        }
+
+//        uploadLogEntity.getData().add(uploadLogDataEntity);
+//
+//
+//
+//        uploadLogEntity.setUid(mUserId);
+//        uploadLogEntity.setCou(locationEntity.getCountry());
+//        uploadLogEntity.setPro(locationEntity.getProvince());
+//        uploadLogEntity.setCity(locationEntity.getCity());
+//        uploadLogEntity.setDis(locationEntity.getDistrict());
+//        uploadLogEntity.setClas(0);
+//
+//
+//
+//
+////        //清空txt文档的数据
+////        FileWriter fw5 = new FileWriter(mNewsFile);
+////        BufferedWriter bw1 = new BufferedWriter(fw5);
+////        bw1.write("");
+////        bw1.close();
+////        //写入txt文件数据
+////        FileUtils.writeSDFile(mNewsFile,gson.toJson(uploadLogEntity));
+//
+//        mNewsFile = null;
+
     }
 
     /**
@@ -377,7 +503,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
-                Logger.e("jigang","back aty ------");
+            Logger.e("jigang","back aty ------");
             if (mCommentDialog != null){
                 mCommentDialog.dismiss();
             }
@@ -569,7 +695,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (defaultH == 0){
-                        defaultH = mImageWallDesc.getHeight();
+                    defaultH = mImageWallDesc.getHeight();
                 }
                 Logger.e("jigang","default =" + defaultH);
                 int lineCount = mImageWallDesc.getLineCount();
@@ -591,9 +717,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                                     height = defaultH;
                                 }
                             }else {
-                            if (height > maxHeight){
-                                height = maxHeight + DensityUtil.dip2px(NewsDetailAty2.this,6 * 2 + 4);
-                            }
+                                if (height > maxHeight){
+                                    height = maxHeight + DensityUtil.dip2px(NewsDetailAty2.this,6 * 2 + 4);
+                                }
                             }
                             params.height = height;
                             mImageWallDesc.setMaxLines(Integer.MAX_VALUE);
@@ -666,4 +792,5 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             return views.get(position);
         }
     }
+
 }

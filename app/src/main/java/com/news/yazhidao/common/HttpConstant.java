@@ -92,5 +92,9 @@ public class HttpConstant {
      * 添加新闻评论
      */
     public static final String URL_ADD_COMMENT = URL_SERVER_HOST + "/bdp/news/comment/ydzx";
+    /**
+     * 日志上传
+     */
+    public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep?";
 
 }

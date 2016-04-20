@@ -24,6 +24,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -36,6 +37,7 @@ import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.AnalyticsConfig;
@@ -65,6 +67,7 @@ public class NewsFeedAdapter extends BaseAdapter {
     private SharedPreferences mSharedPreferences;
     private NewsFeedDao mNewsFeedDao;
     private final int DELETEANIMTIME = 500;
+    private File mNewsFile;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt) {
         mContext = context;
@@ -73,6 +76,8 @@ public class NewsFeedAdapter extends BaseAdapter {
         this.mNewsFeedFgt = newsFeedFgt;
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
+        mNewsFile = ZipperUtil.getSaveFontPath(context);
+
     }
 
     public NewsFeedAdapter(Context context) {
@@ -417,6 +422,11 @@ public class NewsFeedAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * item的点击事件
+     * @param rlNewsContent
+     * @param feed
+     */
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
@@ -426,6 +436,14 @@ public class NewsFeedAdapter extends BaseAdapter {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
+//                Gson gson = new Gson();
+//
+//                try {
+//                    FileUtils.writeSDFile(mNewsFile,gson.toJson(feed));
+//                    Logger.d("aaa","读取的内容===="+FileUtils.readSDFile(mNewsFile));
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
