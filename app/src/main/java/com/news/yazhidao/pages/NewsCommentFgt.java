@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -60,6 +63,7 @@ public class NewsCommentFgt extends BaseFragment {
     private User mUser;
     private NewsDetailComment mComment;
     private Holder mHolder;
+    private LinearLayout news_comment_NoCommentsLayout;
 
     /**通知新闻详情页和评论fragment刷新评论*/
     public  class RefreshPageBroReceiber extends BroadcastReceiver {
@@ -120,6 +124,12 @@ public class NewsCommentFgt extends BaseFragment {
         news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
         news_comment_Title.setText(mTitle);
         news_comment_content.setText(mPubName+"  "+mPubTime+"  "+mCommentCount+"评");
+        news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
+        if(mCommentCount.equals("0")){
+            news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+        }else{
+            news_comment_NoCommentsLayout.setVisibility(View.GONE);
+        }
 
         mNewsCommentList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -140,30 +150,40 @@ public class NewsCommentFgt extends BaseFragment {
         if( bgLayout.getVisibility() == View.GONE){
             bgLayout.setVisibility(View.VISIBLE);
         }
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid);
+        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+        NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
+        try {
+            feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid,"utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
-            @Override
-            public void onResponse(ArrayList<NewsDetailComment> result) {
-                mNewsCommentList.onRefreshComplete();
-                Logger.e("jigang", "network success, comment" + result);
-                if (!TextUtil.isListEmpty(result)) {
-                    mComments.addAll(result);
-                    mCommentsAdapter.setData(mComments);
+                @Override
+                public void onResponse(ArrayList<NewsDetailComment> result) {
                     if( bgLayout.getVisibility() == View.VISIBLE){
                         bgLayout.setVisibility(View.GONE);
                     }
+                    mNewsCommentList.onRefreshComplete();
+                    Logger.e("jigang", "network success, comment" + result);
+
+                    if (!TextUtil.isListEmpty(result)) {
+                        mComments.addAll(result);
+                        mCommentsAdapter.setData(mComments);
+                        Logger.d("aaa", "评论加载完毕！！！！！！");
+                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                    }else{
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    }
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mNewsCommentList.onRefreshComplete();
-                Logger.e("jigang", "network fail");
-            }
-        });
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    mNewsCommentList.onRefreshComplete();
+                    Logger.e("jigang", "network fail");
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
     }
