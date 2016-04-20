@@ -42,7 +42,8 @@ public class NewsFeedDao {
         try {
             if (arrNewsFeed != null && arrNewsFeed.size() > 0) {
                 for (NewsFeed newsFeed : arrNewsFeed) {
-                    mNewsFeedDao.create(newsFeed);
+                    if (!newsFeed.getImgStyle().equals("900"))
+                        mNewsFeedDao.create(newsFeed);
                 }
                 Logger.e(TAG, "insert " + NewsFeed.class.getSimpleName() + " success >>>");
             }
@@ -70,6 +71,7 @@ public class NewsFeedDao {
             Logger.e(TAG, "insert " + NewsFeed.class.getSimpleName() + " failure >>>" + e.getMessage());
         }
     }
+
     /**
      * 更新一个新闻数据
      *
@@ -77,15 +79,15 @@ public class NewsFeedDao {
      */
     public void update(NewsFeed newsFeed) {
         try {
-            if (newsFeed != null ) {
+            if (newsFeed != null) {
                 QueryBuilder<NewsFeed, String> queryBuilder = mNewsFeedDao.queryBuilder();
-                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID,newsFeed.getUrl());
+                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID, newsFeed.getUrl());
                 List<NewsFeed> result = queryBuilder.query();
-                if (!TextUtil.isListEmpty(result)){
+                if (!TextUtil.isListEmpty(result)) {
                     NewsFeed feed = result.get(0);
                     feed.setRead(true);
                     Dao.CreateOrUpdateStatus orUpdate = mNewsFeedDao.createOrUpdate(feed);
-                    Logger.e("jigang","update---linechange="+orUpdate.getNumLinesChanged()+",isUpdated=" + orUpdate.isUpdated() +","+orUpdate.isCreated());
+                    Logger.e("jigang", "update---linechange=" + orUpdate.getNumLinesChanged() + ",isUpdated=" + orUpdate.isUpdated() + "," + orUpdate.isCreated());
                 }
                 Logger.e(TAG, "update " + NewsFeed.class.getSimpleName() + " success >>>");
             }
@@ -119,7 +121,7 @@ public class NewsFeedDao {
         return new ArrayList<NewsFeed>(subItems);
     }
 
-    public int executeRaw(String sql){
+    public int executeRaw(String sql) {
         try {
             return mNewsFeedDao.executeRaw(sql);
         } catch (SQLException e) {
@@ -142,6 +144,7 @@ public class NewsFeedDao {
         }
         return 0;
     }
+
     /**
      * 删除某一条数据
      */
