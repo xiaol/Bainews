@@ -175,7 +175,11 @@ public class NewsCommentFgt extends BaseFragment {
                         Logger.d("aaa", "评论加载完毕！！！！！！");
                         news_comment_NoCommentsLayout.setVisibility(View.GONE);
                     }else{
-                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                        if (mComments.size() == 0) {
+                            news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                        }
 
                     }
                 }
