@@ -94,13 +94,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
      * 热词页面加载更多
      */
     private int mSearchPage = 1;
-//    private Handler mHandler;
+    //    private Handler mHandler;
 //    private Runnable mRunnable;
-//    private boolean mIsFirst = true;
+    private boolean mIsFirst = true;
+    private int mDeleteIndex;
     /**
      * 当前的fragment 是否已经加载过数据
      */
-//    private boolean isLoadedData;
+//    private boolean isLoadedData = false;
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRelative;
     private View mHomeRetry;
@@ -166,7 +167,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void refreshData() {
-//        isLoadedData = true;
+        mlvNewsFeed.setRefreshing();
     }
 
     public void onCreate(Bundle bundle) {
@@ -245,7 +246,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_DOWN_REFRESH);
-
             }
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -270,7 +270,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
 
-        mAdapter = new NewsFeedAdapter(getActivity(), this,null);
+        mAdapter = new NewsFeedAdapter(getActivity(), this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
 
         mlvNewsFeed.setAdapter(mAdapter);
@@ -372,7 +372,17 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             @Override
             public void onResponse(final ArrayList<NewsFeed> result) {
-
+                if (mDeleteIndex != 0) {
+                    mArrNewsFeed.remove(mDeleteIndex);
+                    mDeleteIndex = 0;
+                }
+                if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
+                    NewsFeed newsFeed = new NewsFeed();
+                    newsFeed.setImgStyle("900");
+                    result.add(newsFeed);
+                    mDeleteIndex = result.size()-1;
+                }
+                mIsFirst = false;
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
@@ -406,6 +416,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         for (NewsFeed newsFeed : result)
                             newsFeed.setChannelId("1");
                     }
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -487,7 +498,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             } else {
                 mHomeRetry.setVisibility(View.GONE);
             }
-
             mAdapter.setNewsFeed(newsFeeds);
             mAdapter.notifyDataSetChanged();
             mlvNewsFeed.onRefreshComplete();
@@ -511,7 +521,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public interface NewsFeedFgtPopWindow {
-        public void showPopWindow(int x, int y,String pubName, NewsFeedAdapter mAdapter);
+        public void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {
@@ -569,6 +579,5 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         requestQueue.add(request);
         }
     }
-
 
 }

@@ -73,9 +73,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_item_no_pic;
                     case "1":
                     case "2":
-                        return R.layout.ll_news_item_no_pic;
+                        return R.layout.ll_news_item_one_pic;
                     case "3":
                         return R.layout.ll_news_card;
+                    case "900":
+                        return R.layout.ll_news_item_time_line;
                     default:
                         return 0;
                 }
@@ -83,7 +85,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 3;
+                return 4;
             }
 
             @Override
@@ -96,6 +98,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.ONE_AND_TWO_PIC;
                     case "3":
                         return NewsFeed.THREE_PIC;
+                    case "900":
+                        return NewsFeed.TIME_LINE;
                     default:
                         return 0;
                 }
@@ -183,6 +187,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPubTime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                break;
+            case R.layout.ll_news_item_time_line:
+                holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mNewsFeedFgt.refreshData();
+                    }
+                });
                 break;
         }
     }

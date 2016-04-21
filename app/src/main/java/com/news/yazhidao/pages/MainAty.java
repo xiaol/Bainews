@@ -437,7 +437,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
             ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
             if (TextUtil.isListEmpty(newsFeeds)) {
-                fgt.refreshData();
+//                fgt.refreshData();
             } else {
                 fgt.setNewsFeed(newsFeeds);
             }

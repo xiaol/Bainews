@@ -118,7 +118,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     Logger.e("jigang","dialog  back");
                     UserCommentDialog.this.dismiss();
                 }
-                return true;
+                return false;
             }
         });
     }
@@ -151,6 +151,9 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         switch (v.getId()){
             case R.id.mCommentCommit:
                 User user = SharedPreManager.getUser(getActivity());
+//                user = new User();
+//                user.setUserName("zhangsan");
+//                user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
                 if (user == null){
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty,REQUEST_CODE);
@@ -168,10 +171,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         String uuid = SharedPreManager.getUUID();
         final String createTime = DateUtil.getDate();
         final String profile = user.getUserIcon();
+        final String userid = user.getUserId();
+        Logger.d("aaa", "uuid==" + uuid);
+        Logger.d("aaa", "userid==" + userid);
+
         final String docid = mDocid;
         final String comment_id = UUID.randomUUID().toString();
         try {
-            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ uuid +"\",\"love\":0,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
+            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ userid +"\",\"love\":0,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -183,11 +190,13 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                 try {
                     String code = response.getString("code");
                     String message = response.getString("message");
-                    int data = response.getInt("data");
+                    String data = response.optString("data");
                     if ("0".equals(code) && "success".equals(message)){
+                        Logger.e("jigang","comment_id" + comment_id);
                         ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,1,nickeName,profile);
+                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,0,nickeName,profile,userid);
+
                         intent.putExtra(KEY_ADD_COMMENT,comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();

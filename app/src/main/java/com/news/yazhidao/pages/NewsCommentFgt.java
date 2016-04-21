@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -74,7 +77,9 @@ public class NewsCommentFgt extends BaseFragment {
             Logger.e("jigang","detailaty refresh br");
             NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
             mComments.add(0,comment);
+            news_comment_NoCommentsLayout.setVisibility(View.GONE);
             mCommentsAdapter.setData(mComments);
+
         }
     }
 
@@ -113,7 +118,6 @@ public class NewsCommentFgt extends BaseFragment {
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
         mNewsCommentList.setAdapter(mCommentsAdapter);
-
         View mCommentHeaderView = inflater.inflate(R.layout.news_comment_fragment_headerview, null);
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mCommentHeaderView.setLayoutParams(layoutParams);
@@ -172,6 +176,7 @@ public class NewsCommentFgt extends BaseFragment {
                         news_comment_NoCommentsLayout.setVisibility(View.GONE);
                     }else{
                         news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+
                     }
                 }
             }, new Response.ErrorListener() {
@@ -241,6 +246,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder = (Holder) convertView.getTag();
             }
             final NewsDetailComment comment = comments.get(position);
+            final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
             if (!TextUtil.isEmptyString(comment.getProfile())) {
@@ -250,16 +256,30 @@ public class NewsCommentFgt extends BaseFragment {
             holder.tvPraiseCount.setText(comment.getLove() + "");
 
             holder.tvContent.setText(comment.getContent());
+            if (!mComment.isPraise()){
+                holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+            }else {
+                holder.ivPraise.setImageResource(R.drawable.bg_praised);
+            }
+
+            if(user.getUserId().equals(comment.getUuid())){
+                holder.ivPraise.setVisibility(View.GONE);
+            }else{
+                holder.ivPraise.setVisibility(View.VISIBLE);
+            }
+
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    User user = SharedPreManager.getUser(mContext);
+
                     if (user == null) {
-                        Intent loginAty = new Intent(mContext,LoginAty.class);
-                        startActivityForResult(loginAty,REQUEST_CODE);
-                    } else {
+                        Intent loginAty = new Intent(mContext, LoginAty.class);
+                        startActivityForResult(loginAty, REQUEST_CODE);
+                    }else {
                         addNewsLove(user, comment, holder);
+                        comments.get(position).setPraise(true);
+                        comments.get(position).setLove(comment.getLove() + 1);
                     }
 
                 }
@@ -269,6 +289,14 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
+        try {
+            String name = URLEncoder.encode(user.getUserName(),"utf-8");
+            String cid = URLEncoder.encode(comment.getId(),"utf-8");
+            user.setUserName(name);
+            comment.setId(cid);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
