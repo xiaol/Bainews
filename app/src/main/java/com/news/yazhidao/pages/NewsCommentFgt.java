@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -151,9 +148,6 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void loadData() {
-        if( bgLayout.getVisibility() == View.GONE){
-            bgLayout.setVisibility(View.VISIBLE);
-        }
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
@@ -187,6 +181,9 @@ public class NewsCommentFgt extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     mNewsCommentList.onRefreshComplete();
+                    if( bgLayout.getVisibility() == View.VISIBLE){
+                        bgLayout.setVisibility(View.GONE);
+                    }
                     Logger.e("jigang", "network fail");
                 }
             });
@@ -266,7 +263,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
 
-            if(user.getUserId().equals(comment.getUuid())){
+            if(user != null && user.getUserId().equals(comment.getUuid())){
                 holder.ivPraise.setVisibility(View.GONE);
             }else{
                 holder.ivPraise.setVisibility(View.VISIBLE);

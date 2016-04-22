@@ -613,7 +613,7 @@ public class TextUtil {
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize / 2 + "px\">" +
+                "<body><div style=\"font-size:" + titleTextSize / 2 + "px;font-weight:bold;\">" +
                 detail.getTitle() +
                 "</div><br><div style=\"font-size:" + commentTextSize / 2 + "px\" class=\"top\"><span>" +
                 detail.getPubName() +

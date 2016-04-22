@@ -200,3 +200,14 @@ java.lang.Object readResolve();
 -keep class com.android.volley.RequestQueue$* { *; }
 -keep class com.android.volley.toolbox.HurlStack$* { *; }
 -keep class com.android.volley.toolbox.ImageLoader$* { *; }
+
+# # -------------------------------------------
+# #  ###############  自定义属性动画  ###############
+# # -------------------------------------------
+
+
+-keep class com.news.yazhidao.adapter.NewsFeedAdapter$ViewWrapper{
+    public <fields>;
+    public <methods>;
+
+}
