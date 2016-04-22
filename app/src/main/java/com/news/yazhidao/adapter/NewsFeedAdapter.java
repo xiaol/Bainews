@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -57,6 +58,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private NewsFeedDao mNewsFeedDao;
     private final int DELETEANIMTIME = 500;
     private File mNewsFile;
+    private int mTitleViewWidth;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -106,7 +108,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mNewsFile = ZipperUtil.getSaveFontPath(context);
-
+        mTitleViewWidth = mScreenWidth - DensityUtil.dip2px(mContext, 147);
     }
 
     public void setSearchKeyWord(String pKeyWord) {
@@ -130,9 +132,30 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgList().get(0));
                 final String strTitle = feed.getTitle();
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
-                final TextView tvTitle =  holder.getView(R.id.title_textView);
-                final LinearLayout llSourceContent =  holder.getView(R.id.source_content_linearLayout);
-                final ImageView ivBottomLine =  holder.getView(R.id.line_bottom_imageView);
+                final TextView tvTitle = holder.getView(R.id.title_textView);
+                final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
+                final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
+
+                RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceContent.getLayoutParams();
+                RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
+                RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
+                float textRealWidth = tvTitle.getPaint().measureText(strTitle);
+                Log.i("tag", tvTitle.getPaint().measureText(strTitle) + "textsize" + mTitleViewWidth + "textNum");
+                if (textRealWidth >= 2 * mTitleViewWidth - 5) {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+                } else if (textRealWidth <= mTitleViewWidth) {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                } else {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                }
+                llSourceContent.setLayoutParams(lpSourceContent);
+                ivBottomLine.setLayoutParams(lpBottomLine);
                 tvTitle.post(new Runnable() {
                     @Override
                     public void run() {
@@ -144,7 +167,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
                             lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
                             lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                        } else if (lineCount == 1) {
+                        } else if (lineCount <= 1) {
                             titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
                             lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
                             lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
@@ -266,6 +289,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     /**
      * item的点击事件
+     *
      * @param rlNewsContent
      * @param feed
      */
@@ -290,7 +314,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 intent.putExtra(NewsFeedFgt.KEY_PUBNAME, feed.getPubName());
                 intent.putExtra(NewsFeedFgt.KEY_PUBTIME, feed.getPubTime());
                 intent.putExtra(NewsFeedFgt.KEY_COMMENTCOUNT, feed.getCommentsCount());
-
 
 
                 if (mNewsFeedFgt != null) {
@@ -364,7 +387,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mNewsFeedDao.deleteOnceDate(DeleteClickBean);
-                ObjectAnimator.ofFloat(wrapper, "height", 0, DeleteView.getHeight()).setDuration(0).start();
+//                ObjectAnimator.ofFloat(wrapper, "height", 0, deleteViewHeight).setDuration(0).start();
                 ArrayList<NewsFeed> arrayList = getNewsFeed();
                 arrayList.remove(DeleteClickBean);
                 notifyDataSetChanged();
