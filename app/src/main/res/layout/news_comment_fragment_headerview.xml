@@ -57,6 +57,26 @@
             android:layout_marginTop="8dp"
             android:layout_toRightOf="@id/news_comment_hotComment_Line1"/>
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/news_comment_NoCommentsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="169dp"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sofa_image"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="哎呦，快来抢沙发"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/color3"/>
+    </LinearLayout>
 
 
 </LinearLayout>

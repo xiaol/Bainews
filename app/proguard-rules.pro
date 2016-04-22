@@ -189,3 +189,14 @@ java.lang.Object readResolve();
 -keep class android.webkit.**{*;}
 -keep class android.**{*;}
 -keep class android.support.**{*;}
+
+# # -------------------------------------------
+# #  ############### volley混淆  ###############
+# # -------------------------------------------
+-keep class com.android.volley.** {*;}
+-keep class com.android.volley.toolbox.** {*;}
+-keep class com.android.volley.Response$* { *; }
+-keep class com.android.volley.Request$* { *; }
+-keep class com.android.volley.RequestQueue$* { *; }
+-keep class com.android.volley.toolbox.HurlStack$* { *; }
+-keep class com.android.volley.toolbox.ImageLoader$* { *; }

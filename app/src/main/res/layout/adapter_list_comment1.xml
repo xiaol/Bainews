@@ -86,4 +86,11 @@
         android:layout_toRightOf="@+id/iv_user_icon"
         android:visibility="gone"
         />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>

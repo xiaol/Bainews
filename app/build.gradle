@@ -66,12 +66,13 @@ android {
 
     signingConfigs {
         myConfig {
-            storeFile file("/Users/fiocca/develop/BaiNews/toutiaobaoke.keystore")
+            storeFile file("../toutiaobaoke.keystore")
             storePassword "yazhidao"
             keyAlias "yazhidao"
             keyPassword "yazhidao"
         }
     }
+
     sourceSets {
         main {
             jniLibs.srcDir('libs/jniLibs')
@@ -93,6 +94,9 @@ android {
                     }
                 }
             }
+        }
+        debug {
+            signingConfig signingConfigs.myConfig
         }
 //        debug {
 //            debuggable false

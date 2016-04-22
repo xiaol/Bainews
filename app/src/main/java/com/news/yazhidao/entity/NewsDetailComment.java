@@ -21,15 +21,17 @@ public class NewsDetailComment implements Serializable{
 
     private String docid;
     private String comment_id;
-    private int id;
+    private String id;
     private String profile;
     private int love;
     private String content;
     private String create_time;
     private String nickname;
-
+    private boolean isPraise;
+    private String uuid;
     public NewsDetailComment(){}
-    public NewsDetailComment(String comment_id, String content, String create_time, String docid, int id, int love, String nickname, String profile) {
+
+    public NewsDetailComment(String comment_id, String content, String create_time, String docid, String id, int love, String nickname, String profile,String uuid) {
         this.comment_id = comment_id;
         this.content = content;
         this.create_time = create_time;
@@ -38,8 +40,40 @@ public class NewsDetailComment implements Serializable{
         this.love = love;
         this.nickname = nickname;
         this.profile = profile;
+        this.uuid = uuid;
     }
 
+    @Override
+    public String toString() {
+        return "NewsDetailComment{" +
+                "docid='" + docid + '\'' +
+                ", comment_id='" + comment_id + '\'' +
+                ", id='" + id + '\'' +
+                ", profile='" + profile + '\'' +
+                ", love=" + love +
+                ", content='" + content + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", isPraise=" + isPraise +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public boolean isPraise() {
+        return isPraise;
+    }
+
+    public void setPraise(boolean praise) {
+        isPraise = praise;
+    }
     public String getDocid() {
         return docid;
     }
@@ -56,11 +90,11 @@ public class NewsDetailComment implements Serializable{
         this.comment_id = comment_id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

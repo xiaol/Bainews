@@ -31,10 +31,12 @@ public class NewsCommentRequest<T> extends GsonRequest<T> {
     @Override
     protected String checkJsonData(String data,NetworkResponse response) {
         try {
+
             JSONObject jsonObject = new JSONObject(data);
             String code = jsonObject.optString("code", "");
             String message = jsonObject.optString("message", "");
             Logger.e("jigang","code = "+code + ",message=" + message);
+            Logger.e("jigang","data = "+data );
             if ("0".equals(code) && "success".equals(message)){
                 return jsonObject.optString("data","");
             }else {
