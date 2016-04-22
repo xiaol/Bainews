@@ -319,7 +319,7 @@ public class DiggerAty extends BaseActivity {
             /**此时专辑列表为空,需要插入一条默认的专辑*/
             User user = SharedPreManager.getUser(this);
             DiggerAlbumDao albumDao = new DiggerAlbumDao(this);
-            DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","0","2130837568","0");
+            DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","0",R.drawable.bg_album1 + "","0");
             albumDao.insert(album);
             resultList = new ArrayList<>();
             resultList.add(album);

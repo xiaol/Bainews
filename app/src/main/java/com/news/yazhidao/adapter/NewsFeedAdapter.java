@@ -9,17 +9,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -33,9 +29,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.ZipperUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -284,14 +278,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
-//                Gson gson = new Gson();
-//
-//                try {
-//                    FileUtils.writeSDFile(mNewsFile,gson.toJson(feed));
-//                    Logger.d("aaa","读取的内容===="+FileUtils.readSDFile(mNewsFile));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
@@ -367,12 +353,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
         });
     }
-
+    int height;
     public void disLikeDeleteItem() {
         final ViewWrapper wrapper = new ViewWrapper(DeleteView);
-        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(400);
+        height = DeleteView.getHeight();
+        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(550);
         changeH.start();
-        changeH.setInterpolator(new LinearInterpolator());
+        changeH.setInterpolator(new AccelerateInterpolator());
         changeH.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
