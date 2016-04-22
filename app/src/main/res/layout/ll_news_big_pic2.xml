@@ -86,10 +86,10 @@
 
         <ImageView
             android:id="@+id/delete_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/btn_news_feed_delete" />
+            android:src="@drawable/btn_news_feed_delete" />
     </LinearLayout>
 
     <ImageView
