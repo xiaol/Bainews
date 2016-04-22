@@ -45,6 +45,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
     private SharedPreferences mSharedPreferences;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_setting);
@@ -62,7 +63,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
         mRadioGroup = (RadioGroup) findViewById(R.id.mRadioGroup);
         mSharedPreferences = getSharedPreferences("showflag", MODE_PRIVATE);
         int saveFont = mSharedPreferences.getInt("textSize", 0);
-        switch (saveFont){
+        switch (saveFont) {
             case CommonConstant.TEXT_SIZE_NORMAL:
                 mRadioGroup.check(R.id.mRadioNormal);
                 break;
@@ -133,19 +134,36 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.mSettingClearCache:
+                AlertDialog.Builder clearBuilder = new AlertDialog.Builder(this);
+                clearBuilder.setMessage("缓存文件可以帮助您节约流量,但较大时会占用较多的磁盘空间。\n确定开始清理吗?");
+                clearBuilder.setTitle("提示");
+                clearBuilder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 //                1.清理fresco 中缓存的图片数据
-                ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                imagePipeline.clearCaches();
+                        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+                        imagePipeline.clearCaches();
 //                2.清理webview 中缓存的数据
-                DataCleanManager.clearWebViewCache(this);
+                        DataCleanManager.clearWebViewCache(SettingAty.this);
 //                3.删除缓存的新闻数据
-                NewsFeedDao newsFeedDao = new NewsFeedDao(this);
-                newsFeedDao.deleteAllData();
-                try {
-                    ToastUtil.toastShort("清理缓存已完成");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                        NewsFeedDao newsFeedDao = new NewsFeedDao(SettingAty.this);
+                        newsFeedDao.deleteAllData();
+                        try {
+                            ToastUtil.toastShort("清理缓存已完成");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                clearBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                clearBuilder.create().show();
                 break;
             case R.id.mSettingAbout:
                 Intent aboutAty = new Intent(this, AboutAty.class);

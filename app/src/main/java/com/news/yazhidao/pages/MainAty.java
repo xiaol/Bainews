@@ -225,6 +225,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
         dislikePopupWindow.setVisibility(View.GONE);
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
+            Handler mHandler = new Handler();
             @Override
             public void itemClick(int position) {
                 switch (position) {
@@ -232,20 +233,17 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
 //                        newsFeedFgt.disLikeItem();
-                        mNewsFeedAdapter.disLikeDeleteItem();
-                        dislikePopupWindow.setVisibility(View.GONE);
-                        break;
                     case 1://重复、旧闻
-                        mNewsFeedAdapter.disLikeDeleteItem();
-                        dislikePopupWindow.setVisibility(View.GONE);
-                        break;
                     case 2://内容质量差
-                        mNewsFeedAdapter.disLikeDeleteItem();
-                        dislikePopupWindow.setVisibility(View.GONE);
-                        break;
                     case 3://不喜欢
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
+                             ToastUtil.showReduceRecommendToast(MainAty.this);
+                        mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                            }
+                        },100);
                         break;
                 }
             }
