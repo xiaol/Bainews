@@ -87,16 +87,22 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void loadData() {
-        boolean showGuidePage = SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
-        if (!showGuidePage){
-            Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
-            startActivity(intent);
-            SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE,true);
-        }else {
-            Intent mainAty = new Intent(this,MainAty.class);
-            startActivity(mainAty);
-        }
-        SplashAty.this.finish();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                boolean showGuidePage = SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
+                if (!showGuidePage) {
+                    Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
+                    startActivity(intent);
+                    SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE, true);
+                } else {
+                    Intent mainAty = new Intent(SplashAty.this, MainAty.class);
+                    startActivity(mainAty);
+                }
+                SplashAty.this.finish();
+
+            }
+        }, 2000);
     }
 
     @Override
