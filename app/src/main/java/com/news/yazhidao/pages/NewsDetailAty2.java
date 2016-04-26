@@ -19,11 +19,8 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.webkit.WebView;
-import android.widget.AbsListView;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,28 +36,23 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsDetailELVAdapter;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
-import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.HttpClientUtil;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
-import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.CommentPopupWindow;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
@@ -72,25 +64,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_CHANNEL_ID;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_COLLECTION;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_COMMENTCOUNT;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_NEWS_DOCID;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_NEWS_ID;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_NEWS_IMG_URL;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_NEWS_SOURCE;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_NEWS_TYPE;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_PUBNAME;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_PUBTIME;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_TITLE;
-import static com.news.yazhidao.pages.NewsFeedFgt.KEY_URL;
 import static com.news.yazhidao.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
 
 /**
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, CommentPopupWindow.IUpdateCommentCount, CommentPopupWindow.IUpdatePraiseCount, SharePopupWindow.ShareDismiss {
+public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
@@ -101,16 +81,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private String mUserId = "";
     private String mPlatformType = "";
     private String uuid;
-    private String mNewsDetailUrl;
     private ImageView mivShareBg;
-    //新闻内容POJO
-    private NewsDetailAdd mNewsDetailAdd;
     private ArrayList<ArrayList> mNewsContentDataList;
     private ArrayList<View> mImageViews;
     private ArrayList<HashMap<String, String>> mImages;
-    private NewsDetailELVAdapter mNewsDetailELVAdapter;
     private NewsDetailHeaderView2 mDetailHeaderView;
-    private ExpandableListView mDetailContentListView;
     private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     /**
      * 返回上一级,全文评论,分享
@@ -126,17 +101,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     private boolean isDisplay = true;
     private int defaultH;//图片新闻文本描述的默认高度
-    private String mSource;
-    private String newsId = null;
-    private String newsType = null;
     private long mDurationStart;//统计用户读此条新闻时话费的时间
     private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
     private boolean isCommentPage;//是否是评论页
-    private String channelId;
-    private String mImgUrl;
     private View mDetailAddComment;
     private TextView mDetailCommentNum;
-    private String mNewsType;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
     private TextView mImageWallDesc;
@@ -144,9 +113,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private ImageView mDetailCommentPic;
     private WebView mDetailWebView;
     private ViewPager mNewsDetailViewPager;
-    private String mNewsDocId;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
+    private NewsFeed mNewsFeed;
+    private String mSource;
+    private String mUrl;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -158,9 +129,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         public void onReceive(Context context, Intent intent) {
             Logger.e("jigang", "comment fgt refresh br");
             int number = 0;
-            try{
-                 number = Integer.valueOf(mDetailCommentNum.getText().toString());
-            }catch (Exception e){
+            try {
+                number = Integer.valueOf(mDetailCommentNum.getText().toString());
+            } catch (Exception e) {
 
             }
             mDetailCommentNum.setText(number + 1 + "");
@@ -181,7 +152,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
         mImageViews = new ArrayList<>();
-        mNewsDetailELVAdapter = new NewsDetailELVAdapter(this, mNewsContentDataList);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
@@ -191,9 +161,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
+        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
-        mSource = getIntent().getStringExtra(KEY_NEWS_SOURCE);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -220,36 +190,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
         mDetailWebView = (WebView) findViewById(R.id.mDetailWebView);
         mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
-
-        mDetailContentListView = (ExpandableListView) findViewById(R.id.mDetailContentListView);
-        mDetailContentListView.addHeaderView(mDetailHeaderView);
-        mDetailContentListView.setAdapter(mNewsDetailELVAdapter);
-        mDetailContentListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                        isReadOver = true;
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });
-        //设置Listview默认展开
-        expandedChildViews();
-        //去掉Listview左边箭头
-        mDetailContentListView.setGroupIndicator(null);
-        //取消groupview 点击事件
-        mDetailContentListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return true;
-            }
-        });
-
     }
 
     long lastTime, nowTime;
@@ -273,10 +213,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         lastTime = System.currentTimeMillis() - nowTime + lastTime;
         long readDuration = System.currentTimeMillis() - mDurationStart;
 
-
-        Logger.e("jigang", "time = " + DateUtil.getDate() + ",read duration = " + readDuration + ",readOver = " + isReadOver + ",newsid =" +
-                newsId + ",type=" + newsType + ",channelId =" + channelId + ",uuid=" + uuid + ",userid=" + mUserId + ",location=" +
-                "" + SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION));
     }
 
 
@@ -297,10 +233,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      */
     private void upLoadLog() {
 //
+        if (mNewsFeed == null) {
+            return;
+        }
         UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-        uploadLogDataEntity.setNid(newsId);
-        uploadLogDataEntity.setCid(channelId);
-        uploadLogDataEntity.setTid(newsType);
+        uploadLogDataEntity.setNid(mNewsFeed.getUrl());
+        uploadLogDataEntity.setCid(mNewsFeed.getChannelId());
+        uploadLogDataEntity.setTid(mNewsFeed.getImgStyle());
         uploadLogDataEntity.setStime(lastTime / 1000 + "");
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
@@ -344,7 +283,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } else {
                     isCommentPage = false;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString())?View.GONE:View.VISIBLE);
+                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -360,11 +299,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } else {
                     NewsCommentFgt commentFgt = new NewsCommentFgt();
                     Bundle args = new Bundle();
-                    args.putString(NewsCommentFgt.KEY_NEWS_DOCID, result.getDocid());
-                    args.putString(KEY_TITLE, getIntent().getStringExtra(KEY_TITLE));
-                    args.putString(KEY_PUBNAME, getIntent().getStringExtra(KEY_PUBNAME));
-                    args.putString(KEY_PUBTIME, getIntent().getStringExtra(KEY_PUBTIME));
-                    args.putString(KEY_COMMENTCOUNT, getIntent().getStringExtra(KEY_COMMENTCOUNT));
+                    args.putSerializable(NewsCommentFgt.KEY_NEWS_FEED, mNewsFeed);
                     commentFgt.setArguments(args);
                     return commentFgt;
                 }
@@ -385,64 +320,31 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsLoadingImg.setVisibility(View.GONE);
 
         bgLayout.setVisibility(View.VISIBLE);
-        Bundle bundle = getIntent().getBundleExtra(AlbumListAty.KEY_BUNDLE);
-
-        boolean isDigger = false;
-        AlbumSubItem albumSubItem;
-        if (bundle != null) {
-            isDigger = bundle.getBoolean(AlbumListAty.KEY_IS_DIGGER);
-            albumSubItem = (AlbumSubItem) bundle.getSerializable(AlbumListAty.KEY_ALBUMSUBITEM);
-            newsId = albumSubItem.getInserteId();
-
+        mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
+        if (mNewsFeed != null) {
+            mUrl = mNewsFeed.getUrl();
         } else {
-            newsId = getIntent().getStringExtra(KEY_NEWS_ID);
-            newsType = getIntent().getStringExtra(KEY_COLLECTION);
-            channelId = getIntent().getStringExtra(KEY_CHANNEL_ID);
-            mImgUrl = getIntent().getStringExtra(KEY_NEWS_IMG_URL);
-            mNewsType = getIntent().getStringExtra(KEY_NEWS_TYPE);
-            mNewsDocId = getIntent().getStringExtra(KEY_NEWS_DOCID);
-//            mNewsType = "big_pic";
-            mNewsDetailELVAdapter.setNewsImgUrl(mImgUrl);
-//            newsId = "2ffae38a585d31376be0465de6e591ee";
-//            newsId = "64bd38470cb881dc0940e1295ba39103";
-//            newsId = "705715e8ee4bc0e2fdd41e27f9b08de2";
-//            newsType = "NewsItem";
-            Logger.e("jigang", "newsid =" + newsId + ",type=" + newsType);
+            mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
         if (user != null) {
             mUserId = user.getUserId();
             mPlatformType = user.getPlatformType();
         }
-        mNewsDetailUrl = getIntent().getStringExtra(KEY_URL);
-        mNewsDetailELVAdapter.setNewsUrl(mNewsDetailUrl);
         uuid = DeviceInfoUtil.getUUID();
 
-        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(newsId));
+        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(mUrl));
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-        }.getType(), HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(newsId), new Response.Listener<NewsDetail>() {
+        }.getType(), HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(mUrl), new Response.Listener<NewsDetail>() {
 
             @Override
             public void onResponse(NewsDetail result) {
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                 Logger.e("jigang", "network success~~" + result);
                 if (result != null) {
+                    mNewsFeed = convert2NewsFeed(result);
                     displayDetailAndComment(result);
-                    //此处判断是否是图片新闻
-                    if ("big_pic".equals(mNewsType)) {
-                        if (!TextUtil.isListEmpty(null)) {
-//                            mImages = result.imgWall;
-                            //隐藏listview 展示imagewall fragment
-                            mDetailContentListView.setVisibility(View.GONE);
-                            mImageWallWrapper.setVisibility(View.VISIBLE);
-                            configViewPagerViews();
-                        } else {
-                            mDetailContentListView.setVisibility(View.VISIBLE);
-                            mImageWallWrapper.setVisibility(View.GONE);
-                        }
-
-                    }
                     mDetailHeaderView.updateView(result);
                     if (result.getCommentSize() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
@@ -465,6 +367,19 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         requestQueue.add(feedRequest);
     }
 
+    private NewsFeed convert2NewsFeed(NewsDetail result) {
+        NewsFeed mNewsFeed = new NewsFeed();
+        mNewsFeed.setDocid(result.getDocid());
+        mNewsFeed.setUrl(result.getUrl());
+        mNewsFeed.setTitle(result.getTitle());
+        mNewsFeed.setPubName(result.getPubName());
+        mNewsFeed.setPubTime(result.getPubTime());
+        mNewsFeed.setCommentsCount(result.getCommentSize() + "");
+        mNewsFeed.setChannelId(result.getChannelId() + "");
+        mNewsFeed.setImgStyle(result.getImgNum() + "");
+        return mNewsFeed;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -475,7 +390,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString())?View.GONE:View.VISIBLE);
+                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
                 return true;
             }
@@ -485,9 +400,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, newsId);
-        setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+        if (mNewsFeed != null) {
+            Intent intent = new Intent();
+            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getUrl());
+            setResult(NewsFeedAdapter.REQUEST_CODE, intent);
+        }
         super.finish();
         //如果是后台推送新闻消息过来的话，关闭新闻详情页的时候，就会打开主页面
         if (VALUE_NEWS_NOTIFICATION.equals(mSource)) {
@@ -503,9 +420,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.mDetailAddComment:
-                mCommentDialog = new UserCommentDialog(NewsDetailAty2.this, null);
-                mCommentDialog.setDocid(mNewsDocId);
-                mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+                if (mNewsFeed != null) {
+                    mCommentDialog = new UserCommentDialog();
+                    mCommentDialog.setDocid(mNewsFeed.getDocid());
+                    mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
+                }
                 break;
             case R.id.mDetailComment:
                 if (!isCommentPage) {
@@ -517,82 +436,25 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString())?View.GONE:View.VISIBLE);
+                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
                 break;
             case R.id.mDetailShare:
-                mivShareBg.startAnimation(mAlphaAnimationIn);
-                mivShareBg.setVisibility(View.VISIBLE);
-                mSharePopupWindow = new SharePopupWindow(this, this);
-                // FIXME: 15/11/5 有可能以后分享的时候有问题,遇到问题后改之
-                String type = "1", remark = "1";
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("newsid", newsId);
-                hashMap.put("type", type);
-                hashMap.put("collection", newsType);
-                String url = HttpClientUtil.addParamsToUrl("http://deeporiginalx.com/news.html?", hashMap);
-                mSharePopupWindow.setTitleAndUrl(mNewsDetailAdd.title, url, remark);
-                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                if (mNewsFeed != null) {
+                    mivShareBg.startAnimation(mAlphaAnimationIn);
+                    mivShareBg.setVisibility(View.VISIBLE);
+                    mSharePopupWindow = new SharePopupWindow(this, this);
+                    String remark = "1";
+                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+                    mSharePopupWindow.setTitleAndUrl(mNewsFeed.getTitle(), url, remark);
+                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+                }
                 break;
             case R.id.mNewsLoadingImg:
                 loadData();
                 break;
         }
-    }
-
-    /**
-     * 打开新闻评论页
-     */
-    private void openCommentPage() {
-        ArrayList<NewsDetailAdd.Point> points;
-        if (mNewsDetailAdd != null && !TextUtil.isListEmpty(mNewsDetailAdd.point)) {
-            points = mNewsDetailAdd.point;
-        } else {
-            points = null;
-        }
-        mivShareBg.startAnimation(mAlphaAnimationIn);
-        mivShareBg.setVisibility(View.VISIBLE);
-        CommentPopupWindow window = new CommentPopupWindow(this, points, mNewsDetailUrl, this, -1, this, this);
-        window.setFocusable(true);
-        //防止虚拟软键盘被弹出菜单遮住
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        window.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-    }
-
-    /**
-     * 展开所有的childview
-     */
-    private void expandedChildViews() {
-        for (int i = 0; i < mNewsDetailELVAdapter.getGroupCount(); i++) {
-            mDetailContentListView.expandGroup(i);
-        }
-    }
-
-    @Override
-    public void updateCommentCount(NewsDetailAdd.Point point) {
-        if (mNewsDetailAdd != null) {
-            if (mNewsDetailAdd.point == null) {
-                ArrayList<NewsDetailAdd.Point> list = new ArrayList<>();
-                list.add(0, point);
-                mNewsDetailAdd.point = list;
-            } else {
-                mNewsDetailAdd.point.add(0, point);
-            }
-            mNewsContentDataList = TextUtil.parseNewsDetail(mNewsContentDataList, mNewsDetailAdd, mImgUrl);
-        }
-        //更新评论显示数字
-        mDetailCommentNum.setText(mNewsDetailAdd.point.size() + "");
-        mDetailCommentNum.setVisibility(View.VISIBLE);
-        mNewsDetailELVAdapter.notifyDataSetChanged();
-        //设置Listview默认展开
-        expandedChildViews();
-        openCommentPage();
-    }
-
-
-    @Override
-    public void updataPraise() {
-
     }
 
     @Override

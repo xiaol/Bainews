@@ -55,6 +55,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
     public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
     public static final String KEY_NEWS_DOCID = "key_news_docid";
+    public static final String KEY_NEWS_FEED = "key_news_feed";
 
     /**
      * 当前fragment 所对应的新闻频道

@@ -238,9 +238,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-                tvComment.setText(updateTime);
+//                tvComment.setText(updateTime);
+                tvComment.setText("");
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvComment.setText(between / 3600000 + "小时前");
+//                tvComment.setText(between / 3600000 + "小时前");
+                tvComment.setText("");
             } else {
                 if (between / 3600000 / 60 == 0) {
                     tvComment.setText("刚刚");
@@ -304,17 +306,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
-                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
-                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
-                intent.putExtra(NewsFeedFgt.KEY_TITLE, feed.getTitle());
-                intent.putExtra(NewsFeedFgt.KEY_PUBNAME, feed.getPubName());
-                intent.putExtra(NewsFeedFgt.KEY_PUBTIME, feed.getPubTime());
-                intent.putExtra(NewsFeedFgt.KEY_COMMENTCOUNT, feed.getCommentsCount());
-
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED,feed);
 
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);

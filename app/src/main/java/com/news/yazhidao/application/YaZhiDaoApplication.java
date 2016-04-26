@@ -101,7 +101,7 @@ public class YaZhiDaoApplication extends Application {
                 String newVersion = msg.extra.get("version");
                 Logger.i("jigang", "receive custom newsid=" + newsid + ",collection=" + collection);
                 //此处对传过来的json字符串做处理 {"news_url":"www.baidu.com"}
-                if (!TextUtil.isEmptyString(newsid) && !TextUtil.isEmptyString(collection)) {
+                if (!TextUtil.isEmptyString(newsid)) {
                     Intent detailIntent = new Intent(context, NewsDetailAty2.class);
                     detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_ID, newsid);
                     detailIntent.putExtra(NewsFeedFgt.KEY_NEWS_SOURCE, NewsFeedFgt.VALUE_NEWS_NOTIFICATION);
