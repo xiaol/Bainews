@@ -4,4 +4,6 @@
     <item android:drawable="@drawable/jz_xl_2" android:duration="150"></item>
     <item android:drawable="@drawable/jz_xl_3" android:duration="150"></item>
     <item android:drawable="@drawable/jz_xl_4" android:duration="150"></item>
+    <item android:drawable="@drawable/jz_xl_5" android:duration="150"></item>
+    <item android:drawable="@drawable/jz_xl_6" android:duration="150"></item>
 </animation-list>
