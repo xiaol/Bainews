@@ -17,6 +17,7 @@ import android.widget.GridView;
 import android.widget.PopupWindow;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
@@ -167,6 +168,7 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
+                        Logger.e("jigang","share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl, mstrRemark);
                     }
                     SharePopupWindow.this.dismiss();
