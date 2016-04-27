@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,15 +25,19 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
 
     private ImageView mivClose;
     private View mMenuView;
-    private Activity m_pContext;
+    private Activity mContext;
     private SeekBar mSeekBar;
+    private SharedPreferences mSharedPreferences;
+    int mTextSize;
 
     public ChangeTextSizePopupWindow(Activity context) {
         super(context);
-        m_pContext = context;
+        mContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_change_text_size, null);
+        mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
+        mTextSize = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
         findHeadPortraitImageViews();
         loadData();
     }
@@ -53,7 +58,7 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         //设置SelectPicPopupWindow弹出窗体动画效果
 //        this.setAnimationStyle(R.style.DialogAnimation);
         //实例化一个ColorDrawable颜色为半透明
-        ColorDrawable dw = new ColorDrawable(m_pContext.getResources().getColor(R.color.half_black));
+        ColorDrawable dw = new ColorDrawable(mContext.getResources().getColor(R.color.half_black));
         //设置SelectPicPopupWindow弹出窗体的背景
         this.setBackgroundDrawable(dw);
         //mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
@@ -72,6 +77,17 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
                 dismiss();
             }
         });
+        switch (mTextSize) {
+            case CommonConstant.TEXT_SIZE_NORMAL:
+                mSeekBar.setProgress(0);
+                break;
+            case CommonConstant.TEXT_SIZE_BIG:
+                mSeekBar.setProgress(50);
+                break;
+            case CommonConstant.TEXT_SIZE_BIGGER:
+                mSeekBar.setProgress(100);
+                break;
+        }
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -98,7 +114,7 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
                     intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIGGER);
                 }
                 intent.setAction(CommonConstant.CHANGE_TEXT_ACTION);
-                m_pContext.sendBroadcast(intent);
+                mContext.sendBroadcast(intent);
             }
         });
     }
