@@ -9,9 +9,9 @@
         android:id="@+id/iv_user_icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="15dp"
         app:failureImage="@drawable/ic_user_comment_default"
         app:placeholderImage="@drawable/ic_user_comment_default"
         app:roundAsCircle="true"
@@ -26,55 +26,47 @@
         android:layout_toRightOf="@+id/iv_user_icon"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/news_detail_desc"
-        android:textSize="12sp" />
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/new_font3" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_user_name"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_toRightOf="@+id/iv_user_icon"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/new_font5" />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_comment_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_user_name"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="-25dp"
+        android:layout_below="@+id/tv_time"
+        android:layout_marginRight="15dp"
         android:layout_toRightOf="@+id/iv_user_icon"
-        android:layout_toLeftOf="@+id/rl_praise"
-        android:ellipsize="end"
         android:lineSpacingMultiplier="1.15"
-        android:text="@string/mNewsDetailHeaderDesc"
-        android:textColor="@color/news_detail_content"
-        android:textSize="14sp" />
+        android:textColor="@color/new_color1"
+        android:textSize="@dimen/new_font10" />
 
-    <RelativeLayout
-        android:id="@+id/rl_praise"
+    <ImageView
+        android:id="@+id/iv_praise"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/bg_normal_praise" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_praise_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tv_user_name"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="-10dp">
-
-        <ImageView
-            android:id="@+id/iv_praise"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_centerHorizontal="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/bg_normal_praise" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/tv_praise_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_praise"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="-16dp"
-            android:textColor="@color/red"
-            android:paddingBottom="15dp"
-            android:textSize="10sp" />
-    </RelativeLayout>
-
+        android:layout_alignBottom="@+id/tv_user_name"
+        android:layout_toLeftOf="@+id/iv_praise"
+        android:textColor="@color/new_color3"
+        android:textSize="@dimen/new_font5" />
 
     <com.news.yazhidao.widget.SpeechView
         android:id="@+id/mSpeechView"
@@ -84,13 +76,15 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/iv_user_icon"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"/>
+        android:layout_below="@+id/tv_comment_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/new_color4" />
 
 </RelativeLayout>

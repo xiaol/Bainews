@@ -44,7 +44,10 @@ import com.news.yazhidao.widget.UserCommentDialog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -67,15 +70,17 @@ public class NewsCommentFgt extends BaseFragment {
     private LinearLayout news_comment_NoCommentsLayout;
     private NewsFeed mNewsFeed;
 
-    /**通知新闻详情页和评论fragment刷新评论*/
-    public  class RefreshPageBroReceiber extends BroadcastReceiver {
+    /**
+     * 通知新闻详情页和评论fragment刷新评论
+     */
+    public class RefreshPageBroReceiber extends BroadcastReceiver {
 
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang","detailaty refresh br");
+            Logger.e("jigang", "detailaty refresh br");
             NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-            mComments.add(0,comment);
+            mComments.add(0, comment);
             news_comment_NoCommentsLayout.setVisibility(View.GONE);
             mCommentsAdapter.setData(mComments);
 
@@ -86,9 +91,9 @@ public class NewsCommentFgt extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        mNewsFeed = (NewsFeed)arguments.getSerializable(KEY_NEWS_FEED);
+        mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
 
-        if(mRefreshReceiber == null){
+        if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             getActivity().registerReceiver(mRefreshReceiber, filter);
@@ -98,12 +103,13 @@ public class NewsCommentFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mRefreshReceiber != null){
+        if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
 
-    private TextView news_comment_Title,news_comment_content;
+    private TextView news_comment_Title, news_comment_content;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -122,11 +128,11 @@ public class NewsCommentFgt extends BaseFragment {
         news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
         news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
         news_comment_Title.setText(mNewsFeed.getTitle());
-        news_comment_content.setText(mNewsFeed.getPubName()+"  "+mNewsFeed.getPubTime()+"  "+mNewsFeed.getCommentsCount()+"评");
+        news_comment_content.setText(mNewsFeed.getPubName() + "  " + mNewsFeed.getPubTime() + "  " + mNewsFeed.getCommentsCount() + "评");
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
-        if("0".equals(mNewsFeed.getCommentsCount())){
+        if ("0".equals(mNewsFeed.getCommentsCount())) {
             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             news_comment_NoCommentsLayout.setVisibility(View.GONE);
         }
 
@@ -146,16 +152,16 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void loadData() {
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mNewsFeed.getDocid() );
+        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mNewsFeed.getDocid());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         try {
             feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mNewsFeed.getDocid(),"utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mNewsFeed.getDocid(), "utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
-                    if( bgLayout.getVisibility() == View.VISIBLE){
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
                     mNewsCommentList.onRefreshComplete();
@@ -166,7 +172,7 @@ public class NewsCommentFgt extends BaseFragment {
                         mCommentsAdapter.setData(mComments);
                         Logger.d("aaa", "评论加载完毕！！！！！！");
                         news_comment_NoCommentsLayout.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         if (mComments.size() == 0) {
                             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
                         } else {
@@ -179,7 +185,7 @@ public class NewsCommentFgt extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     mNewsCommentList.onRefreshComplete();
-                    if( bgLayout.getVisibility() == View.VISIBLE){
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
                     Logger.e("jigang", "network fail");
@@ -194,7 +200,7 @@ public class NewsCommentFgt extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == LoginAty.REQUEST_CODE && data != null){
+        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
             mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
             addNewsLove(mUser, mComment, mHolder);
         }
@@ -238,6 +244,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
+                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
@@ -248,22 +255,29 @@ public class NewsCommentFgt extends BaseFragment {
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
+            setNewsTime(holder.tvTime, comment.getCreate_time());
             if (!TextUtil.isEmptyString(comment.getProfile())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
             }
             holder.tvName.setText(comment.getNickname());
-            holder.tvPraiseCount.setText(comment.getLove() + "");
+            int count = comment.getLove();
+            if (count == 0) {
+                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+            } else {
+                holder.tvPraiseCount.setVisibility(View.VISIBLE);
+                holder.tvPraiseCount.setText(comment.getLove() + "");
+            }
 
             holder.tvContent.setText(comment.getContent());
-            if (!mComment.isPraise()){
+            if (!mComment.isPraise()) {
                 holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-            }else {
+            } else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
 
-            if(user != null && user.getUserId().equals(comment.getUuid())){
+            if (user != null && user.getUserId().equals(comment.getUuid())) {
                 holder.ivPraise.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
             }
 
@@ -275,7 +289,7 @@ public class NewsCommentFgt extends BaseFragment {
                     if (user == null) {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
-                    }else {
+                    } else {
                         addNewsLove(user, comment, holder);
                         comments.get(position).setPraise(true);
                         comments.get(position).setLove(comment.getLove() + 1);
@@ -287,16 +301,39 @@ public class NewsCommentFgt extends BaseFragment {
         }
     }
 
+    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = dateFormat.parse(updateTime);
+            long between = System.currentTimeMillis() - date.getTime();
+            if (between >= (24 * 3600000)) {
+                tvTime.setText(updateTime);
+            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
+                tvTime.setText(between / 3600000 + "小时前");
+            } else {
+                if (between / 3600000 / 60 == 0) {
+                    tvTime.setText("刚刚");
+                } else {
+                    tvTime.setText(between / 3600000 / 60 + "分钟前");
+                }
+            }
+        } catch (ParseException e) {
+            tvTime.setText(updateTime);
+            e.printStackTrace();
+        }
+
+    }
+
     private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
         try {
-            String name = URLEncoder.encode(user.getUserName(),"utf-8");
-            String cid = URLEncoder.encode(comment.getId(),"utf-8");
+            String name = URLEncoder.encode(user.getUserName(), "utf-8");
+            String cid = URLEncoder.encode(comment.getId(), "utf-8");
             user.setUserName(name);
             comment.setId(cid);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
         }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
@@ -327,6 +364,7 @@ public class NewsCommentFgt extends BaseFragment {
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
+        TextViewExtend tvTime;
         ImageView ivPraise;
     }
 }
