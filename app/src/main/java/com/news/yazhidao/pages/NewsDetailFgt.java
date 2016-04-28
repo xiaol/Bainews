@@ -7,10 +7,13 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -75,8 +78,10 @@ public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_NEWS_ID = "key_news_id";
     public static final int REQUEST_CODE = 1030;
     private  LinearLayout detail_shared_FriendCircleLayout,
-            detail_shared_PraiseLayout,
-            mCommentLayout;
+            detail_shared_CareForLayout,
+            mCommentLayout,
+            careforLayout;
+
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
             detail_shared_MoreComment,
@@ -84,11 +89,13 @@ public class NewsDetailFgt extends BaseFragment {
     private RelativeLayout detail_shared_ShareImageLayout,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
+    private ImageView detail_shared_PraiseImage;
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
+
 
 
 
@@ -116,6 +123,7 @@ public class NewsDetailFgt extends BaseFragment {
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
+        careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
 
@@ -191,8 +199,9 @@ public class NewsDetailFgt extends BaseFragment {
         mCommentTitleView.setLayoutParams(layoutParams);
         mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
-        detail_shared_PraiseLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
+        detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
+        detail_shared_PraiseImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -203,10 +212,13 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa", "点击朋友圈");
             }
         });
-        detail_shared_PraiseLayout.setOnClickListener(new View.OnClickListener() {
+        detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
+                CareForAnimation();
+                detail_shared_PraiseImage.setImageResource(R.drawable.bg_praised);
+
             }
         });
         ////第3部分的CommentContent(这个内容是动态的获取数据后添加)
@@ -226,9 +238,20 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
+        detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewsDetailAty2 mActivity = (NewsDetailAty2) getActivity();
+                if (!mActivity.isCommentPage) {
+                    mActivity.isCommentPage = true;
+                    mActivity.mNewsDetailViewPager.setCurrentItem(1);
+                    mActivity.mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                }
+            }
+        });
 
         detail_shared_hotComment.setText("相关观点");
-
 
     }
 
@@ -240,7 +263,60 @@ public class NewsDetailFgt extends BaseFragment {
 //            addNewsLove(comment);
 //        }
 //    };
+    public void CareForAnimation(){
+        //图片渐变模糊度始终
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f,1.0f);
+        //渐变时间
+        alphaAnimation.setDuration(500);
+        careforLayout.startAnimation(alphaAnimation);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(careforLayout.getVisibility() == View.GONE){
+                    careforLayout.setVisibility(View.VISIBLE);
+                }
+            }
 
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f,0f);
+                        //渐变时间
+                        alphaAnimationEnd.setDuration(500);
+                        careforLayout.startAnimation(alphaAnimationEnd);
+                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                    if(careforLayout.getVisibility() == View.VISIBLE){
+                                        careforLayout.setVisibility(View.GONE);
+                                    }
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                    }
+                }, 1000);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
     private void loadData() {
 
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
@@ -276,6 +352,8 @@ public class NewsDetailFgt extends BaseFragment {
                     isCommentSuccess = true;
                     isBgLayoutSuccess();
                     mNewsDetailList.onRefreshComplete();
+                    detail_shared_CommentTitleLayout.setVisibility(View.GONE);
+                    detail_shared_MoreComment.setVisibility(View.GONE);
                     Logger.e("jigang", "network fail");
                 }
             });

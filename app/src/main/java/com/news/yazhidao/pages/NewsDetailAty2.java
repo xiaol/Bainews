@@ -103,16 +103,16 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private int defaultH;//图片新闻文本描述的默认高度
     private long mDurationStart;//统计用户读此条新闻时话费的时间
     private boolean isReadOver;//是否看完了全文,此处指的是翻到最下面
-    private boolean isCommentPage;//是否是评论页
+    public boolean isCommentPage;//是否是评论页
     private View mDetailAddComment;
-    private TextView mDetailCommentNum;
+    public TextView mDetailCommentNum;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
     private TextView mImageWallDesc;
     private View mDetailBottomBanner;
-    private ImageView mDetailCommentPic;
+    public ImageView mDetailCommentPic;
     private WebView mDetailWebView;
-    private ViewPager mNewsDetailViewPager;
+    public ViewPager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
@@ -323,7 +323,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
         mNewsLoadingImg.setVisibility(View.GONE);
-
+        mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
         bgLayout.setVisibility(View.VISIBLE);
         mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
         if (mNewsFeed != null) {

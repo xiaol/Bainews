@@ -66,6 +66,10 @@ public class CommonViewHolder {
         TextViewExtend text = getView(ViewID);
         text.setBackgroundColor(mContext.getResources().getColor(color));
     }
+    public void setTextViewExtendTextBackgroundResource(int ViewID ,int resource){
+        TextViewExtend text = getView(ViewID);
+        text.setBackgroundResource(resource);
+    }
 
 
     public View getConvertView()

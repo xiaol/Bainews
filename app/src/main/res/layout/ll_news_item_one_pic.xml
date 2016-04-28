@@ -99,6 +99,5 @@
         android:layout_height="1px"
         android:layout_marginTop="12dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:background="@color/new_color5" />
+        android:layout_marginRight="15dp" />
 </RelativeLayout>
