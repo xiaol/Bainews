@@ -265,13 +265,14 @@ public class NewsCommentFgt extends BaseFragment {
             }else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
-
-            if(user.getUserId().equals(comment.getUuid())){
-                holder.ivPraise.setVisibility(View.GONE);
-            }else{
-                holder.ivPraise.setVisibility(View.VISIBLE);
+            String commentUserid = comment.getUuid();
+            if(commentUserid != null && commentUserid.length() != 0){
+                if(user.getUserId().equals(comment.getUuid())){
+                    holder.ivPraise.setVisibility(View.GONE);
+                }else{
+                    holder.ivPraise.setVisibility(View.VISIBLE);
+                }
             }
-
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

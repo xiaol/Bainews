@@ -121,7 +121,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     @Override
-    public void convert(final CommonViewHolder holder, NewsFeed feed) {
+    public void convert(final CommonViewHolder holder, NewsFeed feed,int position) {
         switch (holder.getLayoutId()) {
             case R.layout.ll_news_item_no_pic:
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());

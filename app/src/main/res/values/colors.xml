@@ -237,6 +237,9 @@
     <color name="title_user_not_read" >@color/color2</color>
 
     <color name="news_comment_line1" >#FE6946</color>
+    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
+    <color name="detail_share_frame" >#ffdcdcdc</color>
+    <color name="attention_lineColor" >#ffb3b3b3</color>
 
 
 </resources>

@@ -15,7 +15,8 @@
         android:gravity="center"
         android:padding="3dp"
         android:textColor="@color/DarkGray"
-        android:textSize="@dimen/detail_relate_opinion_time" />
+        android:textSize="@dimen/detail_relate_opinion_time"
+        android:text="123"/>
 
 
     <RelativeLayout

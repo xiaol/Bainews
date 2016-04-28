@@ -13,22 +13,27 @@
         android:background="@color/bg_home_login_header"
         >
 
+
         <ImageView
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
             android:contentDescription="转到上一级"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_left_back"/>
+            android:src="@drawable/detail_back"/>
+        <ImageView
+            android:id="@+id/mDetailRightMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/detail_more"
+            android:layout_alignParentRight="true"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:alpha="0.3"
-            android:background="@color/black"
+            android:background="@color/new_color5"
             />
     </RelativeLayout>
 
@@ -172,11 +177,13 @@
             android:src="@drawable/btn_detail_share"/>
     </RelativeLayout>
   <!--  暂时不用-->
+    <!--需要显示-->
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:visibility="visible"
         >
 
         <ImageView
@@ -190,17 +197,20 @@
             android:src="@drawable/ic_news_detail_reload"
             android:visibility="gone"
             />
-        <include layout="@layout/loading_view" />
+        <include layout="@layout/loading_view"
+
+            />
 
     </RelativeLayout>
 
-
+<!--需要占位不显示-->
     <ImageView
         android:id="@+id/share_bg_imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        />
 
 
 </RelativeLayout>

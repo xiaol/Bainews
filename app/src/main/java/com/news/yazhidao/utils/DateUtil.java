@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.widget.TextView;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -314,5 +315,30 @@ public class DateUtil {
             e.printStackTrace();
             return 0;
         }
+
+    }
+
+    /**
+     * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @param strDate
+     * @return
+     */
+    public static Date strToDateLong(String strDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ParsePosition pos = new ParsePosition(0);
+        Date strtodate = formatter.parse(strDate, pos);
+        return strtodate;
+    }
+
+
+    public static Calendar strToCalendarLong(String strDate) {
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(strDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 }

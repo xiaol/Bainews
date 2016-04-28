@@ -97,4 +97,9 @@ public class HttpConstant {
      */
     public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep?";
 
+    /**
+     * 新闻客户端-新闻相关属性集
+     */
+    public static final String URL_NEWS_RELATED = URL_SERVER_HOST + "/bdp/news/related?";
+
 }
