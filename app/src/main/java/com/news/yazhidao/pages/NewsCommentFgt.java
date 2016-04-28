@@ -312,15 +312,16 @@ public class NewsCommentFgt extends BaseFragment {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-                tvTime.setText(updateTime);
+                tvTime.setText("");
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvTime.setText(between / 3600000 + "小时前");
+                tvTime.setText("");
             } else {
-                if (between / 3600000 / 60 == 0) {
-                    tvTime.setText("刚刚");
-                } else {
-                    tvTime.setText(between / 3600000 / 60 + "分钟前");
-                }
+                tvTime.setText(between *60/ 3600000+"分钟前");
+//                if (between / 3600000 / 60 == 0) {
+//                    tvTime.setText("刚刚");
+//                } else {
+//                    tvTime.setText(between / 3600000 / 60 + "分钟前");
+//                }
             }
         } catch (ParseException e) {
             tvTime.setText(updateTime);

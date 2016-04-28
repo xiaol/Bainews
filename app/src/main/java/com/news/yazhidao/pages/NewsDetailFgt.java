@@ -128,30 +128,6 @@ public class NewsDetailFgt extends BaseFragment {
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
 
-//        mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {//刷新
-//                isListRefresh = true;
-//                mNewsDetailList.onRefreshComplete();
-//            }
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {//加载
-//                isListRefresh = false;
-//                if (MAXPage > viewpointPage) {
-//                    beanList.addAll(beanPageList.get(viewpointPage));
-//                    viewpointPage++;
-//                    mAdapter.setNewsFeed(beanList);
-//                    mAdapter.notifyDataSetChanged();
-//                    mNewsDetailList.onRefreshComplete();
-//                }else{
-//                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//                    ListView lv = mNewsDetailList.getRefreshableView();
-//                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
-//                    mNewsDetailFootView.setLayoutParams(layoutParams);
-//                    lv.addFooterView(mNewsDetailFootView);
-//                }
-//            }
-//        });
 
         mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

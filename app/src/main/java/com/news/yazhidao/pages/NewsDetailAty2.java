@@ -42,9 +42,6 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
-import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.entity.RelatedEntity;
-import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
@@ -64,8 +61,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -197,6 +192,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
         mDetailWebView = (WebView) findViewById(R.id.mDetailWebView);
         mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
+
     }
 
     long lastTime, nowTime;
@@ -462,7 +458,16 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 onBackPressed();
                 break;
             case R.id.mDetailRightMore://更多的点击
+                if (mNewsFeed != null) {
+                    mivShareBg.startAnimation(mAlphaAnimationIn);
+                    mivShareBg.setVisibility(View.VISIBLE);
+                    mSharePopupWindow = new SharePopupWindow(this, this);
+                    String remark = "1";
+                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+                    mSharePopupWindow.setTitleAndUrl(mNewsFeed.getTitle(), url, remark);
+                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
+                }
                 break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {
