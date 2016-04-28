@@ -45,7 +45,10 @@ import com.news.yazhidao.widget.UserCommentDialog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -131,7 +134,6 @@ public class NewsCommentFgt extends BaseFragment {
         } else {
             news_comment_content.setText(mNewsFeed.getPubName() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPubTime()) + "  " + mNewsFeed.getCommentsCount() + "评");
         }
-
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
         if ("0".equals(mNewsFeed.getCommentsCount())) {
             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
@@ -247,6 +249,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
+                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
@@ -257,11 +260,18 @@ public class NewsCommentFgt extends BaseFragment {
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
+            setNewsTime(holder.tvTime, comment.getCreate_time());
             if (!TextUtil.isEmptyString(comment.getProfile())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
             }
             holder.tvName.setText(comment.getNickname());
-            holder.tvPraiseCount.setText(comment.getLove() + "");
+            int count = comment.getLove();
+            if (count == 0) {
+                holder.tvPraiseCount.setVisibility(View.INVISIBLE);
+            } else {
+                holder.tvPraiseCount.setVisibility(View.VISIBLE);
+                holder.tvPraiseCount.setText(comment.getLove() + "");
+            }
 
             holder.tvContent.setText(comment.getContent());
             if (!mComment.isPraise()) {
@@ -270,7 +280,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
 
-            if(user != null && user.getUserId().equals(comment.getUuid())){
+            if (user != null && user.getUserId().equals(comment.getUuid())) {
                 holder.ivPraise.setVisibility(View.GONE);
             } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
@@ -294,6 +304,29 @@ public class NewsCommentFgt extends BaseFragment {
             });
             return convertView;
         }
+    }
+
+    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = dateFormat.parse(updateTime);
+            long between = System.currentTimeMillis() - date.getTime();
+            if (between >= (24 * 3600000)) {
+                tvTime.setText(updateTime);
+            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
+                tvTime.setText(between / 3600000 + "小时前");
+            } else {
+                if (between / 3600000 / 60 == 0) {
+                    tvTime.setText("刚刚");
+                } else {
+                    tvTime.setText(between / 3600000 / 60 + "分钟前");
+                }
+            }
+        } catch (ParseException e) {
+            tvTime.setText(updateTime);
+            e.printStackTrace();
+        }
+
     }
 
     private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
@@ -336,6 +369,7 @@ public class NewsCommentFgt extends BaseFragment {
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
+        TextViewExtend tvTime;
         ImageView ivPraise;
     }
 }

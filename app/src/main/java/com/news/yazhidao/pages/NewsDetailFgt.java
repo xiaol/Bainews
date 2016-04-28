@@ -118,7 +118,6 @@ public class NewsDetailFgt extends BaseFragment {
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        mNewsDetailList.setRefreshing();
 
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
