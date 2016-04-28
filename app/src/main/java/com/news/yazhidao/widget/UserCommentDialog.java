@@ -31,7 +31,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.NewsDetailAdd;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.LoginAty;
@@ -59,22 +58,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
 
-    public interface IRefreshCommentPage{
-        void refreshComment(NewsDetailAdd.Point point);
-    }
-
-    private  CommentPopupWindow.IUpdateCommentCount mIUpdateCommentCount;
     private Context mContext;
     private EditText mCommentContent;
     private TextView mCommentCommit;
     private String mUserCommentMsg;
-    private IRefreshCommentPage mRefreshCommentPage;
-
-    public UserCommentDialog(){}
-    public UserCommentDialog(CommentPopupWindow.IUpdateCommentCount updateCommentCount,IRefreshCommentPage iRefreshCommentPage) {
-        this.mIUpdateCommentCount = updateCommentCount;
-        this.mRefreshCommentPage = iRefreshCommentPage;
-    }
 
     @Override
     public void onAttach(Activity activity) {

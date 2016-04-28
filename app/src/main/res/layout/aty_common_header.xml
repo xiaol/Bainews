@@ -3,7 +3,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@color/bg_home_login_header"
+                android:background="@color/new_color9"
                 android:orientation="vertical">
 
     <ImageView
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="默认"
-        android:textColor="@color/white"
+        android:textColor="@color/new_color7"
         android:textSize="20sp"
         />
 </RelativeLayout>

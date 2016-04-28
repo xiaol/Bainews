@@ -23,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -56,6 +55,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static final String KEY_NEWS_IMG_URL = "key_news_img_url";//确保新闻详情中有一张图
     public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
     public static final String KEY_NEWS_DOCID = "key_news_docid";
+    public static final String KEY_NEWS_FEED = "key_news_feed";
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -71,8 +71,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_PUBNAME = "key_pubname";
     public static String KEY_PUBTIME = "key_pubtime";
     public static String KEY_COMMENTCOUNT = "key_commentcount";
-
-
 
 
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
@@ -105,7 +103,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NewsSaveDataCallBack mNewsSaveCallBack;
     private View mHomeRelative;
     private View mHomeRetry;
-    private RelativeLayout bgLayout,mSearch_layout;
+    private RelativeLayout bgLayout, mSearch_layout;
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
     private boolean isNeedAddSP = true;
@@ -128,7 +126,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
 
-
     public void setNewsFeed(ArrayList<NewsFeed> results) {
         this.mArrNewsFeed = results;
         if (mAdapter != null) {
@@ -144,7 +141,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
-        if(isNewVisity&&isNeedAddSP){//切换到别的页面加入他
+        if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
             addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
 
             isNeedAddSP = false;
@@ -238,7 +235,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
 
 
-
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -247,6 +243,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 isListRefresh = true;
                 loadData(PULL_DOWN_REFRESH);
             }
+
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
@@ -360,11 +357,26 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
             requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
         } else {
-            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
-                NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
-                tstart = DateUtil.dateStr2Long(lastItem.getPubTime()) + "";
+            if (mFlag) {
+                if (mIsFirst) {
+                    ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                    if (!TextUtil.isListEmpty(arrNewsFeed)) {
+                        NewsFeed newsFeed = arrNewsFeed.get(0);
+                        tstart = DateUtil.dateStr2Long(newsFeed.getPubTime()) + "";
+                    }
+                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
+                } else {
+                    if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                        NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
+                        tstart = DateUtil.dateStr2Long(lastItem.getPubTime()) + "";
+                    }
+                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
+                }
+            } else {
+                mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
+                requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
             }
-            requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
         }
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
@@ -380,7 +392,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     NewsFeed newsFeed = new NewsFeed();
                     newsFeed.setImgStyle("900");
                     result.add(newsFeed);
-                    mDeleteIndex = result.size()-1;
+                    mDeleteIndex = result.size() - 1;
                 }
                 mIsFirst = false;
                 mHomeRetry.setVisibility(View.GONE);
@@ -396,7 +408,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             mlvNewsFeed.getRefreshableView().setSelection(0);
                             break;
                         case PULL_UP_REFRESH:
-                            if(isNewVisity){//首次进入加入他
+                            if (isNewVisity) {//首次进入加入他
                                 addSP(result);
                                 isNeedAddSP = false;
 
@@ -527,7 +539,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private void showChangeTextSizeView() {
         if (mstrChannelId.equals("1") && mFlag == false)
             if (mChangeTextSizePopWindow == null) {
-                mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
@@ -550,7 +561,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
     }
-    public void addSP(ArrayList<NewsFeed> result){
+
+    public void addSP(ArrayList<NewsFeed> result) {
         ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
         for (NewsFeed bean : result) {
             UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
@@ -559,24 +571,24 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             uploadLogDataEntity.setCid(bean.getChannelId());
             uploadLogDataEntities.add(uploadLogDataEntity);
         }
-        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId,CommonConstant.UPLOAD_LOG_MAIN,uploadLogDataEntities);
+        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
         Logger.d("aaa", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-        if(saveNum > 200){
+        if (saveNum > 200) {
             RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        String url =HttpConstant.URL_UPLOAD_LOG+"uid=" + mstrUserId + "&clas=1" +
-                "&data=" +TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-        Logger.d("aaa", "url===" + url);
-        UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-        });
-        requestQueue.add(request);
+            String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
+                    "&data=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+            Logger.d("aaa", "url===" + url);
+            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
+            requestQueue.add(request);
         }
     }
 

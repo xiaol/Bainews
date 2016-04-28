@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -35,6 +32,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
@@ -56,8 +54,8 @@ public class NewsCommentFgt extends BaseFragment {
 
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
+    public static final String KEY_NEWS_FEED = "key_news_feed";
     private PullToRefreshListView mNewsCommentList;
-    private String mDocid , mTitle , mPubName , mPubTime, mCommentCount;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
@@ -67,6 +65,7 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsDetailComment mComment;
     private Holder mHolder;
     private LinearLayout news_comment_NoCommentsLayout;
+    private NewsFeed mNewsFeed;
 
     /**通知新闻详情页和评论fragment刷新评论*/
     public  class RefreshPageBroReceiber extends BroadcastReceiver {
@@ -87,11 +86,7 @@ public class NewsCommentFgt extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
-        mDocid = arguments.getString(KEY_NEWS_DOCID);
-        mTitle = arguments.getString(NewsFeedFgt.KEY_TITLE);
-        mPubName = arguments.getString(NewsFeedFgt.KEY_PUBNAME);
-        mPubTime = arguments.getString(NewsFeedFgt.KEY_PUBTIME);
-        mCommentCount = arguments.getString(NewsFeedFgt.KEY_COMMENTCOUNT);
+        mNewsFeed = (NewsFeed)arguments.getSerializable(KEY_NEWS_FEED);
 
         if(mRefreshReceiber == null){
             mRefreshReceiber = new RefreshPageBroReceiber();
@@ -126,10 +121,10 @@ public class NewsCommentFgt extends BaseFragment {
 
         news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
         news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
-        news_comment_Title.setText(mTitle);
-        news_comment_content.setText(mPubName+"  "+mPubTime+"  "+mCommentCount+"评");
+        news_comment_Title.setText(mNewsFeed.getTitle());
+        news_comment_content.setText(mNewsFeed.getPubName()+"  "+mNewsFeed.getPubTime()+"  "+mNewsFeed.getCommentsCount()+"评");
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
-        if(mCommentCount.equals("0")){
+        if("0".equals(mNewsFeed.getCommentsCount())){
             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
         }else{
             news_comment_NoCommentsLayout.setVisibility(View.GONE);
@@ -151,15 +146,12 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void loadData() {
-        if( bgLayout.getVisibility() == View.GONE){
-            bgLayout.setVisibility(View.VISIBLE);
-        }
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
+        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mNewsFeed.getDocid() );
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         try {
             feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid,"utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mNewsFeed.getDocid(),"utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -187,6 +179,9 @@ public class NewsCommentFgt extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     mNewsCommentList.onRefreshComplete();
+                    if( bgLayout.getVisibility() == View.VISIBLE){
+                        bgLayout.setVisibility(View.GONE);
+                    }
                     Logger.e("jigang", "network fail");
                 }
             });
@@ -265,13 +260,13 @@ public class NewsCommentFgt extends BaseFragment {
             }else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
-            String commentUserid = comment.getUuid();
-            if(commentUserid != null && commentUserid.length() != 0){
-                if(user.getUserId().equals(comment.getUuid())){
-                    holder.ivPraise.setVisibility(View.GONE);
-                }else{
-                    holder.ivPraise.setVisibility(View.VISIBLE);
-                }
+
+
+            if(user != null && user.getUserId().equals(comment.getUuid())){
+                holder.ivPraise.setVisibility(View.GONE);
+            }else{
+                holder.ivPraise.setVisibility(View.VISIBLE);
+
             }
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override

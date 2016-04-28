@@ -3,6 +3,7 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.nfc.Tag;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.widget.tag.TagBaseAdapter;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
@@ -78,7 +80,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mPopWindowLayout = new LinearLayout(context);
         mPopWindowLayout.setOrientation(LinearLayout.VERTICAL);
-        mPopWindowLayout.setPadding(mInPopMargin, mInPopMargin, mInPopMargin, mInPopMargin);
+        mPopWindowLayout.setPadding(DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15), DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15));
 
         mPopWindowLayout.setBackgroundResource(R.drawable.popwindow_linear_bg);
         mPopWindowLayout.setOnClickListener(new OnClickListener() {
@@ -102,10 +104,10 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mTriangle.setImageResource(R.drawable.triangle_downward);
 
         mTitle = new TextView(context);
-        mTitle.setTextSize(16f);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,16f);
         mTitle.setIncludeFontPadding(false);
         mTitle.setText("请选择不感兴趣原因:");
-        mTitle.setTextColor(getResources().getColor(R.color.black));
+        mTitle.setTextColor(getResources().getColor(R.color.new_color1));
         int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         mTitle.measure(w, h);
@@ -114,8 +116,8 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mLine = new TextView(context);
         LinearLayout.LayoutParams params0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
-        params1.setMargins(0, mInPopMargin, 0, 0);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext,0.55f));
+        params1.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
         mLine.setBackgroundColor(getResources().getColor(R.color.new_color5));
 
         mContainer = new TagCloudLayout(context);
@@ -129,7 +131,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(DeviceInfoUtil.getScreenWidth(context) - mInPopMargin * 2 - mMarginLorR * 2
                 , mLayoutHeight);//这里给他一个固定的大小
-        params2.setMargins(0, mInPopMargin, 0, 0);
+        params2.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
 
         mPopWindowLayout.addView(mTitle, params0);
         mPopWindowLayout.addView(mLine, params1);
@@ -149,7 +151,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mLayoutWidth = r - mMarginLorR * 2;
         mScreeHeight = b;
         mScreeWidth = r;
-        mLayoutHeight = mContainer.getLayoutHeight() + mInPopMargin * 4 + mTitleHeight + 1;
+        mLayoutHeight = mContainer.getLayoutHeight() + DensityUtil.dip2px(mContext,15) * 4 + mTitleHeight + 10;
 
 
         mAllLayout.layout(l, t, mScreeWidth, mScreeHeight);

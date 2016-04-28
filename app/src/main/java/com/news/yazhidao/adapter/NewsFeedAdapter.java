@@ -8,18 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -33,9 +30,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.ZipperUtil;
-import com.news.yazhidao.utils.adcoco.AdcocoUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -63,6 +58,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private NewsFeedDao mNewsFeedDao;
     private final int DELETEANIMTIME = 500;
     private File mNewsFile;
+    private int mTitleViewWidth;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -112,7 +108,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mNewsFile = ZipperUtil.getSaveFontPath(context);
-
+        mTitleViewWidth = mScreenWidth - DensityUtil.dip2px(mContext, 147);
     }
 
     public void setSearchKeyWord(String pKeyWord) {
@@ -136,9 +132,30 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgList().get(0));
                 final String strTitle = feed.getTitle();
                 setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), strTitle, feed.isRead());
-                final TextView tvTitle =  holder.getView(R.id.title_textView);
-                final LinearLayout llSourceContent =  holder.getView(R.id.source_content_linearLayout);
-                final ImageView ivBottomLine =  holder.getView(R.id.line_bottom_imageView);
+                final TextView tvTitle = holder.getView(R.id.title_textView);
+                final LinearLayout llSourceContent = holder.getView(R.id.source_content_linearLayout);
+                final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
+
+                RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceContent.getLayoutParams();
+                RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
+                RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
+                float textRealWidth = tvTitle.getPaint().measureText(strTitle);
+                Log.i("tag", tvTitle.getPaint().measureText(strTitle) + "textsize" + mTitleViewWidth + "textNum");
+                if (textRealWidth >= 2 * mTitleViewWidth - 5) {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+                } else if (textRealWidth <= mTitleViewWidth) {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                } else {
+                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
+                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                }
+                llSourceContent.setLayoutParams(lpSourceContent);
+                ivBottomLine.setLayoutParams(lpBottomLine);
                 tvTitle.post(new Runnable() {
                     @Override
                     public void run() {
@@ -150,7 +167,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                             titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
                             lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
                             lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                        } else if (lineCount == 1) {
+                        } else if (lineCount <= 1) {
                             titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
                             lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 127);
                             lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
@@ -221,9 +238,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             if (between >= (24 * 3600000)) {
-                tvComment.setText(updateTime);
+//                tvComment.setText(updateTime);
+                tvComment.setText("");
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvComment.setText(between / 3600000 + "小时前");
+//                tvComment.setText(between / 3600000 + "小时前");
+                tvComment.setText("");
             } else {
                 if (between / 3600000 / 60 == 0) {
                     tvComment.setText("刚刚");
@@ -272,6 +291,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     /**
      * item的点击事件
+     *
      * @param rlNewsContent
      * @param feed
      */
@@ -284,28 +304,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     firstClick = System.currentTimeMillis();
                     return;
                 }
-//                Gson gson = new Gson();
-//
-//                try {
-//                    FileUtils.writeSDFile(mNewsFile,gson.toJson(feed));
-//                    Logger.d("aaa","读取的内容===="+FileUtils.readSDFile(mNewsFile));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, feed.getUrl());
-                intent.putExtra(NewsFeedFgt.KEY_URL, feed.getPubUrl());
-                intent.putExtra(NewsFeedFgt.KEY_CHANNEL_ID, feed.getChannelId());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_IMG_URL, TextUtil.isListEmpty(feed.getImgList()) ? null : feed.getImgList().get(0));
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_TYPE, feed.getImgStyle());
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_DOCID, feed.getDocid());
-                intent.putExtra(NewsFeedFgt.KEY_TITLE, feed.getTitle());
-                intent.putExtra(NewsFeedFgt.KEY_PUBNAME, feed.getPubName());
-                intent.putExtra(NewsFeedFgt.KEY_PUBTIME, feed.getPubTime());
-                intent.putExtra(NewsFeedFgt.KEY_COMMENTCOUNT, feed.getCommentsCount());
-
-
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED,feed);
 
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
@@ -367,17 +368,18 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
         });
     }
-
+    int height;
     public void disLikeDeleteItem() {
         final ViewWrapper wrapper = new ViewWrapper(DeleteView);
-        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(400);
+        height = DeleteView.getHeight();
+        ObjectAnimator changeH = ObjectAnimator.ofInt(wrapper, "height", DeleteView.getHeight(), 0).setDuration(550);
         changeH.start();
-        changeH.setInterpolator(new LinearInterpolator());
+        changeH.setInterpolator(new AccelerateInterpolator());
         changeH.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mNewsFeedDao.deleteOnceDate(DeleteClickBean);
-                ObjectAnimator.ofFloat(wrapper, "height", 0, DeleteView.getHeight()).setDuration(0).start();
+//                ObjectAnimator.ofFloat(wrapper, "height", 0, deleteViewHeight).setDuration(0).start();
                 ArrayList<NewsFeed> arrayList = getNewsFeed();
                 arrayList.remove(DeleteClickBean);
                 notifyDataSetChanged();
