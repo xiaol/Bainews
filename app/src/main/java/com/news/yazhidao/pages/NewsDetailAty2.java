@@ -102,7 +102,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mDetailView;
     private SharePopupWindow mSharePopupWindow;
     //    private ProgressBar mNewsDetailProgress;
-    private RelativeLayout bgLayout;
 
     private boolean isDisplay = true;
     private int defaultH;//图片新闻文本描述的默认高度
@@ -176,7 +175,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsLoadingImg.setOnClickListener(this);
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
-        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
@@ -328,7 +326,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mAniNewsLoading.start();
         mNewsLoadingImg.setVisibility(View.GONE);
 
-        bgLayout.setVisibility(View.VISIBLE);
         mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
         if (mNewsFeed != null) {
             mUrl = mNewsFeed.getUrl();
@@ -369,7 +366,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
                 mNewsLoadingImg.setVisibility(View.VISIBLE);
-                bgLayout.setVisibility(View.GONE);
             }
         });
 
@@ -652,5 +648,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             return views.get(position);
         }
     }
+
 
 }

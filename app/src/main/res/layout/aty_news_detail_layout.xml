@@ -182,9 +182,6 @@
             android:src="@drawable/ic_news_detail_reload"
             android:visibility="gone"
             />
-        <include layout="@layout/loading_view"
-
-            />
 
     </RelativeLayout>
 

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,6 +91,7 @@ public class NewsDetailFgt extends BaseFragment {
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
 
 
 
@@ -139,7 +141,6 @@ public class NewsDetailFgt extends BaseFragment {
 
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
-
         loadData();
 
         return rootView;
@@ -173,7 +174,14 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.loadData(TextUtil.genarateHTML(result, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
-
+        mDetailWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                isWebSuccess = true;
+                isBgLayoutSuccess();
+            }
+        });
 
         //第2部分的CommentTitle
         View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
@@ -231,9 +239,7 @@ public class NewsDetailFgt extends BaseFragment {
 //    };
 
     private void loadData() {
-        if( bgLayout.getVisibility() == View.GONE){
-            bgLayout.setVisibility(View.VISIBLE);
-        }
+
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
@@ -244,9 +250,8 @@ public class NewsDetailFgt extends BaseFragment {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
-                    if( bgLayout.getVisibility() == View.VISIBLE){
-                        bgLayout.setVisibility(View.GONE);
-                    }
+                    isCommentSuccess = true;
+                    isBgLayoutSuccess();
                     mNewsDetailList.onRefreshComplete();
                     Logger.e("jigang", "network success, comment" + result);
 
@@ -265,6 +270,8 @@ public class NewsDetailFgt extends BaseFragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    isCommentSuccess = true;
+                    isBgLayoutSuccess();
                     mNewsDetailList.onRefreshComplete();
                     Logger.e("jigang", "network fail");
                 }
@@ -276,6 +283,9 @@ public class NewsDetailFgt extends BaseFragment {
                     new Response.Listener<RelatedEntity>() {
                         @Override
                         public void onResponse(RelatedEntity response) {
+                            isCorrelationSuccess = true;
+                            isBgLayoutSuccess();
+
                             Logger.e("jigang", "network success RelatedEntity~~" + response);
                             ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
                             if(!TextUtil.isListEmpty(relatedItemEntities)){
@@ -304,6 +314,8 @@ public class NewsDetailFgt extends BaseFragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            isCorrelationSuccess = true;
+                            isBgLayoutSuccess();
                             Logger.e("jigang", "network error~~");
                         }
                     });
@@ -511,4 +523,10 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
     }
+    public void isBgLayoutSuccess(){
+        if (isCommentSuccess && isWebSuccess && isCorrelationSuccess&&bgLayout.getVisibility() == View.VISIBLE) {
+            bgLayout.setVisibility(View.GONE);
+        }
+    }
+
 }
