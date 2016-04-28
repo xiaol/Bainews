@@ -9,9 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -54,7 +52,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.umeng.message.proguard.P;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -154,8 +151,15 @@ public class NewsDetailFgt extends BaseFragment {
         return rootView;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mRefreshReceiber != null){
+            getActivity().unregisterReceiver(mRefreshReceiber);
+        }
+    }
 
-    public void addHeadView(LayoutInflater inflater,  ViewGroup container){
+    public void addHeadView(LayoutInflater inflater, ViewGroup container){
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
@@ -235,6 +239,18 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
+        detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewsDetailAty2 mActivity = (NewsDetailAty2) getActivity();
+                if (!mActivity.isCommentPage) {
+                    mActivity.isCommentPage = true;
+                    mActivity.mNewsDetailViewPager.setCurrentItem(1);
+                    mActivity.mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mActivity.mDetailCommentNum.setVisibility(View.GONE);
+                }
+            }
+        });
 
         detail_shared_hotComment.setText("相关观点");
 
@@ -337,6 +353,8 @@ public class NewsDetailFgt extends BaseFragment {
                     isCommentSuccess = true;
                     isBgLayoutSuccess();
                     mNewsDetailList.onRefreshComplete();
+                    detail_shared_CommentTitleLayout.setVisibility(View.GONE);
+                    detail_shared_MoreComment.setVisibility(View.GONE);
                     Logger.e("jigang", "network fail");
                 }
             });

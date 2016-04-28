@@ -304,6 +304,19 @@ public class DateUtil {
     }
 
     /**
+     * 获取指定时间的月和日,格式06-24
+     */
+    public static String getMonthAndDay(String dateStr){
+        try {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr));
+            return String.format("%02d", c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE));
+        } catch (ParseException e) {
+            return getMonthAndDay(getDate());
+        }
+    }
+
+    /**
      * 把字符串转换成毫秒值
      */
     public static long dateStr2Long(String dateStr) {
