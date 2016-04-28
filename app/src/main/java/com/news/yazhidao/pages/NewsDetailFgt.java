@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,14 +90,13 @@ public class NewsDetailFgt extends BaseFragment {
     private RelativeLayout detail_shared_ShareImageLayout,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
-    private ImageView detail_shared_PraiseImage;
+    private ImageView detail_shared_AttentionImage;
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
-
-
+    boolean isNoHaveBean ;
 
 
 
@@ -114,9 +114,10 @@ public class NewsDetailFgt extends BaseFragment {
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
+
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
@@ -125,23 +126,69 @@ public class NewsDetailFgt extends BaseFragment {
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        mNewsDetailList.setRefreshing();
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
 
-        mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//        mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {//刷新
+//                isListRefresh = true;
+//                mNewsDetailList.onRefreshComplete();
+//            }
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {//加载
+//                isListRefresh = false;
+//                if (MAXPage > viewpointPage) {
+//                    beanList.addAll(beanPageList.get(viewpointPage));
+//                    viewpointPage++;
+//                    mAdapter.setNewsFeed(beanList);
+//                    mAdapter.notifyDataSetChanged();
+//                    mNewsDetailList.onRefreshComplete();
+//                }else{
+//                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+//                    ListView lv = mNewsDetailList.getRefreshableView();
+//                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
+//                    mNewsDetailFootView.setLayoutParams(layoutParams);
+//                    lv.addFooterView(mNewsDetailFootView);
+//                }
+//            }
+//        });
+
+        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {//刷新
-                isListRefresh = true;
-                mNewsDetailList.onRefreshComplete();
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
             }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {//加载
-                isListRefresh = false;
-                mNewsDetailList.onRefreshComplete();
 
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                if (beanList.size() == 0) {
+
+                    return;
+                }
+                int lastPositon =  absListView.getLastVisiblePosition();
+                if(lastPositon -2 ==beanList.size()-1){
+                    if (MAXPage > viewpointPage) {
+                        beanList.addAll(beanPageList.get(viewpointPage));
+                        viewpointPage++;
+                        mAdapter.setNewsFeed(beanList);
+                        mAdapter.notifyDataSetChanged();
+                        mNewsDetailList.onRefreshComplete();
+                    }else{
+                        if(isNoHaveBean){
+                            return;
+                        }
+
+                        isNoHaveBean = true;
+
+                        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                        ListView lv = mNewsDetailList.getRefreshableView();
+                        LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
+                        mNewsDetailFootView.setLayoutParams(layoutParams);
+                        lv.addFooterView(mNewsDetailFootView);
+                    }
+                }
             }
         });
-
         mAdapter = new NewsDetailFgtAdapter(getActivity());
 
         mNewsDetailList.setAdapter(mAdapter);
@@ -202,7 +249,7 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
-        detail_shared_PraiseImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseImage);
+        detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -218,7 +265,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
                 CareForAnimation();
-                detail_shared_PraiseImage.setImageResource(R.drawable.bg_praised);
+                detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
 
             }
         });
@@ -318,6 +365,9 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
     }
+
+
+
     private void loadData() {
 
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
@@ -367,21 +417,11 @@ public class NewsDetailFgt extends BaseFragment {
                         public void onResponse(RelatedEntity response) {
                             isCorrelationSuccess = true;
                             isBgLayoutSuccess();
-
-                            Logger.e("jigang", "network success RelatedEntity~~" + response);
                             ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
+                            Logger.e("jigang", "network success RelatedEntity~~" + response);
+
                             if(!TextUtil.isListEmpty(relatedItemEntities)){
-                                Logger.e("aaa","time:================比较前=================");
-                                for(int i=0;i<relatedItemEntities.size();i++){
-                                    Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
-                                }
-                                Collections.sort(relatedItemEntities);
-                                Logger.e("aaa","time:================比较====后=================");
-                                for(int i=0;i<relatedItemEntities.size();i++){
-                                    Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
-                                }
-                                mAdapter.setNewsFeed(relatedItemEntities);
-                                mAdapter.notifyDataSetChanged();
+                                setBeanPageList(relatedItemEntities);
                                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
                             }else{
                                 RelatedItemEntity entity = new RelatedItemEntity();
@@ -415,6 +455,42 @@ public class NewsDetailFgt extends BaseFragment {
 
 
     }
+    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
+    ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
+    int viewpointPage = 0;
+    int pageSize = 6;
+    int MAXPage;
+    public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities){
+        Logger.e("aaa","time:================比较前=================");
+        for(int i=0;i<relatedItemEntities.size();i++){
+            Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
+        }
+        Collections.sort(relatedItemEntities);
+        Logger.e("aaa","time:================比较====后=================");
+        for(int i=0;i<relatedItemEntities.size();i++){
+            Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
+        }
+        int listSice = relatedItemEntities.size();
+        int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
+        MAXPage  = page;
+        for (int i = 0; i < page; i++) {
+            ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
+            for(int j = 0; j<pageSize;j++){
+                int itemPosition = j + i * pageSize;
+                if(itemPosition+1 >listSice){
+                    break;
+                }
+                Logger.e("aaa", "page:" + itemPosition);
+                listBean.add(relatedItemEntities.get(itemPosition));
+            }
+            beanPageList.add(listBean);
+        }
+        beanList.addAll(beanPageList.get(viewpointPage));
+        viewpointPage++;
+        mAdapter.setNewsFeed(beanList);
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void addNewsLove(NewsDetailComment comment,final  int position, final CommentHolder holder) {
         try {
             String name = URLEncoder.encode(user.getUserName(),"utf-8");

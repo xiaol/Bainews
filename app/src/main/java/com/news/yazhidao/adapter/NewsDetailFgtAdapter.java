@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
         if(relatedItemEntity.getUrl().equals("-1")){//没有数据时也可以让listView滑动
             holder.getView(R.id.attentionlayout).setVisibility(View.GONE);
             Logger.e("aaa", "没有数据时的状况！！！！！！！！！！！！！");
+//            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(0, 0);
+//            holder.getView(R.id.attentionlayout).setLayoutParams(layoutParams);
             return;
         }
         Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntity.getUpdateTime());
@@ -96,6 +100,11 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
             holder.getView(R.id.attention_img_View).setVisibility(View.GONE);
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout),relatedItemEntity);
+
+
+//        if(getCount() == position+1){去掉最后一条的线
+//            holder.getView(R.id.attention_bottomLine).setVisibility(View.GONE);
+//        }
     }
     public void onAttentionItemClickListener(RelativeLayout mAttentionlayout,final RelatedItemEntity relatedItemEntity){
        mAttentionlayout.setOnClickListener(new View.OnClickListener() {

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/attentionlayout">
+    android:id="@+id/attentionlayout"
+    android:visibility="visible">
 
     <LinearLayout
         android:id="@+id/attention_mainLayout"
@@ -66,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/new_color1"
-                    android:textSize="@dimen/new_font1"
+                    android:textSize="@dimen/new_font10"
                     />
 
                 <com.news.yazhidao.widget.TextViewExtend
@@ -84,6 +85,7 @@
         </RelativeLayout>
 
         <View
+            android:id="@+id/attention_bottomLine"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/new_color4"
