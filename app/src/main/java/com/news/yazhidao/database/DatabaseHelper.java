@@ -33,7 +33,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 12);
+        super(context, TABLE_NAME, null, 13);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -115,7 +115,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             oldChannelItems = channelDao.queryForAll();
             //删除所有老版本上的频道
-            if (oldVersion <= 11){
+            if (oldVersion <= 12){
                oldChannelItems.clear();
             }
             /**查询数据库升级前的专辑列表*/

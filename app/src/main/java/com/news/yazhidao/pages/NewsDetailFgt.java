@@ -126,7 +126,6 @@ public class NewsDetailFgt extends BaseFragment {
         careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {//刷新
