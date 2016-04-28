@@ -245,11 +245,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                tvComment.setText(between / 3600000 + "小时前");
                 tvComment.setText("");
             } else {
-                if (between / 3600000 / 60 == 0) {
-                    tvComment.setText("刚刚");
-                } else {
-                    tvComment.setText(between / 3600000 / 60 + "分钟前");
-                }
+                tvComment.setText(between *60/ 3600000+"分钟前");
+//                if (between / 3600000 == 0) {
+//                    tvComment.setText( between *60/ 3600000+"分钟前");
+//                } else {
+//                    tvComment.setText(between / 3600000 / 60 + "分钟前");
+//                }
             }
         } catch (ParseException e) {
             tvComment.setText(updateTime);
