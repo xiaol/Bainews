@@ -59,20 +59,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("16","育儿",16,true));
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("24","健康",1,false));
-        mChannels.add(new ChannelItem("35","APP",1,false));
-        mChannels.add(new ChannelItem("29","外媒",1,false));
-        mChannels.add(new ChannelItem("30","影视",1,false));
-        mChannels.add(new ChannelItem("31","奇闻",1,false));
-        mChannels.add(new ChannelItem("32","萌宠",1,false));
-        mChannels.add(new ChannelItem("22","互联网",2,false));
-        mChannels.add(new ChannelItem("20","股票",3,false));
-        mChannels.add(new ChannelItem("8","军事",4,false));
-        mChannels.add(new ChannelItem("13","历史",5,false));
-        mChannels.add(new ChannelItem("18","故事",6,false));
-        mChannels.add(new ChannelItem("12","旅游",7,false));
-        mChannels.add(new ChannelItem("19","美文",8,false));
-        mChannels.add(new ChannelItem("15","美食",9,false));
-        mChannels.add(new ChannelItem("26","美女",10,false));
+        mChannels.add(new ChannelItem("35","APP",2,false));
+        mChannels.add(new ChannelItem("29","外媒",3,false));
+        mChannels.add(new ChannelItem("30","影视",4,false));
+        mChannels.add(new ChannelItem("31","奇闻",5,false));
+        mChannels.add(new ChannelItem("32","萌宠",6,false));
+        mChannels.add(new ChannelItem("22","互联网",7,false));
+        mChannels.add(new ChannelItem("20","股票",8,false));
+        mChannels.add(new ChannelItem("8","军事",9,false));
+        mChannels.add(new ChannelItem("13","历史",10,false));
+        mChannels.add(new ChannelItem("18","故事",11,false));
+        mChannels.add(new ChannelItem("12","旅游",12,false));
+        mChannels.add(new ChannelItem("19","美文",13,false));
+        mChannels.add(new ChannelItem("15","美食",14,false));
+        mChannels.add(new ChannelItem("26","美女",15,false));
     }
     @Override
     public void onCreate(SQLiteDatabase database,
