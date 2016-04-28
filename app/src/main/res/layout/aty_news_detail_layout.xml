@@ -13,6 +13,7 @@
         android:background="@color/common_header_bg"
         >
 
+
         <ImageView
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
@@ -23,7 +24,6 @@
             android:padding="16dp"
             android:src="@drawable/btn_left_back"
             />
-
         <ImageView
             android:id="@+id/mDetailRightMore"
             android:layout_width="48dp"
@@ -39,7 +39,7 @@
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:alpha="0.3"
-            android:background="@color/black"
+            android:background="@color/new_color5"
             />
     </RelativeLayout>
 
@@ -178,12 +178,12 @@
             android:src="@drawable/btn_detail_share"/>
 
     </RelativeLayout>
-    <!--  暂时不用-->
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:visibility="visible"
         >
 
         <ImageView
@@ -197,12 +197,11 @@
             android:src="@drawable/ic_news_detail_reload"
             android:visibility="gone"
             />
-
         <include layout="@layout/loading_view"/>
 
     </RelativeLayout>
 
-
+<!--需要占位不显示-->
     <ImageView
         android:id="@+id/share_bg_imageView"
         android:layout_width="match_parent"

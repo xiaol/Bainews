@@ -23,6 +23,23 @@ public class User implements Serializable {
     private long firstLoginTime;
     private long lastLoginTime;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "uuid='" + uuid + '\'' +
+                ", userId='" + userId + '\'' +
+                ", expiresIn=" + expiresIn +
+                ", expiresTime=" + expiresTime +
+                ", token='" + token + '\'' +
+                ", userGender='" + userGender + '\'' +
+                ", userIcon='" + userIcon + '\'' +
+                ", userName='" + userName + '\'' +
+                ", platformType='" + platformType + '\'' +
+                ", firstLoginTime=" + firstLoginTime +
+                ", lastLoginTime=" + lastLoginTime +
+                '}';
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -32,7 +49,7 @@ public class User implements Serializable {
     }
 
     public String getUserId() {
-        return userId;
+        return userId+"";
     }
 
     public void setUserId(String userId) {

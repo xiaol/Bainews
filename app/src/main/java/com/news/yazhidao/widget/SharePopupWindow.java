@@ -1,5 +1,6 @@
 package com.news.yazhidao.widget;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -8,22 +9,24 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.tencent.weibo.TencentWeibo;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
 
@@ -36,13 +39,14 @@ public class SharePopupWindow extends PopupWindow {
     private TextViewExtend mtvClose;
     private View mMenuView;
     private Context m_pContext;
-    private GridView mgvShare;
-    private ShareAdapter mShareAdapter;
     private TypedArray mTypedArray;
     private String[] mShareName;
     private String[] marrSharePlatform;
     private String mstrTitle, mstrUrl, mstrRemark;
     private ShareDismiss mShareDismiss;
+    private TextViewExtend mtvFavorite, mtvTextSize, mtvAccusation;
+    private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
+    private LinearLayout mShareLayout;
 
     public SharePopupWindow(Context context, ShareDismiss shareDismiss) {
         super(context);
@@ -51,17 +55,18 @@ public class SharePopupWindow extends PopupWindow {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mMenuView = inflater.inflate(R.layout.popup_window_share, null);
-        mShareAdapter = new ShareAdapter(m_pContext);
         mShareName = m_pContext.getResources().getStringArray(R.array.share_list_name);
         mTypedArray = m_pContext.getResources().obtainTypedArray(R.array.share_list_image);
-        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME, TencentWeibo.NAME};
+        marrSharePlatform = new String[]{WechatMoments.NAME, Wechat.NAME, SinaWeibo.NAME, QQ.NAME};
         findHeadPortraitImageViews();
     }
 
     private void findHeadPortraitImageViews() {
         mtvClose = (TextViewExtend) mMenuView.findViewById(R.id.close_imageView);
-        mgvShare = (GridView) mMenuView.findViewById(R.id.share_gridView);
-        mgvShare.setAdapter(mShareAdapter);
+        mtvFavorite = (TextViewExtend) mMenuView.findViewById(R.id.favorite_view);
+        mtvTextSize = (TextViewExtend) mMenuView.findViewById(R.id.textsize_view);
+        mtvAccusation = (TextViewExtend) mMenuView.findViewById(R.id.accusation_view);
+        mShareLayout = (LinearLayout) mMenuView.findViewById(R.id.share_layout);
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -86,12 +91,7 @@ public class SharePopupWindow extends PopupWindow {
                 return true;
             }
         });
-        mtvClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        setOnClick();
     }
 
     public void setTitleAndUrl(String title, String url, String remark) {
@@ -104,6 +104,89 @@ public class SharePopupWindow extends PopupWindow {
     public void dismiss() {
         super.dismiss();
         mShareDismiss.shareDismiss();
+    }
+
+    private void setOnClick() {
+        mtvClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        mtvFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        mtvTextSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mChangeTextSizePopWindow == null) {
+                    mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(((Activity) m_pContext));
+                    mChangeTextSizePopWindow.showAtLocation(((Activity) m_pContext).getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    dismiss();
+                }
+            }
+        });
+        mtvAccusation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        for (int i = 0; i < mTypedArray.length(); i++) {
+            TextViewExtend viewExtend = new TextViewExtend(m_pContext);
+            Drawable topDrawable = m_pContext.getResources().getDrawable(mTypedArray.getResourceId(i, 0));
+            topDrawable.setBounds(0, 0, topDrawable.getMinimumWidth(), topDrawable.getMinimumHeight());
+            viewExtend.setCompoundDrawables(null, topDrawable, null, null);
+            viewExtend.setTextColor(m_pContext.getResources().getColor(R.color.bg_share_text));
+            viewExtend.setTextSize(TypedValue.COMPLEX_UNIT_PX, m_pContext.getResources().getDimensionPixelSize(R.dimen.new_font6));
+            viewExtend.setText(mShareName[i]);
+            viewExtend.setGravity(Gravity.CENTER_HORIZONTAL);
+            viewExtend.setCompoundDrawablePadding(DensityUtil.dip2px(m_pContext, 8));
+            int margin = DensityUtil.dip2px(m_pContext, 25);
+            if (i == mTypedArray.length() - 1) {
+                viewExtend.setPadding(margin, margin, margin, margin);
+            } else {
+                viewExtend.setPadding(margin, margin, 0, margin);
+            }
+            final String strShareName = mShareName[i];
+            String strSharePlatform = null;
+            if (i < marrSharePlatform.length)
+                strSharePlatform = marrSharePlatform[i];
+            final String finalStrSharePlatform = strSharePlatform;
+            viewExtend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if ("短信".equals(strShareName)) {
+                        Uri smsToUri = Uri.parse("smsto:");
+                        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+                        intent.putExtra("sms_body", mstrTitle + mstrUrl);
+                        m_pContext.startActivity(intent);
+                    } else if ("邮件".equals(strShareName)) {
+//                        String[] email = {"3802**92@qq.com"}; // 需要注意，email必须以数组形式传入
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("message/rfc822"); // 设置邮件格式
+//                        intent.putExtra(Intent.EXTRA_EMAIL, email); // 接收人
+//                        intent.putExtra(Intent.EXTRA_CC, email); // 抄送人
+                        intent.putExtra(Intent.EXTRA_SUBJECT, mstrTitle); // 主题
+                        intent.putExtra(Intent.EXTRA_TEXT, mstrUrl); // 正文
+                        m_pContext.startActivity(Intent.createChooser(intent, "请选择邮件类应用"));
+                    } else if ("转发链接".equals(strShareName)) {
+                        ClipboardManager cmb = (ClipboardManager) m_pContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                        cmb.setPrimaryClip(ClipData.newPlainText(null, mstrUrl));
+                        ToastUtil.toastShort("复制成功");
+//                        Log.i("eva",cmb.getText().toString().trim());
+                    } else {
+                        Logger.e("jigang", "share url=" + mstrUrl);
+                        ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
+                    }
+                    SharePopupWindow.this.dismiss();
+                }
+            });
+            mShareLayout.addView(viewExtend);
+        }
     }
 
     class ShareAdapter extends BaseAdapter {
@@ -168,7 +251,7 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        Logger.e("jigang","share url=" + mstrUrl);
+                        Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl, mstrRemark);
                     }
                     SharePopupWindow.this.dismiss();

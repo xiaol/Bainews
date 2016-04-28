@@ -579,7 +579,7 @@ public class TextUtil {
     public static String generateCSS() {
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
-                "body { margin: 18px 18px 18px 18px; } " +
+                "body { margin: 18px 18px 18px 18px; background-color: #f6f6f6;} " +
                 "h3 { margin: 0px; } " +
                 ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 150%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +

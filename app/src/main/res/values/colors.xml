@@ -21,7 +21,7 @@
     <color name="new_color9">#f6f6f6</color>
     <color name="new_color10">#f2f2f2</color>
     <color name="new_color11">#d3d3d3</color>
-    <color name="common_header_bg">#fafafa</color>
+    <color name="common_header_bg">#f0f0f0</color>
     <color name="news_list_table_channelname">#ff7f66</color>
     <color name="news_list_table_devider">#e1e1e1</color>
     <color name="white">#ffffff</color>
@@ -51,6 +51,9 @@
     <color name="Gray">#848484</color>
     <color name="LightGray">#CCCCCC</color>
     <color name="Bg">#F0F0F0</color>
+    <color name="bg_share">#f0f0f0</color>
+    <color name="bg_share_press">#d3d3d3</color>
+    <color name="bg_share_text">#1a1a1a</color>
     <color name="dark_black">#80000000</color>
     <color name="BgBlue">#3EADE1</color>
     <color name="BgBlueTransparent">#963EADE1</color>
@@ -238,6 +241,9 @@
     <color name="title_user_not_read" >@color/color2</color>
 
     <color name="news_comment_line1" >#FE6946</color>
+    <color name="detail_share_TopTitleColor" >#ff4b515e</color>
+    <color name="detail_share_frame" >#ffdcdcdc</color>
+    <color name="attention_lineColor" >#ffb3b3b3</color>
 
 
 </resources>

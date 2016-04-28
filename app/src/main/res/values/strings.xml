@@ -61,7 +61,6 @@
         <item>微信好友</item>
         <item>新浪微博</item>
         <item>QQ好友</item>
-        <item>腾讯微博</item>
         <item>短信</item>
         <item>邮件</item>
         <item>转发链接</item>
@@ -72,7 +71,6 @@
         <item>@drawable/ic_share_wechat</item>
         <item>@drawable/ic_share_sina</item>
         <item>@drawable/ic_share_qq</item>
-        <item>@drawable/ic_share_qq_weibo</item>
         <item>@drawable/ic_share_message</item>
         <item>@drawable/ic_share_email</item>
         <item>@drawable/ic_share_link</item>

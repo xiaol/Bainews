@@ -3,6 +3,7 @@ package com.news.yazhidao.utils;
 import android.widget.TextView;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -303,13 +304,13 @@ public class DateUtil {
     }
 
     /**
-     * 获取指定时间的月和日,格式6-24
+     * 获取指定时间的月和日,格式06-24
      */
     public static String getMonthAndDay(String dateStr){
         try {
             Calendar c = Calendar.getInstance();
             c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr));
-            return c.get(Calendar.MONTH) + 1 + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE));
+            return String.format("%02d", c.get(Calendar.MONTH) + 1) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + String.format("%02d", c.get(Calendar.HOUR_OF_DAY)) + ":" + String.format("%02d", c.get(Calendar.MINUTE));
         } catch (ParseException e) {
             return getMonthAndDay(getDate());
         }
@@ -327,5 +328,30 @@ public class DateUtil {
             e.printStackTrace();
             return 0;
         }
+
+    }
+
+    /**
+     * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
+     *
+     * @param strDate
+     * @return
+     */
+    public static Date strToDateLong(String strDate) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ParsePosition pos = new ParsePosition(0);
+        Date strtodate = formatter.parse(strDate, pos);
+        return strtodate;
+    }
+
+
+    public static Calendar strToCalendarLong(String strDate) {
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(strDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 }

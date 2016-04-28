@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.widget.TextViewExtend;
 
 /**
  * Created by fengjigang on 16/4/14.
@@ -52,6 +53,20 @@ public class CommonViewHolder {
         }
         return (T) view;
     }
+
+    public void setTextViewExtendText(int ViewID ,String content){
+        TextViewExtend text = getView(ViewID);
+        text.setText(content);
+    }
+    public void setTextViewExtendTextColor(int ViewID ,int color){
+        TextViewExtend text = getView(ViewID);
+        text.setTextColor(mContext.getResources().getColor(color));
+    }
+    public void setTextViewExtendTextBackground(int ViewID ,int color){
+        TextViewExtend text = getView(ViewID);
+        text.setBackgroundColor(mContext.getResources().getColor(color));
+    }
+
 
     public View getConvertView()
     {

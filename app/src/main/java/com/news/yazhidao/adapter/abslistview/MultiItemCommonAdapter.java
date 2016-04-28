@@ -46,7 +46,7 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
                 getItem(position));
         CommonViewHolder viewHolder = CommonViewHolder.get(mContext, convertView, parent,
                 layoutId, position);
-        convert(viewHolder, getItem(position));
+        convert(viewHolder, getItem(position),position);
         Logger.e("jigang","consume time="+(System.currentTimeMillis()-start));
         return viewHolder.getConvertView();
     }
