@@ -212,6 +212,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
+        mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
+
         mUserCenter = (SimpleDraweeView) findViewById(R.id.mUserCenter);
         mUserCenter.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);

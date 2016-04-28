@@ -59,7 +59,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
             holder.getView(R.id.rounded_imageView2).setVisibility(View.GONE);
             holder.getView(R.id.attention_line2).setVisibility(View.GONE);
             holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
-            holder.setTextViewExtendTextBackground(R.id.attention_MonthandDay, R.color.new_color2);
+            holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
             YearShow = thisYear;
         }else {
             if (thisYear != YearShow) {
@@ -69,7 +69,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 holder.getView(R.id.attention_line2).setVisibility(View.VISIBLE);
                 holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
 
-                holder.setTextViewExtendTextBackground(R.id.attention_MonthandDay, R.color.new_color2);
+                holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
 
 
                 YearShow = thisYear;
@@ -79,7 +79,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 holder.getView(R.id.rounded_imageView2).setVisibility(View.GONE);
                 holder.getView(R.id.attention_line2).setVisibility(View.GONE);
 
-                holder.setTextViewExtendTextBackground(R.id.attention_MonthandDay, R.color.title_user_had_read);
+                holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_nohaveyear_bg);
 
             }
         }

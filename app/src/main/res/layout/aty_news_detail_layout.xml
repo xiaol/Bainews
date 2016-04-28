@@ -10,20 +10,18 @@
         android:id="@+id/mDetailHeader"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/common_header_bg"
-        >
+        android:background="@color/common_header_bg" >
 
 
         <ImageView
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/bg_left_back_selector"
-            android:clickable="true"
             android:padding="16dp"
+            android:layout_marginBottom="2dp"
             android:src="@drawable/btn_left_back"
-            />
+            android:clickable="true"
+            android:background="@drawable/bg_left_back_selector"/>
         <ImageView
             android:id="@+id/mDetailRightMore"
             android:layout_width="48dp"
@@ -201,7 +199,7 @@
 
     </RelativeLayout>
 
-<!--需要占位不显示-->
+    <!--需要占位不显示-->
     <ImageView
         android:id="@+id/share_bg_imageView"
         android:layout_width="match_parent"

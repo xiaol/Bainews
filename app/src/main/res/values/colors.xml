@@ -26,6 +26,7 @@
     <color name="news_list_table_devider">#e1e1e1</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="black_90">#E6000000</color>
     <color name="news_list_cell_sourcesitename">#a5a5a5</color>
     <color name="news_list_bg">#f3f3fa</color>
     <color name="common_theme_color">#ff7f66</color>
