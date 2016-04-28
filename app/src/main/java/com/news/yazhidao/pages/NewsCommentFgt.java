@@ -36,6 +36,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -128,7 +129,11 @@ public class NewsCommentFgt extends BaseFragment {
         news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
         news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
         news_comment_Title.setText(mNewsFeed.getTitle());
-        news_comment_content.setText(mNewsFeed.getPubName() + "  " + mNewsFeed.getPubTime() + "  " + mNewsFeed.getCommentsCount() + "评");
+        if ("0".equals(mNewsFeed.getCommentsCount())) {
+            news_comment_content.setText(mNewsFeed.getPubName() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPubTime()));
+        } else {
+            news_comment_content.setText(mNewsFeed.getPubName() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPubTime()) + "  " + mNewsFeed.getCommentsCount() + "评");
+        }
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
         if ("0".equals(mNewsFeed.getCommentsCount())) {
             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
@@ -279,8 +284,8 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.ivPraise.setVisibility(View.GONE);
             } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
-            }
 
+            }
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

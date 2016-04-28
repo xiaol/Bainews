@@ -132,7 +132,7 @@
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="0.55dp"
+        android:layout_height="1px"
         android:layout_below="@+id/source_content_linearLayout"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"

@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/background_splash"/>
 
-    <item android:bottom="40dp">
-        <bitmap android:src="@drawable/ic_splash_bottom" android:gravity="bottom|center_horizontal" />
+    <item android:top="130dp">
+        <bitmap android:src="@drawable/ic_splash_slogan" android:gravity="top" />
     </item>
 </layer-list>

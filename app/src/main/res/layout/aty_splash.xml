@@ -55,13 +55,16 @@
         android:scaleType="centerCrop"
         android:visibility="gone"/>
 
-    <ImageView
+    <TextView
+        android:id="@+id/mSplashVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="奇点资讯"
+        android:textColor="#8cbffa"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/ic_splash_bottom"
-        android:scaleType="centerCrop"/>
+        android:layout_marginBottom="60dp"
+        />
 
 </RelativeLayout>

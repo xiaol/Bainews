@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="#f0f0f0"
+        android:background="@color/common_header_bg"
         >
 
         <TextView

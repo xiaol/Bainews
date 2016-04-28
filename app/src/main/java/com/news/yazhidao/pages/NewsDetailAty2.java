@@ -42,6 +42,9 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailAdd;
+import com.news.yazhidao.entity.RelatedEntity;
+import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
@@ -61,6 +64,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -91,7 +96,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * 返回上一级,全文评论,分享
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
-    private ImageView mDetailLeftBack, mDetailShare;
+    private ImageView mDetailLeftBack, mDetailRightMore, mDetailShare;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -176,6 +181,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
+        mDetailRightMore = (ImageView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailComment.setOnClickListener(this);
@@ -294,6 +301,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     NewsDetailFgt detailFgt = new NewsDetailFgt();
                     Bundle args = new Bundle();
                     args.putSerializable(NewsDetailFgt.KEY_DETAIL_RESULT, result);
+                    args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
+                    args.putString(NewsDetailFgt.KEY_NEWS_ID, mUrl);
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
@@ -341,6 +350,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void onResponse(NewsDetail result) {
                 mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                if(bgLayout.getVisibility() == View.VISIBLE){
+                    bgLayout.setVisibility(View.GONE);
+                }
                 Logger.e("jigang", "network success~~" + result);
                 if (result != null) {
                     mNewsFeed = convert2NewsFeed(result);
@@ -363,8 +375,38 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 bgLayout.setVisibility(View.GONE);
             }
         });
+
+//        NewsDetailRequest<RelatedEntity> related = new NewsDetailRequest<RelatedEntity>(Request.Method.GET,
+//                new TypeToken<RelatedEntity>() {
+//                }.getType(),
+//                HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(newsId),
+//                new Response.Listener<RelatedEntity>() {
+//                    @Override
+//                    public void onResponse(RelatedEntity response) {
+//                        Logger.e("jigang", "network success RelatedEntity~~" + response);
+//                        ArrayList<RelatedItemEntity> list = response.getSearchItems();
+//                        Logger.e("aaa","time:================比较前=================");
+//                        for(int i=0;i<list.size();i++){
+//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
+//                        }
+//                        Collections.sort(list);
+//                        Logger.e("aaa","time:================比较====后=================");
+//                        for(int i=0;i<list.size();i++){
+//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
+//                        }
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Logger.e("jigang", "network error~~");
+//                    }
+//                });
+
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
+//        requestQueue.add(related);
     }
 
     private NewsFeed convert2NewsFeed(NewsDetail result) {
@@ -418,6 +460,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
                 onBackPressed();
+                break;
+            case R.id.mDetailRightMore://更多的点击
+
                 break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {

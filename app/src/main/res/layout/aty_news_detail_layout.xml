@@ -10,42 +10,53 @@
         android:id="@+id/mDetailHeader"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/bg_home_login_header"
+        android:background="@color/common_header_bg"
         >
+
 
         <ImageView
             android:id="@+id/mDetailLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:layout_centerVertical="true"
-            android:contentDescription="转到上一级"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_left_back"/>
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:padding="16dp"
+            android:src="@drawable/btn_left_back"
+            />
+        <ImageView
+            android:id="@+id/mDetailRightMore"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="4dp"
+            android:padding="16dp"
+            android:src="@drawable/btn_detail_right_more"
+            />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:alpha="0.3"
-            android:background="@color/black"
+            android:background="@color/new_color5"
             />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mNewsDetailViewPager"
-        android:layout_above="@+id/mDetailBottomBanner"
-        android:layout_below="@id/mDetailHeader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mDetailBottomBanner"
+        android:layout_below="@id/mDetailHeader"/>
 
     <RelativeLayout
         android:id="@+id/mImageWallWrapper"
-        android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/mDetailBottomBanner"
         android:layout_below="@id/mDetailHeader"
+        android:background="@color/black"
         android:visibility="gone"
         >
 
@@ -62,15 +73,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="#45000000"
+            android:lineSpacingExtra="5dp"
             android:maxHeight="120dp"
+            android:maxLines="4"
             android:paddingBottom="6dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:paddingTop="6dp"
-            android:text="sssss"
-            android:lineSpacingExtra="5dp"
-            android:maxLines="4"
             android:scrollbars="vertical"
+            android:text="sssss"
             android:textColor="@color/color7"
             android:textSize="@dimen/font4"
             />
@@ -94,16 +105,17 @@
         <TextView
             android:id="@+id/mDetailAddComment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="27dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/mDetailComment"
             android:layout_weight="30"
-            android:padding="8dp"
             android:background="@drawable/user_add_comment"
-            android:paddingLeft="16dp"
-            android:text="写点什么吧..."
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:text="说一下..."
             android:textColor="@color/user_add_comment_color"
             android:textSize="14sp"
             />
@@ -113,7 +125,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/mDetailShare">
+            android:layout_toLeftOf="@+id/mDetailFavorite">
 
             <ImageView
                 android:id="@+id/mDetailCommentPic"
@@ -128,15 +140,13 @@
                 android:id="@+id/mDetailCommentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="4dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
                 android:background="@drawable/bg_news_detail_commit_num"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingLeft="3dp"
-                android:paddingRight="3dp"
+                android:padding="3dp"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="@color/white"
@@ -144,6 +154,17 @@
                 android:visibility="gone"
                 />
         </FrameLayout>
+
+        <ImageView
+            android:id="@+id/mDetailFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/mDetailShare"
+            android:scaleType="centerInside"
+            android:src="@drawable/btn_detail_favorite_normal"/>
 
         <ImageView
             android:id="@+id/mDetailShare"
@@ -155,13 +176,14 @@
             android:contentDescription="分享"
             android:scaleType="centerInside"
             android:src="@drawable/btn_detail_share"/>
+
     </RelativeLayout>
-  <!--  暂时不用-->
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:visibility="visible"
         >
 
         <ImageView
@@ -175,17 +197,18 @@
             android:src="@drawable/ic_news_detail_reload"
             android:visibility="gone"
             />
-        <include layout="@layout/loading_view" />
+        <include layout="@layout/loading_view"/>
 
     </RelativeLayout>
 
-
+<!--需要占位不显示-->
     <ImageView
         android:id="@+id/share_bg_imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        />
 
 
 </RelativeLayout>
