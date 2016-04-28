@@ -579,9 +579,9 @@ public class TextUtil {
     public static String generateCSS() {
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
-                "body { margin: 16px 22px 16px 22px; } " +
+                "body { margin: 18px 18px 18px 18px; } " +
                 "h3 { margin: 0px; } " +
-                ".top { color: #aaaaaa; border-bottom: 1px solid #aaaaaa; padding: 0px 0px 14px 0px; } " +
+                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 150%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
                 ".content img { width: 100%; }" +
                 ".p_img { text-align: center; }");
@@ -598,37 +598,38 @@ public class TextUtil {
         }
         int titleTextSize, commentTextSize, contentTextSize;
         if (textSize == CommonConstant.TEXT_SIZE_NORMAL) {
-            titleTextSize = 40;
-            commentTextSize = 26;
-            contentTextSize = 32;
+            titleTextSize = 20;
+            commentTextSize = 13;
+            contentTextSize = 16;
         } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
-            titleTextSize = 46;
-            commentTextSize = 30;
-            contentTextSize = 34;
+            titleTextSize = 23;
+            commentTextSize = 15;
+            contentTextSize = 17;
         } else {
-            titleTextSize = 48;
-            commentTextSize = 32;
-            contentTextSize = 38;
+            titleTextSize = 24;
+            commentTextSize = 16;
+            contentTextSize = 19;
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize / 2 + "px;font-weight:bold;\">" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 15px 0px;\">" +
                 detail.getTitle() +
-                "</div><br><div style=\"font-size:" + commentTextSize / 2 + "px\" class=\"top\"><span>" +
-                detail.getPubName() +
-                "</span>&nbsp; <span>" +
-                detail.getPubTime() +
-                "</span>&nbsp; <span>" +
-                detail.getCommentSize() + "评论" +
-                "</span></div><div class=\"content\">");
+                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #9a9a9a;\" class=\"top\"><span>" +
+                detail.getPubName() + "</span>" +
+                "&nbsp; <span>" + DateUtil.getMonthAndDay(detail.getPubTime()) + "</span>");
+        if (detail.getCommentSize() != 0) {
+            contentBuilder.append("&nbsp; <span>" + detail.getCommentSize() + "评论" + "</span>");
+        }
+            contentBuilder.append("</div><div class=\"content\">");
+
         ArrayList<HashMap<String, String>> content = detail.getContent();
         if (!TextUtil.isListEmpty(content)) {
             for (HashMap<String, String> map : content) {
                 String txt = map.get("txt");
                 String img = map.get("img");
                 if (!TextUtil.isEmptyString(txt)) {
-                    contentBuilder.append("<p style=\"font-size:" + contentTextSize / 2 + "px\">" + txt + "</p>");
+                    contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     contentBuilder.append("<p class=\"p_img\"><img src=\"" + img + "\"></p>");

@@ -9,11 +9,11 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
@@ -28,6 +28,7 @@ public class SplashAty extends BaseActivity {
     private ImageView mSplashSlogan;
     private ImageView mSplashMask;
     private View mSplashContent;
+    private TextView mSplashVersion;
 
     @Override
     protected boolean isNeedAnimation() {
@@ -51,10 +52,11 @@ public class SplashAty extends BaseActivity {
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
         mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
         mSplashContent = findViewById(R.id.mSplashContent);
+        mSplashVersion = (TextView)findViewById(R.id.mSplashVersion);
+        mSplashVersion.setText(getResources().getString(R.string.app_name) + " v" + getResources().getString(R.string.app_version));
         int screenHeight = DeviceInfoUtil.getScreenHeight(this);
-        mSplashContent.setPadding(0, screenHeight / 3 - DensityUtil.dip2px(this, 34), 0, 0);
-        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
-        mSplashSlogan.setAnimation(animation);
+//        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
+//        mSplashSlogan.setAnimation(animation);
         mSplashLine = (ImageView) findViewById(R.id.mSplashLine);
         final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
         new Handler().postDelayed(new Runnable() {
