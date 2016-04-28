@@ -116,6 +116,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mDatas = null;
     }
 
+
     @Override
     public void convert(final CommonViewHolder holder, NewsFeed feed,int position) {
         switch (holder.getLayoutId()) {
