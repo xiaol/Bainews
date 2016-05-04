@@ -21,7 +21,7 @@
         fresco:roundTopLeft="false"
         fresco:roundTopRight="false"
         fresco:roundedCornerRadius="2dp"
-        fresco:roundingBorderColor="@color/color5"
+        fresco:roundingBorderColor="@color/new_color4"
         fresco:roundingBorderWidth="1px" />
 
     <TextView
@@ -98,7 +98,7 @@
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp" />
 </RelativeLayout>
