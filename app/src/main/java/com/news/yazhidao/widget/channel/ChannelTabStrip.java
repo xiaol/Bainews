@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,7 +127,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
         ViewGroup tab = (ViewGroup) mLayoutInflater.inflate(R.layout.channel_tab, this, false);
         TextView category_text = (TextView) tab.findViewById(R.id.category_text);
         category_text.setText(title);
-        category_text.setGravity(Gravity.CENTER);
+//        category_text.setGravity(Gravity.CENTER);
         category_text.setSingleLine();
         category_text.setFocusable(true);
         category_text.setTextColor(getResources().getColor(R.color.new_color1));

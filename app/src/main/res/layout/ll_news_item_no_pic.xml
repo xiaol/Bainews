@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:ellipsize="end"
         android:maxLines="3"
         android:textColor="@color/new_color1"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="11dp">
 
         <ImageView
             android:id="@+id/type_imageView"
@@ -80,5 +80,5 @@
         android:layout_below="@+id/source_content_linearLayout"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="8dp" />
 </RelativeLayout>
