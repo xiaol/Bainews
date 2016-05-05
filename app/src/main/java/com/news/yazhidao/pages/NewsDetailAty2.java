@@ -91,7 +91,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * 返回上一级,全文评论,分享
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
-    private ImageView mDetailLeftBack, mDetailRightMore, mDetailShare;
+    private ImageView mDetailShare;
+    private TextView mDetailLeftBack,mDetailRightMore;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -174,9 +175,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
-        mDetailLeftBack = (ImageView) findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-        mDetailRightMore = (ImageView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
         mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
@@ -429,7 +430,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
                 mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
-                mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
                 return true;
             }
         }
@@ -518,7 +518,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailBottomBanner.setBackgroundColor(getResources().getColor(R.color.black));
         mDetailAddComment.setBackgroundResource(R.drawable.user_add_comment_black);
         int padding = DensityUtil.dip2px(this, 8);
-        mDetailLeftBack.setImageResource(R.drawable.btn_detail_left_white);
+//        mDetailLeftBack.setImageResource(R.drawable.btn_detail_left_white);
         mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment_white);
         mDetailShare.setImageResource(R.drawable.btn_detail_share_white);
         mDetailView.setBackgroundColor(getResources().getColor(R.color.black));
