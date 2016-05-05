@@ -91,7 +91,9 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 (month<10?"0":"")+month+"/"+(day<10?"0":"")+day);
 
 
-        holder.setTextViewExtendText(R.id.attention_Title,relatedItemEntity.getTitle());
+        holder.setTextViewExtendTextandTextSice(R.id.attention_Title,relatedItemEntity.getTitle());
+
+
         holder.setTextViewExtendText(R.id.attention_Source,relatedItemEntity.getSourceSite());
         String imageUrl = relatedItemEntity.getImgUrl();
         if(imageUrl != null&&imageUrl.length()!= 0){

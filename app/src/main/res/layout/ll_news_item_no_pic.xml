@@ -15,7 +15,7 @@
         android:ellipsize="end"
         android:maxLines="3"
         android:textColor="@color/new_color1"
-        android:textSize="@dimen/new_font2" />
+        android:textSize="@dimen/new_font2"/>
 
     <LinearLayout
         android:id="@+id/source_content_linearLayout"

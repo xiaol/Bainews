@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +54,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.message.proguard.M;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -97,7 +99,8 @@ public class NewsDetailFgt extends BaseFragment {
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
     boolean isNoHaveBean ;
-
+    private final int LOAD_MORE = 0;
+    private final int LOAD_BOTTOM = 1;
 
 
     @Override
@@ -116,6 +119,8 @@ public class NewsDetailFgt extends BaseFragment {
         }
 
     }
+
+    private int oldLastPositon;
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
@@ -142,27 +147,22 @@ public class NewsDetailFgt extends BaseFragment {
                     return;
                 }
                 int lastPositon =  absListView.getLastVisiblePosition();
+                Logger.e("aaa", "lastPositon====" + lastPositon);
+                Message msg = new Message();
                 if(lastPositon -2 ==beanList.size()-1){
                     if (MAXPage > viewpointPage) {
-                        beanList.addAll(beanPageList.get(viewpointPage));
-                        viewpointPage++;
-                        mAdapter.setNewsFeed(beanList);
-                        mAdapter.notifyDataSetChanged();
-                        mNewsDetailList.onRefreshComplete();
-                    }else{
-                        if(isNoHaveBean){
+                        if(oldLastPositon == lastPositon){
                             return;
                         }
+                        msg.what = LOAD_MORE;
+                        mHandler.sendMessage(msg);
+                    }else{
+                        msg.what = LOAD_BOTTOM;
+                        mHandler.sendMessage(msg);
 
-                        isNoHaveBean = true;
-
-                        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-                        ListView lv = mNewsDetailList.getRefreshableView();
-                        LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
-                        mNewsDetailFootView.setLayoutParams(layoutParams);
-                        lv.addFooterView(mNewsDetailFootView);
                     }
                 }
+                oldLastPositon = lastPositon;
             }
         });
         mAdapter = new NewsDetailFgtAdapter(getActivity());
@@ -173,7 +173,34 @@ public class NewsDetailFgt extends BaseFragment {
 
         return rootView;
     }
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_MORE:
+                    beanList.addAll(beanPageList.get(viewpointPage));
+                    viewpointPage++;
+                    mAdapter.setNewsFeed(beanList);
+                    mAdapter.notifyDataSetChanged();
+                    mNewsDetailList.onRefreshComplete();
+                    break;
+                case LOAD_BOTTOM:
+                    if(isNoHaveBean){
+                        return;
+                    }
 
+                    isNoHaveBean = true;
+
+                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                    ListView lv = mNewsDetailList.getRefreshableView();
+                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
+                    mNewsDetailFootView.setLayoutParams(layoutParams);
+                    lv.addFooterView(mNewsDetailFootView);
+                    break;
+            }
+        }
+    };
     @Override
     public void onDetach() {
         super.onDetach();
@@ -621,6 +648,7 @@ public class NewsDetailFgt extends BaseFragment {
         holder.tvName.setText(comment.getNickname());
         holder.tvPraiseCount.setText(comment.getLove() + "");
 
+        holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         holder.tvContent.setText(comment.getContent());
         holder.tvContent.setOnClickListener(new View.OnClickListener() {
             @Override
