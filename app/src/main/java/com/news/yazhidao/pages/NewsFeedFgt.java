@@ -257,6 +257,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
         lv.addHeaderView(mSearchHeaderView);
+        lv.setHeaderDividersEnabled(false);
         mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
         mSearch_layout.setOnClickListener(new View.OnClickListener() {
             @Override

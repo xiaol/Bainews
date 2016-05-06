@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.message.proguard.M;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -70,17 +72,17 @@ public class NewsDetailFgt extends BaseFragment {
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
     private boolean isListRefresh;
-    private  User user;
+    private User user;
     private RelativeLayout bgLayout;
-    private String mDocid , mTitle , mPubName , mPubTime, mCommentCount,mNewID;
+    private String mDocid, mTitle, mPubName, mPubTime, mCommentCount, mNewID;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_ID = "key_news_id";
     public static final int REQUEST_CODE = 1030;
-    private  LinearLayout detail_shared_FriendCircleLayout,
+    private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
-            careforLayout;
+            careforLayout, mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
@@ -89,13 +91,16 @@ public class NewsDetailFgt extends BaseFragment {
     private RelativeLayout detail_shared_ShareImageLayout,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
-    private ImageView detail_shared_PraiseImage;
+    private ImageView detail_shared_AttentionImage;
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
     private TextView mDetailSharedHotComment;
+    boolean isNoHaveBean ;
+    private final int LOAD_MORE = 0;
+    private final int LOAD_BOTTOM = 1;
 
 
     @Override
@@ -107,14 +112,17 @@ public class NewsDetailFgt extends BaseFragment {
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
-        if(mRefreshReceiber == null){
+        if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
+
     }
+
+    private int oldLastPositon;
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
         this.inflater = inflater;
         this.container = container;
@@ -123,21 +131,40 @@ public class NewsDetailFgt extends BaseFragment {
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-        mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {//刷新
-                isListRefresh = true;
-                mNewsDetailList.onRefreshComplete();
-            }
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {//加载
-                isListRefresh = false;
-                mNewsDetailList.onRefreshComplete();
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
 
+
+        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+                if (beanList.size() == 0) {
+
+                    return;
+                }
+                int lastPositon =  absListView.getLastVisiblePosition();
+                Logger.e("aaa", "lastPositon====" + lastPositon);
+                Message msg = new Message();
+                if(lastPositon -2 ==beanList.size()-1){
+                    if (MAXPage > viewpointPage) {
+                        if(oldLastPositon == lastPositon){
+                            return;
+                        }
+                        msg.what = LOAD_MORE;
+                        mHandler.sendMessage(msg);
+                    }else{
+                        msg.what = LOAD_BOTTOM;
+                        mHandler.sendMessage(msg);
+
+                    }
+                }
+                oldLastPositon = lastPositon;
             }
         });
-
         mAdapter = new NewsDetailFgtAdapter(getActivity());
 
         mNewsDetailList.setAdapter(mAdapter);
@@ -146,21 +173,48 @@ public class NewsDetailFgt extends BaseFragment {
 
         return rootView;
     }
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOAD_MORE:
+                    beanList.addAll(beanPageList.get(viewpointPage));
+                    viewpointPage++;
+                    mAdapter.setNewsFeed(beanList);
+                    mAdapter.notifyDataSetChanged();
+                    mNewsDetailList.onRefreshComplete();
+                    break;
+                case LOAD_BOTTOM:
+                    if(isNoHaveBean){
+                        return;
+                    }
 
+                    isNoHaveBean = true;
+
+                    AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                    ListView lv = mNewsDetailList.getRefreshableView();
+                    LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
+                    mNewsDetailFootView.setLayoutParams(layoutParams);
+                    lv.addFooterView(mNewsDetailFootView);
+                    break;
+            }
+        }
+    };
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mRefreshReceiber != null){
+        if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
 
-    public void addHeadView(LayoutInflater inflater, ViewGroup container){
+    public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         //第1部分的WebView
-        LinearLayout mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
+        mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
         mNewsDetailHeaderView.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +236,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
-        mDetailWebView.setWebViewClient(new WebViewClient(){
+        mDetailWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
@@ -199,7 +253,7 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
-        detail_shared_PraiseImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseImage);
+        detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -215,10 +269,9 @@ public class NewsDetailFgt extends BaseFragment {
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
                 CareForAnimation();
-
-                detail_shared_PraiseImage.setImageResource(R.drawable.btn_detail_like_select);
                 detail_shared_PraiseText.setVisibility(View.VISIBLE);
                 detail_shared_PraiseText.setText("1");
+                detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
 
             }
         });
@@ -257,23 +310,22 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
 
-
-//    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
+    //    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
 //        @Override
 //        public void addLove(NewsDetailComment comment, int position) {
 //            addNewsLove(comment);
 //        }
 //    };
-    public void CareForAnimation(){
+    public void CareForAnimation() {
         //图片渐变模糊度始终
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f,1.0f);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
         //渐变时间
         alphaAnimation.setDuration(500);
         careforLayout.startAnimation(alphaAnimation);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                if(careforLayout.getVisibility() == View.GONE){
+                if (careforLayout.getVisibility() == View.GONE) {
                     careforLayout.setVisibility(View.VISIBLE);
                 }
             }
@@ -284,7 +336,7 @@ public class NewsDetailFgt extends BaseFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f,0f);
+                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
                         //渐变时间
                         alphaAnimationEnd.setDuration(500);
                         careforLayout.startAnimation(alphaAnimationEnd);
@@ -296,9 +348,9 @@ public class NewsDetailFgt extends BaseFragment {
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                    if(careforLayout.getVisibility() == View.VISIBLE){
-                                        careforLayout.setVisibility(View.GONE);
-                                    }
+                                if (careforLayout.getVisibility() == View.VISIBLE) {
+                                    careforLayout.setVisibility(View.GONE);
+                                }
 
                             }
 
@@ -318,15 +370,17 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
     }
+
+
     private void loadData() {
 
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid );
+        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<RelatedEntity> related = null;
         try {
             feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid,"utf-8") + "&page=" + (1), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid, "utf-8") + "&page=" + (1), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -342,7 +396,7 @@ public class NewsDetailFgt extends BaseFragment {
                         Logger.d("aaa", "评论加载完毕！！！！！！");
                         mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
                         addCommentContent(result);
-                    }else{
+                    } else {
                         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
                         detail_shared_MoreComment.setVisibility(View.GONE);
 
@@ -368,23 +422,13 @@ public class NewsDetailFgt extends BaseFragment {
                         public void onResponse(RelatedEntity response) {
                             isCorrelationSuccess = true;
                             isBgLayoutSuccess();
-
-                            Logger.e("jigang", "network success RelatedEntity~~" + response);
                             ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
-                            if(!TextUtil.isListEmpty(relatedItemEntities)){
-                                Logger.e("aaa","time:================比较前=================");
-                                for(int i=0;i<relatedItemEntities.size();i++){
-                                    Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
-                                }
-                                Collections.sort(relatedItemEntities);
-                                Logger.e("aaa","time:================比较====后=================");
-                                for(int i=0;i<relatedItemEntities.size();i++){
-                                    Logger.e("aaa","time:==="+relatedItemEntities.get(i).getUpdateTime());
-                                }
-                                mAdapter.setNewsFeed(relatedItemEntities);
-                                mAdapter.notifyDataSetChanged();
+                            Logger.e("jigang", "network success RelatedEntity~~" + response);
+
+                            if (!TextUtil.isListEmpty(relatedItemEntities)) {
+                                setBeanPageList(relatedItemEntities);
                                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
-                            }else{
+                            } else {
                                 RelatedItemEntity entity = new RelatedItemEntity();
                                 entity.setUrl("-1");
                                 relatedItemEntities.add(entity);
@@ -407,7 +451,6 @@ public class NewsDetailFgt extends BaseFragment {
         }
 
 
-
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 
@@ -416,16 +459,54 @@ public class NewsDetailFgt extends BaseFragment {
 
 
     }
-    private void addNewsLove(NewsDetailComment comment,final  int position, final CommentHolder holder) {
+
+    ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();
+    ArrayList<RelatedItemEntity> beanList = new ArrayList<RelatedItemEntity>();
+    int viewpointPage = 0;
+    int pageSize = 6;
+    int MAXPage;
+
+    public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
+        Logger.e("aaa", "time:================比较前=================");
+        for (int i = 0; i < relatedItemEntities.size(); i++) {
+            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getUpdateTime());
+        }
+        Collections.sort(relatedItemEntities);
+        Logger.e("aaa", "time:================比较====后=================");
+        for (int i = 0; i < relatedItemEntities.size(); i++) {
+            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getUpdateTime());
+        }
+        int listSice = relatedItemEntities.size();
+        int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
+        MAXPage = page;
+        for (int i = 0; i < page; i++) {
+            ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
+            for (int j = 0; j < pageSize; j++) {
+                int itemPosition = j + i * pageSize;
+                if (itemPosition + 1 > listSice) {
+                    break;
+                }
+                Logger.e("aaa", "page:" + itemPosition);
+                listBean.add(relatedItemEntities.get(itemPosition));
+            }
+            beanPageList.add(listBean);
+        }
+        beanList.addAll(beanPageList.get(viewpointPage));
+        viewpointPage++;
+        mAdapter.setNewsFeed(beanList);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder) {
         try {
-            String name = URLEncoder.encode(user.getUserName(),"utf-8");
-            String cid = URLEncoder.encode(comment.getId(),"utf-8");
+            String name = URLEncoder.encode(user.getUserName(), "utf-8");
+            String cid = URLEncoder.encode(comment.getId(), "utf-8");
             user.setUserName(name);
             comment.setId(cid);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Logger.e("jigang","love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
         }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
@@ -457,9 +538,10 @@ public class NewsDetailFgt extends BaseFragment {
     ArrayList<CommentHolder> holderList = new ArrayList<CommentHolder>();
     ArrayList<View> viewList = new ArrayList<View>();
     private View mCCView;
-    public void addCommentContent(final ArrayList<NewsDetailComment> result){
+
+    public void addCommentContent(final ArrayList<NewsDetailComment> result) {
         int listSice = result.size();
-        if(listSice == 0){
+        if (listSice == 0) {
             CommentType = 0;
             detail_shared_CommentTitleLayout.setVisibility(View.GONE);
             detail_shared_MoreComment.setVisibility(View.GONE);
@@ -476,7 +558,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                CommentHolder holder = new CommentHolder(mCCView);
 //                holderList.add(holder);
 //            }
-        }else{
+        } else {
             ShowCommentBar();
             for(int i = 0; i<listSice&&i<3 ;i++){
                 CommentType = i+1;
@@ -487,7 +569,7 @@ public class NewsDetailFgt extends BaseFragment {
                 int position = i;
                 NewsDetailComment comment = result.get(i);
 
-                UpdateCCView(holder,comment,position);
+                UpdateCCView(holder, comment, position);
                 holderList.add(holder);
                 viewList.add(mCCView);
                 if (i == 2){
@@ -500,14 +582,13 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
 
-
-    public void ShowCommentBar(){
-        if(detail_shared_CommentTitleLayout.getVisibility() == View.GONE){
+    public void ShowCommentBar() {
+        if (detail_shared_CommentTitleLayout.getVisibility() == View.GONE) {
             detail_shared_CommentTitleLayout.setVisibility(View.VISIBLE);
         }
 
-        if(mComments.size()>3){
-            if(detail_shared_MoreComment.getVisibility() == View.GONE){
+        if (mComments.size() > 3) {
+            if (detail_shared_MoreComment.getVisibility() == View.GONE) {
                 detail_shared_MoreComment.setVisibility(View.VISIBLE);
             }
         }
@@ -519,7 +600,8 @@ public class NewsDetailFgt extends BaseFragment {
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
         ImageView ivPraise;
-        public CommentHolder(View convertView){
+
+        public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
             ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
             tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
@@ -527,26 +609,30 @@ public class NewsDetailFgt extends BaseFragment {
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
         }
     }
-    /**通知新闻详情页和评论fragment刷新评论*/
-    public  class RefreshPageBroReceiber extends BroadcastReceiver {
+
+    /**
+     * 通知新闻详情页和评论fragment刷新评论
+     */
+    public class RefreshPageBroReceiber extends BroadcastReceiver {
 
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang","detailaty refresh br");
+            Logger.e("jigang", "detailaty refresh br");
             NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-            mComments.add(0,comment);
+            mComments.add(0, comment);
             UpdateCCOneData();
 
         }
     }
-    public void UpdateCCOneData(){
-        if(CommentType == 3){
+
+    public void UpdateCCOneData() {
+        if (CommentType == 3) {
             CCViewNotifyDataSetChanged();
             ShowCommentBar();
-        }else{
+        } else {
             CommentType = CommentType + 1;
-            mCCView = inflater.inflate(R.layout.adapter_list_comment1,container,false);
+            mCCView = inflater.inflate(R.layout.adapter_list_comment1, container, false);
             CommentHolder holder = new CommentHolder(mCCView);
             holderList.add(holder);
             viewList.add(mCCView);
@@ -556,8 +642,9 @@ public class NewsDetailFgt extends BaseFragment {
         }
 
     }
-    public void CCViewNotifyDataSetChanged(){
-        for (int i = 0; i < CommentType;i++ ) {
+
+    public void CCViewNotifyDataSetChanged() {
+        for (int i = 0; i < CommentType; i++) {
             CommentHolder holder = holderList.get(i);
             NewsDetailComment newsDetailComment = mComments.get(i);
             UpdateCCView(holder, newsDetailComment, i);
@@ -565,7 +652,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
 
-    public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment ,final int position){
+    public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getProfile())) {
             holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
@@ -573,6 +660,7 @@ public class NewsDetailFgt extends BaseFragment {
         holder.tvName.setText(comment.getNickname());
         holder.tvPraiseCount.setText(comment.getLove() + "");
 
+        holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         holder.tvContent.setText(comment.getContent());
         holder.tvContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -580,16 +668,16 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa", "点击内容");
             }
         });
-        if (!comment.isPraise()){
+        if (!comment.isPraise()) {
             holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
-        }else {
+        } else {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
         String commentUserid = comment.getUuid();
-        if(commentUserid != null && commentUserid.length() != 0){
-            if(user.getUserId().equals(comment.getUuid())){
+        if (commentUserid != null && commentUserid.length() != 0) {
+            if (user.getUserId().equals(comment.getUuid())) {
                 holder.ivPraise.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
             }
         }
@@ -600,19 +688,26 @@ public class NewsDetailFgt extends BaseFragment {
 
                 if (user == null) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
-                    startActivityForResult(loginAty,REQUEST_CODE );
-                }else {
-                    addNewsLove(comment,position,holder);
+                    startActivityForResult(loginAty, REQUEST_CODE);
+                } else {
+                    addNewsLove(comment, position, holder);
 
                 }
 
             }
         });
     }
-    public void isBgLayoutSuccess(){
-        if (isCommentSuccess && isWebSuccess && isCorrelationSuccess&&bgLayout.getVisibility() == View.VISIBLE) {
+
+    public void isBgLayoutSuccess() {
+        if (isCommentSuccess && isWebSuccess && isCorrelationSuccess && bgLayout.getVisibility() == View.VISIBLE) {
             bgLayout.setVisibility(View.GONE);
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mNewsDetailHeaderView.removeView(mDetailWebView);
+        mDetailWebView.destroy();
+    }
 }

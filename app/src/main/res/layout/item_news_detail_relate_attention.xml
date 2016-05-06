@@ -2,160 +2,164 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/attentionlayout">
-
-    <LinearLayout
-        android:id="@+id/attention_mainLayout"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="27.5dp"
-        android:orientation="vertical">
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/attention_Year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/new_color2"
-            android:textSize="@dimen/new_font4"
-            android:layout_marginTop="7dp"
-            android:visibility="visible"
-            />
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/attention_MonthandDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="@dimen/new_font4"
-            android:layout_marginTop="7dp"
-            />
-        <RelativeLayout
+        android:id="@+id/attentionlayout">
+
+        <LinearLayout
+            android:id="@+id/attention_mainLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingRight="15dp"
-            android:layout_marginTop="10dp">
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/attention_img_View"
-                android:layout_width="80dp"
-                android:layout_height="54dp"
-                android:layout_alignParentRight="true"
-                custom:actualImageScaleType="centerCrop"
-                custom:placeholderImage="@drawable/bg_load_default_small"
-                custom:placeholderImageScaleType="centerCrop"
-                custom:roundBottomLeft="false"
-                custom:roundBottomRight="false"
-                custom:roundTopLeft="false"
-                custom:roundTopRight="false"
-                custom:roundedCornerRadius="2dp"
-                custom:roundingBorderColor="@color/color5"
-                custom:roundingBorderWidth="1px"
-                />
-            <LinearLayout
-                android:id="@+id/attention_contentLayout"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="27.5dp"
+            android:orientation="vertical">
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/attention_Year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toLeftOf="@+id/attention_img_View"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true">
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/attention_Title"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/new_color2"
+                android:textSize="@dimen/new_font4"
+                android:layout_marginTop="7dp"
+                android:visibility="visible"
+                />
+            <com.news.yazhidao.widget.TextViewExtend
+                android:id="@+id/attention_MonthandDay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/new_font4"
+                android:layout_marginTop="7dp"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="15dp"
+                android:layout_marginTop="10dp">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/attention_img_View"
+                    android:layout_width="80dp"
+                    android:layout_height="54dp"
+                    android:layout_alignParentRight="true"
+                    custom:actualImageScaleType="centerCrop"
+                    custom:placeholderImage="@drawable/bg_load_default_small"
+                    custom:placeholderImageScaleType="centerCrop"
+                    custom:roundBottomLeft="false"
+                    custom:roundBottomRight="false"
+                    custom:roundTopLeft="false"
+                    custom:roundTopRight="false"
+                    custom:roundedCornerRadius="2dp"
+                    custom:roundingBorderColor="@color/color5"
+                    custom:roundingBorderWidth="1px"
+                    />
+                <LinearLayout
+                    android:id="@+id/attention_contentLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/new_color1"
-                    android:textSize="@dimen/new_font1"
-                    />
+                    android:orientation="vertical"
+                    android:layout_toLeftOf="@+id/attention_img_View"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true">
+                    <com.news.yazhidao.widget.TextViewExtend
+                        android:id="@+id/attention_Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/new_color1"
+                        android:textSize="@dimen/new_font10"
+                        />
 
-                <com.news.yazhidao.widget.TextViewExtend
-                    android:id="@+id/attention_Source"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/new_color3"
-                    android:textSize="@dimen/new_font6"
-                    android:layout_marginTop="8dp"
-                    />
-            </LinearLayout>
-
-
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/new_color4"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"/>
+                    <com.news.yazhidao.widget.TextViewExtend
+                        android:id="@+id/attention_Source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/new_color3"
+                        android:textSize="@dimen/new_font6"
+                        android:layout_marginTop="8dp"
+                        />
+                </LinearLayout>
 
 
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/attention_bottomLine"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/new_color4"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"/>
 
 
-    </LinearLayout>
+
+
+        </LinearLayout>
 
 
 
-    <LinearLayout
-        android:id="@+id/attention_lineLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_alignParentTop="true">
+        <LinearLayout
+            android:id="@+id/attention_lineLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_alignParentTop="true">
+            <com.news.yazhidao.widget.DividerView
+                android:id="@+id/attention_line1"
+                android:layout_width="1dp"
+                android:layout_height="12dp"
+                custom:linecolor="@color/attention_lineColor"
+                custom:orientation="vertical"
+                custom:dashLength="3dp"
+                custom:dashGap="1dp"
+                custom:dashThickness="1dp"
+                android:layerType="software"
+                />
+            <ImageView
+                android:id="@+id/rounded_imageView1"
+                android:layout_width="5.5dp"
+                android:layout_height="5.5dp"
+                android:background="@drawable/white_relate_onedp_solid" />
+            <com.news.yazhidao.widget.DividerView
+                android:id="@+id/attention_line2"
+                android:layout_width="1dp"
+                android:layout_height="17dp"
+                custom:linecolor="@color/attention_lineColor"
+                custom:orientation="vertical"
+                custom:dashLength="3dp"
+                custom:dashGap="1dp"
+                custom:dashThickness="1dp"
+                android:layerType="software"
+                />
+            <ImageView
+                android:id="@+id/rounded_imageView2"
+                android:layout_width="5.5dp"
+                android:layout_height="5.5dp"
+                android:background="@drawable/white_relate_onedp_solid" />
+
+        </LinearLayout>
+
         <com.news.yazhidao.widget.DividerView
-            android:id="@+id/attention_line1"
+            android:id="@+id/attention_line3"
+            android:layout_below="@id/attention_lineLayout"
             android:layout_width="1dp"
-            android:layout_height="12dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/attention_mainLayout"
+            android:layout_toRightOf="@id/attention_lineLayout"
+            android:layout_marginLeft="-3.75dp"
             custom:linecolor="@color/attention_lineColor"
             custom:orientation="vertical"
             custom:dashLength="3dp"
             custom:dashGap="1dp"
             custom:dashThickness="1dp"
-            android:layerType="software"
-            />
-        <ImageView
-            android:id="@+id/rounded_imageView1"
-            android:layout_width="5.5dp"
-            android:layout_height="5.5dp"
-            android:background="@drawable/white_relate_onedp_solid" />
-        <com.news.yazhidao.widget.DividerView
-            android:id="@+id/attention_line2"
-            android:layout_width="1dp"
-            android:layout_height="17dp"
-            custom:linecolor="@color/attention_lineColor"
-            custom:orientation="vertical"
-            custom:dashLength="3dp"
-            custom:dashGap="1dp"
-            custom:dashThickness="1dp"
-            android:layerType="software"
-            />
-        <ImageView
-            android:id="@+id/rounded_imageView2"
-            android:layout_width="5.5dp"
-            android:layout_height="5.5dp"
-            android:background="@drawable/white_relate_onedp_solid" />
-
-    </LinearLayout>
-
-    <com.news.yazhidao.widget.DividerView
-        android:id="@+id/attention_line3"
-        android:layout_below="@id/attention_lineLayout"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/attention_mainLayout"
-        android:layout_toRightOf="@id/attention_lineLayout"
-        android:layout_marginLeft="-3.75dp"
-        custom:linecolor="@color/attention_lineColor"
-        custom:orientation="vertical"
-        custom:dashLength="3dp"
-        custom:dashGap="1dp"
-        custom:dashThickness="1dp"
-        android:layerType="software"/>
+            android:layerType="software"/>
 
 
-
+    </RelativeLayout>
 
 </RelativeLayout>
