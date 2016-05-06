@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.common.CommonConstant;
@@ -57,6 +58,14 @@ public class CommonViewHolder {
             mViews.put(viewId, view);
         }
         return (T) view;
+    }
+    public void setTextViewText(int ViewID ,String content){
+        TextView text = getView(ViewID);
+        text.setText(content);
+    }
+    public void setTextViewTextBackgroundResource(int ViewID ,int resource){
+        TextView text = getView(ViewID);
+        text.setBackgroundResource(resource);
     }
 
     public void setTextViewExtendText(int ViewID ,String content){

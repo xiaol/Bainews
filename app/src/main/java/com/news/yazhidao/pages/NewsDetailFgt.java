@@ -50,6 +50,7 @@ import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
@@ -60,6 +61,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import cn.sharesdk.wechat.moments.WechatMoments;
+
 /**
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
@@ -67,7 +70,7 @@ import java.util.Collections;
 public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private WebView mDetailWebView;
-    private NewsDetail result;
+    private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
@@ -78,6 +81,7 @@ public class NewsDetailFgt extends BaseFragment {
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_ID = "key_news_id";
+    public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
@@ -86,9 +90,8 @@ public class NewsDetailFgt extends BaseFragment {
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
-            detail_shared_MoreComment,
             detail_shared_hotComment;
-    private RelativeLayout detail_shared_ShareImageLayout,
+    private RelativeLayout detail_shared_ShareImageLayout,detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
     private ImageView detail_shared_AttentionImage;
@@ -97,9 +100,11 @@ public class NewsDetailFgt extends BaseFragment {
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
+    private TextView mDetailSharedHotComment;
     boolean isNoHaveBean ;
     private final int LOAD_MORE = 0;
     private final int LOAD_BOTTOM = 1;
+    private boolean isLike;
 
 
     @Override
@@ -108,7 +113,9 @@ public class NewsDetailFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
-        result = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
+        mTitle = arguments.getString(KEY_NEWS_TITLE);
+        Logger.e("aaa", "mTitle==" + mTitle);
+        mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
         if (mRefreshReceiber == null) {
@@ -233,7 +240,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.loadData(TextUtil.genarateHTML(result, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
+        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -249,6 +256,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
+        mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
@@ -259,14 +267,25 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
+
+                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME,mTitle , mNewID, "1");
+
+
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
-                mShowCareforLayout.show();
-                detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                if(isLike){
+                    isLike = false;
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+                }else{
+                    isLike = true;
+                    mShowCareforLayout.show();
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                }
+
 
             }
         });
@@ -280,7 +299,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
-        detail_shared_MoreComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
+        detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -336,6 +355,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
                         Logger.d("aaa", "评论加载完毕！！！！！！");
+                        mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
                         addCommentContent(result);
                     } else {
                         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
@@ -501,9 +521,10 @@ public class NewsDetailFgt extends BaseFragment {
 //            }
         } else {
             ShowCommentBar();
-            for (int i = 0; i < listSice && i < 3; i++) {
-                CommentType = i + 1;
-                mCCView = inflater.inflate(R.layout.adapter_list_comment1, container, false);
+            for(int i = 0; i<listSice&&i<3 ;i++){
+                CommentType = i+1;
+                mCCView = inflater.inflate(R.layout.adapter_list_comment1,container,false);
+                View mSelectCommentDivider = mCCView.findViewById(R.id.mSelectCommentDivider);
                 CommentHolder holder = new CommentHolder(mCCView);
 
                 int position = i;
@@ -512,7 +533,9 @@ public class NewsDetailFgt extends BaseFragment {
                 UpdateCCView(holder, comment, position);
                 holderList.add(holder);
                 viewList.add(mCCView);
-
+                if (i == 2){
+                    mSelectCommentDivider.setVisibility(View.GONE);
+                }
                 mCommentLayout.addView(mCCView);
 
             }
@@ -650,7 +673,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     public interface  ShowCareforLayout{
-        public void show();
+         void show();
     }
 
     ShowCareforLayout mShowCareforLayout;

@@ -4,27 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    >
+    android:id="@+id/mFavoriteItemLayout">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingRight="15dp"
         android:paddingLeft="15dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="6dp"
+        >
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/myfavorite_img_View"
-            android:layout_width="80dp"
-            android:layout_height="54dp"
+            android:layout_width="85dp"
+            android:layout_height="58dp"
             android:layout_alignParentRight="true"
             custom:actualImageScaleType="centerCrop"
-            custom:placeholderImage="@drawable/bg_load_default_small"
             custom:placeholderImageScaleType="centerCrop"
             custom:roundBottomLeft="false"
             custom:roundBottomRight="false"
             custom:roundTopLeft="false"
             custom:roundTopRight="false"
             custom:roundedCornerRadius="2dp"
-            custom:roundingBorderColor="@color/color5"
             custom:roundingBorderWidth="1px"
             />
         <LinearLayout
@@ -32,9 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_toLeftOf="@+id/myfavorite_img_View"
+            android:layout_toLeftOf="@id/myfavorite_img_View"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true">
+            android:layout_centerVertical="true"
+            android:paddingRight="8dp">
             <com.news.yazhidao.widget.TextViewExtend
                 android:id="@+id/myfavorite_Title"
                 android:layout_width="wrap_content"
@@ -42,6 +42,7 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/new_color1"
                 android:textSize="@dimen/new_font10"
+                android:includeFontPadding="false"
                 />
 
             <com.news.yazhidao.widget.TextViewExtend
@@ -51,12 +52,14 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/new_color3"
                 android:textSize="@dimen/new_font6"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="1dp"
                 />
         </LinearLayout>
 
 
     </RelativeLayout>
+
     <View
         android:id="@+id/myfavorite_bottomLine"
         android:layout_width="match_parent"

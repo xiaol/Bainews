@@ -6,10 +6,11 @@
     >
 
     <RelativeLayout
+        android:id="@+id/mFavoriteTopLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/common_header_bg"
-        android:visibility="gone"
+        android:visibility="visible"
         >
 
         <ImageView
@@ -40,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_comment_building"
-        android:text="正在建设中,请移步"
+        android:text="暂无收藏内容"
         android:textSize="@dimen/font3"
         android:drawablePadding="15dp"
         android:layout_centerInParent="true"
@@ -58,6 +59,7 @@
         android:clipToPadding="false"
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:layout_below="@id/mFavoriteTopLayout"/>
     <include layout="@layout/loading_view" />
 </RelativeLayout>

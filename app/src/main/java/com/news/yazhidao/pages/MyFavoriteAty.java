@@ -2,6 +2,9 @@ package com.news.yazhidao.pages;
 
 import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -25,6 +28,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     private PullToRefreshListView mFavoriteListView;
     private MyFavoriteAdapter mAdapter;
     private ArrayList<NewsFeed> newsFeedList = new ArrayList<NewsFeed>();
+    private boolean isHaveFooterView;
 
 
 
@@ -50,17 +54,38 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void loadData() {
-        bgLayout.setVisibility(View.GONE);
         mFavoriteLeftBack.setOnClickListener(this);
         mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
+        mFavoriteListView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        bgLayout.setVisibility(View.GONE);
         try {
             newsFeedList = SharedPreManager.myFavoriteGetList();
         } catch (JSONException e) {
             e.printStackTrace();
         }
         mAdapter.setNewsFeed(newsFeedList);
-        mFavoriteListView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        if(newsFeedList.size() == 0){
+            mFavoriteListView.setVisibility(View.GONE);
+        }else{
+            if(!isHaveFooterView){
+                isHaveFooterView = true;
+                AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                ListView lv = mFavoriteListView.getRefreshableView();
+                LinearLayout mNewsDetailFootView = (LinearLayout) getLayoutInflater().inflate(R.layout.detail_footview_layout, null);
+                mNewsDetailFootView.setLayoutParams(layoutParams);
+                lv.addFooterView(mNewsDetailFootView);
+            }
+            mFavoriteListView.setVisibility(View.VISIBLE);
+
+        }
     }
 
     @Override

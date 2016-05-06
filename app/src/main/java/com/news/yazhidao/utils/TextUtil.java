@@ -579,9 +579,9 @@ public class TextUtil {
     public static String generateCSS() {
         StringBuilder cssBuilder = new StringBuilder("<style type=\"text/css\">");
         cssBuilder.append("" +
-                "body { margin: 18px 18px 18px 18px; background-color: #f6f6f6;} " +
+                "body { margin: 14px 18px 18px 18px; background-color: #f6f6f6;} " +
                 "h3 { margin: 0px; } " +
-                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 150%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
+                ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
                 ".content img { width: 100%; }" +
                 ".p_img { text-align: center; }");
@@ -613,7 +613,7 @@ public class TextUtil {
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 15px 0px;\">" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;\">" +
                 detail.getTitle() +
                 "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #9a9a9a;\" class=\"top\"><span>" +
                 detail.getPubName() + "</span>" +

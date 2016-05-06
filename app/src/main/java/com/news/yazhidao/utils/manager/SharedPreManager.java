@@ -268,7 +268,7 @@ public class SharedPreManager {
         remove(CommonConstant.UPLOAD_LOG, key);
     }
     public static void myFavoriteSaveList(NewsFeed bean){
-        ArrayList<NewsFeed> list = null;
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
         try {
             list = myFavoriteGetList();
         } catch (JSONException e) {
@@ -287,8 +287,9 @@ public class SharedPreManager {
             e.printStackTrace();
             return false;
         }
-
+        Logger.d("bbb", "newsID==" + newsID);
         for(int i = 0; i < list.size(); i++){
+            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getUrl());
             if(list.get(i).getUrl().equals(newsID)){
                 return true;
             }
