@@ -8,19 +8,18 @@
     <RelativeLayout
         android:id="@+id/mSettingHeader"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="49dp"
         android:background="@color/common_header_bg"
         >
 
-        <ImageView
+        <TextView
             android:id="@+id/mSettingtLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="16dp"
-            android:layout_marginBottom="2dp"
-            android:src="@drawable/btn_left_back"
-            android:clickable="true"
             android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp"
             />
 
         <TextView
@@ -55,16 +54,16 @@
         <RelativeLayout
             android:id="@+id/mSettingPushSwitch"
             android:layout_width="match_parent"
+            android:layout_height="49dp"
             android:background="@drawable/bg_setting_item_top_selector"
             android:clickable="true"
-            android:layout_height="48dp"
             >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23dp"
                 android:drawableLeft="@drawable/ic_setting_push_switch"
                 android:drawablePadding="12dp"
                 android:text="推送设置"
@@ -86,7 +85,7 @@
         <RelativeLayout
             android:id="@+id/mSettingFont"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="49dp"
             android:background="@drawable/bg_setting_item_top_selector"
             >
 
@@ -102,7 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23dp"
                 android:drawableLeft="@drawable/ic_setting_font"
                 android:drawablePadding="12dp"
                 android:text="字体大小"
@@ -117,8 +116,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="8dp"
-                android:orientation="horizontal"
                 android:checkedButton="@+id/mRadioNormal"
+                android:orientation="horizontal"
                 >
 
                 <RadioButton
@@ -166,7 +165,7 @@
     <RelativeLayout
         android:id="@+id/mSettingClearCacheParent"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="49dp"
         android:layout_below="@id/mSettingSection1"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -176,18 +175,18 @@
 
         <TextView
             android:id="@+id/mSettingClearCache"
-            android:background="@drawable/bg_setting_item_all_selector"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
+            android:background="@drawable/bg_setting_item_all_selector"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_setting_clear_cache"
-            android:textColor="@color/new_color1"
-            android:gravity="center_vertical"
-            android:paddingLeft="18dp"
             android:drawablePadding="12dp"
-            android:textSize="@dimen/font2"
+            android:gravity="center_vertical"
+            android:paddingLeft="23dp"
             android:text="清除缓存"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2"
             />
 
     </RelativeLayout>
@@ -207,7 +206,7 @@
         <RelativeLayout
             android:id="@+id/mSettingAbout"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="49dp"
             android:background="@drawable/bg_setting_item_top_selector"
             android:clickable="true"
             >
@@ -216,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23dp"
                 android:drawableLeft="@drawable/ic_setting_about"
                 android:drawablePadding="12dp"
                 android:text="关于"
@@ -237,7 +236,7 @@
         <RelativeLayout
             android:id="@+id/mSettingPrivacyPolicy"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="49dp"
             android:background="@drawable/bg_setting_item_middle_selector"
             android:clickable="true"
             >
@@ -254,7 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23dp"
                 android:drawableLeft="@drawable/ic_setting_privacy_policy"
                 android:drawablePadding="12dp"
                 android:text="隐私政策"
@@ -275,7 +274,7 @@
         <RelativeLayout
             android:id="@+id/mSettingUpdate"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="49dp"
             android:background="@drawable/bg_setting_item_bottom_selector"
             android:clickable="true"
             >
@@ -292,7 +291,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18dp"
+                android:layout_marginLeft="23dp"
                 android:drawableLeft="@drawable/ic_setting_update"
                 android:drawablePadding="12dp"
                 android:text="检查更新"
@@ -314,15 +313,15 @@
 
     <TextView
         android:id="@+id/mSetttingLogout"
-        android:layout_below="@id/mSettingSection3"
-        android:background="@drawable/bg_setting_login_selector"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_below="@id/mSettingSection3"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_setting_login_selector"
+        android:clickable="true"
         android:gravity="center"
         android:text="退出登录"
-        android:clickable="true"
         android:textColor="@color/new_color2"
-        android:textSize="@dimen/font3"
+        android:textSize="@dimen/new_font2"
         />
 </RelativeLayout>
