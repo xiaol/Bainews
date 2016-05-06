@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/common_header_bg"
+        android:visibility="gone"
         >
 
         <ImageView
@@ -45,4 +46,18 @@
         android:layout_centerInParent="true"
         android:textColor="@color/new_color5"
         />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/aty_myFavorite_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color7"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:drawingCacheQuality="auto"
+        android:animationCache="false"
+        android:clipToPadding="false"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none"/>
+    <include layout="@layout/loading_view" />
 </RelativeLayout>

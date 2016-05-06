@@ -31,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/white"
-                android:textSize="@dimen/new_font4"
-                android:layout_marginTop="7dp"
+                android:textSize="@dimen/font5"
+                android:layout_marginTop="10dp"
                 />
             <RelativeLayout
                 android:layout_width="match_parent"

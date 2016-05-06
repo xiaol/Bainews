@@ -82,7 +82,7 @@ public class NewsDetailFgt extends BaseFragment {
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
-            careforLayout, mNewsDetailHeaderView;
+             mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
@@ -128,7 +128,6 @@ public class NewsDetailFgt extends BaseFragment {
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
 
@@ -266,7 +265,7 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
-                CareForAnimation();
+                mShowCareforLayout.show();
                 detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
 
             }
@@ -312,60 +311,7 @@ public class NewsDetailFgt extends BaseFragment {
 //            addNewsLove(comment);
 //        }
 //    };
-    public void CareForAnimation() {
-        //图片渐变模糊度始终
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-        //渐变时间
-        alphaAnimation.setDuration(500);
-        careforLayout.startAnimation(alphaAnimation);
-        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                if (careforLayout.getVisibility() == View.GONE) {
-                    careforLayout.setVisibility(View.VISIBLE);
-                }
-            }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
-                        //渐变时间
-                        alphaAnimationEnd.setDuration(500);
-                        careforLayout.startAnimation(alphaAnimationEnd);
-                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                if (careforLayout.getVisibility() == View.VISIBLE) {
-                                    careforLayout.setVisibility(View.GONE);
-                                }
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                    }
-                }, 1000);
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
 
 
     private void loadData() {
@@ -701,5 +647,14 @@ public class NewsDetailFgt extends BaseFragment {
         super.onDestroy();
         mNewsDetailHeaderView.removeView(mDetailWebView);
         mDetailWebView.destroy();
+    }
+
+    public interface  ShowCareforLayout{
+        public void show();
+    }
+
+    ShowCareforLayout mShowCareforLayout;
+    public void setShowCareforLayout(ShowCareforLayout showCareforLayout){
+        mShowCareforLayout = showCareforLayout;
     }
 }

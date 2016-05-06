@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -20,8 +21,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,7 +60,10 @@ import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
+import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
 import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -108,16 +114,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public TextView mDetailCommentNum;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
-    private TextView mImageWallDesc;
+    private TextView mImageWallDesc,carefor_Text;
     private View mDetailBottomBanner;
-    public ImageView mDetailCommentPic;
+    public ImageView mDetailCommentPic,mDetailFavorite,carefor_Image;
     private WebView mDetailWebView;
     public ViewPager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
-    private String mSource;
+    private String mSource,mImageUrl;
     private String mUrl;
+    private LinearLayout careforLayout;
+    boolean isFavorite;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -162,8 +170,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     @Override
     protected void initializeViews() {
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
+        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+        careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -180,6 +190,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailRightMore.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
+        mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
+        mDetailFavorite.setOnClickListener(this);
+        carefor_Text = (TextView) findViewById(R.id.carefor_Text);
+        carefor_Image = (ImageView) findViewById(R.id.carefor_Image);
+
         mDetailComment.setOnClickListener(this);
         mDetailShare = (ImageView) findViewById(R.id.mDetailShare);
         mDetailShare.setOnClickListener(this);
@@ -299,6 +314,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     args.putSerializable(NewsDetailFgt.KEY_DETAIL_RESULT, result);
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mUrl);
+                    detailFgt.setShowCareforLayout(mShowCareforLayout);
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
@@ -322,6 +338,18 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
+        try {
+            Logger.e("aaa","刚刚进入============"+SharedPreManager.myFavoriteGetList().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+        if(isFavorite){
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+        }else {
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+        }
         mNewsLoadingImg.setVisibility(View.GONE);
         mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
         bgLayout.setVisibility(View.VISIBLE);
@@ -415,6 +443,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setCommentsCount(result.getCommentSize() + "");
         mNewsFeed.setChannelId(result.getChannelId() + "");
         mNewsFeed.setImgStyle(result.getImgNum() + "");
+        mNewsFeed.setImageUrl(mImageUrl);
+
         return mNewsFeed;
     }
 
@@ -503,6 +533,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mNewsLoadingImg:
                 loadData();
+                break;
+            case R.id.mDetailFavorite:
+                CareForAnimation(false);
                 break;
         }
     }
@@ -659,6 +692,85 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             ((ViewPager) container).addView(views.get(position));
             return views.get(position);
         }
+    }
+
+    ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
+        @Override
+        public void show() {
+            CareForAnimation(true);
+        }
+    };
+
+    public void CareForAnimation(boolean isCarefor) {
+        if(isCarefor){
+            carefor_Image.setImageResource(R.drawable.carefor_image);
+            carefor_Text.setText("将推荐更多此类文章");
+        }else{
+            carefor_Image.setImageResource(R.drawable.hook_image);
+            if(isFavorite){
+                isFavorite = false;
+                carefor_Text.setText("收藏已取消");
+                SharedPreManager.myFavoritRemoveItem(mNewsFeed.getUrl());
+            }else{
+                isFavorite = true;
+                carefor_Text.setText("收藏成功");
+                SharedPreManager.myFavoriteSaveList(mNewsFeed);
+            }
+
+        }
+
+        //图片渐变模糊度始终
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
+        //渐变时间
+        alphaAnimation.setDuration(500);
+        careforLayout.startAnimation(alphaAnimation);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if (careforLayout.getVisibility() == View.GONE) {
+                    careforLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
+                        //渐变时间
+                        alphaAnimationEnd.setDuration(500);
+                        careforLayout.startAnimation(alphaAnimationEnd);
+                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                if (careforLayout.getVisibility() == View.VISIBLE) {
+                                    careforLayout.setVisibility(View.GONE);
+                                }
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                    }
+                }, 1000);
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
 }

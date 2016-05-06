@@ -173,6 +173,9 @@
             android:src="@drawable/btn_detail_share"/>
 
     </RelativeLayout>
+
+    <include layout="@layout/detail_carefor_layout"/>
+
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
