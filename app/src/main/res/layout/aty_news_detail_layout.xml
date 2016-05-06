@@ -132,7 +132,7 @@
                 android:layout_height="40dp"
                 android:contentDescription="评论"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_comment"
+                android:src="@drawable/btn_detail_no_comment"
                 />
 
             <TextView

@@ -249,7 +249,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
-                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
+//                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
@@ -260,7 +260,7 @@ public class NewsCommentFgt extends BaseFragment {
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
-            setNewsTime(holder.tvTime, comment.getCreate_time());
+//            setNewsTime(holder.tvTime, comment.getCreate_time());
             if (!TextUtil.isEmptyString(comment.getProfile())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
             }

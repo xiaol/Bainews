@@ -65,7 +65,7 @@ import java.util.Collections;
 public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     private WebView mDetailWebView;
-    private NewsDetail result;
+    private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
@@ -84,8 +84,8 @@ public class NewsDetailFgt extends BaseFragment {
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
-            detail_shared_MoreComment,
             detail_shared_hotComment;
+    private View detail_shared_MoreComment;
     private RelativeLayout detail_shared_ShareImageLayout,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
@@ -95,9 +95,7 @@ public class NewsDetailFgt extends BaseFragment {
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
-
-
-
+    private TextView mDetailSharedHotComment;
 
 
     @Override
@@ -106,7 +104,7 @@ public class NewsDetailFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
-        result = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
+        mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
         if(mRefreshReceiber == null){
@@ -183,7 +181,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.loadData(TextUtil.genarateHTML(result, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
+        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -199,6 +197,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
+        mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_PraiseImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseImage);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
@@ -216,7 +215,10 @@ public class NewsDetailFgt extends BaseFragment {
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
                 CareForAnimation();
-                detail_shared_PraiseImage.setImageResource(R.drawable.bg_praised);
+
+                detail_shared_PraiseImage.setImageResource(R.drawable.btn_detail_like_select);
+                detail_shared_PraiseText.setVisibility(View.VISIBLE);
+                detail_shared_PraiseText.setText("1");
 
             }
         });
@@ -230,7 +232,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
-        detail_shared_MoreComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
+        detail_shared_MoreComment = mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -338,6 +340,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
                         Logger.d("aaa", "评论加载完毕！！！！！！");
+                        mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
                         addCommentContent(result);
                     }else{
                         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
@@ -478,6 +481,7 @@ public class NewsDetailFgt extends BaseFragment {
             for(int i = 0; i<listSice&&i<3 ;i++){
                 CommentType = i+1;
                 mCCView = inflater.inflate(R.layout.adapter_list_comment1,container,false);
+                View mSelectCommentDivider = mCCView.findViewById(R.id.mSelectCommentDivider);
                 CommentHolder holder = new CommentHolder(mCCView);
 
                 int position = i;
@@ -486,7 +490,9 @@ public class NewsDetailFgt extends BaseFragment {
                 UpdateCCView(holder,comment,position);
                 holderList.add(holder);
                 viewList.add(mCCView);
-
+                if (i == 2){
+                    mSelectCommentDivider.setVisibility(View.GONE);
+                }
                 mCommentLayout.addView(mCCView);
 
             }
