@@ -175,6 +175,8 @@
 
     </RelativeLayout>
 
+
+
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
@@ -207,6 +209,6 @@
         android:background="#88000000"
         android:visibility="gone"
         />
-
+    <include layout="@layout/detail_carefor_layout"/>
 
 </RelativeLayout>

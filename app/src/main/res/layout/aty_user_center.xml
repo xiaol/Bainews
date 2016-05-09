@@ -140,7 +140,6 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/mCenterFavoriteIcon"
             android:textSize="@dimen/font2"
-            android:drawablePadding="12dp"
             android:textColor="@color/new_color1"
             android:text="我的收藏"
             />

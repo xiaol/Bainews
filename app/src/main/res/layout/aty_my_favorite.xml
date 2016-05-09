@@ -6,9 +6,11 @@
     >
 
     <RelativeLayout
+        android:id="@+id/mFavoriteTopLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/common_header_bg"
+        android:visibility="visible"
         >
 
         <TextView
@@ -44,8 +46,23 @@
         android:layout_centerInParent="true"
         android:drawablePadding="15dp"
         android:drawableTop="@drawable/ic_comment_building"
-        android:text="正在建设中,请移步"
-        android:textColor="@color/new_color5"
+        android:text="暂无收藏内容"
         android:textSize="@dimen/font3"
+        android:textColor="@color/new_color5"
         />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/aty_myFavorite_PullToRefreshListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color7"
+        android:cacheColorHint="@color/new_encounter_cell_bg"
+        android:drawingCacheQuality="auto"
+        android:animationCache="false"
+        android:clipToPadding="false"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_below="@id/mFavoriteTopLayout"/>
+    <include layout="@layout/loading_view" />
 </RelativeLayout>

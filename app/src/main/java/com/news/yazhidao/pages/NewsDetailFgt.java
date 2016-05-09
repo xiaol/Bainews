@@ -13,8 +13,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -50,15 +48,17 @@ import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.umeng.message.proguard.M;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -78,17 +78,17 @@ public class NewsDetailFgt extends BaseFragment {
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_ID = "key_news_id";
+    public static final String KEY_NEWS_TITLE = "key_news_title";
     public static final int REQUEST_CODE = 1030;
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
-            careforLayout, mNewsDetailHeaderView;
+             mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
             detail_shared_hotComment;
-    private View detail_shared_MoreComment;
-    private RelativeLayout detail_shared_ShareImageLayout,
+    private RelativeLayout detail_shared_ShareImageLayout,detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout;
     private ImageView detail_shared_AttentionImage;
@@ -101,6 +101,7 @@ public class NewsDetailFgt extends BaseFragment {
     boolean isNoHaveBean ;
     private final int LOAD_MORE = 0;
     private final int LOAD_BOTTOM = 1;
+    private boolean isLike;
 
 
     @Override
@@ -109,6 +110,8 @@ public class NewsDetailFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
+        mTitle = arguments.getString(KEY_NEWS_TITLE);
+        Logger.e("aaa", "mTitle==" + mTitle);
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
@@ -129,7 +132,6 @@ public class NewsDetailFgt extends BaseFragment {
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-        careforLayout = (LinearLayout) rootView.findViewById(R.id.careforLayout);
 
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
 
@@ -262,16 +264,25 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
+
+                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME,mTitle , mNewID, "1");
+
+
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击点赞");
-                CareForAnimation();
-                detail_shared_PraiseText.setVisibility(View.VISIBLE);
-                detail_shared_PraiseText.setText("1");
-                detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                if(isLike){
+                    isLike = false;
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+                }else{
+                    isLike = true;
+                    mShowCareforLayout.show();
+                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                }
+
 
             }
         });
@@ -285,7 +296,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
-        detail_shared_MoreComment = mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
+        detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -316,60 +327,7 @@ public class NewsDetailFgt extends BaseFragment {
 //            addNewsLove(comment);
 //        }
 //    };
-    public void CareForAnimation() {
-        //图片渐变模糊度始终
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
-        //渐变时间
-        alphaAnimation.setDuration(500);
-        careforLayout.startAnimation(alphaAnimation);
-        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                if (careforLayout.getVisibility() == View.GONE) {
-                    careforLayout.setVisibility(View.VISIBLE);
-                }
-            }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlphaAnimation alphaAnimationEnd = new AlphaAnimation(1.0f, 0f);
-                        //渐变时间
-                        alphaAnimationEnd.setDuration(500);
-                        careforLayout.startAnimation(alphaAnimationEnd);
-                        alphaAnimationEnd.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                if (careforLayout.getVisibility() == View.VISIBLE) {
-                                    careforLayout.setVisibility(View.GONE);
-                                }
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                    }
-                }, 1000);
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
 
 
     private void loadData() {
@@ -619,9 +577,15 @@ public class NewsDetailFgt extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.e("jigang", "detailaty refresh br");
-            NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-            mComments.add(0, comment);
-            UpdateCCOneData();
+            String action = intent.getAction();
+            if (CommonConstant.CHANGE_TEXT_ACTION.equals(action)) {
+                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+
+            }else if (NewsDetailAty2.ACTION_REFRESH_COMMENT.equals(action)){
+                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+                mComments.add(0, comment);
+                UpdateCCOneData();
+            }
 
         }
     }
@@ -709,5 +673,14 @@ public class NewsDetailFgt extends BaseFragment {
         super.onDestroy();
         mNewsDetailHeaderView.removeView(mDetailWebView);
         mDetailWebView.destroy();
+    }
+
+    public interface  ShowCareforLayout{
+         void show();
+    }
+
+    ShowCareforLayout mShowCareforLayout;
+    public void setShowCareforLayout(ShowCareforLayout showCareforLayout){
+        mShowCareforLayout = showCareforLayout;
     }
 }
