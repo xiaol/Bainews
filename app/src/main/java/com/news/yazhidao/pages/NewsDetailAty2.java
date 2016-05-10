@@ -136,16 +136,26 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang", "comment fgt refresh br");
-            int number = 0;
-            try {
-                number = Integer.valueOf(mDetailCommentNum.getText().toString());
-            } catch (Exception e) {
+//            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
+//                Logger.e("aaa", "详情页===文字的改变！！！");
+//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                mSharedPreferences.edit().putInt("textSize", size).commit();
+//                mNewsDetailViewPager.setAdapter(pagerAdapter);
 
-            }
-            mDetailCommentNum.setText(number + 1 + "");
-            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
+//            } else {
+
+                Logger.e("jigang", "comment fgt refresh br");
+                int number = 0;
+                try {
+                    number = Integer.valueOf(mDetailCommentNum.getText().toString());
+                } catch (Exception e) {
+
+                }
+                mDetailCommentNum.setText(number + 1 + "");
+                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+
+//            }
         }
     }
 
@@ -224,6 +234,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(ACTION_REFRESH_COMMENT);
+//            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             registerReceiver(mRefreshReceiber, filter);
         }
     }
@@ -264,7 +275,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         uploadLogDataEntity.setStime(lastTime / 1000 + "");
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-        Logger.d("aaa", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         if (saveNum >= 30) {
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
@@ -288,6 +299,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
+    FragmentStatePagerAdapter pagerAdapter;
     /**
      * 显示新闻详情和评论
      *
@@ -309,7 +321,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 }
             }
         });
-        mNewsDetailViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
@@ -335,7 +347,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             public int getCount() {
                 return 2;
             }
-        });
+        };
+        mNewsDetailViewPager.setAdapter(pagerAdapter);
     }
 
     @Override

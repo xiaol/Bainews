@@ -1,9 +1,12 @@
 package com.news.yazhidao.entity;
 
+import java.io.Serializable;
+import java.util.Collection;
+
 /**
  * Created by Administrator on 2016/4/18.
  */
-public class UploadLogDataEntity {
+public class UploadLogDataEntity implements Serializable{
     private String nid;
     private String cid;
     private String tid;
@@ -23,17 +26,7 @@ public class UploadLogDataEntity {
     public UploadLogDataEntity() {
     }
 
-    @Override
-    public String toString() {
-        return "UploadLogDataEntity{" +
-                "nid='" + nid + '\'' +
-                ", cid='" + cid + '\'' +
-                ", tid='" + tid + '\'' +
-                ", stime='" + stime + '\'' +
-                ", sltime='" + sltime + '\'' +
-                ", from='" + from + '\'' +
-                '}';
-    }
+
 
     public String getNid() {
         return nid;

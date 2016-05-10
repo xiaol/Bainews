@@ -17,6 +17,10 @@ public class RelatedItemEntity implements Serializable,Comparable {
     private String title;
     private String abs;
     private String updateTime;
+    /**
+     * 莫一年的第一天
+     */
+    private boolean yearFrist;
 
     public RelatedItemEntity(String url, int rank, String sourceSite, String searchFrom, String imgUrl, String title, String abs, String updateTime) {
         this.url = url;
@@ -66,6 +70,14 @@ public class RelatedItemEntity implements Serializable,Comparable {
         return "RelatedItemEntity{" +
                 "updateTime='" + updateTime + '\'' +
                 '}';
+    }
+
+    public boolean getYearFrist() {
+        return yearFrist;
+    }
+
+    public void setYearFrist(boolean yearFrist) {
+        this.yearFrist = yearFrist;
     }
 
     public String getUrl() {
