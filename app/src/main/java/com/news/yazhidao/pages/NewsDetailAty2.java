@@ -299,7 +299,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             public void onPageSelected(int position) {
                 if (position == 1) {
                     isCommentPage = true;
-                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
@@ -518,7 +518,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (!isCommentPage) {
                     isCommentPage = true;
                     mNewsDetailViewPager.setCurrentItem(1);
-                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;

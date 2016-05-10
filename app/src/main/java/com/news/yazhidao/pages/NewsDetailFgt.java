@@ -310,7 +310,7 @@ public class NewsDetailFgt extends BaseFragment {
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
-                    mActivity.mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
                 }
             }
