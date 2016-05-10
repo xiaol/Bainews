@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -557,8 +558,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-                mSharedPreferences.edit().putInt("textSize", size).commit();
+                Logger.e("aaa","文字的改变！！！");
+//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -574,24 +576,24 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             uploadLogDataEntities.add(uploadLogDataEntity);
         }
         int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-        Logger.d("aaa", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-        if (saveNum > 200) {
-            RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-            String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
-                    "&data=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-            Logger.d("aaa", "url===" + url);
-            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            });
-            requestQueue.add(request);
-        }
+        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//        if (saveNum > 200) {
+//            RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+//            String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
+//                    "&data=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//            Logger.d("aaa", "url===" + url);
+//            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+//                @Override
+//                public void onResponse(String response) {
+//                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                }
+//            });
+//            requestQueue.add(request);
+//        }
     }
 
 }

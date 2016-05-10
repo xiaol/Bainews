@@ -27,6 +27,17 @@
             android:layout_marginRight="8dp"
             android:padding="14dp"
             android:src="@drawable/bg_close_text_size_setting" />
+        <TextView
+            android:id="@+id/text_success"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="@dimen/font3"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:text="完成"
+            android:visibility="gone"
+            android:textColor="@color/new_color1"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -110,6 +121,7 @@
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/change_text_size_hintImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/content_layout"

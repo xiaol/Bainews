@@ -48,6 +48,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
@@ -59,6 +60,7 @@ import com.umeng.message.proguard.M;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -121,6 +123,7 @@ public class NewsDetailFgt extends BaseFragment {
         if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
 
@@ -239,13 +242,17 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
+        mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
+//        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
+        mDetailWebView.loadDataWithBaseURL(null,TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+                "text/html;charset=UTF-8", "utf-8", null);
         mDetailWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 isWebSuccess = true;
+                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
             }
         });
@@ -440,6 +447,7 @@ public class NewsDetailFgt extends BaseFragment {
         int listSice = relatedItemEntities.size();
         int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
         MAXPage = page;
+        int mYear = 0;
         for (int i = 0; i < page; i++) {
             ArrayList<RelatedItemEntity> listBean = new ArrayList<RelatedItemEntity>();
             for (int j = 0; j < pageSize; j++) {
@@ -448,6 +456,14 @@ public class NewsDetailFgt extends BaseFragment {
                     break;
                 }
                 Logger.e("aaa", "page:" + itemPosition);
+                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getUpdateTime());
+
+                int thisYear = calendar.get(Calendar.YEAR);//获取年份
+                if(thisYear != mYear){
+                    mYear = thisYear;
+                    relatedItemEntities.get(itemPosition).setYearFrist(true);
+                }
+
                 listBean.add(relatedItemEntities.get(itemPosition));
             }
             beanPageList.add(listBean);
@@ -547,10 +563,14 @@ public class NewsDetailFgt extends BaseFragment {
         if (detail_shared_CommentTitleLayout.getVisibility() == View.GONE) {
             detail_shared_CommentTitleLayout.setVisibility(View.VISIBLE);
         }
-
+        Logger.e("aaa","mComments.size() = " + mComments.size());
         if (mComments.size() > 3) {
             if (detail_shared_MoreComment.getVisibility() == View.GONE) {
                 detail_shared_MoreComment.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if (detail_shared_MoreComment.getVisibility() == View.VISIBLE) {
+                detail_shared_MoreComment.setVisibility(View.GONE);
             }
         }
     }
@@ -579,10 +599,25 @@ public class NewsDetailFgt extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang", "detailaty refresh br");
-            NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-            mComments.add(0, comment);
-            UpdateCCOneData();
+            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
+                Logger.e("aaa","详情页===文字的改变！！！");
+//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                mSharedPreferences.edit().putInt("textSize", size).commit();
+                mDetailWebView.loadDataWithBaseURL(null,TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+                        "text/html;charset=UTF-8", "utf-8", null);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT , LinearLayout.LayoutParams.WRAP_CONTENT);
+                mDetailWebView.setLayoutParams(params);
+                mAdapter.notifyDataSetChanged();
+                CCViewNotifyDataSetChanged();
+
+            }else{
+                Logger.e("jigang", "detailaty refresh br");
+                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+                mComments.add(0, comment);
+                UpdateCCOneData();
+            }
+
+
 
         }
     }

@@ -160,8 +160,9 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View v) {
                 if (mChangeTextSizePopWindow == null) {
-                    mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(((Activity) m_pContext));
-                    mChangeTextSizePopWindow.showAtLocation(((Activity) m_pContext).getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(m_pContext);
+                    mChangeTextSizePopWindow.isDeteilOpen();
+                    mChangeTextSizePopWindow.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                     dismiss();
                 }
             }
