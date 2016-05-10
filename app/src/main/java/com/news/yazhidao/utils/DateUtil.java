@@ -1,5 +1,6 @@
 package com.news.yazhidao.utils;
 
+import android.annotation.SuppressLint;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -353,5 +354,30 @@ public class DateUtil {
             e.printStackTrace();
         }
         return c;
+    }
+    @SuppressLint("SimpleDateFormat")
+    public static String getTimes(long unixLong) {
+        long currentDate = System.currentTimeMillis();
+        long times = currentDate / 1000 - unixLong / 1000;
+        // return "侧首";
+        if (times > 172800) {
+            Calendar c = Calendar.getInstance();
+            c.setTimeInMillis(unixLong);
+            SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+            String time = dateformat.format(c.getTime());
+            String[] timeArray = time.split("-");
+            int month = Integer.parseInt(timeArray[0]);
+            int day = Integer.parseInt(timeArray[1]);
+            time = month + "-" + day;
+            return time;
+        } else if (times >= 86400 && times < 172800) {
+            return "昨天";
+        } else if (times > 3600 && times < 86400) {
+            return times / (60 * 60) + "小时前";
+        } else if (times > 60 && times <= 3600) {
+            return times / (60) + "分钟前";
+        } else {
+            return "刚刚";
+        }
     }
 }

@@ -58,14 +58,16 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
         int day=calendar.get(Calendar.DATE);//获取日
 
         if(position == 0){
+            holder.getView(R.id.attention_onceHave).setVisibility(View.VISIBLE);
             holder.getView(R.id.attention_Year).setVisibility(View.GONE);
             holder.getView(R.id.attention_line1).setVisibility(View.INVISIBLE);
             holder.getView(R.id.rounded_imageView2).setVisibility(View.GONE);
             holder.getView(R.id.attention_line2).setVisibility(View.GONE);
             holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
-            holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
+            holder.setTextViewTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
             YearShow = thisYear;
         }else {
+            holder.getView(R.id.attention_onceHave).setVisibility(View.GONE);
             if (thisYear != YearShow) {
                 holder.getView(R.id.attention_line1).setVisibility(View.VISIBLE);
                 holder.getView(R.id.attention_Year).setVisibility(View.VISIBLE);
@@ -73,7 +75,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 holder.getView(R.id.attention_line2).setVisibility(View.VISIBLE);
                 holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
 
-                holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
+                holder.setTextViewTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
 
 
                 YearShow = thisYear;
@@ -83,28 +85,32 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 holder.getView(R.id.rounded_imageView2).setVisibility(View.GONE);
                 holder.getView(R.id.attention_line2).setVisibility(View.GONE);
 
-                holder.setTextViewExtendTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_nohaveyear_bg);
+                holder.setTextViewTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_nohaveyear_bg);
 
             }
         }
-        holder.setTextViewExtendText(R.id.attention_MonthandDay,
+        holder.setTextViewText(R.id.attention_MonthandDay,
                 (month<10?"0":"")+month+"/"+(day<10?"0":"")+day);
 
 
-        holder.setTextViewExtendText(R.id.attention_Title,relatedItemEntity.getTitle());
+        holder.setTextViewExtendTextandTextSice(R.id.attention_Title,relatedItemEntity.getTitle());
+
+
         holder.setTextViewExtendText(R.id.attention_Source,relatedItemEntity.getSourceSite());
         String imageUrl = relatedItemEntity.getImgUrl();
         if(imageUrl != null&&imageUrl.length()!= 0){
+            holder.getView(R.id.attention_haveImageShow).setVisibility(View.VISIBLE);
             holder.setSimpleDraweeViewURI(R.id.attention_img_View,imageUrl);
         }else{
             holder.getView(R.id.attention_img_View).setVisibility(View.GONE);
+            holder.getView(R.id.attention_haveImageShow).setVisibility(View.GONE);
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout),relatedItemEntity);
 
 
-//        if(getCount() == position+1){去掉最后一条的线
-//            holder.getView(R.id.attention_bottomLine).setVisibility(View.GONE);
-//        }
+        if(getCount() == position+1){//去掉最后一条的线
+            holder.getView(R.id.attention_bottomLine).setVisibility(View.GONE);
+        }
     }
     public void onAttentionItemClickListener(RelativeLayout mAttentionlayout,final RelatedItemEntity relatedItemEntity){
        mAttentionlayout.setOnClickListener(new View.OnClickListener() {

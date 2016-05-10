@@ -21,6 +21,7 @@
     <color name="new_color9">#f6f6f6</color>
     <color name="new_color10">#f2f2f2</color>
     <color name="new_color11">#d3d3d3</color>
+    <color name="new_color12">#fbfbfb</color>
     <color name="common_header_bg">#f0f0f0</color>
     <color name="news_list_table_channelname">#ff7f66</color>
     <color name="news_list_table_devider">#e1e1e1</color>
@@ -151,7 +152,7 @@
     <color name="btn_unpress_color">#22000000</color>
 
     <!--login portion-->
-    <color name="bg_home_login_header">@color/white</color>
+    <color name="bg_home_login_header">#f6f6f6</color>
     <color name="bg_home_login">@color/theme_color</color>
     <color name="home_login_chat">#2b2b2b</color>
     <color name="home_logout">#ff7878</color>

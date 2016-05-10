@@ -58,10 +58,40 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String channelId;
     /**
+     *  这个参数是收藏用的单张图
+     */
+    private String imageUrl;
+    /**
      * 用户是否看过
      */
     @DatabaseField(dataType = DataType.BOOLEAN)
     private boolean isRead;
+
+    @Override
+    public String toString() {
+        return "NewsFeed{" +
+                "pubTime='" + pubTime + '\'' +
+                ", url='" + url + '\'' +
+                ", docid='" + docid + '\'' +
+                ", commentsCount='" + commentsCount + '\'' +
+                ", pubName='" + pubName + '\'' +
+                ", pubUrl='" + pubUrl + '\'' +
+                ", imgStyle='" + imgStyle + '\'' +
+                ", title='" + title + '\'' +
+                ", imgList=" + imgList +
+                ", channelId='" + channelId + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", isRead=" + isRead +
+                '}';
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     public String getChannelId() {
         return channelId;

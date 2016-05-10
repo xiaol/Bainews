@@ -8,11 +8,18 @@ import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.LocationEntity;
+import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.RelatedEntity;
+import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.umeng.message.proguard.S;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +113,7 @@ public class SharedPreManager {
         SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
         String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
         if (!TextUtil.isEmptyString(oldWords)){
-           return Arrays.asList(oldWords.split(","));
+            return Arrays.asList(oldWords.split(","));
         }
         return new ArrayList<>();
     }
@@ -260,6 +267,65 @@ public class SharedPreManager {
 
         remove(CommonConstant.UPLOAD_LOG, key);
     }
+    public static void myFavoriteSaveList(NewsFeed bean){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        list.add(bean);
+        Gson gson = new Gson();
+        String str = gson.toJson(list);
+        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+    }
+    public static boolean myFavoriteisSame(String newsID){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Logger.d("bbb", "newsID==" + newsID);
+        for(int i = 0; i < list.size(); i++){
+            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getUrl());
+            if(list.get(i).getUrl().equals(newsID)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static  ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
+        Gson gson = new Gson();
+        String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
+        JSONArray array;
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        array = new JSONArray(mf);
+        for (int i = 0; i < array.length(); i++) {
+            String str = array.getString(i);
+            NewsFeed bean = gson.fromJson(str, NewsFeed.class);
+            list.add(bean);
 
+        }
+        return list;
 
+    }
+    public static void myFavoritRemoveItem(String newsID){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getUrl().equals(newsID)){
+                list.remove(i);
+                Gson gson = new Gson();
+                String str = gson.toJson(list);
+                save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+            }
+        }
+
+    }
 }

@@ -15,7 +15,8 @@
         <TextView
             android:id="@+id/mCenterCancel"
             android:layout_width="66dp"
-            android:layout_height="49dp"
+            android:layout_height="48dp"
+            android:paddingLeft="2dp"
             android:gravity="center"
             android:text="关闭"
             android:textColor="@color/new_color1"
@@ -44,52 +45,60 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="108dp"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         >
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/mCenterUserIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             fresco:placeholderImage="@drawable/ic_user_comment_default"
             fresco:roundAsCircle="true"
             fresco:roundingBorderColor="@color/white"
-            fresco:roundingBorderWidth="4dp"
+            fresco:roundingBorderWidth="5dp"
             />
 
         <TextView
             android:id="@+id/mCenterUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:text="@string/app_name"
             android:textColor="@color/new_color1"
-            android:textSize="@dimen/font2"
+            android:textSize="@dimen/new_font2"
             />
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/mCenterComment"
         android:layout_below="@id/mCenterUserInfo"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="79dp"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
+        android:layout_height="48.56dp"
+        android:background="@color/new_color12"
         >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
             android:background="@color/new_color5"
             />
+        <ImageView
+            android:id="@+id/mCenterCommentIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user_center_comment"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="12dp"
+            android:paddingTop="1dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_user_center_comment"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/mCenterCommentIcon"
             android:textSize="@dimen/font2"
-            android:layout_marginLeft="18dp"
-            android:drawablePadding="12dp"
             android:textColor="@color/new_color1"
             android:text="我的评论"
             />
@@ -106,8 +115,8 @@
         android:id="@+id/mCenterFavorite"
         android:layout_below="@id/mCenterComment"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
+        android:layout_height="49dp"
+        android:background="@color/new_color12"
         >
         <ImageView
             android:layout_width="match_parent"
@@ -116,14 +125,21 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             />
+        <ImageView
+            android:id="@+id/mCenterFavoriteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user_center_favorite"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="12dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_user_center_favorite"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/mCenterFavoriteIcon"
             android:textSize="@dimen/font2"
-            android:layout_marginLeft="18dp"
-            android:drawablePadding="12dp"
             android:textColor="@color/new_color1"
             android:text="我的收藏"
             />
@@ -140,8 +156,8 @@
         android:id="@+id/mCenterMessage"
         android:layout_below="@id/mCenterFavorite"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/white"
+        android:layout_height="49dp"
+        android:background="@color/new_color12"
         >
         <ImageView
             android:layout_width="match_parent"
@@ -150,13 +166,21 @@
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             />
+        <ImageView
+            android:id="@+id/mCenterMessageIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user_center_message"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="12dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_user_center_message"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/mCenterMessageIcon"
             android:textSize="@dimen/font2"
-            android:layout_marginLeft="18dp"
             android:drawablePadding="12dp"
             android:textColor="@color/new_color1"
             android:text="我的消息"
@@ -180,10 +204,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginLeft="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginLeft="86dp"
+        android:layout_marginRight="86dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="26dp"
         >
         <TextView
             android:id="@+id/mCenterDigger"
@@ -195,7 +219,7 @@
             android:textColor="@color/new_color1"
             android:textSize="@dimen/font3"
             android:drawableTop="@drawable/ic_user_center_digger"
-            android:drawablePadding="8dp"
+            android:drawablePadding="10dp"
             android:padding="12dp"
             android:text="一订"
             android:gravity="center"
@@ -210,7 +234,7 @@
             android:textColor="@color/new_color1"
             android:textSize="@dimen/font3"
             android:drawableTop="@drawable/btn_setting"
-            android:drawablePadding="8dp"
+            android:drawablePadding="10dp"
             android:padding="12dp"
             android:gravity="center"
             android:text="设置"

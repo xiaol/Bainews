@@ -16,6 +16,6 @@
         android:scrollbars="none"/>
     <include layout="@layout/loading_view" />
 
-    <include layout="@layout/detail_carefor_layout"/>
+
 
 </RelativeLayout>
