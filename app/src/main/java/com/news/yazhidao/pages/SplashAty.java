@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,11 +12,27 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.UploadLogDataEntity;
+import com.news.yazhidao.entity.UploadLogEntity;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fengjigang on 15/3/30.
@@ -46,7 +63,7 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
-        SharedPreferences sp = getSharedPreferences("showflag", 0);
+        final SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow", false);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
@@ -81,6 +98,66 @@ public class SplashAty extends BaseActivity {
 
             }
         });
+        /**
+         * 日志上传
+         */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                User user = SharedPreManager.getUser(SplashAty.this);
+                String mstrUserId = "";
+                if (user != null)
+                    mstrUserId = user.getUserId();
+                else
+                    return;
+                Logger.e("ccc", "主页的数据上传====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+                String mReadData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN);
+                Gson gson = new Gson();
+                UploadLogEntity uploadLogEntity = new UploadLogEntity();
+                if (mReadData != null && mReadData.length() != 0) {
+                    uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+                }
+                List<UploadLogDataEntity> data = uploadLogEntity.getData();
+
+                int size = data.size();
+                if (size < 200) {
+                    Log.e("ccc", "条数不够！！！！======="+size);
+                    return;
+
+                }
+                Logger.e("aaa","data=================="+data.toString());
+                for (int i = 0; i < (size % 100 == 0 ? size / 100 : size / 100 + 1); i++) {
+                    List<UploadLogDataEntity> dataScope = null;
+                    if (data.size() > 100) {
+                        dataScope = new ArrayList<UploadLogDataEntity>(data.subList(0, 99));
+                    }else{
+                        dataScope = data;
+                    }
+
+                    Logger.e("aaa","dataScope=================="+dataScope.toString());
+                    RequestQueue requestQueue = Volley.newRequestQueue(SplashAty.this);
+                    String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
+                            "&data=" + TextUtil.getBase64(gson.toJson(dataScope));
+                    Logger.d("aaa", "url===" + url);
+                    UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                        }
+                    });
+                    requestQueue.add(request);
+
+                    data.removeAll(dataScope);
+                    Log.e("ccc", "删除完成之后的数量！！！！======="+data.size());
+                }
+                SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
+
+            }
+        }).start();
 //        Logger.e("jigang", "h=" + mSplashLine.getHeight() + ",w=" + mSplashLine.getWidth());
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);

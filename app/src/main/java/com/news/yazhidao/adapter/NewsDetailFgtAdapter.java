@@ -2,6 +2,7 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
 
     private Activity mContext;
     public static final int REQUEST_CODE = 1030;
-    private int YearShow = 1;
 
     public NewsDetailFgtAdapter(Activity context) {
         super(R.layout.item_news_detail_relate_attention,context,null);
@@ -56,6 +56,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
         int thisYear = calendar.get(Calendar.YEAR);//获取年份
         int month=calendar.get(Calendar.MONTH)+1;//获取月份
         int day=calendar.get(Calendar.DATE);//获取日
+        Logger.d("ccc", "thisYear===" + thisYear);
 
         if(position == 0){
             holder.getView(R.id.attention_onceHave).setVisibility(View.VISIBLE);
@@ -65,10 +66,10 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
             holder.getView(R.id.attention_line2).setVisibility(View.GONE);
             holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
             holder.setTextViewTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
-            YearShow = thisYear;
         }else {
             holder.getView(R.id.attention_onceHave).setVisibility(View.GONE);
-            if (thisYear != YearShow) {
+            boolean yearFrist = relatedItemEntity.getYearFrist();
+            if (yearFrist) {
                 holder.getView(R.id.attention_line1).setVisibility(View.VISIBLE);
                 holder.getView(R.id.attention_Year).setVisibility(View.VISIBLE);
                 holder.getView(R.id.rounded_imageView2).setVisibility(View.VISIBLE);
@@ -76,9 +77,6 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 holder.setTextViewExtendText(R.id.attention_Year, thisYear + "");
 
                 holder.setTextViewTextBackgroundResource(R.id.attention_MonthandDay, R.drawable.time_haveyear_bg);
-
-
-                YearShow = thisYear;
             } else {
                 holder.getView(R.id.attention_line1).setVisibility(View.VISIBLE);
                 holder.getView(R.id.attention_Year).setVisibility(View.GONE);

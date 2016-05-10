@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
@@ -23,12 +24,16 @@ import com.news.yazhidao.common.CommonConstant;
  */
 public class ChangeTextSizePopupWindow extends PopupWindow {
 
-    private ImageView mivClose, mivShow;
+    private ImageView mivClose,change_text_size_hintImage;
     private View mMenuView;
     private Activity mContext;
     private SeekBar mSeekBar;
     private SharedPreferences mSharedPreferences;
+    private TextView text_success;
     int mTextSize;
+    private boolean isDetailOpen;
+
+
 
     public ChangeTextSizePopupWindow(Activity context) {
         super(context);
@@ -39,7 +44,6 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mTextSize = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
         findHeadPortraitImageViews();
-        loadData();
     }
 
     private void findHeadPortraitImageViews() {
@@ -47,7 +51,8 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mSeekBar = (SeekBar) mMenuView.findViewById(R.id.change_text_size_bar);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
-        mivShow = (ImageView) mMenuView.findViewById(R.id.show_imageView);
+        change_text_size_hintImage = (ImageView) mMenuView.findViewById(R.id.change_text_size_hintImage);
+        text_success = (TextView) mMenuView.findViewById(R.id.text_success);
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -72,10 +77,6 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
 //                return true;
 //            }
 //        });
-        if (!mSharedPreferences.getBoolean("isshow", false)) {
-            mSharedPreferences.edit().putBoolean("isshow", true).commit();
-        } else
-            mivShow.setVisibility(View.GONE);
         mivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,26 +111,33 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
                 Intent intent = new Intent();
                 if (progress < 25) {
                     mSeekBar.setProgress(0);
-                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+                    mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_NORMAL).commit();
                 } else if (progress >= 25 && progress <= 75) {
                     mSeekBar.setProgress(50);
-                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIG);
+//                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIG);
+                    mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIG).commit();
                 } else {
                     mSeekBar.setProgress(100);
-                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIGGER);
+//                    intent.putExtra("textSize", CommonConstant.TEXT_SIZE_BIGGER);
+                    mSharedPreferences.edit().putInt("textSize", CommonConstant.TEXT_SIZE_BIGGER).commit();
                 }
                 intent.setAction(CommonConstant.CHANGE_TEXT_ACTION);
                 mContext.sendBroadcast(intent);
             }
         });
     }
-
-
-    private void loadData() {
-    }
-
-    public interface IUpdateUI {
-        void refreshUI(String date, String type);
+    public void isDeteilOpen(){
+        isDetailOpen = true;
+        change_text_size_hintImage.setVisibility(View.GONE);
+        mivClose.setVisibility(View.GONE);
+        text_success.setVisibility(View.VISIBLE);
+        text_success.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
     }
 
 }
