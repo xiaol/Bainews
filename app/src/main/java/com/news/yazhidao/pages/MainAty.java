@@ -57,7 +57,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
-    private  ArrayList<ChannelItem> mUnSelChannelItems;
+    private ArrayList<ChannelItem> mUnSelChannelItems;
 
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
@@ -80,13 +80,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     FeedDislikePopupWindow dislikePopupWindow;
 
 
-
-    private void initLocation(){
+    private void initLocation() {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy
         );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
-        int span=1000;
+        int span = 1000;
         option.setScanSpan(0);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -104,7 +103,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         @Override
         public void onReceiveLocation(BDLocation location) {
             //Receive Location 如果定位成功需要及时关闭定位,否则耗电太快
-            if(location != null){
+            if (location != null) {
                 mLocationClient.stop();
             }
             StringBuffer sb = new StringBuffer(256);
@@ -164,8 +163,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
                 }
             }
-            Log.i("BaiduLocationApiDem", sb.toString() );
-            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION,CommonConstant.KEY_USER_LOCATION,GsonUtil.serialized(location.getAddress()));
+            Log.i("BaiduLocationApiDem", sb.toString());
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION, GsonUtil.serialized(location.getAddress()));
         }
     }
 
@@ -184,7 +183,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 if (!TextUtil.isEmptyString(url)) {
                     mUserCenter.setImageURI(Uri.parse(url));
                 }
-            }else if (ACTION_USER_LOGOUT.equals(intent.getAction())){
+            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
                 mUserCenter.setImageURI(null);
             }
         }
@@ -202,7 +201,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home,menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
@@ -222,12 +221,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mViewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mViewPagerAdapter);
         mChannelTabStrip.setViewPager(mViewPager);
-
 //                mUserCenter.setImageURI(Uri.parse("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0"));
         dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
         dislikePopupWindow.setVisibility(View.GONE);
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
             Handler mHandler = new Handler();
+
             @Override
             public void itemClick(int position) {
                 switch (position) {
@@ -240,12 +239,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     case 3://不喜欢
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
-                             ToastUtil.showReduceRecommendToast(MainAty.this);
+                        ToastUtil.showReduceRecommendToast(MainAty.this);
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                             }
-                        },100);
+                        }, 100);
                         break;
                 }
             }
@@ -264,7 +263,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         registerReceiver(mReceiver, filter);
         //baidu Map
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
-        mLocationClient.registerLocationListener( myListener );    //注册监听函数
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
     }
@@ -310,7 +309,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 break;
             case R.id.mChannelExpand:
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
-                MobclickAgent.onEvent(this,"user_open_channel_edit_page");
+                MobclickAgent.onEvent(this, "user_open_channel_edit_page");
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
             case R.id.mUserCenter:
@@ -321,24 +320,27 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //                    user.setUserName("forward_one");
 //                    user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
 //                }
-                if (user == null){
-                    Intent loginAty = new Intent(this,LoginAty.class);
+                if (user == null) {
+                    Intent loginAty = new Intent(this, LoginAty.class);
                     startActivity(loginAty);
-                }else {
-                    Intent userCenterAty = new Intent(this,UserCenterAty.class);
+                } else {
+                    Intent userCenterAty = new Intent(this, UserCenterAty.class);
                     startActivity(userCenterAty);
                 }
                 break;
         }
     }
 
+    ChannelItem item1;
+    ArrayList<ChannelItem> channelItems;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == REQUEST_CODE) {
-            ArrayList<ChannelItem> channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
+            channelItems = (ArrayList<ChannelItem>) data.getSerializableExtra(ChannelOperateAty.KEY_USER_SELECT);
             int currPosition = mViewPager.getCurrentItem();
-            ChannelItem item1 = mSelChannelItems.get(currPosition);
+            item1 = mSelChannelItems.get(currPosition);
             int index = -1;
             for (int i = 0; i < channelItems.size(); i++) {
                 ChannelItem item = channelItems.get(i);
@@ -358,14 +360,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             mViewPagerAdapter.setmChannelItems(channelItems);
             mViewPagerAdapter.notifyDataSetChanged();
             mChannelTabStrip.setViewPager(mViewPager);
-
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(dislikePopupWindow.getVisibility() == View.VISIBLE){//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
+            if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
                 dislikePopupWindow.setVisibility(View.GONE);
                 return true;
             }
@@ -394,13 +395,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             mUnSelChannelItems = mChannelItemDao.queryForNormal();
 
             //统计用户频道订阅/非订阅 频道数
-            HashMap<String,String> unSubChannel = new HashMap<>();
-            unSubChannel.put("unsubscribed_channels",TextUtil.List2String(mUnSelChannelItems));
-            MobclickAgent.onEventValue(MainAty.this,"user_unsubscribe_channels",unSubChannel,mUnSelChannelItems.size());
+            HashMap<String, String> unSubChannel = new HashMap<>();
+            unSubChannel.put("unsubscribed_channels", TextUtil.List2String(mUnSelChannelItems));
+            MobclickAgent.onEventValue(MainAty.this, "user_unsubscribe_channels", unSubChannel, mUnSelChannelItems.size());
 
-            HashMap<String,String> subChannel = new HashMap<>();
-            subChannel.put("subscribed_channels",TextUtil.List2String(mSelChannelItems));
-            MobclickAgent.onEventValue(MainAty.this,"user_subscribed_channels",subChannel,mSelChannelItems.size());
+            HashMap<String, String> subChannel = new HashMap<>();
+            subChannel.put("subscribed_channels", TextUtil.List2String(mSelChannelItems));
+            MobclickAgent.onEventValue(MainAty.this, "user_subscribed_channels", subChannel, mSelChannelItems.size());
 
         }
 
@@ -415,8 +416,22 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public int getItemPosition(Object object) {
-            return POSITION_NONE;
+            int index = -1;
+            if (channelItems != null && channelItems.size() > 0) {
+                for (int i = 0; i < channelItems.size(); i++) {
+                    ChannelItem item = channelItems.get(i);
+                    if (item1.getId().equals(item.getId())) {
+                        index = i;
+                    }
+                }
+            }
+            if (index == -1) {
+                return POSITION_NONE;
+            } else {
+                return POSITION_UNCHANGED;
+            }
         }
+
         @Override
         public int getCount() {
             return mSelChannelItems.size();
@@ -451,12 +466,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //        }
 
     }
+
     NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y,String PubName, NewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
-            dislikePopupWindow.setSourceList("来源："+PubName);
+            dislikePopupWindow.setSourceList("来源：" + PubName);
             dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
 
         }

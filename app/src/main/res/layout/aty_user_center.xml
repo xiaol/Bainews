@@ -8,18 +8,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="49dp"
         android:background="@color/common_header_bg"
         >
 
         <TextView
             android:id="@+id/mCenterCancel"
             android:layout_width="66dp"
-            android:layout_height="48dp"
+            android:layout_height="49dp"
             android:gravity="center"
             android:text="关闭"
             android:textColor="@color/new_color1"
-            android:textSize="@dimen/font2"
+            android:textSize="@dimen/new_font2"
             />
 
         <TextView
@@ -112,7 +112,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/new_color5"
+            android:background="@color/news_list_table_devider"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             />
@@ -146,7 +146,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/new_color5"
+            android:background="@color/news_list_table_devider"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             />
