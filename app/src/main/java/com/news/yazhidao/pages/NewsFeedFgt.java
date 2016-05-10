@@ -380,7 +380,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
                 }
             } else {
-                mSharedPreferences.edit().putBoolean("isshow", true).commit();
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
                 requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
             }

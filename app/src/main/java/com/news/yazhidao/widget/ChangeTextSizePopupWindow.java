@@ -23,7 +23,7 @@ import com.news.yazhidao.common.CommonConstant;
  */
 public class ChangeTextSizePopupWindow extends PopupWindow {
 
-    private ImageView mivClose;
+    private ImageView mivClose, mivShow;
     private View mMenuView;
     private Activity mContext;
     private SeekBar mSeekBar;
@@ -47,6 +47,7 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mSeekBar = (SeekBar) mMenuView.findViewById(R.id.change_text_size_bar);
         mivClose = (ImageView) mMenuView.findViewById(R.id.close_imageView);
+        mivShow = (ImageView) mMenuView.findViewById(R.id.show_imageView);
         //设置SelectPicPopupWindow的View
         this.setContentView(mMenuView);
         //设置SelectPicPopupWindow弹出窗体的宽
@@ -71,6 +72,10 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
 //                return true;
 //            }
 //        });
+        if (!mSharedPreferences.getBoolean("isshow", false)) {
+            mSharedPreferences.edit().putBoolean("isshow", true).commit();
+        } else
+            mivShow.setVisibility(View.GONE);
         mivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
