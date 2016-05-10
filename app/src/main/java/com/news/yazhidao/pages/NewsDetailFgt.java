@@ -13,8 +13,6 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -55,7 +53,6 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.umeng.message.proguard.M;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -616,8 +613,6 @@ public class NewsDetailFgt extends BaseFragment {
                 mComments.add(0, comment);
                 UpdateCCOneData();
             }
-
-
 
         }
     }

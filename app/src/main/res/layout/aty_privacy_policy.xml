@@ -12,14 +12,14 @@
         android:background="@color/common_header_bg"
         >
 
-        <ImageView
+        <TextView
             android:id="@+id/mPrivacyLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="16dp"
-            android:src="@drawable/btn_left_back"
-            android:clickable="true"
             android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp"
             />
 
         <TextView

@@ -4,20 +4,21 @@
                 android:layout_height="match_parent"
                 android:background="@color/new_color9"
     >
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/common_header_bg"
         >
 
-        <ImageView
+        <TextView
             android:id="@+id/mAboutLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="16dp"
-            android:src="@drawable/btn_left_back"
-            android:clickable="true"
             android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp"
             />
 
         <TextView
@@ -36,58 +37,65 @@
             android:background="@color/new_color5"
             />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="128dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="128dp"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         >
+
         <ImageView
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:src="@drawable/app_icon"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font3"
-            android:textColor="@color/new_color1"
-            android:text="@string/app_name"
             android:layout_marginTop="10dp"
+            android:text="@string/app_name"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3"
             />
+
         <TextView
             android:id="@+id/mAboutVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="@string/app_version"
             android:textColor="#97a3b1"
             android:textSize="@dimen/font3"
-            android:text="@string/app_version"
-            android:layout_marginTop="18dp"
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="36dp"
+        android:orientation="vertical"
         >
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_about_company_logo"
             android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_about_company_logo"
             />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#abb6c1"
-            android:textSize="@dimen/font5"
             android:layout_marginTop="12dp"
             android:text="@string/aty_about_copy_right"
+            android:textColor="#abb6c1"
+            android:textSize="@dimen/font5"
             />
     </LinearLayout>
 </RelativeLayout>

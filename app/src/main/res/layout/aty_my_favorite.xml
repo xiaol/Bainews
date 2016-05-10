@@ -13,12 +13,14 @@
         android:visibility="visible"
         >
 
-        <ImageView
+        <TextView
             android:id="@+id/mFavoriteLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="16dp"
-            android:src="@drawable/btn_left_back"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:paddingLeft="15dp"
             />
 
         <TextView
@@ -37,14 +39,15 @@
             android:background="@color/new_color5"
             />
     </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:drawablePadding="15dp"
         android:drawableTop="@drawable/ic_comment_building"
         android:text="暂无收藏内容"
         android:textSize="@dimen/font3"
-        android:drawablePadding="15dp"
-        android:layout_centerInParent="true"
         android:textColor="@color/new_color5"
         />
 
