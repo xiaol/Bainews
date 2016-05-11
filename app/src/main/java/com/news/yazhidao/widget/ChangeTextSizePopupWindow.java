@@ -44,7 +44,6 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mTextSize = mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL);
         findHeadPortraitImageViews();
-        loadData();
     }
 
     private void findHeadPortraitImageViews() {
@@ -139,13 +138,6 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
                 dismiss();
             }
         });
-    }
-
-    private void loadData() {
-    }
-
-    public interface IUpdateUI {
-        void refreshUI(String date, String type);
     }
 
 }
