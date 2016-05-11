@@ -137,4 +137,5 @@ dependencies {
     //    compile 'org.zeroturnaround:gradle-jrebel-plugin:1.1.2'//热调试lib
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile files('libs/locSDK_6.13.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
