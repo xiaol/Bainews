@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,7 +29,6 @@ import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -41,8 +39,6 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
 
 import java.util.ArrayList;
-
-import cn.sharesdk.framework.PlatformDb;
 
 
 public class LengjingFgt extends Fragment {
@@ -74,6 +70,9 @@ public class LengjingFgt extends Fragment {
      * 用户退出登录广播
      */
     private UserLogoutReceiver mUserLogoutReceiver;
+    private User mUser;
+    private String mNewsTitle;
+    private String mNewsUrl;
 
     private class UserLogoutReceiver extends BroadcastReceiver {
 
@@ -132,6 +131,16 @@ public class LengjingFgt extends Fragment {
                 }
             }, 800);
             bundle.clear();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
+            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+            DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
+            ArrayList<DiggerAlbum> albums = albumDao.querForAll();
+            handleAlbumsData(mNewsTitle, mNewsUrl, albums);
         }
     }
 
@@ -222,58 +231,18 @@ public class LengjingFgt extends Fragment {
      * @param newsUrl
      */
     public void openEditWindow(final String newsTitle, final String newsUrl) {
+        mNewsTitle = newsTitle;
+        mNewsUrl = newsUrl;
         /**判断用户是否登录,如果没有登录则只显示教程页面*/
         User user = SharedPreManager.getUser(getActivity());
-        if (user == null) {
-            LoginModeFgt loginModeFgt = new LoginModeFgt(mActivity, new UserLoginListener() {
-                @Override
-                public void userLogin(String platform, PlatformDb platformDb) {
-                    //// FIXME: 15/11/23 以后再同步服务器
-//                    FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-//                                @Override
-//                                public void success(ArrayList<DiggerAlbum> resultList) {
-//                                    handleAlbumsData(newsTitle, newsUrl, resultList);
-//                                }
-//
-//                                @Override
-//                                public void failure() {
-//                                    ToastUtil.toastShort("获取专辑失败!");
-//                                }
-//                            }
-//                    );
-                    DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
-                    ArrayList<DiggerAlbum> albums = albumDao.querForAll();
-                    handleAlbumsData(newsTitle, newsUrl, albums);
-                }
-
-                @Override
-                public void userLogout() {
-
-                }
-            }, null);
-            loginModeFgt.show(((FragmentActivity) (mActivity)).getSupportFragmentManager(), "loginModeFgt");
-        } else {
+        if (user == null){
+            Intent loginAty = new Intent(getActivity(),LoginAty.class);
+            startActivityForResult(loginAty, LoginAty.REQUEST_CODE);
+        }else {
             //查看数据库中是否已经专辑数据,如果没有则联网获取
             ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-//            if (!TextUtil.isListEmpty(resultList)) {
-                handleAlbumsData(newsTitle, newsUrl, resultList);
-//            } else {
-                //// FIXME: 15/11/23 以后再同步服务器
-//                /**获取专辑列表数据*/
-//                FetchAlbumListRequest.obtainAlbumList(getActivity(), new FetchAlbumListListener() {
-//                    @Override
-//                    public void success(ArrayList<DiggerAlbum> resultList) {
-//                        handleAlbumsData(newsTitle, newsUrl, resultList);
-//                    }
-//
-//                    @Override
-//                    public void failure() {
-//                        ToastUtil.toastShort("获取专辑失败!");
-//                    }
-//                });
-//            }
+            handleAlbumsData(newsTitle, newsUrl, resultList);
         }
-
     }
 
     /**
@@ -297,7 +266,7 @@ public class LengjingFgt extends Fragment {
             /**此时专辑列表为空,需要插入一条默认的专辑*/
                 User user = SharedPreManager.getUser(getActivity());
                 DiggerAlbumDao albumDao = new DiggerAlbumDao(mActivity);
-                DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","2130837568","img","0");
+                DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","0",R.drawable.bg_album1 + "","0");
                 albumDao.insert(album);
                 resultList = new ArrayList<>();
                 resultList.add(album);

@@ -22,7 +22,9 @@ import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
@@ -42,6 +44,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -352,7 +355,19 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
                 }
                 MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-                MobclickAgent.onEvent(mContext, "user_read_detail");
+                /**点击查看详情时,统计当前的频道名称*/
+                String channelName = "";
+                ChannelItemDao dao = new ChannelItemDao(mContext);
+                ArrayList<ChannelItem> channelItems = dao.queryForAll();
+                for (ChannelItem item: channelItems){
+                    if (feed.getChannelId().equals(item.getId())){
+                        channelName = item.getName();
+                        break;
+                    }
+                }
+                HashMap<String,String> hashmap = new HashMap();
+                hashmap.put("channel",channelName);
+                MobclickAgent.onEvent(mContext, "user_read_detail",hashmap);
             }
         });
     }
@@ -367,6 +382,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     View DeleteView;
 
     private void setDeleteClick(final ImageView imageView, final NewsFeed feed, final View view) {
+        MobclickAgent.onEvent(mContext,"qidian_feed_delete_dislike");
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

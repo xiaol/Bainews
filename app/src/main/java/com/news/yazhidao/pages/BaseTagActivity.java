@@ -14,7 +14,6 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
@@ -27,13 +26,13 @@ import org.apache.http.NameValuePair;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sharesdk.framework.PlatformDb;
-
 /**
  * Created by Berkeley on 7/20/15.
  */
 public class BaseTagActivity extends BaseActivity implements View.OnClickListener {
-    /**热门话题key*/
+    /**
+     * 热门话题key
+     */
     public final static String KEY_HOT_TOPIC = "key_hot_topic";
     public ArrayList<String> keywords;
     public ArrayList<String> hotwords;
@@ -44,10 +43,12 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
     private Button btnchange, btnexperence;
     private ImageView back_imageView;
     private LengjingFgt fgt;
+    private User mUser;
+    private String mKeyword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.item_tag_cloud);
         btnchange = (Button) findViewById(R.id.btnchange);
         btnexperence = (Button) findViewById(R.id.btnexperence);
@@ -63,7 +64,6 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
 
         loadElements();
 
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -97,9 +97,22 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
+            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+            /**通知棱镜界面界面进行挖掘处理*/
+            Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
+            intent.putExtra(KEY_HOT_TOPIC, mKeyword);
+            sendBroadcast(intent);
+            BaseTagActivity.this.finish();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == btnchange) {
-            if(keywordsFlow != null && keywords != null) {
+            if (keywordsFlow != null && keywords != null) {
                 keywords.clear();
 
                 array = createRandomArray(hotwords.size());
@@ -114,35 +127,20 @@ public class BaseTagActivity extends BaseActivity implements View.OnClickListene
 
         } else if (v == btnexperence) {
         } else if (v instanceof TextView) {
-            final String keyword = ((TextView) v).getText().toString();
+            mKeyword = ((TextView) v).getText().toString();
             /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
             User user = SharedPreManager.getUser(this);
-            if (user == null){
-                LoginModeFgt loginModeFgt = new LoginModeFgt(this, new UserLoginListener() {
-                    @Override
-                    public void userLogin(String platform, PlatformDb platformDb) {
-                        /**通知棱镜界面界面进行挖掘处理*/
-                        Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
-                        intent.putExtra(KEY_HOT_TOPIC,keyword);
-                        sendBroadcast(intent);
-                        BaseTagActivity.this.finish();
-                    }
-
-                    @Override
-                    public void userLogout() {
-
-                    }
-                },null);
-                loginModeFgt.show(getSupportFragmentManager(), "loginModeFgt");
-                return;
-            }else{
+            if (user == null) {
+                Intent loginAty = new Intent(this, LoginAty.class);
+                startActivityForResult(loginAty, LoginAty.REQUEST_CODE);
+            } else {
                 /**通知棱镜界面界面进行挖掘处理*/
                 Intent intent = new Intent(LengjingFgt.ACTION_USER_CHOSE_TOPIC);
-                intent.putExtra(KEY_HOT_TOPIC,keyword);
+                intent.putExtra(KEY_HOT_TOPIC, mKeyword);
                 sendBroadcast(intent);
                 BaseTagActivity.this.finish();
             }
-        }else if(v == back_imageView){
+        } else if (v == back_imageView) {
             BaseTagActivity.this.finish();
         }
     }

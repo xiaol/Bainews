@@ -1,9 +1,11 @@
 package com.news.yazhidao.widget;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.IBinder;
 import android.view.Gravity;
@@ -33,8 +35,6 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.widget.customdialog.Effectstype;
-import com.news.yazhidao.widget.customdialog.SuperDialogBuilder;
 
 import java.util.ArrayList;
 
@@ -325,26 +325,22 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
         ClipboardManager cbm = (ClipboardManager) pContext.getSystemService(Context.CLIPBOARD_SERVICE);
         final ClipData primaryClip = cbm.getPrimaryClip();
         if (primaryClip != null && primaryClip.getItemCount() != 0 && !TextUtil.isEmptyString(primaryClip.getItemAt(0).getText().toString())) {
-            final SuperDialogBuilder _DialogBuilder = SuperDialogBuilder.getInstance(pContext);
-            _DialogBuilder.withMessage("是否要使用剪切板中的数据进行挖掘?")
-                    .withDuration(400)
-                    .withIcon(R.drawable.app_icon_version3)
-                    .withTitle("温馨提示")
-                    .withEffect(Effectstype.Sidefill)
-                    .withButton1Text("确定")
-                    .withButton2Text("取消")
-                    .setButton1Click(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            _DialogBuilder.dismiss();
-                            et_content.setText(primaryClip.getItemAt(0).getText());
-                        }
-                    }).setButton2Click(new View.OnClickListener() {
+            AlertDialog.Builder clearBuilder = new AlertDialog.Builder(m_pContext);
+            clearBuilder.setMessage("是否要使用剪切板中的数据进行挖掘");
+            clearBuilder.setTitle("温馨提示");
+            clearBuilder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    _DialogBuilder.dismiss();
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    et_content.setText(primaryClip.getItemAt(0).getText());
+            }});
+            clearBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
                 }
-            }).show();
+            });
+            clearBuilder.create().show();
         }
 
     }

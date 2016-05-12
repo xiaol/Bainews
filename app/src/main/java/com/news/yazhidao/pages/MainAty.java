@@ -207,6 +207,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     protected void initializeViews() {
+        MobclickAgent.onEvent(this,"bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
@@ -327,6 +328,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     Intent userCenterAty = new Intent(this, UserCenterAty.class);
                     startActivity(userCenterAty);
                 }
+                MobclickAgent.onEvent(this,"qidian_user_open_user_center");
                 break;
         }
     }

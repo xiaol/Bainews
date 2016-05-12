@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
@@ -20,7 +19,6 @@ import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -30,8 +28,6 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
 import java.util.ArrayList;
-
-import cn.sharesdk.framework.PlatformDb;
 
 /**
  * Created by fengjigang on 15/8/17.
@@ -47,11 +43,11 @@ public class DiggerAty extends BaseActivity {
     private FloatingActionMenu leftCenterMenu;
     private ArrayList<Album> albumList = new ArrayList<Album>();
     private LengjingFgt mLengJingFgt;
-    private TextView mCommonHeaderTitle;
     private View mCommonHeaderLeftBack;
     private View mLayerMask;//点击底部+号时的遮罩
     private boolean isOpenHomeAty;//关闭此页面时是否需要HomeAty
     private View mCommonHeaderWrapper;
+    private User mUser;
 
     @Override
     protected boolean translucentStatus() {
@@ -62,8 +58,6 @@ public class DiggerAty extends BaseActivity {
     protected void setContentView() {
         setContentView(R.layout.aty_digger);
         mCommonHeaderWrapper = findViewById(R.id.mCommonHeaderWrapper);
-        mCommonHeaderTitle = (TextView)findViewById(R.id.mCommonHeaderTitle);
-        mCommonHeaderTitle.setText(R.string.home_digger);
         mCommonHeaderLeftBack = findViewById(R.id.mCommonHeaderLeftBack);
         mCommonHeaderLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +81,7 @@ public class DiggerAty extends BaseActivity {
         //判断是否是别的app分享进来的
         Intent intent = getIntent();
         final String data = intent.getStringExtra(Intent.EXTRA_TEXT);
-        boolean needOpenHomeAty = intent.getBooleanExtra(TopicSearchAty.KEY_NOT_NEED_OPEN_HOME_ATY,false);
+        boolean needOpenHomeAty = intent.getBooleanExtra(TopicSearchAty.KEY_NOT_NEED_OPEN_HOME_ATY, false);
         String type = intent.getType();
 
         //FIXME 目前暂时酱紫写,后面有可能还有改动
@@ -97,8 +91,8 @@ public class DiggerAty extends BaseActivity {
         if ("text/plain".equals(type) && !TextUtils.isEmpty(data)) {
             //把页面设置在挖掘机
             Bundle bundle = new Bundle();
-            bundle.putString(KEY_TITLE,TextUtil.getNewsTitle(data));
-            bundle.putString(KEY_URL,TextUtil.getNewsUrl(data));
+            bundle.putString(KEY_TITLE, TextUtil.getNewsTitle(data));
+            bundle.putString(KEY_URL, TextUtil.getNewsUrl(data));
             mLengJingFgt.setArguments(bundle);
             isOpenHomeAty = !needOpenHomeAty;
         }
@@ -121,24 +115,36 @@ public class DiggerAty extends BaseActivity {
     @Override
     public void finish() {
         super.finish();
-        if (isOpenHomeAty){
-            Intent intent = new Intent(this,MainAty.class);
+        if (isOpenHomeAty) {
+            Intent intent = new Intent(this, MainAty.class);
             startActivity(intent);
         }
     }
+
     /**
      * 修改标题栏的色值
      */
-    private void changeCommonHeaderColor(){
+    private void changeCommonHeaderColor() {
         /**如果系统版本在4.4以下就使用黑色*/
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
-        }else{
-            if ("dior".equals(Build.DEVICE)&&"dior".equals(Build.PRODUCT)){
+        } else {
+            if ("dior".equals(Build.DEVICE) && "dior".equals(Build.PRODUCT)) {
                 mCommonHeaderWrapper.setBackgroundResource(R.drawable.bg_common_header_gradient);
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
+            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
+            handleAlbumsData(resultList);
+        }
+    }
+
     private void addMenu() {
 
         int redActionButtonSize = getResources().getDimensionPixelSize(R.dimen.red_action_button_size);
@@ -203,56 +209,14 @@ public class DiggerAty extends BaseActivity {
             public void onClick(View v) {
                 /**首先判断用户是否登录,如果没有登录的话,则弹出登录框*/
                 User user = SharedPreManager.getUser(DiggerAty.this);
-                if (user == null){
-                    LoginModeFgt loginModeFgt = new LoginModeFgt(DiggerAty.this, new UserLoginListener() {
-                        @Override
-                        public void userLogin(String platform, PlatformDb platformDb) {
-                            // FIXME: 15/11/23 此处先不处理服务器同步,直接从本地数据库中拿
-//                            /**获取专辑列表数据*/
-//                            FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
-//                                @Override
-//                                public void success(ArrayList<DiggerAlbum> resultList) {
-//                                    handleAlbumsData(resultList);
-//                                }
-//
-//                                @Override
-//                                public void failure() {
-//                                    ToastUtil.toastShort("获取专辑失败!");
-//                                }
-//                            });
-                            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-                            handleAlbumsData(resultList);
-                        }
-
-                        @Override
-                        public void userLogout() {
-
-                        }
-                    }, null);
-                    loginModeFgt.show(getSupportFragmentManager(), "loginModeFgt");
+                if (user == null) {
+                    Intent loginAty = new Intent(DiggerAty.this, LoginAty.class);
+                    startActivityForResult(loginAty, LoginAty.REQUEST_CODE);
                     return;
                 }
                 //查看数据库中是否已经专辑数据,如果没有则联网获取
                 ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-//                if (!TextUtil.isListEmpty(resultList)){
-                    handleAlbumsData(resultList);
-//                }else{
-                    // FIXME: 15/11/23 此处先不处理服务器同步
-//                    /**获取专辑列表数据*/
-//                    FetchAlbumListRequest.obtainAlbumList(DiggerAty.this, new FetchAlbumListListener() {
-//                        @Override
-//                        public void success(ArrayList<DiggerAlbum> resultList) {
-//                            handleAlbumsData(resultList);
-//                        }
-//
-//                        @Override
-//                        public void failure() {
-//                            ToastUtil.toastShort("获取专辑失败!");
-//                        }
-//                    });
-//                }
-
-
+                handleAlbumsData(resultList);
                 leftCenterMenu.close(true);
 
             }
@@ -301,25 +265,28 @@ public class DiggerAty extends BaseActivity {
         });
 
     }
+
     /**
      * 从数据库获取专辑数据
+     *
      * @return
      */
-    private ArrayList<DiggerAlbum> queryAlbumsFromDB(){
+    private ArrayList<DiggerAlbum> queryAlbumsFromDB() {
         DiggerAlbumDao diggerAlbumDao = new DiggerAlbumDao(this);
         return diggerAlbumDao.querForAll();
     }
 
     /**
      * 处理获取到的专辑列表数据
+     *
      * @param resultList
      */
-    private void handleAlbumsData(ArrayList<DiggerAlbum> resultList){
-        if (TextUtil.isListEmpty(resultList)){
+    private void handleAlbumsData(ArrayList<DiggerAlbum> resultList) {
+        if (TextUtil.isListEmpty(resultList)) {
             /**此时专辑列表为空,需要插入一条默认的专辑*/
             User user = SharedPreManager.getUser(this);
             DiggerAlbumDao albumDao = new DiggerAlbumDao(this);
-            DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(),"",user.getUserId(),"默认","0",R.drawable.bg_album1 + "","0");
+            DiggerAlbum album = new DiggerAlbum(TextUtil.getDatabaseId(), DateUtil.getDate(), "", user.getUserId(), "默认", "0", R.drawable.bg_album1 + "", "0");
             albumDao.insert(album);
             resultList = new ArrayList<>();
             resultList.add(album);
