@@ -109,5 +109,6 @@
 
     <string name="aty_about_copy_right">Copyring@2016 lieying.All Rights Reserved</string>
 
-
+    <string name="aty_my_comment_oneplus">+1</string>
+    <string name="aty_my_comment_all_has_show">已显示全部内容</string>
 </resources>

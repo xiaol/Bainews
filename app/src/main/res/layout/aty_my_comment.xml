@@ -1,64 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/common_header_bg"
-    >
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/mCommentBgImg"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        fresco:actualImageScaleType="centerCrop"
-        />
-
-    <ImageView
-        android:id="@+id/mCommentLeftBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="16dp"
-        android:src="@drawable/btn_left_back"
-        />
-
-    <LinearLayout
-        android:id="@+id/mCommentUserInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent"
+        android:background="@color/common_header_bg">
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/mCommentUserIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            fresco:placeholderImage="@drawable/ic_user_comment_default"
-            fresco:roundAsCircle="true"
-            fresco:roundingBorderColor="@color/white"
-            fresco:roundingBorderWidth="4dp"
-            />
+            android:id="@+id/mCommentBgImg"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            fresco:actualImageScaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/mCommentUserName"
+        <ImageView
+            android:id="@+id/mCommentLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="16dp"
+            android:src="@drawable/btn_left_back" />
+
+        <LinearLayout
+            android:id="@+id/mCommentUserInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/app_name"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/font2"
-            />
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/mCommentUserIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                fresco:placeholderImage="@drawable/ic_user_comment_default"
+
+                fresco:roundingBorderColor="@color/white"
+                fresco:roundingBorderWidth="4dp" />
+
+            <TextView
+                android:id="@+id/mCommentUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/app_name"
+                android:textColor="@color/new_color1"
+                android:textSize="@dimen/font2" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/myCommentListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mCommentUserInfo"
+            android:divider="#cccccc"
+            android:dividerHeight="4dp"></ListView>
+
+
+    </RelativeLayout>
+
     <TextView
+        android:id="@+id/clip_pic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_comment_building"
-        android:text="正在建设中,请移步"
-        android:textSize="@dimen/font3"
-        android:drawablePadding="15dp"
-        android:layout_centerInParent="true"
-        android:textColor="@color/new_color5"
-        />
-</RelativeLayout>
+        android:text="@string/aty_my_comment_oneplus"
+        android:textColor="#f00"
+        android:textSize="12sp"
+        android:visibility="gone" />
+</FrameLayout>

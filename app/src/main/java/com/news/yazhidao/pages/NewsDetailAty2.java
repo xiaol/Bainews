@@ -22,8 +22,10 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -40,8 +42,11 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
+import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
@@ -118,6 +123,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsFeed mNewsFeed;
     private String mSource;
     private String mUrl;
+    private NewsDetailCommentDao newsDetailCommentDao;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -128,6 +134,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.e("jigang", "comment fgt refresh br");
+            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+            newsDetailComment.setNewsFeed(mNewsFeed);
+            newsDetailComment.setOriginal(mNewsFeed.getTitle());
+            newsDetailCommentDao.add(newsDetailComment);
+
+
             int number = 0;
             try {
                 number = Integer.valueOf(mDetailCommentNum.getText().toString());
@@ -156,7 +168,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
-
     }
 
     @Override
@@ -193,6 +204,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mDetailWebView = (WebView) findViewById(R.id.mDetailWebView);
         mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
 
+        //初始化新闻评论DAO
+        newsDetailCommentDao = new NewsDetailCommentDao(this);
     }
 
     long lastTime, nowTime;
