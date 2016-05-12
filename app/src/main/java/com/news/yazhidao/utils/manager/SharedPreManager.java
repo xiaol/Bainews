@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedEntity;
@@ -216,6 +217,16 @@ public class SharedPreManager {
         e.commit();
     }
 
+    /**
+     * /**
+     * 收藏本地版
+     * @param mUserId
+     * @param key
+     * @param locationJsonString
+     * @param uploadLogDataEntity
+     * @return
+     */
+
     public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
 
         String mReadData = upLoadLogGet(key);
@@ -267,6 +278,12 @@ public class SharedPreManager {
 
         remove(CommonConstant.UPLOAD_LOG, key);
     }
+
+
+    /**
+     * 收藏本地版
+     * @param bean
+     */
     public static void myFavoriteSaveList(NewsFeed bean){
         ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
         try {
@@ -328,4 +345,38 @@ public class SharedPreManager {
         }
 
     }
+
+    /**
+     * 搜索历史的添加，获得，删除
+     * @param content
+     */
+    public static void HistorySave(String content){
+        HistoryEntity historyEntity = new HistoryEntity(content);
+        ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
+        try {
+           historyEntities = HistoryGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+        historyEntities.add(historyEntity);
+        save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
+    }
+    public static ArrayList<HistoryEntity> HistoryGetList() throws JSONException {
+        ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
+        String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
+        Gson gson = new Gson();
+            JSONArray array = new JSONArray(str);
+        for (int i = 0; i < array.length(); i++) {
+            String str1 = array.getString(i);
+            HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
+            historyEntities.add(bean);
+        }
+        return historyEntities;
+    }
+    public static void Historyremove(){
+        remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
+    }
+
+
 }

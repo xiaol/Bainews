@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_seach_hot_label">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_seach_hot_label">
 
     <RelativeLayout
         android:id="@+id/mSearchHeader"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height"
-        android:background="@color/theme_color">
+        android:background="@color/new_color9">
 
-        <ImageView
+        <TextView
             android:id="@+id/mSearchLeftBack"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_back"/>
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:paddingLeft="15dp"
+            />
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/mDoSearch"
             android:layout_toRightOf="@id/mSearchLeftBack"
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_search_topic"/>
 
             <EditText
@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
+                android:layout_marginLeft="11dp"
                 android:layout_marginRight="4dp"
                 android:layout_toLeftOf="@+id/mSearchClear"
                 android:layout_toRightOf="@id/mSearchIcon"
@@ -75,66 +75,38 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginRight="18dp"
             android:text="搜索"
-            android:textColor="@color/do_search_not_do"
-            android:textSize="16sp"/>
+            android:textColor="@color/bg_share_text"
+            android:textSize="@dimen/new_font10"/>
     </RelativeLayout>
-
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/mSearchListViewOpen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mSearchHeader"
+        android:background="@color/new_color9"
+        />
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/mSearchListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mSearchHeader"
+        android:background="@color/new_color9"
+        android:visibility="gone"
         />
 
-    <RelativeLayout
-        android:id="@+id/mSearchHotLabelLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mSearchHeader"
-        android:background="#ffdfe6e9">
 
-        <TextView
-            android:id="@+id/mSearchHotLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="热门搜索"
-            android:textColor="@color/search_hot_label"
-            android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/mDoSearchChangeBatch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_search_change_batch"
-            android:text="换一批"
-            android:textColor="@color/do_search_change_batch"
-            android:textSize="14sp"/>
-
-        <com.news.yazhidao.widget.HotLabelsLayout
-            android:id="@+id/mHotLabelsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mSearchHotLabel"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            />
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/mSearchLoaddingWrapper"
         android:layout_below="@id/mSearchHeader"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_gray"
+        android:background="@color/new_color9"
+        android:visibility="gone"
         >
 
         <ImageView
