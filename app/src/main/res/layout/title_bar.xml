@@ -4,7 +4,13 @@
 
     <TextView
         android:id="@+id/mLeftBack"
-        style="@style/back_view" />
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_left_back_selector"
+        android:clickable="true"
+        android:drawableLeft="@drawable/btn_left_back"
+        android:paddingLeft="15dp"
+        />
 
     <TextView
         android:id="@+id/title"

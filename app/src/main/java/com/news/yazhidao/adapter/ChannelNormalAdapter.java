@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
@@ -20,6 +22,16 @@ public class ChannelNormalAdapter extends BaseAdapter {
 	private Context context;
 	public List<ChannelItem> channelList;
 	private TextView item_text;
+	private ImageView icon;
+	private boolean isItemShow = false;
+	/**
+	 * 控制的postion
+	 */
+	private int holdPosition;
+	/**
+	 * 是否改变
+	 */
+	private boolean isChanged = false;
 	/** 是否可见 */
 	boolean isVisible = true;
 	/** 要删除的position */
@@ -52,13 +64,34 @@ public class ChannelNormalAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = LayoutInflater.from(context).inflate(R.layout.subscribe_category_item, null);
 		item_text = (TextView) view.findViewById(R.id.text_item);
+		icon = (ImageView) view.findViewById(R.id.icon_new);
+		icon.setBackgroundResource(R.drawable.bg_channel_add);
+		int height = context.getResources().getDrawable(R.drawable.bg_channel_add).getMinimumHeight();
+		RelativeLayout.LayoutParams rlItemText = (RelativeLayout.LayoutParams) item_text.getLayoutParams();
+		rlItemText.topMargin = height / 2;
+		item_text.setLayoutParams(rlItemText);
+		icon.setVisibility(View.VISIBLE);
+
 		ChannelItem channel = getItem(position);
 		item_text.setText(channel.getName());
-		if (!isVisible && (position == -1 + channelList.size())){
+		if (isChanged && (position == holdPosition) && !isItemShow) {
 			item_text.setText("");
+			item_text.setSelected(true);
+			item_text.setEnabled(true);
+			isChanged = false;
+			icon.setVisibility(View.GONE);
 		}
-		if(remove_position == position){
+		if (!isVisible && (position == -1 + channelList.size())) {
 			item_text.setText("");
+			item_text.setSelected(true);
+			item_text.setEnabled(true);
+			icon.setVisibility(View.GONE);
+		}
+		if (remove_position == position) {
+			item_text.setText("");
+			item_text.setSelected(true);
+			item_text.setEnabled(true);
+			icon.setVisibility(View.GONE);
 		}
 		return view;
 	}
@@ -100,5 +133,8 @@ public class ChannelNormalAdapter extends BaseAdapter {
 	/** 设置是否可见 */
 	public void setVisible(boolean visible) {
 		isVisible = visible;
+	}
+	public void setShowDropItem(boolean show) {
+		isItemShow = show;
 	}
 }

@@ -28,6 +28,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="black_90">#E6000000</color>
+    <color name="setting_line_bg">#e9e9e9</color>
     <color name="news_list_cell_sourcesitename">#a5a5a5</color>
     <color name="news_list_bg">#f3f3fa</color>
     <color name="common_theme_color">#ff7f66</color>
@@ -206,7 +207,7 @@
     <color name="default_text_night">#ff747474</color>
     <color name="subscribe_item_text_color_pressed_night">#ff303030</color>
     <color name="subscribe_item_selected_stroke_night">#ffbc494d</color>
-    <color name="subscribe_item_drag_stroke">#ffd2d2d2</color>
+    <color name="subscribe_item_drag_stroke">#939393</color>
     <color name="subscribe_item_drag_bg">#fff5f5f5</color>
     <color name="subscribe_item_selected_bg">#ffffffff</color>
     <color name="subscribe_item_selected_stroke">#ffcc3131</color>
@@ -214,8 +215,8 @@
     <color name="subscribe_item_disabled_bg">#ffefefef</color>
     <color name="subscribe_item_pressed_stroke">#ffcdcdcd</color>
     <color name="subscribe_item_pressed_bg">#fff9f9f9</color>
-    <color name="subscribe_item_normal_stroke">#ffcdcdcd</color>
-    <color name="subscribe_item_normal_bg">#fff5f5f5</color>
+    <color name="subscribe_item_normal_stroke">#dedede</color>
+    <color name="subscribe_item_normal_bg">#ffffff</color>
 
     <item name="subscribe_item_text_color_normal" type="color">@color/default_text</item>
 
