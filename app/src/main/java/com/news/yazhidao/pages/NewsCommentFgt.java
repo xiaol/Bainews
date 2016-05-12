@@ -83,10 +83,10 @@ public class NewsCommentFgt extends BaseFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                Logger.e("aaa","详情页===文字的改变！！！");
+                Logger.e("aaa", "详情页===文字的改变！！！");
                 mCommentsAdapter.notifyDataSetChanged();
-                news_comment_Title.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)+2);
-            }else {
+                news_comment_Title.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
+            } else {
                 Logger.e("jigang", "detailaty refresh br");
                 NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
                 mComments.add(0, comment);
@@ -326,7 +326,11 @@ public class NewsCommentFgt extends BaseFragment {
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
                 tvTime.setText("");
             } else {
-                tvTime.setText(between *60/ 3600000+"分钟前");
+                int time = (int) (between * 60 / 3600000);
+                if (time > 0)
+                    tvTime.setText(between * 60 / 3600000 + "分钟前");
+                else
+                    tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
 //                if (between / 3600000 / 60 == 0) {
 //                    tvTime.setText("刚刚");
 //                } else {

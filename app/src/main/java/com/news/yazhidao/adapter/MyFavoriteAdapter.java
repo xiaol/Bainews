@@ -35,7 +35,7 @@ public class MyFavoriteAdapter extends CommonAdapter<NewsFeed> {
 
     @Override
     public void convert(CommonViewHolder holder, NewsFeed newsFeed, int positon) {
-        holder.setTextViewExtendText(R.id.myfavorite_Title, newsFeed.getTitle());
+        holder.setTextViewExtendTextandTextSice(R.id.myfavorite_Title, newsFeed.getTitle());
         String time = DateUtil.getTimes(DateUtil.dateStr2Long(newsFeed.getPubTime()));
         String source = newsFeed.getPubName() +"  "+time;
 

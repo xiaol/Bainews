@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
@@ -57,7 +58,6 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     public static final int REQUEST_CODE = 1005;
     public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
-
     private Context mContext;
     private EditText mCommentContent;
     private TextView mCommentCommit;
@@ -72,7 +72,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL,R.style.UserComment);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.UserComment);
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         getDialog().getWindow().setGravity(Gravity.BOTTOM | Gravity.FILL_HORIZONTAL);
         View rootView = inflater.inflate(R.layout.dialog_user_comment, null);
         rootView.setMinimumWidth(10000);
-        rootView.setMinimumHeight(DensityUtil.dip2px(getActivity(),150));
+        rootView.setMinimumHeight(DensityUtil.dip2px(getActivity(), 150));
         mCommentContent = (EditText) rootView.findViewById(R.id.mCommentContent);
         mCommentCommit = (TextView) rootView.findViewById(R.id.mCommentCommit);
         mCommentContent.addTextChangedListener(new CommentTextWatcher());
@@ -101,8 +101,8 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK){
-                    Logger.e("jigang","dialog  back");
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    Logger.e("jigang", "dialog  back");
                     UserCommentDialog.this.dismiss();
                 }
                 return false;
@@ -120,14 +120,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         super.dismiss();
     }
 
-    public void setDocid(String docid){
+    public void setDocid(String docid) {
         this.mDocid = docid;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == LoginAty.REQUEST_CODE && data != null){
+        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
             User user = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
             submitComment(user);
         }
@@ -135,23 +135,23 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mCommentCommit:
                 User user = SharedPreManager.getUser(getActivity());
 //                user = new User();
 //                user.setUserName("zhangsan");
 //                user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
-                if (user == null){
+                if (user == null) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
-                    startActivityForResult(loginAty,REQUEST_CODE);
-                }else {
+                    startActivityForResult(loginAty, REQUEST_CODE);
+                } else {
                     submitComment(user);
                 }
                 break;
         }
     }
 
-    private void submitComment(User user){
+    private void submitComment(final User user) {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JSONObject json = null;
         final String nickeName = user.getUserName();
@@ -161,11 +161,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         final String userid = user.getUserId();
         Logger.d("aaa", "uuid==" + uuid);
         Logger.d("aaa", "userid==" + userid);
-
         final String docid = mDocid;
         final String comment_id = UUID.randomUUID().toString();
         try {
-            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\""+ mUserCommentMsg +"\",\"nickname\":\"" + nickeName + "\",\"uuid\":\""+ userid +"\",\"love\":0,\"create_time\":\"" + createTime+ "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid+ "\",\"pid\":\"pid\"}");
+            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\"" + mUserCommentMsg + "\",\"nickname\":\"" + nickeName + "\",\"uuid\":\"" + userid + "\",\"love\":0,\"create_time\":\"" + createTime + "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid + "\",\"pid\":\"pid\"}");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -173,18 +172,28 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Logger.e("jigang","add comment success =" + response);
+                Logger.e("jigang", "add comment success =" + response);
                 try {
                     String code = response.getString("code");
                     String message = response.getString("message");
                     String data = response.optString("data");
-                    if ("0".equals(code) && "success".equals(message)){
-                        Logger.e("jigang","comment_id" + comment_id);
+                    if ("0".equals(code) && "success".equals(message)) {
+                        Logger.e("jigang", "comment_id" + comment_id);
                         ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-                        NewsDetailComment comment = new NewsDetailComment(comment_id,mUserCommentMsg,createTime,docid,data,0,nickeName,profile,userid);
+                        NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid);
+                        //实例化一个新闻评论类
+                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
+                        newsDetailCommentItem.setComment_id(comment_id);
+                        newsDetailCommentItem.setContent(mUserCommentMsg);
+                        newsDetailCommentItem.setCreate_time(System.currentTimeMillis());
+                        newsDetailCommentItem.setDocid(docid);
+                        newsDetailCommentItem.setLove(0);
+                        newsDetailCommentItem.setPraise(false);
+                        newsDetailCommentItem.setUser(user);
 
-                        intent.putExtra(KEY_ADD_COMMENT,comment);
+
+                        intent.putExtra(KEY_ADD_COMMENT, newsDetailCommentItem);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
 
@@ -196,13 +205,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Logger.e("jigang","add comment fail =" + error.getMessage());
+                Logger.e("jigang", "add comment fail =" + error.getMessage());
                 ToastUtil.toastShort("评论失败!");
             }
         });
         jsonRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(jsonRequest);
     }
+
     private class CommentTextWatcher implements TextWatcher {
 
         @Override
@@ -218,9 +228,9 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
             Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
                 mUserCommentMsg = mCommentContent.getText().toString();
-                if (mUserCommentMsg.length() >= 144){
+                if (mUserCommentMsg.length() >= 144) {
                     ToastUtil.toastShort("亲,您输入的评论过长");
-                    mUserCommentMsg = mUserCommentMsg.substring(0,145);
+                    mUserCommentMsg = mUserCommentMsg.substring(0, 145);
                     mCommentContent.setText(mUserCommentMsg);
                 }
                 mCommentCommit.setBackgroundResource(R.drawable.bg_user_comment_commit_sel);

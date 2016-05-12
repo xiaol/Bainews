@@ -157,7 +157,10 @@ public class DiggerPopupWindow extends PopupWindow implements View.OnClickListen
 
             layout.setLayoutParams(params);
             ImageView ivBgIcon = (ImageView) layout.findViewById(R.id.iv_bg_icon);
-            ivBgIcon.setBackgroundResource(Integer.valueOf(albumList.get(i).getId()));
+            String img = albumList.get(i).getId();
+            if(img != null && !img.equals("img")) {
+                ivBgIcon.setBackgroundResource(Integer.valueOf(img));
+            }
             LetterSpacingTextView tvName = (LetterSpacingTextView) layout.findViewById(R.id.tv_name);
             tvName.setTextSize(16);
             final ImageView iv_selected = (ImageView) layout.findViewById(R.id.iv_selected);

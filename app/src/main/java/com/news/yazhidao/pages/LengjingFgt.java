@@ -399,9 +399,13 @@ public class LengjingFgt extends Fragment {
             holder.mSpecialTitle.getPaint().getTextBounds(diggerAlbum.getAlbum_title(), 0, diggerAlbum.getAlbum_title().length(), rect);
             holder.mSpecialTitleContainer.setLayoutParams(new LinearLayout.LayoutParams(rect.width() + DensityUtil.dip2px(getActivity(), 40), ViewGroup.LayoutParams.WRAP_CONTENT));
 
-
+            Logger.e("aaa", "diggerAlbum.getAlbum_img()=====" + diggerAlbum.getAlbum_img());
             //设置专辑背景图片
-            convertView.setBackgroundResource(Integer.valueOf(diggerAlbum.getAlbum_img()));
+            String img = diggerAlbum.getAlbum_img();
+            if(img != null && !img.equals("img")){
+                convertView.setBackgroundResource(Integer.valueOf(img));
+            }
+
             return convertView;
         }
     }

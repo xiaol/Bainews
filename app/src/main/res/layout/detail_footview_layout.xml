@@ -3,6 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:id="@+id/footView_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="内容加载完毕"
