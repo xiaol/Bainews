@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
@@ -29,9 +31,13 @@ import com.umeng.update.UmengUpdateAgent;
  */
 public class YaZhiDaoApplication extends Application {
     private static Context mContext;
+    private static YaZhiDaoApplication mInstance;
+    private RequestQueue mRequestQueue;
+
     @Override
     public void onCreate() {
         mContext=this;
+        mInstance = this;
         //在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
@@ -122,5 +128,16 @@ public class YaZhiDaoApplication extends Application {
             }
         }
     };
+    public static synchronized YaZhiDaoApplication getInstance() {
+        return mInstance;
+    }
 
+    public RequestQueue getRequestQueue() {
+        // lazy initialize the request queue, the queue instance will be
+        // created when it is accessed for the first time
+        if (mRequestQueue == null) {
+            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+        }
+        return mRequestQueue;
+    }
 }

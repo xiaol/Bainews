@@ -47,6 +47,9 @@ public final class CommonConstant {
     public static final String UPLOAD_LOG = "uploadlog";//用户上传日志
     public static final String UPLOAD_LOG_MAIN = "uploadlog_main";//用户上传日志
     public static final String UPLOAD_LOG_DETAIL = "uploadlog_detali";//用户上传日志
+    public static final String MY_FAVORITE = "my_favorite";//我的收藏
+    public static final String SEARCH_HISTORY = "search_history";//我的收藏
+
 
     public static final int TEXT_SIZE_NORMAL = 17;
     public static final int TEXT_SIZE_BIG = 19;

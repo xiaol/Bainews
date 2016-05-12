@@ -115,10 +115,22 @@ public class ChannelTabStrip extends HorizontalScrollView {
         for (int i = 0; i < tabCount; i++) {
             addTab(i, pager.getAdapter().getPageTitle(i).toString());
         }
+//        if (tabCount > 0) {
+//            ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(0);
+//            TextView child = (TextView) tab.findViewById(R.id.category_text);
+//            child.setTextColor(getResources().getColor(R.color.new_color2));
+//        }
         if (tabCount > 0) {
-            ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(0);
-            TextView child = (TextView) tab.findViewById(R.id.category_text);
-            child.setTextColor(getResources().getColor(R.color.new_color2));
+            int position = pager.getCurrentItem();
+            for (int i = 0; i < tabCount; i++) {
+                ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
+                TextView child = (TextView) tab.findViewById(R.id.category_text);
+                if (i == position) {
+                    child.setTextColor(getResources().getColor(R.color.new_color2));
+                } else {
+                    child.setTextColor(getResources().getColor(R.color.new_color1));
+                }
+            }
         }
     }
 
@@ -134,7 +146,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                pager.setCurrentItem(position,false);
+                pager.setCurrentItem(position, false);
             }
         });
         tabsContainer.addView(tab, position, defaultTabLayoutParams);
@@ -203,17 +215,17 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
         // 绘制高亮背景矩形红框
         calculateIndicatorRect(indicatorRect);
-		if(indicator != null) {
-			indicator.setBounds(indicatorRect);
-			indicator.draw(canvas);
-		}
+        if (indicator != null) {
+            indicator.setBounds(indicatorRect);
+            indicator.draw(canvas);
+        }
         if (sliderDrawable != null) {
             sliderDrawable.setBounds(sliderRect);
             sliderDrawable.draw(canvas);
         }
 
         // 绘制背景红框内标签文本
-		int i = 0;
+        int i = 0;
 //		while (i < tabsContainer.getChildCount()) {
 //			if (i < currentPosition - 1 || i > currentPosition + 1) {
 //				i++;
@@ -240,21 +252,21 @@ public class ChannelTabStrip extends HorizontalScrollView {
 ////			Log.e("jigang","draw i = " + i);
 //		}
 //
-		// 绘制左右边界阴影效果
-		i = canvas.save();
-		int top = getScrollX();
-		int height = getHeight();
-		int width = getWidth();
-		canvas.translate((float) top, 0.0f);
-        if (top <= 0){
+        // 绘制左右边界阴影效果
+        i = canvas.save();
+        int top = getScrollX();
+        int height = getHeight();
+        int width = getWidth();
+        canvas.translate((float) top, 0.0f);
+        if (top <= 0) {
             left_edge.setBounds(0, 0, 0, 0);
-        }else{
+        } else {
             left_edge.setBounds(0, 0, left_edge.getIntrinsicWidth(), height);
         }
         left_edge.draw(canvas);
-        if (top >= getScrollRange()){
+        if (top >= getScrollRange()) {
             right_edge.setBounds(0, 0, 0, 0);
-        }else{
+        } else {
             right_edge.setBounds(width - right_edge.getIntrinsicWidth(), 0, width, height);
         }
         right_edge.draw(canvas);
@@ -289,7 +301,7 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
         @Override
         public void onPageSelected(int position) {
-            Logger.e("jigang", "onPageSelected = " + position);
+            Logger.e("jigang", "onPageSelected = " + position + tabCount);
             //此时设置其他所有的item的字体
             for (int i = 0; i < tabCount; i++) {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);

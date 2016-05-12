@@ -20,10 +20,15 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.pages.LoginAty;
+import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
@@ -38,7 +43,7 @@ public class SharePopupWindow extends PopupWindow {
 
     private TextViewExtend mtvClose;
     private View mMenuView;
-    private Context m_pContext;
+    private Activity m_pContext;
     private TypedArray mTypedArray;
     private String[] mShareName;
     private String[] marrSharePlatform;
@@ -47,8 +52,11 @@ public class SharePopupWindow extends PopupWindow {
     private TextViewExtend mtvFavorite, mtvTextSize, mtvAccusation;
     private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
     private LinearLayout mShareLayout;
+    boolean isFavorite;
+    NewsFeed feedBean;
 
-    public SharePopupWindow(Context context, ShareDismiss shareDismiss) {
+
+    public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
         super(context);
         m_pContext = context;
         mShareDismiss = shareDismiss;
@@ -62,6 +70,7 @@ public class SharePopupWindow extends PopupWindow {
     }
 
     private void findHeadPortraitImageViews() {
+
         mtvClose = (TextViewExtend) mMenuView.findViewById(R.id.close_imageView);
         mtvFavorite = (TextViewExtend) mMenuView.findViewById(R.id.favorite_view);
         mtvTextSize = (TextViewExtend) mMenuView.findViewById(R.id.textsize_view);
@@ -94,10 +103,17 @@ public class SharePopupWindow extends PopupWindow {
         setOnClick();
     }
 
-    public void setTitleAndUrl(String title, String url, String remark) {
-        mstrTitle = title;
-        mstrUrl = url;
+    public void setTitleAndUrl(NewsFeed bean,String remark) {
+        feedBean = bean;
+        mstrTitle = bean.getTitle();
+        mstrUrl = bean.getUrl();
         mstrRemark = remark;
+        isFavorite = SharedPreManager.myFavoriteisSame(mstrUrl);
+        if(isFavorite){
+            mtvFavorite.setText("已收藏");
+        }else {
+            mtvFavorite.setText("未收藏");
+        }
     }
 
     @Override
@@ -117,14 +133,36 @@ public class SharePopupWindow extends PopupWindow {
             @Override
             public void onClick(View v) {
 
+                User user = SharedPreManager.getUser(m_pContext);
+                if (user == null) {
+                    Intent loginAty = new Intent(m_pContext, LoginAty.class);
+                    m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
+                } else {
+                    if (isFavorite) {
+                        isFavorite = false;
+                        mtvFavorite.setText("未收藏");
+                        SharedPreManager.myFavoritRemoveItem(feedBean.getUrl());
+//                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+                    } else {
+                        isFavorite = true;
+                        mtvFavorite.setText("已收藏");
+                        SharedPreManager.myFavoriteSaveList(feedBean);
+
+//                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+                    }
+                    dismiss();
+                }
+
+
             }
         });
         mtvTextSize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mChangeTextSizePopWindow == null) {
-                    mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(((Activity) m_pContext));
-                    mChangeTextSizePopWindow.showAtLocation(((Activity) m_pContext).getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(m_pContext);
+                    mChangeTextSizePopWindow.isDeteilOpen();
+                    mChangeTextSizePopWindow.showAtLocation(m_pContext.getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                     dismiss();
                 }
             }

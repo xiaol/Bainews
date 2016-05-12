@@ -22,12 +22,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -36,7 +36,6 @@ import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
-import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -56,6 +55,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_NEWS_IMAGE = "key_news_image";
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -107,7 +107,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private boolean isListRefresh = false;
     private boolean isNewVisity = false;//当前页面是否显示
     private boolean isNeedAddSP = true;
-
+    private Handler mHandler;
+    private Runnable mThread;
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -278,8 +279,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         setUserVisibleHint(getUserVisibleHint());
         String platform = AnalyticsConfig.getChannel(getActivity());
         //load news data
-
-        new Handler().postDelayed(new Runnable() {
+        mHandler = new Handler();
+        mThread = new Runnable() {
             @Override
             public void run() {
 //                mlvNewsFeed.setRefreshing();
@@ -287,7 +288,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 isListRefresh = false;
 
             }
-        }, 800);
+        };
+        mHandler.postDelayed(mThread, 1500);
         return rootView;
     }
 
@@ -302,8 +304,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(mHandler!=null){
+            mHandler.removeCallbacks(mThread);
+        }
         mContext.unregisterReceiver(mRefreshReciver);
-        Logger.e("jigang", "newsfeedfgt onDestroyView");
+        Logger.e("jigang", "newsfeedfgt onDestroyView"+mstrChannelId);
         ((ViewGroup) rootView.getParent()).removeView(rootView);
     }
 
@@ -379,7 +384,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
             }
         }
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
         }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
 
@@ -548,6 +553,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onResume() {
         super.onResume();
+        if(mArrNewsFeed!=null&&bgLayout.getVisibility()==View.VISIBLE) {
+            bgLayout.setVisibility(View.GONE);
+            mAdapter.setNewsFeed(mArrNewsFeed);
+        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -556,8 +565,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-                mSharedPreferences.edit().putInt("textSize", size).commit();
+                Logger.e("aaa","文字的改变！！！");
+//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -573,24 +583,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             uploadLogDataEntities.add(uploadLogDataEntity);
         }
         int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-        Logger.d("aaa", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-        if (saveNum > 200) {
-            RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-            String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
-                    "&data=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-            Logger.d("aaa", "url===" + url);
-            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            });
-            requestQueue.add(request);
-        }
+        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
     }
 
 }

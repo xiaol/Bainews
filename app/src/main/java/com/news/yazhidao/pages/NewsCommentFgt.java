@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseFragment;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
@@ -70,6 +72,7 @@ public class NewsCommentFgt extends BaseFragment {
     private Holder mHolder;
     private LinearLayout news_comment_NoCommentsLayout;
     private NewsFeed mNewsFeed;
+    private SharedPreferences mSharedPreferences;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -79,12 +82,17 @@ public class NewsCommentFgt extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Logger.e("jigang", "detailaty refresh br");
-            NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-            mComments.add(0, comment);
-            news_comment_NoCommentsLayout.setVisibility(View.GONE);
-            mCommentsAdapter.setData(mComments);
-
+            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
+                Logger.e("aaa", "详情页===文字的改变！！！");
+                mCommentsAdapter.notifyDataSetChanged();
+                news_comment_Title.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL) + 2);
+            } else {
+                Logger.e("jigang", "detailaty refresh br");
+                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+                mComments.add(0, comment);
+                news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                mCommentsAdapter.setData(mComments);
+            }
         }
     }
 
@@ -93,10 +101,11 @@ public class NewsCommentFgt extends BaseFragment {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
-
+        mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
     }
@@ -249,18 +258,19 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
-                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
+//                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
             } else {
                 holder = (Holder) convertView.getTag();
             }
+            holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
             final NewsDetailComment comment = comments.get(position);
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
-            setNewsTime(holder.tvTime, comment.getCreate_time());
+//            setNewsTime(holder.tvTime, comment.getCreate_time());
             if (!TextUtil.isEmptyString(comment.getProfile())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
             }
@@ -316,7 +326,11 @@ public class NewsCommentFgt extends BaseFragment {
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
                 tvTime.setText("");
             } else {
-                tvTime.setText(between *60/ 3600000+"分钟前");
+                int time = (int) (between * 60 / 3600000);
+                if (time > 0)
+                    tvTime.setText(between * 60 / 3600000 + "分钟前");
+                else
+                    tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
 //                if (between / 3600000 / 60 == 0) {
 //                    tvTime.setText("刚刚");
 //                } else {

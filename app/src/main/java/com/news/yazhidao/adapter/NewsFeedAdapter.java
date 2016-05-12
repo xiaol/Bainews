@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -148,7 +147,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
                 RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
                 float textRealWidth = tvTitle.getPaint().measureText(strTitle);
-                Log.i("tag", tvTitle.getPaint().measureText(strTitle) + "textsize" + mTitleViewWidth + "textNum");
                 if (textRealWidth >= 2 * mTitleViewWidth - 5) {
                     titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
                     lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
@@ -251,7 +249,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                tvComment.setText(between / 3600000 + "小时前");
                 tvComment.setText("");
             } else {
-                tvComment.setText(between * 60 / 3600000 + "分钟前");
+                int time = (int) (between * 60 / 3600000);
+                if (time > 0)
+                    tvComment.setText(between * 60 / 3600000 + "分钟前");
+                else
+                    tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
 //                if (between / 3600000 == 0) {
 //                    tvComment.setText( between *60/ 3600000+"分钟前");
 //                } else {
@@ -273,7 +275,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
-                tvTitle.setLineSpacing(0,1.1f);
+                tvTitle.setLineSpacing(0, 1.1f);
             }
             if (isRead) {
                 tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
@@ -316,6 +318,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 firstClick = System.currentTimeMillis();
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+
+                ArrayList<String> imageList = feed.getImgList();
+                if (imageList != null && imageList.size() != 0) {
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
+                }
+
 
                 if (mNewsFeedFgt != null) {
                     mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);

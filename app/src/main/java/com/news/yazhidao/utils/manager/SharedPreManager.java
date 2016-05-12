@@ -7,12 +7,20 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.LocationEntity;
+import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.RelatedEntity;
+import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
+import com.umeng.message.proguard.S;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +114,7 @@ public class SharedPreManager {
         SharedPreferences sharedPreferences = getSettings(CommonConstant.FILE_SEARCH_WORDS, Context.MODE_PRIVATE);
         String oldWords = sharedPreferences.getString(CommonConstant.KEY_SEARCH_WORDS, "");
         if (!TextUtil.isEmptyString(oldWords)){
-           return Arrays.asList(oldWords.split(","));
+            return Arrays.asList(oldWords.split(","));
         }
         return new ArrayList<>();
     }
@@ -209,6 +217,16 @@ public class SharedPreManager {
         e.commit();
     }
 
+    /**
+     * /**
+     * 收藏本地版
+     * @param mUserId
+     * @param key
+     * @param locationJsonString
+     * @param uploadLogDataEntity
+     * @return
+     */
+
     public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
 
         String mReadData = upLoadLogGet(key);
@@ -259,6 +277,105 @@ public class SharedPreManager {
     public static void upLoadLogDelter(String key){
 
         remove(CommonConstant.UPLOAD_LOG, key);
+    }
+
+
+    /**
+     * 收藏本地版
+     * @param bean
+     */
+    public static void myFavoriteSaveList(NewsFeed bean){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        list.add(bean);
+        Gson gson = new Gson();
+        String str = gson.toJson(list);
+        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+    }
+    public static boolean myFavoriteisSame(String newsID){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Logger.d("bbb", "newsID==" + newsID);
+        for(int i = 0; i < list.size(); i++){
+            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getUrl());
+            if(list.get(i).getUrl().equals(newsID)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static  ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
+        Gson gson = new Gson();
+        String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
+        JSONArray array;
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        array = new JSONArray(mf);
+        for (int i = 0; i < array.length(); i++) {
+            String str = array.getString(i);
+            NewsFeed bean = gson.fromJson(str, NewsFeed.class);
+            list.add(bean);
+
+        }
+        return list;
+
+    }
+    public static void myFavoritRemoveItem(String newsID){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getUrl().equals(newsID)){
+                list.remove(i);
+                Gson gson = new Gson();
+                String str = gson.toJson(list);
+                save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+            }
+        }
+
+    }
+
+    /**
+     * 搜索历史的添加，获得，删除
+     * @param content
+     */
+    public static void HistorySave(String content){
+        HistoryEntity historyEntity = new HistoryEntity(content);
+        ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
+        try {
+           historyEntities = HistoryGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Gson gson = new Gson();
+        historyEntities.add(historyEntity);
+        save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
+    }
+    public static ArrayList<HistoryEntity> HistoryGetList() throws JSONException {
+        ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
+        String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
+        Gson gson = new Gson();
+            JSONArray array = new JSONArray(str);
+        for (int i = 0; i < array.length(); i++) {
+            String str1 = array.getString(i);
+            HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
+            historyEntities.add(bean);
+        }
+        return historyEntities;
+    }
+    public static void Historyremove(){
+        remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
     }
 
 
