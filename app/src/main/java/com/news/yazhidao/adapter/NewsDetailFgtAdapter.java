@@ -2,31 +2,19 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.RelatedItemEntity;
-import com.news.yazhidao.pages.DiggerNewsDetail;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.widget.TextViewExtend;
+import com.umeng.analytics.MobclickAgent;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Administrator on 2016/4/22.
@@ -118,6 +106,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                String zhihuUrl =  relatedItemEntity.getUrl();
                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
                mContext.startActivity(webviewIntent);
+               MobclickAgent.onEvent(mContext,"qidian_user_view_relate_point");
+
            }
        });
     }

@@ -1,10 +1,19 @@
 package com.news.yazhidao.pages;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -12,11 +21,27 @@ import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.NewsDetailCommentAdapter;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.utils.Fglass;
+import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fengjigang on 16/4/8.
@@ -26,7 +51,11 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     private SimpleDraweeView mCommentBgImg;
     private SimpleDraweeView mCommentUserIcon;
     private TextView mCommentUserName;
-
+    private TextView clip_pic;
+    private ListView mCommentListView;
+    private ArrayList<NewsDetailCommentItem> newsDetailCommentItems = new ArrayList<>();
+    private NewsDetailCommentDao newsDetailCommentDao;
+    private int dHeight;
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_my_comment);
@@ -39,6 +68,9 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
         mCommentBgImg = (SimpleDraweeView)findViewById(R.id.mCommentBgImg);
         mCommentUserIcon = (SimpleDraweeView)findViewById(R.id.mCommentUserIcon);
         mCommentUserName = (TextView)findViewById(R.id.mCommentUserName);
+        mCommentListView = (ListView)this.findViewById(R.id.myCommentListView);
+        newsDetailCommentDao = new NewsDetailCommentDao(this);
+        clip_pic = (TextView)findViewById(R.id.clip_pic);
     }
 
     @Override
@@ -82,6 +114,17 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
                             .setOldController(mCommentBgImg.getController())
                             .build();
             mCommentBgImg.setController(controller);
+
+
+            newsDetailCommentItems = newsDetailCommentDao.queryForAll(-1);
+            View footer = LayoutInflater.from(this).inflate(R.layout.listview_footer,null);
+            mCommentListView.addFooterView(footer,null,false);
+            NewsDetailCommentAdapter newsDetailCommentAdapter = new NewsDetailCommentAdapter(R.layout.user_detail_record_item,this,newsDetailCommentItems);
+            newsDetailCommentAdapter.setDaoHeight(dHeight);
+            newsDetailCommentAdapter.setClip_pic(clip_pic);
+            newsDetailCommentAdapter.setNewsDetailCommentDao(newsDetailCommentDao);
+            mCommentListView.setAdapter(newsDetailCommentAdapter);
+
         }
     }
 
@@ -93,4 +136,19 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // TODO Auto-generated method stub
+        super.onWindowFocusChanged(hasFocus);
+        Point outP = new Point();
+        this.getWindowManager().getDefaultDisplay().getSize(outP);
+        Rect outRect = new Rect();
+        this.getWindow().findViewById(Window.ID_ANDROID_CONTENT)
+                .getDrawingRect(outRect);
+        dHeight = outP.y - outRect.height();
+    }
+
+
 }

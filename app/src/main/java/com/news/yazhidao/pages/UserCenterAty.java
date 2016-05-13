@@ -10,6 +10,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by fengjigang on 16/4/6.
@@ -81,22 +82,27 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
             case R.id.mCenterComment:
                 Intent myCommentAty = new Intent(this,MyCommentAty.class);
                 startActivity(myCommentAty);
+                MobclickAgent.onEvent(this,"qidian_user_center_my_comments");
                 break;
             case R.id.mCenterFavorite:
                 Intent myFavoriteAty = new Intent(this,MyFavoriteAty.class);
                 startActivity(myFavoriteAty);
+                MobclickAgent.onEvent(this,"qidian_user_center_my_favorite");
                 break;
             case R.id.mCenterMessage:
                 Intent myMessageAty = new Intent(this, MyMessageAty.class);
                 startActivity(myMessageAty);
+                MobclickAgent.onEvent(this,"qidian_user_center_my_message");
                 break;
             case R.id.mCenterDigger:
                 Intent diggerAty = new Intent(this, DiggerAty.class);
                 startActivity(diggerAty);
+                MobclickAgent.onEvent(this,"qidian_user_center_my_digger");
                 break;
             case R.id.mCenterSetting:
                 Intent userCenterAty = new Intent(this,SettingAty.class);
                 startActivityForResult(userCenterAty,REQUEST_CODE);
+                MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
                 break;
         }
     }

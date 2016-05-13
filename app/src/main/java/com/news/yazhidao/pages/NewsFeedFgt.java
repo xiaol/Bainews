@@ -44,6 +44,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -265,6 +266,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void onClick(View view) {
                 Intent in = new Intent(getActivity(), TopicSearchAty.class);
                 getActivity().startActivity(in);
+                MobclickAgent.onEvent(getActivity(),"qidian_user_enter_search_page");
             }
         });
 

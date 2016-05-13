@@ -1,131 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
     <!--<RelativeLayout-->
-        <!--android:id="@+id/rl_title"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="70dp"-->
-        <!--android:background="#4D94C9"-->
-        <!-->-->
+    <!--android:id="@+id/rl_title"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="70dp"-->
+    <!--android:background="#4D94C9"-->
+    <!-->-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_cancel"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_width="48dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:text="取消"-->
-            <!--android:layout_marginLeft="10dp"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="16sp" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_cancel"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_width="48dp"-->
+    <!--android:layout_height="48dp"-->
+    <!--android:text="取消"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="16sp" />-->
 
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_new"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_width="48dp"-->
-            <!--android:layout_height="48dp"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:text="新建"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="16sp" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_new"-->
+    <!--android:gravity="center"-->
+    <!--android:layout_width="48dp"-->
+    <!--android:layout_height="48dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:text="新建"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="16sp" />-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv_add_album"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="新建专辑"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="16sp" />-->
+    <!--<TextView-->
+    <!--android:id="@+id/tv_add_album"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="新建专辑"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="16sp" />-->
 
     <!--</RelativeLayout>-->
-<LinearLayout
-    android:id="@+id/rl_title"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:orientation="horizontal"
-    android:background="#4D94C9"
-    android:paddingTop="20dp"
-    >
-    <TextView
-        android:id="@+id/tv_cancel"
-        android:gravity="left|center_vertical"
-        android:layout_weight="1"
-        android:layout_width="48dp"
+    <LinearLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="取消"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
-    <TextView
-        android:id="@+id/tv_add_album"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="新建专辑"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:background="#4D94C9"
+        android:orientation="horizontal"
+        >
 
-    <TextView
-        android:id="@+id/tv_new"
-        android:gravity="right|center_vertical"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginRight="10dp"
-        android:text="新建"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv_add_album"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="新建专辑"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv_new"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            android:text="新建"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
 
 
-</LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/rl_content"
-        android:layout_below="@+id/rl_title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_title"
+        >
 
         <EditText
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:textSize="15sp"
-            android:textColor="@color/black"
-            android:hint="名称(最多6个字符)"
-            android:maxLength="6"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/bg_edittext_line4"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp" />
+            android:gravity="center_vertical"
+            android:hint="名称(最多6个字符)"
+            android:textColorHint="@color/new_color3"
+            android:maxLength="6"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/et_des"
-            android:layout_below="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_below="@+id/et_name"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext_line4"
             android:gravity="center_vertical"
+            android:hint="描述(最多10个字符)"
+            android:textColorHint="@color/new_color3"
+            android:maxLength="10"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
-            android:textSize="15sp"
-            android:background="@drawable/bg_edittext_line4"
             android:textColor="@color/black"
-            android:hint="描述(最多10个字符)"
-            android:maxLength="10"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp" />
+            android:textSize="15sp"/>
 
 
     </RelativeLayout>
@@ -143,13 +148,12 @@
             android:id="@+id/bg_album_item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/news_detail_item_margin_top"
             android:layout_marginBottom="@dimen/news_detail_item_margin_top"
+            android:layout_marginTop="@dimen/news_detail_item_margin_top"
             android:orientation="horizontal">
 
         </LinearLayout>
     </HorizontalScrollView>
-
 
 
 </RelativeLayout>

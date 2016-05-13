@@ -53,6 +53,7 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -109,6 +110,7 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobclickAgent.onEvent(getActivity(),"qidian_user_enter_detail_page");
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
@@ -285,15 +287,14 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
-
                 ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME,mTitle , mNewID, "1");
-
-
+                MobclickAgent.onEvent(getActivity(),"qidian_detail_middle_share_weixin");
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MobclickAgent.onEvent(getActivity(),"qidian_detail_middle_like");
                 Logger.e("aaa", "点击点赞");
                 if(isLike){
                     isLike = false;
@@ -331,7 +332,7 @@ public class NewsDetailFgt extends BaseFragment {
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
-                    mActivity.mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
                 }
             }
