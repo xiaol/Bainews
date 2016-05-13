@@ -126,6 +126,8 @@ public class NewsDetailFgt extends BaseFragment {
 
     }
 
+
+
     private int oldLastPositon;
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -178,6 +180,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         return rootView;
     }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -213,7 +216,17 @@ public class NewsDetailFgt extends BaseFragment {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDetailWebView.pauseTimers();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDetailWebView.resumeTimers();
+    }
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -239,6 +252,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
+        mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
