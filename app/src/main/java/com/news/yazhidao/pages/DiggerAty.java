@@ -138,11 +138,11 @@ public class DiggerAty extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
-            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
-            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
-            handleAlbumsData(resultList);
-        }
+//        if (resultCode == LoginAty.REQUEST_CODE && data != null) {
+//            mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
+//            ArrayList<DiggerAlbum> resultList = queryAlbumsFromDB();
+//            handleAlbumsData(resultList);
+//        }
     }
 
     private void addMenu() {
