@@ -250,7 +250,7 @@ public class NewsDetailFgt extends BaseFragment {
 //        } else {
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //        }
-
+        mDetailWebView.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
