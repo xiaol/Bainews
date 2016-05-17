@@ -15,6 +15,8 @@
             android:id="@+id/mCommentBgImg"
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            fresco:placeholderImage="@drawable/ic_comment_bg"
+            fresco:placeholderImageScaleType="centerCrop"
             fresco:actualImageScaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />

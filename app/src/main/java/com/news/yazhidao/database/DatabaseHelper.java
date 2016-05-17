@@ -34,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 14);
+        super(context, TABLE_NAME, null, 15);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
