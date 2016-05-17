@@ -376,7 +376,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         NewsFeed newsFeed = arrNewsFeed.get(0);
                         tstart = DateUtil.dateStr2Long(newsFeed.getPubTime()) + "";
                     }
-                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);

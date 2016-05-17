@@ -72,9 +72,9 @@
         android:paddingLeft="@dimen/detail_padding_left"
         android:paddingRight="@dimen/detail_padding_right"
         android:visibility="gone"
-        app:failureImage="@drawable/bg_load_default_middle"
+        app:failureImage="@drawable/bg_load_default_small"
         app:failureImageScaleType="centerCrop"
-        app:placeholderImage="@drawable/bg_load_default_middle"
+        app:placeholderImage="@drawable/bg_load_default_small"
         app:placeholderImageScaleType="centerCrop"
         app:viewAspectRatio="1.7777"
         />
