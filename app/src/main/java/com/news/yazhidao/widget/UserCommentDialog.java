@@ -193,7 +193,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                         newsDetailCommentItem.setUser(user);
 
 
-                        intent.putExtra(KEY_ADD_COMMENT, newsDetailCommentItem);
+                        intent.putExtra(KEY_ADD_COMMENT, comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
 
