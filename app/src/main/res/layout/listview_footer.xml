@@ -7,10 +7,10 @@
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="48dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textColor="#333333"
+        android:textColor="#757575"
         android:textSize="16sp"
         android:gravity="center"
         android:text="@string/aty_my_comment_all_has_show" />

@@ -14,7 +14,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.news.yazhidao.entity.AlbumSubItem;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.DiggerAlbum;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
+import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -84,7 +84,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, AlbumSubItem.class);
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
-            TableUtils.createTableIfNotExists(connectionSource, NewsDetailCommentItem.class);
+            TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);
             /**初始化数据库或者升级数据库的时候,插入默认值*/
             channelDao = new ChannelItemDao(mContext);
             if (!TextUtil.isListEmpty(oldChannelItems)){

@@ -9,30 +9,28 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
-import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.database.NewsDetailCommentDao;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
+import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
-import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.utils.DensityUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
-
-import org.w3c.dom.Text;
-
-import java.text.CharacterIterator;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,15 +41,18 @@ import java.util.Date;
 /**
  * Created by xiao on 2016/5/9.
  */
-public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentItem>{
+public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
     private int daoHeight;
     private TextView clip_pic;
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public void setClip_pic(TextView clip_pic) {
         this.clip_pic = clip_pic;
     }
+    private OnDataIsNullListener onDataIsNullListener;
 
-    private ArrayList<NewsDetailCommentItem> mDatas = new  ArrayList<NewsDetailCommentItem>();
+
+
+    private ArrayList<NewsDetailComment> mDatas = new  ArrayList<NewsDetailComment>();
     private Context mContext;
     private NewsDetailCommentDao newsDetailCommentDao = null;
 
@@ -63,13 +64,13 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
         this.newsDetailCommentDao = newsDetailCommentDao;
     }
 
-    public NewsDetailCommentAdapter(int layoutId, Context context, ArrayList<NewsDetailCommentItem> datas){
+    public NewsDetailCommentAdapter(int layoutId, Context context, ArrayList<NewsDetailComment> datas){
         super(layoutId,context,datas);
         mDatas = datas;
         mContext = context;
     }
     @Override
-    public void convert(CommonViewHolder holder,final NewsDetailCommentItem newsDetailCommentItem, int positon) {
+    public void convert(CommonViewHolder holder,final NewsDetailComment newsDetailCommentItem, int positon) {
         TextView pub_time = holder.getView(R.id.pub_time);
         pub_time.setText(convertTime(newsDetailCommentItem.getCreate_time()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
@@ -77,7 +78,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
         comment_content.setText(string);
         TextView original = holder.getView(R.id.original);
         CharSequence originalStr = Html.fromHtml("<b>【原文】</b>"+newsDetailCommentItem.getOriginal());
-        original.setText(originalStr.toString());
+        original.setText(originalStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
         if(newsDetailCommentItem.isPraise()){
             love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
@@ -87,9 +88,15 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
         int love_num = newsDetailCommentItem.getLove();
         final TextView love_count = holder.getView(R.id.love_count);
         if(love_num > 0){
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
+            params.rightMargin = DensityUtil.dip2px(mContext,25);
+            love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.VISIBLE);
             love_count.setText(love_num+"");
         }else{
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
+            params.rightMargin = DensityUtil.dip2px(mContext,19);
+            love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.GONE);
         }
 
@@ -117,7 +124,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
         });
         love_imagebt.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
 
                 newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
                 if(newsDetailCommentItem.isPraise()){
@@ -131,30 +138,47 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
                             .ofFloat(view, "scaleY", 1, 2, 1));
                     set.setDuration(1 * 1000).start();
                     clip_pic.setVisibility(View.VISIBLE);
-                    clip_pic.layout(
-                            location[0] + view.getMeasuredWidth()
-                                    / 2,
-                            location[1] - daoHeight,
-                            location[0]
-                                    + view.getMeasuredWidth()
-                                    / 2
-                                    + clip_pic
-                                    .getMeasuredWidth(),
-                            location[1]
-                                    + clip_pic
-                                    .getMeasuredHeight()
-                                    - daoHeight);
+                    int l =location[0] + view.getMeasuredWidth()/ 2;
+                    int t =location[1] - daoHeight-60;
+                    int r =location[0]+ view.getMeasuredWidth()/ 2+ clip_pic.getMeasuredWidth();
+                    int b =location[1]+ clip_pic.getMeasuredHeight()- daoHeight-30;
+//                    Toast.makeText(mContext, "l="+l+"  t="+t+"  r="+r+"  b="+b, Toast.LENGTH_SHORT).show();
+//                    Log.e("xzj","l="+l+"  t="+t+"  r="+r+"  b="+b);
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.leftMargin = l;
+                    layoutParams.topMargin = t;
+                    clip_pic.setLayoutParams(layoutParams);
+                    clip_pic.requestLayout();
+//                    clip_pic.layout(l,t,r,b);
+//                    clip_pic.requestLayout();
+
+//                    clip_pic.layout(
+//                            location[0] + view.getMeasuredWidth()
+//                                    / 2,
+//                            location[1] - daoHeight,
+//                            location[0]
+//                                    + view.getMeasuredWidth()
+//                                    / 2
+//                                    + clip_pic
+//                                    .getMeasuredWidth(),
+//                            location[1]
+//                                    + clip_pic
+//                                    .getMeasuredHeight()
+//                                    - daoHeight);
 
                     AnimatorSet set1 = new AnimatorSet();
                     set1.addListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
-
+                            //动画开始时将按钮设置成不可点击，防止用户频繁点击
+                            view.setClickable(false);
                         }
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
+                            //动画结束后恢复按钮可点击
                             notifyDataSetChanged();
+                            view.setClickable(true);
                         }
 
                         @Override
@@ -195,16 +219,14 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
     }
 
 
-    private void showPopupWindow(View view,final NewsDetailCommentItem newsDetailCommentItem){
+    private void showPopupWindow(View view,final NewsDetailComment newsDetailCommentItem){
         backgroundAlpha(0.5f);
         // 一个自定义的布局，作为显示的内容
         View contentView = LayoutInflater.from(mContext).inflate(
                 R.layout.popup, null);
         // 设置按钮的点击事件
         Button confirm = (Button) contentView.findViewById(R.id.popup_confirm);
-        Button cancle = (Button) contentView.findViewById(R.id.popup_cancle);
-
-
+        Button cancel = (Button) contentView.findViewById(R.id.popup_cancle);
 
 
         final PopupWindow popupWindow = new PopupWindow(contentView,
@@ -223,12 +245,8 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
             }
         });
 
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        // 我觉得这里是API的一个bug
         popupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(
-                R.drawable.center_bg_notation));
-        // 设置好参数之后再show
-        //popupWindow.showAsDropDown(view);
+                R.drawable.bg_comment_del_popup));
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
 
@@ -249,11 +267,14 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
                         Toast.LENGTH_SHORT).show();
                 newsDetailCommentDao.delete(newsDetailCommentItem);
                 mDatas.remove(newsDetailCommentItem);
+                if (mDatas.size()==0){
+                    onDataIsNullListener.onChangeLayout();
+                }
                 notifyDataSetChanged();
             }
         });
 
-        cancle.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 backgroundAlpha(1.0f);
@@ -266,11 +287,18 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
 
 
 
-    private static String convertTime(long oldTime){
+    private static String convertTime(String oldTime){
         String temp;
-        long timeGap = System.currentTimeMillis()-oldTime;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date old = null;
+        try {
+            old = dateFormat.parse(oldTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long timeGap = System.currentTimeMillis()-old.getTime();
         DateFormat sdf = new SimpleDateFormat("MM月dd日");
-        Date old = new Date(oldTime);
+
 
         if(timeGap<60000){//一分钟
             temp = "刚刚";
@@ -316,7 +344,13 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailCommentIte
         ((Activity)mContext).getWindow().setAttributes(lp);
     }
 
+    public interface OnDataIsNullListener{
+        void onChangeLayout();
+    }
 
+    public void setOnDataIsNullListener(OnDataIsNullListener onDataIsNullListener) {
+        this.onDataIsNullListener = onDataIsNullListener;
+    }
     public int getDaoHeight() {
         return daoHeight;
     }

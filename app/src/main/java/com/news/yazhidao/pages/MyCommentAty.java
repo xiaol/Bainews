@@ -8,12 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -21,41 +18,32 @@ import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailCommentAdapter;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.utils.Fglass;
-import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by fengjigang on 16/4/8.
  */
-public class MyCommentAty extends BaseActivity implements View.OnClickListener {
+public class MyCommentAty extends BaseActivity implements View.OnClickListener, NewsDetailCommentAdapter.OnDataIsNullListener {
     private View mCommentLeftBack;
     private SimpleDraweeView mCommentBgImg;
     private SimpleDraweeView mCommentUserIcon;
     private TextView mCommentUserName;
     private TextView clip_pic;
     private ListView mCommentListView;
-    private ArrayList<NewsDetailCommentItem> newsDetailCommentItems = new ArrayList<>();
+    private ArrayList<NewsDetailComment> newsDetailCommentItems = new ArrayList<>();
     private NewsDetailCommentDao newsDetailCommentDao;
     private int dHeight;
+    private RelativeLayout comment_nor;
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_my_comment);
@@ -65,12 +53,13 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     protected void initializeViews() {
         mCommentLeftBack = findViewById(R.id.mCommentLeftBack);
         mCommentLeftBack.setOnClickListener(this);
-        mCommentBgImg = (SimpleDraweeView)findViewById(R.id.mCommentBgImg);
-        mCommentUserIcon = (SimpleDraweeView)findViewById(R.id.mCommentUserIcon);
-        mCommentUserName = (TextView)findViewById(R.id.mCommentUserName);
-        mCommentListView = (ListView)this.findViewById(R.id.myCommentListView);
+        mCommentBgImg = (SimpleDraweeView) findViewById(R.id.mCommentBgImg);
+        mCommentUserIcon = (SimpleDraweeView) findViewById(R.id.mCommentUserIcon);
+        mCommentUserName = (TextView) findViewById(R.id.mCommentUserName);
+        mCommentListView = (ListView) this.findViewById(R.id.myCommentListView);
         newsDetailCommentDao = new NewsDetailCommentDao(this);
-        clip_pic = (TextView)findViewById(R.id.clip_pic);
+        clip_pic = (TextView) findViewById(R.id.clip_pic);
+        comment_nor = (RelativeLayout) findViewById(R.id.layout_nor_comment);
     }
 
     @Override
@@ -87,7 +76,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 //            user.setUserName("forward_one");
 //            user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
 //        }
-        if (user != null){
+        if (user != null) {
             mCommentUserName.setText(user.getUserName());
             Uri uri = Uri.parse(user.getUserIcon());
             mCommentUserIcon.setImageURI(uri);
@@ -100,7 +89,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void process(Bitmap bitmap) {
 //                    Fglass.blur(mCommentUserIcon,mCommentBgImg,2,8);
-                    Fglass.doBlur(bitmap,16,true);
+                    Fglass.doBlur(bitmap, 16, true);
                 }
             };
 
@@ -117,20 +106,27 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
 
 
             newsDetailCommentItems = newsDetailCommentDao.queryForAll(-1);
-            View footer = LayoutInflater.from(this).inflate(R.layout.listview_footer,null);
-            mCommentListView.addFooterView(footer,null,false);
-            NewsDetailCommentAdapter newsDetailCommentAdapter = new NewsDetailCommentAdapter(R.layout.user_detail_record_item,this,newsDetailCommentItems);
-            newsDetailCommentAdapter.setDaoHeight(dHeight);
-            newsDetailCommentAdapter.setClip_pic(clip_pic);
-            newsDetailCommentAdapter.setNewsDetailCommentDao(newsDetailCommentDao);
-            mCommentListView.setAdapter(newsDetailCommentAdapter);
+            if (newsDetailCommentItems != null && newsDetailCommentItems.size() > 0) {
+                mCommentListView.setVisibility(View.VISIBLE);
+                comment_nor.setVisibility(View.GONE);
+                View footer = LayoutInflater.from(this).inflate(R.layout.listview_footer, null);
+                mCommentListView.addFooterView(footer, null, false);
+                NewsDetailCommentAdapter newsDetailCommentAdapter = new NewsDetailCommentAdapter(R.layout.user_detail_record_item, this, newsDetailCommentItems);
+                newsDetailCommentAdapter.setOnDataIsNullListener(this);
+                newsDetailCommentAdapter.setDaoHeight(dHeight);
+                newsDetailCommentAdapter.setClip_pic(clip_pic);
+                newsDetailCommentAdapter.setNewsDetailCommentDao(newsDetailCommentDao);
+                mCommentListView.setAdapter(newsDetailCommentAdapter);
+            } else {
+                onChangeLayout();
+            }
 
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mCommentLeftBack:
                 finish();
                 break;
@@ -151,4 +147,9 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener {
     }
 
 
+    @Override
+    public void onChangeLayout() {
+        mCommentListView.setVisibility(View.GONE);
+        comment_nor.setVisibility(View.VISIBLE);
+    }
 }
