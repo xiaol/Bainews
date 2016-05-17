@@ -24,11 +24,9 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -49,12 +47,12 @@ import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
+import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -65,11 +63,8 @@ import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
-import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
 import com.umeng.analytics.MobclickAgent;
-
 import org.json.JSONException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,10 +139,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.e("jigang", "comment fgt refresh br");
-            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+
+            NewsDetailComment newsDetailComment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
             newsDetailComment.setNewsFeed(mNewsFeed);
             newsDetailComment.setOriginal(mNewsFeed.getTitle());
             newsDetailCommentDao.add(newsDetailComment);
+
+//            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+//            newsDetailComment.setNewsFeed(mNewsFeed);
+//            newsDetailComment.setOriginal(mNewsFeed.getTitle());
+//            newsDetailCommentDao.add(newsDetailComment);
+
 
 //            } else {
 

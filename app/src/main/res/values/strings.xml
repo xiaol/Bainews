@@ -111,4 +111,6 @@
 
     <string name="aty_my_comment_oneplus">+1</string>
     <string name="aty_my_comment_all_has_show">已显示全部内容</string>
+    <string name="my_comment_cool_person">高冷的ta</string>
+    <string name="my_comment_nor_comment">还没有发表过任何评论</string>
 </resources>

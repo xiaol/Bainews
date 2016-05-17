@@ -127,8 +127,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         this.mNewsSaveCallBack = listener;
     }
 
-
+    boolean isNoteLoadDate;
     public void setNewsFeed(ArrayList<NewsFeed> results) {
+        isNoteLoadDate = true;
         this.mArrNewsFeed = results;
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
@@ -355,6 +356,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     private void loadNewsFeedData(String url, final int flag) {
+        if (!isListRefresh) {
+            bgLayout.setVisibility(View.VISIBLE);
+        }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
         String fixedParams = "&cid=" + mstrChannelId + "&userid=" + mstrUserId + "&deviceid=" + mstrDeviceId + "&uid=" + SharedPreManager.getUUID();
@@ -372,7 +376,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         NewsFeed newsFeed = arrNewsFeed.get(0);
                         tstart = DateUtil.dateStr2Long(newsFeed.getPubTime()) + "";
                     }
-                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tstart=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
@@ -499,17 +503,21 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void loadData(int flag) {
-        if (!isListRefresh) {
-            bgLayout.setVisibility(View.VISIBLE);
-        }
+
 
         Logger.e("jigang", "loaddata -----" + flag);
         if (NetUtil.checkNetWork(mContext)) {
-            if (!TextUtil.isEmptyString(mstrKeyWord)) {
-                loadNewsFeedData("search", flag);
-            } else if (!TextUtil.isEmptyString(mstrChannelId))
-                loadNewsFeedData("recommend", flag);
-            startTopRefresh();
+           if(!isNoteLoadDate) {
+               if (!TextUtil.isEmptyString(mstrKeyWord)) {
+                   loadNewsFeedData("search", flag);
+               } else if (!TextUtil.isEmptyString(mstrChannelId))
+                   loadNewsFeedData("recommend", flag);
+               startTopRefresh();
+           }else{
+               isNoteLoadDate = false;
+           }
+
+
         } else {
             stopRefresh();
             ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);

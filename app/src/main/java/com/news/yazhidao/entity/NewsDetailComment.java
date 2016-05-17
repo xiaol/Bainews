@@ -1,11 +1,15 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 
 /**
  * Created by fengjigang on 16/3/31.
  * 新闻评论
  */
+@DatabaseTable(tableName = "tb_news_detail_comment_item")
 public class NewsDetailComment implements Serializable{
 
     /**
@@ -19,17 +23,57 @@ public class NewsDetailComment implements Serializable{
      * nickname : 你猜23803670
      */
 
-    private String docid;
-    private String comment_id;
-    private String id;
     private String profile;
-    private int love;
-    private String content;
-    private String create_time;
+
     private String nickname;
-    private boolean isPraise;
+
     private String uuid;
     public NewsDetailComment(){}
+    @DatabaseField(columnName="docid")
+    private String docid;
+    @DatabaseField(columnName="comment_id")
+    private String comment_id;
+    @DatabaseField(id = true)
+    private String id;
+    @DatabaseField(columnName="love")
+    private int love;
+    @DatabaseField(columnName="content")
+    private String content;
+    @DatabaseField(columnName="create_time")
+    private String create_time;
+    @DatabaseField(columnName="isPraise")
+    private boolean isPraise;
+    @DatabaseField(columnName = "original")
+    private String original;
+
+    private User user;
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public NewsFeed getNewsFeed() {
+        return newsFeed;
+    }
+
+    public void setNewsFeed(NewsFeed newsFeed) {
+        this.newsFeed = newsFeed;
+    }
+
+    @DatabaseField(canBeNull = true, foreign = true, columnName = "url", foreignAutoRefresh = true)
+    private NewsFeed newsFeed;
 
     public NewsDetailComment(String comment_id, String content, String create_time, String docid, String id, int love, String nickname, String profile,String uuid) {
         this.comment_id = comment_id;

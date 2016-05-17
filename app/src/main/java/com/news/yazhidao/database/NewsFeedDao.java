@@ -110,6 +110,7 @@ public class NewsFeedDao {
             QueryBuilder<NewsFeed, String> builder = mNewsFeedDao.queryBuilder();
             builder.where().eq(NewsFeed.COLUMN_CHANNEL_ID, channelId);
             builder.orderBy(NewsFeed.COLUMN_UPDATE_TIME, false);
+            builder.limit(20l);
             subItems = builder.query();
             if (TextUtil.isListEmpty(subItems)) {
                 return new ArrayList<>();
