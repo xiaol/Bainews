@@ -93,6 +93,18 @@
             android:src="@drawable/btn_news_feed_delete" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/checkFavoriteDelete_image"
+        android:src="@drawable/favorite_uncheck"
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/favorite_surface"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignBottom="@+id/line_bottom_imageView"
+        android:layout_alignParentTop="true"
+        android:scaleType="center"/>
 
     <ImageView
         android:id="@+id/line_bottom_imageView"

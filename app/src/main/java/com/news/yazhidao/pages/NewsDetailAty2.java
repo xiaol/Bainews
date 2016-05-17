@@ -130,6 +130,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private LinearLayout careforLayout;
     boolean isFavorite;
     public static final int REQUEST_CODE = 1030;
+    private NewsFeed mUsedNewsFeed;
     /**
      * 通知新闻详情页和评论fragment刷新评论
      */
@@ -189,6 +190,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void initializeViews() {
+        mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mSwipeBackLayout = getSwipeBackLayout();
@@ -758,12 +760,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if(isFavorite){
                 isFavorite = false;
                 carefor_Text.setText("收藏已取消");
-                SharedPreManager.myFavoritRemoveItem(mNewsFeed.getUrl());
+                SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
                 mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
             }else{
                 isFavorite = true;
                 carefor_Text.setText("收藏成功");
-                SharedPreManager.myFavoriteSaveList(mNewsFeed);
+                SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
                 mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
             }
 

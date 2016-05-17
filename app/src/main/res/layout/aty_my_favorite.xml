@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/new_color9"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9"
     >
 
     <RelativeLayout
@@ -32,11 +32,17 @@
             android:textSize="@dimen/font1"
             />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.56dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/new_color5"
+        <TextView
+            android:id="@+id/mFavoriteRightManage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingRight="14dp"
+            android:text="管理"
+            android:textSize="@dimen/new_font2"
+            android:textColor="@color/new_color1"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
             />
     </RelativeLayout>
 
@@ -64,5 +70,25 @@
         android:overScrollMode="never"
         android:scrollbars="none"
         android:layout_below="@id/mFavoriteTopLayout"/>
-    <include layout="@layout/loading_view" />
+    <LinearLayout
+        android:id="@+id/aty_myFavorite_Deletelayout"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:background="#eb5e41"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:clickable="true">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/favorite_delete"/>
+        <TextView
+            android:id="@+id/aty_myFavorite_number"
+            android:layout_marginLeft="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font3"/>
+    </LinearLayout>
+    <!--<include layout="@layout/loading_view" />-->
 </RelativeLayout>

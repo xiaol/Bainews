@@ -36,6 +36,8 @@ import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
+import com.news.yazhidao.receiver.HomeWatcher;
+import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -110,6 +112,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private boolean isNeedAddSP = true;
     private Handler mHandler;
     private Runnable mThread;
+    private boolean isClickHome;
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -167,7 +170,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void refreshData() {
-        mlvNewsFeed.setRefreshing();
+//        mlvNewsFeed.setRefreshing();
     }
 
     public void onCreate(Bundle bundle) {
@@ -244,12 +247,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                Logger.e("aaa","刷新");
                 loadData(PULL_DOWN_REFRESH);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                Logger.e("aaa","加载");
                 loadData(PULL_UP_REFRESH);
 
             }
@@ -560,15 +565,82 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
     }
 
+    HomeWatcher mHomeWatcher;
     @Override
     public void onResume() {
+        mHomeWatcher = new HomeWatcher(this.getActivity());
+        mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
+        mHomeWatcher.startWatch();
         super.onResume();
-        if(mArrNewsFeed!=null&&bgLayout.getVisibility()==View.VISIBLE) {
-            bgLayout.setVisibility(View.GONE);
-            mAdapter.setNewsFeed(mArrNewsFeed);
+        long time = (System.currentTimeMillis() - homeTime)/1000;
+        Logger.e("aaa", "time====" + time);
+        if(isNewVisity&& isClickHome&&time>=60){
+//            mlvNewsFeed.setRefreshing();
+//            isListRefresh = true;
+//            loadData(PULL_DOWN_REFRESH);
+//            isClickHome = false;
+//            bgLayout.setVisibility(View.VISIBLE);
+//            mlvNewsFeed.createLoadingLayoutProxy(true, false);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    isListRefresh = true;
+//                    loadData(PULL_DOWN_REFRESH);
+//                    isClickHome = false;
+//                }
+//            },1500);
+
+            mThread = new Runnable() {
+                @Override
+                public void run() {
+                    mlvNewsFeed.setRefreshing();
+                    isListRefresh = true;
+                    isClickHome = false;
+                }
+            };
+            mHandler.postDelayed(mThread, 1000);
+
+        }else{
+            if(mArrNewsFeed!=null&&bgLayout.getVisibility()==View.VISIBLE) {
+                bgLayout.setVisibility(View.GONE);
+                mAdapter.setNewsFeed(mArrNewsFeed);
+            }
+            mAdapter.notifyDataSetChanged();
         }
-        mAdapter.notifyDataSetChanged();
+
+
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHomeWatcher.setOnHomePressedListener(null);
+        mHomeWatcher.stopWatch();
+    }
+
+    long homeTime;
+    OnHomePressedListener mOnHomePressedListener = new OnHomePressedListener() {
+        @Override
+        public void onHomePressed() {
+            Logger.e("aaa", "点击home键");
+            if(isClickHome){
+                return;
+            }
+            isClickHome = true;
+            homeTime = System.currentTimeMillis();
+        }
+
+
+        @Override
+        public void onHomeLongPressed() {
+            Logger.e("aaa", "长按home键");
+            if(isClickHome){
+                return;
+            }
+            isClickHome = true;
+            homeTime = System.currentTimeMillis();
+        }
+    };
 
     private class RefreshReceiver extends BroadcastReceiver {
 
