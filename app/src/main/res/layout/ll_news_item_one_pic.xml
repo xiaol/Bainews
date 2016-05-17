@@ -4,7 +4,7 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/new_color9">
+    android:background="@drawable/bg_feed_list_select">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/title_img_View"
