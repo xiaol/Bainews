@@ -32,7 +32,6 @@ import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
@@ -183,17 +182,15 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
                         NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid);
                         //实例化一个新闻评论类
-                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
-                        newsDetailCommentItem.setComment_id(comment_id);
-                        newsDetailCommentItem.setContent(mUserCommentMsg);
-                        newsDetailCommentItem.setCreate_time(System.currentTimeMillis());
-                        newsDetailCommentItem.setDocid(docid);
-                        newsDetailCommentItem.setLove(0);
-                        newsDetailCommentItem.setPraise(false);
-                        newsDetailCommentItem.setUser(user);
-
-
-                        intent.putExtra(KEY_ADD_COMMENT, newsDetailCommentItem);
+//                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
+//                        newsDetailCommentItem.setComment_id(comment_id);
+//                        newsDetailCommentItem.setContent(mUserCommentMsg);
+//                        newsDetailCommentItem.setCreate_time(System.currentTimeMillis());
+//                        newsDetailCommentItem.setDocid(docid);
+//                        newsDetailCommentItem.setLove(0);
+//                        newsDetailCommentItem.setPraise(false);
+                        comment.setUser(user);
+                        intent.putExtra(KEY_ADD_COMMENT, comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
 

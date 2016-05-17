@@ -49,7 +49,6 @@ import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsDetailCommentItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
@@ -144,7 +143,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.e("jigang", "comment fgt refresh br");
-            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+            NewsDetailComment newsDetailComment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
             newsDetailComment.setNewsFeed(mNewsFeed);
             newsDetailComment.setOriginal(mNewsFeed.getTitle());
             newsDetailCommentDao.add(newsDetailComment);

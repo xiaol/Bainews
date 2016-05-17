@@ -38,6 +38,7 @@ import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedEntity;
@@ -59,6 +60,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 import cn.sharesdk.wechat.moments.WechatMoments;
 
@@ -104,6 +106,7 @@ public class NewsDetailFgt extends BaseFragment {
     private final int LOAD_MORE = 0;
     private final int LOAD_BOTTOM = 1;
     private boolean isLike;
+    private NewsDetailCommentDao mNewsDetailCommentDao;
 
 
     @Override
@@ -359,6 +362,8 @@ public class NewsDetailFgt extends BaseFragment {
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
                         Logger.d("aaa", "评论加载完毕！！！！！！");
+                        //同步服务器上的评论数据到本地数据库
+                      //  addCommentInfoToSql(mComments);
                         mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
                         addCommentContent(result);
                     } else {
@@ -423,6 +428,26 @@ public class NewsDetailFgt extends BaseFragment {
         requestQueue.add(related);
 
 
+    }
+
+    private void addCommentInfoToSql(ArrayList<NewsDetailComment> mComments) {
+        if (TextUtil.isListEmpty(mComments)){
+            int commentNum = mComments.size();
+            List<NewsDetailComment> newsDetailCommentItems = new ArrayList<>();
+            String[] commentIds = new String[commentNum];
+            for (int i=0;i<commentNum;i++){
+                commentIds[i] = mComments.get(i).getComment_id();
+            }
+            mNewsDetailCommentDao = new NewsDetailCommentDao(getActivity());
+            newsDetailCommentItems = mNewsDetailCommentDao.qureyByIds(commentIds);
+            if(newsDetailCommentItems==null||newsDetailCommentItems.size()==0){
+                return;
+            }else{
+                for(NewsDetailComment ndc:newsDetailCommentItems){
+                    mNewsDetailCommentDao.update(ndc);
+                }
+            }
+        }
     }
 
     ArrayList<ArrayList<RelatedItemEntity>> beanPageList = new ArrayList<ArrayList<RelatedItemEntity>>();

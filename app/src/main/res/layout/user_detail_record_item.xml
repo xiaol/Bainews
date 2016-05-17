@@ -11,7 +11,8 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="fill_parent"
-        android:layout_height="30.0dip" >
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <TextView
             android:id="@+id/pub_time"
@@ -19,10 +20,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="9dp"
             android:gravity="center"
             android:text="1小时前"
-            android:textColor="#ff999999"
-            android:textSize="12sp" />
+            android:textColor="@color/new_color3"
+            android:textSize="@dimen/font5" />
 
         <ImageView
             android:id="@+id/del_icon"
@@ -30,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginTop="9dp"
             android:clickable="true"
             android:src="@drawable/user_detail_record_del_icon_selector" />
     </RelativeLayout>
@@ -42,53 +45,64 @@
         android:orientation="horizontal"
         android:paddingBottom="8.0dip"
         android:paddingLeft="15.0dip"
-        android:paddingRight="15.0dip" >
+        >
 
         <TextView
             android:id="@+id/comment_item_comment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"
+            android:textSize="@dimen/font2"
             android:text="is"
-            android:textColor="#000"
+            android:paddingTop="13dp"
+            android:layout_marginBottom="13dp"
+            android:textColor="@color/new_color1"
             android:visibility="visible" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-            android:gravity="right"
-            android:orientation="horizontal" >
+            android:gravity="center_vertical"
+            >
 
             <ImageButton
                 android:id="@+id/love_imagebt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="19dp"
                 android:background="#00000000"
-                android:src="@drawable/list_icon_gif_nor_icon_heart_nor" />
+
+                android:src="@drawable/list_icon_gif_nor_icon_heart_nor"
+
+                 />
 
             <TextView
                 android:id="@+id/love_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:textColor="#000000"
-                android:text="2000+" />
-        </LinearLayout>
+                android:text="1"
+                android:textColor="@color/new_color7"
+                android:textSize="12sp"
+                android:paddingTop="3dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="13dp"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/original"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7.0dip"
+        android:layout_marginTop="10.0dip"
         android:drawableRight="@drawable/notationdetails_icn_more"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:text="asdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-        android:textColor="#ff666666"
-        android:textSize="14sp" />
+        android:textColor="@color/new_color7"
+        android:textSize="@dimen/font3"
+        android:paddingBottom="2dp"
+        android:paddingRight="3dp"/>
 
 </LinearLayout>

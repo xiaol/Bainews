@@ -15,7 +15,9 @@
             android:id="@+id/mCommentBgImg"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            fresco:actualImageScaleType="centerCrop" />
+            fresco:actualImageScaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/mCommentLeftBack"
@@ -38,9 +40,10 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 fresco:placeholderImage="@drawable/ic_user_comment_default"
+                fresco:roundAsCircle="true" />
+                <!--fresco:roundingBorderColor="@color/white"-->
+                <!--fresco:roundingBorderWidth="3dp"-->
 
-                fresco:roundingBorderColor="@color/white"
-                fresco:roundingBorderWidth="4dp" />
 
             <TextView
                 android:id="@+id/mCommentUserName"
@@ -56,10 +59,53 @@
             android:id="@+id/myCommentListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/mCommentUserInfo"
-            android:divider="#cccccc"
-            android:dividerHeight="4dp"></ListView>
+            android:layout_below="@id/mCommentBgImg"
+            android:paddingTop="17dp"
+            android:divider="#e0e0e0"
+            android:dividerHeight="8dp"
+            android:visibility="gone">
+        </ListView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_below="@id/mCommentBgImg"
+            android:id="@+id/layout_nor_comment">
+            <ImageView
+                android:id="@+id/comment_nor_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="82dp"
+                android:background="@drawable/comment_nor_icon"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="14dp"
+                android:text="@string/my_comment_cool_person"
+                android:id="@+id/textView"
+                android:textColor="#d4d4d4"
+                android:textSize="17sp"
+                android:layout_below="@+id/comment_nor_icon"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/my_comment_nor_comment"
+                android:id="@+id/textView2"
+                android:textColor="#d4d4d4"
+                android:textSize="17sp"
+                android:layout_below="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp" />
+
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
