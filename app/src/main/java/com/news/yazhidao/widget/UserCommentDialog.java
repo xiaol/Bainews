@@ -182,6 +182,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
                         NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid);
                         //实例化一个新闻评论类
+
 //                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
 //                        newsDetailCommentItem.setComment_id(comment_id);
 //                        newsDetailCommentItem.setContent(mUserCommentMsg);
@@ -190,6 +191,18 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                        newsDetailCommentItem.setLove(0);
 //                        newsDetailCommentItem.setPraise(false);
                         comment.setUser(user);
+
+                        NewsDetailComment newsDetailCommentItem = new NewsDetailComment();
+                        newsDetailCommentItem.setComment_id(comment_id);
+                        newsDetailCommentItem.setContent(mUserCommentMsg);
+                        newsDetailCommentItem.setCreate_time(DateUtil.getDate());
+                        newsDetailCommentItem.setDocid(docid);
+                        newsDetailCommentItem.setLove(0);
+                        newsDetailCommentItem.setPraise(false);
+                        newsDetailCommentItem.setUser(user);
+
+
+
                         intent.putExtra(KEY_ADD_COMMENT, comment);
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
