@@ -47,6 +47,7 @@
         android:textColor="#999999"
         android:textSize="15sp"
         android:background="@drawable/bg_change"
+        android:stateListAnimator="@null"
         />
 
     <Button

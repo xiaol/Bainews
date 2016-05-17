@@ -10,7 +10,9 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
-import static  com.news.yazhidao.utils.helper.ShareSdkHelper.*;
+import com.umeng.analytics.MobclickAgent;
+
+import static com.news.yazhidao.utils.helper.ShareSdkHelper.AuthorizePlatform;
 
 /**
  * Created by fengjigang on 16/4/6.
@@ -78,6 +80,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIBO, mAuthorizeListener);
+                MobclickAgent.onEvent(this,"qidian_user_first_weibo_login");
                 break;
             case R.id.mGuideWinxinLogin:
                 showLoadingDialog();
@@ -87,11 +90,13 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIXIN, mAuthorizeListener);
+                MobclickAgent.onEvent(this,"qidian_user_first_weixin_login");
                 break;
             case R.id.mGuideSkip:
                 this.finish();
                 Intent mainAty = new Intent(this,MainAty.class);
                 startActivity(mainAty);
+                MobclickAgent.onEvent(this,"qidian_user_first_look_around");
                 break;
         }
     }

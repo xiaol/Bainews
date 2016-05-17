@@ -53,6 +53,7 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -109,6 +110,7 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MobclickAgent.onEvent(getActivity(),"qidian_user_enter_detail_page");
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
@@ -125,6 +127,8 @@ public class NewsDetailFgt extends BaseFragment {
         }
 
     }
+
+
 
     private int oldLastPositon;
     @Override
@@ -178,6 +182,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         return rootView;
     }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -213,7 +218,17 @@ public class NewsDetailFgt extends BaseFragment {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDetailWebView.pauseTimers();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDetailWebView.resumeTimers();
+    }
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -235,10 +250,11 @@ public class NewsDetailFgt extends BaseFragment {
 //        } else {
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //        }
-
+        mDetailWebView.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
+        mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
@@ -271,15 +287,14 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
-
                 ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME,mTitle , mNewID, "1");
-
-
+                MobclickAgent.onEvent(getActivity(),"qidian_detail_middle_share_weixin");
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MobclickAgent.onEvent(getActivity(),"qidian_detail_middle_like");
                 Logger.e("aaa", "点击点赞");
                 if(isLike){
                     isLike = false;
@@ -317,7 +332,7 @@ public class NewsDetailFgt extends BaseFragment {
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
-                    mActivity.mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
                 }
             }

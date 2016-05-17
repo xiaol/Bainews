@@ -318,7 +318,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             public void onPageSelected(int position) {
                 if (position == 1) {
                     isCommentPage = true;
-                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
@@ -526,6 +526,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
+                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
                 break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {
@@ -533,12 +534,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mCommentDialog.setDocid(mNewsFeed.getDocid());
                     mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 }
+                MobclickAgent.onEvent(this,"qidian_user_detail_add_comment");
                 break;
             case R.id.mDetailComment:
                 if (!isCommentPage) {
                     isCommentPage = true;
                     mNewsDetailViewPager.setCurrentItem(1);
-                    mDetailCommentPic.setImageResource(R.drawable.detail_switch_commet);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
@@ -558,6 +560,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
+                MobclickAgent.onEvent(this,"qidian_user_detail_share");
                 break;
             case R.id.mNewsLoadingImg:
                 loadData();
@@ -572,7 +575,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     CareForAnimation(false);
 
                 }
-
+                MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
                 break;
         }
     }
