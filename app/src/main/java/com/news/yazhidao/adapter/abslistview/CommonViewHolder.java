@@ -8,6 +8,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -58,6 +59,10 @@ public class CommonViewHolder {
             mViews.put(viewId, view);
         }
         return (T) view;
+    }
+    public ImageView getImageView(int ViewID){
+        ImageView image = getView(ViewID);
+        return image;
     }
     public void setTextViewText(int ViewID ,String content){
         TextView text = getView(ViewID);

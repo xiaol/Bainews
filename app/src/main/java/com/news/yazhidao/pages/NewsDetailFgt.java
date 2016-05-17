@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -53,6 +55,7 @@ import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
+import com.news.yazhidao.widget.webview.LoadWebView;
 import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
@@ -69,7 +72,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
-    private WebView mDetailWebView;
+    private LoadWebView mDetailWebView;
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
@@ -244,7 +247,7 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
 
-        mDetailWebView = (WebView) mNewsDetailHeaderView.findViewById(R.id.mDetailWebView);
+        mDetailWebView = (LoadWebView) mNewsDetailHeaderView.findViewById(R.id.mDetailWebView);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 //        } else {
@@ -260,16 +263,31 @@ public class NewsDetailFgt extends BaseFragment {
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null,TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
                 "text/html;charset=UTF-8", "utf-8", null);
-        mDetailWebView.setWebViewClient(new WebViewClient() {
+//        mDetailWebView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                super.onPageFinished(view, url);
+//
+//            }
+//
+//        });
+        mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+            public void After() {
+                Log.e("aaa","22222");
                 isWebSuccess = true;
                 mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
+//                Log.e("aaa","1111");
             }
         });
-
+        mDetailWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                Log.d("aaa", "newProgress==" + newProgress);
+            }
+        });
         //第2部分的CommentTitle
         View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);

@@ -3,6 +3,7 @@ package com.news.yazhidao.utils.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
@@ -343,8 +344,32 @@ public class SharedPreManager {
                 save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
             }
         }
-
     }
+
+    public static  ArrayList<NewsFeed> myFavoritRemoveList(ArrayList<NewsFeed> deleteList){
+        ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//        Logger.e("aaa","1111111111111"+list.size());
+//        list.removeAll(deleteList);
+//        Logger.e("aaa","2222222222222"+list.size());
+//        Gson gson = new Gson();
+//        String str = gson.toJson(list);
+//        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
+        for(NewsFeed bean : deleteList){
+            myFavoritRemoveItem(bean.getUrl());
+        }
+        try {
+            list = myFavoriteGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 
     /**
      * 搜索历史的添加，获得，删除

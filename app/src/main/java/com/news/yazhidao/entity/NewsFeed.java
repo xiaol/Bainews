@@ -66,6 +66,10 @@ public class NewsFeed implements Serializable {
      */
     @DatabaseField(dataType = DataType.BOOLEAN)
     private boolean isRead;
+    /**
+     * 用户是否删除这条收藏数据
+     */
+    private boolean isFavorite = false;
 
     @Override
     public String toString() {
@@ -83,6 +87,14 @@ public class NewsFeed implements Serializable {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isRead=" + isRead +
                 '}';
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public String getImageUrl() {
