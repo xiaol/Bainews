@@ -50,6 +50,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light"
         android:hardwareAccelerated="true"
+        android:largeHeap="true"
         >
         <meta-data
             android:name="platform_id"
