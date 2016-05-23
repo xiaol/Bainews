@@ -73,7 +73,7 @@
                 android:numColumns="3"
                 android:scrollbars="vertical"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="15dp" />
+                android:verticalSpacing="8dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                 android:numColumns="3"
                 android:scrollbars="vertical"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="15dp" />
+                android:verticalSpacing="8dp" />
         </LinearLayout>
     </ScrollView>
 
