@@ -40,6 +40,7 @@ import com.handmark.pulltorefresh.library.internal.RotateLoadingLayout;
 import com.handmark.pulltorefresh.library.internal.Utils;
 import com.handmark.pulltorefresh.library.internal.ViewCompat;
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 public abstract class PullToRefreshBase<T extends View> extends LinearLayout implements IPullToRefresh<T> {
 
@@ -65,6 +66,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	static final String STATE_SCROLLING_REFRESHING_ENABLED = "ptr_disable_scrolling";
 	static final String STATE_SHOW_REFRESHING_VIEW = "ptr_show_refreshing_view";
 	static final String STATE_SUPER = "ptr_super";
+
 
 	// ===========================================================
 	// Fields
@@ -98,7 +100,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	private OnRefreshListener2<T> mOnRefreshListener2;
 	private OnPullEventListener<T> mOnPullEventListener;
 
+	private onStateListener mOnStateListener;
+
+	public boolean isMainFooterViewType;
+
 	private SmoothScrollRunnable mCurrentSmoothScrollRunnable;
+
+	public boolean isFooterViewVisity;
 
 	// ===========================================================
 	// Constructors
@@ -506,6 +514,13 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	}
 
 	/**
+	 * 监听state的状态
+	 */
+	public void setOnStateListener(onStateListener mOnStateListener){
+		this.mOnStateListener = mOnStateListener;
+	}
+
+	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
 	 */
@@ -538,23 +553,24 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	public abstract Orientation getPullToRefreshScrollDirection();
 
 	final void setState(State state, final boolean... params) {
+
 		mState = state;
 		if (DEBUG) {
 			Log.d(LOG_TAG, "State: " + mState.name());
 		}
 
 		switch (mState) {
-			case RESET:
+			case RESET://初始
 				onReset();
 				break;
-			case PULL_TO_REFRESH:
+			case PULL_TO_REFRESH://更多推荐
 				onPullToRefresh();
 				break;
-			case RELEASE_TO_REFRESH:
+			case RELEASE_TO_REFRESH://松开推荐
 				onReleaseToRefresh();
 				break;
 			case REFRESHING:
-			case MANUAL_REFRESHING:
+			case MANUAL_REFRESHING://推荐中
 				onRefreshing(params[0]);
 				break;
 			case OVERSCROLLING:
@@ -566,6 +582,10 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		if (null != mOnPullEventListener) {
 			mOnPullEventListener.onPullEvent(this, mState, mCurrentMode);
 		}
+		if(mOnStateListener != null){
+			mOnStateListener.getState(state);
+		}
+
 	}
 
 	/**
@@ -946,7 +966,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	 * 
 	 * @param value - New Scroll value
 	 */
-	protected final void setHeaderScroll(int value) {
+	public final void setHeaderScroll(int value) {
 		if (DEBUG) {
 			Log.d(LOG_TAG, "setHeaderScroll: " + value);
 		}
@@ -1191,7 +1211,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 				itemDimension = getHeaderSize();
 				break;
 		}
-
+//		Logger.e("aaa","newScrollValue=="+newScrollValue);
 		setHeaderScroll(newScrollValue);
 
 		if (newScrollValue != 0 && !isRefreshing()) {
@@ -1495,6 +1515,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
 	}
 
+	public interface onStateListener{
+		public void getState(State state);
+	}
 	/**
 	 * An advanced version of the Listener to listen for callbacks to Refresh.
 	 * This listener is different as it allows you to differentiate between Pull
@@ -1646,6 +1669,18 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 			mContinueRunning = false;
 			removeCallbacks(this);
 		}
+	}
+
+	/**
+	 * 隐藏footerView（feed流专门使用）
+	 */
+	public void setFooterViewInvisible(){
+		mFooterLayout.hideAllViews();
+		isFooterViewVisity = true;
+	}
+
+	public void setMainFooterView(boolean isType){
+		isMainFooterViewType = isType;
 	}
 
 	static interface OnSmoothScrollFinishedListener {

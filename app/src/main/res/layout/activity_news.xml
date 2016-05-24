@@ -12,15 +12,23 @@
         android:background="@color/color7"
         android:cacheColorHint="@color/new_encounter_cell_bg"
         android:clipToPadding="false"
-        android:divider="@drawable/list_divider"
-        android:dividerHeight="1px"
-        android:drawingCacheQuality="auto"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
         android:overScrollMode="never"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/listview_scrollbar"
         android:scrollbars="vertical" />
-
+    <TextView
+        android:id="@+id/mRefreshTitleBar"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/new_color2"
+        android:textColor="@color/white"
+        android:text="又发现了10条新数据"
+        android:textSize="@dimen/font4"
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/mHomeRetry"
@@ -57,4 +65,5 @@
     <include
         layout="@layout/loading_view_anim"
         android:visibility="visible" />
+
 </RelativeLayout>
