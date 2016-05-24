@@ -369,6 +369,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
                 tstart = DateUtil.dateStr2Long(firstItem.getPubTime()) + "";
+            }else {
+                tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
             }
             requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
         } else {
@@ -379,6 +381,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     if (!TextUtil.isListEmpty(arrNewsFeed)) {
                         NewsFeed newsFeed = arrNewsFeed.get(0);
                         tstart = DateUtil.dateStr2Long(newsFeed.getPubTime()) + "";
+                    }else {
+                        tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
                     requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tstart=" + tstart + fixedParams;
                 } else {
@@ -414,6 +418,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
+
                     mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:

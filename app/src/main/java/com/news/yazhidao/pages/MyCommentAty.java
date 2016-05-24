@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -11,20 +10,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.request.BasePostprocessor;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.facebook.imagepipeline.request.Postprocessor;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailCommentAdapter;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.utils.Fglass;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import java.util.ArrayList;
@@ -80,29 +72,29 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener, 
             mCommentUserName.setText(user.getUserName());
             Uri uri = Uri.parse(user.getUserIcon());
             mCommentUserIcon.setImageURI(uri);
-            Postprocessor redMeshPostprocessor = new BasePostprocessor() {
-                @Override
-                public String getName() {
-                    return "redMeshPostprocessor";
-                }
-
-                @Override
-                public void process(Bitmap bitmap) {
-//                    Fglass.blur(mCommentUserIcon,mCommentBgImg,2,8);
-                    Fglass.doBlur(bitmap, 16, true);
-                }
-            };
-
-            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                    .setPostprocessor(redMeshPostprocessor)
-                    .build();
-
-            PipelineDraweeController controller = (PipelineDraweeController)
-                    Fresco.newDraweeControllerBuilder()
-                            .setImageRequest(request)
-                            .setOldController(mCommentBgImg.getController())
-                            .build();
-            mCommentBgImg.setController(controller);
+//            Postprocessor redMeshPostprocessor = new BasePostprocessor() {
+//                @Override
+//                public String getName() {
+//                    return "redMeshPostprocessor";
+//                }
+//
+//                @Override
+//                public void process(Bitmap bitmap) {
+////                    Fglass.blur(mCommentUserIcon,mCommentBgImg,2,8);
+//                    Fglass.doBlur(bitmap, 16, true);
+//                }
+//            };
+//
+//            ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+//                    .setPostprocessor(redMeshPostprocessor)
+//                    .build();
+//
+//            PipelineDraweeController controller = (PipelineDraweeController)
+//                    Fresco.newDraweeControllerBuilder()
+//                            .setImageRequest(request)
+//                            .setOldController(mCommentBgImg.getController())
+//                            .build();
+//            mCommentBgImg.setController(controller);
 
 
             newsDetailCommentItems = newsDetailCommentDao.queryForAll(-1);
