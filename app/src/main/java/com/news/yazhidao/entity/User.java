@@ -1,6 +1,5 @@
 package com.news.yazhidao.entity;
 
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.utils.GsonUtil;
 
 import java.io.Serializable;
@@ -13,8 +12,8 @@ public class User implements Serializable {
     private String userId;
     //token的有效时常（单位：秒）
     private long expiresIn;
-    //token的有效截止时间（单位：毫秒）
-    private long expiresTime;
+    //token的有效截止时间
+    private String expiresTime;
     private String token;
     private String userGender;
     private String userIcon;
@@ -22,7 +21,7 @@ public class User implements Serializable {
     private String platformType;
     private long firstLoginTime;
     private long lastLoginTime;
-
+    private String authorToken;//访问接口时的token
     @Override
     public String toString() {
         return "User{" +
@@ -64,11 +63,11 @@ public class User implements Serializable {
         this.expiresIn = expiresIn;
     }
 
-    public long getExpiresTime() {
+    public String getExpiresTime() {
         return expiresTime;
     }
 
-    public void setExpiresTime(long expiresTime) {
+    public void setExpiresTime(String expiresTime) {
         this.expiresTime = expiresTime;
     }
 
@@ -128,14 +127,21 @@ public class User implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
+    public String getAuthorToken() {
+        return authorToken;
+    }
+
+    public void setAuthorToken(String authorToken) {
+        this.authorToken = authorToken;
+    }
+
     /**
      * 把json 反序列化为 User 对象
      * @param userStr
      * @return
      */
     public static User parseUser(String userStr) {
-        return GsonUtil.deSerializedByType(userStr, new TypeToken<User>() {
-        }.getType());
+        return GsonUtil.deSerializedByType(userStr, User.class);
     }
 
     /**
