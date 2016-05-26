@@ -22,6 +22,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -112,6 +113,12 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
 
+    private TextView footView_tv;
+    private ProgressBar footView_progressbar;
+    private boolean isBottom;
+
+    private boolean isLoadDate;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,38 +153,120 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
 
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-
-
-        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
 
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
-                if (beanList.size() == 0) {
-
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                if(isLoadDate){
                     return;
                 }
-                int lastPositon =  absListView.getLastVisiblePosition();
-                Logger.e("aaa", "lastPositon====" + lastPositon);
-                Message msg = new Message();
-                if(lastPositon -2 ==beanList.size()-1){
-                    if (MAXPage > viewpointPage) {
-                        if(oldLastPositon == lastPositon){
-                            return;
-                        }
-                        msg.what = LOAD_MORE;
-                        mHandler.sendMessage(msg);
-                    }else{
-                        msg.what = LOAD_BOTTOM;
-                        mHandler.sendMessage(msg);
 
-                    }
+                isLoadDate = true;
+                if (MAXPage > viewpointPage) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            beanList.addAll(beanPageList.get(viewpointPage));
+                            viewpointPage++;
+                            mAdapter.setNewsFeed(beanList);
+                            mAdapter.notifyDataSetChanged();
+                            mNewsDetailList.onRefreshComplete();
+                            if(MAXPage <= viewpointPage){
+                                mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+                                footView_tv.setText("内容加载完毕");
+                            }
+
+                        }
+                    }, 1000);
                 }
-                oldLastPositon = lastPositon;
+            }
+        });
+        mNewsDetailList.setOnStateListener(new PullToRefreshBase.onStateListener() {
+            @Override
+            public void getState(PullToRefreshBase.State mState) {
+                if(!isBottom){
+                    return;
+                }
+                boolean isVisisyProgressBar = false;
+                switch (mState) {
+                    case RESET://初始
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("上拉获取更多文章");
+                        break;
+                    case PULL_TO_REFRESH://更多推荐
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("上拉获取更多文章");
+                        break;
+                    case RELEASE_TO_REFRESH://松开推荐
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("松手获取更多文章");
+                        break;
+                    case REFRESHING:
+                    case MANUAL_REFRESHING://推荐中
+                        isVisisyProgressBar = true;
+                        footView_tv.setText("正在获取更多文章...");
+                        break;
+                    case OVERSCROLLING:
+                        // NO-OP
+                        break;
+                }
+                if(isVisisyProgressBar){
+                    footView_progressbar.setVisibility(View.VISIBLE);
+                }else{
+                    footView_progressbar.setVisibility(View.GONE);
+                }
+                mNewsDetailList.setFooterViewInvisible();
+            }
+        });
+
+        mNewsDetailList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            Log.e("aaa", "滑动到底部");
+                            isBottom = true;
+
+
+                        }else{
+                            isBottom = false;
+                            Logger.e("aaa","在33333isBottom =="+isBottom);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItem, int i1, int i2) {
+//                if (beanList.size() == 0) {
+//
+//                    return;
+//                }
+//                int lastPositon =  absListView.getLastVisiblePosition();
+//                Logger.e("aaa", "lastPositon====" + lastPositon);
+//                Message msg = new Message();
+//                if(lastPositon -2 ==beanList.size()-1){
+//                    if (MAXPage > viewpointPage) {
+//                        if(oldLastPositon == lastPositon){
+//                            return;
+//                        }
+//                        msg.what = LOAD_MORE;
+//                        mHandler.sendMessage(msg);
+//                    }else{
+//                        msg.what = LOAD_BOTTOM;
+//                        mHandler.sendMessage(msg);
+//
+//                    }
+//                }
+//                oldLastPositon = lastPositon;
             }
         });
         mAdapter = new NewsDetailFgtAdapter(getActivity());
@@ -361,7 +450,18 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_hotComment.setText("相关观点");
 
+
+        final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
+        lv.addFooterView(footerView);
+        footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
+        footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
+
+
+
+
+
     }
+
 
 
     //    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
@@ -527,6 +627,10 @@ public class NewsDetailFgt extends BaseFragment {
         viewpointPage++;
         mAdapter.setNewsFeed(beanList);
         mAdapter.notifyDataSetChanged();
+        if(MAXPage <= viewpointPage){
+            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+            footView_tv.setText("内容加载完毕");
+        }
     }
 
     private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder) {

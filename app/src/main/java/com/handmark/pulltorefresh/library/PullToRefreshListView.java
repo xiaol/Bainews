@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 
@@ -71,12 +72,13 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		 * If we're not showing the Refreshing view, or the list is empty, the
 		 * the header/footer views won't show so we use the normal method.
 		 */
+
 		ListAdapter adapter = mRefreshableView.getAdapter();
 		if (!mListViewExtrasEnabled || !getShowViewWhileRefreshing() || null == adapter || adapter.isEmpty()) {
 			super.onRefreshing(doScroll);
 			return;
 		}
-
+		Logger.e("aaa","111111加载滑动");
 		super.onRefreshing(false);
 
 		final LoadingLayout origLoadingView, listViewLoadingView, oppositeListViewLoadingView;
@@ -109,7 +111,10 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		oppositeListViewLoadingView.setVisibility(View.GONE);
 
 		// Show the ListView Loading View and set it to refresh.
-		listViewLoadingView.setVisibility(View.VISIBLE);
+		if(!isFooterViewVisity||getCurrentMode() != Mode.PULL_FROM_END){
+			listViewLoadingView.setVisibility(View.VISIBLE);
+		}
+
 		listViewLoadingView.refreshing();
 
 		if (doScroll) {
@@ -134,11 +139,12 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		/**
 		 * If the extras are not enabled, just call up to super and return.
 		 */
+
 		if (!mListViewExtrasEnabled) {
 			super.onReset();
 			return;
 		}
-
+		Logger.e("aaa","222222加载滑动");
 		final LoadingLayout originalLoadingLayout, listViewLoadingLayout;
 		final int scrollToHeight, selection;
 		final boolean scrollLvToEdge;
@@ -161,7 +167,9 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 				scrollLvToEdge = Math.abs(mRefreshableView.getFirstVisiblePosition() - selection) <= 1;
 				break;
 		}
-
+		Logger.e("aaa", "selection===" + selection);
+		Logger.e("aaa", "scrollToHeight===" + scrollToHeight);
+		Logger.e("aaa", "scrollLvToEdge===" + scrollLvToEdge);
 		// If the ListView header loading layout is showing, then we need to
 		// flip so that the original one is showing instead
 		if (listViewLoadingLayout.getVisibility() == View.VISIBLE) {
@@ -244,6 +252,7 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 			mLvFooterLoadingFrame = new FrameLayout(getContext());
 			mFooterLoadingView = createLoadingLayout(getContext(), Mode.PULL_FROM_END, a);
 			mFooterLoadingView.setVisibility(View.GONE);
+			Logger.e("aaa","==================看看执行几次！===============");
 			mLvFooterLoadingFrame.addView(mFooterLoadingView, lp);
 
 			/**

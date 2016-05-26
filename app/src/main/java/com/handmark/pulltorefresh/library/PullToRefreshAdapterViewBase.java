@@ -448,7 +448,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	}
 
 	private void updateIndicatorViewsVisibility() {
-//		if (null != mIndicatorIvTop) {
+//		if (null != ) {
 //			if (!isRefreshing() && isReadyForPullStart()) {
 //				if (!mIndicatorIvTop.isVisible()) {
 //					mIndicatorIvTop.show();
@@ -459,7 +459,7 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 //				}
 //			}
 //		}
-//
+
 //		if (null != mIndicatorIvBottom) {
 //			if (!isRefreshing() && isReadyForPullEnd()) {
 //				if (!mIndicatorIvBottom.isVisible()) {

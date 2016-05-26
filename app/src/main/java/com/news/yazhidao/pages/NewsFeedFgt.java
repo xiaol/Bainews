@@ -9,13 +9,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -113,6 +118,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private Handler mHandler;
     private Runnable mThread;
     private boolean isClickHome;
+    private TextView footView_tv, mRefreshTitleBar;
+    private ProgressBar footView_progressbar;
+    private boolean isBottom;
+
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -229,6 +238,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
+        mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
 
 
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
@@ -243,6 +253,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
+        mlvNewsFeed.setMainFooterView(true);
+
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -260,21 +272,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         });
 
-        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
-        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        mSearchHeaderView.setLayoutParams(layoutParams);
-        ListView lv = mlvNewsFeed.getRefreshableView();
-        lv.addHeaderView(mSearchHeaderView);
-        lv.setHeaderDividersEnabled(false);
-        mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
-        mSearch_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in = new Intent(getActivity(), TopicSearchAty.class);
-                getActivity().startActivity(in);
-                MobclickAgent.onEvent(getActivity(),"qidian_user_enter_search_page");
-            }
-        });
+        addHFView(LayoutInflater);
 
 
         mAdapter = new NewsFeedAdapter(getActivity(), this, null);
@@ -378,6 +376,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         } else {
             if (mFlag) {
                 if (mIsFirst) {
+                    Logger.e("aaa","++++++++++++++++++++++++++++++走没走");
                     ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
                     if (!TextUtil.isListEmpty(arrNewsFeed)) {
                         NewsFeed newsFeed = arrNewsFeed.get(0);
@@ -415,20 +414,34 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     result.add(newsFeed);
                     mDeleteIndex = result.size() - 1;
                 }
+
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
-                mIsFirst = false;
+
                     mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
+                            Logger.e("aaa","===========PULL_DOWN_REFRESH==========");
                             if (mArrNewsFeed == null)
                                 mArrNewsFeed = result;
                             else
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
+//                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
+//                            mRefreshTitleBar.setVisibility(View.VISIBLE);
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
+//                                        mRefreshTitleBar.setVisibility(View.GONE);
+//                                    }
+//
+//                                }
+//                            }, 1000);
                             break;
                         case PULL_UP_REFRESH:
+                            Logger.e("aaa","===========PULL_UP_REFRESH==========");
                             if (isNewVisity) {//首次进入加入他
                                 addSP(result);
                                 isNeedAddSP = false;
@@ -483,6 +496,23 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         bgLayout.setVisibility(View.GONE);
                     }
                 }
+                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
+                    if (result == null || result.size() == 0) {
+                        return;
+                    }
+                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                }
+                mIsFirst = false;
                 mlvNewsFeed.onRefreshComplete();
             }
         }, new Response.ErrorListener() {
@@ -670,6 +700,99 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
         Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+    }
+
+
+//    int lastY = 0;
+//    int MAX_PULL_BOTTOM_HEIGHT = 100;
+    public void addHFView(LayoutInflater LayoutInflater){
+
+        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
+        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        mSearchHeaderView.setLayoutParams(layoutParams);
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        lv.addHeaderView(mSearchHeaderView);
+        lv.setHeaderDividersEnabled(false);
+        mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
+        mSearch_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(getActivity(), TopicSearchAty.class);
+                getActivity().startActivity(in);
+                MobclickAgent.onEvent(getActivity(),"qidian_user_enter_search_page");
+            }
+        });
+        final LinearLayout footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
+        lv.addFooterView(footerView);
+        footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
+        footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
+
+//        lv.setFooterDividersEnabled(false);
+        mlvNewsFeed.setOnStateListener(new PullToRefreshBase.onStateListener() {
+            @Override
+            public void getState(PullToRefreshBase.State mState) {
+                if(!isBottom){
+                    return;
+                }
+                boolean isVisisyProgressBar = false;
+                switch (mState) {
+                    case RESET://初始
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("上拉获取更多文章");
+                        break;
+                    case PULL_TO_REFRESH://更多推荐
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("上拉获取更多文章");
+                        break;
+                    case RELEASE_TO_REFRESH://松开推荐
+                        isVisisyProgressBar = false;
+                        footView_tv.setText("松手获取更多文章");
+                        break;
+                    case REFRESHING:
+                    case MANUAL_REFRESHING://推荐中
+                        isVisisyProgressBar = true;
+                        footView_tv.setText("正在获取更多文章...");
+                        break;
+                    case OVERSCROLLING:
+                        // NO-OP
+                        break;
+                }
+                if(isVisisyProgressBar){
+                    footView_progressbar.setVisibility(View.VISIBLE);
+                }else{
+                    footView_progressbar.setVisibility(View.GONE);
+                }
+                mlvNewsFeed.setFooterViewInvisible();
+            }
+        });
+
+        // 监听listview滚到最底部
+        mlvNewsFeed.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            Log.e("aaa", "滑动到底部");
+                            isBottom = true;
+
+
+                        }else{
+                            isBottom = false;
+                            Logger.e("aaa","在33333isBottom =="+isBottom);
+                        }
+                        break;
+                }
+            }
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+            }
+        });
+
+
     }
 
 }
