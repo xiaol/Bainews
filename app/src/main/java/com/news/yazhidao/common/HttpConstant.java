@@ -70,12 +70,12 @@ public class HttpConstant {
     /**
      * feed流上拉加载更多
      */
-    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/bdp/news/load?";
+    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/l?";
 
     /**
      * feed流下拉刷新
      */
-    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/bdp/news/refresh?";
+    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/r?";
 
     /**
      * 获取新闻详情页

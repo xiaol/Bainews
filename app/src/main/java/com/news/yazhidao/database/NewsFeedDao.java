@@ -42,7 +42,7 @@ public class NewsFeedDao {
         try {
             if (arrNewsFeed != null && arrNewsFeed.size() > 0) {
                 for (NewsFeed newsFeed : arrNewsFeed) {
-                    if (!newsFeed.getImgStyle().equals("900"))
+                    if (newsFeed.getStyle() != 900)
                         mNewsFeedDao.create(newsFeed);
                 }
                 Logger.e(TAG, "insert " + NewsFeed.class.getSimpleName() + " success >>>");

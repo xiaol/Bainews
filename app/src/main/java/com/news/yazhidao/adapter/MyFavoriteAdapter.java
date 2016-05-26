@@ -1,18 +1,14 @@
 package com.news.yazhidao.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.entity.RelatedItemEntity;
-import com.news.yazhidao.pages.MyFavoriteAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DateUtil;
@@ -36,8 +32,8 @@ public class MyFavoriteAdapter extends CommonAdapter<NewsFeed> {
     @Override
     public void convert(CommonViewHolder holder, NewsFeed newsFeed, int positon) {
         holder.setTextViewExtendTextandTextSice(R.id.myfavorite_Title, newsFeed.getTitle());
-        String time = DateUtil.getTimes(DateUtil.dateStr2Long(newsFeed.getPubTime()));
-        String source = newsFeed.getPubName() +"  "+time;
+        String time = DateUtil.getTimes(DateUtil.dateStr2Long(newsFeed.getPtime()));
+        String source = newsFeed.getPname() +"  "+time;
 
         holder.setTextViewExtendText(R.id.myfavorite_Source,source);
         String imageUrl = newsFeed.getImageUrl();
@@ -70,7 +66,7 @@ public class MyFavoriteAdapter extends CommonAdapter<NewsFeed> {
                 Intent intent = new Intent(mContext, NewsDetailAty2.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
 
-                ArrayList<String> imageList = feed.getImgList();
+                ArrayList<String> imageList = feed.getImgs();
                 if(imageList != null && imageList.size() != 0){
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
                 }

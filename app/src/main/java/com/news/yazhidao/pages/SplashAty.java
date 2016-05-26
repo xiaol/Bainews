@@ -221,7 +221,7 @@ public class SplashAty extends BaseActivity {
             @Override
             public void run() {
                 boolean showGuidePage = SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
-                if (showGuidePage) {
+                if (!showGuidePage) {
                     Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
                     startActivity(intent);
                     SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE, true);
