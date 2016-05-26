@@ -18,18 +18,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.RegisterVisitorRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +53,7 @@ public class SplashAty extends BaseActivity {
     private ImageView mSplashMask;
     private View mSplashContent;
     private TextView mSplashVersion;
+    private String TAG = "SplashAty";
 
     @Override
     protected boolean isNeedAnimation() {
@@ -69,7 +77,7 @@ public class SplashAty extends BaseActivity {
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
         mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
         mSplashContent = findViewById(R.id.mSplashContent);
-        mSplashVersion = (TextView)findViewById(R.id.mSplashVersion);
+        mSplashVersion = (TextView) findViewById(R.id.mSplashVersion);
         mSplashVersion.setText(getResources().getString(R.string.app_name) + " v" + getResources().getString(R.string.app_version));
         int screenHeight = DeviceInfoUtil.getScreenHeight(this);
 //        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
@@ -98,6 +106,9 @@ public class SplashAty extends BaseActivity {
 
             }
         });
+
+        registerVisitor();
+
         /**
          * 日志上传
          */
@@ -121,20 +132,20 @@ public class SplashAty extends BaseActivity {
 
                 int size = data.size();
                 if (size < 200) {
-                    Log.e("ccc", "条数不够！！！！======="+size);
+                    Log.e("ccc", "条数不够！！！！=======" + size);
                     return;
 
                 }
-                Logger.e("aaa","data=================="+data.toString());
+                Logger.e("aaa", "data==================" + data.toString());
                 for (int i = 0; i < (size % 100 == 0 ? size / 100 : size / 100 + 1); i++) {
                     List<UploadLogDataEntity> dataScope = null;
                     if (data.size() > 100) {
                         dataScope = new ArrayList<UploadLogDataEntity>(data.subList(0, 99));
-                    }else{
+                    } else {
                         dataScope = data;
                     }
 
-                    Logger.e("aaa","dataScope=================="+dataScope.toString());
+                    Logger.e("aaa", "dataScope==================" + dataScope.toString());
                     RequestQueue requestQueue = Volley.newRequestQueue(SplashAty.this);
                     String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
                             "&data=" + TextUtil.getBase64(gson.toJson(dataScope));
@@ -152,7 +163,7 @@ public class SplashAty extends BaseActivity {
                     requestQueue.add(request);
 
                     data.removeAll(dataScope);
-                    Log.e("ccc", "删除完成之后的数量！！！！======="+data.size());
+                    Log.e("ccc", "删除完成之后的数量！！！！=======" + data.size());
                 }
                 SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
 
@@ -162,6 +173,46 @@ public class SplashAty extends BaseActivity {
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);
 //        }
+    }
+
+    /**
+     * 注册游客身份,获取访问所有接口数据的token
+     */
+    private void registerVisitor() {
+        final User user = SharedPreManager.getUser(this);
+        if (user == null){
+                JSONObject requestBody = new JSONObject();
+                try {
+                    requestBody.put("utype",2);
+                    requestBody.put("platform",2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RegisterVisitorRequest jsonObjectRequest = new RegisterVisitorRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        User user = new User();
+                        user.setAuthorToken(response.optString("Authorization"));
+                        user.setUtype(response.optString("utype"));
+                        user.setMuid(response.optInt("uid"));
+                        user.setPassword(response.optString("password"));
+                        try {
+                             ArrayList<String> channels = GsonUtil.deSerializedByType(response.getJSONArray("channel").toString(), new TypeToken<ArrayList<String>>() {
+                            }.getType());
+                            user.setChannel(channels);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreManager.saveUser(user);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Logger.e(TAG,"error" +error.getMessage());
+                    }
+                });
+                YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
+        }
     }
 
     @Override

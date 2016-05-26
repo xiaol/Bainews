@@ -7,7 +7,11 @@ public class HttpConstant {
     /**
      * 服务器api 域名
      */
-    public static final String URL_SERVER_HOST = "http://api.deeporiginalx.com";
+    public static final String URL_SERVER_HOST = "http://bdp.deeporiginalx.com/v2";
+
+    public static final String URL_REGISTER_VISITOR = URL_SERVER_HOST + "/au/sin/g";//注册游客信息
+
+    public static final String URL_MERGE_USER_LOGIN = URL_SERVER_HOST + "/au/sin/s";//三方用户注册,1.包含第三方用户登录合并游客用户;2.包含新第三方用户登录覆盖三方用户
 
     public static final String URL_PRAISE = URL_SERVER_HOST + "/news/baijia/praise";
 
@@ -66,12 +70,12 @@ public class HttpConstant {
     /**
      * feed流上拉加载更多
      */
-    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/bdp/news/load?";
+    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/l?";
 
     /**
      * feed流下拉刷新
      */
-    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/bdp/news/refresh?";
+    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/r?";
 
     /**
      * 获取新闻详情页

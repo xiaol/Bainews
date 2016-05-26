@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.baidu.location.BDLocation;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.HttpConstant;
@@ -15,14 +18,14 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
-import com.news.yazhidao.listener.UserLoginRequestListener;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.StringCallback;
 import com.news.yazhidao.net.UserCallback;
 import com.news.yazhidao.net.request.UploadJpushidRequest;
-import com.news.yazhidao.net.request.UserLoginRequest;
+import com.news.yazhidao.net.volley.MergeThirdUserLoginRequest;
 import com.news.yazhidao.pages.MainAty;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -62,7 +65,7 @@ public class ShareSdkHelper {
 
 
     public static enum AuthorizePlatform {
-        WEIXIN,WEIBO,MEIZU
+        WEIXIN, WEIBO, MEIZU
     }
 
     private static final String TAG = "ShareSdkHelper";
@@ -83,22 +86,67 @@ public class ShareSdkHelper {
             if (userId != null) {
                 PlatformDb platformDb = platform.getDb();
                 String nickName = platformDb.getUserName();
-                String gender = platformDb.getUserGender();
+                int gender = "m".equals(platformDb.getUserGender())? 1:0;//1 男,0 女
                 String iconURL = platformDb.getUserIcon();
                 String token = platformDb.getToken();
+                String avatar = platformDb.getUserIcon();
+                String expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
                 //关注官方微博
                 if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
                     platform.followFriend(mContext.getResources().getString(R.string.app_name));
                 }
-                Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token);
-                UserLoginRequest.userLogin(platformDb, new UserLoginRequestListener() {
+                Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token + ",userid=" + platformDb.getUserId());
+                //检查是否有游客或者其他第三方登录
+                final User newUser = new User();
+                User user = SharedPreManager.getUser(mContext);
+                JSONObject requestBody = new JSONObject();
+                try {
+                    if (user != null) {
+                        if (user.isVisitor()){
+                            //第三方用户信息合并游客信息
+                            requestBody.put("muid", user.getMuid());
+                            requestBody.put("msuid", "");
+                            newUser.setAuthorToken(user.getAuthorToken());
+                        }else {
+                            //第三方新用户信息合并老第三方登录信息
+                            requestBody.put("muid", 0);
+                            requestBody.put("msuid", user.getUserId());
+                            newUser.setAuthorToken(user.getAuthorToken());
+                        }
+                    }
+                    requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
+                    requestBody.put("platform", 2);
+                    requestBody.put("suid", userId);
+                    requestBody.put("stoken", token);
+                    requestBody.put("sexpires", expiresTime);
+                    requestBody.put("uname", nickName);
+                    requestBody.put("gender", gender);
+                    requestBody.put("avatar", avatar);
+                    BDLocation location = SharedPreManager.getLocation();
+                    if (location != null) {
+                        requestBody.put("province", location.getProvince());
+                        requestBody.put("city", location.getCity());
+                        requestBody.put("district", location.getDistrict());
+                    }
+                    newUser.setUserId(userId);
+                    newUser.setToken(token);
+                    newUser.setExpiresTime(expiresTime);
+                    newUser.setExpiresIn(platformDb.getExpiresIn());
+                    newUser.setUserName(nickName);
+                    newUser.setUserGender(gender);
+                    newUser.setUserIcon(avatar);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                MergeThirdUserLoginRequest mergeRequest = new MergeThirdUserLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
                     @Override
-                    public void success(User user) {
-                        if (mAuthorizeListener != null){
-                            mAuthorizeListener.success(user);
+                    public void onResponse(JSONObject response) {
+                        if (mAuthorizeListener != null) {
+                            mAuthorizeListener.success(newUser);
                         }
                         //保存user json串到sp 中
-                        SharedPreManager.saveUser(user);
+                        SharedPreManager.saveUser(newUser);
                         String jPushId = SharedPreManager.getJPushId();
                         if (!TextUtils.isEmpty(jPushId)) {
                             UploadJpushidRequest.uploadJpushId(mContext, jPushId);
@@ -106,20 +154,18 @@ public class ShareSdkHelper {
 //                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
 
                         Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
-                        intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
-                        mContext.sendBroadcast(intent);
-
+                        intent.putExtra(MainAty.KEY_INTENT_USER_URL, newUser.getUserIcon());
+//                        mContext.sendBroadcast(intent);
                     }
-
+                }, new Response.ErrorListener() {
                     @Override
-                    public void failed(MyAppException exception) {
-                        Logger.e(TAG, "UserLoginRequest exception");
-                        if (mAuthorizeListener != null){
-                            mAuthorizeListener.failure(exception.getMessage());
+                    public void onErrorResponse(VolleyError error) {
+                        if (mAuthorizeListener != null) {
+                            mAuthorizeListener.failure(error.getMessage());
                         }
                     }
                 });
-
+                YaZhiDaoApplication.getInstance().getRequestQueue().add(mergeRequest);
             }
         }
 
@@ -137,7 +183,7 @@ public class ShareSdkHelper {
                 }
             });
             throwable.printStackTrace();
-            if (mAuthorizeListener != null){
+            if (mAuthorizeListener != null) {
                 mAuthorizeListener.failure(throwable.getMessage());
             }
             Logger.e(TAG, "authorize error-----" + i + ",,," + throwable.toString());
@@ -146,7 +192,7 @@ public class ShareSdkHelper {
         @Override
         public void onCancel(Platform platform, int i) {
             Logger.e(TAG, "authorize cancel-----");
-            if (mAuthorizeListener != null){
+            if (mAuthorizeListener != null) {
                 mAuthorizeListener.cancel();
             }
 //            mHandler.post(new Runnable() {
@@ -160,13 +206,13 @@ public class ShareSdkHelper {
     };
 
 
-    public static void authorize(Context pContext, AuthorizePlatform pPlatform, UserAuthorizeListener pAuthorizeListener){
+    public static void authorize(Context pContext, AuthorizePlatform pPlatform, UserAuthorizeListener pAuthorizeListener) {
         mContext = pContext;
         mAuthorizeListener = pAuthorizeListener;
         String shareSdkPlatform = null;
-        if (pPlatform == AuthorizePlatform.WEIBO){
+        if (pPlatform == AuthorizePlatform.WEIBO) {
             shareSdkPlatform = SinaWeibo.NAME;
-        }else if (pPlatform == AuthorizePlatform.WEIXIN){
+        } else if (pPlatform == AuthorizePlatform.WEIXIN) {
             shareSdkPlatform = Wechat.NAME;
         }
         Platform _Plateform = ShareSDK.getPlatform(mContext, shareSdkPlatform);
@@ -175,7 +221,7 @@ public class ShareSdkHelper {
         if (_Plateform.isAuthValid() && user != null) {
             String userId = _Plateform.getDb().getUserId();
             if (userId != null) {
-                if (pAuthorizeListener != null){
+                if (pAuthorizeListener != null) {
                     pAuthorizeListener.success(user);
                 }
                 return;

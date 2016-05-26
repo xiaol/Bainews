@@ -280,8 +280,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
         uploadLogDataEntity.setNid(mNewsFeed.getUrl());
-        uploadLogDataEntity.setCid(mNewsFeed.getChannelId());
-        uploadLogDataEntity.setTid(mNewsFeed.getImgStyle());
+        uploadLogDataEntity.setCid(mNewsFeed.getChannel()+"");
+        uploadLogDataEntity.setTid(mNewsFeed.getStyle()+"");
         uploadLogDataEntity.setStime(lastTime / 1000 + "");
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
@@ -469,11 +469,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
         mNewsFeed.setTitle(result.getTitle());
-        mNewsFeed.setPubName(result.getPubName());
-        mNewsFeed.setPubTime(result.getPubTime());
-        mNewsFeed.setCommentsCount(result.getCommentSize() + "");
-        mNewsFeed.setChannelId(result.getChannelId() + "");
-        mNewsFeed.setImgStyle(result.getImgNum() + "");
+        mNewsFeed.setPname(result.getPubName());
+        mNewsFeed.setPtime(result.getPubTime());
+        mNewsFeed.setComment(result.getCommentSize());
+        mNewsFeed.setChannel(result.getChannelId());
+        mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
 
         return mNewsFeed;

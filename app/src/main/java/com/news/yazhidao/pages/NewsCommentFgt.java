@@ -138,13 +138,13 @@ public class NewsCommentFgt extends BaseFragment {
         news_comment_Title = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_Title);
         news_comment_content = (TextView) mCommentHeaderView.findViewById(R.id.news_comment_content);
         news_comment_Title.setText(mNewsFeed.getTitle());
-        if ("0".equals(mNewsFeed.getCommentsCount())) {
-            news_comment_content.setText(mNewsFeed.getPubName() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPubTime()));
+        if ("0".equals(mNewsFeed.getComment())) {
+            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()));
         } else {
-            news_comment_content.setText(mNewsFeed.getPubName() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPubTime()) + "  " + mNewsFeed.getCommentsCount() + "评");
+            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()) + "  " + mNewsFeed.getComment() + "评");
         }
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
-        if ("0".equals(mNewsFeed.getCommentsCount())) {
+        if ("0".equals(mNewsFeed.getComment())) {
             news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
         } else {
             news_comment_NoCommentsLayout.setVisibility(View.GONE);

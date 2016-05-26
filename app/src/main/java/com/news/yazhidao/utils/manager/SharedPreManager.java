@@ -3,22 +3,20 @@ package com.news.yazhidao.utils.manager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.baidu.location.BDLocation;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.entity.RelatedEntity;
-import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.umeng.message.proguard.S;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,18 +152,24 @@ public class SharedPreManager {
         }
 
         User user = User.parseUser(userJson);
-        if ("meizu".equals(user.getPlatformType())){
-            if (System.currentTimeMillis() - user.getExpiresTime() > 0){
-                remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
-                return null;
-            }else {
+//        if ("meizu".equals(user.getPlatformType())){
+//            if (System.currentTimeMillis() - user.getExpiresTime() > 0){
+//                remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+//                return null;
+//            }else {
+//                return user;
+//            }
+//        }
+        if (user != null){
+            if (user.isVisitor()){
                 return user;
+            }else {
+                if (ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
+                    return user;
+                }else {
+                    remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+                }
             }
-        }
-        if(ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
-            return user;
-        }else{
-            remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
         }
         return null;
     }
@@ -403,5 +407,8 @@ public class SharedPreManager {
         remove(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
     }
 
-
+    public static BDLocation getLocation(){
+        String locationStr = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
+        return GsonUtil.deSerializedByClass(locationStr,BDLocation.class);
+    }
 }

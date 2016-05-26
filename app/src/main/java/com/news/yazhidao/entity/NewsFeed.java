@@ -19,44 +19,58 @@ public class NewsFeed implements Serializable {
     public static final int THREE_PIC = 2;
     public static final int TIME_LINE = 3;
 
-    public static final String COLUMN_CHANNEL_ID = "channelId";
-    public static final String COLUMN_NEWS_ID = "url";
-    public static final String COLUMN_UPDATE_TIME = "pubTime";
+    public static final String COLUMN_CHANNEL_ID = "channel";
+    public static final String COLUMN_NEWS_ID = "nid";
+    public static final String COLUMN_UPDATE_TIME = "ptime";
     /**
      * 新闻发布时间
      */
     @DatabaseField
-    private String pubTime;
+    private String ptime;
     /**
      * 新闻来源地址,tips:此字段要当着获取详情的id使用
      */
     @DatabaseField(id = true)
+    private int nid;
+
+    @DatabaseField
     private String url;
+
     @DatabaseField
     private String docid;
     /**
      * 新闻评论
      */
     @DatabaseField
-    private String commentsCount;
+    private int comment;
     /**
      * 新闻来源名称
      */
     @DatabaseField
-    private String pubName;
+    private String pname;
     @DatabaseField
-    private String pubUrl;
+    private String purl;
     /**
-     * 新闻样式;0:没有图片,1:一张图片,2:两张图片,3:3张图片
+     * 新闻样式;0:没有图片,1:一张图片,2:两张图片,3:3张图片,4:900timeLine
      */
     @DatabaseField
-    private String imgStyle;
+    private int style;
     @DatabaseField
     private String title;
-    @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<String> imgList;
     @DatabaseField
-    private String channelId;
+    private String province;
+    @DatabaseField
+    private String city;
+    @DatabaseField
+    private String district;
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<String> imgs;
+    @DatabaseField
+    private int channel;
+    @DatabaseField
+    private int collect;
+    @DatabaseField
+    private int concern;
     /**
      *  这个参数是收藏用的单张图
      */
@@ -74,51 +88,43 @@ public class NewsFeed implements Serializable {
     @Override
     public String toString() {
         return "NewsFeed{" +
-                "pubTime='" + pubTime + '\'' +
+                "pubTime='" + ptime + '\'' +
                 ", url='" + url + '\'' +
                 ", docid='" + docid + '\'' +
-                ", commentsCount='" + commentsCount + '\'' +
-                ", pubName='" + pubName + '\'' +
-                ", pubUrl='" + pubUrl + '\'' +
-                ", imgStyle='" + imgStyle + '\'' +
+                ", commentsCount='" + comment + '\'' +
+                ", pubName='" + pname + '\'' +
+                ", pubUrl='" + purl + '\'' +
+                ", imgStyle='" + style + '\'' +
                 ", title='" + title + '\'' +
-                ", imgList=" + imgList +
-                ", channelId='" + channelId + '\'' +
+                ", imgList=" + imgs +
+                ", channelId='" + channel + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isRead=" + isRead +
                 '}';
     }
 
-    public boolean isFavorite() {
-        return isFavorite;
+    public String getPtime() {
+        return ptime;
     }
 
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
+    public void setPtime(String ptime) {
+        this.ptime = ptime;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public int getNid() {
+        return nid;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setNid(int nid) {
+        this.nid = nid;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setChannelId(String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(String commentsCount) {
-        this.commentsCount = commentsCount;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getDocid() {
@@ -129,52 +135,36 @@ public class NewsFeed implements Serializable {
         this.docid = docid;
     }
 
-    public ArrayList<String> getImgList() {
-        return imgList;
+    public int getComment() {
+        return comment;
     }
 
-    public void setImgList(ArrayList<String> imgList) {
-        this.imgList = imgList;
+    public void setComment(int comment) {
+        this.comment = comment;
     }
 
-    public String getImgStyle() {
-        return imgStyle;
+    public String getPname() {
+        return pname;
     }
 
-    public void setImgStyle(String imgStyle) {
-        this.imgStyle = imgStyle;
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 
-    public boolean isRead() {
-        return isRead;
+    public String getPurl() {
+        return purl;
     }
 
-    public void setRead(boolean read) {
-        isRead = read;
+    public void setPurl(String purl) {
+        this.purl = purl;
     }
 
-    public String getPubName() {
-        return pubName;
+    public int getStyle() {
+        return style;
     }
 
-    public void setPubName(String pubName) {
-        this.pubName = pubName;
-    }
-
-    public String getPubTime() {
-        return pubTime;
-    }
-
-    public void setPubTime(String pubTime) {
-        this.pubTime = pubTime;
-    }
-
-    public String getPubUrl() {
-        return pubUrl;
-    }
-
-    public void setPubUrl(String pubUrl) {
-        this.pubUrl = pubUrl;
+    public void setStyle(int style) {
+        this.style = style;
     }
 
     public String getTitle() {
@@ -185,11 +175,83 @@ public class NewsFeed implements Serializable {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getProvince() {
+        return province;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public ArrayList<String> getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(ArrayList<String> imgs) {
+        this.imgs = imgs;
+    }
+
+    public int getChannel() {
+        return channel;
+    }
+
+    public void setChannel(int channel) {
+        this.channel = channel;
+    }
+
+    public int getCollect() {
+        return collect;
+    }
+
+    public void setCollect(int collect) {
+        this.collect = collect;
+    }
+
+    public int getConcern() {
+        return concern;
+    }
+
+    public void setConcern(int concern) {
+        this.concern = concern;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

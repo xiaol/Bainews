@@ -1,28 +1,38 @@
 package com.news.yazhidao.entity;
 
-import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.utils.GsonUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
+ * 此用户游客用户和第三方授权用户
  * Created by fengjigang on 15/5/13.
  */
 public class User implements Serializable {
+    private int muid;// 游客用户合并三方用户时提供对应的游客用户ID
+    private String msuid;// 三方用户相互合并时提供对应的三方用户ID
     private String uuid;
+    private String utype = "2";//本地注册用户	1 ;游客用户	2;微博三方用户	3;微信三方用户	4
     private String userId;
+    private String province;
+    private String city;
+    private String district;
     //token的有效时常（单位：秒）
     private long expiresIn;
-    //token的有效截止时间（单位：毫秒）
-    private long expiresTime;
+    //token的有效截止时间
+    private String expiresTime;
     private String token;
-    private String userGender;
+    private int userGender;
     private String userIcon;
     private String userName;
     private String platformType;
     private long firstLoginTime;
     private long lastLoginTime;
-
+    private String authorToken;//访问接口时的token
+    private boolean isVisitor = true;//是否是游客用户
+    private String password;
+    private ArrayList<String> channel;
     @Override
     public String toString() {
         return "User{" +
@@ -64,11 +74,11 @@ public class User implements Serializable {
         this.expiresIn = expiresIn;
     }
 
-    public long getExpiresTime() {
+    public String getExpiresTime() {
         return expiresTime;
     }
 
-    public void setExpiresTime(long expiresTime) {
+    public void setExpiresTime(String expiresTime) {
         this.expiresTime = expiresTime;
     }
 
@@ -80,11 +90,11 @@ public class User implements Serializable {
         this.token = token;
     }
 
-    public String getUserGender() {
+    public int getUserGender() {
         return userGender;
     }
 
-    public void setUserGender(String userGender) {
+    public void setUserGender(int userGender) {
         this.userGender = userGender;
     }
 
@@ -128,14 +138,93 @@ public class User implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
+    public ArrayList<String> getChannel() {
+        return channel;
+    }
+
+    public void setChannel(ArrayList<String> channel) {
+        this.channel = channel;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public boolean isVisitor() {
+        return "2".equals(utype);
+    }
+
+    public void setVisitor(boolean visitor) {
+        isVisitor = visitor;
+    }
+
+    public String getMsuid() {
+        return msuid;
+    }
+
+    public void setMsuid(String msuid) {
+        this.msuid = msuid;
+    }
+
+    public int getMuid() {
+        return muid;
+    }
+
+    public void setMuid(int muid) {
+        this.muid = muid;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getUtype() {
+        return utype;
+    }
+
+    public void setUtype(String utype) {
+        this.utype = utype;
+    }
+
+    public String getAuthorToken() {
+        return authorToken;
+    }
+
+    public void setAuthorToken(String authorToken) {
+        this.authorToken = authorToken;
+    }
+
     /**
      * 把json 反序列化为 User 对象
      * @param userStr
      * @return
      */
     public static User parseUser(String userStr) {
-        return GsonUtil.deSerializedByType(userStr, new TypeToken<User>() {
-        }.getType());
+        return GsonUtil.deSerializedByType(userStr, User.class);
     }
 
     /**

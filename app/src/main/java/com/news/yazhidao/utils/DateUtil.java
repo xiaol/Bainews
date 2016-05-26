@@ -332,6 +332,10 @@ public class DateUtil {
 
     }
 
+    public static String dateLong2Str(long date) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(date));
+    }
+
     /**
      * 将长时间格式字符串转换为时间 yyyy-MM-dd HH:mm:ss
      *
