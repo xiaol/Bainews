@@ -170,7 +170,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void refreshData() {
-//        mlvNewsFeed.setRefreshing();
+        mlvNewsFeed.setRefreshing();
     }
 
     public void onCreate(Bundle bundle) {
