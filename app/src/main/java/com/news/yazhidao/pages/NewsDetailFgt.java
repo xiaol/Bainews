@@ -313,7 +313,6 @@ public class NewsDetailFgt extends BaseFragment {
         super.onDetach();
         if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
-            Toast.makeText(getActivity(), "123", Toast.LENGTH_SHORT).show();
         }
     }
     @Override
