@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -115,6 +116,7 @@ public class NewsDetailFgt extends BaseFragment {
 
     private TextView footView_tv;
     private ProgressBar footView_progressbar;
+    private LinearLayout footerView_layout;
     private boolean isBottom;
 
     private boolean isLoadDate;
@@ -311,6 +313,7 @@ public class NewsDetailFgt extends BaseFragment {
         super.onDetach();
         if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
+            Toast.makeText(getActivity(), "123", Toast.LENGTH_SHORT).show();
         }
     }
     @Override
@@ -441,6 +444,7 @@ public class NewsDetailFgt extends BaseFragment {
                 NewsDetailAty2 mActivity = (NewsDetailAty2) getActivity();
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
+
                     mActivity.mNewsDetailViewPager.setCurrentItem(1);
                     mActivity.mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mActivity.mDetailCommentNum.setVisibility(View.GONE);
@@ -455,6 +459,7 @@ public class NewsDetailFgt extends BaseFragment {
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
+        footerView_layout = (LinearLayout) footerView.findViewById(R.id.footerView_layout);
 
 
 
@@ -530,6 +535,9 @@ public class NewsDetailFgt extends BaseFragment {
 
                             if (!TextUtil.isListEmpty(relatedItemEntities)) {
                                 setBeanPageList(relatedItemEntities);
+                                if(footerView_layout.getVisibility() ==View.GONE){
+                                    footerView_layout.setVisibility(View.VISIBLE);
+                                }
                                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
                             } else {
                                 RelatedItemEntity entity = new RelatedItemEntity();
@@ -538,6 +546,9 @@ public class NewsDetailFgt extends BaseFragment {
                                 mAdapter.setNewsFeed(relatedItemEntities);
                                 mAdapter.notifyDataSetChanged();
                                 detail_shared_ViewPointTitleLayout.setVisibility(View.GONE);
+                                if(footerView_layout.getVisibility() ==View.VISIBLE){
+                                    footerView_layout.setVisibility(View.GONE);
+                                }
                             }
                         }
                     },

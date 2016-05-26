@@ -118,7 +118,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private TextView mImageWallDesc,carefor_Text;
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic,mDetailFavorite,carefor_Image;
-    private WebView mDetailWebView;
+//    private WebView mDetailWebView;
     public ViewPager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
@@ -227,7 +227,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallWrapper = findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager) findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
-        mDetailWebView = (WebView) findViewById(R.id.mDetailWebView);
         mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
 
         //初始化新闻评论DAO
