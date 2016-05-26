@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
@@ -26,10 +27,10 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.entity.Visitor;
 import com.news.yazhidao.net.volley.RegisterVisitorRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
+import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -178,10 +179,8 @@ public class SplashAty extends BaseActivity {
      * 注册游客身份,获取访问所有接口数据的token
      */
     private void registerVisitor() {
-        final Visitor visitor = SharedPreManager.getVisitor();
-        User user = SharedPreManager.getUser(this);
+        final User user = SharedPreManager.getUser(this);
         if (user == null){
-            if (visitor == null) {
                 JSONObject requestBody = new JSONObject();
                 try {
                     requestBody.put("utype",2);
@@ -192,8 +191,19 @@ public class SplashAty extends BaseActivity {
                 RegisterVisitorRequest jsonObjectRequest = new RegisterVisitorRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Visitor visitor = Visitor.json2Visitor(response.toString());
-                        SharedPreManager.saveVisitor(visitor);
+                        User user = new User();
+                        user.setAuthorToken(response.optString("Authorization"));
+                        user.setUtype(response.optString("utype"));
+                        user.setMuid(response.optInt("uid"));
+                        user.setPassword(response.optString("password"));
+                        try {
+                             ArrayList<String> channels = GsonUtil.deSerializedByType(response.getJSONArray("channel").toString(), new TypeToken<ArrayList<String>>() {
+                            }.getType());
+                            user.setChannel(channels);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreManager.saveUser(user);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -202,7 +212,6 @@ public class SplashAty extends BaseActivity {
                     }
                 });
                 YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
-            }
         }
     }
 
@@ -212,7 +221,7 @@ public class SplashAty extends BaseActivity {
             @Override
             public void run() {
                 boolean showGuidePage = SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE);
-                if (true) {
+                if (showGuidePage) {
                     Intent intent = new Intent(SplashAty.this, GuideLoginAty.class);
                     startActivity(intent);
                     SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.KEY_USER_NEED_SHOW_GUIDE_PAGE, true);

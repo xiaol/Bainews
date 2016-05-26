@@ -15,7 +15,6 @@ import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.entity.Visitor;
 import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.listener.UserLoginPopupStateListener;
@@ -87,7 +86,7 @@ public class ShareSdkHelper {
             if (userId != null) {
                 PlatformDb platformDb = platform.getDb();
                 String nickName = platformDb.getUserName();
-                String gender = ("m".equals(platformDb.getUserGender())? 1:0) + "";//1 男,0 女
+                int gender = "m".equals(platformDb.getUserGender())? 1:0;//1 男,0 女
                 String iconURL = platformDb.getUserIcon();
                 String token = platformDb.getToken();
                 String avatar = platformDb.getUserIcon();
@@ -100,19 +99,20 @@ public class ShareSdkHelper {
                 //检查是否有游客或者其他第三方登录
                 final User newUser = new User();
                 User user = SharedPreManager.getUser(mContext);
-                Visitor visitor = SharedPreManager.getVisitor();
                 JSONObject requestBody = new JSONObject();
                 try {
-                    if (visitor != null) {
-                        //第三方用户信息合并游客信息
-                        requestBody.put("muid", visitor.getUid());
-                        requestBody.put("msuid", "");
-                        newUser.setAuthorToken(visitor.getToken());
-                    } else if (user != null) {
-                        //第三方新用户信息合并老第三方登录信息
-                        requestBody.put("muid", "");
-                        requestBody.put("msuid", user.getUserId());
-                        newUser.setAuthorToken(user.getAuthorToken());
+                    if (user != null) {
+                        if (user.isVisitor()){
+                            //第三方用户信息合并游客信息
+                            requestBody.put("muid", user.getMuid());
+                            requestBody.put("msuid", "");
+                            newUser.setAuthorToken(user.getAuthorToken());
+                        }else {
+                            //第三方新用户信息合并老第三方登录信息
+                            requestBody.put("muid", 0);
+                            requestBody.put("msuid", user.getUserId());
+                            newUser.setAuthorToken(user.getAuthorToken());
+                        }
                     }
                     requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
                     requestBody.put("platform", 2);
@@ -147,7 +147,6 @@ public class ShareSdkHelper {
                         }
                         //保存user json串到sp 中
                         SharedPreManager.saveUser(newUser);
-                        SharedPreManager.deleteVisitor();
                         String jPushId = SharedPreManager.getJPushId();
                         if (!TextUtils.isEmpty(jPushId)) {
                             UploadJpushidRequest.uploadJpushId(mContext, jPushId);

@@ -14,7 +14,6 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.entity.Visitor;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -161,10 +160,16 @@ public class SharedPreManager {
 //                return user;
 //            }
 //        }
-        if(ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
-            return user;
-        }else{
-            remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+        if (user != null){
+            if (user.isVisitor()){
+                return user;
+            }else {
+                if (ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
+                    return user;
+                }else {
+                    remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+                }
+            }
         }
         return null;
     }
@@ -405,30 +410,5 @@ public class SharedPreManager {
     public static BDLocation getLocation(){
         String locationStr = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         return GsonUtil.deSerializedByClass(locationStr,BDLocation.class);
-    }
-
-    /**
-     * 获取游客信息
-     */
-    public static Visitor getVisitor() {
-        String visitor = get(CommonConstant.FILE_USER, CommonConstant.KEY_VISITOR_INFO);
-        if (!TextUtil.isEmptyString(visitor)){
-            return Visitor.json2Visitor(visitor);
-        }
-        return null;
-    }
-
-    /**
-     * 删除游客信息
-     */
-    public static void deleteVisitor(){
-        remove(CommonConstant.FILE_USER, CommonConstant.KEY_VISITOR_INFO);
-    }
-
-    /**
-     * 保存游客信息
-     */
-    public static void saveVisitor(Visitor visitor) {
-        save(CommonConstant.FILE_USER, CommonConstant.KEY_VISITOR_INFO,visitor.toJsonStr());
     }
 }
