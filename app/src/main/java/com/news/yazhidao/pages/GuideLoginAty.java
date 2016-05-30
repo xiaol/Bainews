@@ -31,6 +31,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
             Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
             intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
             sendBroadcast(intent);
+            GuideLoginAty.this.finish();
         }
 
         @Override
