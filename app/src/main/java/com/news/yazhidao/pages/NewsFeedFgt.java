@@ -260,14 +260,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                Logger.e("aaa", "刷新");
                 loadData(PULL_DOWN_REFRESH);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
-                Logger.e("aaa", "加载");
                 loadData(PULL_UP_REFRESH);
 
             }
@@ -377,7 +375,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         } else {
             if (mFlag) {
                 if (mIsFirst) {
-                    Logger.e("aaa", "++++++++++++++++++++++++++++++走没走");
                     ArrayList<NewsFeed> arrNewsFeed = mNewsFeedDao.queryByChannelId(mstrChannelId);
                     if (!TextUtil.isListEmpty(arrNewsFeed)) {
                         NewsFeed newsFeed = arrNewsFeed.get(0);
@@ -395,6 +392,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
             } else {
                 mSharedPreferences.edit().putBoolean("isshow", true).commit();
+                mFlag =true;
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
                 requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
@@ -405,6 +403,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             @Override
             public void onResponse(final ArrayList<NewsFeed> result) {
+
                 if (mDeleteIndex != 0) {
                     mArrNewsFeed.remove(mDeleteIndex);
                     mDeleteIndex = 0;
@@ -419,11 +418,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.GONE);
                 stopRefresh();
                 if (result != null && result.size() > 0) {
-
                     mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
-                            Logger.e("aaa", "===========PULL_DOWN_REFRESH==========");
                             if (mArrNewsFeed == null)
                                 mArrNewsFeed = result;
                             else
