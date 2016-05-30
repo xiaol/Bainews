@@ -108,12 +108,12 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void loadData() {
         user = SharedPreManager.getUser(this);
-        if (user == null) {
-            mSetttingLogout.setText("点击登录");
-            mSetttingLogout.setTextColor(getResources().getColor(R.color.new_color1));
-        } else {
+        if (user != null && !user.isVisitor()) {
             mSetttingLogout.setText("退出登录");
             mSetttingLogout.setTextColor(getResources().getColor(R.color.new_color2));
+        } else {
+            mSetttingLogout.setText("点击登录");
+            mSetttingLogout.setTextColor(getResources().getColor(R.color.new_color1));
         }
     }
 

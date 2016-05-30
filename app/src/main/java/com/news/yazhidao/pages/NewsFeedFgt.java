@@ -48,6 +48,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -542,7 +543,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         Logger.e("jigang", "uuid = " + SharedPreManager.getUUID() + ",channelid =" + mstrChannelId + ",tstart =" + tstart);
     }
 
-    public void loadData(int flag) {
+    public void loadData(final int flag) {
         User user = SharedPreManager.getUser(mContext);
         Logger.e("jigang", "loaddata -----" + flag);
         if (null != user) {
@@ -576,6 +577,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }else {
             //请求token
+            UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
+                @Override
+                public void registeSuccess() {
+                    loadData(flag);
+                }
+            });
         }
     }
 

@@ -138,7 +138,9 @@ public class SharedPreManager {
                 ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
             }
         }
-        remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+        user.setUtype("2");
+        saveUser(user);
+//        remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
     }
     /**
      * 从 sp 中获取用户对象
