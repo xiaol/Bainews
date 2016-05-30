@@ -90,6 +90,7 @@ public class ShareSdkHelper {
                 String iconURL = platformDb.getUserIcon();
                 String token = platformDb.getToken();
                 String avatar = platformDb.getUserIcon();
+                String platformNname = platformDb.getPlatformNname();
                 String expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
                 //关注官方微博
                 if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
@@ -105,15 +106,16 @@ public class ShareSdkHelper {
                         if (user.isVisitor()){
                             //第三方用户信息合并游客信息
                             requestBody.put("muid", user.getMuid());
-                            requestBody.put("msuid", "");
+                            newUser.setMuid(user.getMuid());
                             newUser.setAuthorToken(user.getAuthorToken());
                         }else {
                             //第三方新用户信息合并老第三方登录信息
                             requestBody.put("muid", 0);
-                            requestBody.put("msuid", user.getUserId());
                             newUser.setAuthorToken(user.getAuthorToken());
+                            newUser.setMsuid(userId);
                         }
                     }
+                    requestBody.put("msuid", user.getUserId());
                     requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
                     requestBody.put("platform", 2);
                     requestBody.put("suid", userId);
@@ -128,6 +130,8 @@ public class ShareSdkHelper {
                         requestBody.put("city", location.getCity());
                         requestBody.put("district", location.getDistrict());
                     }
+                    newUser.setPlatformType(platformNname);
+                    newUser.setUtype((SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4) + "");
                     newUser.setUserId(userId);
                     newUser.setToken(token);
                     newUser.setExpiresTime(expiresTime);
@@ -135,7 +139,6 @@ public class ShareSdkHelper {
                     newUser.setUserName(nickName);
                     newUser.setUserGender(gender);
                     newUser.setUserIcon(avatar);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -155,7 +158,7 @@ public class ShareSdkHelper {
 
                         Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
                         intent.putExtra(MainAty.KEY_INTENT_USER_URL, newUser.getUserIcon());
-//                        mContext.sendBroadcast(intent);
+                        mContext.sendBroadcast(intent);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -218,7 +221,7 @@ public class ShareSdkHelper {
         Platform _Plateform = ShareSDK.getPlatform(mContext, shareSdkPlatform);
         //判断指定平台是否已经完成授权
         User user = SharedPreManager.getUser(mContext);
-        if (_Plateform.isAuthValid() && user != null) {
+        if (_Plateform.isAuthValid() && user != null && !user.isVisitor()) {
             String userId = _Plateform.getDb().getUserId();
             if (userId != null) {
                 if (pAuthorizeListener != null) {
