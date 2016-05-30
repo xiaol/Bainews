@@ -51,6 +51,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by fengjigang on 16/3/31.
@@ -270,17 +271,17 @@ public class NewsCommentFgt extends BaseFragment {
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
-//            setNewsTime(holder.tvTime, comment.getCreate_time());
-            if (!TextUtil.isEmptyString(comment.getProfile())) {
-                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
+//            setNewsTime(holder.tvTime, comment.getCtime());
+            if (!TextUtil.isEmptyString(comment.getAvator())) {
+                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvator()));
             }
-            holder.tvName.setText(comment.getNickname());
-            int count = comment.getLove();
+            holder.tvName.setText(comment.getUname());
+            int count = comment.getCommend();
             if (count == 0) {
                 holder.tvPraiseCount.setVisibility(View.INVISIBLE);
             } else {
                 holder.tvPraiseCount.setVisibility(View.VISIBLE);
-                holder.tvPraiseCount.setText(comment.getLove() + "");
+                holder.tvPraiseCount.setText(comment.getCommend() + "");
             }
 
             holder.tvContent.setText(comment.getContent());
@@ -290,7 +291,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
 
-            if (user != null && user.getUserId().equals(comment.getUuid())) {
+            if (user != null && user.getUserId().equals(comment.getUid())) {
                 holder.ivPraise.setVisibility(View.GONE);
             } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
@@ -307,7 +308,7 @@ public class NewsCommentFgt extends BaseFragment {
                     } else {
                         addNewsLove(user, comment, holder);
                         comments.get(position).setPraise(true);
-                        comments.get(position).setLove(comment.getLove() + 1);
+                        comments.get(position).setCommend(comment.getCommend() + 1);
                     }
 
                 }
@@ -353,11 +354,11 @@ public class NewsCommentFgt extends BaseFragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Logger.e("jigang", "love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
-        }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
-
+        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.POST, new TypeToken<String>() {
+        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
+            //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
             @Override
             public void onResponse(String result) {
                 mNewsCommentList.onRefreshComplete();
@@ -374,6 +375,13 @@ public class NewsCommentFgt extends BaseFragment {
                 Logger.e("jigang", "network fail");
             }
         });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
+        loveRequest.setRequestHeader(header);
+        HashMap<String, String> mParams = new HashMap<>();
+        mParams.put("cid", comment.getId());
+        mParams.put("uid", user.getUserId());
+        loveRequest.setRequestParams(mParams);
         loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(loveRequest);
     }

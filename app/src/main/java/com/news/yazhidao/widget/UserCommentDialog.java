@@ -23,16 +23,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DateUtil;
@@ -45,6 +43,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 
@@ -162,13 +161,24 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         Logger.d("aaa", "userid==" + userid);
         final String docid = mDocid;
         final String comment_id = UUID.randomUUID().toString();
+//        requestBody.put("platform", 2);//json不行可以试试这个
         try {
-            json = new JSONObject("{\"comment_id\":\"" + comment_id + "\",\"content\":\"" + mUserCommentMsg + "\",\"nickname\":\"" + nickeName + "\",\"uuid\":\"" + userid + "\",\"love\":0,\"create_time\":\"" + createTime + "\",\"profile\":\"" + profile + "\",\"docid\":\"" + docid + "\",\"pid\":\"pid\"}");
+            json = new JSONObject(
+//                    "{\"comment_id\":\"" + comment_id +
+                    "{\"content\":\"" + mUserCommentMsg +
+                    "\",\"uname\":\"" + nickeName +
+                    "\",\"uid\":\"" + userid +
+                    "\",\"commend\":0" +
+                    ",\"ctime\":\"" + createTime +
+                    "\",\"avatar\":\"" + profile +
+                    "\",\"docid\":\"" + docid
+//                    "\",\"pid\":\"pid\"}"
+            );
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json, new Response.Listener<JSONObject>() {
+        DetailOperateRequest request = new DetailOperateRequest(json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Logger.e("jigang", "add comment success =" + response);
@@ -186,18 +196,18 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
 //                        newsDetailCommentItem.setComment_id(comment_id);
 //                        newsDetailCommentItem.setContent(mUserCommentMsg);
-//                        newsDetailCommentItem.setCreate_time(System.currentTimeMillis());
+//                        newsDetailCommentItem.setCtime(System.currentTimeMillis());
 //                        newsDetailCommentItem.setDocid(docid);
-//                        newsDetailCommentItem.setLove(0);
+//                        newsDetailCommentItem.setCommend(0);
 //                        newsDetailCommentItem.setPraise(false);
                         comment.setUser(user);
 
                         NewsDetailComment newsDetailCommentItem = new NewsDetailComment();
                         newsDetailCommentItem.setComment_id(comment_id);
                         newsDetailCommentItem.setContent(mUserCommentMsg);
-                        newsDetailCommentItem.setCreate_time(DateUtil.getDate());
+                        newsDetailCommentItem.setCtime(DateUtil.getDate());
                         newsDetailCommentItem.setDocid(docid);
-                        newsDetailCommentItem.setLove(0);
+                        newsDetailCommentItem.setCommend(0);
                         newsDetailCommentItem.setPraise(false);
                         newsDetailCommentItem.setUser(user);
 
@@ -216,11 +226,65 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "add comment fail =" + error.getMessage());
-                ToastUtil.toastShort("评论失败!");
+//                ToastUtil.toastShort("评论失败!");
             }
         });
-        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(jsonRequest);
+//        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json, new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                Logger.e("jigang", "add comment success =" + response);
+//                try {
+//                    String code = response.getString("code");
+//                    String message = response.getString("message");
+//                    String data = response.optString("data");
+//                    if ("0".equals(code) && "success".equals(message)) {
+//                        Logger.e("jigang", "comment_id" + comment_id);
+//                        ToastUtil.toastShort("评论成功!");
+//                        Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+//                        NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid);
+//                        //实例化一个新闻评论类
+//
+////                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
+////                        newsDetailCommentItem.setComment_id(comment_id);
+////                        newsDetailCommentItem.setContent(mUserCommentMsg);
+////                        newsDetailCommentItem.setCtime(System.currentTimeMillis());
+////                        newsDetailCommentItem.setDocid(docid);
+////                        newsDetailCommentItem.setCommend(0);
+////                        newsDetailCommentItem.setPraise(false);
+//                        comment.setUser(user);
+//
+//                        NewsDetailComment newsDetailCommentItem = new NewsDetailComment();
+//                        newsDetailCommentItem.setComment_id(comment_id);
+//                        newsDetailCommentItem.setContent(mUserCommentMsg);
+//                        newsDetailCommentItem.setCtime(DateUtil.getDate());
+//                        newsDetailCommentItem.setDocid(docid);
+//                        newsDetailCommentItem.setCommend(0);
+//                        newsDetailCommentItem.setPraise(false);
+//                        newsDetailCommentItem.setUser(user);
+//
+//
+//
+//                        intent.putExtra(KEY_ADD_COMMENT, comment);
+//                        getActivity().sendBroadcast(intent);
+//                        UserCommentDialog.this.dismiss();
+//
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Logger.e("jigang", "add comment fail =" + error.getMessage());
+//                ToastUtil.toastShort("评论失败!");
+//            }
+//        });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
     }
 
     private class CommentTextWatcher implements TextWatcher {

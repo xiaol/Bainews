@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +24,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -45,9 +43,9 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.RelatedEntity;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
@@ -66,6 +64,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -93,7 +92,7 @@ public class NewsDetailFgt extends BaseFragment {
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
-             mNewsDetailHeaderView;
+            mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
@@ -407,16 +406,23 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 MobclickAgent.onEvent(getActivity(),"qidian_detail_middle_like");
-                Logger.e("aaa", "点击点赞");
-                if(isLike){
-                    isLike = false;
-                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
-                }else{
-                    isLike = true;
-                    mShowCareforLayout.show();
-                    detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
-                }
 
+                if (user == null) {
+                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+                    startActivityForResult(loginAty, REQUEST_CODE);
+                } else {
+                    Logger.e("aaa", "点击点赞");
+
+                    if (isLike) {
+                        isLike = false;
+                        mShowCareforLayout.show(isLike);
+                        detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+                    } else {
+                        isLike = true;
+                        mShowCareforLayout.show(isLike);
+                        detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+                    }
+                }
 
             }
         });
@@ -482,10 +488,11 @@ public class NewsDetailFgt extends BaseFragment {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid);
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
-        NewsDetailRequest<RelatedEntity> related = null;
+        NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         try {
             feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid, "utf-8") + "&page=" + (1), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid, "utf-8") + "&page=" + (1)
+                    , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -500,7 +507,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                        mAdapter.notifyDataSetChanged();
                         Logger.d("aaa", "评论加载完毕！！！！！！");
                         //同步服务器上的评论数据到本地数据库
-                      //  addCommentInfoToSql(mComments);
+                        //  addCommentInfoToSql(mComments);
                         mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
                         addCommentContent(result);
                     } else {
@@ -520,17 +527,17 @@ public class NewsDetailFgt extends BaseFragment {
                     Logger.e("jigang", "network fail");
                 }
             });
-            related = new NewsDetailRequest<RelatedEntity>(Request.Method.GET,
-                    new TypeToken<RelatedEntity>() {
+            related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
+                    new TypeToken<ArrayList<RelatedItemEntity>>() {
                     }.getType(),
                     HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(mNewID),
-                    new Response.Listener<RelatedEntity>() {
+                    new Response.Listener<ArrayList<RelatedItemEntity>>() {
                         @Override
-                        public void onResponse(RelatedEntity response) {
+                        public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
                             isCorrelationSuccess = true;
                             isBgLayoutSuccess();
-                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
-                            Logger.e("jigang", "network success RelatedEntity~~" + response);
+//                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
+//                            Logger.e("jigang", "network success RelatedEntity~~" + response);
 
                             if (!TextUtil.isListEmpty(relatedItemEntities)) {
                                 setBeanPageList(relatedItemEntities);
@@ -602,12 +609,12 @@ public class NewsDetailFgt extends BaseFragment {
     public void setBeanPageList(ArrayList<RelatedItemEntity> relatedItemEntities) {
         Logger.e("aaa", "time:================比较前=================");
         for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getUpdateTime());
+            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
         }
         Collections.sort(relatedItemEntities);
         Logger.e("aaa", "time:================比较====后=================");
         for (int i = 0; i < relatedItemEntities.size(); i++) {
-            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getUpdateTime());
+            Logger.e("aaa", "time:===" + relatedItemEntities.get(i).getPtime());
         }
         int listSice = relatedItemEntities.size();
         int page = (listSice / pageSize) + (listSice % pageSize == 0 ? 0 : 1);
@@ -621,7 +628,7 @@ public class NewsDetailFgt extends BaseFragment {
                     break;
                 }
                 Logger.e("aaa", "page:" + itemPosition);
-                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getUpdateTime());
+                Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntities.get(itemPosition).getPtime());
 
                 int thisYear = calendar.get(Calendar.YEAR);//获取年份
                 if(thisYear != mYear){
@@ -652,18 +659,23 @@ public class NewsDetailFgt extends BaseFragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Logger.e("jigang", "love url=" + HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.PUT, new TypeToken<String>() {
-        }.getType(), HttpConstant.URL_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName(), new Response.Listener<String>() {
+
+
+
+
+        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.POST, new TypeToken<String>() {
+        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
 
             @Override
             public void onResponse(String result) {
+                //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
                 mNewsDetailList.onRefreshComplete();
                 Logger.e("jigang", "network success, love" + result);
                 if (!TextUtil.isEmptyString(result)) {
                     mComments.get(position).setPraise(true);
-                    mComments.get(position).setLove(Integer.parseInt(result));
+                    mComments.get(position).setCommend(Integer.parseInt(result));
                     holder.ivPraise.setImageResource(R.drawable.bg_praised);
                     holder.tvPraiseCount.setText(result);
 //                    viewList.get(position).invalidate();//刷新界面
@@ -677,6 +689,14 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("jigang", "network fail");
             }
         });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
+        loveRequest.setRequestHeader(header);
+        HashMap<String, String> mParams = new HashMap<>();
+        mParams.put("cid", comment.getId());
+        mParams.put("uid", user.getUserId());
+        loveRequest.setRequestParams(mParams);
+
         loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(loveRequest);
     }
@@ -817,11 +837,11 @@ public class NewsDetailFgt extends BaseFragment {
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
-        if (!TextUtil.isEmptyString(comment.getProfile())) {
-            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getProfile()));
+        if (!TextUtil.isEmptyString(comment.getAvator())) {
+            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvator()));
         }
-        holder.tvName.setText(comment.getNickname());
-        holder.tvPraiseCount.setText(comment.getLove() + "");
+        holder.tvName.setText(comment.getUname());
+        holder.tvPraiseCount.setText(comment.getCommend() + "");
 
         holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         holder.tvContent.setText(comment.getContent());
@@ -836,9 +856,9 @@ public class NewsDetailFgt extends BaseFragment {
         } else {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
-        String commentUserid = comment.getUuid();
+        String commentUserid = comment.getUid();
         if (commentUserid != null && commentUserid.length() != 0) {
-            if (user.getUserId().equals(comment.getUuid())) {
+            if (user.getUserId().equals(comment.getUid())) {
                 holder.ivPraise.setVisibility(View.GONE);
             } else {
                 holder.ivPraise.setVisibility(View.VISIBLE);
@@ -875,7 +895,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     public interface  ShowCareforLayout{
-         void show();
+        void show(boolean isCareFor);
     }
 
     ShowCareforLayout mShowCareforLayout;

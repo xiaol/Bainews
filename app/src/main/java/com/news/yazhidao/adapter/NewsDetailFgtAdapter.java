@@ -39,7 +39,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
 //            holder.getView(R.id.attentionlayout).setLayoutParams(layoutParams);
             return;
         }
-        Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntity.getUpdateTime());
+        Calendar calendar = DateUtil.strToCalendarLong(relatedItemEntity.getPtime());
 
         int thisYear = calendar.get(Calendar.YEAR);//获取年份
         int month=calendar.get(Calendar.MONTH)+1;//获取月份
@@ -89,7 +89,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
         holder.setTextViewExtendTextandTextSice(R.id.attention_Title,relatedItemEntity.getTitle());
 
 
-        holder.setTextViewExtendText(R.id.attention_Source,relatedItemEntity.getSourceSite());
+        holder.setTextViewExtendText(R.id.attention_Source,relatedItemEntity.getPname());
         String imageUrl = relatedItemEntity.getImgUrl();
         if(imageUrl != null&&imageUrl.length()!= 0){
             holder.getView(R.id.attention_haveImageShow).setVisibility(View.VISIBLE);

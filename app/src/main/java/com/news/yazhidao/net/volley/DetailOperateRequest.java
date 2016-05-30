@@ -1,5 +1,6 @@
 package com.news.yazhidao.net.volley;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
@@ -12,14 +13,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * 注册游客用户
- * Created by fengjigang on 16/5/25.
+ * Created by Administrator on 2016/5/27.
  */
-public class MergeThirdUserLoginRequest extends JsonObjectRequest {
-    public MergeThirdUserLoginRequest(String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, HttpConstant.URL_MERGE_USER_LOGIN,requestBody, listener, errorListener);
+public class DetailOperateRequest extends JsonObjectRequest {
+    private HashMap mParams, mHeader;
+
+    public DetailOperateRequest(String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        super(Method.POST, HttpConstant.URL_ADD_COMMENT,requestBody, listener, errorListener);
     }
 
     @Override
@@ -41,6 +45,25 @@ public class MergeThirdUserLoginRequest extends JsonObjectRequest {
         } catch (JSONException je) {
             return Response.error(new ParseError(je));
         }
+    }
+
+
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return mHeader;
+    }
+    public void setRequestHeader(HashMap header) {
+        this.mHeader = header;
+    }
+
+
+    @Override
+    protected Map<String, String> getParams() throws AuthFailureError {
+        return mParams;
+    }
+    public void setRequestParams(HashMap params) {
+        this.mParams = params;
     }
 
 }

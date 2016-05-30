@@ -9,29 +9,30 @@ import java.util.Date;
  * Created by Administrator on 2016/4/22.
  */
 public class RelatedItemEntity implements Serializable,Comparable {
+    /**
+     * "url": "http://news.163.com/16/0520/08/BNGEG7ID00014Q4P.html",
+     "title": "但愿雷洋事件不是一个小插曲",
+     "from": "Baidu",
+     "rank": 1,
+     "pname": "网易新闻",
+     "ptime": "2016-05-20 08:47:45",
+     "img": "http://some.jpg",         - Option
+     "abs": "据@平安北京19日发布..." - Option
+     */
     private String url;
     private int rank;
-    private String sourceSite;
-    private String searchFrom;
+    private String pname;
+    private String from;
     private String imgUrl;
     private String title;
     private String abs;
-    private String updateTime;
+    private String ptime;
     /**
      * 莫一年的第一天
      */
     private boolean yearFrist;
 
-    public RelatedItemEntity(String url, int rank, String sourceSite, String searchFrom, String imgUrl, String title, String abs, String updateTime) {
-        this.url = url;
-        this.rank = rank;
-        this.sourceSite = sourceSite;
-        this.searchFrom = searchFrom;
-        this.imgUrl = imgUrl;
-        this.title = title;
-        this.abs = abs;
-        this.updateTime = updateTime;
-    }
+
 
     public RelatedItemEntity() {
     }
@@ -42,8 +43,8 @@ public class RelatedItemEntity implements Serializable,Comparable {
         Date date1 = null;
         Date date2 = null;
         try {
-            date1 = format.parse(itemEntity.getUpdateTime());
-            date2 = format.parse(this.updateTime);
+            date1 = format.parse(itemEntity.getPtime());
+            date2 = format.parse(this.ptime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -52,24 +53,20 @@ public class RelatedItemEntity implements Serializable,Comparable {
 
         return flag;
     }
-    @Override
-    public String toString() {
-        return "RelatedItemEntity{" +
-                "url='" + url + '\'' +
-                ", rank=" + rank +
-                ", sourceSite='" + sourceSite + '\'' +
-                ", searchFrom='" + searchFrom + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", abs='" + abs + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                '}';
-    }
+
 
     public String toTimeString() {
         return "RelatedItemEntity{" +
-                "updateTime='" + updateTime + '\'' +
+                "ptime='" + ptime + '\'' +
                 '}';
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     public boolean getYearFrist() {
@@ -96,21 +93,14 @@ public class RelatedItemEntity implements Serializable,Comparable {
         this.rank = rank;
     }
 
-    public String getSourceSite() {
-        return sourceSite;
+    public String getPname() {
+        return pname;
     }
 
-    public void setSourceSite(String sourceSite) {
-        this.sourceSite = sourceSite;
+    public void setPname(String pname) {
+        this.pname = pname;
     }
 
-    public String getSearchFrom() {
-        return searchFrom;
-    }
-
-    public void setSearchFrom(String searchFrom) {
-        this.searchFrom = searchFrom;
-    }
 
     public String getImgUrl() {
         return imgUrl;
@@ -136,12 +126,12 @@ public class RelatedItemEntity implements Serializable,Comparable {
         this.abs = abs;
     }
 
-    public String getUpdateTime() {
-        return updateTime;
+    public String getPtime() {
+        return ptime;
     }
 
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
+    public void setptime(String ptime) {
+        this.ptime = ptime;
     }
 
 

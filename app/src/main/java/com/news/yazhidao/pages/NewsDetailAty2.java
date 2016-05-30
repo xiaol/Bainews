@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +49,7 @@ import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
@@ -65,6 +65,8 @@ import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.umeng.analytics.MobclickAgent;
 import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +130,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private NewsDetailCommentDao newsDetailCommentDao;
 
     private LinearLayout careforLayout;
-    boolean isFavorite;
+    boolean isFavorite,isCareFor;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
     /**
@@ -469,10 +471,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setDocid(result.getDocid());
         mNewsFeed.setUrl(result.getUrl());
         mNewsFeed.setTitle(result.getTitle());
-        mNewsFeed.setPname(result.getPubName());
-        mNewsFeed.setPtime(result.getPubTime());
+        mNewsFeed.setPname(result.getPname());
+        mNewsFeed.setPtime(result.getPtime());
         mNewsFeed.setComment(result.getCommentSize());
-        mNewsFeed.setChannel(result.getChannelId());
+        mNewsFeed.setChannel(result.getChannel());
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
 
@@ -575,7 +577,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("bbb","收藏触发的点击事件！！！！！");
-                    CareForAnimation(false);
+                    loadOperate(true);
 
                 }
                 MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
@@ -745,30 +747,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
     ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
         @Override
-        public void show() {
-            CareForAnimation(true);
+        public void show(boolean type) {
+            isCareFor = type;
+            loadOperate(false);
         }
     };
 
-    public void CareForAnimation(final boolean isCarefor) {
-        if(isCarefor){
-            carefor_Image.setImageResource(R.drawable.carefor_image);
-            carefor_Text.setText("将推荐更多此类文章");
-        }else{
-            carefor_Image.setImageResource(R.drawable.hook_image);
-            if(isFavorite){
-                isFavorite = false;
-                carefor_Text.setText("收藏已取消");
-                SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
-                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-            }else{
-                isFavorite = true;
-                carefor_Text.setText("收藏成功");
-                SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
-                mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-            }
-
-        }
+    public void CareForAnimation() {
 
         //图片渐变模糊度始终
         AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1.0f);
@@ -823,6 +808,72 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 
             }
         });
+    }
+
+    /**
+     *
+     * @param isType ture 是收藏  false 是关心
+     */
+    public void loadOperate(final boolean isType){
+
+        RequestQueue requestQueue = Volley.newRequestQueue(NewsDetailAty2.this);
+        NewsDetailRequest<String> request = new NewsDetailRequest<String>(Request.Method.POST, new TypeToken<String>() {
+        }.getType(), isType?HttpConstant.URL_ADDORDELETE_FAVORITE:HttpConstant.URL_ADDORDELETE_CAREFOR, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                if(mDetailFavorite.getVisibility() == View.GONE){
+                    mDetailFavorite.setVisibility(View.VISIBLE);
+                }
+                if(isType){
+                    carefor_Image.setImageResource(R.drawable.hook_image);
+                    if(isFavorite){
+                        isFavorite = false;
+                        carefor_Text.setText("收藏已取消");
+                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+                    }else{
+                        isFavorite = true;
+                        carefor_Text.setText("收藏成功");
+                        SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+                    }
+                    CareForAnimation();
+                }else{
+                    if(isCareFor){
+                        carefor_Image.setImageResource(R.drawable.carefor_image);
+                        carefor_Text.setText("将推荐更多此类文章");
+                        CareForAnimation();
+                    }else{
+
+                    }
+
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if(mDetailFavorite.getVisibility() == View.VISIBLE){
+                    mDetailFavorite.setVisibility(View.GONE);
+                }
+                if(isType){
+                    carefor_Text.setText("收藏失败");
+                }else{
+                    carefor_Text.setText("关心失败");
+                }
+                CareForAnimation();
+            }
+        });
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
+        request.setRequestHeader(header);
+        HashMap<String, String> mParams = new HashMap<>();
+        mParams.put("nid", mUrl);
+        mParams.put("uid", mUserId);
+        request.setRequestParams(mParams);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
     }
 
 }

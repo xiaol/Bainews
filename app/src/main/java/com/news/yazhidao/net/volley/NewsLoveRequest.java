@@ -16,7 +16,8 @@ import java.util.Map;
  * Created by fengjigang on 16/2/26.
  */
 public class NewsLoveRequest<T> extends GsonRequest<T> {
-    private HashMap mParams;
+    private HashMap mParams, mHeader;
+
 
     public NewsLoveRequest(int method, Class clazz, String url, Response.Listener successListener, Response.ErrorListener listener) {
         super(method, clazz, url, successListener, listener);
@@ -24,9 +25,6 @@ public class NewsLoveRequest<T> extends GsonRequest<T> {
 
     public NewsLoveRequest(int method, Type reflectType, String url, Response.Listener successListener, Response.ErrorListener listener) {
         super(method, reflectType, url, successListener, listener);
-    }
-    public void setRequestParams(HashMap params){
-        this.mParams = params;
     }
     @Override
     protected String checkJsonData(String data,NetworkResponse response) {
@@ -45,8 +43,22 @@ public class NewsLoveRequest<T> extends GsonRequest<T> {
         }
         return "";
     }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return mHeader;
+    }
+    public void setRequestHeader(HashMap header) {
+        this.mHeader = header;
+    }
+
+
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
         return mParams;
     }
+    public void setRequestParams(HashMap params) {
+        this.mParams = params;
+    }
+
 }

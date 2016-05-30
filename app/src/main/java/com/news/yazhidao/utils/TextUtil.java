@@ -616,8 +616,8 @@ public class TextUtil {
                 "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;\">" +
                 detail.getTitle() +
                 "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #9a9a9a;\" class=\"top\"><span>" +
-                detail.getPubName() + "</span>" +
-                "&nbsp; <span>" + DateUtil.getMonthAndDay(detail.getPubTime()) + "</span>");
+                detail.getPname() + "</span>" +
+                "&nbsp; <span>" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
         if (detail.getCommentSize() != 0) {
             contentBuilder.append("&nbsp; <span>" + detail.getCommentSize() + "评论" + "</span>");
         }

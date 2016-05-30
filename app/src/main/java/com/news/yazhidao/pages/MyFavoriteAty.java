@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -12,13 +13,23 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.NewsFeedAdapter.introductionNewsFeed;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -41,6 +52,8 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     private TextView mFavoriteRightManage,aty_myFavorite_number;
     private LinearLayout aty_myFavorite_Deletelayout;
     private boolean isDeleteyFavorite;
+    private User user;
+    private Context mContext;
 
 
 
@@ -53,6 +66,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void initializeViews() {
+        mContext = this;
         mFavoriteLeftBack = findViewById(R.id.mFavoriteLeftBack);
 
         mFavoriteRightManage = (TextView) findViewById(R.id.mFavoriteRightManage);
@@ -60,7 +74,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         aty_myFavorite_number = (TextView) findViewById(R.id.aty_myFavorite_number);
         aty_myFavorite_Deletelayout = (LinearLayout) findViewById(R.id.aty_myFavorite_Deletelayout);
         aty_myFavorite_Deletelayout.setOnClickListener(this);
-
+        user = SharedPreManager.getUser(mContext);
 //        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mFavoriteListView = (PullToRefreshListView) findViewById(R.id.aty_myFavorite_PullToRefreshListView);
         mAdapter = new NewsFeedAdapter(this, null, null);
@@ -105,6 +119,24 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         mFavoriteLeftBack.setOnClickListener(this);
         mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
         mFavoriteListView.setAdapter(mAdapter);
+
+    }
+    public void loadFavorite(){
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        NewsDetailRequest<ArrayList<NewsDetailComment>> request = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.POST,
+                new TypeToken<ArrayList<NewsDetailComment>>() {
+                }.getType(), HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + user != null ? user.getUserId() : ""
+                , new Response.Listener<ArrayList<NewsDetailComment>>() {
+            @Override
+            public void onResponse(ArrayList<NewsDetailComment> response) {
+                Logger.e("aaa", "收藏内容======" + response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e("aaa", "获取收藏失败");
+            }
+        });
 
     }
 
@@ -240,7 +272,5 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
                 }
             });
         }
-
-
     }
 }

@@ -40,4 +40,5 @@ public class RegisterVisitorRequest extends JsonObjectRequest {
             return Response.error(new ParseError(je));
         }
     }
+
 }

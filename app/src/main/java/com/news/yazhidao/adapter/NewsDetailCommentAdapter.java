@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -72,7 +71,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
     @Override
     public void convert(CommonViewHolder holder,final NewsDetailComment newsDetailCommentItem, int positon) {
         TextView pub_time = holder.getView(R.id.pub_time);
-        pub_time.setText(convertTime(newsDetailCommentItem.getCreate_time()));
+        pub_time.setText(convertTime(newsDetailCommentItem.getCtime()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
@@ -85,7 +84,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         }else {
             love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
         }
-        int love_num = newsDetailCommentItem.getLove();
+        int love_num = newsDetailCommentItem.getCommend();
         final TextView love_count = holder.getView(R.id.love_count);
         if(love_num > 0){
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
@@ -128,7 +127,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 
                 newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
                 if(newsDetailCommentItem.isPraise()){
-                    newsDetailCommentItem.setLove(newsDetailCommentItem.getLove()+1);
+                    newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend()+1);
                     ((ImageButton)view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
                     int[] location = new int[2];
                     view.getLocationOnScreen(location);
@@ -204,7 +203,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 
 
                 }else {
-                    newsDetailCommentItem.setLove(newsDetailCommentItem.getLove()-1);
+                    newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend()-1);
 
                     ((ImageButton)view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
                     notifyDataSetChanged();
