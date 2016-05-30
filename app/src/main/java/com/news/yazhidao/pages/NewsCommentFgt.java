@@ -36,7 +36,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.NewsCommentRequest;
+import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
@@ -169,10 +169,10 @@ public class NewsCommentFgt extends BaseFragment {
     private void loadData() {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mNewsFeed.getDocid());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
-        try {
-            feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mNewsFeed.getDocid(), "utf-8") + "&page=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+        NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
+
+            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -203,12 +203,9 @@ public class NewsCommentFgt extends BaseFragment {
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
-                    Logger.e("jigang", "network fail");
+                    Logger.e("jigang", "NewsCommentFgt  network fail");
                 }
             });
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
     }
@@ -272,8 +269,8 @@ public class NewsCommentFgt extends BaseFragment {
             mComment = comment;
             mHolder = holder;
 //            setNewsTime(holder.tvTime, comment.getCtime());
-            if (!TextUtil.isEmptyString(comment.getAvator())) {
-                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvator()));
+            if (!TextUtil.isEmptyString(comment.getAvatar())) {
+                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
             }
             holder.tvName.setText(comment.getUname());
             int count = comment.getCommend();

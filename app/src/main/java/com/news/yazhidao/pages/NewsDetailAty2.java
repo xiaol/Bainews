@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -189,12 +190,34 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
     }
-
+//    public NewsFeed getDate(){
+//        NewsFeed bean = new NewsFeed();
+//        bean.setNid(5);
+//        bean.setPtime("2016-05-22 18:09:47");
+//        bean.setUrl("http://toutiao.com/a6287080350670504193/");
+//        bean.setDocid("http://toutiao.com/group/6287080350670504193/comments/?count=100&offset=0&format=json");
+//        bean.setComment(3);
+//        bean.setPname("北寒旅游");
+//        bean.setPurl("http://toutiao.com/group/6287080350670504193/");
+//        bean.setStyle(5);
+//        ArrayList<String> list = new ArrayList<String>();
+//        list.add("http://bdp-pic.deeporiginalx.com/W0JANTBiOTlmYzU.jpg");
+//        list.add("http://bdp-pic.deeporiginalx.com/W0JANWI4ZjlhNDY.jpg");
+//        list.add("http://bdp-pic.deeporiginalx.com/W0JANjA5M2Q5ZjQ.jpg");
+//        bean.setImgs(list);
+//        bean.setTitle("泰山脚下的传统茶道表演");
+//        bean.setChannel(12);
+//        return bean;
+//    }
     @Override
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
         mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
         mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
+//        mUsedNewsFeed = getDate();
+//        mImageUrl = "http://bdp-pic.deeporiginalx.com/W0JAM2ExMmYwNGQ.png";
+
+
 //        mSwipeBackLayout = getSwipeBackLayout();
 //        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
@@ -379,8 +402,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
         bgLayout.setVisibility(View.VISIBLE);
         mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
+//        mNewsFeed = getDate();
         if (mNewsFeed != null) {
-            mUrl = mNewsFeed.getUrl();
+            mUrl = mNewsFeed.getNid()+"";
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
@@ -398,10 +422,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
         }
 
-        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(mUrl));
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
+        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-        }.getType(), HttpConstant.URL_FETCH_CONTENT + "url=" + TextUtil.getBase64(mUrl), new Response.Listener<NewsDetail>() {
+        }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl, new Response.Listener<NewsDetail>() {
 
             @Override
             public void onResponse(NewsDetail result) {
@@ -433,37 +457,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
         });
 
-//        NewsDetailRequest<RelatedEntity> related = new NewsDetailRequest<RelatedEntity>(Request.Method.GET,
-//                new TypeToken<RelatedEntity>() {
-//                }.getType(),
-//                HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(newsId),
-//                new Response.Listener<RelatedEntity>() {
-//                    @Override
-//                    public void onResponse(RelatedEntity response) {
-//                        Logger.e("jigang", "network success RelatedEntity~~" + response);
-//                        ArrayList<RelatedItemEntity> list = response.getSearchItems();
-//                        Logger.e("aaa","time:================比较前=================");
-//                        for(int i=0;i<list.size();i++){
-//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
-//                        }
-//                        Collections.sort(list);
-//                        Logger.e("aaa","time:================比较====后=================");
-//                        for(int i=0;i<list.size();i++){
-//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
-//                        }
-//
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Logger.e("jigang", "network error~~");
-//                    }
-//                });
-
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
-//        requestQueue.add(related);
     }
 
     private NewsFeed convert2NewsFeed(NewsDetail result) {
@@ -865,9 +860,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             }
         });
 
-        HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
-        request.setRequestHeader(header);
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
+//        request.setRequestHeader(header);
         HashMap<String, String> mParams = new HashMap<>();
         mParams.put("nid", mUrl);
         mParams.put("uid", mUserId);

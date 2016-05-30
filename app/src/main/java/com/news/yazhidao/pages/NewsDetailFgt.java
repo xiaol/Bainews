@@ -45,8 +45,6 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.DetailOperateRequest;
-import com.news.yazhidao.net.volley.NewsCommentRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
@@ -485,13 +483,12 @@ public class NewsDetailFgt extends BaseFragment {
 
     private void loadData() {
 
-        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_COMMENTS + "docid=" + mDocid);
+        Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1)+ "&c=" + (20));
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsCommentRequest<ArrayList<NewsDetailComment>> feedRequest = null;
+        NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
-        try {
-            feedRequest = new NewsCommentRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "docid=" + URLEncoder.encode(mDocid, "utf-8") + "&page=" + (1)
+            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1)+ "&c=" + (20)
                     , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
@@ -524,13 +521,14 @@ public class NewsDetailFgt extends BaseFragment {
                     mNewsDetailList.onRefreshComplete();
                     detail_shared_CommentTitleLayout.setVisibility(View.GONE);
                     detail_shared_MoreComment.setVisibility(View.GONE);
-                    Logger.e("jigang", "network fail");
+                    Logger.e("jigang", "URL_FETCH_HOTCOMMENTS  network fail");
                 }
             });
+        Logger.e("jigang", "URL_NEWS_RELATED=" + HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID);
             related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
                     new TypeToken<ArrayList<RelatedItemEntity>>() {
                     }.getType(),
-                    HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(mNewID),
+                    HttpConstant.URL_NEWS_RELATED + "nid=" +mNewID,
                     new Response.Listener<ArrayList<RelatedItemEntity>>() {
                         @Override
                         public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -548,6 +546,9 @@ public class NewsDetailFgt extends BaseFragment {
                             } else {
                                 RelatedItemEntity entity = new RelatedItemEntity();
                                 entity.setUrl("-1");
+                                if(relatedItemEntities == null||relatedItemEntities.size() == 0){
+                                    relatedItemEntities = new ArrayList<RelatedItemEntity>();
+                                }
                                 relatedItemEntities.add(entity);
                                 mAdapter.setNewsFeed(relatedItemEntities);
                                 mAdapter.notifyDataSetChanged();
@@ -563,16 +564,20 @@ public class NewsDetailFgt extends BaseFragment {
                         public void onErrorResponse(VolleyError error) {
                             isCorrelationSuccess = true;
                             isBgLayoutSuccess();
-                            Logger.e("jigang", "network error~~");
+                            Logger.e("jigang", "URL_NEWS_RELATED  network error~~");
                         }
                     });
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
 
 
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         related.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+//        feedRequest.setRequestHeader(header);
+//        HashMap<String, String> header1 = new HashMap<>();
+//        header1.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+//        related.setRequestHeader(header1);
 
         requestQueue.add(feedRequest);
         requestQueue.add(related);
@@ -837,8 +842,8 @@ public class NewsDetailFgt extends BaseFragment {
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
-        if (!TextUtil.isEmptyString(comment.getAvator())) {
-            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvator()));
+        if (!TextUtil.isEmptyString(comment.getAvatar())) {
+            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -857,7 +862,8 @@ public class NewsDetailFgt extends BaseFragment {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
         String commentUserid = comment.getUid();
-        if (commentUserid != null && commentUserid.length() != 0) {
+        if (commentUserid != null && commentUserid.length() != 0&&user != null) {
+
             if (user.getUserId().equals(comment.getUid())) {
                 holder.ivPraise.setVisibility(View.GONE);
             } else {

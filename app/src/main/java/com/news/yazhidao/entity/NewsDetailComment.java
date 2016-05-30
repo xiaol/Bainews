@@ -38,7 +38,7 @@ public class NewsDetailComment implements Serializable{
 
     /**  在创建评论时：如果你当前用户有头像，就提供该值，没有则不提供
      评论列表响应时：如果创建该评论时提供了头像就会有该值，否则没有 */
-    private String avator;
+    private String avatar;
 
     private String uname;
 
@@ -101,7 +101,7 @@ public class NewsDetailComment implements Serializable{
     @DatabaseField(canBeNull = true, foreign = true, columnName = "url", foreignAutoRefresh = true)
     private NewsFeed newsFeed;
 
-    public NewsDetailComment(String comment_id, String content, String ctime, String docid, String id, int commend, String uname, String avator,String uid) {
+    public NewsDetailComment(String comment_id, String content, String ctime, String docid, String id, int commend, String uname, String avatar, String uid) {
         this.comment_id = comment_id;
         this.content = content;
         this.ctime = ctime;
@@ -109,7 +109,7 @@ public class NewsDetailComment implements Serializable{
         this.id = id;
         this.commend = commend;
         this.uname = uname;
-        this.avator = avator;
+        this.avatar = avatar;
         this.uid = uid;
     }
 
@@ -119,7 +119,7 @@ public class NewsDetailComment implements Serializable{
                 "docid='" + docid + '\'' +
                 ", comment_id='" + comment_id + '\'' +
                 ", id='" + id + '\'' +
-                ", avator='" + avator + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", commend=" + commend +
                 ", content='" + content + '\'' +
                 ", ctime='" + ctime + '\'' +
@@ -168,12 +168,12 @@ public class NewsDetailComment implements Serializable{
         this.id = id;
     }
 
-    public String getAvator() {
-        return avator;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvator(String avator) {
-        this.avator = avator;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getCommend() {

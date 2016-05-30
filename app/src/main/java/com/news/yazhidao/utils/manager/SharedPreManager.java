@@ -150,7 +150,7 @@ public class SharedPreManager {
         if(TextUtils.isEmpty(userJson)){
             return null;
         }
-
+        Logger.e("aaa", "userJson====="+userJson);
         User user = User.parseUser(userJson);
 //        if ("meizu".equals(user.getPlatformType())){
 //            if (System.currentTimeMillis() - user.getExpiresTime() > 0){
