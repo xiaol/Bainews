@@ -139,10 +139,11 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                user = new User();
 //                user.setUserName("zhangsan");
 //                user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
-                if (user == null) {
+                if (user == null&&user.getUserId() == null) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
+                    Logger.e("aaa","user.toString()===="+user.toString());
                     submitComment(user);
                 }
                 break;
