@@ -100,7 +100,7 @@ public class HttpConstant {
     /**
      * 添加新闻评论
      */
-    public static final String URL_ADD_COMMENT = URL_SERVER_HOST + "/ns/coms?";
+    public static final String URL_ADD_COMMENT = URL_SERVER_HOST + "/ns/coms";
     /**
      * 查看评论列表
      * 用户删除已创建评论**

@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.utils.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,11 +32,14 @@ public class DetailOperateRequest extends JsonObjectRequest {
         try {
             String jsonString = new String(response.data,
                     HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+            Logger.e("aaa", "返回的数据=====" + jsonString);
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONObject data = new JSONObject();
+//            Logger.e("aaa", "返回的数据=====" + jsonObject.optString("code"));
+
             if ("2000".equals(jsonObject.optString("code"))){
-                data = jsonObject.getJSONObject("data");
-                return Response.success(data,
+//                data = jsonObject.getJSONObject("data");
+                return Response.success(jsonObject,
                         HttpHeaderParser.parseCacheHeaders(response));
             }else {
                 return Response.error(new VolleyError("服务器异常!"));
@@ -47,7 +51,11 @@ public class DetailOperateRequest extends JsonObjectRequest {
         }
     }
 
-
+//    @Override
+//    public String getBodyContentType() {
+//        return String.format("application/json", "utf-8");
+//
+//    }
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
@@ -58,12 +66,12 @@ public class DetailOperateRequest extends JsonObjectRequest {
     }
 
 
-    @Override
-    protected Map<String, String> getParams() throws AuthFailureError {
-        return mParams;
-    }
-    public void setRequestParams(HashMap params) {
-        this.mParams = params;
-    }
+//    @Override
+//    protected Map<String, String> getParams() throws AuthFailureError {
+//        return mParams;
+//    }
+//    public void setRequestParams(HashMap params) {
+//        this.mParams = params;
+//    }
 
 }

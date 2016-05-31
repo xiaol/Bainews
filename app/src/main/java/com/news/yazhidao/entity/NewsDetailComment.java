@@ -116,16 +116,20 @@ public class NewsDetailComment implements Serializable{
     @Override
     public String toString() {
         return "NewsDetailComment{" +
-                "docid='" + docid + '\'' +
+                "avatar='" + avatar + '\'' +
+                ", uname='" + uname + '\'' +
+                ", uid='" + uid + '\'' +
+                ", docid='" + docid + '\'' +
                 ", comment_id='" + comment_id + '\'' +
                 ", id='" + id + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", commend=" + commend +
                 ", content='" + content + '\'' +
                 ", ctime='" + ctime + '\'' +
-                ", uname='" + uname + '\'' +
                 ", isPraise=" + isPraise +
-                ", uid='" + uid + '\'' +
+                ", original='" + original + '\'' +
+                ", user=" + user +
+                ", upflag=" + upflag +
+                ", newsFeed=" + newsFeed +
                 '}';
     }
 

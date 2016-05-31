@@ -139,7 +139,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                user = new User();
 //                user.setUserName("zhangsan");
 //                user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
-                if (user == null&&user.getUserId() == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
@@ -152,46 +152,54 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 
     private void submitComment(final User user) {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        JSONObject json = null;
+        JSONObject  json = new JSONObject();
         final String nickeName = user.getUserName();
         String uuid = SharedPreManager.getUUID();
         final String createTime = DateUtil.getDate();
         final String profile = user.getUserIcon();
-        final String userid = user.getUserId();
+        final long userid = user.getMuid();
         Logger.d("aaa", "uuid==" + uuid);
         Logger.d("aaa", "userid==" + userid);
         final String docid = mDocid;
         final String comment_id = UUID.randomUUID().toString();
 //        requestBody.put("platform", 2);//json不行可以试试这个
         try {
-            json = new JSONObject(
-//                    "{\"comment_id\":\"" + comment_id +
-                    "{\"content\":\"" + mUserCommentMsg +
-                    "\",\"uname\":\"" + nickeName +
-                    "\",\"uid\":\"" + userid +
-                    "\",\"commend\":0" +
-                    ",\"ctime\":\"" + createTime +
-                    "\",\"avatar\":\"" + profile +
-                    "\",\"docid\":\"" + docid
-//                    "\",\"pid\":\"pid\"}"
-            );
+////                    "{\"comment_id\":\"" + comment_id +
+//                    "{\"content\":\"" + mUserCommentMsg +
+//                    "\",\"uname\":\"" + nickeName +
+//                    "\",\"uid\":\"" + userid +
+//                    "\",\"commend\":0" +
+//                    ",\"ctime\":\"" + createTime +
+//                    "\",\"avatar\":\"" + profile +
+//                    "\",\"docid\":\"" + docid
+////                    "\",\"pid\":\"pid\"}"
+////            );
+            json.put("content", mUserCommentMsg);
+            json.put("uname", nickeName);
+            json.put("uid", userid);
+            json.put("commend", 0);
+            json.put("ctime", createTime);
+            json.put("avatar", profile);
+            json.put("docid", docid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        Logger.e("aaa", "json.toString()===" + json.toString());
         DetailOperateRequest request = new DetailOperateRequest(json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Logger.e("jigang", "add comment success =" + response);
-                try {
-                    String code = response.getString("code");
-                    String message = response.getString("message");
+                Logger.e("jigang", "add comment success =" +response.toString());
+
+//                try {
+//                    Logger.e("jigang", "add comment success123 =" + response.getString("data"));
+//                    String code = response.getString("code");
+//                    String message = response.getString("message");
                     String data = response.optString("data");
-                    if ("0".equals(code) && "success".equals(message)) {
+//                    if ("2000".equals(code)) {
                         Logger.e("jigang", "comment_id" + comment_id);
                         ToastUtil.toastShort("评论成功!");
                         Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-                        NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid);
+                        NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid+"");
                         //实例化一个新闻评论类
 
 //                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
@@ -218,10 +226,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                         getActivity().sendBroadcast(intent);
                         UserCommentDialog.this.dismiss();
 
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -230,6 +238,15 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                ToastUtil.toastShort("评论失败!");
             }
         });
+
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
 //        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json, new Response.Listener<JSONObject>() {
 //            @Override
 //            public void onResponse(JSONObject response) {
@@ -281,11 +298,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                ToastUtil.toastShort("评论失败!");
 //            }
 //        });
-        HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-        request.setRequestHeader(header);
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(request);
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+//        request.setRequestHeader(header);
+
     }
 
     private class CommentTextWatcher implements TextWatcher {

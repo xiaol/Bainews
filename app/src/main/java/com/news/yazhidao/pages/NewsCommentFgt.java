@@ -214,7 +214,7 @@ public class NewsCommentFgt extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == LoginAty.REQUEST_CODE && data != null) {
             mUser = (User) data.getSerializableExtra(LoginAty.KEY_USER_LOGIN);
-            addNewsLove(mUser, mComment, mHolder);
+//            addNewsLove(mUser, mComment, mHolder);
         }
     }
 
@@ -282,30 +282,34 @@ public class NewsCommentFgt extends BaseFragment {
             }
 
             holder.tvContent.setText(comment.getContent());
-            if (!mComment.isPraise()) {
+            if (mComment.getUpflag() == 0) {
                 holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
             } else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
             }
 
-            if (user != null && user.getUserId().equals(comment.getUid())) {
-                holder.ivPraise.setVisibility(View.GONE);
-            } else {
-                holder.ivPraise.setVisibility(View.VISIBLE);
-
-            }
+//            if (user != null && user.getUserId().equals(comment.getUid())) {
+//                holder.ivPraise.setVisibility(View.GONE);
+//            } else {
+//                holder.ivPraise.setVisibility(View.VISIBLE);
+//
+//            }
             holder.ivPraise.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
 
-                    if (user == null) {
+                    if (user != null && user.isVisitor()) {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
-                        addNewsLove(user, comment, holder);
-                        comments.get(position).setPraise(true);
-                        comments.get(position).setCommend(comment.getCommend() + 1);
+                        if(mComment.getUpflag()==0){
+                            addNewsLove(user, comment, position, true);
+
+                        }else{
+                            addNewsLove(user, comment, position, false);
+                        }
+
                     }
 
                 }
@@ -342,7 +346,7 @@ public class NewsCommentFgt extends BaseFragment {
 
     }
 
-    private void addNewsLove(User user, NewsDetailComment comment, final Holder holder) {
+    private void addNewsLove(User user, NewsDetailComment comment, final int position, final boolean isAdd) {
         try {
             String name = URLEncoder.encode(user.getUserName(), "utf-8");
             String cid = URLEncoder.encode(comment.getId(), "utf-8");
@@ -351,9 +355,9 @@ public class NewsCommentFgt extends BaseFragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uid=" + user.getUserId() + "&unam=" + user.getUserName());
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.POST, new TypeToken<String>() {
+        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(isAdd?Request.Method.POST:Request.Method.DELETE, new TypeToken<String>() {
         }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
             //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
             @Override
@@ -361,8 +365,15 @@ public class NewsCommentFgt extends BaseFragment {
                 mNewsCommentList.onRefreshComplete();
                 Logger.e("jigang", "network success, love" + result);
                 if (!TextUtil.isEmptyString(result)) {
-                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                    holder.tvPraiseCount.setText(result);
+                   if(isAdd){
+                       mComments.get(position).setUpflag(1);
+                   }else{
+                       mComments.get(position).setUpflag(0);
+
+                   }
+                    mComments.get(position).setCommend(Integer.parseInt(result));
+                    mCommentsAdapter.notifyDataSetChanged();
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -373,14 +384,19 @@ public class NewsCommentFgt extends BaseFragment {
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
+        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
         loveRequest.setRequestHeader(header);
         HashMap<String, String> mParams = new HashMap<>();
         mParams.put("cid", comment.getId());
-        mParams.put("uid", user.getUserId());
+        mParams.put("uid", user.getMuid()+"");
         loveRequest.setRequestParams(mParams);
         loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(loveRequest);
+    }
+    public void deleteNewsLove(User user, NewsDetailComment comment, final Holder holder){
+
     }
 
 
