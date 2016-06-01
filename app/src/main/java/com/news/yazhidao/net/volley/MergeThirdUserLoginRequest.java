@@ -31,6 +31,7 @@ public class MergeThirdUserLoginRequest extends JsonObjectRequest {
             JSONObject data = new JSONObject();
             if ("2000".equals(jsonObject.optString("code"))){
                 data = jsonObject.getJSONObject("data");
+                data.put("Authorization",response.headers.get("Authorization"));
                 return Response.success(data,
                         HttpHeaderParser.parseCacheHeaders(response));
             }else {

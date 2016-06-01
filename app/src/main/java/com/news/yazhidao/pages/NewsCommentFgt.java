@@ -79,6 +79,7 @@ public class NewsCommentFgt extends BaseFragment {
     private LinearLayout news_comment_NoCommentsLayout;
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
+    private boolean isNetWork;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -177,7 +178,8 @@ public class NewsCommentFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +"&uid="+SharedPreManager.getUser(getActivity()).getMuid()+
+                    "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -287,7 +289,7 @@ public class NewsCommentFgt extends BaseFragment {
             }
 
             holder.tvContent.setText(comment.getContent());
-            if (mComment.getUpflag() == 0) {
+            if (comment.getUpflag() == 0) {
                 holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
             } else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
@@ -308,10 +310,11 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
-                        if(mComment.getUpflag()==0){
+                        if(comment.getUpflag()==0){
+                            Logger.e("aaa", "点赞");
                             addNewsLove(user, comment, position, true);
-
                         }else{
+                            Logger.e("aaa", "取消点赞");
                             addNewsLove(user, comment, position, false);
                         }
 
@@ -352,6 +355,10 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void addNewsLove(User user, NewsDetailComment comment, final int position, final boolean isAdd) {
+        if(isNetWork){
+            return;
+        }
+        isNetWork = true;
 //        String uid = null;
 //        try {
 //            String name = URLEncoder.encode(user.getUserName(), "utf-8");
@@ -394,6 +401,7 @@ Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
                     }
                     mComments.get(position).setCommend(Integer.parseInt(data));
                     mCommentsAdapter.notifyDataSetChanged();
+                    isNetWork = false;
 
                 }
             }
@@ -402,6 +410,7 @@ Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
             public void onErrorResponse(VolleyError error) {
                 mNewsCommentList.onRefreshComplete();
                 Logger.e("jigang", "network fail");
+                isNetWork = false;
             }
         });
         HashMap<String, String> header = new HashMap<>();

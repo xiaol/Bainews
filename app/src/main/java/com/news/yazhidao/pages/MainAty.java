@@ -154,7 +154,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         });
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
-        if (user != null && user.isVisitor()) {
+        if (user != null && !user.isVisitor()) {
             if (!TextUtil.isEmptyString(user.getUserIcon())) {
                 mUserCenter.setImageURI(Uri.parse(user.getUserIcon()));
             }

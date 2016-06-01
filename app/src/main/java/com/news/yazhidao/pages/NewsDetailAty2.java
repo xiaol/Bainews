@@ -438,9 +438,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mNewsFeed = convert2NewsFeed(result);
                     displayDetailAndComment(result);
                     mDetailHeaderView.updateView(result);
-                    if (result.getCommentSize() != 0) {
+                    if (result.getComment() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(result.getCommentSize() + "");
+                        mDetailCommentNum.setText(result.getComment() + "");
                         mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
@@ -468,7 +468,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setTitle(result.getTitle());
         mNewsFeed.setPname(result.getPname());
         mNewsFeed.setPtime(result.getPtime());
-        mNewsFeed.setComment(result.getCommentSize());
+        mNewsFeed.setComment(result.getComment());
         mNewsFeed.setChannel(result.getChannel());
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
