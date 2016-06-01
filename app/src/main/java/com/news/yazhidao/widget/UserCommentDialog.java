@@ -240,8 +240,8 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         });
 
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
-
+        header.put("Authorization",SharedPreManager.getUser(getActivity()).getAuthorToken());
+        Logger.e("jigang", "Authorization=" + SharedPreManager.getUser(getActivity()).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);

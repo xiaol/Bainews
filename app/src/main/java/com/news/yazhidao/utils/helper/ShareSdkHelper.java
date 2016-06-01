@@ -31,6 +31,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.utils.manager.UserManager;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -85,66 +86,24 @@ public class ShareSdkHelper {
             String userId = platform.getDb().getUserId();
             if (userId != null) {
                 PlatformDb platformDb = platform.getDb();
-                String nickName = platformDb.getUserName();
-                int gender = "m".equals(platformDb.getUserGender())? 1:0;//1 男,0 女
-                String iconURL = platformDb.getUserIcon();
-                String token = platformDb.getToken();
-                String avatar = platformDb.getUserIcon();
-                String platformNname = platformDb.getPlatformNname();
-                String expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
                 //关注官方微博
                 if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
                     platform.followFriend(mContext.getResources().getString(R.string.app_name));
                 }
-                Log.i(TAG, "nickName=" + nickName + ",gender=" + gender + ",iconURL=" + iconURL + ",token=" + token + ",userid=" + platformDb.getUserId());
                 //检查是否有游客或者其他第三方登录
                 final User newUser = new User();
-                User user = SharedPreManager.getUser(mContext);
+                User oldUser = SharedPreManager.getUser(mContext);
                 JSONObject requestBody = new JSONObject();
-                try {
-                    if (user != null) {
-                        if (user.isVisitor()){
-                            //第三方用户信息合并游客信息
-                            requestBody.put("muid", user.getMuid());
-                            newUser.setMuid(user.getMuid());
-                            newUser.setAuthorToken(user.getAuthorToken());
-                        }else {
-                            //第三方新用户信息合并老第三方登录信息
-                            requestBody.put("muid", 0);
-                            newUser.setAuthorToken(user.getAuthorToken());
-                            newUser.setMsuid(userId);
-                        }
-                    }
-                    requestBody.put("msuid", user.getUserId());
-                    requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
-                    requestBody.put("platform", 2);
-                    requestBody.put("suid", userId);
-                    requestBody.put("stoken", token);
-                    requestBody.put("sexpires", expiresTime);
-                    requestBody.put("uname", nickName);
-                    requestBody.put("gender", gender);
-                    requestBody.put("avatar", avatar);
-                    BDLocation location = SharedPreManager.getLocation();
-                    if (location != null) {
-                        requestBody.put("province", location.getProvince());
-                        requestBody.put("city", location.getCity());
-                        requestBody.put("district", location.getDistrict());
-                    }
-                    newUser.setPlatformType(platformNname);
-                    newUser.setUtype((SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4) + "");
-                    newUser.setUserId(userId);
-                    newUser.setToken(token);
-                    newUser.setExpiresTime(expiresTime);
-                    newUser.setExpiresIn(platformDb.getExpiresIn());
-                    newUser.setUserName(nickName);
-                    newUser.setUserGender(gender);
-                    newUser.setUserIcon(avatar);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                generateRequestBodyAndUser(platform.getDb(), requestBody, oldUser, newUser);
                 MergeThirdUserLoginRequest mergeRequest = new MergeThirdUserLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
+
                     @Override
                     public void onResponse(JSONObject response) {
+                        try {
+                            newUser.setAuthorToken(response.getString("Authorization"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                         if (mAuthorizeListener != null) {
                             mAuthorizeListener.success(newUser);
                         }
@@ -540,6 +499,66 @@ public class ShareSdkHelper {
             Platform platform = ShareSDK.getPlatform(Douban.NAME);
             platform.setPlatformActionListener(pShareListner);
             platform.share(pShareParams);
+        }
+    }
+
+    private static void generateRequestBodyAndUser(final PlatformDb platformDb, final JSONObject requestBody, final User oldUser, final User newUser) {
+        String userId = platformDb.getUserId();
+        String nickName = platformDb.getUserName();
+        int gender = "m".equals(platformDb.getUserGender()) ? 1 : 0;//1 男,0 女
+        String token = platformDb.getToken();
+        String avatar = platformDb.getUserIcon();
+        String platformNname = platformDb.getPlatformNname();
+        String expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
+        try {
+            //说明注册游客用户成功
+            if (oldUser != null) {
+                if (oldUser.isVisitor()) {
+                    //第三方用户信息合并游客信息
+                    requestBody.put("muid", oldUser.getMuid());
+                    newUser.setMuid(oldUser.getMuid());
+                    requestBody.put("msuid", "");
+                    newUser.setAuthorToken(oldUser.getAuthorToken());
+                } else {
+                    //第三方新用户信息合并老第三方登录信息
+                    requestBody.put("muid", oldUser.getMuid());
+                    newUser.setAuthorToken(oldUser.getAuthorToken());
+                    newUser.setMsuid(userId);
+                    requestBody.put("msuid", oldUser.getUserId());
+                }
+                requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
+                requestBody.put("platform", 2);
+                requestBody.put("suid", userId);
+                requestBody.put("stoken", token);
+                requestBody.put("sexpires", expiresTime);
+                requestBody.put("uname", nickName);
+                requestBody.put("gender", gender);
+                requestBody.put("avatar", avatar);
+                BDLocation location = SharedPreManager.getLocation();
+                if (location != null) {
+                    requestBody.put("province", location.getProvince());
+                    requestBody.put("city", location.getCity());
+                    requestBody.put("district", location.getDistrict());
+                }
+                newUser.setPlatformType(platformNname);
+                newUser.setUtype((SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4) + "");
+                newUser.setUserId(userId);
+                newUser.setToken(token);
+                newUser.setExpiresTime(expiresTime);
+                newUser.setExpiresIn(platformDb.getExpiresIn());
+                newUser.setUserName(nickName);
+                newUser.setUserGender(gender);
+                newUser.setUserIcon(avatar);
+            } else {
+                UserManager.registerVisitor(mContext, new UserManager.RegisterVisitorListener() {
+                    @Override
+                    public void registeSuccess() {
+                        generateRequestBodyAndUser(platformDb, requestBody, oldUser, newUser);
+                    }
+                });
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }
