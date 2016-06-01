@@ -410,7 +410,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
         if (user != null) {
-            mUserId = user.getUserId();
+            mUserId = user.getMuid()+"";
             mPlatformType = user.getPlatformType();
         }
         uuid = DeviceInfoUtil.getUUID();
@@ -811,11 +811,23 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      */
     public void loadOperate(final boolean isType){
 
+
+
+        JSONObject json = new JSONObject();
         RequestQueue requestQueue = Volley.newRequestQueue(NewsDetailAty2.this);
-        NewsDetailRequest<String> request = new NewsDetailRequest<String>(Request.Method.POST, new TypeToken<String>() {
-        }.getType(), isType?HttpConstant.URL_ADDORDELETE_FAVORITE:HttpConstant.URL_ADDORDELETE_CAREFOR, new Response.Listener() {
+        Logger.e("aaa", "type====" + (isType ? (isFavorite ? Request.Method.DELETE : Request.Method.POST) :
+                (isCareFor ? Request.Method.POST : Request.Method.DELETE)));
+        Logger.e("aaa", "url===" + (isType ? HttpConstant.URL_ADDORDELETE_FAVORITE : HttpConstant.URL_ADDORDELETE_CAREFOR) + "nid=" + mUrl + "&uid=" + mUserId);
+
+
+
+        DetailOperateRequest detailOperateRequest = new DetailOperateRequest(isType ? (isFavorite ? Request.Method.DELETE : Request.Method.POST) :
+                (isCareFor ? Request.Method.POST : Request.Method.DELETE),
+                (isType ? HttpConstant.URL_ADDORDELETE_FAVORITE : HttpConstant.URL_ADDORDELETE_CAREFOR)+"nid="+ mUrl+"&uid="+mUserId,
+
+                json.toString(), new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(Object response) {
+            public void onResponse(JSONObject response) {
                 if(mDetailFavorite.getVisibility() == View.GONE){
                     mDetailFavorite.setVisibility(View.VISIBLE);
                 }
@@ -843,7 +855,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }
 
                 }
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -859,16 +870,70 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 CareForAnimation();
             }
         });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization",  SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        detailOperateRequest.setRequestHeader(header);
+        detailOperateRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(detailOperateRequest);
+
+//        NewsDetailRequest<String> request = new NewsDetailRequest<String>(Request.Method.POST, new TypeToken<String>() {
+//        }.getType(), isType?HttpConstant.URL_ADDORDELETE_FAVORITE:HttpConstant.URL_ADDORDELETE_CAREFOR, new Response.Listener() {
+//            @Override
+//            public void onResponse(Object response) {
+//                if(mDetailFavorite.getVisibility() == View.GONE){
+//                    mDetailFavorite.setVisibility(View.VISIBLE);
+//                }
+//                if(isType){
+//                    carefor_Image.setImageResource(R.drawable.hook_image);
+//                    if(isFavorite){
+//                        isFavorite = false;
+//                        carefor_Text.setText("收藏已取消");
+//                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+//                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//                    }else{
+//                        isFavorite = true;
+//                        carefor_Text.setText("收藏成功");
+//                        SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+//                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//                    }
+//                    CareForAnimation();
+//                }else{
+//                    if(isCareFor){
+//                        carefor_Image.setImageResource(R.drawable.carefor_image);
+//                        carefor_Text.setText("将推荐更多此类文章");
+//                        CareForAnimation();
+//                    }else{
+//
+//                    }
+//
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                if(mDetailFavorite.getVisibility() == View.VISIBLE){
+//                    mDetailFavorite.setVisibility(View.GONE);
+//                }
+//                if(isType){
+//                    carefor_Text.setText("收藏失败");
+//                }else{
+//                    carefor_Text.setText("关心失败");
+//                }
+//                CareForAnimation();
+//            }
+//        });
 
 //        HashMap<String, String> header = new HashMap<>();
 //        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
 //        request.setRequestHeader(header);
-        HashMap<String, String> mParams = new HashMap<>();
-        mParams.put("nid", mUrl);
-        mParams.put("uid", mUserId);
-        request.setRequestParams(mParams);
-        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(request);
+//        HashMap<String, String> mParams = new HashMap<>();
+//        mParams.put("nid", mUrl);
+//        mParams.put("uid", mUserId);
+//        request.setRequestParams(mParams);
+
     }
 
 }

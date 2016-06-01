@@ -23,8 +23,8 @@ import java.util.Map;
 public class DetailOperateRequest extends JsonObjectRequest {
     private HashMap mParams, mHeader;
 
-    public DetailOperateRequest(String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-        super(Method.POST, HttpConstant.URL_ADD_COMMENT,requestBody, listener, errorListener);
+    public DetailOperateRequest(int method,String requestUrl,String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
+        super(method, requestUrl,requestBody, listener, errorListener);
     }
 
     @Override

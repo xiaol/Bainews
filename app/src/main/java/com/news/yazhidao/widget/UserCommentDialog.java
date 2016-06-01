@@ -23,11 +23,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
@@ -185,22 +187,22 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
             e.printStackTrace();
         }
         Logger.e("aaa", "json.toString()===" + json.toString());
-        DetailOperateRequest request = new DetailOperateRequest(json.toString(), new Response.Listener<JSONObject>() {
+        DetailOperateRequest request = new DetailOperateRequest(Request.Method.POST, HttpConstant.URL_ADD_COMMENT, json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Logger.e("jigang", "add comment success =" +response.toString());
+                Logger.e("jigang", "add comment success =" + response.toString());
 
 //                try {
 //                    Logger.e("jigang", "add comment success123 =" + response.getString("data"));
 //                    String code = response.getString("code");
 //                    String message = response.getString("message");
-                    String data = response.optString("data");
+                String data = response.optString("data");
 //                    if ("2000".equals(code)) {
-                        Logger.e("jigang", "comment_id" + comment_id);
-                        ToastUtil.toastShort("评论成功!");
-                        Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-                        NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid+"");
-                        //实例化一个新闻评论类
+                Logger.e("jigang", "comment_id" + comment_id);
+                ToastUtil.toastShort("评论成功!");
+                Intent intent = new Intent(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+                NewsDetailComment comment = new NewsDetailComment(comment_id, mUserCommentMsg, createTime, docid, data, 0, nickeName, profile, userid + "");
+                //实例化一个新闻评论类
 
 //                        NewsDetailCommentItem newsDetailCommentItem = new NewsDetailCommentItem();
 //                        newsDetailCommentItem.setComment_id(comment_id);
@@ -209,22 +211,21 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                        newsDetailCommentItem.setDocid(docid);
 //                        newsDetailCommentItem.setCommend(0);
 //                        newsDetailCommentItem.setPraise(false);
-                        comment.setUser(user);
+                comment.setUser(user);
 
-                        NewsDetailComment newsDetailCommentItem = new NewsDetailComment();
-                        newsDetailCommentItem.setComment_id(comment_id);
-                        newsDetailCommentItem.setContent(mUserCommentMsg);
-                        newsDetailCommentItem.setCtime(DateUtil.getDate());
-                        newsDetailCommentItem.setDocid(docid);
-                        newsDetailCommentItem.setCommend(0);
-                        newsDetailCommentItem.setPraise(false);
-                        newsDetailCommentItem.setUser(user);
+                NewsDetailComment newsDetailCommentItem = new NewsDetailComment();
+                newsDetailCommentItem.setComment_id(comment_id);
+                newsDetailCommentItem.setContent(mUserCommentMsg);
+                newsDetailCommentItem.setCtime(DateUtil.getDate());
+                newsDetailCommentItem.setDocid(docid);
+                newsDetailCommentItem.setCommend(0);
+                newsDetailCommentItem.setPraise(false);
+                newsDetailCommentItem.setUser(user);
 
 
-
-                        intent.putExtra(KEY_ADD_COMMENT, comment);
-                        getActivity().sendBroadcast(intent);
-                        UserCommentDialog.this.dismiss();
+                intent.putExtra(KEY_ADD_COMMENT, comment);
+                getActivity().sendBroadcast(intent);
+                UserCommentDialog.this.dismiss();
 
 //                    }
 //                } catch (JSONException e) {
@@ -240,7 +241,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         });
 
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
 
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");

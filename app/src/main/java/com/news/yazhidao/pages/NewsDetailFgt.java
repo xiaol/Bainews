@@ -409,7 +409,7 @@ public class NewsDetailFgt extends BaseFragment {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
-                    Logger.e("aaa", "点击点赞");
+                    Logger.e("aaa", "点击关心");
 
                     if (isLike) {
                         isLike = false;
