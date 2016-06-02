@@ -151,7 +151,7 @@ public class NewsDetailFgt extends BaseFragment {
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-
+        bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -382,7 +382,7 @@ public class NewsDetailFgt extends BaseFragment {
         //第2部分的CommentTitle
         View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
-        mNewsDetailHeaderView.addView(mCommentTitleView);
+//        mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
@@ -429,7 +429,7 @@ public class NewsDetailFgt extends BaseFragment {
         //第4部分的viewPointContent
         View mViewPointLayout = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mViewPointLayout.setLayoutParams(layoutParams);
-        mNewsDetailHeaderView.addView(mViewPointLayout);
+//        mNewsDetailHeaderView.addView(mViewPointLayout);
 
 
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);

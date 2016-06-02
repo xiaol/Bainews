@@ -213,11 +213,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
-                    if (item != null && newsId.equals(item.getUrl())) {
+                    if (item != null && newsId == item.getNid()) {
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                     }
