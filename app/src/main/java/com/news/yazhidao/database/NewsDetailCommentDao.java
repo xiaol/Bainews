@@ -68,7 +68,7 @@ public class NewsDetailCommentDao implements Serializable{
         List<NewsDetailComment> newsDetailCommentItems = new ArrayList<>();
         try {
             QueryBuilder<NewsDetailComment, Integer> builder = newsDetailCommentDaoOpe.queryBuilder();
-            builder.orderBy("create_time", false);
+            builder.orderBy("ctime", false);
             newsDetailCommentItems = builder.query();
             if(newsDetailCommentItems!=null&&newsDetailCommentItems.size()!=0){
                 return (ArrayList<NewsDetailComment>)newsDetailCommentItems;

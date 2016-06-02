@@ -50,7 +50,6 @@ import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
 import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
@@ -65,8 +64,8 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.umeng.analytics.MobclickAgent;
+
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -472,6 +471,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setChannel(result.getChannel());
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
+        mNewsFeed.setNid(result.getNid());
 
         return mNewsFeed;
     }

@@ -131,7 +131,7 @@ public class MyCommentAty extends BaseActivity implements View.OnClickListener, 
         // TODO Auto-generated method stub
         super.onWindowFocusChanged(hasFocus);
         Point outP = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(outP);
+         this.getWindowManager().getDefaultDisplay().getSize(outP);
         Rect outRect = new Rect();
         this.getWindow().findViewById(Window.ID_ANDROID_CONTENT)
                 .getDrawingRect(outRect);

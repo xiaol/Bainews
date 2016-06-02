@@ -383,7 +383,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     } else {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
-                    requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
@@ -517,6 +517,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error.toString().contains("2002")){
+                    mRefreshTitleBar.setText("已是最新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                     if (TextUtil.isListEmpty(newsFeeds)) {
