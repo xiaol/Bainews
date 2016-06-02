@@ -36,6 +36,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
@@ -45,12 +46,16 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.HashMap;
 
 /**
@@ -74,6 +79,7 @@ public class NewsCommentFgt extends BaseFragment {
     private LinearLayout news_comment_NoCommentsLayout;
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
+    private boolean isNetWork;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -172,7 +178,8 @@ public class NewsCommentFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +"&uid="+SharedPreManager.getUser(getActivity()).getMuid()+
+                    "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
                 public void onResponse(ArrayList<NewsDetailComment> result) {
@@ -282,7 +289,7 @@ public class NewsCommentFgt extends BaseFragment {
             }
 
             holder.tvContent.setText(comment.getContent());
-            if (mComment.getUpflag() == 0) {
+            if (comment.getUpflag() == 0) {
                 holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
             } else {
                 holder.ivPraise.setImageResource(R.drawable.bg_praised);
@@ -303,10 +310,11 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
-                        if(mComment.getUpflag()==0){
+                        if(comment.getUpflag()==0){
+                            Logger.e("aaa", "点赞");
                             addNewsLove(user, comment, position, true);
-
                         }else{
+                            Logger.e("aaa", "取消点赞");
                             addNewsLove(user, comment, position, false);
                         }
 
@@ -347,32 +355,53 @@ public class NewsCommentFgt extends BaseFragment {
     }
 
     private void addNewsLove(User user, NewsDetailComment comment, final int position, final boolean isAdd) {
-        try {
-            String name = URLEncoder.encode(user.getUserName(), "utf-8");
-            String cid = URLEncoder.encode(comment.getId(), "utf-8");
-            user.setUserName(name);
-            comment.setId(cid);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if(isNetWork){
+            return;
         }
-        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uid=" + user.getUserId() + "&unam=" + user.getUserName());
+        isNetWork = true;
+//        String uid = null;
+//        try {
+//            String name = URLEncoder.encode(user.getUserName(), "utf-8");
+//            String cid = URLEncoder.encode(comment.getId(), "utf-8");
+//            uid =  URLEncoder.encode(user.getMuid()+"", "utf-8");
+//            user.setUserName(name);
+//            comment.setId(cid);
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(isAdd?Request.Method.POST:Request.Method.DELETE, new TypeToken<String>() {
-        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
-            //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
-            @Override
-            public void onResponse(String result) {
-                mNewsCommentList.onRefreshComplete();
-                Logger.e("jigang", "network success, love" + result);
-                if (!TextUtil.isEmptyString(result)) {
-                   if(isAdd){
-                       mComments.get(position).setUpflag(1);
-                   }else{
-                       mComments.get(position).setUpflag(0);
 
-                   }
-                    mComments.get(position).setCommend(Integer.parseInt(result));
+
+        Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
+        JSONObject json = new JSONObject();
+
+//        try {
+//            json.put("cid", comment.getId());
+//            json.put("uid",uid);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+
+        DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
+                HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()
+                , json.toString(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String data = response.optString("data");
+                mNewsCommentList.onRefreshComplete();
+                Logger.e("jigang", "network success, love" + data);
+                if (!TextUtil.isEmptyString(data)) {
+                    if(isAdd){
+                        mComments.get(position).setUpflag(1);
+                    }else{
+                        mComments.get(position).setUpflag(0);
+
+
+                    }
+                    mComments.get(position).setCommend(Integer.parseInt(data));
                     mCommentsAdapter.notifyDataSetChanged();
+                    isNetWork = false;
 
                 }
             }
@@ -381,19 +410,55 @@ public class NewsCommentFgt extends BaseFragment {
             public void onErrorResponse(VolleyError error) {
                 mNewsCommentList.onRefreshComplete();
                 Logger.e("jigang", "network fail");
+                isNetWork = false;
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
-        loveRequest.setRequestHeader(header);
-        HashMap<String, String> mParams = new HashMap<>();
-        mParams.put("cid", comment.getId());
-        mParams.put("uid", user.getMuid()+"");
-        loveRequest.setRequestParams(mParams);
-        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(loveRequest);
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+
+
+//        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(isAdd ? Request.Method.POST : Request.Method.DELETE, new TypeToken<String>() {
+//        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + uid + "&cid=" + comment.getId(), new Response.Listener<String>() {
+//            //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
+//            @Override
+//            public void onResponse(String result) {
+//                mNewsCommentList.onRefreshComplete();
+//                Logger.e("jigang", "network success, love" + result);
+//                if (!TextUtil.isEmptyString(result)) {
+//                    if (isAdd) {
+//                        mComments.get(position).setUpflag(1);
+//                    } else {
+//                        mComments.get(position).setUpflag(0);
+//
+//                    }
+//                    mComments.get(position).setCommend(Integer.parseInt(result));
+//                    mCommentsAdapter.notifyDataSetChanged();
+//
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                mNewsCommentList.onRefreshComplete();
+//                Logger.e("jigang", "network fail");
+//            }
+//        });
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", "Basic X29pZH5jeDYyMmNvKXhuNzU2NmVuMXNzJy5yaXg0aWphZWUpaTc0M2JjbG40M2l1NDZlYXE3MXcyYV94KDBwNA");
+//        header.put("Content-Type", "application/json");
+//        header.put("X-Requested-With", "*");
+//        loveRequest.setRequestHeader(header);
+//        HashMap<String, String> mParams = new HashMap<>();
+//        mParams.put("cid", comment.getId());
+//        mParams.put("uid", user.getMuid()+"");
+//        loveRequest.setRequestParams(mParams);
+//        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//        requestQueue.add(loveRequest);
     }
     public void deleteNewsLove(User user, NewsDetailComment comment, final Holder holder){
 

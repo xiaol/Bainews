@@ -31,9 +31,9 @@ public class NewsLoveRequest<T> extends GsonRequest<T> {
         try {
             JSONObject jsonObject = new JSONObject(data);
             String code = jsonObject.optString("code", "");
-            String message = jsonObject.optString("message", "");
-            Logger.e("jigang","code = "+code + ",message=" + message);
-            if ("0".equals(code) && "success".equals(message)){
+//            String message = jsonObject.optString("message", "");
+//            Logger.e("jigang","code = "+code + ",message=" + message);
+            if ("2000".equals(code)){
                 return jsonObject.optString("data","");
             }else {
                 return "";

@@ -409,7 +409,7 @@ public class NewsDetailFgt extends BaseFragment {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
-                    Logger.e("aaa", "点击点赞");
+                    Logger.e("aaa", "点击关心");
 
                     if (isLike) {
                         isLike = false;
@@ -544,18 +544,7 @@ public class NewsDetailFgt extends BaseFragment {
                                 }
                                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
                             } else {
-                                RelatedItemEntity entity = new RelatedItemEntity();
-                                entity.setUrl("-1");
-                                if(relatedItemEntities == null||relatedItemEntities.size() == 0){
-                                    relatedItemEntities = new ArrayList<RelatedItemEntity>();
-                                }
-                                relatedItemEntities.add(entity);
-                                mAdapter.setNewsFeed(relatedItemEntities);
-                                mAdapter.notifyDataSetChanged();
-                                detail_shared_ViewPointTitleLayout.setVisibility(View.GONE);
-                                if(footerView_layout.getVisibility() ==View.VISIBLE){
-                                    footerView_layout.setVisibility(View.GONE);
-                                }
+                                setNoRelatedDate();
                             }
                         }
                     },
@@ -564,6 +553,7 @@ public class NewsDetailFgt extends BaseFragment {
                         public void onErrorResponse(VolleyError error) {
                             isCorrelationSuccess = true;
                             isBgLayoutSuccess();
+                            setNoRelatedDate();
                             Logger.e("jigang", "URL_NEWS_RELATED  network error~~");
                         }
                     });
@@ -583,6 +573,22 @@ public class NewsDetailFgt extends BaseFragment {
         requestQueue.add(related);
 
 
+    }
+
+    public void setNoRelatedDate(){
+        RelatedItemEntity entity = new RelatedItemEntity();
+        entity.setUrl("-1");
+        ArrayList<RelatedItemEntity> relatedItemEntities = new ArrayList<RelatedItemEntity>();
+//        if(relatedItemEntities == null||relatedItemEntities.size() == 0){
+//            relatedItemEntities = new ArrayList<RelatedItemEntity>();
+//        }
+        relatedItemEntities.add(entity);
+        mAdapter.setNewsFeed(relatedItemEntities);
+        mAdapter.notifyDataSetChanged();
+        detail_shared_ViewPointTitleLayout.setVisibility(View.GONE);
+        if(footerView_layout.getVisibility() ==View.VISIBLE){
+            footerView_layout.setVisibility(View.GONE);
+        }
     }
 
     private void addCommentInfoToSql(ArrayList<NewsDetailComment> mComments) {

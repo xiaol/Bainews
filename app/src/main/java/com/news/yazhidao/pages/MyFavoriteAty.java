@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -29,14 +30,18 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by fengjigang on 16/4/8.
@@ -120,23 +125,54 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
         mFavoriteListView.setAdapter(mAdapter);
 
+
     }
     public void loadFavorite(){
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        NewsDetailRequest<ArrayList<NewsDetailComment>> request = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.POST,
-                new TypeToken<ArrayList<NewsDetailComment>>() {
-                }.getType(), HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + user != null ? user.getUserId() : ""
-                , new Response.Listener<ArrayList<NewsDetailComment>>() {
+        Logger.e("aaa", "URL=======" + HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + SharedPreManager.getUser(mContext).getMuid());
+        NewsLoveRequest<ArrayList<NewsFeed>> request = new NewsLoveRequest<ArrayList<NewsFeed>>(Request.Method.GET,
+                new TypeToken<ArrayList<NewsFeed>>() {
+                }.getType(), HttpConstant.URL_SELECT_FAVORITELIST + "uid=" +user.getMuid()
+                , new Response.Listener<ArrayList<NewsFeed>>() {
             @Override
-            public void onResponse(ArrayList<NewsDetailComment> response) {
+            public void onResponse(ArrayList<NewsFeed> response) {
                 Logger.e("aaa", "收藏内容======" + response.toString());
+                newsFeedList = response;
+                mAdapter.setNewsFeed(newsFeedList);
+                mAdapter.notifyDataSetChanged();
+
+                if(newsFeedList.size() == 0){
+                    mFavoriteListView.setVisibility(View.GONE);
+                }else{
+                    if(!isHaveFooterView){
+                        isHaveFooterView = true;
+                        AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+                        ListView lv = mFavoriteListView.getRefreshableView();
+                        LinearLayout mNewsDetailFootView = (LinearLayout) getLayoutInflater().inflate(R.layout.detail_footview_layout, null);
+                        mNewsDetailFootView.setLayoutParams(layoutParams);
+                        lv.addFooterView(mNewsDetailFootView);
+                    }
+                    mFavoriteListView.setVisibility(View.VISIBLE);
+
+                }
+
+
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Logger.e("aaa", "获取收藏失败");
+                Logger.e("aaa", "获取收藏失败"+error);
             }
         });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
+
 
     }
 
@@ -144,12 +180,14 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     protected void onResume() {
         super.onResume();
 //        bgLayout.setVisibility(View.GONE);
-        try {
-            newsFeedList = SharedPreManager.myFavoriteGetList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Logger.e("aaa", "newsFeedList==" + newsFeedList);
+
+        loadFavorite();
+//        try {
+//            newsFeedList = SharedPreManager.myFavoriteGetList();
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        Logger.e("aaa", "newsFeedList==" + newsFeedList);
         mAdapter.setNewsFeed(newsFeedList);
         mAdapter.notifyDataSetChanged();
 
