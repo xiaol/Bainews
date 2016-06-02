@@ -47,7 +47,6 @@ import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -60,8 +59,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -76,6 +73,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 public class NewsDetailFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
+    public static final String ACTION_REFRESH_DTC = "com.news.yazhidao.ACTION_REFRESH_DTC";
     private LoadWebView mDetailWebView;
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
@@ -106,6 +104,7 @@ public class NewsDetailFgt extends BaseFragment {
     private LayoutInflater inflater;
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshLikeBroReceiber mRefreshLike;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
     private TextView mDetailSharedHotComment;
     boolean isNoHaveBean ;
@@ -140,6 +139,12 @@ public class NewsDetailFgt extends BaseFragment {
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
+        if (mRefreshLike == null) {
+            mRefreshLike = new RefreshLikeBroReceiber();
+            IntentFilter filter = new IntentFilter(NewsCommentFgt.ACTION_REFRESH_CTD);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+            getActivity().registerReceiver(mRefreshLike, filter);
+        }
 
     }
 
@@ -154,7 +159,7 @@ public class NewsDetailFgt extends BaseFragment {
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
-
+        bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -314,6 +319,9 @@ public class NewsDetailFgt extends BaseFragment {
         if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
         }
+        if (mRefreshLike != null) {
+            getActivity().unregisterReceiver(mRefreshLike);
+        }
     }
     @Override
     public void onPause() {
@@ -460,7 +468,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_hotComment.setText("相关观点");
 
-
+        //footView
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
@@ -492,7 +500,7 @@ public class NewsDetailFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
             }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                    user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():""+
+                    (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
                     "&p=" + (1)+ "&c=" + (20)
                     , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
@@ -505,6 +513,11 @@ public class NewsDetailFgt extends BaseFragment {
 
                     if (!TextUtil.isListEmpty(result)) {
                         mComments = result;
+                        for(int i = 0;i<mComments.size();i++){
+                            if(i>2){
+                                mComments.remove(i);
+                            }
+                        }
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
                         Logger.d("aaa", "评论加载完毕！！！！！！");
@@ -770,6 +783,11 @@ public class NewsDetailFgt extends BaseFragment {
                     int commend = Integer.parseInt(data);
                     mComments.get(position).setCommend(commend);
                     holder.tvPraiseCount.setText(commend + "");
+                    Intent intent = new Intent(ACTION_REFRESH_DTC);
+                    intent.putExtra(NewsCommentFgt.LIKETYPE,isAdd);
+                    intent.putExtra((NewsCommentFgt.LIKEBEAN), mComments.get(position));
+                    getActivity().sendBroadcast(intent);
+
                     isNetWork = false;
 
                 }
@@ -900,6 +918,47 @@ public class NewsDetailFgt extends BaseFragment {
                 UpdateCCOneData();
             }
 
+        }
+    }
+
+    /**
+     * 点赞的广播
+     */
+    public class RefreshLikeBroReceiber extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Logger.e("aaa", "详情接收到！");
+            NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
+            boolean isAdd = intent.getBooleanExtra(NewsCommentFgt.LIKETYPE,false);
+            boolean isLikeType = false;
+            int size = mComments.size();
+            for(int i = 0;i<mComments.size();i++)
+                if (mComments.get(i).getId().equals(bean.getId())) {
+                    isLikeType = true;
+                    mComments.set(i,bean);
+                    CCViewNotifyDataSetChanged();
+                }
+            if (!isLikeType && isAdd && size < 3) {
+                ShowCommentBar();
+                mComments.add(bean);
+                size = mComments.size();
+                CommentType = size;
+                mCCView = inflater.inflate(R.layout.adapter_list_comment1, container, false);
+                View mSelectCommentDivider = mCCView.findViewById(R.id.mSelectCommentDivider);
+                CommentHolder holder = new CommentHolder(mCCView);
+
+//                NewsDetailComment comment = result.get(i);
+
+                UpdateCCView(holder, bean, CommentType-1);
+                holderList.add(holder);
+                viewList.add(mCCView);
+                if (size == 2) {
+                    mSelectCommentDivider.setVisibility(View.GONE);
+                }
+                mCommentLayout.addView(mCCView);
+
+            }
         }
     }
 

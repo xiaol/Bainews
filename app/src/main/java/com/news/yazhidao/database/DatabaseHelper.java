@@ -34,7 +34,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 17);
+        super(context, TABLE_NAME, null, 19);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -139,6 +139,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
+            TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);
             onCreate(database, connectionSource);
             Logger.e("jigang", "DatabaseHelper  onUpgrade()");
         } catch (SQLException e) {

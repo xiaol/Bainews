@@ -1,24 +1,21 @@
 package com.news.yazhidao.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
@@ -30,6 +27,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -112,13 +110,28 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         del_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                showPopupWindow(v,newsDetailCommentItem);
-//                Toast.makeText(mContext, "删除该条评论",
-//                        Toast.LENGTH_SHORT).show();
-//                newsDetailCommentDao.delete(newsDetailCommentItem);
-//                mDatas.remove(newsDetailCommentItem);
-//                notifyDataSetChanged();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("确认删除此条评论吗?");
+                builder.setTitle("提示");
+                builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        newsDetailCommentDao.delete(newsDetailCommentItem);
+                        mDatas.remove(newsDetailCommentItem);
+                        if (mDatas.size()==0){
+                            onDataIsNullListener.onChangeLayout();
+                        }
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             }
         });
         love_imagebt.setOnClickListener(new View.OnClickListener(){
@@ -218,70 +231,6 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
     }
 
 
-    private void showPopupWindow(View view,final NewsDetailComment newsDetailCommentItem){
-        backgroundAlpha(0.5f);
-        // 一个自定义的布局，作为显示的内容
-        View contentView = LayoutInflater.from(mContext).inflate(
-                R.layout.popup, null);
-        // 设置按钮的点击事件
-        Button confirm = (Button) contentView.findViewById(R.id.popup_confirm);
-        Button cancel = (Button) contentView.findViewById(R.id.popup_cancle);
-
-
-        final PopupWindow popupWindow = new PopupWindow(contentView,
-                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
-
-        popupWindow.setTouchable(true);
-
-        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                return false;
-                // 这里如果返回true的话，touch事件将被拦截
-                // 拦截后 PopupWindow的onTouchEvent不被调用，这样点击外部区域无法dismiss
-            }
-        });
-
-        popupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(
-                R.drawable.bg_comment_del_popup));
-        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-
-            @Override
-            public void onDismiss() {
-                // TODO Auto-generated method stub
-                backgroundAlpha(1.0f);
-            }
-        });
-
-        confirm.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                backgroundAlpha(1.0f);
-                Toast.makeText(mContext, "删除该条评论",
-                        Toast.LENGTH_SHORT).show();
-                newsDetailCommentDao.delete(newsDetailCommentItem);
-                mDatas.remove(newsDetailCommentItem);
-                if (mDatas.size()==0){
-                    onDataIsNullListener.onChangeLayout();
-                }
-                notifyDataSetChanged();
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                backgroundAlpha(1.0f);
-                popupWindow.dismiss();
-            }
-        });
-
-    }
 
 
 

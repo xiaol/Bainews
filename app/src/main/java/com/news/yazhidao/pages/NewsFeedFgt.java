@@ -82,6 +82,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_COMMENTCOUNT = "key_commentcount";
 
 
+
+
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
@@ -213,11 +215,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
-                    if (item != null && newsId.equals(item.getUrl())) {
+                    if (item != null && newsId == item.getNid()) {
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                     }
@@ -383,7 +385,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     } else {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
-                    requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
@@ -517,6 +519,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error.toString().contains("2002")){
+                    mRefreshTitleBar.setText("已是最新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                     if (TextUtil.isListEmpty(newsFeeds)) {

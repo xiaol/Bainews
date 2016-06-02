@@ -65,6 +65,7 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.umeng.analytics.MobclickAgent;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -296,7 +297,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-        if (saveNum >= 5) {
+        if (saveNum >= 30) {
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -495,7 +496,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void finish() {
         if (mNewsFeed != null) {
             Intent intent = new Intent();
-            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getUrl());
+            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
             setResult(NewsFeedAdapter.REQUEST_CODE, intent);
         }
         super.finish();

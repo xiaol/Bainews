@@ -81,7 +81,7 @@ public class NewsFeedDao {
         try {
             if (newsFeed != null) {
                 QueryBuilder<NewsFeed, String> queryBuilder = mNewsFeedDao.queryBuilder();
-                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID, newsFeed.getUrl());
+                queryBuilder.where().eq(NewsFeed.COLUMN_NEWS_ID, newsFeed.getNid());
                 List<NewsFeed> result = queryBuilder.query();
                 if (!TextUtil.isListEmpty(result)) {
                     NewsFeed feed = result.get(0);

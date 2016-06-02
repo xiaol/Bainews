@@ -1,5 +1,6 @@
 package com.news.yazhidao.entity;
 
+import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -98,7 +99,7 @@ public class NewsDetailComment implements Serializable{
         this.newsFeed = newsFeed;
     }
 
-    @DatabaseField(canBeNull = true, foreign = true, columnName = "url", foreignAutoRefresh = true)
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private NewsFeed newsFeed;
 
     public NewsDetailComment(String comment_id, String content, String ctime, String docid, String id, int commend, String uname, String avatar, String uid) {

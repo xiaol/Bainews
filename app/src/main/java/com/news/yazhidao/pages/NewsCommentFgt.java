@@ -38,7 +38,6 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -46,16 +45,12 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 /**
@@ -67,11 +62,15 @@ public class NewsCommentFgt extends BaseFragment {
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String ACTION_REFRESH_CTD = "com.news.yazhidao.ACTION_REFRESH_CTD";
+    public static final String LIKETYPE = "liketype";
+    public static final String LIKEBEAN = "likebean";
     private PullToRefreshListView mNewsCommentList;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshLikeBroReceiber mRefreshLike;
     private RelativeLayout bgLayout;
     private User mUser;
     private NewsDetailComment mComment;
@@ -80,6 +79,26 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private boolean isNetWork;
+
+    /**
+     * 点赞的广播
+     */
+    public class RefreshLikeBroReceiber extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Logger.e("aaa", "评论接收到！");
+            NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
+            for(int i = 0;i<mComments.size();i++)
+                if (mComments.get(i).getId().equals(bean.getId())) {
+//                    mComments.remove(i);
+//                    mComments.add(i, bean);
+                    mComments.set(i,bean);
+                    mCommentsAdapter.notifyDataSetChanged();
+
+                }
+        }
+    }
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -116,6 +135,12 @@ public class NewsCommentFgt extends BaseFragment {
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
+        if (mRefreshLike == null) {
+            mRefreshLike = new RefreshLikeBroReceiber();
+            IntentFilter filter = new IntentFilter(NewsDetailFgt.ACTION_REFRESH_DTC);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+            getActivity().registerReceiver(mRefreshLike, filter);
+        }
     }
 
     @Override
@@ -123,6 +148,9 @@ public class NewsCommentFgt extends BaseFragment {
         super.onDestroy();
         if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
+        }
+        if (mRefreshLike != null) {
+            getActivity().unregisterReceiver(mRefreshLike);
         }
     }
 
@@ -399,6 +427,11 @@ public class NewsCommentFgt extends BaseFragment {
                     }
                     mComments.get(position).setCommend(Integer.parseInt(data));
                     mCommentsAdapter.notifyDataSetChanged();
+                    Intent intent = new Intent(ACTION_REFRESH_CTD);
+                    intent.putExtra(LIKETYPE,isAdd);
+                    intent.putExtra(LIKEBEAN, mComments.get(position));
+                    getActivity().sendBroadcast(intent);
+
                     isNetWork = false;
 
                 }
