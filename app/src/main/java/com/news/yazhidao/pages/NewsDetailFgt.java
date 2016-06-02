@@ -45,6 +45,7 @@ import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
@@ -56,6 +57,8 @@ import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.umeng.analytics.MobclickAgent;
+
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -117,7 +120,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
 
     private boolean isLoadDate;
-
+    private boolean isNetWork;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -488,7 +491,9 @@ public class NewsDetailFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1)+ "&c=" + (20)
+            }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
+                    user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():""+
+                    "&p=" + (1)+ "&c=" + (20)
                     , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
@@ -505,7 +510,7 @@ public class NewsDetailFgt extends BaseFragment {
                         Logger.d("aaa", "评论加载完毕！！！！！！");
                         //同步服务器上的评论数据到本地数据库
                         //  addCommentInfoToSql(mComments);
-                        mDetailSharedHotComment.setText("热门评论("+mResult.getCommentSize()+")");
+                        mDetailSharedHotComment.setText("热门评论");//
                         addCommentContent(result);
                     } else {
                         detail_shared_CommentTitleLayout.setVisibility(View.GONE);
@@ -661,36 +666,112 @@ public class NewsDetailFgt extends BaseFragment {
         }
     }
 
-    private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder) {
-        try {
-            String name = URLEncoder.encode(user.getUserName(), "utf-8");
-            String cid = URLEncoder.encode(comment.getId(), "utf-8");
-            user.setUserName(name);
-            comment.setId(cid);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+    private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder,final boolean isAdd) {
+//        try {
+//            String name = URLEncoder.encode(user.getUserName(), "utf-8");
+//            String cid = URLEncoder.encode(comment.getId(), "utf-8");
+//            user.setUserName(name);
+//            comment.setId(cid);
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+//        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+//
+//
+//
+//
+//        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.POST, new TypeToken<String>() {
+//        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
+//
+//            @Override
+//            public void onResponse(String result) {
+//                //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
+//                mNewsDetailList.onRefreshComplete();
+//                Logger.e("jigang", "network success, love" + result);
+//                if (!TextUtil.isEmptyString(result)) {
+//                    mComments.get(position).setPraise(true);
+//                    mComments.get(position).setCommend(Integer.parseInt(result));
+//                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
+//                    holder.tvPraiseCount.setText(result);
+////                    viewList.get(position).invalidate();//刷新界面
+////                    mAdapter.notifyDataSetChanged();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                mNewsDetailList.onRefreshComplete();
+//                Logger.e("jigang", "network fail");
+//            }
+//        });
+//        HashMap<String, String> header = new HashMap<>();
+//        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
+//        loveRequest.setRequestHeader(header);
+//        HashMap<String, String> mParams = new HashMap<>();
+//        mParams.put("cid", comment.getId());
+//        mParams.put("uid", user.getUserId());
+//        loveRequest.setRequestParams(mParams);
+//
+//        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//        requestQueue.add(loveRequest);
+
+        if(isNetWork){
+            return;
         }
-        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName());
+        isNetWork = true;
+//        String uid = null;
+//        try {
+//            String name = URLEncoder.encode(user.getUserName(), "utf-8");
+//            String cid = URLEncoder.encode(comment.getId(), "utf-8");
+//            uid =  URLEncoder.encode(user.getMuid()+"", "utf-8");
+//            user.setUserName(name);
+//            comment.setId(cid);
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
+        JSONObject json = new JSONObject();
+//        try {
+//            json.put("cid", comment.getId());
+//            json.put("uid",uid);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
 
-
-
-
-        NewsLoveRequest<String> loveRequest = new NewsLoveRequest<String>(Request.Method.POST, new TypeToken<String>() {
-        }.getType(), HttpConstant.URL_ADDORDELETE_LOVE_COMMENT , new Response.Listener<String>() {
-
+        DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
+                HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()
+                , json.toString(), new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String result) {
-                //+ "cid=" + comment.getId() + "&uuid=" + user.getUserId() + "&unam=" + user.getUserName()
+            public void onResponse(JSONObject response) {
+                String data = response.optString("data");
+
+
                 mNewsDetailList.onRefreshComplete();
-                Logger.e("jigang", "network success, love" + result);
-                if (!TextUtil.isEmptyString(result)) {
-                    mComments.get(position).setPraise(true);
-                    mComments.get(position).setCommend(Integer.parseInt(result));
-                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                    holder.tvPraiseCount.setText(result);
-//                    viewList.get(position).invalidate();//刷新界面
-//                    mAdapter.notifyDataSetChanged();
+//                Logger.e("jigang", "network success, love" + result);
+//                if (!TextUtil.isEmptyString(result)) {
+//                    mComments.get(position).setPraise(true);
+//                    mComments.get(position).setCommend(Integer.parseInt(result));
+//                    holder.ivPraise.setImageResource(R.drawable.bg_praised);
+//                    holder.tvPraiseCount.setText(result);
+//                }
+                mNewsDetailList.onRefreshComplete();
+                Logger.e("jigang", "network success, love" + data);
+                if (!TextUtil.isEmptyString(data)) {
+                    if(isAdd){
+                        mComments.get(position).setUpflag(1);
+                        holder.ivPraise.setImageResource(R.drawable.bg_praised);
+                    }else{
+                        mComments.get(position).setUpflag(0);
+                        holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
+                    }
+                    int commend = Integer.parseInt(data);
+                    mComments.get(position).setCommend(commend);
+                    holder.tvPraiseCount.setText(commend + "");
+                    isNetWork = false;
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -698,18 +779,20 @@ public class NewsDetailFgt extends BaseFragment {
             public void onErrorResponse(VolleyError error) {
                 mNewsDetailList.onRefreshComplete();
                 Logger.e("jigang", "network fail");
+                isNetWork = false;
             }
         });
         HashMap<String, String> header = new HashMap<>();
         header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
-        loveRequest.setRequestHeader(header);
-        HashMap<String, String> mParams = new HashMap<>();
-        mParams.put("cid", comment.getId());
-        mParams.put("uid", user.getUserId());
-        loveRequest.setRequestParams(mParams);
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
 
-        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-        requestQueue.add(loveRequest);
+
+
+
     }
 
     ArrayList<CommentHolder> holderList = new ArrayList<CommentHolder>();
@@ -862,20 +945,22 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa", "点击内容");
             }
         });
-        if (!comment.isPraise()) {
+
+        if (comment.getUpflag() == 0) {
             holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
         } else {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
-        String commentUserid = comment.getUid();
-        if (commentUserid != null && commentUserid.length() != 0&&user != null) {
 
-            if (user.getUserId().equals(comment.getUid())) {
-                holder.ivPraise.setVisibility(View.GONE);
-            } else {
-                holder.ivPraise.setVisibility(View.VISIBLE);
-            }
-        }
+//        String commentUserid = comment.getUid();
+//        if (commentUserid != null && commentUserid.length() != 0&&user != null) {
+//
+//            if ((user.getMuid()+"").equals(comment.getUid())) {
+//                holder.ivPraise.setVisibility(View.GONE);
+//            } else {
+//                holder.ivPraise.setVisibility(View.VISIBLE);
+//            }
+//        }
 
         holder.ivPraise.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -885,8 +970,13 @@ public class NewsDetailFgt extends BaseFragment {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
-                    addNewsLove(comment, position, holder);
-
+                    if(comment.getUpflag()==0){
+                        Logger.e("aaa", "点赞");
+                        addNewsLove(comment, position, holder, true);
+                    }else{
+                        Logger.e("aaa", "取消点赞");
+                        addNewsLove(comment, position, holder, false);
+                    }
                 }
 
             }

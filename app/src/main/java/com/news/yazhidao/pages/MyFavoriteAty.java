@@ -48,7 +48,7 @@ import java.util.HashMap;
  */
 public class MyFavoriteAty extends BaseActivity implements View.OnClickListener {
     private View mFavoriteLeftBack;
-//    private RelativeLayout bgLayout;
+    private RelativeLayout bgLayout;
     private PullToRefreshListView mFavoriteListView;
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> newsFeedList = new ArrayList<NewsFeed>();
@@ -80,7 +80,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
         aty_myFavorite_Deletelayout = (LinearLayout) findViewById(R.id.aty_myFavorite_Deletelayout);
         aty_myFavorite_Deletelayout.setOnClickListener(this);
         user = SharedPreManager.getUser(mContext);
-//        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mFavoriteListView = (PullToRefreshListView) findViewById(R.id.aty_myFavorite_PullToRefreshListView);
         mAdapter = new NewsFeedAdapter(this, null, null);
         mAdapter.setIntroductionNewsFeed(mIntroductionNewsFeed);
@@ -128,6 +128,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
 
     }
     public void loadFavorite(){
+        showBGLayout(true);
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         Logger.e("aaa", "URL=======" + HttpConstant.URL_SELECT_FAVORITELIST + "uid=" + SharedPreManager.getUser(mContext).getMuid());
         NewsLoveRequest<ArrayList<NewsFeed>> request = new NewsLoveRequest<ArrayList<NewsFeed>>(Request.Method.GET,
@@ -155,14 +156,22 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
                     mFavoriteListView.setVisibility(View.VISIBLE);
 
                 }
-
+                showBGLayout(false);
 
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Logger.e("aaa", "获取收藏失败"+error);
+               //这里有问题，比如点击进入详情页，后关闭网络回来会没有数据（实际是有数据的）
+
+                mFavoriteListView.setVisibility(View.GONE);
+                newsFeedList = new ArrayList<NewsFeed>();
+                mAdapter.setNewsFeed(newsFeedList);
+                mAdapter.notifyDataSetChanged();
+
+
+                showBGLayout(false);
             }
         });
         HashMap<String, String> header = new HashMap<>();
@@ -228,9 +237,47 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
                 for (int i = 0; i < deleteFeedList.size(); i++) {
                     deleteFeedList.get(i).setFavorite(false);
                 }
+                deleteFavorite(deleteFeedList);
                 setDeleteType(false);
+
                 break;
         }
+    }
+    public void deleteFavorite(final ArrayList<NewsFeed> list){
+        showBGLayout(true);
+        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        for(int i = 0; i < list.size(); i++){
+            final int position = i;
+            NewsFeed bean = list.get(i);
+            JSONObject json = new JSONObject();
+            Logger.e("aaa", "nid==" + bean.getNid());
+            DetailOperateRequest request = new DetailOperateRequest(Request.Method.DELETE, HttpConstant.URL_ADDORDELETE_FAVORITE + "uid=" + user.getMuid() + "&nid=" + bean.getNid(), json.toString(), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (position == list.size() - 1) {
+                        loadFavorite();
+                    }
+
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                    showBGLayout(false);
+                }
+            });
+            HashMap<String, String> header = new HashMap<>();
+            header.put("Authorization",  SharedPreManager.getUser(mContext).getAuthorToken());
+            header.put("Content-Type", "application/json");
+            header.put("X-Requested-With", "*");
+            request.setRequestHeader(header);
+//            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(request);
+        }
+
+
+
     }
 
     public void setDeleteType(boolean isType){
@@ -311,4 +358,16 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
             });
         }
     }
+    public void showBGLayout(boolean isShow){
+        if(isShow){
+            if(bgLayout.getVisibility() == View.GONE){
+                bgLayout.setVisibility(View.VISIBLE);
+            }
+        }else{
+            if(bgLayout.getVisibility() == View.VISIBLE){
+                bgLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
 }

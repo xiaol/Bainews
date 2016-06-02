@@ -202,63 +202,63 @@ public class SplashAty extends BaseActivity {
         /**
          * 日志上传
          */
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                User user = SharedPreManager.getUser(SplashAty.this);
-                String mstrUserId = "";
-                if (user != null)
-                    mstrUserId = user.getUserId();
-                else
-                    return;
-                Logger.e("ccc", "主页的数据上传====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-                String mReadData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN);
-                Gson gson = new Gson();
-                UploadLogEntity uploadLogEntity = new UploadLogEntity();
-                if (mReadData != null && mReadData.length() != 0) {
-                    uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
-                }
-                List<UploadLogDataEntity> data = uploadLogEntity.getData();
-
-                int size = data.size();
-                if (size < 200) {
-                    Log.e("ccc", "条数不够！！！！=======" + size);
-                    return;
-
-                }
-                Logger.e("aaa", "data==================" + data.toString());
-                for (int i = 0; i < (size % 100 == 0 ? size / 100 : size / 100 + 1); i++) {
-                    List<UploadLogDataEntity> dataScope = null;
-                    if (data.size() > 100) {
-                        dataScope = new ArrayList<UploadLogDataEntity>(data.subList(0, 99));
-                    } else {
-                        dataScope = data;
-                    }
-
-                    Logger.e("aaa", "dataScope==================" + dataScope.toString());
-                    RequestQueue requestQueue = Volley.newRequestQueue(SplashAty.this);
-                    String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
-                            "&data=" + TextUtil.getBase64(gson.toJson(dataScope));
-                    Logger.d("aaa", "url===" + url);
-                    UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
-                    });
-                    requestQueue.add(request);
-
-                    data.removeAll(dataScope);
-                    Log.e("ccc", "删除完成之后的数量！！！！=======" + data.size());
-                }
-                SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
-
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                User user = SharedPreManager.getUser(SplashAty.this);
+//                String mstrUserId = "";
+//                if (user != null)
+//                    mstrUserId = user.getUserId();
+//                else
+//                    return;
+//                Logger.e("ccc", "主页的数据上传====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//                String mReadData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN);
+//                Gson gson = new Gson();
+//                UploadLogEntity uploadLogEntity = new UploadLogEntity();
+//                if (mReadData != null && mReadData.length() != 0) {
+//                    uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+//                }
+//                List<UploadLogDataEntity> data = uploadLogEntity.getData();
+//
+//                int size = data.size();
+//                if (size < 200) {
+//                    Log.e("ccc", "条数不够！！！！=======" + size);
+//                    return;
+//
+//                }
+//                Logger.e("aaa", "data==================" + data.toString());
+//                for (int i = 0; i < (size % 100 == 0 ? size / 100 : size / 100 + 1); i++) {
+//                    List<UploadLogDataEntity> dataScope = null;
+//                    if (data.size() > 100) {
+//                        dataScope = new ArrayList<UploadLogDataEntity>(data.subList(0, 99));
+//                    } else {
+//                        dataScope = data;
+//                    }
+//
+//                    Logger.e("aaa", "dataScope==================" + dataScope.toString());
+//                    RequestQueue requestQueue = Volley.newRequestQueue(SplashAty.this);
+//                    String url = HttpConstant.URL_UPLOAD_LOG + "uid=" + mstrUserId + "&clas=1" +
+//                            "&data=" + TextUtil.getBase64(gson.toJson(dataScope));
+//                    Logger.d("aaa", "url===" + url);
+//                    UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                        }
+//                    });
+//                    requestQueue.add(request);
+//
+//                    data.removeAll(dataScope);
+//                    Log.e("ccc", "删除完成之后的数量！！！！=======" + data.size());
+//                }
+//                SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_MAIN);
+//
+//            }
+//        }).start();
 //        Logger.e("jigang", "h=" + mSplashLine.getHeight() + ",w=" + mSplashLine.getWidth());
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);

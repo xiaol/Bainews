@@ -107,6 +107,7 @@ public class NewsCommentFgt extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
+        mUser = SharedPreManager.getUser(getActivity());
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         if (mRefreshReceiber == null) {
@@ -178,7 +179,7 @@ public class NewsCommentFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +"&uid="+SharedPreManager.getUser(getActivity()).getMuid()+
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
                     "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
@@ -370,18 +371,15 @@ public class NewsCommentFgt extends BaseFragment {
 //            e.printStackTrace();
 //        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
-
         Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
         JSONObject json = new JSONObject();
-
 //        try {
 //            json.put("cid", comment.getId());
 //            json.put("uid",uid);
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
 
         DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
                 HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()

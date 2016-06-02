@@ -159,7 +159,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
         if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
-            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
+//            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
 
             isNeedAddSP = false;
         }
@@ -442,7 +442,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         case PULL_UP_REFRESH:
                             Logger.e("aaa", "===========PULL_UP_REFRESH==========");
                             if (isNewVisity) {//首次进入加入他
-                                addSP(result);
+//                                addSP(result);
                                 isNeedAddSP = false;
 
                             }
@@ -701,18 +701,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
-    public void addSP(ArrayList<NewsFeed> result) {
-        ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
-        for (NewsFeed bean : result) {
-            UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-            uploadLogDataEntity.setNid(bean.getUrl());
-            uploadLogDataEntity.setTid(bean.getTitle());//需要改成typeID
-            uploadLogDataEntity.setCid(bean.getChannel()+"");
-            uploadLogDataEntities.add(uploadLogDataEntity);
-        }
-        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-    }
+//    public void addSP(ArrayList<NewsFeed> result) {
+//        ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
+//        for (NewsFeed bean : result) {
+//            UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+//            uploadLogDataEntity.setN(bean.getNid()+"");
+//            uploadLogDataEntity.setT("0");//需要改成typeID
+//            uploadLogDataEntity.setC(bean.getChannel()+"");
+//            uploadLogDataEntities.add(uploadLogDataEntity);
+//        }
+//        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
+//        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//    }
 
 
     //    int lastY = 0;

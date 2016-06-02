@@ -5,6 +5,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 
@@ -68,12 +69,16 @@ public class GsonRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String data = new String(response.data, "utf-8");
+            if(data.equals("2002")){//判断他数据为空
+                return Response.error(new VolleyError(data));
+            }
             data = checkJsonData(data, response);
             T o = mGson.fromJson(data, mReflectType == null ? mClazz : mReflectType);
             return Response.success(o, HttpHeaderParser.parseCacheHeaders(response));
         } catch (Exception e) {
             e.printStackTrace();
             return Response.error(new ParseError(e));
+
         }
     }
 

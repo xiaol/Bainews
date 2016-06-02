@@ -237,26 +237,43 @@ public class SharedPreManager {
     public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
 
         String mReadData = upLoadLogGet(key);
-        Gson gson = new Gson();
-        UploadLogEntity uploadLogEntity = new UploadLogEntity();
-        if (mReadData != null && mReadData.length() != 0) {
-            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
-
+        if(mReadData.indexOf("city")!= -1){
+            remove(CommonConstant.UPLOAD_LOG, key);
         }
-        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-
-        uploadLogEntity.getData().add(uploadLogDataEntity);
-
-        uploadLogEntity.setUid(mUserId);
-        uploadLogEntity.setCou(locationEntity.getCountry());
-        uploadLogEntity.setPro(locationEntity.getProvince());
-        uploadLogEntity.setCity(locationEntity.getCity());
-        uploadLogEntity.setDis(locationEntity.getDistrict());
-        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+        Gson gson = new Gson();
+        JSONArray array = null;
+         ArrayList<UploadLogDataEntity> data = new ArrayList<UploadLogDataEntity>();
+        try {
+            array = new JSONArray(mReadData);
+            for (int i = 0; i < array.length(); i++) {
+                String str1 = array.getString(i);
+                UploadLogDataEntity bean = gson.fromJson(str1, UploadLogDataEntity.class);
+                data.add(bean);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        data.add(uploadLogDataEntity);
 
         upLoadLogDelter(key);
-        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
-        return uploadLogEntity.getData().size();
+        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(data));
+        return data.size();
+
+
+
+//        UploadLogEntity uploadLogEntity = new UploadLogEntity();
+//        if (mReadData != null && mReadData.length() != 0) {
+//            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+//
+//        }
+//        uploadLogEntity.getData().add(uploadLogDataEntity);
+//
+//        uploadLogEntity.setUid(mUserId);
+//        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+//
+//        upLoadLogDelter(key);
+//        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
+//        return uploadLogEntity.getData().size();
     }
     public static int upLoadLogSaveList(String mUserId, String key,  List<UploadLogDataEntity> list) {
 
