@@ -107,6 +107,11 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
             mSetttingLogout.setText("退出登录");
