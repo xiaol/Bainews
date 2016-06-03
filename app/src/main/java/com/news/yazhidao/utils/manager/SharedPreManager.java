@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.HistoryEntity;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;

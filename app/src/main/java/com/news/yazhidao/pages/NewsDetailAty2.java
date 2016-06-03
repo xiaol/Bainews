@@ -571,7 +571,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } else {
                     Logger.e("bbb","收藏触发的点击事件！！！！！");
                     loadOperate(true);
-
                 }
                 MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
                 break;
