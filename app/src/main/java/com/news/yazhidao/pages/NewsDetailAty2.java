@@ -565,7 +565,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDetailFavorite:
                 User user = SharedPreManager.getUser(NewsDetailAty2.this);
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
@@ -826,15 +826,15 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(mDetailFavorite.getVisibility() == View.GONE){
-                    mDetailFavorite.setVisibility(View.VISIBLE);
-                }
+//                if(mDetailFavorite.getVisibility() == View.GONE){
+//                    mDetailFavorite.setVisibility(View.VISIBLE);
+//                }
                 if(isType){
                     carefor_Image.setImageResource(R.drawable.hook_image);
                     if(isFavorite){
                         isFavorite = false;
                         carefor_Text.setText("收藏已取消");
-                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid()+"");
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     }else{
                         isFavorite = true;
@@ -857,9 +857,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(mDetailFavorite.getVisibility() == View.VISIBLE){
-                    mDetailFavorite.setVisibility(View.GONE);
-                }
+//                if(mDetailFavorite.getVisibility() == View.VISIBLE){
+//                    mDetailFavorite.setVisibility(View.GONE);
+//                }
                 if(isType){
                     carefor_Text.setText("收藏失败");
                 }else{

@@ -235,11 +235,15 @@ public class NewsCommentFgt extends BaseFragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Logger.e("aaa", "没有数据报的错=============================="+error);
+                    if(error.toString().indexOf("服务端未找到数据 2002") != -1){
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    }
                     mNewsCommentList.onRefreshComplete();
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
-                    Logger.e("jigang", "NewsCommentFgt  network fail");
+                    Logger.e("jigang", "NewsCommentFgt  network fail"+error);
                 }
             });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));

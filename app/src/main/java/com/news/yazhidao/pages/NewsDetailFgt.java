@@ -420,7 +420,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void onClick(View view) {
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_like");
 
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
@@ -1031,7 +1031,7 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View v) {
 
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
