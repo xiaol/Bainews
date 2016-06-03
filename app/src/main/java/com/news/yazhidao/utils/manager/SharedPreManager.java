@@ -383,7 +383,7 @@ public class SharedPreManager {
 //        String str = gson.toJson(list);
 //        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
         for(NewsFeed bean : deleteList){
-            myFavoritRemoveItem(bean.getUrl());
+            myFavoritRemoveItem(bean.getNid()+"");
         }
         try {
             list = myFavoriteGetList();

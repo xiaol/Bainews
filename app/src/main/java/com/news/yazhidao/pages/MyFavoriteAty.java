@@ -245,6 +245,7 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
     }
     public void deleteFavorite(final ArrayList<NewsFeed> list){
         showBGLayout(true);
+        SharedPreManager.myFavoritRemoveList(list);
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         for(int i = 0; i < list.size(); i++){
             final int position = i;
