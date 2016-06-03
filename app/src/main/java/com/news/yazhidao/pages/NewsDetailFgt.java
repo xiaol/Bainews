@@ -554,10 +554,13 @@ public class NewsDetailFgt extends BaseFragment {
         related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
+
                 HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
+
+                        Logger.e("jigang", "URL_NEWS_RELATED  network success~~"+relatedItemEntities.toString());
                         isCorrelationSuccess = true;
                         isBgLayoutSuccess();
 //                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
