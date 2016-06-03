@@ -565,13 +565,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDetailFavorite:
                 User user = SharedPreManager.getUser(NewsDetailAty2.this);
-                if (user == null) {
-                    Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
-                    startActivityForResult(loginAty, REQUEST_CODE);
-                } else {
+                if (user != null && !user.isVisitor()) {
                     Logger.e("bbb","收藏触发的点击事件！！！！！");
                     loadOperate(true);
-
+                } else {
+                    Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
+                    startActivityForResult(loginAty, REQUEST_CODE);
                 }
                 MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
                 break;
