@@ -107,7 +107,7 @@ public class SharePopupWindow extends PopupWindow {
     public void setTitleAndUrl(NewsFeed bean,String remark) {
         feedBean = bean;
         mstrTitle = bean.getTitle();
-        mstrUrl = bean.getUrl();
+        mstrUrl = bean.getNid()+"";
         mstrRemark = remark;
         isFavorite = SharedPreManager.myFavoriteisSame(mstrUrl);
         if(isFavorite){
@@ -218,7 +218,7 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ TextUtil.getBase64(mstrUrl) +"&interface";
+                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
                     }
