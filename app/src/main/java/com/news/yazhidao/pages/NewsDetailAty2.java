@@ -838,7 +838,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }else{
                         isFavorite = true;
                         carefor_Text.setText("收藏成功");
-                        SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+                        SharedPreManager.myFavoriteSaveList(mNewsFeed);
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
                     CareForAnimation();
