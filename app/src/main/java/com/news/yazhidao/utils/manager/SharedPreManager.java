@@ -328,8 +328,9 @@ public class SharedPreManager {
             return false;
         }
         Logger.d("bbb", "newsID==" + newsID);
+        Logger.e("aaa","收藏的数据======"+list.toString());
         for(int i = 0; i < list.size(); i++){
-            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
+//            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
             if(newsID.equals(list.get(i).getNid()+"")){
                 return true;
             }
