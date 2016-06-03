@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -79,6 +80,7 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private boolean isNetWork;
+    public boolean isClickMyLike;
 
     /**
      * 点赞的广播
@@ -235,11 +237,15 @@ public class NewsCommentFgt extends BaseFragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Logger.e("aaa", "没有数据报的错=============================="+error);
+                    if(error.toString().indexOf("服务端未找到数据 2002") != -1){
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    }
                     mNewsCommentList.onRefreshComplete();
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
-                    Logger.e("jigang", "NewsCommentFgt  network fail");
+                    Logger.e("jigang", "NewsCommentFgt  network fail"+error);
                 }
             });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -339,6 +345,15 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
+                        if(isClickMyLike){
+                            return;
+                        }
+                        if((user.getMuid()+"").equals(comment.getUid())){
+                            isClickMyLike = true;
+                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         if(comment.getUpflag()==0){
                             Logger.e("aaa", "点赞");
                             addNewsLove(user, comment, position, true);
@@ -354,6 +369,8 @@ public class NewsCommentFgt extends BaseFragment {
             return convertView;
         }
     }
+
+
 
     private void setNewsTime(TextViewExtend tvTime, String updateTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

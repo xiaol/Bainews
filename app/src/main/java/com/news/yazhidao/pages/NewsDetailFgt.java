@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -119,6 +120,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
+    public boolean isClickMyLike;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -420,7 +422,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void onClick(View view) {
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_like");
 
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
@@ -1031,11 +1033,19 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View v) {
 
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     if(comment.getUpflag()==0){
+                        if(isClickMyLike){
+                            return;
+                        }
+                        if((user.getMuid()+"").equals(comment.getUid())){
+                            isClickMyLike = true;
+                            Toast.makeText(getActivity(), "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         Logger.e("aaa", "点赞");
                         addNewsLove(comment, position, holder, true);
                     }else{

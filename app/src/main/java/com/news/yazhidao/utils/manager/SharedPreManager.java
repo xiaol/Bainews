@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.HistoryEntity;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
@@ -330,8 +329,8 @@ public class SharedPreManager {
         }
         Logger.d("bbb", "newsID==" + newsID);
         for(int i = 0; i < list.size(); i++){
-            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getUrl());
-            if(list.get(i).getUrl().equals(newsID)){
+            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
+            if(newsID.equals(list.get(i).getNid()+"")){
                 return true;
             }
         }
@@ -360,7 +359,7 @@ public class SharedPreManager {
             e.printStackTrace();
         }
         for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getUrl().equals(newsID)){
+            if (newsID.equals(list.get(i).getNid() + "")) {
                 list.remove(i);
                 Gson gson = new Gson();
                 String str = gson.toJson(list);

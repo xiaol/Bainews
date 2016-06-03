@@ -135,10 +135,7 @@ public class SharePopupWindow extends PopupWindow {
             public void onClick(View v) {
 
                 User user = SharedPreManager.getUser(m_pContext);
-                if (user == null) {
-                    Intent loginAty = new Intent(m_pContext, LoginAty.class);
-                    m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
-                } else {
+                if (user != null && !user.isVisitor()) {
                     if (isFavorite) {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
@@ -152,6 +149,9 @@ public class SharePopupWindow extends PopupWindow {
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
                     dismiss();
+                } else {
+                    Intent loginAty = new Intent(m_pContext, LoginAty.class);
+                    m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
                 }
 
 
