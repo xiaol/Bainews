@@ -26,6 +26,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
+    private static int DATABASE_VERSION = 23;
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -34,7 +35,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private ChannelItemDao channelDao;
 
     private DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null, 19);
+        super(context, TABLE_NAME, null, DATABASE_VERSION);
         mContext = context;
         mDaos = new HashMap<>();
         Logger.e("jigang","DatabaseHelper()");
@@ -44,12 +45,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         /**默认用户选择的频道*/
         mChannels.add(new ChannelItem("1","奇点",1,true));
         mChannels.add(new ChannelItem("4","科技",2,true));
-        mChannels.add(new ChannelItem("2","社会",3,true));
-        mChannels.add(new ChannelItem("7","财经",4,true));
-        mChannels.add(new ChannelItem("6","体育",5,true));
-        mChannels.add(new ChannelItem("5","汽车",6,true));
-        mChannels.add(new ChannelItem("29","外媒",7,true));
-        mChannels.add(new ChannelItem("35","APP",8,true));
+        mChannels.add(new ChannelItem("29","外媒",3,true));
+        mChannels.add(new ChannelItem("35","点集",4,true));
+        mChannels.add(new ChannelItem("2","社会",5,true));
+        mChannels.add(new ChannelItem("7","财经",6,true));
+        mChannels.add(new ChannelItem("6","体育",7,true));
+        mChannels.add(new ChannelItem("5","汽车",8,true));
         mChannels.add(new ChannelItem("9","国际",9,true));
         mChannels.add(new ChannelItem("10","时尚",10,true));
         mChannels.add(new ChannelItem("14","探索",11,true));
@@ -117,7 +118,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             ChannelItemDao channelDao = new ChannelItemDao(mContext);
             oldChannelItems = channelDao.queryForAll();
             //删除所有老版本上的频道
-            if (oldVersion <= 16){
+            if (oldVersion <= DATABASE_VERSION){
                oldChannelItems.clear();
             }
             /**查询数据库升级前的专辑列表*/

@@ -298,6 +298,7 @@
         <activity
             android:name=".pages.MainAty"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             />
         <activity
             android:name=".pages.ChannelOperateAty"
