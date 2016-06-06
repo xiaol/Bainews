@@ -20,6 +20,7 @@ android {
         huanliang {}
 //        googleplay {}
 //        yingyongbao {}
+        shenzhen {}
         kuaiyou {}
         shanghai {}
         hulizhushou {}
