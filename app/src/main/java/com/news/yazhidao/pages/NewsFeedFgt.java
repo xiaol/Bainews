@@ -82,6 +82,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_COMMENTCOUNT = "key_commentcount";
 
 
+
+
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
@@ -159,7 +161,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
         if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
-            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
+//            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
 
             isNeedAddSP = false;
         }
@@ -213,11 +215,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
-                    if (item != null && newsId.equals(item.getUrl())) {
+                    if (item != null && newsId == item.getNid()) {
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                     }
@@ -383,7 +385,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     } else {
                         tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
                     }
-                    requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
@@ -442,7 +444,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         case PULL_UP_REFRESH:
                             Logger.e("aaa", "===========PULL_UP_REFRESH==========");
                             if (isNewVisity) {//首次进入加入他
-                                addSP(result);
+//                                addSP(result);
                                 isNeedAddSP = false;
 
                             }
@@ -517,6 +519,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error.toString().contains("2002")){
+                    mRefreshTitleBar.setText("已是最新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                     if (TextUtil.isListEmpty(newsFeeds)) {
@@ -701,18 +716,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
-    public void addSP(ArrayList<NewsFeed> result) {
-        ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
-        for (NewsFeed bean : result) {
-            UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-            uploadLogDataEntity.setNid(bean.getUrl());
-            uploadLogDataEntity.setTid(bean.getTitle());//需要改成typeID
-            uploadLogDataEntity.setCid(bean.getChannel()+"");
-            uploadLogDataEntities.add(uploadLogDataEntity);
-        }
-        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
-        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
-    }
+//    public void addSP(ArrayList<NewsFeed> result) {
+//        ArrayList<UploadLogDataEntity> uploadLogDataEntities = new ArrayList<UploadLogDataEntity>();
+//        for (NewsFeed bean : result) {
+//            UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+//            uploadLogDataEntity.setN(bean.getNid()+"");
+//            uploadLogDataEntity.setT("0");//需要改成typeID
+//            uploadLogDataEntity.setC(bean.getChannel()+"");
+//            uploadLogDataEntities.add(uploadLogDataEntity);
+//        }
+//        int saveNum = SharedPreManager.upLoadLogSaveList(mstrUserId, CommonConstant.UPLOAD_LOG_MAIN, uploadLogDataEntities);
+//        Logger.e("ccc", "主页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_MAIN));
+//    }
 
 
     //    int lastY = 0;

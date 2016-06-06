@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -38,7 +39,6 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -46,16 +46,12 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.UserCommentDialog;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.HashMap;
 
 /**
@@ -67,11 +63,15 @@ public class NewsCommentFgt extends BaseFragment {
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String ACTION_REFRESH_CTD = "com.news.yazhidao.ACTION_REFRESH_CTD";
+    public static final String LIKETYPE = "liketype";
+    public static final String LIKEBEAN = "likebean";
     private PullToRefreshListView mNewsCommentList;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     private CommentsAdapter mCommentsAdapter;
     private int mPageIndex = 1;
     private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshLikeBroReceiber mRefreshLike;
     private RelativeLayout bgLayout;
     private User mUser;
     private NewsDetailComment mComment;
@@ -80,6 +80,27 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private boolean isNetWork;
+    public boolean isClickMyLike;
+
+    /**
+     * 点赞的广播
+     */
+    public class RefreshLikeBroReceiber extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Logger.e("aaa", "评论接收到！");
+            NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
+            for(int i = 0;i<mComments.size();i++)
+                if (mComments.get(i).getId().equals(bean.getId())) {
+//                    mComments.remove(i);
+//                    mComments.add(i, bean);
+                    mComments.set(i,bean);
+                    mCommentsAdapter.notifyDataSetChanged();
+
+                }
+        }
+    }
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -107,6 +128,7 @@ public class NewsCommentFgt extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle arguments = getArguments();
+        mUser = SharedPreManager.getUser(getActivity());
         mNewsFeed = (NewsFeed) arguments.getSerializable(KEY_NEWS_FEED);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         if (mRefreshReceiber == null) {
@@ -115,6 +137,12 @@ public class NewsCommentFgt extends BaseFragment {
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshReceiber, filter);
         }
+        if (mRefreshLike == null) {
+            mRefreshLike = new RefreshLikeBroReceiber();
+            IntentFilter filter = new IntentFilter(NewsDetailFgt.ACTION_REFRESH_DTC);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+            getActivity().registerReceiver(mRefreshLike, filter);
+        }
     }
 
     @Override
@@ -122,6 +150,9 @@ public class NewsCommentFgt extends BaseFragment {
         super.onDestroy();
         if (mRefreshReceiber != null) {
             getActivity().unregisterReceiver(mRefreshReceiber);
+        }
+        if (mRefreshLike != null) {
+            getActivity().unregisterReceiver(mRefreshLike);
         }
     }
 
@@ -178,7 +209,7 @@ public class NewsCommentFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
             feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +"&uid="+SharedPreManager.getUser(getActivity()).getMuid()+
+            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
                     "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
                 @Override
@@ -206,11 +237,15 @@ public class NewsCommentFgt extends BaseFragment {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Logger.e("aaa", "没有数据报的错=============================="+error);
+                    if(error.toString().indexOf("服务端未找到数据 2002") != -1){
+                        news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    }
                     mNewsCommentList.onRefreshComplete();
                     if (bgLayout.getVisibility() == View.VISIBLE) {
                         bgLayout.setVisibility(View.GONE);
                     }
-                    Logger.e("jigang", "NewsCommentFgt  network fail");
+                    Logger.e("jigang", "NewsCommentFgt  network fail"+error);
                 }
             });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -310,6 +345,15 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
+                        if(isClickMyLike){
+                            return;
+                        }
+                        if((user.getMuid()+"").equals(comment.getUid())){
+                            isClickMyLike = true;
+                            Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         if(comment.getUpflag()==0){
                             Logger.e("aaa", "点赞");
                             addNewsLove(user, comment, position, true);
@@ -325,6 +369,8 @@ public class NewsCommentFgt extends BaseFragment {
             return convertView;
         }
     }
+
+
 
     private void setNewsTime(TextViewExtend tvTime, String updateTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -370,18 +416,15 @@ public class NewsCommentFgt extends BaseFragment {
 //            e.printStackTrace();
 //        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-
-
         Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
         JSONObject json = new JSONObject();
-
 //        try {
 //            json.put("cid", comment.getId());
 //            json.put("uid",uid);
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
 
         DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
                 HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()
@@ -401,6 +444,11 @@ Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
                     }
                     mComments.get(position).setCommend(Integer.parseInt(data));
                     mCommentsAdapter.notifyDataSetChanged();
+                    Intent intent = new Intent(ACTION_REFRESH_CTD);
+                    intent.putExtra(LIKETYPE,isAdd);
+                    intent.putExtra(LIKEBEAN, mComments.get(position));
+                    getActivity().sendBroadcast(intent);
+
                     isNetWork = false;
 
                 }

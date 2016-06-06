@@ -111,7 +111,7 @@ public class HttpConstant {
     /**
      * 日志上传
      */
-    public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep?";// URL_SERVER_HOST+"/c?"
+    public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep/v2/c?";// URL_SERVER_HOST+"/c?"
 
     /**
      * 新闻客户端-新闻相关属性集

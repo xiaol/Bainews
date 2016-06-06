@@ -107,7 +107,7 @@ public class SharePopupWindow extends PopupWindow {
     public void setTitleAndUrl(NewsFeed bean,String remark) {
         feedBean = bean;
         mstrTitle = bean.getTitle();
-        mstrUrl = bean.getUrl();
+        mstrUrl = bean.getNid()+"";
         mstrRemark = remark;
         isFavorite = SharedPreManager.myFavoriteisSame(mstrUrl);
         if(isFavorite){
@@ -135,10 +135,7 @@ public class SharePopupWindow extends PopupWindow {
             public void onClick(View v) {
 
                 User user = SharedPreManager.getUser(m_pContext);
-                if (user == null) {
-                    Intent loginAty = new Intent(m_pContext, LoginAty.class);
-                    m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
-                } else {
+                if (user != null && !user.isVisitor()) {
                     if (isFavorite) {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
@@ -152,6 +149,9 @@ public class SharePopupWindow extends PopupWindow {
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
                     dismiss();
+                } else {
+                    Intent loginAty = new Intent(m_pContext, LoginAty.class);
+                    m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
                 }
 
 
@@ -218,7 +218,7 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ TextUtil.getBase64(mstrUrl) +"&interface";
+                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
                     }

@@ -33,8 +33,10 @@ public class NewsDetailRequest<T> extends GsonRequest<T> {
             String code = jsonObject.optString("code", "");
 //            String message = jsonObject.optString("message", "");
             Logger.e("jigang","code = "+code );
-            if ("2000".equals(code) ){
-                return jsonObject.optString("data","");
+            if ("2000".equals(code) ) {
+                return jsonObject.optString("data", "");
+            }else if("2002".equals(code)){
+                return "2002";
             }else {
                 return "";
             }

@@ -59,7 +59,7 @@ public class UserCenterAty extends BaseActivity implements View.OnClickListener 
     @Override
     protected void loadData() {
         User user = SharedPreManager.getUser(this);
-        if (user != null){
+        if (user != null && !user.isVisitor()){
             mCenterUserIcon.setImageURI(Uri.parse(user.getUserIcon()));
             mCenterUserName.setText(user.getUserName());
         }

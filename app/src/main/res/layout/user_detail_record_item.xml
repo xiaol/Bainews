@@ -12,7 +12,7 @@
         android:id="@+id/header"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="4dp">
 
         <TextView
             android:id="@+id/pub_time"
@@ -28,12 +28,13 @@
 
         <ImageView
             android:id="@+id/del_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="9dp"
             android:clickable="true"
+            android:padding="6dp"
             android:src="@drawable/user_detail_record_del_icon_selector" />
     </RelativeLayout>
 

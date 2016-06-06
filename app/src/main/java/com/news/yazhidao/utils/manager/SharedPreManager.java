@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.HistoryEntity;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
@@ -237,26 +236,43 @@ public class SharedPreManager {
     public static int upLoadLogSave(String mUserId, String key, String locationJsonString, UploadLogDataEntity uploadLogDataEntity) {
 
         String mReadData = upLoadLogGet(key);
-        Gson gson = new Gson();
-        UploadLogEntity uploadLogEntity = new UploadLogEntity();
-        if (mReadData != null && mReadData.length() != 0) {
-            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
-
+        if(mReadData.indexOf("city")!= -1){
+            remove(CommonConstant.UPLOAD_LOG, key);
         }
-        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-
-        uploadLogEntity.getData().add(uploadLogDataEntity);
-
-        uploadLogEntity.setUid(mUserId);
-        uploadLogEntity.setCou(locationEntity.getCountry());
-        uploadLogEntity.setPro(locationEntity.getProvince());
-        uploadLogEntity.setCity(locationEntity.getCity());
-        uploadLogEntity.setDis(locationEntity.getDistrict());
-        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+        Gson gson = new Gson();
+        JSONArray array = null;
+         ArrayList<UploadLogDataEntity> data = new ArrayList<UploadLogDataEntity>();
+        try {
+            array = new JSONArray(mReadData);
+            for (int i = 0; i < array.length(); i++) {
+                String str1 = array.getString(i);
+                UploadLogDataEntity bean = gson.fromJson(str1, UploadLogDataEntity.class);
+                data.add(bean);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        data.add(uploadLogDataEntity);
 
         upLoadLogDelter(key);
-        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
-        return uploadLogEntity.getData().size();
+        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(data));
+        return data.size();
+
+
+
+//        UploadLogEntity uploadLogEntity = new UploadLogEntity();
+//        if (mReadData != null && mReadData.length() != 0) {
+//            uploadLogEntity = gson.fromJson(mReadData, UploadLogEntity.class);
+//
+//        }
+//        uploadLogEntity.getData().add(uploadLogDataEntity);
+//
+//        uploadLogEntity.setUid(mUserId);
+//        uploadLogEntity.setClas(CommonConstant.UPLOAD_LOG_DETAIL.equals(key) ? 0 : 1);
+//
+//        upLoadLogDelter(key);
+//        save(CommonConstant.UPLOAD_LOG, key, gson.toJson(uploadLogEntity));
+//        return uploadLogEntity.getData().size();
     }
     public static int upLoadLogSaveList(String mUserId, String key,  List<UploadLogDataEntity> list) {
 
@@ -312,9 +328,10 @@ public class SharedPreManager {
             return false;
         }
         Logger.d("bbb", "newsID==" + newsID);
+        Logger.e("aaa","收藏的数据======"+list.toString());
         for(int i = 0; i < list.size(); i++){
-            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getUrl());
-            if(list.get(i).getUrl().equals(newsID)){
+//            Logger.d("bbb", "list.get(i).getUrl()======="+i+"============" + list.get(i).getNid());
+            if(newsID.equals(list.get(i).getNid()+"")){
                 return true;
             }
         }
@@ -343,7 +360,7 @@ public class SharedPreManager {
             e.printStackTrace();
         }
         for(int i = 0; i < list.size(); i++){
-            if(list.get(i).getUrl().equals(newsID)){
+            if (newsID.equals(list.get(i).getNid() + "")) {
                 list.remove(i);
                 Gson gson = new Gson();
                 String str = gson.toJson(list);
@@ -366,7 +383,7 @@ public class SharedPreManager {
 //        String str = gson.toJson(list);
 //        save(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE, str);
         for(NewsFeed bean : deleteList){
-            myFavoritRemoveItem(bean.getUrl());
+            myFavoritRemoveItem(bean.getNid()+"");
         }
         try {
             list = myFavoriteGetList();

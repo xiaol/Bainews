@@ -1,26 +1,23 @@
 package com.news.yazhidao.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 /**
  * Created by Administrator on 2016/4/18.
  */
 public class UploadLogDataEntity implements Serializable{
-    private String nid;
-    private String cid;
-    private String tid;
-    private String stime;
-    private String sltime;
-    private String from;
+    private String n;
+    private String c;
+    private String t;
+    private String s;
+    private String f;
 
-    public UploadLogDataEntity(String nid, String cid, String tid, String stime, String sltime, String from) {
-        this.nid = nid;
-        this.cid = cid;
-        this.tid = tid;
-        this.stime = stime;
-        this.sltime = sltime;
-        this.from = from;
+    public UploadLogDataEntity(String n, String c, String t, String s, String sltime, String f) {
+        this.n = n;
+        this.c = c;
+        this.t = t;
+        this.s = s;
+        this.f = f;
     }
 
     public UploadLogDataEntity() {
@@ -28,51 +25,44 @@ public class UploadLogDataEntity implements Serializable{
 
 
 
-    public String getNid() {
-        return nid;
+    public String getN() {
+        return n;
     }
 
-    public void setNid(String nid) {
-        this.nid = nid;
+    public void setN(String n) {
+        this.n = n;
     }
 
-    public String getCid() {
-        return cid;
+    public String getC() {
+        return c;
     }
 
-    public void setCid(String cid) {
-        this.cid = cid;
+    public void setC(String c) {
+        this.c = c;
     }
 
-    public String getTid() {
-        return tid;
+    public String getT() {
+        return t;
     }
 
-    public void setTid(String tid) {
-        this.tid = tid;
+    public void setT(String t) {
+        this.t = t;
     }
 
-    public String getStime() {
-        return stime;
+    public String getS() {
+        return s;
     }
 
-    public void setStime(String stime) {
-        this.stime = stime;
+    public void setS(String s) {
+        this.s = s;
     }
 
-    public String getSltime() {
-        return sltime;
+
+    public String getF() {
+        return f;
     }
 
-    public void setSltime(String sltime) {
-        this.sltime = sltime;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
+    public void setF(String f) {
+        this.f = f;
     }
 }

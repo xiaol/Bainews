@@ -65,10 +65,13 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.umeng.analytics.MobclickAgent;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,25 +193,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
     }
-//    public NewsFeed getDate(){
-//        NewsFeed bean = new NewsFeed();
-//        bean.setNid(5);
-//        bean.setPtime("2016-05-22 18:09:47");
-//        bean.setUrl("http://toutiao.com/a6287080350670504193/");
-//        bean.setDocid("http://toutiao.com/group/6287080350670504193/comments/?count=100&offset=0&format=json");
-//        bean.setComment(3);
-//        bean.setPname("北寒旅游");
-//        bean.setPurl("http://toutiao.com/group/6287080350670504193/");
-//        bean.setStyle(5);
-//        ArrayList<String> list = new ArrayList<String>();
-//        list.add("http://bdp-pic.deeporiginalx.com/W0JANTBiOTlmYzU.jpg");
-//        list.add("http://bdp-pic.deeporiginalx.com/W0JANWI4ZjlhNDY.jpg");
-//        list.add("http://bdp-pic.deeporiginalx.com/W0JANjA5M2Q5ZjQ.jpg");
-//        bean.setImgs(list);
-//        bean.setTitle("泰山脚下的传统茶道表演");
-//        bean.setChannel(12);
-//        return bean;
-//    }
     @Override
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
@@ -290,7 +274,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
-        upLoadLog();
+            upLoadLog();
+
     }
 
     /**
@@ -298,16 +283,17 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      *
      * @throws IOException
      */
-    private void upLoadLog() {
+    private void upLoadLog()  {
 //
-        if (mNewsFeed == null) {
+        if (mNewsFeed == null&&mUserId != null &&mUserId.length() != 0) {
             return;
         }
         UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-        uploadLogDataEntity.setNid(mNewsFeed.getUrl());
-        uploadLogDataEntity.setCid(mNewsFeed.getChannel()+"");
-        uploadLogDataEntity.setTid(mNewsFeed.getStyle()+"");
-        uploadLogDataEntity.setStime(lastTime / 1000 + "");
+        uploadLogDataEntity.setN(mNewsFeed.getNid()+"");
+        uploadLogDataEntity.setC(mNewsFeed.getChannel()+"");
+        uploadLogDataEntity.setT("0");
+        uploadLogDataEntity.setS(lastTime / 1000 + "");
+        uploadLogDataEntity.setF("0");
         String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
@@ -315,9 +301,20 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             Gson gson = new Gson();
             LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String url = "http://bdp.deeporiginalx.com/rep?uid=" + mUserId + "&cou=" + locationEntity.getCountry() +
-                    "&pro=" + locationEntity.getProvince() + "&city=" + locationEntity.getCity() + "&dis=" + locationEntity.getDistrict() +
-                    "&clas=0" + "&data=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+            String userid = null, p= null, t= null, i= null;
+            try {
+                userid = URLEncoder.encode(mUserId+"", "utf-8");
+                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
+                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+
+
+            String url = HttpConstant.URL_UPLOAD_LOG+"u=" + userid + "&p=" + p +
+                    "&t=" + t + "&i=" +i + "&d=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
             Logger.d("aaa", "url===" + url);
 
             UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
@@ -472,6 +469,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mNewsFeed.setChannel(result.getChannel());
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
+        mNewsFeed.setNid(result.getNid());
 
         return mNewsFeed;
     }
@@ -498,7 +496,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void finish() {
         if (mNewsFeed != null) {
             Intent intent = new Intent();
-            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getUrl());
+            intent.putExtra(NewsFeedAdapter.KEY_NEWS_ID, mNewsFeed.getNid());
             setResult(NewsFeedAdapter.REQUEST_CODE, intent);
         }
         super.finish();
@@ -567,13 +565,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDetailFavorite:
                 User user = SharedPreManager.getUser(NewsDetailAty2.this);
-                if (user == null) {
+                if (user != null && user.isVisitor()) {
                     Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("bbb","收藏触发的点击事件！！！！！");
                     loadOperate(true);
-
                 }
                 MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
                 break;
@@ -828,20 +825,20 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(mDetailFavorite.getVisibility() == View.GONE){
-                    mDetailFavorite.setVisibility(View.VISIBLE);
-                }
+//                if(mDetailFavorite.getVisibility() == View.GONE){
+//                    mDetailFavorite.setVisibility(View.VISIBLE);
+//                }
                 if(isType){
                     carefor_Image.setImageResource(R.drawable.hook_image);
                     if(isFavorite){
                         isFavorite = false;
                         carefor_Text.setText("收藏已取消");
-                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getUrl());
+                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid()+"");
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     }else{
                         isFavorite = true;
                         carefor_Text.setText("收藏成功");
-                        SharedPreManager.myFavoriteSaveList(mUsedNewsFeed);
+                        SharedPreManager.myFavoriteSaveList(mNewsFeed);
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
                     CareForAnimation();
@@ -859,9 +856,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(mDetailFavorite.getVisibility() == View.VISIBLE){
-                    mDetailFavorite.setVisibility(View.GONE);
-                }
+//                if(mDetailFavorite.getVisibility() == View.VISIBLE){
+//                    mDetailFavorite.setVisibility(View.GONE);
+//                }
                 if(isType){
                     carefor_Text.setText("收藏失败");
                 }else{

@@ -211,3 +211,7 @@ java.lang.Object readResolve();
     public <methods>;
 
 }
+
+## baidu 定位sdk
+-keep class com.baidu.** { *; }
+-keep class vi.com.gdi.bgl.android.**{*;}

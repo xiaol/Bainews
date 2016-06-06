@@ -107,6 +107,11 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
             mSetttingLogout.setText("退出登录");
@@ -189,7 +194,7 @@ public class SettingAty extends BaseActivity implements View.OnClickListener {
                 UmengUpdateAgent.update(SettingAty.this);
                 break;
             case R.id.mSetttingLogout:
-                if (user != null) {
+                if (user != null && !user.isVisitor()) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setMessage("确认退出吗?");
                     builder.setTitle("提示");

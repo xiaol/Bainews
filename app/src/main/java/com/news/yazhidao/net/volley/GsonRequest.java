@@ -5,8 +5,11 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,12 +71,21 @@ public class GsonRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String data = new String(response.data, "utf-8");
-            data = checkJsonData(data, response);
-            T o = mGson.fromJson(data, mReflectType == null ? mClazz : mReflectType);
-            return Response.success(o, HttpHeaderParser.parseCacheHeaders(response));
+            JSONObject jsonRes = new JSONObject(data);
+            String code = jsonRes.optString("code");
+            if ("2000".equals(code)) {
+                data = checkJsonData(data, response);
+                T o = mGson.fromJson(data, mReflectType == null ? mClazz : mReflectType);
+                return Response.success(o, HttpHeaderParser.parseCacheHeaders(response));
+            } else if ("2002".equals(code)){
+                return Response.error(new VolleyError("服务端未找到数据 2002"));
+            }else {
+                return Response.error(new VolleyError("获取数据异常!--" + code));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return Response.error(new ParseError(e));
+
         }
     }
 
