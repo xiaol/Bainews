@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -411,6 +413,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mArrNewsFeed.remove(mDeleteIndex);
                     mDeleteIndex = 0;
                 }
+                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
+                    if (result == null || result.size() == 0) {
+                        return;
+                    }
+                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
+                    mRefreshTitleBarAnimtation();
+
+                }
                 if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
                     NewsFeed newsFeed = new NewsFeed();
                     newsFeed.setStyle(900);
@@ -497,22 +507,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         bgLayout.setVisibility(View.GONE);
                     }
                 }
-                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
-                    if (result == null || result.size() == 0) {
-                        return;
-                    }
-                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
-                    mRefreshTitleBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
-                                mRefreshTitleBar.setVisibility(View.GONE);
-                            }
 
-                        }
-                    }, 1000);
-                }
                 mIsFirst = false;
                 mlvNewsFeed.onRefreshComplete();
             }
@@ -819,7 +814,54 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                                  int visibleItemCount, int totalItemCount) {
             }
         });
+    }
+    public void mRefreshTitleBarAnimtation(){
 
+
+        //初始化
+        Animation mStartAlphaAnimation = new AlphaAnimation(0f, 1.0f);
+        //设置动画时间
+        mStartAlphaAnimation.setDuration(500);
+        mRefreshTitleBar.startAnimation(mStartAlphaAnimation);
+        mStartAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mRefreshTitleBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Animation mEndAlphaAnimation = new AlphaAnimation(1.0f, 0f);
+                        mEndAlphaAnimation.setDuration(500);
+                        mRefreshTitleBar.startAnimation(mEndAlphaAnimation);
+                        mEndAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+                        });
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
 
     }
 
