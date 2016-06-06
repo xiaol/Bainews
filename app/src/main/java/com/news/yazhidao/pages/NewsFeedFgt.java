@@ -821,7 +821,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         //初始化
         Animation mStartAlphaAnimation = new AlphaAnimation(0f, 1.0f);
         //设置动画时间
-        mStartAlphaAnimation.setDuration(1000);
+        mStartAlphaAnimation.setDuration(500);
         mRefreshTitleBar.startAnimation(mStartAlphaAnimation);
         mStartAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -835,7 +835,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     @Override
                     public void run() {
                         Animation mEndAlphaAnimation = new AlphaAnimation(1.0f, 0f);
-                        mEndAlphaAnimation.setDuration(1000);
+                        mEndAlphaAnimation.setDuration(500);
                         mRefreshTitleBar.startAnimation(mEndAlphaAnimation);
                         mEndAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                             @Override
