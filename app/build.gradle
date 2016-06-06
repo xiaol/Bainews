@@ -17,8 +17,10 @@ android {
 
     productFlavors {
         daoyoudao {}
+        huanliang {}
 //        googleplay {}
 //        yingyongbao {}
+        shenzhen {}
         kuaiyou {}
         shanghai {}
         hulizhushou {}

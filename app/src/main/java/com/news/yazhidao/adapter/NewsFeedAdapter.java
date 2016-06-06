@@ -382,7 +382,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     BufferedWriter bis = null;
                     try {
                         bis = new BufferedWriter(new FileWriter(file));
-                        bis.write(feed.getTitle() + ",newsid=" + feed.getUrl());
+                        bis.write(feed.getTitle() + ",newsid=" + feed.getNid());
                         bis.newLine();
                         bis.flush();
                     } catch (Exception e) {
