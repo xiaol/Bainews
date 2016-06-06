@@ -386,6 +386,7 @@ public class NewsDetailFgt extends BaseFragment {
                 isWebSuccess = true;
                 mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
+
 //                Log.e("aaa","1111");
             }
         });
@@ -568,10 +569,6 @@ public class NewsDetailFgt extends BaseFragment {
 
                         if (!TextUtil.isListEmpty(relatedItemEntities)) {
                             setBeanPageList(relatedItemEntities);
-                            if (footerView_layout.getVisibility() == View.GONE) {
-                                footerView_layout.setVisibility(View.VISIBLE);
-                            }
-                            detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
                         } else {
                             setNoRelatedDate();
                         }
@@ -680,14 +677,24 @@ public class NewsDetailFgt extends BaseFragment {
             }
             beanPageList.add(listBean);
         }
-        beanList.addAll(beanPageList.get(viewpointPage));
-        viewpointPage++;
-        mAdapter.setNewsFeed(beanList);
-        mAdapter.notifyDataSetChanged();
-        if (MAXPage <= viewpointPage) {
-            mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
-            footView_tv.setText("内容加载完毕");
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                beanList.addAll(beanPageList.get(viewpointPage));
+                viewpointPage++;
+                mAdapter.setNewsFeed(beanList);
+                mAdapter.notifyDataSetChanged();
+                if (MAXPage <= viewpointPage) {
+                    mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
+                    footView_tv.setText("内容加载完毕");
+                }
+                if (footerView_layout.getVisibility() == View.GONE) {
+                    footerView_layout.setVisibility(View.VISIBLE);
+                }
+                detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
+            }
+        }, 1500);
+
     }
 
     private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder,final boolean isAdd) {

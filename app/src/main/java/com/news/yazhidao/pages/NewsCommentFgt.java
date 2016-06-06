@@ -238,7 +238,8 @@ public class NewsCommentFgt extends BaseFragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Logger.e("aaa", "没有数据报的错=============================="+error);
-                    if(error.toString().indexOf("服务端未找到数据 2002") != -1){
+                    Logger.e("aaa", "mComments.size()=============================="+mComments.size());
+                    if (error.toString().indexOf("服务端未找到数据 2002") != -1 && mComments.size() == 0) {
                         news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
                     }
                     mNewsCommentList.onRefreshComplete();

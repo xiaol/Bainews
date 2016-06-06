@@ -411,6 +411,22 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mArrNewsFeed.remove(mDeleteIndex);
                     mDeleteIndex = 0;
                 }
+                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
+                    if (result == null || result.size() == 0) {
+                        return;
+                    }
+                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                }
                 if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
                     NewsFeed newsFeed = new NewsFeed();
                     newsFeed.setStyle(900);
@@ -497,22 +513,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         bgLayout.setVisibility(View.GONE);
                     }
                 }
-                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
-                    if (result == null || result.size() == 0) {
-                        return;
-                    }
-                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
-                    mRefreshTitleBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
-                                mRefreshTitleBar.setVisibility(View.GONE);
-                            }
 
-                        }
-                    }, 1000);
-                }
                 mIsFirst = false;
                 mlvNewsFeed.onRefreshComplete();
             }
