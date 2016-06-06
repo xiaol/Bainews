@@ -188,7 +188,7 @@ public class NewsDetailFgt extends BaseFragment {
                                 mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
                                 footView_tv.setText("内容加载完毕");
                             }
-
+                            isLoadDate = false;
                         }
                     }, 1000);
                 }
@@ -693,7 +693,7 @@ public class NewsDetailFgt extends BaseFragment {
                 }
                 detail_shared_ViewPointTitleLayout.setVisibility(View.VISIBLE);
             }
-        }, 1500);
+        }, 500);
 
     }
 

@@ -22,9 +22,9 @@
     <TextView
         android:id="@+id/mRefreshTitleBar"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/new_color2"
-        android:textColor="@color/white"
+        android:layout_height="35dp"
+        android:background="@color/new_color8"
+        android:textColor="@color/new_color2"
         android:text="又发现了10条新数据"
         android:textSize="@dimen/font4"
         android:gravity="center"
