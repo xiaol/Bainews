@@ -152,6 +152,15 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 }
             }
         });
+        String s = SharedPreManager.get("aa", "aa");
+        if (!"aa".equals(s)){
+            User user = SharedPreManager.getUser(this);
+            user.setAuthorToken("sssss");
+            SharedPreManager.saveUser(user);
+            SharedPreManager.save("aa","aa","aa");
+        }else {
+
+        }
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
