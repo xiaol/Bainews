@@ -162,15 +162,16 @@ public class SharedPreManager {
 //            }
 //        }
         if (user != null){
-            if (user.isVisitor()){
-                return user;
-            }else {
-                if (ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
-                    return user;
-                }else {
-                    remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
-                }
-            }
+            return user;
+//            if (user.isVisitor()){
+//                return user;
+//            }else {
+//                if (ShareSDK.getPlatform(mContext,user.getPlatformType()).isValid()){
+//                    return user;
+//                }else {
+//                    remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
+//                }
+//            }
         }
         return null;
     }

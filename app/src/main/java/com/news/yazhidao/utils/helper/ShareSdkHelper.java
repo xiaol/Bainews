@@ -68,7 +68,6 @@ public class ShareSdkHelper {
     public static enum AuthorizePlatform {
         WEIXIN, WEIBO, MEIZU
     }
-
     private static final String TAG = "ShareSdkHelper";
     private static String CLIENT_ID = "tsGKllOEx2MnUVmBmRey";
     private static String REDIRECT_URI = "http://www.deeporiginalx.com/";
@@ -90,46 +89,11 @@ public class ShareSdkHelper {
                 if (SinaWeibo.NAME.equals(platformDb.getPlatformNname())) {
                     platform.followFriend(mContext.getResources().getString(R.string.app_name));
                 }
-                //检查是否有游客或者其他第三方登录
-                final User newUser = new User();
-                User oldUser = SharedPreManager.getUser(mContext);
-                JSONObject requestBody = new JSONObject();
-                generateRequestBodyAndUser(platform.getDb(), requestBody, oldUser, newUser);
-                MergeThirdUserLoginRequest mergeRequest = new MergeThirdUserLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            newUser.setAuthorToken(response.getString("Authorization"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (mAuthorizeListener != null) {
-                            mAuthorizeListener.success(newUser);
-                        }
-                        //保存user json串到sp 中
-                        SharedPreManager.saveUser(newUser);
-                        String jPushId = SharedPreManager.getJPushId();
-                        if (!TextUtils.isEmpty(jPushId)) {
-                            UploadJpushidRequest.uploadJpushId(mContext, jPushId);
-                        }
-//                      SharedPreManager.saveUserIdAndPlatform(CommonConstant.FILE_USER, CommonConstant.KEY_USER_ID_AND_PLATFORM, userId, platform.getName());
-
-                        Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
-                        intent.putExtra(MainAty.KEY_INTENT_USER_URL, newUser.getUserIcon());
-                        mContext.sendBroadcast(intent);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (mAuthorizeListener != null) {
-                            mAuthorizeListener.failure(error.getMessage());
-                        }
-                    }
-                });
-                YaZhiDaoApplication.getInstance().getRequestQueue().add(mergeRequest);
+                mergeThirdUser(platformDb);
             }
         }
+
+
 
         @Override
         public void onError(final Platform platform, int i, final Throwable throwable) {
@@ -167,6 +131,59 @@ public class ShareSdkHelper {
         }
     };
 
+    /**
+     * 合并用户登录(包含三方授权合并游客和新三方授权合并老三方授权)
+     */
+    public static void  mergeThirdUser(final PlatformDb platformDb) {
+        //检查是否有游客或者其他第三方登录
+        final User newUser = new User();
+        User oldUser = SharedPreManager.getUser(mContext);
+        JSONObject requestBody = new JSONObject();
+        generateRequestBodyAndUser(platformDb, requestBody, oldUser, newUser);
+        Logger.e("jigang","merge request body =" + requestBody.toString());
+        MergeThirdUserLoginRequest mergeRequest = new MergeThirdUserLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Logger.e("jigang","merge user success");
+                try {
+                    newUser.setAuthorToken(response.getString("Authorization"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (mAuthorizeListener != null) {
+                    mAuthorizeListener.success(newUser);
+                }
+                //保存user json串到sp 中
+                SharedPreManager.saveUser(newUser);
+                String jPushId = SharedPreManager.getJPushId();
+                if (!TextUtils.isEmpty(jPushId)) {
+                    UploadJpushidRequest.uploadJpushId(mContext, jPushId);
+                }
+                if (mContext != null && platformDb != null){
+                    Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
+                    intent.putExtra(MainAty.KEY_INTENT_USER_URL, newUser.getUserIcon());
+                    mContext.sendBroadcast(intent);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e("jigang","merge user error__" + error.getMessage());
+                if (mAuthorizeListener != null) {
+                    mAuthorizeListener.failure(error.getMessage());
+                }
+            }
+        });
+        YaZhiDaoApplication.getInstance().getRequestQueue().add(mergeRequest);
+    }
+
+    /**
+     * 重新注册三方用户,防止用户信息过期
+     */
+    public static void reRegisterThidUser() {
+        mergeThirdUser(null);
+    }
 
     public static void authorize(Context pContext, AuthorizePlatform pPlatform, UserAuthorizeListener pAuthorizeListener) {
         mContext = pContext;
@@ -503,20 +520,35 @@ public class ShareSdkHelper {
     }
 
     private static void generateRequestBodyAndUser(final PlatformDb platformDb, final JSONObject requestBody, final User oldUser, final User newUser) {
-        String userId = platformDb.getUserId();
-        String nickName = platformDb.getUserName();
-        int gender = "m".equals(platformDb.getUserGender()) ? 1 : 0;//1 男,0 女
-        String token = platformDb.getToken();
-        String avatar = platformDb.getUserIcon();
-        String platformNname = platformDb.getPlatformNname();
-        String expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
         try {
             //说明注册游客用户成功
             if (oldUser != null) {
+                String userId, nickName, token, avatar, platformNname, expiresTime;
+                int gender;
+                long expiresIn;
+                if (platformDb != null) {
+                    userId = platformDb.getUserId();
+                    nickName = platformDb.getUserName();
+                    gender = "m".equals(platformDb.getUserGender()) ? 1 : 0;//1 男,0 女
+                    token = platformDb.getToken();
+                    avatar = platformDb.getUserIcon();
+                    platformNname = platformDb.getPlatformNname();
+                    expiresTime = DateUtil.dateLong2Str(platformDb.getExpiresTime());
+                    expiresIn = platformDb.getExpiresIn();
+                } else {
+                    userId = oldUser.getUserId();
+                    nickName = oldUser.getUserName();
+                    gender = oldUser.getUserGender();
+                    token = oldUser.getToken();
+                    avatar = oldUser.getUserIcon();
+                    platformNname = oldUser.getPlatformType();
+                    expiresTime = oldUser.getExpiresTime();
+                    expiresIn = oldUser.getExpiresIn();
+                }
+
                 if (oldUser.isVisitor()) {
                     //第三方用户信息合并游客信息
                     requestBody.put("muid", oldUser.getMuid());
-                    newUser.setMuid(oldUser.getMuid());
                     requestBody.put("msuid", "");
                     newUser.setAuthorToken(oldUser.getAuthorToken());
                 } else {
@@ -526,7 +558,7 @@ public class ShareSdkHelper {
                     newUser.setMsuid(userId);
                     requestBody.put("msuid", oldUser.getUserId());
                 }
-                requestBody.put("utype", SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4);
+                requestBody.put("utype", SinaWeibo.NAME.equals(platformNname) ? 3 : 4);
                 requestBody.put("platform", 2);
                 requestBody.put("suid", userId);
                 requestBody.put("stoken", token);
@@ -540,12 +572,13 @@ public class ShareSdkHelper {
                     requestBody.put("city", location.getCity());
                     requestBody.put("district", location.getDistrict());
                 }
+                newUser.setMuid(oldUser.getMuid());
                 newUser.setPlatformType(platformNname);
-                newUser.setUtype((SinaWeibo.NAME.equals(platformDb.getPlatformNname()) ? 3 : 4) + "");
+                newUser.setUtype((SinaWeibo.NAME.equals(platformNname) ? 3 : 4) + "");
                 newUser.setUserId(userId);
                 newUser.setToken(token);
                 newUser.setExpiresTime(expiresTime);
-                newUser.setExpiresIn(platformDb.getExpiresIn());
+                newUser.setExpiresIn(expiresIn);
                 newUser.setUserName(nickName);
                 newUser.setUserGender(gender);
                 newUser.setUserIcon(avatar);

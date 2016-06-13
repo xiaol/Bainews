@@ -38,7 +38,6 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.NewsFeed;
-import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
@@ -83,7 +82,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     public static String KEY_PUBTIME = "key_pubtime";
     public static String KEY_COMMENTCOUNT = "key_commentcount";
 
-
+    public static final int REQUEST_CODE = 1060;
 
 
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
@@ -217,7 +216,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
@@ -231,6 +230,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     bgLayout.setVisibility(View.GONE);
                 }
             }
+        }else if (requestCode == LoginAty.REQUEST_CODE && data != null){
+            loadData(PULL_DOWN_REFRESH);
         }
     }
 
@@ -397,7 +398,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
             } else {
                 mSharedPreferences.edit().putBoolean("isshow", true).commit();
-                mFlag =true;
+                mFlag = true;
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
                 requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
@@ -514,7 +515,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error.toString().contains("2002")){
+                if (error.toString().contains("2002")) {
                     mRefreshTitleBar.setText("已是最新数据");
                     mRefreshTitleBar.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
@@ -526,6 +527,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                         }
                     }, 1000);
+                } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
+                    User user = SharedPreManager.getUser(getActivity());
+                    user.setUtype("2");
+                    SharedPreManager.saveUser(user);
+                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+                    startActivityForResult(loginAty, REQUEST_CODE);
                 }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
@@ -547,6 +554,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         });
         HashMap<String, String> header = new HashMap<>();
         header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+//        header.put("Authorization", "9097879790");
         feedRequest.setRequestHeader(header);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
@@ -585,7 +593,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 showChangeTextSizeView();
             }
-        }else {
+        } else {
             //请求token
             UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
                 @Override
@@ -815,7 +823,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         });
     }
-    public void mRefreshTitleBarAnimtation(){
+
+    public void mRefreshTitleBarAnimtation() {
 
 
         //初始化

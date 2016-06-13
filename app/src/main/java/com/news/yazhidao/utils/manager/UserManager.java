@@ -8,8 +8,10 @@ import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.RegisterVisitorRequest;
+import com.news.yazhidao.net.volley.VisitorLoginRequest;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +68,38 @@ public class UserManager {
                 }
             });
             YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
+        }else {
+                if (user.isVisitor()){
+                    JSONObject requestBody = new JSONObject();
+                    try {
+                        requestBody.put("uid", user.getMuid());
+                        requestBody.put("password", user.getPassword());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    VisitorLoginRequest loginRequest = new VisitorLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            User user = new User();
+                            user.setAuthorToken(response.optString("Authorization"));
+                            user.setUtype(response.optString("utype"));
+                            user.setMuid(response.optInt("uid"));
+                            user.setPassword(response.optString("password"));
+                            SharedPreManager.saveUser(user);
+                            if (mListener != null){
+                                mListener.registeSuccess();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Logger.e("jigang", "error" + error.getMessage());
+                        }
+                    });
+                    YaZhiDaoApplication.getInstance().getRequestQueue().add(loginRequest);
+                }else {
+                    ShareSdkHelper.reRegisterThidUser();
+                }
         }
     }
 }

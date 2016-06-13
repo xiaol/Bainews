@@ -307,9 +307,12 @@
             android:name=".pages.TopicSearchAty"
             android:screenOrientation="portrait"/>
         <activity android:name=".pages.GuideLoginAty"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+            />
         <activity android:name=".pages.LoginAty"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleTask"
+            />
         <activity android:name=".pages.UserCenterAty"
                   android:screenOrientation="portrait"/>
         <activity android:name=".pages.SettingAty"
