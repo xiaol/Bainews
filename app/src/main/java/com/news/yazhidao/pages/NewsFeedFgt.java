@@ -214,7 +214,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode);
+        Logger.e("jigang", "requestCode = " + requestCode + ",data=" +data);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
@@ -230,7 +230,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     bgLayout.setVisibility(View.GONE);
                 }
             }
-        }else if (requestCode == LoginAty.REQUEST_CODE && data != null){
+        }else if (requestCode == REQUEST_CODE && data != null){
+            Logger.e("jigang","token 失效后 重新登录 =" + data.toString());
             loadData(PULL_DOWN_REFRESH);
         }
     }
