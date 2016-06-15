@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,10 +16,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -121,6 +126,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isLoadDate;
     private boolean isNetWork;
     public boolean isClickMyLike;
+    FrameLayout video;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,6 +164,8 @@ public class NewsDetailFgt extends BaseFragment {
         this.inflater = inflater;
         this.container = container;
         user = SharedPreManager.getUser(getActivity());
+        // 声明video，把之后的视频放到这里面去
+        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
@@ -340,6 +348,10 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.onResume();
     }
 
+
+
+
+
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -362,23 +374,23 @@ public class NewsDetailFgt extends BaseFragment {
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //        }
         mDetailWebView.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
+
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+//        //设置WebView 可以加载更多格式页面
+//        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
+//        //设置WebView使用广泛的视窗
+//        mDetailWebView.getSettings().setUseWideViewPort(true);
+
+
+
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
                 "text/html;charset=UTF-8", "utf-8", null);
-//        mDetailWebView.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                super.onPageFinished(view, url);
-//
-//            }
-//
-//        });
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
@@ -388,13 +400,6 @@ public class NewsDetailFgt extends BaseFragment {
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
-            }
-        });
-        mDetailWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                super.onProgressChanged(view, newProgress);
-                Log.d("aaa", "newProgress==" + newProgress);
             }
         });
         //第2部分的CommentTitle
