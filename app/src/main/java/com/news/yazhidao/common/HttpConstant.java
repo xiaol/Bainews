@@ -11,6 +11,8 @@ public class HttpConstant {
 
     public static final String URL_REGISTER_VISITOR = URL_SERVER_HOST + "/au/sin/g";//注册游客信息
 
+    public static final String URL_VISITOR_LOGIN = URL_SERVER_HOST + "/au/lin/g";//游客登录
+
     public static final String URL_MERGE_USER_LOGIN = URL_SERVER_HOST + "/au/sin/s";//三方用户注册,1.包含第三方用户登录合并游客用户;2.包含新第三方用户登录覆盖三方用户
 
     public static final String URL_PRAISE = URL_SERVER_HOST + "/news/baijia/praise";

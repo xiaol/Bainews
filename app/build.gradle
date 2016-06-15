@@ -16,27 +16,51 @@ android {
     }
 
     productFlavors {
-        daoyoudao {}
-        huanliang {}
+        baidu {}
+        q91shichang {}
+        anzhuoshichang {}
+        yingyongbao {}
+        anzhishichang {}
+        wandoujia {}
+        jifengwang {}
+        yingyonghui {}
+        tongbu {}
+        q360shoujizhushou {}
+        Nduowang {}
+        q3ganzhuoshichang {}
+        woqushoujizhushou {}
+        huawei {}
+        lianxiang {}
+        xiaomi {}
+        sougouzhushou {}
+        zhongguancun {}
+        meizu {}
+        oppo {}
+        feiliu {}
+        liquwang {}
+        q91zhuomian {}
+        wangyiyingyongzhongxin {}
+//        daoyoudao {}
+//        huanliang {}
 //        googleplay {}
 //        yingyongbao {}
-        shenzhen {}
-        kuaiyou {}
-        shanghai {}
-        hulizhushou {}
-        wangba {}
-        xiaomi {}
-        adcoco {}
-        adcocoa {}
-        red {}
+//        shenzhen {}
+//        kuaiyou {}
+//        shanghai {}
+//        hulizhushou {}
+//        wangba {}
+//        xiaomi {}
+//        adcoco {}
+//        adcocoa {}
+//        red {}
 //        c360 {}
 //        baidu {}
 //        wandoujia {}
-        meizu {}
+//        meizu {}
 //        anzhi {}
-        wandoujia {}
-        jifeng {}
-        yingyonghui {}
+//        wandoujia {}
+//        jifeng {}
+//        yingyonghui {}
 //        mumayi {}
 //        zhihuiyun {}
 //        wo {}
@@ -48,18 +72,18 @@ android {
 //        mumayi {}
 //        oppo{}
 //        vivo{}
-
+//
 //        zhihuiyun {}
 //        wo {}
 //        sougou {}
 //        mm {}
         official{}
-        lianxiang{}
-        yidong{}
-        jinli{}
-        dianxin{}
-        liantong{}
-        suning{}
+//        lianxiang{}
+//        yidong{}
+//        jinli{}
+//        dianxin{}
+//        liantong{}
+//        suning{}
 
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
