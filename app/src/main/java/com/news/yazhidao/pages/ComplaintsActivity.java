@@ -40,6 +40,7 @@ public class ComplaintsActivity extends BaseActivity {
 
     @Override
     protected void loadData() {
+
         stringArrayList.add("广告");
         stringArrayList.add("色情低俗");
         stringArrayList.add("反动");
@@ -51,6 +52,12 @@ public class ComplaintsActivity extends BaseActivity {
         stringArrayList.add("错别字");
         stringArrayList.add("抄袭");
         addListView();
+        Complaints_LeftBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         mAdapter = new ComplaintsAdapter(mContext, stringArrayList, new ComplaintsAdapter.SetItemChangeBackgroundListener() {
             @Override
             public void listener() {
