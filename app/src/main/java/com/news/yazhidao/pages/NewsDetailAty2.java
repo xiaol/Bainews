@@ -304,9 +304,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             String userid = null, p= null, t= null, i= null;
             try {
                 userid = URLEncoder.encode(mUserId+"", "utf-8");
-                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
-                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+//                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
+//                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+//                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+                p = (locationEntity.getProvince() != null) ? URLEncoder.encode(locationEntity.getProvince() + "", "utf-8") : "";
+                t = (locationEntity.getCity() != null) ? URLEncoder.encode(locationEntity.getCity()+"", "utf-8") : "";
+                i = (locationEntity.getDistrict() != null) ? URLEncoder.encode(locationEntity.getDistrict()+"", "utf-8") : "";
+
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
