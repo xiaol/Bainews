@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/complaintsItem_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        >
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/complaintsItem_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="广告"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font4"/>
+        <ImageView
+            android:id="@+id/complaintsItem_checkImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_digger_completed"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"/>
+
+        <View
+            android:id="@+id/complaintsItem_line"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/new_color5"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="16dp"/>
+    </RelativeLayout>
+
+</LinearLayout>

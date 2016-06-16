@@ -218,7 +218,7 @@
         <activity
             android:name="sdk.meizu.auth.ui.AuthActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".pages.NewsDetailWebviewAty"
             android:screenOrientation="portrait" />
@@ -321,7 +321,11 @@
         <activity
             android:name=".pages.PrivacyPolicyAty"
             android:screenOrientation="portrait" />
-        <activity android:name=".pages.PlayVideoActivity"
+        <activity
+            android:name=".pages.PlayVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".pages.ComplaintsActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <!-- 配置Receiver(必须) -->
