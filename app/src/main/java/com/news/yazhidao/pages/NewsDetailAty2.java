@@ -511,6 +511,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
+                if (isCommentPage) {
+                    isCommentPage = false;
+                    mNewsDetailViewPager.setCurrentItem(0, true);
+                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+                    return ;
+                }
                 onBackPressed();
                 break;
             case R.id.mDetailRightMore://更多的点击
