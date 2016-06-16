@@ -149,7 +149,6 @@ public class NewsDetailFgt extends BaseFragment {
         if (mRefreshLike == null) {
             mRefreshLike = new RefreshLikeBroReceiber();
             IntentFilter filter = new IntentFilter(NewsCommentFgt.ACTION_REFRESH_CTD);
-            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshLike, filter);
         }
 
@@ -951,6 +950,9 @@ public class NewsDetailFgt extends BaseFragment {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if(!CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())){
+
+            }
             Logger.e("aaa", "详情接收到！");
             NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
             boolean isAdd = intent.getBooleanExtra(NewsCommentFgt.LIKETYPE,false);
