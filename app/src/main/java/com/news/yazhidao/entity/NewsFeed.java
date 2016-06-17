@@ -88,18 +88,25 @@ public class NewsFeed implements Serializable {
     @Override
     public String toString() {
         return "NewsFeed{" +
-                "pubTime='" + ptime + '\'' +
+                "ptime='" + ptime + '\'' +
+                ", nid=" + nid +
                 ", url='" + url + '\'' +
                 ", docid='" + docid + '\'' +
-                ", commentsCount='" + comment + '\'' +
-                ", pubName='" + pname + '\'' +
-                ", pubUrl='" + purl + '\'' +
-                ", imgStyle='" + style + '\'' +
+                ", comment=" + comment +
+                ", pname='" + pname + '\'' +
+                ", purl='" + purl + '\'' +
+                ", style=" + style +
                 ", title='" + title + '\'' +
-                ", imgList=" + imgs +
-                ", channelId='" + channel + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", imgs=" + imgs +
+                ", channel=" + channel +
+                ", collect=" + collect +
+                ", concern=" + concern +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isRead=" + isRead +
+                ", isFavorite=" + isFavorite +
                 '}';
     }
 

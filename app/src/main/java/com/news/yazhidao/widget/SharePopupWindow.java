@@ -140,7 +140,7 @@ public class SharePopupWindow extends PopupWindow {
                     if (isFavorite) {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
-                        SharedPreManager.myFavoritRemoveItem(feedBean.getUrl());
+                        SharedPreManager.myFavoritRemoveItem(feedBean.getNid()+"");
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     } else {
                         isFavorite = true;
