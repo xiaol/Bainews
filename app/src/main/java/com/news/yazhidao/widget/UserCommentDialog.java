@@ -59,7 +59,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
     private Context mContext;
-    private EditText mCommentContent;
+    private CommentEditText mCommentContent;
     private TextView mCommentCommit;
     private String mUserCommentMsg;
 
@@ -83,7 +83,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         View rootView = inflater.inflate(R.layout.dialog_user_comment, null);
         rootView.setMinimumWidth(10000);
         rootView.setMinimumHeight(DensityUtil.dip2px(getActivity(), 150));
-        mCommentContent = (EditText) rootView.findViewById(R.id.mCommentContent);
+        mCommentContent = (CommentEditText) rootView.findViewById(R.id.mCommentContent);
         mCommentCommit = (TextView) rootView.findViewById(R.id.mCommentCommit);
         mCommentContent.addTextChangedListener(new CommentTextWatcher());
         return rootView;
@@ -316,13 +316,20 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 
         @Override
         public void afterTextChanged(Editable s) {
+            if(mCommentContent.isCopy()){
+                return;
+            }
             Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
+
                 mUserCommentMsg = mCommentContent.getText().toString();
+
+                Logger.e("aaa", "mUserCommentMsg.length()==" + mUserCommentMsg.length());
                 if (mUserCommentMsg.length() >= 144) {
                     ToastUtil.toastShort("亲,您输入的评论过长");
-                    mUserCommentMsg = mUserCommentMsg.substring(0, 145);
+                    mUserCommentMsg = mUserCommentMsg.substring(0, 144);
                     mCommentContent.setText(mUserCommentMsg);
+
                 }
                 mCommentCommit.setBackgroundResource(R.drawable.bg_user_comment_commit_sel);
                 mCommentCommit.setOnClickListener(UserCommentDialog.this);
