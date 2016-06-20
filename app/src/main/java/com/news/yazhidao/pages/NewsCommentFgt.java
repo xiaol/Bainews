@@ -140,7 +140,6 @@ public class NewsCommentFgt extends BaseFragment {
         if (mRefreshLike == null) {
             mRefreshLike = new RefreshLikeBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailFgt.ACTION_REFRESH_DTC);
-            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshLike, filter);
         }
     }

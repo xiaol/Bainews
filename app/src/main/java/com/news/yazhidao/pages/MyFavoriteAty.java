@@ -35,6 +35,7 @@ import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.json.JSONException;
@@ -234,11 +235,17 @@ public class MyFavoriteAty extends BaseActivity implements View.OnClickListener 
                 }
                 break;
             case R.id.aty_myFavorite_Deletelayout:
+                if(deleteFeedList.size() == 0){
+                    ToastUtil.toastShort("无删除数据。");
+                    setDeleteType(false);
+                    return;
+                }
+
                 for (int i = 0; i < deleteFeedList.size(); i++) {
                     deleteFeedList.get(i).setFavorite(false);
                 }
                 deleteFavorite(deleteFeedList);
-                setDeleteType(false);
+
 
                 break;
         }

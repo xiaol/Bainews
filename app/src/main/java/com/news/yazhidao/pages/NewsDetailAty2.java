@@ -167,6 +167,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } catch (Exception e) {
 
                 }
+            if(mDetailCommentNum.getVisibility() == View.GONE&&!isCommentPage){
+                mDetailCommentNum.setVisibility(View.VISIBLE);
+            }
                 mDetailCommentNum.setText(number + 1 + "");
                 mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
@@ -304,9 +307,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             String userid = null, p= null, t= null, i= null;
             try {
                 userid = URLEncoder.encode(mUserId+"", "utf-8");
-                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
-                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+//                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
+//                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+//                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+                p = (locationEntity.getProvince() != null) ? URLEncoder.encode(locationEntity.getProvince() + "", "utf-8") : "";
+                t = (locationEntity.getCity() != null) ? URLEncoder.encode(locationEntity.getCity()+"", "utf-8") : "";
+                i = (locationEntity.getDistrict() != null) ? URLEncoder.encode(locationEntity.getDistrict()+"", "utf-8") : "";
+
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -845,6 +852,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }else{
                         isFavorite = true;
                         carefor_Text.setText("收藏成功");
+                        Logger.e("aaa","收藏成功数据："+mNewsFeed.toString());
                         SharedPreManager.myFavoriteSaveList(mNewsFeed);
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
