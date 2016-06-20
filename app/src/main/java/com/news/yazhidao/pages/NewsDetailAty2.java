@@ -167,6 +167,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } catch (Exception e) {
 
                 }
+            if(mDetailCommentNum.getVisibility() == View.GONE&&!isCommentPage){
+                mDetailCommentNum.setVisibility(View.VISIBLE);
+            }
                 mDetailCommentNum.setText(number + 1 + "");
                 mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
