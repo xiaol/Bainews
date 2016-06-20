@@ -147,7 +147,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("aaa","user.toString()===="+user.toString());
-                    if(DeviceInfoUtil.isWifiConnected(mContext)&&DeviceInfoUtil.isMobileConnected(mContext)){
+                    if(!DeviceInfoUtil.isWifiConnected(mContext)&&!DeviceInfoUtil.isMobileConnected(mContext)){
                         ToastUtil.toastShort("无法连接到网络，请稍后再试");
                     }
                     submitComment(user);

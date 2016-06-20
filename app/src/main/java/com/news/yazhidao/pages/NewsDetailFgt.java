@@ -125,7 +125,6 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
-    public boolean isClickMyLike;
     FrameLayout video;
 
     @Override
@@ -1056,11 +1055,7 @@ public class NewsDetailFgt extends BaseFragment {
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     if(comment.getUpflag()==0){
-                        if(isClickMyLike){
-                            return;
-                        }
                         if((user.getMuid()+"").equals(comment.getUid())){
-                            isClickMyLike = true;
                             Toast.makeText(getActivity(), "不能给自己点赞。", Toast.LENGTH_SHORT).show();
                             return;
                         }
