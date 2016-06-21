@@ -103,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="@string/subscribe_my_category"
+                    android:text="@string/subscribe_more_category"
                     android:textColor="@color/new_color3"
                     android:textSize="@dimen/new_font4" />
             </LinearLayout>
