@@ -203,6 +203,7 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -232,7 +233,7 @@ public class SharePopupWindow extends PopupWindow {
                             }
                         }
 
-                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
+
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
                     }

@@ -507,6 +507,9 @@ public class ShareSdkHelper {
         } else if (argPlatform.equals(QQ.NAME)) {
             Platform platform = ShareSDK.getPlatform(QQ.NAME);
             platform.setPlatformActionListener(pShareListner);
+//            pShareParams.setTitle(title);
+//            pShareParams.setTitleUrl(url);
+//            pShareParams.setText("奇点资讯分享社区");
             platform.share(pShareParams);
         } else if (argPlatform.equals(QZone.NAME)) {
             Platform platform = ShareSDK.getPlatform(QZone.NAME);
