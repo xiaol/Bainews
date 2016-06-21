@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,11 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -53,7 +47,6 @@ import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
-import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -119,7 +112,6 @@ public class NewsDetailFgt extends BaseFragment {
     private final int LOAD_BOTTOM = 1;
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
-    private WebSettings mWebSettings;
     private TextView footView_tv;
     private ProgressBar footView_progressbar;
     private LinearLayout footerView_layout;
@@ -395,7 +387,6 @@ public class NewsDetailFgt extends BaseFragment {
             public void After() {
                 Log.e("aaa", "22222");
                 isWebSuccess = true;
-                mWebSettings.setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
