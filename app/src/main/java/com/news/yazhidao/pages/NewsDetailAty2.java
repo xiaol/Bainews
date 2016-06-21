@@ -57,6 +57,7 @@ import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -832,7 +833,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
      * @param isType ture 是收藏  false 是关心
      */
     public void loadOperate(final boolean isType){
-
+        if(!NetUtil.checkNetWork(NewsDetailAty2.this)){
+            ToastUtil.toastShort("无法连接到网络，请稍后再试");
+            return;
+        }
 
 
         JSONObject json = new JSONObject();
