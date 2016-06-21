@@ -32,6 +32,8 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -221,6 +223,15 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
+                        if(finalStrSharePlatform.equals(WechatMoments.NAME)||finalStrSharePlatform.equals(Wechat.NAME)){
+                            Platform plat = ShareSDK.getPlatform(finalStrSharePlatform);
+                            if(!plat.isClientValid()){
+                                ToastUtil.toastShort("未安装微信");
+                                SharePopupWindow.this.dismiss();
+                                return;
+                            }
+                        }
+
                         mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);

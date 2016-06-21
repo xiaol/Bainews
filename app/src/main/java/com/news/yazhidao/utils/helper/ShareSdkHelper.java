@@ -455,7 +455,7 @@ public class ShareSdkHelper {
             }
 
             @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
+            public void onError(Platform platform, final int i, Throwable throwable) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
