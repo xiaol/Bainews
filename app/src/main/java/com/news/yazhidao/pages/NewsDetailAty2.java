@@ -62,6 +62,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.SharePopupWindow.OnFavoritListener;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
 import com.umeng.analytics.MobclickAgent;
@@ -535,6 +536,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
@@ -569,6 +571,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     Logger.e("aaa", "mNewsFeed==="+mNewsFeed.toString());
+                    mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
@@ -592,6 +595,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         }
     }
 
+    OnFavoritListener listener = new OnFavoritListener() {
+        @Override
+        public void FavoritListener(boolean isFavoriteType) {
+            isFavorite = isFavoriteType;
+            loadOperate(true);
+        }
+    };
     @Override
     public void shareDismiss() {
         mivShareBg.startAnimation(mAlphaAnimationOut);

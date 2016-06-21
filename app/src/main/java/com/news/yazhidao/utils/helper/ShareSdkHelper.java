@@ -459,6 +459,7 @@ public class ShareSdkHelper {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        Logger.e("aaa", "i===" + i);
                         ToastUtil.toastShort("分享失败");
                     }
                 });
