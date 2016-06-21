@@ -119,6 +119,7 @@ public class NewsDetailFgt extends BaseFragment {
     private final int LOAD_BOTTOM = 1;
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
+    private WebSettings mWebSettings;
     private TextView footView_tv;
     private ProgressBar footView_progressbar;
     private LinearLayout footerView_layout;
@@ -352,7 +353,7 @@ public class NewsDetailFgt extends BaseFragment {
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         //第1部分的WebView
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
@@ -372,7 +373,6 @@ public class NewsDetailFgt extends BaseFragment {
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 //        }
         mDetailWebView.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent));
-
         mDetailWebView.getSettings().setJavaScriptEnabled(true);
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
@@ -395,7 +395,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void After() {
                 Log.e("aaa", "22222");
                 isWebSuccess = true;
-                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
+                mWebSettings.setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
