@@ -156,7 +156,12 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         }
     }
 
+    boolean isComment;
     private void submitComment(final User user) {
+        if(isComment){
+            return;
+        }
+        isComment = true;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JSONObject  json = new JSONObject();
         final String nickeName = user.getUserName();
@@ -235,12 +240,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
+                isComment = false;
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "add comment fail =" + error.getMessage());
 //                ToastUtil.toastShort("评论失败!");
+                isComment = false;
             }
         });
 
