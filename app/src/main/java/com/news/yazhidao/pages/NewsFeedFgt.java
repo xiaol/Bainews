@@ -308,7 +308,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
-            mNewsFeedFgtPopWindow.showPopWindow(x, y, feed.getPname(), mAdapter);
+            String pName = feed.getPname();
+            mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", mAdapter);
 
         }
     };

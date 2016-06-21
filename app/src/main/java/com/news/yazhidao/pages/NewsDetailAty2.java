@@ -532,7 +532,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
-                    String remark = "1";
+                    String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -566,8 +566,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
-                    String remark = "1";
+                    String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+                    Logger.e("aaa", "mNewsFeed==="+mNewsFeed.toString());
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
