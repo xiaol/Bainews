@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.pages.ComplaintsActivity;
 import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DensityUtil;
@@ -139,7 +140,7 @@ public class SharePopupWindow extends PopupWindow {
                     if (isFavorite) {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
-                        SharedPreManager.myFavoritRemoveItem(feedBean.getUrl());
+                        SharedPreManager.myFavoritRemoveItem(feedBean.getNid()+"");
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     } else {
                         isFavorite = true;
@@ -171,6 +172,8 @@ public class SharePopupWindow extends PopupWindow {
         mtvAccusation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent in = new Intent(m_pContext, ComplaintsActivity.class);
+                m_pContext.startActivity(in);
                 dismiss();
             }
         });

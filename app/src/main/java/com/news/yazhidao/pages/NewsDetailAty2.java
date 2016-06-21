@@ -167,6 +167,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } catch (Exception e) {
 
                 }
+            if(mDetailCommentNum.getVisibility() == View.GONE&&!isCommentPage){
+                mDetailCommentNum.setVisibility(View.VISIBLE);
+            }
                 mDetailCommentNum.setText(number + 1 + "");
                 mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
@@ -304,9 +307,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             String userid = null, p= null, t= null, i= null;
             try {
                 userid = URLEncoder.encode(mUserId+"", "utf-8");
-                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
-                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+//                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
+//                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+//                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+                p = (locationEntity.getProvince() != null) ? URLEncoder.encode(locationEntity.getProvince() + "", "utf-8") : "";
+                t = (locationEntity.getCity() != null) ? URLEncoder.encode(locationEntity.getCity()+"", "utf-8") : "";
+                i = (locationEntity.getDistrict() != null) ? URLEncoder.encode(locationEntity.getDistrict()+"", "utf-8") : "";
+
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -511,6 +518,13 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.mDetailLeftBack:
+                if (isCommentPage) {
+                    isCommentPage = false;
+                    mNewsDetailViewPager.setCurrentItem(0, true);
+                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+                    return ;
+                }
                 onBackPressed();
                 break;
             case R.id.mDetailRightMore://更多的点击
@@ -518,7 +532,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
-                    String remark = "1";
+                    String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -552,8 +566,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
-                    String remark = "1";
+                    String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+                    Logger.e("aaa", "mNewsFeed==="+mNewsFeed.toString());
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
@@ -838,6 +853,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     }else{
                         isFavorite = true;
                         carefor_Text.setText("收藏成功");
+                        Logger.e("aaa","收藏成功数据："+mNewsFeed.toString());
                         SharedPreManager.myFavoriteSaveList(mNewsFeed);
                         mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }

@@ -472,6 +472,10 @@ public class ShareSdkHelper {
         Platform.ShareParams pShareParams = new Platform.ShareParams();
         pShareParams.setImageData(BitmapFactory.decodeResource(YaZhiDaoApplication.getAppContext().getResources(), R.drawable.app_icon));
 //        pShareParams.setImageUrl("http://www.wyl.cc/wp-content/uploads/2014/02/10060381306b675f5c5.jpg");
+        Logger.e("aaa","argPlatform=="+argPlatform);
+        Logger.e("aaa","title=="+title);
+        Logger.e("aaa","url=="+url);
+        Logger.e("aaa","remark=="+remark);
         if (argPlatform.equals(Wechat.NAME) ||
                 argPlatform.equals(WechatMoments.NAME)) {
             pShareParams.setShareType(Platform.SHARE_WEBPAGE);
@@ -484,7 +488,7 @@ public class ShareSdkHelper {
             Platform platform = ShareSDK.getPlatform(Wechat.NAME);
             platform.setPlatformActionListener(pShareListner);
             if (TextUtil.isEmptyString(remark))
-                pShareParams.setText("头条百家分享社区");
+                pShareParams.setText("奇点资讯分享社区");
             else
                 pShareParams.setText(remark);
             platform.share(pShareParams);

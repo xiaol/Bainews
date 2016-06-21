@@ -80,7 +80,6 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private boolean isNetWork;
-    public boolean isClickMyLike;
 
     /**
      * 点赞的广播
@@ -140,7 +139,6 @@ public class NewsCommentFgt extends BaseFragment {
         if (mRefreshLike == null) {
             mRefreshLike = new RefreshLikeBroReceiber();
             IntentFilter filter = new IntentFilter(NewsDetailFgt.ACTION_REFRESH_DTC);
-            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             getActivity().registerReceiver(mRefreshLike, filter);
         }
     }
@@ -346,11 +344,7 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
-                        if(isClickMyLike){
-                            return;
-                        }
                         if((user.getMuid()+"").equals(comment.getUid())){
-                            isClickMyLike = true;
                             Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -509,9 +503,7 @@ public class NewsCommentFgt extends BaseFragment {
 //        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 //        requestQueue.add(loveRequest);
     }
-    public void deleteNewsLove(User user, NewsDetailComment comment, final Holder holder){
 
-    }
 
 
     class Holder {

@@ -84,23 +84,44 @@ public class NewsFeed implements Serializable {
      * 用户是否删除这条收藏数据
      */
     private boolean isFavorite = false;
+    /**
+     * 新闻备注
+     */
+    @DatabaseField
+    private String descr;
 
     @Override
     public String toString() {
         return "NewsFeed{" +
-                "pubTime='" + ptime + '\'' +
+                "ptime='" + ptime + '\'' +
+                ", nid=" + nid +
                 ", url='" + url + '\'' +
                 ", docid='" + docid + '\'' +
-                ", commentsCount='" + comment + '\'' +
-                ", pubName='" + pname + '\'' +
-                ", pubUrl='" + purl + '\'' +
-                ", imgStyle='" + style + '\'' +
+                ", comment=" + comment +
+                ", pname='" + pname + '\'' +
+                ", purl='" + purl + '\'' +
+                ", style=" + style +
                 ", title='" + title + '\'' +
-                ", imgList=" + imgs +
-                ", channelId='" + channel + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", imgs=" + imgs +
+                ", channel=" + channel +
+                ", collect=" + collect +
+                ", concern=" + concern +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isRead=" + isRead +
+                ", isFavorite=" + isFavorite +
+                ", descr='" + descr + '\'' +
                 '}';
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
     }
 
     public String getPtime() {

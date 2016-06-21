@@ -14,7 +14,7 @@
         android:background="@drawable/bg_user_comment_et"
         >
 
-        <EditText
+        <com.news.yazhidao.widget.CommentEditText
             android:id="@+id/mCommentContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

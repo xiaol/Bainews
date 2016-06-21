@@ -37,6 +37,7 @@ import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -59,7 +60,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
     public static final String KEY_ADD_COMMENT = "key_add_comment";
     private String mDocid;
     private Context mContext;
-    private EditText mCommentContent;
+    private CommentEditText mCommentContent;
     private TextView mCommentCommit;
     private String mUserCommentMsg;
 
@@ -83,7 +84,7 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
         View rootView = inflater.inflate(R.layout.dialog_user_comment, null);
         rootView.setMinimumWidth(10000);
         rootView.setMinimumHeight(DensityUtil.dip2px(getActivity(), 150));
-        mCommentContent = (EditText) rootView.findViewById(R.id.mCommentContent);
+        mCommentContent = (CommentEditText) rootView.findViewById(R.id.mCommentContent);
         mCommentCommit = (TextView) rootView.findViewById(R.id.mCommentCommit);
         mCommentContent.addTextChangedListener(new CommentTextWatcher());
         return rootView;
@@ -146,13 +147,21 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("aaa","user.toString()===="+user.toString());
+                    if(!DeviceInfoUtil.isWifiConnected(mContext)&&!DeviceInfoUtil.isMobileConnected(mContext)){
+                        ToastUtil.toastShort("无法连接到网络，请稍后再试");
+                    }
                     submitComment(user);
                 }
                 break;
         }
     }
 
+    boolean isComment;
     private void submitComment(final User user) {
+        if(isComment){
+            return;
+        }
+        isComment = true;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JSONObject  json = new JSONObject();
         final String nickeName = user.getUserName();
@@ -231,12 +240,14 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
+                isComment = false;
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "add comment fail =" + error.getMessage());
 //                ToastUtil.toastShort("评论失败!");
+                isComment = false;
             }
         });
 
@@ -316,13 +327,20 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
 
         @Override
         public void afterTextChanged(Editable s) {
+            if(mCommentContent.isCopy()){
+                return;
+            }
             Logger.e("jigang", "s=" + s);
             if (s != null && !TextUtil.isEmptyString(s.toString())) {
+
                 mUserCommentMsg = mCommentContent.getText().toString();
+
+                Logger.e("aaa", "mUserCommentMsg.length()==" + mUserCommentMsg.length());
                 if (mUserCommentMsg.length() >= 144) {
                     ToastUtil.toastShort("亲,您输入的评论过长");
-                    mUserCommentMsg = mUserCommentMsg.substring(0, 145);
+                    mUserCommentMsg = mUserCommentMsg.substring(0, 144);
                     mCommentContent.setText(mUserCommentMsg);
+
                 }
                 mCommentCommit.setBackgroundResource(R.drawable.bg_user_comment_commit_sel);
                 mCommentCommit.setOnClickListener(UserCommentDialog.this);
