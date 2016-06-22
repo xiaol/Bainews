@@ -16,8 +16,14 @@ android {
     }
 
     productFlavors {
-        huanliang91
-        baidu {}
+        /**91桌面换量渠道*/
+//        huanliang91 {}
+
+        /**深圳推广*/
+//        shenzhen {}
+
+        /**24个渠道*/
+       /** baidu {}
         q91shichang {}
         anzhuoshichang {}
         yingyongbao {}
@@ -40,12 +46,30 @@ android {
         feiliu {}
         liquwang {}
         q91zhuomian {}
-        wangyiyingyongzhongxin {}
+        wangyiyingyongzhongxin {} */
+
+        /**pc端渠道*/
+        newasp {}
+        downcc {}
+        cr173 {}
+        pc6 {}
+        redshu {}
+        q9ht {}
+        yiwan {}
+        anfens {}
+        yxdown {}
+        qqtn {}
+        hackhome {}
+        xz7 {}
+        coolapk {}
+        q05sun {}
+        paopaoche {}
+
+
 //        daoyoudao {}
 //        huanliang {}
 //        googleplay {}
-//        yingyongbao {}
-        shenzhen {}
+        yingyongbao {}
 //        kuaiyou {}
 //        shanghai {}
 //        hulizhushou {}
@@ -78,7 +102,7 @@ android {
 //        wo {}
 //        sougou {}
 //        mm {}
-        official{}
+//        official{}
 //        lianxiang{}
 //        yidong{}
 //        jinli{}
