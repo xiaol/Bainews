@@ -453,7 +453,6 @@ public class ShareSdkHelper {
                 mHandler.post(myRunnable);
 
             }
-
             @Override
             public void onError(Platform platform, final int i, Throwable throwable) {
                 mHandler.post(new Runnable() {

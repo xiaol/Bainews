@@ -43,6 +43,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
@@ -103,7 +104,7 @@ public class NewsDetailFgt extends BaseFragment {
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
-//    private RefreshPageBroReceiber mRefreshReceiber;
+    private RefreshPageBroReceiber mRefreshReceiber;
     private RefreshLikeBroReceiber mRefreshLike;
     private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
     private TextView mDetailSharedHotComment;
@@ -132,12 +133,12 @@ public class NewsDetailFgt extends BaseFragment {
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
 
-//        if (mRefreshReceiber == null) {
-//            mRefreshReceiber = new RefreshPageBroReceiber();
-//            IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
-//            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
-//            getActivity().registerReceiver(mRefreshReceiber, filter);
-//        }
+        if (mRefreshReceiber == null) {
+            mRefreshReceiber = new RefreshPageBroReceiber();
+            IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+            filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+            getActivity().registerReceiver(mRefreshReceiber, filter);
+        }
         if (mRefreshLike == null) {
             mRefreshLike = new RefreshLikeBroReceiber();
             IntentFilter filter = new IntentFilter(NewsCommentFgt.ACTION_REFRESH_CTD);
@@ -317,9 +318,9 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        if (mRefreshReceiber != null) {
-//            getActivity().unregisterReceiver(mRefreshReceiber);
-//        }
+        if (mRefreshReceiber != null) {
+            getActivity().unregisterReceiver(mRefreshReceiber);
+        }
         if (mRefreshLike != null) {
             getActivity().unregisterReceiver(mRefreshLike);
         }
@@ -409,7 +410,7 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
-                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1");
+                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1" );
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_share_weixin");
             }
         });
@@ -905,34 +906,34 @@ public class NewsDetailFgt extends BaseFragment {
         }
     }
 
-//    /**
-//     * 通知新闻详情页和评论fragment刷新评论
-//     */
-//    public class RefreshPageBroReceiber extends BroadcastReceiver {
-//
-//
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
-//                Logger.e("aaa", "详情页===文字的改变！！！");
-////                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
-////                mSharedPreferences.edit().putInt("textSize", size).commit();
-//                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
-//                        "text/html;charset=UTF-8", "utf-8", null);
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                mDetailWebView.setLayoutParams(params);
-//                mAdapter.notifyDataSetChanged();
-//                CCViewNotifyDataSetChanged();
-//
-//            } else {
+    /**
+     * 通知新闻详情页和评论fragment刷新评论
+     */
+    public class RefreshPageBroReceiber extends BroadcastReceiver {
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
+                Logger.e("aaa", "详情页===文字的改变！！！");
+//                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
+//                mSharedPreferences.edit().putInt("textSize", size).commit();
+                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+                        "text/html;charset=UTF-8", "utf-8", null);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                mDetailWebView.setLayoutParams(params);
+                mAdapter.notifyDataSetChanged();
+                CCViewNotifyDataSetChanged();
+
+            } else {
 //                Logger.e("jigang", "detailaty refresh br");
 //                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
 //                mComments.add(0, comment);
 //                UpdateCCOneData();
-//            }
-//
-//        }
-//    }
+            }
+
+        }
+    }
 
     /**
      * 点赞的广播
