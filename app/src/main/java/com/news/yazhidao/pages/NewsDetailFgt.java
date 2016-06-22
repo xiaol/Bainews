@@ -390,6 +390,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void After() {
                 Log.e("aaa", "22222");
                 isWebSuccess = true;
+                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
