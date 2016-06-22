@@ -43,13 +43,16 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -409,13 +412,17 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
-                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1");
+                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1" );
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_share_weixin");
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!NetUtil.checkNetWork(getActivity())){
+                    ToastUtil.toastShort("无法连接到网络，请稍后再试");
+                    return;
+                }
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_like");
 
                 if (user != null && user.isVisitor()) {
@@ -925,10 +932,10 @@ public class NewsDetailFgt extends BaseFragment {
                 CCViewNotifyDataSetChanged();
 
             } else {
-                Logger.e("jigang", "detailaty refresh br");
-                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
-                mComments.add(0, comment);
-                UpdateCCOneData();
+//                Logger.e("jigang", "detailaty refresh br");
+//                NewsDetailComment comment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
+//                mComments.add(0, comment);
+//                UpdateCCOneData();
             }
 
         }

@@ -39,6 +39,7 @@ import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -147,8 +148,10 @@ public class UserCommentDialog extends DialogFragment implements View.OnClickLis
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("aaa","user.toString()===="+user.toString());
-                    if(!DeviceInfoUtil.isWifiConnected(mContext)&&!DeviceInfoUtil.isMobileConnected(mContext)){
+                    if(!NetUtil.checkNetWork(mContext)){
                         ToastUtil.toastShort("无法连接到网络，请稍后再试");
+                        UserCommentDialog.this.dismiss();
+                        return;
                     }
                     submitComment(user);
                 }
