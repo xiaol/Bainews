@@ -123,7 +123,6 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
-    FrameLayout video;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,8 +159,6 @@ public class NewsDetailFgt extends BaseFragment {
         this.inflater = inflater;
         this.container = container;
         user = SharedPreManager.getUser(getActivity());
-        // 声明video，把之后的视频放到这里面去
-        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
