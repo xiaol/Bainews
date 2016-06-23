@@ -214,7 +214,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode);
+        Logger.e("jigang", "requestCode = " + requestCode + ",data=" +data);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
@@ -230,7 +230,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     bgLayout.setVisibility(View.GONE);
                 }
             }
-        }else if (requestCode == LoginAty.REQUEST_CODE && data != null){
+        } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
         }
     }
@@ -576,8 +576,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 } else {
                     isNoteLoadDate = false;
                 }
-
-
             } else {
                 stopRefresh();
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
@@ -588,7 +586,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 mAdapter.setNewsFeed(newsFeeds);
                 mAdapter.notifyDataSetChanged();
-                mlvNewsFeed.onRefreshComplete();
+                mlvNewsFeed.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mlvNewsFeed.onRefreshComplete();
+                    }
+                }, 500);
+
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }

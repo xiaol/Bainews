@@ -43,9 +43,9 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.utils.DateUtil;
@@ -56,7 +56,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
-import com.news.yazhidao.widget.UserCommentDialog;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.umeng.analytics.MobclickAgent;
 
@@ -375,6 +374,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8") ;//
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(),"VideoJavaScriptBridge");
 //        //设置WebView 可以加载更多格式页面
 //        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
 //        //设置WebView使用广泛的视窗

@@ -589,6 +589,11 @@ public class TextUtil {
         return cssBuilder.toString();
     }
 
+    public static String generateJs(){
+//        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
+        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
+    }
+
     /**
      * 生成新闻详情的html
      */
@@ -611,7 +616,7 @@ public class TextUtil {
             contentTextSize = 19;
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
-                generateCSS() +
+                generateCSS() + generateJs() +
                 "</head>" +
                 "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;\">" +
                 detail.getTitle() +
@@ -625,15 +630,24 @@ public class TextUtil {
 
         ArrayList<HashMap<String, String>> content = detail.getContent();
         if (!TextUtil.isListEmpty(content)) {
+            HashMap<String,String> add = new HashMap<>();
+            add.put("vid","<iframe allowfullscreen=\\\"\\\" class=\\\"video_iframe\\\" data-src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" frameborder=\\\"0\\\" height=\\\"375\\\" src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" width=\\\"500\\\"></iframe>");
+            content.add(add);
             for (HashMap<String, String> map : content) {
                 String txt = map.get("txt");
                 String img = map.get("img");
+                String vid = map.get("vid");
                 if (!TextUtil.isEmptyString(txt)) {
                     contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     contentBuilder.append("<p class=\"p_img\"><img src=\"" + img + "\"></p>");
                 }
+//                if (!TextUtil.isEmptyString(vid)){
+//                    vid = "file:///android_asset/deail_default.png";
+//                    String url = "";
+//                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + vid + "\" onclick=\"openVideo('"+url+"')\"></p>");
+//                }
             }
         }
         contentBuilder.append("</div></body></html>");

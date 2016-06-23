@@ -10,13 +10,20 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 119
-        versionName "3.0"
+        versionCode 120
+        versionName "3.18"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
     productFlavors {
-        baidu {}
+        /**91桌面换量渠道*/
+//        huanliang91 {}
+
+        /**深圳推广*/
+//        shenzhen {}
+
+        /**24个渠道*/
+       /** baidu {}
         q91shichang {}
         anzhuoshichang {}
         yingyongbao {}
@@ -39,12 +46,30 @@ android {
         feiliu {}
         liquwang {}
         q91zhuomian {}
-        wangyiyingyongzhongxin {}
+        wangyiyingyongzhongxin {} */
+
+        /**pc端渠道*/
+        newasp {}
+        downcc {}
+        cr173 {}
+        pc6 {}
+        redshu {}
+        q9ht {}
+        yiwan {}
+        anfens {}
+        yxdown {}
+        qqtn {}
+        hackhome {}
+        xz7 {}
+        coolapk {}
+        q05sun {}
+        paopaoche {}
+
+
 //        daoyoudao {}
 //        huanliang {}
 //        googleplay {}
-//        yingyongbao {}
-//        shenzhen {}
+        yingyongbao {}
 //        kuaiyou {}
 //        shanghai {}
 //        hulizhushou {}
@@ -77,7 +102,7 @@ android {
 //        wo {}
 //        sougou {}
 //        mm {}
-        official{}
+//        official{}
 //        lianxiang{}
 //        yidong{}
 //        jinli{}

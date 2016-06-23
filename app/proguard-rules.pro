@@ -215,3 +215,11 @@ java.lang.Object readResolve();
 ## baidu 定位sdk
 -keep class com.baidu.** { *; }
 -keep class vi.com.gdi.bgl.android.**{*;}
+
+
+##js 和java互调
+-keep class com.news.yazhidao.javascript.VideoJavaScriptBridge{
+    public <fields>;
+    public <methods>;
+
+}

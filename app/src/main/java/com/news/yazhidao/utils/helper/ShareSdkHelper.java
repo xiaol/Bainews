@@ -181,7 +181,7 @@ public class ShareSdkHelper {
     /**
      * 重新注册三方用户,防止用户信息过期
      */
-    public static void reRegisterThidUser() {
+    public static void reRegisterThirdUser() {
         mergeThirdUser(null);
     }
 
@@ -579,6 +579,7 @@ public class ShareSdkHelper {
                     requestBody.put("city", location.getCity());
                     requestBody.put("district", location.getDistrict());
                 }
+                newUser.setPassword(oldUser.getPassword());
                 newUser.setMuid(oldUser.getMuid());
                 newUser.setPlatformType(platformNname);
                 newUser.setUtype((SinaWeibo.NAME.equals(platformNname) ? 3 : 4) + "");

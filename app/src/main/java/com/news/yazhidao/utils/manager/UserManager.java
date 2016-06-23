@@ -31,8 +31,10 @@ public class UserManager {
     /**
      * 注册游客身份,获取访问所有接口数据的token
      */
-    public static void registerVisitor(Context mContext, final RegisterVisitorListener mListener) {
+    public static void registerVisitor(final Context mContext, final RegisterVisitorListener mListener) {
         final User user = SharedPreManager.getUser(mContext);
+        if (user != null)
+            Logger.e("jigang","check userJson="+user.toJsonString());
         if (user == null) {
             JSONObject requestBody = new JSONObject();
             try {
@@ -77,15 +79,16 @@ public class UserManager {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Logger.e("jigang","user visitor login body="+requestBody.toString());
                     VisitorLoginRequest loginRequest = new VisitorLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            User user = new User();
                             user.setAuthorToken(response.optString("Authorization"));
                             user.setUtype(response.optString("utype"));
                             user.setMuid(response.optInt("uid"));
                             user.setPassword(response.optString("password"));
                             SharedPreManager.saveUser(user);
+                            Logger.e("jigang","user visitor login="+SharedPreManager.getUser(mContext).toJsonString());
                             if (mListener != null){
                                 mListener.registeSuccess();
                             }
@@ -98,7 +101,7 @@ public class UserManager {
                     });
                     YaZhiDaoApplication.getInstance().getRequestQueue().add(loginRequest);
                 }else {
-                    ShareSdkHelper.reRegisterThidUser();
+                    ShareSdkHelper.reRegisterThirdUser();
                 }
         }
     }
