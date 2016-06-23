@@ -453,12 +453,12 @@ public class ShareSdkHelper {
                 mHandler.post(myRunnable);
 
             }
-
             @Override
-            public void onError(Platform platform, int i, Throwable throwable) {
+            public void onError(Platform platform, final int i, Throwable throwable) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        Logger.e("aaa", "i===" + i);
                         ToastUtil.toastShort("分享失败");
                     }
                 });
@@ -507,6 +507,9 @@ public class ShareSdkHelper {
         } else if (argPlatform.equals(QQ.NAME)) {
             Platform platform = ShareSDK.getPlatform(QQ.NAME);
             platform.setPlatformActionListener(pShareListner);
+//            pShareParams.setTitle(title);
+//            pShareParams.setTitleUrl(url);
+//            pShareParams.setText("奇点资讯分享社区");
             platform.share(pShareParams);
         } else if (argPlatform.equals(QZone.NAME)) {
             Platform platform = ShareSDK.getPlatform(QZone.NAME);

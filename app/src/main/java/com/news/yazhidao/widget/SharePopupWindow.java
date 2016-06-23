@@ -32,6 +32,8 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.sina.weibo.SinaWeibo;
 import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.wechat.friends.Wechat;
@@ -123,7 +125,14 @@ public class SharePopupWindow extends PopupWindow {
         super.dismiss();
         mShareDismiss.shareDismiss();
     }
+    public interface OnFavoritListener{
+        public void FavoritListener(boolean isFavoriteType);
+    }
 
+    OnFavoritListener listener;
+    public void setOnFavoritListener(OnFavoritListener listener){
+        this.listener = listener;
+    }
     private void setOnClick() {
         mtvClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,18 +146,21 @@ public class SharePopupWindow extends PopupWindow {
 
                 User user = SharedPreManager.getUser(m_pContext);
                 if (user != null && !user.isVisitor()) {
+                    listener.FavoritListener(isFavorite);
                     if (isFavorite) {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
-                        SharedPreManager.myFavoritRemoveItem(feedBean.getNid()+"");
+//                        SharedPreManager.myFavoritRemoveItem(feedBean.getNid()+"");
+
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     } else {
                         isFavorite = true;
                         mtvFavorite.setText("已收藏");
-                        SharedPreManager.myFavoriteSaveList(feedBean);
+//                        SharedPreManager.myFavoriteSaveList(feedBean);
 
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
+
                     dismiss();
                 } else {
                     Intent loginAty = new Intent(m_pContext, LoginAty.class);
@@ -201,6 +213,7 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -221,7 +234,16 @@ public class SharePopupWindow extends PopupWindow {
                         ToastUtil.toastShort("复制成功");
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
+                        if(finalStrSharePlatform.equals(WechatMoments.NAME)||finalStrSharePlatform.equals(Wechat.NAME)){
+                            Platform plat = ShareSDK.getPlatform(finalStrSharePlatform);
+                            if(!plat.isClientValid()){
+                                ToastUtil.toastShort("未安装微信");
+                                SharePopupWindow.this.dismiss();
+                                return;
+                            }
+                        }
+
+
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
                     }
