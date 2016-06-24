@@ -374,7 +374,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8") ;//
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(),"VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(getActivity()),"VideoJavaScriptBridge");
 //        //设置WebView 可以加载更多格式页面
 //        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
 //        //设置WebView使用广泛的视窗

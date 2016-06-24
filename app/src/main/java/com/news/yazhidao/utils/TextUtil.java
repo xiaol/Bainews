@@ -589,7 +589,7 @@ public class TextUtil {
         return cssBuilder.toString();
     }
 
-    public static String generateJs(){
+    public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
         return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
     }
@@ -626,12 +626,12 @@ public class TextUtil {
         if (detail.getCommentSize() != 0) {
             contentBuilder.append("&nbsp; <span>" + detail.getCommentSize() + "评论" + "</span>");
         }
-            contentBuilder.append("</div><div class=\"content\">");
+        contentBuilder.append("</div><div class=\"content\">");
 
         ArrayList<HashMap<String, String>> content = detail.getContent();
         if (!TextUtil.isListEmpty(content)) {
-            HashMap<String,String> add = new HashMap<>();
-            add.put("vid","<iframe allowfullscreen=\\\"\\\" class=\\\"video_iframe\\\" data-src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" frameborder=\\\"0\\\" height=\\\"375\\\" src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" width=\\\"500\\\"></iframe>");
+            HashMap<String, String> add = new HashMap<>();
+            add.put("vid", "<iframe allowfullscreen=\\\"\\\" class=\\\"video_iframe\\\" data-src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" frameborder=\\\"0\\\" height=\\\"375\\\" src=\\\"https://v.qq.com/iframe/preview.html?vid=d0307rjka3y&amp;width=500&amp;height=375&amp;auto=0\\\" width=\\\"500\\\"></iframe>");
             content.add(add);
             for (HashMap<String, String> map : content) {
                 String txt = map.get("txt");
@@ -643,11 +643,47 @@ public class TextUtil {
                 if (!TextUtil.isEmptyString(img)) {
                     contentBuilder.append("<p class=\"p_img\"><img src=\"" + img + "\"></p>");
                 }
-//                if (!TextUtil.isEmptyString(vid)){
-//                    vid = "file:///android_asset/deail_default.png";
-//                    String url = "";
-//                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + vid + "\" onclick=\"openVideo('"+url+"')\"></p>");
-//                }
+                if (!TextUtil.isEmptyString(vid)) {
+                    String imgUrl = "file:///android_asset/deail_default.png";
+                    String[] split = vid.split("\"");
+                    String url = "";
+                    for (int i = 0; i < split.length; i++) {
+                        if (split[i].contains("https:")) {
+                            url = split[i].replace("https", "http").replace("\\", "").replace("preview","player");
+                            break;
+                        }
+                    }
+                    Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
+
+                    String params = url.substring(url.indexOf("?") + 1);
+                    Logger.e("jigang", "params url=" + params);
+                    String[] paramsArr = params.split("=|&");
+                    for (int i = 0; i < paramsArr.length; i++) {
+                        Logger.e("jigang", "param --->" + paramsArr[i] + "\n");
+                    }
+                    for (int i = 0; i < paramsArr.length; i++) {
+                        if (paramsArr[i].contains("width")) {
+                            paramsArr[i + 1] = DeviceInfoUtil.getScreenWidth() / 3 + "";
+                        }
+                        if (paramsArr[i].contains("auto")) {
+                            paramsArr[i + 1] = "1";
+                        }
+                    }
+                    StringBuilder sb = new StringBuilder(url.substring(0, url.indexOf("?") + 1));
+                    for (int i = 0; i < paramsArr.length; i++) {
+                        if (i % 2 == 0) {
+                            sb.append(paramsArr[i] + "=");
+                        } else {
+                            if (i != paramsArr.length - 1) {
+                                sb.append(paramsArr[i] + "&");
+                            } else {
+                                sb.append(paramsArr[i]);
+                            }
+                        }
+                    }
+                    Logger.e("jigang", "final url=" + sb.toString());
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onclick=\"openVideo('" + sb.toString() + "')\"></p>");
+                }
             }
         }
         contentBuilder.append("</div></body></html>");
