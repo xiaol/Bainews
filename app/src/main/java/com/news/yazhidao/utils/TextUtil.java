@@ -584,7 +584,9 @@ public class TextUtil {
                 ".top{position:relative;border:0}.top :after{content:'';position:absolute;left:0;background:#d3d3d3;width:100%;height:1px;top: 180%;-webkit-transform:scaleY(0.3);transform:scaleY(0.3);-webkit-transform-origin:0 0;transform-origin:0 0} " +
                 ".content { letter-spacing: 0.5px; line-height: 150%; font-size: 18px; }" +
                 ".content img { width: 100%; }" +
-                ".p_img { text-align: center; }");
+                ".p_img { text-align: center; }" +
+                ".p_video { text-align: center;position: relative; }"
+        );
         cssBuilder.append("</style>");
         return cssBuilder.toString();
     }
@@ -654,7 +656,8 @@ public class TextUtil {
                         }
                     }
                     Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-
+                    int w = DeviceInfoUtil.getScreenWidth();
+                    int h = (int) (w * 0.75);
                     String params = url.substring(url.indexOf("?") + 1);
                     Logger.e("jigang", "params url=" + params);
                     String[] paramsArr = params.split("=|&");
@@ -663,10 +666,13 @@ public class TextUtil {
                     }
                     for (int i = 0; i < paramsArr.length; i++) {
                         if (paramsArr[i].contains("width")) {
-                            paramsArr[i + 1] = DeviceInfoUtil.getScreenWidth() / 3 + "";
+                            paramsArr[i + 1] = w + "";
                         }
                         if (paramsArr[i].contains("auto")) {
                             paramsArr[i + 1] = "1";
+                        }
+                        if (paramsArr[i].contains("height")) {
+                            paramsArr[i + 1] = h + "";
                         }
                     }
                     StringBuilder sb = new StringBuilder(url.substring(0, url.indexOf("?") + 1));
@@ -682,7 +688,7 @@ public class TextUtil {
                         }
                     }
                     Logger.e("jigang", "final url=" + sb.toString());
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onclick=\"openVideo('" + sb.toString() + "')\"></p>");
+                    contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url+"')\" style=\"position:absolute;width:100%;height:"+h+"px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\""+h+"\" width=\"100%\" src=\""+url+"\"></p>");
                 }
             }
         }
