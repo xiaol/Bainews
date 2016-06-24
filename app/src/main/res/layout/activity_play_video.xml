@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
+    <RelativeLayout
+        android:id="@+id/mDetailHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/common_header_bg">
+
+        <TextView
+            android:id="@+id/mPlayVideoLeftBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:paddingLeft="15dp"
+            />
+
+
+
+    </RelativeLayout>
     <WebView
         android:id="@+id/mPlayVideoWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-/>
-</RelativeLayout>
+        />
+</LinearLayout>

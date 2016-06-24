@@ -1,6 +1,6 @@
 package com.news.yazhidao.javascript;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
@@ -12,9 +12,9 @@ import com.news.yazhidao.pages.PlayVideoAty;
 public class VideoJavaScriptBridge {
 
     public static final String KEY_VIDEO_URL = "KEY_VIDEO_URL";
-    private Context mContext;
+    private Activity mContext;
 
-    public VideoJavaScriptBridge(Context mContext) {
+    public VideoJavaScriptBridge(Activity mContext) {
         this.mContext = mContext;
     }
 
