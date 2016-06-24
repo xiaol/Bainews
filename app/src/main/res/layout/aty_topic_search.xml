@@ -106,8 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/new_color9"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/mSearchTipImg"
@@ -134,16 +133,16 @@
             android:visibility="gone"
             />
 
-        <ProgressBar
-            android:id="@+id/mSearchProgress"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminateOnly="true"
-            android:minHeight="60.0dip"
-            android:minWidth="60.0dip"
-            />
+        <!--<ProgressBar-->
+            <!--android:id="@+id/mSearchProgress"-->
+            <!--style="?android:attr/progressBarStyleLarge"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:indeterminateOnly="true"-->
+            <!--android:minHeight="60.0dip"-->
+            <!--android:minWidth="60.0dip"-->
+            <!--/>-->
     </RelativeLayout>
 
 </RelativeLayout>

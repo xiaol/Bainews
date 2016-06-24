@@ -61,9 +61,12 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,7 +123,6 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
-    FrameLayout video;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,8 +159,6 @@ public class NewsDetailFgt extends BaseFragment {
         this.inflater = inflater;
         this.container = container;
         user = SharedPreManager.getUser(getActivity());
-        // 声明video，把之后的视频放到这里面去
-        video = (FrameLayout) rootView.findViewById(R.id.video);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
@@ -902,6 +902,7 @@ public class NewsDetailFgt extends BaseFragment {
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
+        TextViewExtend tvTime;
         ImageView ivPraise;
 
         public CommentHolder(View convertView) {
@@ -910,6 +911,7 @@ public class NewsDetailFgt extends BaseFragment {
             tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
+            tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
         }
     }
 
@@ -1010,7 +1012,35 @@ public class NewsDetailFgt extends BaseFragment {
             UpdateCCView(holder, newsDetailComment, i);
         }
     }
-
+//    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            Date date = dateFormat.parse(updateTime);
+//            long between = System.currentTimeMillis() - date.getTime();
+//            if (between >= (24 * 3600000)) {
+//                tvTime.setText(updateTime);
+////                tvTime.setText("");
+//            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
+//                tvTime.setText(between / 3600000 + "小时前");
+////                tvTime.setText("");
+//            } else {
+//                int time = (int) (between * 60 / 3600000);
+//                if (time > 0)
+//                    tvTime.setText(between * 60 / 3600000 + "分钟前");
+//                else
+//                    tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
+////                if (between / 3600000 / 60 == 0) {
+////                    tvTime.setText("刚刚");
+////                } else {
+////                    tvTime.setText(between / 3600000 / 60 + "分钟前");
+////                }
+//            }
+//        } catch (ParseException e) {
+//            tvTime.setText(updateTime);
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
@@ -1019,6 +1049,9 @@ public class NewsDetailFgt extends BaseFragment {
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
+        Logger.e("aaa", "LS=comment.getCtime()===" + comment.getCtime());
+        holder.tvTime.setText("" + DateUtil.getTimes(DateUtil.dateStr2Long(comment.getCtime())));
+//        setNewsTime(holder.tvTime, comment.getCtime());
 
         holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         holder.tvContent.setText(comment.getContent());

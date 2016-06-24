@@ -2,6 +2,7 @@ package com.news.yazhidao.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
@@ -29,6 +30,24 @@ public class SearchListViewOpenAdapter extends CommonAdapter<HistoryEntity> {
             }
         }
         holder.setTextViewExtendText(R.id.search_listviewopen_item_content,historyEntity.getCotent());
+        setItemClick((RelativeLayout) holder.getView(R.id.search_listviewopen_itemLayout),historyEntity.getCotent());
 
+    }
+    public void setItemClick(RelativeLayout layout, final String content){
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnSearchListViewOpenItemClick.listener(content);
+
+            }
+        });
+    }
+
+    private onSearchListViewOpenItemClick mOnSearchListViewOpenItemClick;
+    public void setonSearchListViewOpenItemClick(onSearchListViewOpenItemClick mOnSearchListViewOpenItemClick){
+        this.mOnSearchListViewOpenItemClick = mOnSearchListViewOpenItemClick;
+    }
+    public interface onSearchListViewOpenItemClick{
+        public void listener(String content);
     }
 }
