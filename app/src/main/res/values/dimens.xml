@@ -89,6 +89,7 @@
     <dimen name="new_font8">19sp</dimen>
     <dimen name="new_font9">21sp</dimen>
     <dimen name="new_font10">16sp</dimen>
+    <dimen name="new_font11">15sp</dimen>
 
     <!--新闻详情页字体大小-->
     <dimen name="detail_title">23sp</dimen>

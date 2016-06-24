@@ -52,8 +52,8 @@ public final class CommonConstant {
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
 
 
-    public static final int TEXT_SIZE_NORMAL = 17;
-    public static final int TEXT_SIZE_BIG = 19;
-    public static final int TEXT_SIZE_BIGGER = 21;
+    public static final int TEXT_SIZE_NORMAL = 16;
+    public static final int TEXT_SIZE_BIG = 17;
+    public static final int TEXT_SIZE_BIGGER = 18;
     public static final String CHANGE_TEXT_ACTION = "change_text";
 }

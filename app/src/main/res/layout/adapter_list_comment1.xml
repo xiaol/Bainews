@@ -85,8 +85,8 @@
                 android:text="ssss"
                 android:layout_below="@+id/mSelectCommentHeader"
                 android:lineSpacingMultiplier="1.15"
-                android:textColor="@color/new_color1"
-                android:textSize="@dimen/new_font10"/>
+                android:textColor="@color/new_color1_c"
+                android:textSize="@dimen/new_font11"/>
 
         </LinearLayout>
 
