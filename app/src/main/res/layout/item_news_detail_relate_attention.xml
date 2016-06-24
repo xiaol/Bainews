@@ -88,8 +88,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textColor="@color/new_color1"
-                        android:textSize="@dimen/new_font10"
+                        android:textColor="@color/new_color1_c"
+                        android:textSize="@dimen/new_font11"
                         android:includeFontPadding="false"
                         />
 

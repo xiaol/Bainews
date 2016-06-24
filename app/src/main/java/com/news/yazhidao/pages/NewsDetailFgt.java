@@ -330,14 +330,12 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mDetailWebView.pauseTimers();
         mDetailWebView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mDetailWebView.resumeTimers();
         mDetailWebView.onResume();
     }
 
@@ -374,7 +372,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8") ;//
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(getActivity()),"VideoJavaScriptBridge");
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
 //        //设置WebView 可以加载更多格式页面
 //        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
 //        //设置WebView使用广泛的视窗
@@ -415,6 +413,7 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa", "点击朋友圈");
                 ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1" );
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_share_weixin");
+
             }
         });
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
