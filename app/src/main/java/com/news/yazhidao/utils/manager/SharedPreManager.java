@@ -407,8 +407,13 @@ public class SharedPreManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        for (int i = 0; i < historyEntities.size(); i++) {
+            if(content.equals(historyEntities.get(i).getCotent())){
+                historyEntities.remove(i);
+            }
+        }
         Gson gson = new Gson();
-        historyEntities.add(historyEntity);
+        historyEntities.add(0,historyEntity);
         save(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY, gson.toJson(historyEntities));
     }
     public static ArrayList<HistoryEntity> HistoryGetList() throws JSONException {

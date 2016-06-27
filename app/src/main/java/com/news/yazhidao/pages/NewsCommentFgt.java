@@ -297,7 +297,7 @@ public class NewsCommentFgt extends BaseFragment {
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
                 holder.ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
-//                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
+                holder.tvTime = (TextViewExtend) convertView.findViewById(R.id.tv_time);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
                 holder.tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
                 convertView.setTag(holder);
@@ -309,6 +309,7 @@ public class NewsCommentFgt extends BaseFragment {
             final User user = SharedPreManager.getUser(mContext);
             mComment = comment;
             mHolder = holder;
+            holder.tvTime.setText("" + DateUtil.getTimes(DateUtil.dateStr2Long(comment.getCtime())));
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
                 holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
@@ -367,33 +368,33 @@ public class NewsCommentFgt extends BaseFragment {
 
 
 
-    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date date = dateFormat.parse(updateTime);
-            long between = System.currentTimeMillis() - date.getTime();
-            if (between >= (24 * 3600000)) {
-                tvTime.setText("");
-            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                tvTime.setText("");
-            } else {
-                int time = (int) (between * 60 / 3600000);
-                if (time > 0)
-                    tvTime.setText(between * 60 / 3600000 + "分钟前");
-                else
-                    tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
-//                if (between / 3600000 / 60 == 0) {
-//                    tvTime.setText("刚刚");
-//                } else {
-//                    tvTime.setText(between / 3600000 / 60 + "分钟前");
-//                }
-            }
-        } catch (ParseException e) {
-            tvTime.setText(updateTime);
-            e.printStackTrace();
-        }
-
-    }
+//    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            Date date = dateFormat.parse(updateTime);
+//            long between = System.currentTimeMillis() - date.getTime();
+//            if (between >= (24 * 3600000)) {
+//                tvTime.setText("");
+//            } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
+//                tvTime.setText("");
+//            } else {
+//                int time = (int) (between * 60 / 3600000);
+//                if (time > 0)
+//                    tvTime.setText(between * 60 / 3600000 + "分钟前");
+//                else
+//                    tvTime.setText(between * 60 * 60 / 3600000 + "秒前");
+////                if (between / 3600000 / 60 == 0) {
+////                    tvTime.setText("刚刚");
+////                } else {
+////                    tvTime.setText(between / 3600000 / 60 + "分钟前");
+////                }
+//            }
+//        } catch (ParseException e) {
+//            tvTime.setText(updateTime);
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private void addNewsLove(User user, NewsDetailComment comment, final int position, final boolean isAdd) {
         if(isNetWork){

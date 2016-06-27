@@ -2,14 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/mSearchHotLabelLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mSearchHeader"
         android:background="@color/new_color9"
+        android:orientation="vertical"
         >
-
+        <RelativeLayout
+            android:id="@+id/HotSearchlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <View
             android:layout_width="3dp"
             android:layout_height="15dp"
@@ -56,11 +59,11 @@
             android:layout_marginLeft="-2dp"
             android:layout_marginTop="5dp"
             />
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/HistoryLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mHotLabelsLayout"
             android:layout_marginTop="20dp">
             <View
                 android:id="@+id/history_Line_bold"
@@ -103,5 +106,5 @@
                 android:layout_below="@id/mSearchHistory"/>
         </RelativeLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

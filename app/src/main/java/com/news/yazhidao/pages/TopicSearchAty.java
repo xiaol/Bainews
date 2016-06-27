@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
+import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.Element;
@@ -80,7 +82,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private View mSearchLoaddingWrapper;
     private ImageView mSearchTipImg;
     private TextView mSearchTip;
-    private ProgressBar mSearchProgress;
+//    private ProgressBar mSearchProgress;
     private ArrayList<Element> mHotLabels;
     private ArrayList<NewsFeed> mNewsFeedLists = new ArrayList<>();
     private int mTotalPage;
@@ -89,7 +91,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private int mPageIndex = 1;//搜索index
     private SearchListViewOpenAdapter mSearchListViewOpenAdapter;
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
-    private RelativeLayout HistoryLayout;
+    private RelativeLayout HistoryLayout,HotSearchlayout;
 
 
     @Override
@@ -116,7 +118,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mSearchLoaddingWrapper = findViewById(R.id.mSearchLoaddingWrapper);
         mSearchTipImg = (ImageView) findViewById(R.id.mSearchTipImg);
         mSearchTip = (TextView) findViewById(R.id.mSearchTip);
-        mSearchProgress = (ProgressBar) findViewById(R.id.mSearchProgress);
+//        mSearchProgress = (ProgressBar) findViewById(R.id.mSearchProgress);
         mNewsFeedAdapter = new NewsFeedAdapter(this, null, null);
         mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
         mSearchListViewOpen = (PullToRefreshListView) findViewById(R.id.mSearchListViewOpen);
@@ -197,7 +199,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                         ToastUtil.toastShort("没有搜索到与\"" + mKeyWord + "\"相关的数据");
                         mSearchTipImg.setVisibility(View.VISIBLE);
                         mSearchTip.setVisibility(View.VISIBLE);
-                        mSearchProgress.setVisibility(View.GONE);
+//                        mSearchProgress.setVisibility(View.GONE);
 
                     }
                 }
@@ -207,9 +209,10 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 mSearchListView.onRefreshComplete();
-                Logger.e("jigang", "" + error.getMessage());
+                Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
                 mSearchTip.setVisibility(View.VISIBLE);
+//                mSearchProgress.setVisibility(View.GONE);
             }
         });
         searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
@@ -234,16 +237,24 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     setHotLabelLayoutData(mCurrPageIndex++);
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                 } else {
-                    mSearchTipImg.setVisibility(View.VISIBLE);
-                    mSearchTip.setVisibility(View.VISIBLE);
+                    Logger.e("jigang", "-----No Date ~");
+//                    mSearchTipImg.setVisibility(View.VISIBLE);
+//                    mSearchTip.setVisibility(View.VISIBLE);
+                    mSearchLoaddingWrapper.setVisibility(View.GONE);
+                    HotSearchlayout.setVisibility(View.GONE);
+//                    mSearchProgress.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void failed(MyAppException exception) {
                 Logger.e("jigang", "-----fetch hot label fail~");
-                mSearchTipImg.setVisibility(View.VISIBLE);
-                mSearchTip.setVisibility(View.VISIBLE);
+                HotSearchlayout.setVisibility(View.GONE);
+                mSearchLoaddingWrapper.setVisibility(View.GONE);
+//                mSearchTipImg.setVisibility(View.VISIBLE);
+//                mSearchTip.setVisibility(View.VISIBLE);
+//                HistoryLayout.setVisibility(View.GONE);
+//                mSearchProgress.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<ArrayList<Element>>() {
         }.getType()));
@@ -260,6 +271,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
         mHotLabelsLayout = (HotLabelsLayout) headView.findViewById(R.id.mHotLabelsLayout);
         HistoryLayout = (RelativeLayout) headView.findViewById(R.id.HistoryLayout);
+        HotSearchlayout = (RelativeLayout) headView.findViewById(R.id.HotSearchlayout);
         mDoSearchChangeBatch.setOnClickListener(this);
         lv.addHeaderView(headView);
         try {
@@ -267,6 +279,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Logger.e("aaa","historyEntities============"+historyEntities.toString());
         if(historyEntities.size() == 0){
             HistoryEntity bean = new HistoryEntity(-1);
             historyEntities.add(bean);
@@ -276,9 +289,34 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         }
 
         mSearchListViewOpenAdapter = new SearchListViewOpenAdapter(TopicSearchAty.this);
+        mSearchListViewOpenAdapter.setonSearchListViewOpenItemClick(mOnSearchListViewOpenItemClick);
         mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
         mSearchListViewOpen.setAdapter(mSearchListViewOpenAdapter);
     }
+
+    onSearchListViewOpenItemClick mOnSearchListViewOpenItemClick = new onSearchListViewOpenItemClick() {
+        @Override
+        public void listener(String content) {
+            mSearchContent.setText(content);
+
+
+//            hideKeyboard(view);
+
+            mSearchTip.setText("暂无搜索结果");
+            SharedPreManager.HistorySave(mKeyWord);
+            try {
+                historyEntities = SharedPreManager.HistoryGetList();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            isVisity(true);
+            mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
+            mSearchListViewOpenAdapter.notifyDataSetChanged();
+
+            mPageIndex = 1;
+            loadNewsData(mKeyWord, mPageIndex + "");
+        }
+    };
 
     public void setHotLabelLayoutData(int mCurrPageIndex) {
         if (mTotalPage >= 1) {
@@ -393,14 +431,14 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             if (mSearchLoaddingWrapper.getVisibility() == View.GONE) { mSearchLoaddingWrapper.setVisibility(View.VISIBLE);}
             if (mSearchTipImg.getVisibility() == View.VISIBLE) { mSearchTipImg.setVisibility(View.GONE);}
             if (mSearchTip.getVisibility() == View.VISIBLE) {mSearchTip.setVisibility(View.GONE);;}
-            if (mSearchProgress.getVisibility() == View.GONE) {mSearchProgress.setVisibility(View.VISIBLE);}
+//            if (mSearchProgress.getVisibility() == View.GONE) {mSearchProgress.setVisibility(View.VISIBLE);}
         }else{
             if (mSearchListView.getVisibility() == View.VISIBLE) {mSearchListViewOpen.setVisibility(View.GONE);}
             if (mSearchListViewOpen.getVisibility() == View.GONE) {mSearchListViewOpen.setVisibility(View.VISIBLE);}
             if (mSearchLoaddingWrapper.getVisibility() == View.VISIBLE) { mSearchLoaddingWrapper.setVisibility(View.GONE);}
             if (mSearchTipImg.getVisibility() == View.GONE) { mSearchTipImg.setVisibility(View.VISIBLE);}
             if (mSearchTip.getVisibility() == View.GONE) {mSearchTip.setVisibility(View.VISIBLE);;}
-            if (mSearchProgress.getVisibility() == View.VISIBLE) {mSearchProgress.setVisibility(View.GONE);}
+//            if (mSearchProgress.getVisibility() == View.VISIBLE) {mSearchProgress.setVisibility(View.GONE);}
         }
         if (historyEntities.size() != 0) {
             if(mFootView == null){
