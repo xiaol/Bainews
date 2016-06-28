@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -172,7 +173,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 break;
             case R.layout.ll_news_item_one_pic:
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0));
+                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0),mCardWidth,mCardHeight);
                 final String strTitle = feed.getTitle();
                 if(isFavorite){
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -241,9 +242,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-                holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0));
-                holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1));
-                holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2));
+                holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0),mCardWidth,mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1),mCardWidth,mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2),mCardWidth,mCardHeight);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card1), 15, 1, 3);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card2), 1, 1, 3);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card3), 1, 15, 3);
@@ -290,6 +291,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
+            Log.i("tag",updateTime+"date.getTime()");
             if (between >= (24 * 3600000)) {
 //                tvComment.setText(updateTime);
                 tvComment.setText("");
