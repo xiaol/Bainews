@@ -8,6 +8,7 @@ import com.baidu.location.BDLocation;
 import com.google.gson.Gson;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.AppsItemInfo;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
@@ -242,7 +243,7 @@ public class SharedPreManager {
         }
         Gson gson = new Gson();
         JSONArray array = null;
-         ArrayList<UploadLogDataEntity> data = new ArrayList<UploadLogDataEntity>();
+        ArrayList<UploadLogDataEntity> data = new ArrayList<UploadLogDataEntity>();
         try {
             array = new JSONArray(mReadData);
             for (int i = 0; i < array.length(); i++) {
@@ -403,7 +404,7 @@ public class SharedPreManager {
         HistoryEntity historyEntity = new HistoryEntity(content);
         ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
         try {
-           historyEntities = HistoryGetList();
+            historyEntities = HistoryGetList();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -420,7 +421,7 @@ public class SharedPreManager {
         ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
         String str = get(CommonConstant.SEARCH_HISTORY, CommonConstant.SEARCH_HISTORY);
         Gson gson = new Gson();
-            JSONArray array = new JSONArray(str);
+        JSONArray array = new JSONArray(str);
         for (int i = 0; i < array.length(); i++) {
             String str1 = array.getString(i);
             HistoryEntity bean = gson.fromJson(str1, HistoryEntity.class);
@@ -436,4 +437,54 @@ public class SharedPreManager {
         String locationStr = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
         return GsonUtil.deSerializedByClass(locationStr,BDLocation.class);
     }
+
+    public static boolean  AppInfoSaveList(List<AppsItemInfo> listBean){
+        List<AppsItemInfo> appsItemInfos = new ArrayList<AppsItemInfo>();
+        try {
+            appsItemInfos = AppInfoGetList();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        boolean isDifferent = false;
+        for (int i = 0; i < listBean.size(); i++) {
+            AppsItemInfo bean1 = listBean.get(i);
+            for (int j = 0; j < appsItemInfos.size(); j++) {
+                AppsItemInfo bean2 = appsItemInfos.get(j);
+                if(!bean1.equals(bean2)){
+                    isDifferent = true;
+                    break;
+                }
+            }
+        }
+        if(appsItemInfos.size() == 0){
+            isDifferent = true;
+        }
+
+        if(isDifferent){
+            Gson gson = new Gson();
+            AppInfoRemove();
+            save(CommonConstant.APPINFO, CommonConstant.APPINFO, gson.toJson(listBean));
+        }
+
+        return isDifferent;
+
+    }
+
+    public static ArrayList<AppsItemInfo> AppInfoGetList() throws JSONException {
+        ArrayList<AppsItemInfo> appsItemInfos = new ArrayList<AppsItemInfo>();
+        String str = get(CommonConstant.APPINFO, CommonConstant.APPINFO);
+        Gson gson = new Gson();
+        JSONArray array = new JSONArray(str);
+        for (int i = 0; i < array.length(); i++) {
+            String str1 = array.getString(i);
+            AppsItemInfo bean = gson.fromJson(str1, AppsItemInfo.class);
+            appsItemInfos.add(bean);
+        }
+        return appsItemInfos;
+    }
+    public static void AppInfoRemove(){
+        remove(CommonConstant.APPINFO, CommonConstant.APPINFO);
+    }
+
+
 }
