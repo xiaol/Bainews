@@ -322,9 +322,8 @@
             android:name=".pages.PrivacyPolicyAty"
             android:screenOrientation="portrait"/>
         <activity
-
             android:name=".pages.PlayVideoAty"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".pages.ComplaintsActivity"
