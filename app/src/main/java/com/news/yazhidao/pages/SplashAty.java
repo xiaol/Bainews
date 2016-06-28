@@ -1,7 +1,10 @@
 package com.news.yazhidao.pages;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,6 +30,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.AppsItemInfo;
 import com.news.yazhidao.entity.UploadLogDataEntity;
 import com.news.yazhidao.entity.UploadLogEntity;
 import com.news.yazhidao.entity.User;
@@ -37,6 +41,8 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -199,6 +205,8 @@ public class SplashAty extends BaseActivity {
 
         UserManager.registerVisitor(this,null);
 
+
+
         /**
          * 日志上传
          */
@@ -263,6 +271,8 @@ public class SplashAty extends BaseActivity {
 //        if (DeviceInfoUtil.isFlyme() || "meizu".equals(AnalyticsConfig.getChannel(this))) {
 //            iv_splash_background.setVisibility(View.VISIBLE);
 //        }
+        getAppInfo();
+
         //baidu Map
         mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
@@ -270,6 +280,62 @@ public class SplashAty extends BaseActivity {
         mLocationClient.start();
     }
 
+    private PackageManager pManager;
+    // 用来记录应用程序的信息
+    List<AppsItemInfo> list;
+    public void getAppInfo(){
+        // 获取图片、应用名、包名
+        pManager = SplashAty.this.getPackageManager();
+        List<PackageInfo> appList = getAllApps(SplashAty.this);
+
+        list = new ArrayList<AppsItemInfo>();
+
+        for (int i = 0; i < appList.size(); i++) {
+            PackageInfo pinfo = appList.get(i);
+            AppsItemInfo shareItem = new AppsItemInfo();
+//            // 设置图片
+//            shareItem.setIcon(pManager
+//                    .getApplicationIcon(pinfo.applicationInfo));
+            // 设置应用程序名字
+            shareItem.setLabel(pManager.getApplicationLabel(
+                    pinfo.applicationInfo).toString());
+            // 设置应用程序的包名
+            shareItem.setPackageName(pinfo.applicationInfo.packageName);
+
+            list.add(shareItem);
+
+        }
+        Logger.e("aaa","获取所有应用的名称："+list.toString());
+        boolean isDifferent = SharedPreManager.AppInfoSaveList(list);
+        Logger.e("aaa", "isDifferent==" + isDifferent);
+        try {
+            Logger.e("aaa", "isDifferent==" + SharedPreManager.AppInfoGetList());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static List<PackageInfo> getAllApps(Context context) {
+
+        List<PackageInfo> apps = new ArrayList<PackageInfo>();
+        PackageManager pManager = context.getPackageManager();
+        // 获取手机内所有应用
+        List<PackageInfo> packlist = pManager.getInstalledPackages(0);
+        for (int i = 0; i < packlist.size(); i++) {
+            PackageInfo pak = (PackageInfo) packlist.get(i);
+
+            // 判断是否为非系统预装的应用程序
+            // 这里还可以添加系统自带的，这里就先不添加了，如果有需要可以自己添加
+            // if()里的值如果<=0则为自己装的程序，否则为系统工程自带
+            if ((pak.applicationInfo.flags & pak.applicationInfo.FLAG_SYSTEM) <= 0) {
+                // 添加自己已经安装的应用程序
+                apps.add(pak);
+            }
+
+        }
+        return apps;
+    }
 
     @Override
     protected void loadData() {

@@ -2,25 +2,18 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -178,11 +171,12 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
      */
     private void loadNewsData(String pKeyWord, String pPageIndex) {
         RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
-        SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.POST, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), "http://api.deeporiginalx.com/news/baijia/search", new Response.Listener<ArrayList<NewsFeed>>() {
+        SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType(), "http://bdp.deeporiginalx.com/v2/ns/es/s"+"?keywords="+pKeyWord, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
+                Log.i("tag",response.toString());
                 mSearchListView.onRefreshComplete();
                 if (!TextUtil.isListEmpty(response)) {
                     mNewsFeedLists.addAll(response);
@@ -208,6 +202,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("tag",error.toString());
                 mSearchListView.onRefreshComplete();
                 Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
@@ -215,7 +210,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 //                mSearchProgress.setVisibility(View.GONE);
             }
         });
-        searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
+//        searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
         searchRequest.setRetryPolicy(new DefaultRetryPolicy(15 * 1000, 1, 1.0f));
         requestQueue.add(searchRequest);
     }
