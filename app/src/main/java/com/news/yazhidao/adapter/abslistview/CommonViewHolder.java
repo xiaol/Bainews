@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 
 /**
@@ -109,7 +108,8 @@ public class CommonViewHolder {
     public void setSimpleDraweeViewURI(int draweeView, String strImg) {
         SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            imageView.setImageURI(Uri.parse(strImg));
+            String img = strImg.replace("bdp-","pro-");
+            imageView.setImageURI(Uri.parse(img+"@1e_1c_0o_0l_100sh_225h_300w_95q.jpg"));
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
     }

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -290,6 +291,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
+            Log.i("tag",updateTime+"date.getTime()");
             if (between >= (24 * 3600000)) {
 //                tvComment.setText(updateTime);
                 tvComment.setText("");
