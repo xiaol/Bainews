@@ -85,7 +85,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity>{
                 (month<10?"0":"")+month+"/"+(day<10?"0":"")+day);
 
 
-        holder.setTextViewExtendTextandTextSice(R.id.attention_Title,relatedItemEntity.getTitle());
+        holder.setRelatedTitleTextViewExtendTextandTextSice(R.id.attention_Title,relatedItemEntity.getTitle());
 
 
         holder.setTextViewExtendText(R.id.attention_Source,relatedItemEntity.getPname());

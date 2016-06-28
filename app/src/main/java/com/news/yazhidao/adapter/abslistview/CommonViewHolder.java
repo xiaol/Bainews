@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,13 @@ public class CommonViewHolder {
     public void setTextViewExtendTextandTextSice(int ViewID ,String content){
         TextViewExtend text = getView(ViewID);
         text.setText(content);
+        text.setText(Html.fromHtml(content));
+        text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+    }
+    public void setRelatedTitleTextViewExtendTextandTextSice(int ViewID ,String content){
+        TextViewExtend text = getView(ViewID);
+        text.setText(content);
+        text.setText(Html.fromHtml(content));
         text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
     }
     public void setTextViewExtendTextColor(int ViewID ,int color){
