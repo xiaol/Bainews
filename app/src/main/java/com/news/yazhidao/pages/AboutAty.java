@@ -5,11 +5,12 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 /**
  * Created by fengjigang on 16/4/11.
  */
-public class AboutAty extends BaseActivity implements View.OnClickListener {
+public class AboutAty extends SwipeBackActivity implements View.OnClickListener {
 
     private View mAboutLeftBack;
     private TextView mAboutVersion;

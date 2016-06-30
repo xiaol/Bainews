@@ -40,7 +40,6 @@ import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.YaZhiDaoApplication;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
@@ -64,8 +63,9 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsDetailHeaderView2;
 import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SharePopupWindow.OnFavoritListener;
+import com.news.yazhidao.widget.SwipeBackViewpager;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackLayout;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
@@ -84,14 +84,12 @@ import static com.news.yazhidao.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
 
     private int mScreenWidth, mScreenHeight;
-    //滑动关闭当前activity布局
-    private SwipeBackLayout mSwipeBackLayout;
     private String mUserId = "";
     private String mPlatformType = "";
     private String uuid;
@@ -127,7 +125,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic,mDetailFavorite,carefor_Image;
 //    private WebView mDetailWebView;
-    public ViewPager mNewsDetailViewPager;
+    public SwipeBackViewpager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
@@ -206,9 +204,6 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //        mUsedNewsFeed = getDate();
 //        mImageUrl = "http://bdp-pic.deeporiginalx.com/W0JAM2ExMmYwNGQ.png";
 
-
-//        mSwipeBackLayout = getSwipeBackLayout();
-//        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
@@ -241,7 +236,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         mImageWallWrapper = findViewById(R.id.mImageWallWrapper);
         mImageWallVPager = (ViewPager) findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
-        mNewsDetailViewPager = (ViewPager) findViewById(R.id.mNewsDetailViewPager);
+        mNewsDetailViewPager = (SwipeBackViewpager) findViewById(R.id.mNewsDetailViewPager);
 
         //初始化新闻评论DAO
         newsDetailCommentDao = new NewsDetailCommentDao(this);
