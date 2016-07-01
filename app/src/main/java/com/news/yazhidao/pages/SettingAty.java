@@ -19,6 +19,7 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.DataCleanManager;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -28,7 +29,7 @@ import com.umeng.update.UpdateStatus;
 /**
  * Created by fengjigang on 16/4/7.
  */
-public class SettingAty extends BaseActivity implements View.OnClickListener {
+public class SettingAty extends SwipeBackActivity implements View.OnClickListener {
 
     public final static int RESULT_CODE = 1008;
     public static final String KEY_NEED_NOT_SETTING = "key_need_not_setting";

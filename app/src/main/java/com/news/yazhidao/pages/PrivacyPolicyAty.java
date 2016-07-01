@@ -5,11 +5,12 @@ import android.webkit.WebView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 /**
  * Created by fengjigang on 16/4/11.
  */
-public class PrivacyPolicyAty extends BaseActivity implements View.OnClickListener {
+public class PrivacyPolicyAty extends SwipeBackActivity implements View.OnClickListener {
     private View mPrivacyLeftBack;
     private WebView mPrivacyWebView;
 

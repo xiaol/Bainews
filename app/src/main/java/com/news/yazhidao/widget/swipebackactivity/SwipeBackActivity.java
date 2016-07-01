@@ -8,13 +8,18 @@ import com.news.yazhidao.common.BaseActivity;
 
 public  class SwipeBackActivity extends BaseActivity implements SwipeBackActivityBase {
 
+    //滑动关闭当前activity布局
+    private SwipeBackLayout mSwipeBackLayout;
 
     @Override
     protected void setContentView() {
+        mSwipeBackLayout = getSwipeBackLayout();
+        mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
     }
 
     @Override
     protected void initializeViews() {
+
     }
 
     @Override

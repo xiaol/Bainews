@@ -17,7 +17,7 @@ android {
 
     productFlavors {
         /**91桌面换量渠道*/
-//        huanliang91 {}
+        huanliang91 {}
 
         /**深圳推广*/
 //        shenzhen {}

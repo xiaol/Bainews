@@ -21,12 +21,12 @@ import android.widget.TextView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.ChannelNormalAdapter;
 import com.news.yazhidao.adapter.ChannelSelectedAdapter;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.channel.NormalGridView;
 import com.news.yazhidao.widget.channel.SelectedGridView;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.sql.SQLException;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * 新闻频道管理
  */
-public class ChannelOperateAty extends BaseActivity implements OnItemClickListener {
+public class ChannelOperateAty extends SwipeBackActivity implements OnItemClickListener {
 	public static final String KEY_USER_SELECT = "key_user_select";
 	/** 用户栏目的GRIDVIEW */
 	private SelectedGridView userGridView;

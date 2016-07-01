@@ -29,7 +29,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
-import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
@@ -43,6 +43,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.HotLabelsLayout;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
@@ -55,7 +56,7 @@ import java.util.List;
 /**
  * Created by fengjigang on 15/10/29.
  */
-public class TopicSearchAty extends BaseActivity implements View.OnClickListener {
+public class TopicSearchAty extends SwipeBackActivity implements View.OnClickListener {
 
     public final static String KEY_NOT_NEED_OPEN_HOME_ATY = "KEY_NOT_NEED_OPEN_HOME_ATY";
     /**
@@ -176,7 +177,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         }
         RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
         SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), "http://bdp.deeporiginalx.com/v2/ns/es/s" + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
+        }.getType(), HttpConstant.URL_SEARCH + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
