@@ -145,19 +145,23 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 isVisity(false);
                 break;
             case R.id.mDoSearch:
-                hideKeyboard(v);
-                mSearchTip.setText("暂无搜索结果");
-                SharedPreManager.HistorySave(mKeyWord);
-                try {
-                    historyEntities = SharedPreManager.HistoryGetList();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(mKeyWord!=null&&!mKeyWord.equals("")) {
+                    hideKeyboard(v);
+                    mSearchTip.setText("暂无搜索结果");
+                    SharedPreManager.HistorySave(mKeyWord);
+                    try {
+                        historyEntities = SharedPreManager.HistoryGetList();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    isVisity(true);
+                    mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
+                    mSearchListViewOpenAdapter.notifyDataSetChanged();
+                    mPageIndex = 1;
+                    loadNewsData(mKeyWord, mPageIndex + "");
+                }else {
+                    ToastUtil.toastShort("请您输入搜索关键词");
                 }
-                isVisity(true);
-                mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
-                mSearchListViewOpenAdapter.notifyDataSetChanged();
-                mPageIndex = 1;
-                loadNewsData(mKeyWord, mPageIndex + "");
                 break;
             case R.id.mDoSearchChangeBatch:
                 setHotLabelLayoutData(mCurrPageIndex++);
