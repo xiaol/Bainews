@@ -31,7 +31,6 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.common.BaseActivity;
-import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
@@ -49,6 +48,8 @@ import com.news.yazhidao.widget.HotLabelsLayout;
 import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private View mSearchLoaddingWrapper;
     private ImageView mSearchTipImg;
     private TextView mSearchTip;
-//    private ProgressBar mSearchProgress;
+    //    private ProgressBar mSearchProgress;
     private ArrayList<Element> mHotLabels;
     private ArrayList<NewsFeed> mNewsFeedLists = new ArrayList<>();
     private int mTotalPage;
@@ -84,7 +85,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private int mPageIndex = 1;//搜索index
     private SearchListViewOpenAdapter mSearchListViewOpenAdapter;
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
-    private RelativeLayout HistoryLayout,HotSearchlayout;
+    private RelativeLayout HistoryLayout, HotSearchlayout;
 
 
     @Override
@@ -170,15 +171,21 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
      * 获取新闻数据
      */
     private void loadNewsData(String pKeyWord, String pPageIndex) {
+        String keyWord = "";
+        try {
+            keyWord = URLDecoder.decode(pKeyWord, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
         SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), "http://bdp.deeporiginalx.com/v2/ns/es/s"+"?keywords="+pKeyWord, new Response.Listener<ArrayList<NewsFeed>>() {
+        }.getType(), "http://bdp.deeporiginalx.com/v2/ns/es/s" + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
-                Log.i("tag",response.toString());
                 mSearchListView.onRefreshComplete();
                 if (!TextUtil.isListEmpty(response)) {
+                    Log.i("tag",response.toString());
                     mNewsFeedLists.addAll(response);
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
@@ -202,7 +209,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("tag",error.toString());
+                Log.i("tag", error.toString());
                 mSearchListView.onRefreshComplete();
                 Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
@@ -219,7 +226,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     protected void loadData() {
         mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
         mSearchTip.setText("暂无热门搜索热词");
-        final NetworkRequest request = new NetworkRequest(HttpConstant.URL_FETCH_ELEMENTS, NetworkRequest.RequestMethod.POST);
+        final NetworkRequest request = new NetworkRequest("http://121.40.34.56/news/baijia/fetchElementary", NetworkRequest.RequestMethod.POST);
         List<NameValuePair> pairs = new ArrayList<>();
         request.setParams(pairs);
         request.setCallback(new JsonCallback<ArrayList<Element>>() {
@@ -233,8 +240,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                 } else {
                     Logger.e("jigang", "-----No Date ~");
-//                    mSearchTipImg.setVisibility(View.VISIBLE);
-//                    mSearchTip.setVisibility(View.VISIBLE);
+                    mSearchTipImg.setVisibility(View.VISIBLE);
+                    mSearchTip.setVisibility(View.VISIBLE);
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     HotSearchlayout.setVisibility(View.GONE);
 //                    mSearchProgress.setVisibility(View.GONE);
@@ -246,9 +253,9 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 Logger.e("jigang", "-----fetch hot label fail~");
                 HotSearchlayout.setVisibility(View.GONE);
                 mSearchLoaddingWrapper.setVisibility(View.GONE);
-//                mSearchTipImg.setVisibility(View.VISIBLE);
-//                mSearchTip.setVisibility(View.VISIBLE);
-//                HistoryLayout.setVisibility(View.GONE);
+                mSearchTipImg.setVisibility(View.VISIBLE);
+                mSearchTip.setVisibility(View.VISIBLE);
+                HistoryLayout.setVisibility(View.GONE);
 //                mSearchProgress.setVisibility(View.GONE);
             }
         }.setReturnType(new TypeToken<ArrayList<Element>>() {
@@ -257,10 +264,11 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     }
 
     LinearLayout mFootView;
-    public void addListViewHFView(){
+
+    public void addListViewHFView() {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-         ListView lv = mSearchListViewOpen.getRefreshableView();
-        LinearLayout headView = (LinearLayout) getLayoutInflater().inflate(R.layout.aty_topic_search_headview,null);
+        ListView lv = mSearchListViewOpen.getRefreshableView();
+        LinearLayout headView = (LinearLayout) getLayoutInflater().inflate(R.layout.aty_topic_search_headview, null);
         headView.setLayoutParams(layoutParams);
         mSearchHotLabelLayout = headView.findViewById(R.id.mSearchHotLabelLayout);
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
@@ -274,12 +282,12 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Logger.e("aaa","historyEntities============"+historyEntities.toString());
-        if(historyEntities.size() == 0){
+        Logger.e("aaa", "historyEntities============" + historyEntities.toString());
+        if (historyEntities.size() == 0) {
             HistoryEntity bean = new HistoryEntity(-1);
             historyEntities.add(bean);
             HistoryLayout.setVisibility(View.GONE);
-        }else{
+        } else {
             addListViewFootView();
         }
 
@@ -296,7 +304,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
 
 //            hideKeyboard(view);
-
             mSearchTip.setText("暂无搜索结果");
             SharedPreManager.HistorySave(mKeyWord);
             try {
@@ -384,7 +391,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     }
 
 
-
     private class TopicTextWatcher implements TextWatcher {
 
         @Override
@@ -416,37 +422,59 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     }
 
     /**
-     *
      * @param isType true显示搜索结果 false显示搜索界面
      */
-    public void isVisity(boolean  isType){
-        if(isType){
-            if (mSearchListView.getVisibility() == View.GONE) {mSearchListViewOpen.setVisibility(View.VISIBLE);}
-            if (mSearchListViewOpen.getVisibility() == View.VISIBLE) {mSearchListViewOpen.setVisibility(View.GONE);}
-            if (mSearchLoaddingWrapper.getVisibility() == View.GONE) { mSearchLoaddingWrapper.setVisibility(View.VISIBLE);}
-            if (mSearchTipImg.getVisibility() == View.VISIBLE) { mSearchTipImg.setVisibility(View.GONE);}
-            if (mSearchTip.getVisibility() == View.VISIBLE) {mSearchTip.setVisibility(View.GONE);;}
+    public void isVisity(boolean isType) {
+        if (isType) {
+            if (mSearchListView.getVisibility() == View.GONE) {
+                mSearchListViewOpen.setVisibility(View.VISIBLE);
+            }
+            if (mSearchListViewOpen.getVisibility() == View.VISIBLE) {
+                mSearchListViewOpen.setVisibility(View.GONE);
+            }
+            if (mSearchLoaddingWrapper.getVisibility() == View.GONE) {
+                mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
+            }
+            if (mSearchTipImg.getVisibility() == View.VISIBLE) {
+                mSearchTipImg.setVisibility(View.GONE);
+            }
+            if (mSearchTip.getVisibility() == View.VISIBLE) {
+                mSearchTip.setVisibility(View.GONE);
+                ;
+            }
 //            if (mSearchProgress.getVisibility() == View.GONE) {mSearchProgress.setVisibility(View.VISIBLE);}
-        }else{
-            if (mSearchListView.getVisibility() == View.VISIBLE) {mSearchListViewOpen.setVisibility(View.GONE);}
-            if (mSearchListViewOpen.getVisibility() == View.GONE) {mSearchListViewOpen.setVisibility(View.VISIBLE);}
-            if (mSearchLoaddingWrapper.getVisibility() == View.VISIBLE) { mSearchLoaddingWrapper.setVisibility(View.GONE);}
-            if (mSearchTipImg.getVisibility() == View.GONE) { mSearchTipImg.setVisibility(View.VISIBLE);}
-            if (mSearchTip.getVisibility() == View.GONE) {mSearchTip.setVisibility(View.VISIBLE);;}
+        } else {
+            if (mSearchListView.getVisibility() == View.VISIBLE) {
+                mSearchListViewOpen.setVisibility(View.GONE);
+            }
+            if (mSearchListViewOpen.getVisibility() == View.GONE) {
+                mSearchListViewOpen.setVisibility(View.VISIBLE);
+            }
+            if (mSearchLoaddingWrapper.getVisibility() == View.VISIBLE) {
+                mSearchLoaddingWrapper.setVisibility(View.GONE);
+            }
+            if (mSearchTipImg.getVisibility() == View.GONE) {
+                mSearchTipImg.setVisibility(View.VISIBLE);
+            }
+            if (mSearchTip.getVisibility() == View.GONE) {
+                mSearchTip.setVisibility(View.VISIBLE);
+                ;
+            }
 //            if (mSearchProgress.getVisibility() == View.VISIBLE) {mSearchProgress.setVisibility(View.GONE);}
         }
         if (historyEntities.size() != 0) {
-            if(mFootView == null){
+            if (mFootView == null) {
                 addListViewFootView();
             }
-            if(HistoryLayout.getVisibility() == View.GONE){
+            if (HistoryLayout.getVisibility() == View.GONE) {
                 HistoryLayout.setVisibility(View.VISIBLE);
             }
 
         }
 
     }
-    public void addListViewFootView(){
+
+    public void addListViewFootView() {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         final ListView lv = mSearchListViewOpen.getRefreshableView();
         mFootView = (LinearLayout) getLayoutInflater().inflate(R.layout.detail_footview_layout, null);

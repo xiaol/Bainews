@@ -1,7 +1,5 @@
 package com.news.yazhidao.net.volley;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -75,7 +73,6 @@ public class GsonRequest<T> extends Request<T> {
             String data = new String(response.data, "utf-8");
             JSONObject jsonRes = new JSONObject(data);
             String code = jsonRes.optString("code");
-            Log.i("tag",data+"data");
             if ("2000".equals(code)) {
                 data = checkJsonData(data, response);
                 T o = mGson.fromJson(data, mReflectType == null ? mClazz : mReflectType);
