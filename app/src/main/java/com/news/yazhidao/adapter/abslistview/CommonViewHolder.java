@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.net.Uri;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ public class CommonViewHolder {
     private View mConvertView;
     private int mLayoutId;
     private SharedPreferences mSharedPreferences;
+
     public CommonViewHolder(Context mContext, View mConvertView, ViewGroup mViewGroup, int mPosition) {
         this.mContext = mContext;
         this.mConvertView = mConvertView;
@@ -36,80 +38,98 @@ public class CommonViewHolder {
         mConvertView.setTag(this);
     }
 
-    public static CommonViewHolder get(Context mContext, View mConvertView, ViewGroup mViewGroup,int mLayoutId, int mPosition){
-        if (mConvertView == null){
+    public static CommonViewHolder get(Context mContext, View mConvertView, ViewGroup mViewGroup, int mLayoutId, int mPosition) {
+        if (mConvertView == null) {
             View itemView = LayoutInflater.from(mContext).inflate(mLayoutId, mViewGroup, false);
             CommonViewHolder viewHolder = new CommonViewHolder(mContext, itemView, mViewGroup, mPosition);
             viewHolder.mLayoutId = mLayoutId;
             return viewHolder;
-        }else {
+        } else {
             CommonViewHolder viewHolder = (CommonViewHolder) mConvertView.getTag();
             viewHolder.mPosition = mPosition;
             return viewHolder;
         }
     }
 
-    public <T extends View> T getView(int viewId)
-    {
+    public <T extends View> T getView(int viewId) {
         View view = mViews.get(viewId);
-        if (view == null)
-        {
+        if (view == null) {
             view = mConvertView.findViewById(viewId);
             mViews.put(viewId, view);
         }
         return (T) view;
     }
-    public ImageView getImageView(int ViewID){
+
+    public ImageView getImageView(int ViewID) {
         ImageView image = getView(ViewID);
         return image;
     }
-    public void setTextViewText(int ViewID ,String content){
+
+    public void setTextViewText(int ViewID, String content) {
         TextView text = getView(ViewID);
         text.setText(content);
     }
-    public void setTextViewTextBackgroundResource(int ViewID ,int resource){
+
+    public void setTextViewTextBackgroundResource(int ViewID, int resource) {
         TextView text = getView(ViewID);
         text.setBackgroundResource(resource);
     }
 
-    public void setTextViewExtendText(int ViewID ,String content){
+    public void setTextViewExtendText(int ViewID, String content) {
         TextViewExtend text = getView(ViewID);
         text.setText(content);
     }
-    public void setTextViewExtendTextandTextSice(int ViewID ,String content){
+
+    public void setTextViewExtendTextandTextSice(int ViewID, String content) {
         TextViewExtend text = getView(ViewID);
         text.setText(content);
+        text.setText(Html.fromHtml(content));
         text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
     }
-    public void setTextViewExtendTextColor(int ViewID ,int color){
+    public void setRelatedTitleTextViewExtendTextandTextSice(int ViewID ,String content){
+        TextViewExtend text = getView(ViewID);
+        text.setText(content);
+        text.setText(Html.fromHtml(content));
+        text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+    }
+
+    public void setTextViewExtendTextColor(int ViewID, int color) {
         TextViewExtend text = getView(ViewID);
         text.setTextColor(mContext.getResources().getColor(color));
     }
-    public void setTextViewExtendTextBackground(int ViewID ,int color){
+
+    public void setTextViewExtendTextBackground(int ViewID, int color) {
         TextViewExtend text = getView(ViewID);
         text.setBackgroundColor(mContext.getResources().getColor(color));
     }
-    public void setTextViewExtendTextBackgroundResource(int ViewID ,int resource){
+
+    public void setTextViewExtendTextBackgroundResource(int ViewID, int resource) {
         TextViewExtend text = getView(ViewID);
         text.setBackgroundResource(resource);
     }
 
 
-    public View getConvertView()
-    {
+    public View getConvertView() {
         return mConvertView;
     }
 
-    public int getLayoutId()
-    {
+    public int getLayoutId() {
         return mLayoutId;
     }
 
     public void setSimpleDraweeViewURI(int draweeView, String strImg) {
-        SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
+        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            String img = strImg.replace("bdp-","pro-");
-            imageView.setImageURI(Uri.parse(img+"@1e_1c_0o_0l_100sh_225h_300w_95q.jpg"));
+            imageView.setImageURI(Uri.parse(strImg));
+            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        }
+    }
+
+    public void setSimpleDraweeViewURI(int draweeView, String strImg, int width, int height) {
+        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            String img = strImg.replace("bdp-", "pro-");
+            imageView.setImageURI(Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg"));
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
     }

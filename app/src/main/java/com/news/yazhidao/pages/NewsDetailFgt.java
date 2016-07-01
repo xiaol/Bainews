@@ -159,7 +159,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
-        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+        mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -374,6 +374,7 @@ public class NewsDetailFgt extends BaseFragment {
 //        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
 //        //设置WebView使用广泛的视窗
 //        mDetailWebView.getSettings().setUseWideViewPort(true);
+
 
 
 
@@ -679,9 +680,13 @@ public class NewsDetailFgt extends BaseFragment {
             }
             beanPageList.add(listBean);
         }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+
+//
                 beanList.addAll(beanPageList.get(viewpointPage));
                 viewpointPage++;
                 mAdapter.setNewsFeed(beanList);
@@ -689,6 +694,10 @@ public class NewsDetailFgt extends BaseFragment {
                 if (MAXPage <= viewpointPage) {
                     mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
                     footView_tv.setText("内容加载完毕");
+                }else{
+                    if(mNewsDetailList.getMode()!=PullToRefreshBase.Mode.PULL_FROM_END){
+                        mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
+                    }
                 }
                 if (footerView_layout.getVisibility() == View.GONE) {
                     footerView_layout.setVisibility(View.VISIBLE);
