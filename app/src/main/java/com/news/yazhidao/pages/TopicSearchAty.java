@@ -274,6 +274,17 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         LinearLayout headView = (LinearLayout) getLayoutInflater().inflate(R.layout.aty_topic_search_headview, null);
         headView.setLayoutParams(layoutParams);
         mSearchHotLabelLayout = headView.findViewById(R.id.mSearchHotLabelLayout);
+        mSearchHotLabelLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = getWindow().peekDecorView();
+                if (view != null) {
+                    mSearchContent.clearFocus();
+                    InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        });
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
         mHotLabelsLayout = (HotLabelsLayout) headView.findViewById(R.id.mHotLabelsLayout);
         HistoryLayout = (RelativeLayout) headView.findViewById(R.id.HistoryLayout);
