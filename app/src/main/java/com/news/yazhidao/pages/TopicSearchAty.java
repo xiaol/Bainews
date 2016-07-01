@@ -167,7 +167,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     /**
      * 获取新闻数据
      */
-    private void loadNewsData(String pKeyWord, String pPageIndex) {
+    private void loadNewsData(String pKeyWord, final String pPageIndex) {
         String keyWord = "";
         try {
             keyWord = URLEncoder.encode(pKeyWord, "utf-8");
@@ -183,7 +183,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 mSearchListView.onRefreshComplete();
                 if (!TextUtil.isListEmpty(response)) {
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
-                    mNewsFeedLists.removeAll(mNewsFeedLists);
+                    if(pPageIndex.equals("1"))
+                        mNewsFeedLists.removeAll(mNewsFeedLists);
                     mNewsFeedLists.addAll(response);
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
