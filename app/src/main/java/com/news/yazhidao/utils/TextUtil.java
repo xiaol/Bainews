@@ -654,6 +654,8 @@ public class TextUtil {
                         if (split[i].contains("https:")) {
                             url = split[i].replace("https", "http").replace("\\", "").replace("preview","player");
                             break;
+                        }else if (split[i].contains("http:")){
+                            url = split[i].replace("\\", "");
                         }
                     }
                     Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
