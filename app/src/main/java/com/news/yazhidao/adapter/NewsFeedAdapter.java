@@ -320,8 +320,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
-                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+//                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);

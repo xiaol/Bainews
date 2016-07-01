@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -49,7 +48,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,7 +145,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.mDoSearch:
                 hideKeyboard(v);
-
                 mSearchTip.setText("暂无搜索结果");
                 SharedPreManager.HistorySave(mKeyWord);
                 try {
@@ -157,7 +155,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                 isVisity(true);
                 mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
                 mSearchListViewOpenAdapter.notifyDataSetChanged();
-
                 mPageIndex = 1;
                 loadNewsData(mKeyWord, mPageIndex + "");
                 break;
@@ -173,7 +170,7 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
     private void loadNewsData(String pKeyWord, String pPageIndex) {
         String keyWord = "";
         try {
-            keyWord = URLDecoder.decode(pKeyWord, "utf-8");
+            keyWord = URLEncoder.encode(pKeyWord, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -185,12 +182,13 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             public void onResponse(ArrayList<NewsFeed> response) {
                 mSearchListView.onRefreshComplete();
                 if (!TextUtil.isListEmpty(response)) {
-                    Log.i("tag",response.toString());
+                    mSearchLoaddingWrapper.setVisibility(View.GONE);
+                    mNewsFeedLists.removeAll(mNewsFeedLists);
                     mNewsFeedLists.addAll(response);
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
                     mNewsFeedAdapter.notifyDataSetChanged();
-                    mSearchLoaddingWrapper.setVisibility(View.GONE);
+
                 } else {
                     Logger.e("jigang", "response is null");
 
@@ -209,7 +207,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("tag", error.toString());
                 mSearchListView.onRefreshComplete();
                 Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
@@ -314,7 +311,6 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             isVisity(true);
             mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
             mSearchListViewOpenAdapter.notifyDataSetChanged();
-
             mPageIndex = 1;
             loadNewsData(mKeyWord, mPageIndex + "");
         }
@@ -347,11 +343,24 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
                     @Override
                     public void onClick(View v) {
                         hideKeyboard(v);
-                        Intent diggerIntent = new Intent(TopicSearchAty.this, DiggerAty.class);
-                        diggerIntent.setType("text/plain");
-                        diggerIntent.putExtra(Intent.EXTRA_TEXT, element.getTitle());
-                        diggerIntent.putExtra(KEY_NOT_NEED_OPEN_HOME_ATY, true);
-                        startActivity(diggerIntent);
+                        mSearchContent.setText(element.getTitle());
+                        mSearchTip.setText("暂无搜索结果");
+                        SharedPreManager.HistorySave(element.getTitle());
+                        try {
+                            historyEntities = SharedPreManager.HistoryGetList();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        isVisity(true);
+                        mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
+                        mSearchListViewOpenAdapter.notifyDataSetChanged();
+                        mPageIndex = 1;
+                        loadNewsData(element.getTitle(), mPageIndex + "");
+//                        Intent diggerIntent = new Intent(TopicSearchAty.this, DiggerAty.class);
+//                        diggerIntent.setType("text/plain");
+//                        diggerIntent.putExtra(Intent.EXTRA_TEXT, element.getTitle());
+//                        diggerIntent.putExtra(KEY_NOT_NEED_OPEN_HOME_ATY, true);
+//                        startActivity(diggerIntent);
                     }
                 });
                 mHotLabelsLayout.addView(textView);
@@ -426,12 +435,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
      */
     public void isVisity(boolean isType) {
         if (isType) {
-            if (mSearchListView.getVisibility() == View.GONE) {
-                mSearchListViewOpen.setVisibility(View.VISIBLE);
-            }
-            if (mSearchListViewOpen.getVisibility() == View.VISIBLE) {
-                mSearchListViewOpen.setVisibility(View.GONE);
-            }
+            mSearchListViewOpen.setVisibility(View.GONE);
+            mSearchListView.setVisibility(View.VISIBLE);
             if (mSearchLoaddingWrapper.getVisibility() == View.GONE) {
                 mSearchLoaddingWrapper.setVisibility(View.VISIBLE);
             }
@@ -444,12 +449,8 @@ public class TopicSearchAty extends BaseActivity implements View.OnClickListener
             }
 //            if (mSearchProgress.getVisibility() == View.GONE) {mSearchProgress.setVisibility(View.VISIBLE);}
         } else {
-            if (mSearchListView.getVisibility() == View.VISIBLE) {
-                mSearchListViewOpen.setVisibility(View.GONE);
-            }
-            if (mSearchListViewOpen.getVisibility() == View.GONE) {
-                mSearchListViewOpen.setVisibility(View.VISIBLE);
-            }
+            mSearchListViewOpen.setVisibility(View.VISIBLE);
+            mSearchListView.setVisibility(View.GONE);
             if (mSearchLoaddingWrapper.getVisibility() == View.VISIBLE) {
                 mSearchLoaddingWrapper.setVisibility(View.GONE);
             }
