@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.DiggerAlbumDao;
 import com.news.yazhidao.entity.Album;
 import com.news.yazhidao.entity.DiggerAlbum;
@@ -23,6 +22,7 @@ import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.DiggerPopupWindow;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
  * Created by fengjigang on 15/8/17.
  * 挖掘机
  */
-public class DiggerAty extends BaseActivity {
+public class DiggerAty extends SwipeBackActivity {
 
     public final static String KEY_TITLE = "key_title";
     public final static String KEY_URL = "key_url";

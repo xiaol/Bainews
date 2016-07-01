@@ -1,8 +1,6 @@
 package com.news.yazhidao.pages;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -25,13 +23,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.NewsFeedAdapter.introductionNewsFeed;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
-import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.NewsLoveRequest;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
@@ -39,7 +34,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -126,8 +120,7 @@ public class MyFavoriteAty extends SwipeBackActivity implements View.OnClickList
         mFavoriteLeftBack.setOnClickListener(this);
         mFavoriteListView.setMode(PullToRefreshBase.Mode.DISABLED);
         mFavoriteListView.setAdapter(mAdapter);
-
-
+        loadFavorite();
     }
     public void loadFavorite(){
         showBGLayout(true);
@@ -192,7 +185,6 @@ public class MyFavoriteAty extends SwipeBackActivity implements View.OnClickList
         super.onResume();
 //        bgLayout.setVisibility(View.GONE);
 
-        loadFavorite();
 //        try {
 //            newsFeedList = SharedPreManager.myFavoriteGetList();
 //        } catch (JSONException e) {

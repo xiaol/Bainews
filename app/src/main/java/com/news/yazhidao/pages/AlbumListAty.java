@@ -24,7 +24,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.AlbumSubItemDao;
 import com.news.yazhidao.entity.AlbumSubItem;
@@ -38,6 +37,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +47,7 @@ import java.util.HashMap;
  * 专辑列表页面
  * Created by fengjigang on 15/7/23.
  */
-public class AlbumListAty extends BaseActivity implements View.OnClickListener {
+public class AlbumListAty extends SwipeBackActivity implements View.OnClickListener {
     /**
      * 是不是调用的新接口的数据,谷歌今日焦点不是新接口
      */
