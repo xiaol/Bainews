@@ -128,16 +128,9 @@
             android:textSize="14sp"
             android:visibility="gone" />
 
-        <!--<ProgressBar-->
-        <!--android:id="@+id/mSearchProgress"-->
-        <!--style="?android:attr/progressBarStyleLarge"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:indeterminateOnly="true"-->
-        <!--android:minHeight="60.0dip"-->
-        <!--android:minWidth="60.0dip"-->
-        <!--/>-->
-    </RelativeLayout>
 
+    </RelativeLayout>
+    <include
+        layout="@layout/loading_view_anim"
+        android:visibility="visible" />
 </RelativeLayout>
