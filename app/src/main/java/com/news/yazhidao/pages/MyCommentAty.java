@@ -13,18 +13,18 @@ import android.widget.TextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailCommentAdapter;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import java.util.ArrayList;
 
 /**
  * Created by fengjigang on 16/4/8.
  */
-public class MyCommentAty extends BaseActivity implements View.OnClickListener, NewsDetailCommentAdapter.OnDataIsNullListener {
+public class MyCommentAty extends SwipeBackActivity implements View.OnClickListener, NewsDetailCommentAdapter.OnDataIsNullListener {
     private View mCommentLeftBack;
     private SimpleDraweeView mCommentBgImg;
     private SimpleDraweeView mCommentUserIcon;

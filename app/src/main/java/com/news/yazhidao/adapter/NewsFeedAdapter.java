@@ -115,7 +115,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
         if(mNewsFeedFgt == null){
-            isFavorite = true;
+            //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
+            isFavorite = false;
         }
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);

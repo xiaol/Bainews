@@ -375,11 +375,11 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE) {
-            String newsId = data.getStringExtra(NewsFeedAdapter.KEY_NEWS_ID);
-            Logger.e("jigang", "newsid = " + newsId);
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID,0);
+            Logger.e("jigang", "news nid = " + newsId);
             if (!TextUtil.isListEmpty(mNewsFeedLists)) {
                 for (NewsFeed item : mNewsFeedLists) {
-                    if (item != null && newsId.equals(item.getUrl())) {
+                    if (item != null && newsId == item.getNid()) {
                         item.setRead(true);
                     }
                 }

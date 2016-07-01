@@ -7,15 +7,15 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class UserCenterAty extends BaseActivity implements View.OnClickListener {
+public class UserCenterAty extends SwipeBackActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1008;
 

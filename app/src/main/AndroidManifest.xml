@@ -307,7 +307,9 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.UserCenterAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.SettingAty"
             android:screenOrientation="portrait"
@@ -315,13 +317,19 @@
             />
         <activity
             android:name=".pages.MyCommentAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MyFavoriteAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MyMessageAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.AboutAty"
             android:screenOrientation="portrait"
