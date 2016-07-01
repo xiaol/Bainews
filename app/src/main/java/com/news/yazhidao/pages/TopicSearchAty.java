@@ -30,6 +30,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
@@ -49,7 +50,7 @@ import org.apache.http.NameValuePair;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,13 +174,13 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
     private void loadNewsData(String pKeyWord, String pPageIndex) {
         String keyWord = "";
         try {
-            keyWord = URLDecoder.decode(pKeyWord, "utf-8");
+            keyWord = URLEncoder.encode(pKeyWord, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
         SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), "http://bdp.deeporiginalx.com/v2/ns/es/s" + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
+        }.getType(), HttpConstant.URL_SEARCH + "?keywords=" + keyWord + "&p=" + pPageIndex, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
