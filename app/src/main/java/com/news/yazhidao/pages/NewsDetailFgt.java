@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,12 +61,9 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -370,7 +366,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setDatabaseEnabled(true);
         mDetailWebView.getSettings().setDomStorageEnabled(true);
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-        mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
+//        mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8") ;//
         mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");

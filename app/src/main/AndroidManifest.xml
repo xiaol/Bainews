@@ -290,10 +290,15 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.ChannelOperateAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.TopicSearchAty"
-            android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustPan|stateVisible"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.GuideLoginAty"
             android:screenOrientation="portrait"/>
@@ -303,29 +308,42 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".pages.UserCenterAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.SettingAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MyCommentAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MyFavoriteAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MyMessageAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.AboutAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.PrivacyPolicyAty"
-            android:screenOrientation="portrait"/>
-        <activity
-
-            android:name=".pages.PlayVideoAty"
             android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
+        <activity
+            android:name=".pages.PlayVideoAty"
+            android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".pages.ComplaintsActivity"

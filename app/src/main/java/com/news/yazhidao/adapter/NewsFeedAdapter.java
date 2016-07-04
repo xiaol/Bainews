@@ -115,7 +115,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
         if(mNewsFeedFgt == null){
-            isFavorite = true;
+            //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
+            isFavorite = false;
         }
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
@@ -192,21 +193,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
                 RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
                 float textRealWidth = tvTitle.getPaint().measureText(strTitle);
-                if (textRealWidth >= 2 * mTitleViewWidth - 5) {
-                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
-                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                } else if (textRealWidth <= mTitleViewWidth) {
-                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
-                    lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                } else {
-                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                    lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                }
-                llSourceContent.setLayoutParams(lpSourceContent);
-                ivBottomLine.setLayoutParams(lpBottomLine);
+//                if (textRealWidth >= 2 * mTitleViewWidth - 5) {
+//                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+//                    lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+//                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+//                } else if (textRealWidth <= mTitleViewWidth) {
+//                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
+//                    lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+//                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                } else {
+//                    titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+//                    lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+//                    lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+//                }
+//                llSourceContent.setLayoutParams(lpSourceContent);
+//                ivBottomLine.setLayoutParams(lpBottomLine);
                 tvTitle.post(new Runnable() {
                     @Override
                     public void run() {
@@ -320,8 +321,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
-                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
-                strTitle = strTitle.replace(mstrKeyWord.toUpperCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toUpperCase() + "</font>");
+//                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);

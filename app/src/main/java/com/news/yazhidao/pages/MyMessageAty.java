@@ -3,12 +3,12 @@ package com.news.yazhidao.pages;
 import android.view.View;
 
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 /**
  * Created by fengjigang on 16/4/8.
  */
-public class MyMessageAty extends BaseActivity implements View.OnClickListener {
+public class MyMessageAty extends SwipeBackActivity implements View.OnClickListener {
 
     private View mMessagetLeftBack;
 

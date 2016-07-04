@@ -37,6 +37,7 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +48,7 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 16/4/8.
  */
-public class MyFavoriteAty extends BaseActivity implements View.OnClickListener {
+public class MyFavoriteAty extends SwipeBackActivity implements View.OnClickListener {
     private View mFavoriteLeftBack;
     private RelativeLayout bgLayout;
     private PullToRefreshListView mFavoriteListView;
