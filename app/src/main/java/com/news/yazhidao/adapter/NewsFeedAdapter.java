@@ -64,6 +64,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private int mTitleViewWidth;
     private int mCardWidth, mCardHeight;
     private boolean isFavorite;
+    private boolean isNeedShowDisLikeIcon = true;
     boolean isCkeckVisity;
 
 
@@ -117,6 +118,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         if(mNewsFeedFgt == null){
             //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
             isFavorite = false;
+            isNeedShowDisLikeIcon = false;
         }
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
@@ -172,6 +174,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_one_pic:
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0),mCardWidth,mCardHeight);
@@ -240,6 +243,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -260,6 +264,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {

@@ -255,7 +255,9 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".pages.DiggerAty"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEND"/>
 
@@ -283,7 +285,9 @@
             android:theme="@style/SwipeBackTheme"/>
         <activity
             android:name=".pages.AlbumListAty"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            />
         <activity
             android:name=".pages.MainAty"
             android:launchMode="singleTask"

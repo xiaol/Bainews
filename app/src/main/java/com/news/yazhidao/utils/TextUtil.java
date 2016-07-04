@@ -574,6 +574,54 @@ public class TextUtil {
     }
 
     /**
+     * 解析出iframe中的video url
+     */
+    private static String parseVideoUrl(String videoUrl, int w, int h) {
+        String[] split = videoUrl.split("\"");
+        String url = "";
+        for (int i = 0; i < split.length; i++) {
+            if (split[i].contains("https:")) {
+                url = split[i].replace("https", "http").replace("\\", "").replace("preview", "player");
+                break;
+            } else if (split[i].contains("http:")) {
+                url = split[i].replace("\\", "");
+            }
+        }
+        Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
+
+        String params = url.substring(url.indexOf("?") + 1);
+        Logger.e("jigang", "params url=" + params);
+        String[] paramsArr = params.split("=|&");
+        for (int i = 0; i < paramsArr.length; i++) {
+            Logger.e("jigang", "param --->" + paramsArr[i] + "\n");
+        }
+        for (int i = 0; i < paramsArr.length; i++) {
+            if (paramsArr[i].contains("width")) {
+                paramsArr[i + 1] = w + "";
+            }
+            if (paramsArr[i].contains("auto")) {
+                paramsArr[i + 1] = "1";
+            }
+            if (paramsArr[i].contains("height")) {
+                paramsArr[i + 1] = h + "";
+            }
+        }
+        StringBuilder sb = new StringBuilder(url.substring(0, url.indexOf("?") + 1));
+        for (int i = 0; i < paramsArr.length; i++) {
+            if (i % 2 == 0) {
+                sb.append(paramsArr[i] + "=");
+            } else {
+                if (i != paramsArr.length - 1) {
+                    sb.append(paramsArr[i] + "&");
+                } else {
+                    sb.append(paramsArr[i]);
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * 生成新闻详情中的css样式
      */
     public static String generateCSS() {
@@ -644,53 +692,14 @@ public class TextUtil {
                     contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
-                    Logger.e("jigang","img " + img);
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'"+img+"')\"></p>");
+                    Logger.e("jigang", "img " + img);
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "')\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
-                    String[] split = vid.split("\"");
-                    String url = "";
-                    for (int i = 0; i < split.length; i++) {
-                        if (split[i].contains("https:")) {
-                            url = split[i].replace("https", "http").replace("\\", "").replace("preview","player");
-                            break;
-                        }
-                    }
-                    Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-                    int w = DeviceInfoUtil.getScreenWidth()/3;
+                    int w = DeviceInfoUtil.getScreenWidth() / 3;
                     int h = (int) (w * 0.75);
-                    String params = url.substring(url.indexOf("?") + 1);
-                    Logger.e("jigang", "params url=" + params);
-                    String[] paramsArr = params.split("=|&");
-                    for (int i = 0; i < paramsArr.length; i++) {
-                        Logger.e("jigang", "param --->" + paramsArr[i] + "\n");
-                    }
-                    for (int i = 0; i < paramsArr.length; i++) {
-                        if (paramsArr[i].contains("width")) {
-                            paramsArr[i + 1] = w + "";
-                        }
-                        if (paramsArr[i].contains("auto")) {
-                            paramsArr[i + 1] = "1";
-                        }
-                        if (paramsArr[i].contains("height")) {
-                            paramsArr[i + 1] = h + "";
-                        }
-                    }
-                    StringBuilder sb = new StringBuilder(url.substring(0, url.indexOf("?") + 1));
-                    for (int i = 0; i < paramsArr.length; i++) {
-                        if (i % 2 == 0) {
-                            sb.append(paramsArr[i] + "=");
-                        } else {
-                            if (i != paramsArr.length - 1) {
-                                sb.append(paramsArr[i] + "&");
-                            } else {
-                                sb.append(paramsArr[i]);
-                            }
-                        }
-                    }
-                    url = sb.toString();
-                    Logger.e("jigang", "final url=" + sb.toString());
-                    contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url+"')\" style=\"position:absolute;width:94%;height:"+h+"px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\""+h+"\" width=\"100%\" src=\""+url+"\"></p>");
+                    String url = parseVideoUrl(vid, w, h);
+                    contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></p>");
                 }
             }
         }

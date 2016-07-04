@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -86,6 +87,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
     private SearchListViewOpenAdapter mSearchListViewOpenAdapter;
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
     private RelativeLayout HistoryLayout, HotSearchlayout;
+    private View mBgLayout;
 
 
     @Override
@@ -108,7 +110,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         mSearchClear.setOnClickListener(this);
         mDoSearch = (TextView) findViewById(R.id.mDoSearch);
 
-
+        mBgLayout = findViewById(R.id.bgLayout);
         mSearchLoaddingWrapper = findViewById(R.id.mSearchLoaddingWrapper);
         mSearchTipImg = (ImageView) findViewById(R.id.mSearchTipImg);
         mSearchTip = (TextView) findViewById(R.id.mSearchTip);
@@ -173,6 +175,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
      * 获取新闻数据
      */
     private void loadNewsData(String pKeyWord, final String pPageIndex) {
+        mBgLayout.setVisibility(View.VISIBLE);
         String keyWord = "";
         try {
             keyWord = URLEncoder.encode(pKeyWord, "utf-8");
@@ -186,6 +189,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {
                 mSearchListView.onRefreshComplete();
+                mBgLayout.setVisibility(View.GONE);
                 if (!TextUtil.isListEmpty(response)) {
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if(pPageIndex.equals("1"))
@@ -217,7 +221,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
                 mSearchTip.setVisibility(View.VISIBLE);
-//                mSearchProgress.setVisibility(View.GONE);
+                mBgLayout.setVisibility(View.GONE);
             }
         });
 //        searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
@@ -236,6 +240,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void success(ArrayList<Element> result) {
                 mHotLabels = result;
+                mBgLayout.setVisibility(View.GONE);
                 if (!TextUtil.isListEmpty(mHotLabels)) {
                     int temp = mHotLabels.size() % PAGE_CAPACITY;
                     mTotalPage = (temp == 0) ? mHotLabels.size() / PAGE_CAPACITY : mHotLabels.size() / PAGE_CAPACITY + 1;
@@ -254,6 +259,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void failed(MyAppException exception) {
                 Logger.e("jigang", "-----fetch hot label fail~");
+                mBgLayout.setVisibility(View.GONE);
                 HotSearchlayout.setVisibility(View.GONE);
                 mSearchLoaddingWrapper.setVisibility(View.GONE);
                 mSearchTipImg.setVisibility(View.VISIBLE);
@@ -274,15 +280,16 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         LinearLayout headView = (LinearLayout) getLayoutInflater().inflate(R.layout.aty_topic_search_headview, null);
         headView.setLayoutParams(layoutParams);
         mSearchHotLabelLayout = headView.findViewById(R.id.mSearchHotLabelLayout);
-        mSearchHotLabelLayout.setOnClickListener(new View.OnClickListener() {
+        mSearchHotLabelLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 View view = getWindow().peekDecorView();
                 if (view != null) {
                     mSearchContent.clearFocus();
                     InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
+                return false;
             }
         });
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
