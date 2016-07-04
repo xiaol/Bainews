@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -279,15 +280,16 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         LinearLayout headView = (LinearLayout) getLayoutInflater().inflate(R.layout.aty_topic_search_headview, null);
         headView.setLayoutParams(layoutParams);
         mSearchHotLabelLayout = headView.findViewById(R.id.mSearchHotLabelLayout);
-        mSearchHotLabelLayout.setOnClickListener(new View.OnClickListener() {
+        mSearchHotLabelLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 View view = getWindow().peekDecorView();
                 if (view != null) {
                     mSearchContent.clearFocus();
                     InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
+                return false;
             }
         });
         mDoSearchChangeBatch = (TextView) headView.findViewById(R.id.mDoSearchChangeBatch);
