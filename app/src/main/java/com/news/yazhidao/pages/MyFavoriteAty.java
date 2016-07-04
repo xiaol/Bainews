@@ -79,6 +79,7 @@ public class MyFavoriteAty extends SwipeBackActivity implements View.OnClickList
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mFavoriteListView = (PullToRefreshListView) findViewById(R.id.aty_myFavorite_PullToRefreshListView);
         mAdapter = new NewsFeedAdapter(this, null, null);
+        mAdapter.isFavoriteList();
         mAdapter.setIntroductionNewsFeed(mIntroductionNewsFeed);
 
     }

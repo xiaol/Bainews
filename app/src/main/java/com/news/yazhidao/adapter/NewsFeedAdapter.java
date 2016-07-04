@@ -115,11 +115,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
-        if(mNewsFeedFgt == null){
-            //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
-            isFavorite = false;
-            isNeedShowDisLikeIcon = false;
-        }
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mNewsFile = ZipperUtil.getSaveFontPath(context);
@@ -133,6 +128,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     public void setSearchKeyWord(String pKeyWord) {
         mstrKeyWord = pKeyWord;
         mDatas = null;
+    }
+    public void isFavoriteList(){
+        //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
+        isFavorite = true;
+        isNeedShowDisLikeIcon = false;
     }
 
 
