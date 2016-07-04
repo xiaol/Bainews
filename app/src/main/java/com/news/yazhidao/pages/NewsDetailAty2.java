@@ -430,10 +430,21 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onResponse(NewsDetail result) {
-                mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                if(bgLayout.getVisibility() == View.VISIBLE){
-                    bgLayout.setVisibility(View.GONE);
-                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE){
+                            mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                        }
+
+                        if(bgLayout.getVisibility() == View.VISIBLE){
+                            bgLayout.setVisibility(View.GONE);
+                        }
+                    }
+                }, 500);
+
+
                 Logger.e("jigang", "network success~~" + result);
                 if (result != null) {
                     mNewsFeed = convert2NewsFeed(result);
@@ -453,8 +464,13 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
-                mNewsLoadingImg.setVisibility(View.VISIBLE);
-                bgLayout.setVisibility(View.GONE);
+                if(mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE){
+                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                }
+
+                if(bgLayout.getVisibility() == View.VISIBLE){
+                    bgLayout.setVisibility(View.GONE);
+                }
             }
         });
 

@@ -18,15 +18,14 @@
             android:alpha="0.3"
             android:background="@color/black"
             />
-        <ImageView
+        <TextView
             android:id="@+id/mLeftBack"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:contentDescription="转到上一级"
-            android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_left_back"/>
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:drawableLeft="@drawable/btn_left_back"
+            android:background="@drawable/bg_left_back_selector"
+            android:clickable="true"
+            android:paddingLeft="15dp"/>
 
     <ProgressBar
         android:id="@+id/mNewsSourcesiteProgress"
