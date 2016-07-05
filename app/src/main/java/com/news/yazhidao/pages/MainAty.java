@@ -32,6 +32,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
+import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -109,6 +110,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     protected void initializeViews() {
+        AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this,"bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();

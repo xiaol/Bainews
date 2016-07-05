@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.news.yazhidao.R;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.User;
@@ -180,19 +180,20 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
                 startActivity(privacyAty);
                 break;
             case R.id.mSettingUpdate:
+                Log.e("jigang","update=");
                 UmengUpdateAgent.setUpdateAutoPopup(false);
                 UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
                     @Override
                     public void onUpdateReturned(int status, UpdateResponse updateResponse) {
                         if (status == UpdateStatus.Yes) {
-                            UmengUpdateAgent.setUpdateAutoPopup(true);
-                            UmengUpdateAgent.update(SettingAty.this);
+                            UmengUpdateAgent.showUpdateDialog(SettingAty.this, updateResponse);
+                            Log.e("jigang","update=");
                         } else {
                             ToastUtil.toastShort("已是最新版本");
                         }
                     }
                 });
-                UmengUpdateAgent.update(SettingAty.this);
+                UmengUpdateAgent.update(this);
                 break;
             case R.id.mSetttingLogout:
                 if (user != null && !user.isVisitor()) {

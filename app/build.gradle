@@ -10,8 +10,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 120
-        versionName "3.18"
+        versionCode 121
+        versionName "3.2"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     }
 
@@ -20,7 +20,7 @@ android {
         huanliang91 {}
 
         /**深圳推广*/
-//        shenzhen {}
+        shenzhen {}
 
         /**24个渠道*/
        /** baidu {}
@@ -49,39 +49,39 @@ android {
         wangyiyingyongzhongxin {} */
 
         /**pc端渠道*/
-        newasp {}
-        downcc {}
-        cr173 {}
-        pc6 {}
-        redshu {}
-        q9ht {}
-        yiwan {}
-        anfens {}
-        yxdown {}
-        qqtn {}
-        hackhome {}
-        xz7 {}
-        coolapk {}
-        q05sun {}
-        paopaoche {}
+//        newasp {}
+//        downcc {}
+//        cr173 {}
+//        pc6 {}
+//        redshu {}
+//        q9ht {}
+//        yiwan {}
+//        anfens {}
+//        yxdown {}
+//        qqtn {}
+//        hackhome {}
+//        xz7 {}
+//        coolapk {}
+//        q05sun {}
+//        paopaoche {}
 
 
 //        daoyoudao {}
-//        huanliang {}
+        huanliang {}
 //        googleplay {}
         yingyongbao {}
 //        kuaiyou {}
-//        shanghai {}
+        shanghai {}
 //        hulizhushou {}
 //        wangba {}
-//        xiaomi {}
+        xiaomi {}
 //        adcoco {}
-//        adcocoa {}
-//        red {}
+        adcocoa {}
+        red {}
 //        c360 {}
 //        baidu {}
-//        wandoujia {}
-//        meizu {}
+        wandoujia {}
+        meizu {}
 //        anzhi {}
 //        wandoujia {}
 //        jifeng {}
