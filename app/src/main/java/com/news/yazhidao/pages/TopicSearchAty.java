@@ -88,7 +88,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
     private ArrayList<HistoryEntity> historyEntities = new ArrayList<HistoryEntity>();
     private RelativeLayout HistoryLayout, HotSearchlayout;
     private View mBgLayout;
-
+    private boolean misPullUpToRefresh = false;
 
     @Override
     protected boolean translucentStatus() {
@@ -131,6 +131,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                misPullUpToRefresh = true;
                 loadNewsData(mKeyWord, ++mPageIndex + "");
             }
         });
@@ -175,7 +176,8 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
      * 获取新闻数据
      */
     private void loadNewsData(String pKeyWord, final String pPageIndex) {
-        mBgLayout.setVisibility(View.VISIBLE);
+        if(!misPullUpToRefresh)
+            mBgLayout.setVisibility(View.VISIBLE);
         String keyWord = "";
         try {
             keyWord = URLEncoder.encode(pKeyWord, "utf-8");
@@ -190,6 +192,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             public void onResponse(ArrayList<NewsFeed> response) {
                 mSearchListView.onRefreshComplete();
                 mBgLayout.setVisibility(View.GONE);
+                misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
                     if(pPageIndex.equals("1"))
@@ -201,7 +204,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
                 } else {
                     Logger.e("jigang", "response is null");
-
+                    misPullUpToRefresh = false;
                     if (mPageIndex > 1) {
                         ToastUtil.toastShort("没有更多数据");
                     } else {
@@ -217,6 +220,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                misPullUpToRefresh = false;
                 mSearchListView.onRefreshComplete();
                 Logger.e("jigang", "========" + error.getMessage());
                 mSearchTipImg.setVisibility(View.VISIBLE);
