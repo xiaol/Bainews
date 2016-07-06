@@ -130,7 +130,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mDatas = null;
     }
     public void isFavoriteList(){
-        //FIXME 不知道这儿的具体逻辑,需要梁帅来确认一下
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
@@ -433,11 +432,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     View DeleteView;
 
     private void setDeleteClick(final ImageView imageView, final NewsFeed feed, final View view) {
-        MobclickAgent.onEvent(mContext,"qidian_feed_delete_dislike");
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                ToastUtil.toastShort(feed.getPname());
+                MobclickAgent.onEvent(mContext,"qidian_feed_delete_dislike");
                 DeleteView = view;
                 DeleteClickBean = feed;
                 int[] LocationInWindow = new int[2];
