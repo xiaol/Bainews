@@ -149,6 +149,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
 
                 }
+                if(feed.isFavorite()){
+                    holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_check);
+                }else{
+                    holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
+                }
                 if (isFavorite) {
                     holder.getView(R.id.delete_imageView).setVisibility(View.GONE);
                     holder.getView(R.id.comment_num_textView).setVisibility(View.GONE);

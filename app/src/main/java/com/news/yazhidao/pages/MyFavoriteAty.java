@@ -257,6 +257,7 @@ public class MyFavoriteAty extends SwipeBackActivity implements View.OnClickList
                 @Override
                 public void onResponse(JSONObject response) {
                     if (position == list.size() - 1) {
+                        aty_myFavorite_number.setText("");
                         loadFavorite();
                     }
 
