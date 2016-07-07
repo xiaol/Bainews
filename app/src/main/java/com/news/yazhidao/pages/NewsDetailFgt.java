@@ -380,7 +380,7 @@ public class NewsDetailFgt extends BaseFragment {
 
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
-                "text/html;charset=UTF-8", "utf-8", null);
+                "text/html", "utf-8", null);
 //        mDetailWebView.loadDataWithBaseURL(null, "<!DOCTYPE html><html><body><h1>sssssss</h1></body></html>",
 //                "text/html;charset=UTF-8", "UTF-8", null);
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
