@@ -16,18 +16,13 @@ android {
     }
 
     productFlavors {
-        /**91桌面换量渠道*/
-        huanliang91 {}
-
-        /**深圳推广*/
-        shenzhen {}
-
-        /**24个渠道*/
-       /** baidu {}
+        /**
+        baidu {}
         q91shichang {}
         anzhuoshichang {}
         yingyongbao {}
         anzhishichang {}
+        mumayi {}
         wandoujia {}
         jifengwang {}
         yingyonghui {}
@@ -40,13 +35,21 @@ android {
         lianxiang {}
         xiaomi {}
         sougouzhushou {}
-        zhongguancun {}
         meizu {}
         oppo {}
-        feiliu {}
         liquwang {}
-        q91zhuomian {}
-        wangyiyingyongzhongxin {} */
+        wangyiyingyongzhongxin {}
+        newasp {}
+        downcc {}
+        PC6 {}*/
+        /**91桌面换量渠道*/
+//        huanliang91 {}
+
+        /**深圳推广*/
+//        shenzhen {}
+
+        /**24个渠道*/
+        /** baidu {}q91shichang {}anzhuoshichang {}yingyongbao {}anzhishichang {}wandoujia {}jifengwang {}yingyonghui {}tongbu {}q360shoujizhushou {}Nduowang {}q3ganzhuoshichang {}woqushoujizhushou {}huawei {}lianxiang {}xiaomi {}sougouzhushou {}zhongguancun {}meizu {}oppo {}feiliu {}liquwang {}q91zhuomian {}wangyiyingyongzhongxin {} */
 
         /**pc端渠道*/
 //        newasp {}
@@ -65,23 +68,22 @@ android {
 //        q05sun {}
 //        paopaoche {}
 
-
 //        daoyoudao {}
-        huanliang {}
+//        huanliang {}
 //        googleplay {}
-        yingyongbao {}
+//        yingyongbao {}
 //        kuaiyou {}
-        shanghai {}
+//        shanghai {}
 //        hulizhushou {}
 //        wangba {}
-        xiaomi {}
+//        xiaomi {}
 //        adcoco {}
-        adcocoa {}
-        red {}
+//        adcocoa {}
+//        red {}
 //        c360 {}
 //        baidu {}
-        wandoujia {}
-        meizu {}
+//        wandoujia {}
+//        meizu {}
 //        anzhi {}
 //        wandoujia {}
 //        jifeng {}
@@ -102,7 +104,7 @@ android {
 //        wo {}
 //        sougou {}
 //        mm {}
-        official{}
+//        official{}
 //        lianxiang{}
 //        yidong{}
 //        jinli{}

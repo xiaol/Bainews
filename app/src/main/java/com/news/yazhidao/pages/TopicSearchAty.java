@@ -116,6 +116,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         mSearchTip = (TextView) findViewById(R.id.mSearchTip);
 //        mSearchProgress = (ProgressBar) findViewById(R.id.mSearchProgress);
         mNewsFeedAdapter = new NewsFeedAdapter(this, null, null);
+        mNewsFeedAdapter.isFavoriteList();
         mSearchListView = (PullToRefreshListView) findViewById(R.id.mSearchListView);
         mSearchListViewOpen = (PullToRefreshListView) findViewById(R.id.mSearchListViewOpen);
         mSearchListView.setAdapter(mNewsFeedAdapter);
