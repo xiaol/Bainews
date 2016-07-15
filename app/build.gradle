@@ -16,6 +16,12 @@ android {
     }
 
     productFlavors {
+        q9ht {}
+        appfun {}
+        hismarttv {}
+        anbei {}
+        iqiyi {}
+        coolchuan {}
         /**
         baidu {}
         q91shichang {}

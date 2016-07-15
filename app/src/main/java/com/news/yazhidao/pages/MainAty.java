@@ -317,6 +317,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public int getItemPosition(Object object) {
+            Logger.e("jigang","----viewpager getItemPosition " + object.getClass().getSimpleName());
             int index = -1;
             if (channelItems != null && channelItems.size() > 0) {
                 for (int i = 0; i < channelItems.size(); i++) {
@@ -340,6 +341,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Fragment getItem(int position) {
+            Logger.e("jigang","----viewpager getItem " + position);
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
             feedFgt.setNewsFeedFgtPopWindow(mNewsFeedFgtPopWindow);
@@ -349,6 +351,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+            Logger.e("jigang","----viewpager instantiateItem " + position);
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
             ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
@@ -360,11 +363,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             return fgt;
         }
 
-//        @Override
-//        public void destroyItem(ViewGroup container, int position, Object object) {
-////            super.destroyItem(container, position, object);
-//
-//        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            Logger.e("jigang","----viewpager destroyItem " + position);
+        }
 
     }
 
