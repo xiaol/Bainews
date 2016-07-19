@@ -125,6 +125,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
+    private boolean misFocus = false;
 
 
     public interface NewsSaveDataCallBack {
@@ -155,6 +156,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 bgLayout.setVisibility(View.GONE);
             }
         }
+    }
+
+    public void setIsFocus() {
+        misFocus = true;
     }
 
     @Override
@@ -214,7 +219,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode + ",data=" +data);
+        Logger.e("jigang", "requestCode = " + requestCode + ",data=" + data);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
@@ -631,11 +636,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     private void showChangeTextSizeView() {
-        if (mstrChannelId.equals("1") && mFlag == false)
+        if (mstrChannelId.equals("1") && mFlag == false) {
             if (mChangeTextSizePopWindow == null) {
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
+        }
     }
 
     HomeWatcher mHomeWatcher;
@@ -746,13 +752,23 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     //    int lastY = 0;
 //    int MAX_PULL_BOTTOM_HEIGHT = 100;
     public void addHFView(LayoutInflater LayoutInflater) {
-
-        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
+        View mSearchHeaderView;
+        if (mstrChannelId.equals("1000")) {
+            mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout_focus, null);
+        } else
+            mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
         lv.addHeaderView(mSearchHeaderView);
         lv.setHeaderDividersEnabled(false);
+        if (mstrChannelId.equals("1000")) {
+            TextView tvFocus = (TextView) mSearchHeaderView.findViewById(R.id.focus_textView);
+            TextView tvFocusNum = (TextView) mSearchHeaderView.findViewById(R.id.focus_num_textView);
+            if (bgLayout.getVisibility() == View.VISIBLE) {
+                bgLayout.setVisibility(View.GONE);
+            }
+        }
         mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
         mSearch_layout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -37,74 +37,27 @@
         android:textColor="@color/new_color1"
         android:textSize="@dimen/new_font2" />
 
-    <LinearLayout
+    <include
         android:id="@+id/source_content_linearLayout"
+        layout="@layout/ll_news_item_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp">
-
-        <ImageView
-            android:id="@+id/type_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:visibility="gone" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/news_source_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxEms="8"
-            android:lines="1"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6"
-            android:gravity="center_vertical"
-            />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/comment_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6"
-            />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/comment_num_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/new_color3"
-            android:layout_marginRight="-10dp"
-            android:textSize="@dimen/new_font6" />
-
-        <ImageView
-            android:id="@+id/delete_imageView"
-            android:layout_width="35dp"
-            android:layout_height="18dp"
-            android:paddingLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/btn_news_feed_delete" />
-    </LinearLayout>
+        android:layout_marginTop="10dp" />
 
     <ImageView
         android:id="@+id/checkFavoriteDelete_image"
-        android:src="@drawable/favorite_uncheck"
         android:layout_width="55dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/favorite_surface"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_alignBottom="@+id/line_bottom_imageView"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:scaleType="center"/>
+        android:background="@drawable/favorite_surface"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:scaleType="center"
+        android:src="@drawable/favorite_uncheck" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"

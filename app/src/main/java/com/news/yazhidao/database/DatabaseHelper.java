@@ -26,7 +26,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 24;
+    private static int DATABASE_VERSION = 25;
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -43,39 +43,40 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static ArrayList<ChannelItem> mChannels = new ArrayList<>();
     static {
         /**默认用户选择的频道*/
-        mChannels.add(new ChannelItem("1","奇点",1,true));
-        mChannels.add(new ChannelItem("4","科技",2,true));
-        mChannels.add(new ChannelItem("29","外媒",3,true));
-        mChannels.add(new ChannelItem("35","点集",4,true));
-        mChannels.add(new ChannelItem("2","社会",5,true));
-        mChannels.add(new ChannelItem("7","财经",6,true));
-        mChannels.add(new ChannelItem("6","体育",7,true));
-        mChannels.add(new ChannelItem("5","汽车",8,true));
-        mChannels.add(new ChannelItem("9","国际",9,true));
-        mChannels.add(new ChannelItem("10","时尚",10,true));
-        mChannels.add(new ChannelItem("14","探索",11,true));
-        mChannels.add(new ChannelItem("25","科学",12,true));
-        mChannels.add(new ChannelItem("3","娱乐",13,true));
-        mChannels.add(new ChannelItem("23","趣图",14,true));
-        mChannels.add(new ChannelItem("21","搞笑",15,true));
-        mChannels.add(new ChannelItem("17","养生",16,true));
-        mChannels.add(new ChannelItem("11","游戏",17,true));
-        mChannels.add(new ChannelItem("16","育儿",18,true));
-        mChannels.add(new ChannelItem("36","自媒体",19,true));
+        mChannels.add(new ChannelItem("1","奇点",1,true,"1"));
+        mChannels.add(new ChannelItem("4","科技",2,true,"1"));
+        mChannels.add(new ChannelItem("29","外媒",3,true,"1"));
+        mChannels.add(new ChannelItem("35","点集",4,true,"1"));
+        mChannels.add(new ChannelItem("2","社会",5,true,"1"));
+        mChannels.add(new ChannelItem("7","财经",6,true,"1"));
+        mChannels.add(new ChannelItem("6","体育",7,true,"1"));
+        mChannels.add(new ChannelItem("5","汽车",8,true,"1"));
+        mChannels.add(new ChannelItem("9","国际",9,true,"1"));
+        mChannels.add(new ChannelItem("10","时尚",10,true,"1"));
+        mChannels.add(new ChannelItem("14","探索",11,true,"1"));
+        mChannels.add(new ChannelItem("25","科学",12,true,"1"));
+        mChannels.add(new ChannelItem("3","娱乐",13,true,"1"));
+        mChannels.add(new ChannelItem("23","趣图",14,true,"1"));
+        mChannels.add(new ChannelItem("21","搞笑",15,true,"1"));
+        mChannels.add(new ChannelItem("17","养生",16,true,"1"));
+        mChannels.add(new ChannelItem("11","游戏",17,true,"1"));
+        mChannels.add(new ChannelItem("16","育儿",18,true,"1"));
+        mChannels.add(new ChannelItem("36","自媒体",19,true,"1"));
         /**默认用户未选择的频道,并可选添加*/
-        mChannels.add(new ChannelItem("24","健康",1,false));
-        mChannels.add(new ChannelItem("30","影视",2,false));
-        mChannels.add(new ChannelItem("31","奇闻",3,false));
-        mChannels.add(new ChannelItem("32","萌宠",4,false));
-        mChannels.add(new ChannelItem("22","互联网",5,false));
-        mChannels.add(new ChannelItem("20","股票",6,false));
-        mChannels.add(new ChannelItem("8","军事",7,false));
-        mChannels.add(new ChannelItem("13","历史",8,false));
-        mChannels.add(new ChannelItem("18","故事",9,false));
-        mChannels.add(new ChannelItem("12","旅游",10,false));
-        mChannels.add(new ChannelItem("19","美文",11,false));
-        mChannels.add(new ChannelItem("15","美食",12,false));
-        mChannels.add(new ChannelItem("26","美女",13,false));
+        mChannels.add(new ChannelItem("1000","关注",0,false,"0"));
+        mChannels.add(new ChannelItem("24","健康",1,false,"1"));
+        mChannels.add(new ChannelItem("30","影视",2,false,"1"));
+        mChannels.add(new ChannelItem("31","奇闻",3,false,"1"));
+        mChannels.add(new ChannelItem("32","萌宠",4,false,"1"));
+        mChannels.add(new ChannelItem("22","互联网",5,false,"1"));
+        mChannels.add(new ChannelItem("20","股票",6,false,"1"));
+        mChannels.add(new ChannelItem("8","军事",7,false,"1"));
+        mChannels.add(new ChannelItem("13","历史",8,false,"1"));
+        mChannels.add(new ChannelItem("18","故事",9,false,"1"));
+        mChannels.add(new ChannelItem("12","旅游",10,false,"1"));
+        mChannels.add(new ChannelItem("19","美文",11,false,"1"));
+        mChannels.add(new ChannelItem("15","美食",12,false,"1"));
+        mChannels.add(new ChannelItem("26","美女",13,false,"1"));
     }
     @Override
     public void onCreate(SQLiteDatabase database,
