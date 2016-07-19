@@ -16,6 +16,7 @@ import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.DiggerAlbum;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
@@ -88,6 +89,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, ChannelItem.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsFeed.class);
             TableUtils.createTableIfNotExists(connectionSource, NewsDetailComment.class);
+            TableUtils.createTableIfNotExists(connectionSource, ReleaseSourceItem.class);
             /**初始化数据库或者升级数据库的时候,插入默认值*/
             channelDao = new ChannelItemDao(mContext);
             if (!TextUtil.isListEmpty(oldChannelItems)){
@@ -143,6 +145,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ChannelItem.class, true);
             TableUtils.dropTable(connectionSource, NewsFeed.class, true);
             TableUtils.dropTable(connectionSource, NewsDetailComment.class, true);
+            TableUtils.dropTable(connectionSource, ReleaseSourceItem.class, true);
             onCreate(database, connectionSource);
             Logger.e("jigang", "DatabaseHelper  onUpgrade()");
         } catch (SQLException e) {
