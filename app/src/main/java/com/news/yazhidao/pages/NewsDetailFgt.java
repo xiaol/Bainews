@@ -55,6 +55,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
 import com.umeng.analytics.MobclickAgent;
@@ -93,6 +94,8 @@ public class NewsDetailFgt extends BaseFragment {
     private LinearLayout detail_shared_FriendCircleLayout,
             detail_shared_CareForLayout,
             mCommentLayout,
+            detail_attention_addView,
+            linearlayout_attention,
             mNewsDetailHeaderView;
 
     private TextView detail_shared_PraiseText,
@@ -100,8 +103,11 @@ public class NewsDetailFgt extends BaseFragment {
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
-            detail_shared_ViewPointTitleLayout;
-    private ImageView detail_shared_AttentionImage;
+            detail_shared_ViewPointTitleLayout,
+            relativeLayout_attention;
+    private ImageView detail_shared_AttentionImage,
+            image_attention_line,
+            image_attention_success;
     private int CommentType = 0;
     private LayoutInflater inflater;
     ViewGroup container;
@@ -120,6 +126,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isBottom;
     private boolean isLoadDate;
     private boolean isNetWork;
+    private AttentionDetailDialog attentionDetailDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -339,7 +346,7 @@ public class NewsDetailFgt extends BaseFragment {
 
 
 
-
+    boolean isAttention;
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
 //        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -400,11 +407,60 @@ public class NewsDetailFgt extends BaseFragment {
 //        mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
+        detail_attention_addView = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_attention_addView);
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
+
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
+        if(mResult.getConflag() == 1){
+            isLike = true;
+            detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
+        }else{
+            isLike = false;
+            detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
+        }
+
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
+
+        RelativeLayout attention_item = (RelativeLayout) inflater.inflate(R.layout.detail_attention_item, container, false);
+
+        linearlayout_attention = (LinearLayout) attention_item.findViewById(R.id.linearlayout_attention);
+        image_attention_line = (ImageView) attention_item.findViewById(R.id.image_attention_line);
+        image_attention_success = (ImageView) attention_item.findViewById(R.id.image_attention_success);
+        relativeLayout_attention = (RelativeLayout) attention_item.findViewById(R.id.relativeLayout_attention);
+        detail_attention_addView.addView(attention_item);
+//        isAttention = true;
+        if(isAttention){
+            image_attention_success.setVisibility(View.VISIBLE);
+            image_attention_line.setVisibility(View.GONE);
+            linearlayout_attention.setVisibility(View.GONE);
+
+        }else{
+            image_attention_success.setVisibility(View.GONE);
+            image_attention_line.setVisibility(View.VISIBLE);
+            linearlayout_attention.setVisibility(View.VISIBLE);
+        }
+        relativeLayout_attention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in = new Intent(getActivity(), AttentionActivity.class);
+                in.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, "http://www.ld12.com/upimg358/20160201/yd33s1bvzmm1543.jpg");
+                in.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, "音乐风云");
+                getActivity().startActivity(in);
+            }
+        });
+        linearlayout_attention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                attentionDetailDialog = new AttentionDetailDialog(getActivity(),"音乐风云");
+                attentionDetailDialog.show();
+
+            }
+        });
+
+
+
 
         detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
         detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
@@ -416,6 +472,8 @@ public class NewsDetailFgt extends BaseFragment {
 
             }
         });
+
+
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

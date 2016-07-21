@@ -31,6 +31,7 @@ import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.Element;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
@@ -196,10 +197,16 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 misPullUpToRefresh = false;
                 if (!TextUtil.isListEmpty(response)) {
                     mSearchLoaddingWrapper.setVisibility(View.GONE);
-                    if(pPageIndex.equals("1"))
+                    if(pPageIndex.equals("1")) {
                         mNewsFeedLists.removeAll(mNewsFeedLists);
+
+                    }
                     mNewsFeedLists.addAll(response);
+                    if(pPageIndex.equals("1")) {
+                        setAttentionDate();
+                    }
                     mNewsFeedAdapter.setSearchKeyWord(mKeyWord);
+
                     mNewsFeedAdapter.setNewsFeed(mNewsFeedLists);
                     mNewsFeedAdapter.notifyDataSetChanged();
 
@@ -232,6 +239,26 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
 //        searchRequest.setKeyWordAndPageIndex(pKeyWord, pPageIndex);
         searchRequest.setRetryPolicy(new DefaultRetryPolicy(15 * 1000, 1, 1.0f));
         requestQueue.add(searchRequest);
+    }
+    public void setAttentionDate(){
+        NewsFeed newsFeed = new NewsFeed();
+        ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
+        for (int i = 0; i < 4; i++) {
+            AttentionListEntity attentionListEntity = new AttentionListEntity();
+            attentionListEntity.setIcon("http://www.ld12.com/upimg358/20160201/yd33s1bvzmm1543.jpg");
+            attentionListEntity.setDescr("音乐风云");
+            attentionListEntities.add(attentionListEntity);
+        }
+        newsFeed.setAttentionListEntities(attentionListEntities);
+        newsFeed.setStyle(4);
+        if(!TextUtil.isListEmpty(mNewsFeedLists)){//判断不为空
+            if (mNewsFeedLists.size() <= 2) {//判断搜索列表的数量小于等于2
+                mNewsFeedLists.add(newsFeed);
+            } else {
+                mNewsFeedLists.add(2, newsFeed);
+            }
+        }
+
     }
 
     @Override

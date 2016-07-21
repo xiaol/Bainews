@@ -104,7 +104,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
-    private TextView mDetailLeftBack,mDetailRightMore;
+    private TextView mDetailLeftBack,mDetailRightAttention;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -124,7 +124,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private TextView mImageWallDesc,carefor_Text;
     private View mDetailBottomBanner;
     public ImageView mDetailCommentPic,mDetailFavorite,carefor_Image;
-//    private WebView mDetailWebView;
+    //    private WebView mDetailWebView;
     public SwipeBackViewpager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
@@ -160,18 +160,18 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
 //            } else {
 
-                Logger.e("jigang", "comment fgt refresh br");
-                int number = 0;
-                try {
-                    number = Integer.valueOf(mDetailCommentNum.getText().toString());
-                } catch (Exception e) {
+            Logger.e("jigang", "comment fgt refresh br");
+            int number = 0;
+            try {
+                number = Integer.valueOf(mDetailCommentNum.getText().toString());
+            } catch (Exception e) {
 
-                }
+            }
             if(mDetailCommentNum.getVisibility() == View.GONE&&!isCommentPage){
                 mDetailCommentNum.setVisibility(View.VISIBLE);
             }
-                mDetailCommentNum.setText(number + 1 + "");
-                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+            mDetailCommentNum.setText(number + 1 + "");
+            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
 //            }
         }
@@ -217,8 +217,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
-        mDetailRightMore.setOnClickListener(this);
+//        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightAttention = (TextView) findViewById(R.id.mDetailRightAttention);
+        mDetailRightAttention.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
@@ -274,7 +275,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
-            upLoadLog();
+        upLoadLog();
 
     }
 
@@ -342,6 +343,24 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      * @param result
      */
     private void displayDetailAndComment(final NewsDetail result) {
+        /** 判断是否收藏 */
+        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+        if(result.getColflag() == 1){
+            if(!isFavorite){
+                SharedPreManager.myFavoriteSaveList(mNewsFeed);
+            }
+            isFavorite = true;
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+        }else {
+            if(isFavorite){
+                SharedPreManager.myFavoritRemoveItem(mUrl);
+            }
+            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+            isFavorite = false;
+        }
+        /** 判断是否关注 */
+        mDetailRightAttention.setText(result.getConpubflag() == 1 ? "已关注" : "去关注");
+
         mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -416,12 +435,12 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
         uuid = DeviceInfoUtil.getUUID();
 
-        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-        if(isFavorite){
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-        }else {
-            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-        }
+//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        if(isFavorite){
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        }else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//        }
 
         Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
@@ -490,6 +509,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsFeed.setStyle(result.getImgNum());
         mNewsFeed.setImageUrl(mImageUrl);
         mNewsFeed.setNid(result.getNid());
+        mNewsFeed.setColflag(result.getColflag());
+        mNewsFeed.setConflag(result.getConflag());
+        mNewsFeed.setConpubflag(result.getConpubflag());
+
 
         return mNewsFeed;
     }
@@ -540,20 +563,24 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 }
                 onBackPressed();
                 break;
-            case R.id.mDetailRightMore://更多的点击
-                if (mNewsFeed != null) {
-                    mivShareBg.startAnimation(mAlphaAnimationIn);
-                    mivShareBg.setVisibility(View.VISIBLE);
-                    mSharePopupWindow = new SharePopupWindow(this, this);
-                    String remark = mNewsFeed.getDescr();
-                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
-                    mSharePopupWindow.setOnFavoritListener(listener);
-                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+            case R.id.mDetailRightAttention:
+                ToastUtil.toastShort("去关注");
 
-                }
-                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
                 break;
+//            case R.id.mDetailRightMore://更多的点击
+//                if (mNewsFeed != null) {
+//                    mivShareBg.startAnimation(mAlphaAnimationIn);
+//                    mivShareBg.setVisibility(View.VISIBLE);
+//                    mSharePopupWindow = new SharePopupWindow(this, this);
+//                    String remark = mNewsFeed.getDescr();
+//                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+//                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+//                    mSharePopupWindow.setOnFavoritListener(listener);
+//                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//
+//                }
+//                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
+//                break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {
                     mCommentDialog = new UserCommentDialog();

@@ -22,16 +22,30 @@
             android:paddingLeft="15dp"
             />
 
+        <!--<TextView-->
+            <!--android:id="@+id/mDetailRightMore"-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:drawableRight="@drawable/btn_detail_right_more"-->
+            <!--android:background="@drawable/bg_left_back_selector"-->
+            <!--android:clickable="true"-->
+            <!--android:paddingRight="15dp"-->
+            <!--/>-->
+
         <TextView
-            android:id="@+id/mDetailRightMore"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:id="@+id/mDetailRightAttention"
+            android:layout_width="60dp"
+            android:layout_height="23dp"
+            android:background="@drawable/detailright_attentionshape"
             android:layout_alignParentRight="true"
-            android:drawableRight="@drawable/btn_detail_right_more"
-            android:background="@drawable/bg_left_back_selector"
-            android:clickable="true"
-            android:paddingRight="15dp"
-            />
+            android:layout_centerVertical="true"
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font4"
+            android:gravity="center"
+            android:layout_marginRight="15dp"
+            android:text="去关注"
+        />
 
     </RelativeLayout>
 

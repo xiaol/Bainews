@@ -18,6 +18,7 @@ public class NewsFeed implements Serializable {
     public static final int ONE_AND_TWO_PIC = 1;
     public static final int THREE_PIC = 2;
     public static final int TIME_LINE = 3;
+    public static final int SERRCH_ITEM = 4;
 
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
@@ -90,6 +91,16 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String descr;
 
+    /** 是(1)否(0)已收藏 */
+    private int colflag;
+    /** 是(1)否(0)已关心 */
+    private int conflag;
+    /** 是(1)否(0)已关心该新闻对应的发布源 */
+    private int conpubflag;
+
+    private ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
+
+
     @Override
     public String toString() {
         return "NewsFeed{" +
@@ -113,7 +124,42 @@ public class NewsFeed implements Serializable {
                 ", isRead=" + isRead +
                 ", isFavorite=" + isFavorite +
                 ", descr='" + descr + '\'' +
+                ", colflag=" + colflag +
+                ", conflag=" + conflag +
+                ", conpubflag=" + conpubflag +
                 '}';
+    }
+
+    public ArrayList<AttentionListEntity> getAttentionListEntities() {
+        return attentionListEntities;
+    }
+
+    public void setAttentionListEntities(ArrayList<AttentionListEntity> attentionListEntities) {
+        this.attentionListEntities = attentionListEntities;
+    }
+
+    public int getConpubflag() {
+        return conpubflag;
+    }
+
+    public void setConpubflag(int conpubflag) {
+        this.conpubflag = conpubflag;
+    }
+
+    public int getColflag() {
+        return colflag;
+    }
+
+    public void setColflag(int colflag) {
+        this.colflag = colflag;
+    }
+
+    public int getConflag() {
+        return conflag;
+    }
+
+    public void setConflag(int conflag) {
+        this.conflag = conflag;
     }
 
     public String getDescr() {

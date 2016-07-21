@@ -24,14 +24,17 @@ import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
@@ -84,6 +87,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_card;
                     case 900:
                         return R.layout.ll_news_item_time_line;
+                    case 4://奇点号Item
+                        return R.layout.ll_news_search_item;
                     default:
                         return 0;
                 }
@@ -91,7 +96,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 4;
+                return 5;
             }
 
             @Override
@@ -106,6 +111,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.THREE_PIC;
                     case 900:
                         return NewsFeed.TIME_LINE;
+                    case 4://奇点号Item
+                        return NewsFeed.SERRCH_ITEM;
                     default:
                         return 0;
                 }
@@ -133,6 +140,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
+
 
 
     @Override
@@ -277,6 +285,117 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         mNewsFeedFgt.refreshData();
                     }
                 });
+                break;
+            case R.layout.ll_news_search_item://奇点号Item
+                final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
+                int size = attentionListEntities.size();
+                if(size == 1){
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
+
+                    holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,"更多");
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.INVISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击更多");
+                            Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            mContext.startActivity(in);
+
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
+                }else if(size == 2){
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo,attentionListEntities.get(1).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,attentionListEntities.get(1).getDescr());
+
+                    holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree,"更多");
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.INVISIBLE);
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(1).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击更多");
+                            Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            mContext.startActivity(in);
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
+                }else if(size >= 3){
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo,attentionListEntities.get(1).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,attentionListEntities.get(1).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree,attentionListEntities.get(2).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree,attentionListEntities.get(2).getDescr());
+
+                    holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrFour,"更多");
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setVisibility(View.VISIBLE);
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setVisibility(View.VISIBLE);
+
+                    holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(1).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击" + attentionListEntities.get(2).getDescr());
+                        }
+                    });
+                    holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtil.toastShort("点击更多");
+                            Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            mContext.startActivity(in);
+                        }
+                    });
+                }
                 break;
         }
     }

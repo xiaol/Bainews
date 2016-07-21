@@ -118,4 +118,12 @@
 
     <!--用户评论dialog -->
     <dimen name="detail_user_comment_dialog_height">160dp</dimen>
+
+    <dimen name="image_width">65dp</dimen>
+    <dimen name="image_final_width">24dp</dimen>
+    <dimen name="text_final_sice">10dp</dimen>
+    <dimen name="text_start_sice">20dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

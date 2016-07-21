@@ -55,9 +55,37 @@ public class NewsDetail implements Serializable {
     private int concern;
     /** 评论数 */
     private int comment;
+    /** 是(1)否(0)已收藏 */
+    private int colflag;
+    /** 是(1)否(0)已关心 */
+    private int conflag;
+    /** 是(1)否(0)已关心该新闻对应的发布源 */
+    private int conpubflag;
 
 
+    public int getColflag() {
+        return colflag;
+    }
 
+    public void setColflag(int colflag) {
+        this.colflag = colflag;
+    }
+
+    public int getConflag() {
+        return conflag;
+    }
+
+    public void setConflag(int conflag) {
+        this.conflag = conflag;
+    }
+
+    public int getConpubflag() {
+        return conpubflag;
+    }
+
+    public void setConpubflag(int conpubflag) {
+        this.conpubflag = conpubflag;
+    }
 
     public int getNid() {
         return nid;

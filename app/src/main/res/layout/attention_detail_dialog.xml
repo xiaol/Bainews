@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="161dp"
+        android:background="@drawable/attention_detail_dialog_shape">
+        <TextView
+            android:id="@+id/tv_attentionDetailDialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注成功"
+            android:textSize="@dimen/new_font9"
+            android:textColor="@color/attention_detali_dialog_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            />
+        <LinearLayout
+            android:id="@+id/linear_attentionDetailDialog_contentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tv_attentionDetailDialog_title"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/tv_attentionDetailDialog_content1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="可在【关注】频道"
+                android:textSize="@dimen/new_font4"
+                android:textColor="@color/attention_detali_dialog_text"/>
+            <TextView
+                android:id="@+id/tv_attentionDetailDialog_content2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查看音乐风云的内容 "
+                android:textSize="@dimen/new_font4"
+                android:textColor="@color/attention_detali_dialog_text"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_attentionDetailDialog_know"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/linear_attentionDetailDialog_contentLayout"
+            android:layout_marginTop="14dp"
+            android:text="知道了"
+            android:gravity="center"
+            android:textSize="@dimen/new_font10"
+            android:textColor="#dc4324"
+            android:background="@drawable/attention_detail_dialog_knowshape"
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
