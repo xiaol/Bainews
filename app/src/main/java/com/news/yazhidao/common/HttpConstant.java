@@ -80,6 +80,15 @@ public class HttpConstant {
      * feed流下拉刷新
      */
     public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/r?";
+    /**
+     * feed流关注上拉加载更多
+     */
+    public static final String URL_FEED_FOCUS_LOAD_MORE = URL_SERVER_HOST + "/ns/au/cocs?";
+
+    /**
+     * feed流关注下拉刷新
+     */
+    public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/au/cocs?";
 
     /**
      * 获取新闻详情页

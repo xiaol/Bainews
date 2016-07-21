@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_search_header"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/focus_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的关注：#papi 大熊体育"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font5" />
+
+        <TextView
+            android:id="@+id/focus_num_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_toRightOf="@id/focus_textView"
+            android:text="6>"
+            android:textColor="@color/new_color5"
+            android:textSize="@dimen/font5" />
+    </RelativeLayout>
+
+</LinearLayout>

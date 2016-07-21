@@ -29,6 +29,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter;
+import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onFocusItemClick;
 import com.news.yazhidao.adapter.SearchListViewOpenAdapter.onSearchListViewOpenItemClick;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
@@ -345,7 +346,8 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         }
 
         mSearchListViewOpenAdapter = new SearchListViewOpenAdapter(TopicSearchAty.this);
-        mSearchListViewOpenAdapter.setonSearchListViewOpenItemClick(mOnSearchListViewOpenItemClick);
+        mSearchListViewOpenAdapter.setOnSearchListViewOpenItemClick(mOnSearchListViewOpenItemClick);
+        mSearchListViewOpenAdapter.setOnFocusItemClick(mOnFocusItemClick);
         mSearchListViewOpenAdapter.setNewsFeed(historyEntities);
         mSearchListViewOpen.setAdapter(mSearchListViewOpenAdapter);
     }
@@ -371,6 +373,14 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             loadNewsData(mKeyWord, mPageIndex + "");
         }
     };
+
+    onFocusItemClick mOnFocusItemClick = new onFocusItemClick(){
+        @Override
+        public void listener(HistoryEntity historyEntity) {
+
+        }
+    };
+
 
     public void setHotLabelLayoutData(int mCurrPageIndex) {
         if (mTotalPage >= 1) {
