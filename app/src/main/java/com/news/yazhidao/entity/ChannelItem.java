@@ -53,11 +53,12 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
     public ChannelItem() {
     }
 
-    public ChannelItem(String id, String cname, int orderId, boolean selected) {
+    public ChannelItem(String id, String cname, int orderId, boolean selected,String online) {
         this.id = id;
         this.cname = cname;
         this.orderId = orderId;
         this.selected = selected;
+        this.online = online;
     }
 
     public String getId() {
@@ -98,6 +99,10 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
 
     public String getOnline() {
         return online;
+    }
+
+    public void setOnline(String online) {
+        this.online = online;
     }
 
     public String toString() {

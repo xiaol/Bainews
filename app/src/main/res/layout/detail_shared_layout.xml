@@ -114,6 +114,10 @@
                 android:paddingTop="1dp"/>
         </LinearLayout>
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/detail_attention_addView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></LinearLayout>
 
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"

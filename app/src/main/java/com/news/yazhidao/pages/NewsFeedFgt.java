@@ -125,6 +125,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
+    private boolean misFocus = false;
 
 
     public interface NewsSaveDataCallBack {
@@ -155,6 +156,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 bgLayout.setVisibility(View.GONE);
             }
         }
+    }
+
+    public void setIsFocus() {
+        misFocus = true;
     }
 
     @Override
@@ -214,7 +219,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("jigang", "requestCode = " + requestCode + ",data=" +data);
+        Logger.e("jigang", "requestCode = " + requestCode + ",data=" + data);
         if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
             int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
@@ -232,6 +237,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
+
         }
     }
 
@@ -579,10 +585,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNoteLoadDate) {
-                    if (!TextUtil.isEmptyString(mstrKeyWord)) {
+                    if (mstrChannelId != null && mstrChannelId.equals("1000")) {
+                        loadFocusData(flag);
+                    } else if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
-                    } else if (!TextUtil.isEmptyString(mstrChannelId))
+                    } else if (!TextUtil.isEmptyString(mstrChannelId)) {
                         loadNewsFeedData("recommend", flag);
+                    }
                     startTopRefresh();
                 } else {
                     isNoteLoadDate = false;
@@ -620,6 +629,176 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
+    public void loadFocusData(final int flag) {
+        String requestUrl;
+        String uid = String.valueOf(SharedPreManager.getUser(mContext).getMuid());
+        if (flag == PULL_DOWN_REFRESH) {
+            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "uid=" + uid;
+        } else {
+            requestUrl = HttpConstant.URL_FEED_FOCUS_LOAD_MORE + "uid=" + uid;
+        }
+        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+        FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
+        }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
+
+            @Override
+            public void onResponse(final ArrayList<NewsFeed> result) {
+
+                if (mDeleteIndex != 0) {
+                    mArrNewsFeed.remove(mDeleteIndex);
+                    mDeleteIndex = 0;
+                }
+                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
+                    if (result == null || result.size() == 0) {
+                        return;
+                    }
+                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
+                    mRefreshTitleBarAnimtation();
+
+                }
+                if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
+                    NewsFeed newsFeed = new NewsFeed();
+                    newsFeed.setStyle(900);
+                    result.add(newsFeed);
+                    mDeleteIndex = result.size() - 1;
+                }
+
+                mHomeRetry.setVisibility(View.GONE);
+                stopRefresh();
+                if (result != null && result.size() > 0) {
+                    mSearchPage++;
+                    switch (flag) {
+                        case PULL_DOWN_REFRESH:
+                            if (mArrNewsFeed == null)
+                                mArrNewsFeed = result;
+                            else
+                                mArrNewsFeed.addAll(0, result);
+                            mlvNewsFeed.getRefreshableView().setSelection(0);
+//                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
+//                            mRefreshTitleBar.setVisibility(View.VISIBLE);
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
+//                                        mRefreshTitleBar.setVisibility(View.GONE);
+//                                    }
+//
+//                                }
+//                            }, 1000);
+                            break;
+                        case PULL_UP_REFRESH:
+                            Logger.e("aaa", "===========PULL_UP_REFRESH==========");
+                            if (isNewVisity) {//首次进入加入他
+//                                addSP(result);
+                                isNeedAddSP = false;
+
+                            }
+                            if (mArrNewsFeed == null) {
+                                mArrNewsFeed = result;
+                            } else {
+                                mArrNewsFeed.addAll(result);
+                            }
+                            break;
+                    }
+                    if (mNewsSaveCallBack != null) {
+                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
+                    }
+                    //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+                    if (mstrChannelId != null && "1".equals(mstrChannelId)) {
+                        for (NewsFeed newsFeed : result)
+                            newsFeed.setChannel(1);
+                    }
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mNewsFeedDao.insert(result);
+                        }
+                    }).start();
+                    mAdapter.setNewsFeed(mArrNewsFeed);
+                    mAdapter.notifyDataSetChanged();
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
+                        bgLayout.setVisibility(View.GONE);
+                    }
+                    showChangeTextSizeView();
+                } else {
+                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
+                    if (TextUtil.isListEmpty(mArrNewsFeed)) {
+                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                        if (TextUtil.isListEmpty(newsFeeds)) {
+                            mHomeRetry.setVisibility(View.VISIBLE);
+                        } else {
+                            mArrNewsFeed = newsFeeds;
+                            mHomeRetry.setVisibility(View.GONE);
+                            mAdapter.setNewsFeed(newsFeeds);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        mAdapter.setNewsFeed(mArrNewsFeed);
+                        mAdapter.notifyDataSetChanged();
+
+                    }
+                    if (bgLayout.getVisibility() == View.VISIBLE) {
+                        bgLayout.setVisibility(View.GONE);
+                    }
+                }
+
+                mIsFirst = false;
+                mlvNewsFeed.onRefreshComplete();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.toString().contains("2002")) {
+                    if (mDeleteIndex != 0) {
+                        mArrNewsFeed.remove(mDeleteIndex);
+                        mDeleteIndex = 0;
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    mRefreshTitleBar.setText("已是最新数据");
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                mRefreshTitleBar.setVisibility(View.GONE);
+                            }
+
+                        }
+                    }, 1000);
+                } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
+                    User user = SharedPreManager.getUser(getActivity());
+                    user.setUtype("2");
+                    SharedPreManager.saveUser(user);
+                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+                    startActivityForResult(loginAty, REQUEST_CODE);
+                }
+                if (TextUtil.isListEmpty(mArrNewsFeed)) {
+                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
+                    if (TextUtil.isListEmpty(newsFeeds)) {
+                        mHomeRetry.setVisibility(View.VISIBLE);
+                    } else {
+                        mArrNewsFeed = newsFeeds;
+                        mHomeRetry.setVisibility(View.GONE);
+                        mAdapter.setNewsFeed(newsFeeds);
+                        mAdapter.notifyDataSetChanged();
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
+                            bgLayout.setVisibility(View.GONE);
+                        }
+                    }
+                }
+                stopRefresh();
+                mlvNewsFeed.onRefreshComplete();
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+//        header.put("Authorization", "9097879790");
+        feedRequest.setRequestHeader(header);
+        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(feedRequest);
+    }
+
     @Override
     public boolean handleMessage(Message msg) {
         return false;
@@ -637,11 +816,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     private void showChangeTextSizeView() {
-        if (mstrChannelId.equals("1") && mFlag == false)
+        if (mstrChannelId.equals("1") && mFlag == false) {
             if (mChangeTextSizePopWindow == null) {
                 mChangeTextSizePopWindow = new ChangeTextSizePopupWindow(getActivity());
                 mChangeTextSizePopWindow.showAtLocation(getActivity().getWindow().getDecorView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
+        }
     }
 
     HomeWatcher mHomeWatcher;
@@ -752,13 +932,23 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     //    int lastY = 0;
 //    int MAX_PULL_BOTTOM_HEIGHT = 100;
     public void addHFView(LayoutInflater LayoutInflater) {
-
-        View mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
+        View mSearchHeaderView;
+//        if (mstrChannelId.equals("1000")) {
+//            mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout_focus, null);
+//        } else
+        mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
         lv.addHeaderView(mSearchHeaderView);
         lv.setHeaderDividersEnabled(false);
+//        if (mstrChannelId.equals("1000")) {
+//            TextView tvFocus = (TextView) mSearchHeaderView.findViewById(R.id.focus_textView);
+//            TextView tvFocusNum = (TextView) mSearchHeaderView.findViewById(R.id.focus_num_textView);
+//            if (bgLayout.getVisibility() == View.VISIBLE) {
+//                bgLayout.setVisibility(View.GONE);
+//            }
+//        }
         mSearch_layout = (RelativeLayout) mSearchHeaderView.findViewById(R.id.search_layout);
         mSearch_layout.setOnClickListener(new View.OnClickListener() {
             @Override

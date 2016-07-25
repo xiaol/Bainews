@@ -207,6 +207,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     public void finish() {
         if (mNewsSourcesiteWebview != null) {
             mNewsSourcesiteWebview.removeAllViews();
+            mNewsSourcesiteWebview.clearFormData();
         }
         super.finish();
     }

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -74,6 +75,12 @@ public class CommonViewHolder {
         TextView text = getView(ViewID);
         text.setBackgroundResource(resource);
     }
+    public void setTextViewTextandTextSice(int ViewID, String content) {
+        TextView text = getView(ViewID);
+        text.setText(content);
+//        text.setText(Html.fromHtml(content));
+        text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+    }
 
     public void setTextViewExtendText(int ViewID, String content) {
         TextViewExtend text = getView(ViewID);
@@ -132,5 +139,9 @@ public class CommonViewHolder {
             imageView.setImageURI(Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg"));
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
+    }
+    public void setSimpleDraweeViewResource(int draweeView, int Resource) {
+        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));
     }
 }
