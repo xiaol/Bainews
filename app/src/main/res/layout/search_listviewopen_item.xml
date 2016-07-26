@@ -22,7 +22,6 @@
             android:includeFontPadding="false"
             android:layout_centerVertical="true"
             android:layout_marginLeft="13dp"
-            android:text="123"
             />
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/focus_item_content"
@@ -35,7 +34,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="13dp"
-            android:text="123"
+            android:visibility="gone"
             />
     </RelativeLayout>
 
