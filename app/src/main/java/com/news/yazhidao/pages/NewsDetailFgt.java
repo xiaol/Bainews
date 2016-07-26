@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
@@ -62,6 +64,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -423,6 +427,8 @@ public class NewsDetailFgt extends BaseFragment {
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
+
+        //源的关注
         RelativeLayout attention_item = (RelativeLayout) inflater.inflate(R.layout.detail_attention_item, container, false);
 
         linearlayout_attention = (LinearLayout) attention_item.findViewById(R.id.linearlayout_attention);
@@ -431,6 +437,7 @@ public class NewsDetailFgt extends BaseFragment {
         relativeLayout_attention = (RelativeLayout) attention_item.findViewById(R.id.relativeLayout_attention);
         detail_attention_addView.addView(attention_item);
 //        isAttention = true;
+        isAttention = mResult.getConpubflag() == 1 ? true : false;
         if(isAttention){
             image_attention_success.setVisibility(View.VISIBLE);
             image_attention_line.setVisibility(View.GONE);
@@ -444,17 +451,21 @@ public class NewsDetailFgt extends BaseFragment {
         relativeLayout_attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ChannelItemDao channelItemDao = new ChannelItemDao(getActivity());
+                channelItemDao.setFocusOnline();
                 Intent in = new Intent(getActivity(), AttentionActivity.class);
-                in.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, "http://www.ld12.com/upimg358/20160201/yd33s1bvzmm1543.jpg");
-                in.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, "音乐风云");
-                getActivity().startActivity(in);
+                in.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, mResult.getPurl());
+                in.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, mResult.getPname());
+                in.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, mResult.getConpubflag());
+                startActivityForResult(in,1234);
             }
         });
         linearlayout_attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attentionDetailDialog = new AttentionDetailDialog(getActivity(),"音乐风云");
-                attentionDetailDialog.show();
+                addordeleteAttention(true);
+
+
 
             }
         });
@@ -994,7 +1005,7 @@ public class NewsDetailFgt extends BaseFragment {
 //                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
-                        "text/html;charset=UTF-8", "utf-8", null);
+                        "text/html", "utf-8", null);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 mDetailWebView.setLayoutParams(params);
                 mAdapter.notifyDataSetChanged();
@@ -1190,5 +1201,83 @@ public class NewsDetailFgt extends BaseFragment {
 
     public void setShowCareforLayout(ShowCareforLayout showCareforLayout) {
         mShowCareforLayout = showCareforLayout;
+    }
+    public void addordeleteAttention(boolean isAttention){
+        if(isNetWork){
+            return;
+        }
+        String pname = null;
+
+        try {
+            pname = URLEncoder.encode(mResult.getPname(), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        isNetWork = true;
+        ToastUtil.toastShort("添加关注！！！！");
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
+        JSONObject json = new JSONObject();
+        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+
+        DetailOperateRequest request = new DetailOperateRequest( isAttention ? Request.Method.POST : Request.Method.DELETE,
+                HttpConstant.URL_ADDORDELETE_ATTENTION+ "uid=" + user.getMuid() + "&pname="+pname
+                , json.toString(), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String data = response.optString("data");
+                Logger.e("aaa","json+++++++++++++++++++++++"+data);
+
+                attentionDetailDialog = new AttentionDetailDialog(getActivity(),"音乐风云");
+                attentionDetailDialog.show();
+                image_attention_success.setVisibility(View.VISIBLE);
+                image_attention_line.setVisibility(View.GONE);
+                linearlayout_attention.setVisibility(View.GONE);
+                mResult.setConpubflag(1);
+                isNetWork = false;
+
+//                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                mNewsDetailList.onRefreshComplete();
+                Logger.e("jigang", "network fail");
+                ToastUtil.toastShort("关注失败！");
+                isNetWork = false;
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
+    header.put("Content-Type", "application/json");
+    header.put("X-Requested-With", "*");
+    request.setRequestHeader(header);
+    request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+    requestQueue.add(request);
+
+
+
+}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Logger.e("aaa", "resultCode ==" + resultCode);
+        if(requestCode == 1234 && resultCode == 1234){
+            isAttention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG,false);
+            if(isAttention){
+                image_attention_success.setVisibility(View.VISIBLE);
+                image_attention_line.setVisibility(View.GONE);
+                linearlayout_attention.setVisibility(View.GONE);
+                mResult.setConpubflag(1);
+
+            }else{
+                image_attention_success.setVisibility(View.GONE);
+                image_attention_line.setVisibility(View.VISIBLE);
+                linearlayout_attention.setVisibility(View.VISIBLE);
+                mResult.setConpubflag(0);
+            }
+        }
     }
 }

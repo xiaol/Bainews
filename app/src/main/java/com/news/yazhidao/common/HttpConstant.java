@@ -151,4 +151,14 @@ public class HttpConstant {
      * 查看收藏列表
      */
     public static final String URL_SELECT_CAREFOR = URL_SERVER_HOST + "/ns/au/cocs?";
+    /**
+     * 添加新闻发布源关心（POST）
+     * 取消新闻发布源关心（DELETE）
+     */
+    public static final String URL_ADDORDELETE_ATTENTION = URL_SERVER_HOST + "/ns/pbs/cocs?";
+    /**
+     * 获取新闻详情页
+     */
+    public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
+
 }

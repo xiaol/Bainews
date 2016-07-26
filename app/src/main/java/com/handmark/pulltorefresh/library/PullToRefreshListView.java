@@ -43,6 +43,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 
 	private FrameLayout mLvFooterLoadingFrame;
 
+	private boolean isHaveScrollView;
+
 	private boolean mListViewExtrasEnabled;
 
 	public PullToRefreshListView(Context context) {
@@ -64,6 +66,24 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 	@Override
 	public final Orientation getPullToRefreshScrollDirection() {
 		return Orientation.VERTICAL;
+	}
+	/**
+	 * 重写该方法，达到使ListView适应ScrollView的效果
+	 */
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		if(isHaveScrollView){
+			int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
+					MeasureSpec.AT_MOST);
+			setMeasuredDimension(widthMeasureSpec, expandSpec);
+			super.onMeasure(widthMeasureSpec, expandSpec);
+		}else{
+			setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		}
+
+	}
+	public void isHaveScrollView(boolean isHaveScrollView){
+		this.isHaveScrollView = isHaveScrollView;
 	}
 
 	@Override

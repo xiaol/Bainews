@@ -30,8 +30,10 @@ public class AvatarTextBehavior extends CoordinatorLayout.Behavior<TextView>{
     private final Context mContext;
     private float mAvatarMaxSize;
 
-    public AvatarTextBehavior(Context context, AttributeSet attrs) {
+    public AvatarTextBehavior(Context context,int FX,int FY) {
         mContext = context;
+        mFinalYPosition = FY;
+        mFinalXPosition = FX;
         init();
     }
 
@@ -100,19 +102,16 @@ public class AvatarTextBehavior extends CoordinatorLayout.Behavior<TextView>{
         if (mStartYPosition == 0)
             mStartYPosition = (int) (child.getY() + (child.getHeight() / 2));
 
-        Logger.e("aaa", "mStartYPosition==" + mStartYPosition);
 
-        // Toolbar中心
-        if (mFinalYPosition == 0)
-            mFinalYPosition = (dependency.getHeight() / 2);
+//        // Toolbar中心
+//        if (mFinalYPosition == 0)
+//            mFinalYPosition = (dependency.getHeight() / 2);
 
-        Logger.e("aaa", "mFinalYPosition==" + mFinalYPosition);
 
         // 文字高度
         if (mStartSice == 0)
             mStartSice = 16;
 
-        Logger.e("aaa", "mStartSice==" + mStartSice);
 
 //        // 文字宽度
 //        if (mStartWidth == 0)
@@ -127,19 +126,16 @@ public class AvatarTextBehavior extends CoordinatorLayout.Behavior<TextView>{
         if (mStartXPosition == 0)
             mStartXPosition = (int) (child.getX() + (child.getWidth() / 2));
 
-        Logger.e("aaa", "mStartXPosition==" + mStartXPosition);
 
-        // 边缘+缩略图宽度的一半
-        if (mFinalXPosition == 0)
-            mFinalXPosition = DeviceInfoUtil.getScreenWidth() / 2+mContext.getResources().getDimensionPixelOffset(R.dimen.abc_action_bar_content_inset_material) + (mFinalSice / 2);
+//        // 边缘+缩略图宽度的一半
+//        if (mFinalXPosition == 0)
+//            mFinalXPosition = DeviceInfoUtil.getScreenWidth() / 2+mContext.getResources().getDimensionPixelOffset(R.dimen.abc_action_bar_content_inset_material) + (mFinalSice / 2);
 
-        Logger.e("aaa", "mFinalXPosition==" + mFinalXPosition);
 
         // Toolbar的起始位置
         if (mStartToolbarPosition == 0)
             mStartToolbarPosition = dependency.getY() + (dependency.getHeight() / 2);
 
-        Logger.e("aaa", "mStartToolbarPosition==" + mStartToolbarPosition);
     }
 
     // 获取状态栏高度
