@@ -83,12 +83,12 @@ public class HttpConstant {
     /**
      * feed流关注上拉加载更多
      */
-    public static final String URL_FEED_FOCUS_LOAD_MORE = URL_SERVER_HOST + "/ns/au/cocs?";
+    public static final String URL_FEED_FOCUS_LOAD_MORE = URL_SERVER_HOST + "/ns/pbs/cocs/l?";
 
     /**
      * feed流关注下拉刷新
      */
-    public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/au/cocs?";
+    public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/pbs/cocs/r?";
 
     /**
      * 获取新闻详情页
@@ -151,4 +151,14 @@ public class HttpConstant {
      * 查看收藏列表
      */
     public static final String URL_SELECT_CAREFOR = URL_SERVER_HOST + "/ns/au/cocs?";
+    /**
+     * 添加新闻发布源关心（POST）
+     * 取消新闻发布源关心（DELETE）
+     */
+    public static final String URL_ADDORDELETE_ATTENTION = URL_SERVER_HOST + "/ns/pbs/cocs?";
+    /**
+     * 获取新闻详情页
+     */
+    public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
+
 }

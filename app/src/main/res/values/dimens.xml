@@ -121,6 +121,7 @@
 
     <dimen name="image_width">65dp</dimen>
     <dimen name="image_final_width">24dp</dimen>
+    <dimen name="image_final_margin">10dp</dimen>
     <dimen name="text_final_sice">10dp</dimen>
     <dimen name="text_start_sice">20dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>

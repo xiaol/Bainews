@@ -104,7 +104,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
-    private TextView mDetailLeftBack,mDetailRightAttention;
+    private TextView mDetailLeftBack,mDetailRightMore;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -217,9 +217,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
         mDetailLeftBack.setOnClickListener(this);
-//        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
-        mDetailRightAttention = (TextView) findViewById(R.id.mDetailRightAttention);
-        mDetailRightAttention.setOnClickListener(this);
+        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore.setOnClickListener(this);
+//        mDetailRightAttention = (TextView) findViewById(R.id.mDetailRightAttention);
+//        mDetailRightAttention.setOnClickListener(this);
         mDetailComment = findViewById(R.id.mDetailComment);
         mDetailCommentPic = (ImageView) findViewById(R.id.mDetailCommentPic);
         mDetailFavorite = (ImageView) findViewById(R.id.mDetailFavorite);
@@ -358,8 +359,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
             isFavorite = false;
         }
-        /** 判断是否关注 */
-        mDetailRightAttention.setText(result.getConpubflag() == 1 ? "已关注" : "去关注");
+//        /** 判断是否关注 */
+//        mDetailRightAttention.setText(result.getConpubflag() == 1 ? "已关注" : "去关注");
 
         mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -445,7 +446,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-        }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl, new Response.Listener<NewsDetail>() {
+        }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl+"&uid="+mUserId, new Response.Listener<NewsDetail>() {
 
             @Override
             public void onResponse(NewsDetail result) {
@@ -563,24 +564,24 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 }
                 onBackPressed();
                 break;
-            case R.id.mDetailRightAttention:
-                ToastUtil.toastShort("去关注");
-
-                break;
-//            case R.id.mDetailRightMore://更多的点击
-//                if (mNewsFeed != null) {
-//                    mivShareBg.startAnimation(mAlphaAnimationIn);
-//                    mivShareBg.setVisibility(View.VISIBLE);
-//                    mSharePopupWindow = new SharePopupWindow(this, this);
-//                    String remark = mNewsFeed.getDescr();
-//                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-//                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
-//                    mSharePopupWindow.setOnFavoritListener(listener);
-//                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//            case R.id.mDetailRightAttention:
+//                ToastUtil.toastShort("去关注");
 //
-//                }
-//                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
 //                break;
+            case R.id.mDetailRightMore://更多的点击
+                if (mNewsFeed != null) {
+                    mivShareBg.startAnimation(mAlphaAnimationIn);
+                    mivShareBg.setVisibility(View.VISIBLE);
+                    mSharePopupWindow = new SharePopupWindow(this, this);
+                    String remark = mNewsFeed.getDescr();
+                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setOnFavoritListener(listener);
+                    mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
+                }
+                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
+                break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {
                     mCommentDialog = new UserCommentDialog();
@@ -1000,5 +1001,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 //        request.setRequestParams(mParams);
 
     }
+
 
 }

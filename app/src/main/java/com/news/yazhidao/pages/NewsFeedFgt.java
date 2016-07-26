@@ -630,12 +630,26 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void loadFocusData(final int flag) {
+        if (!isListRefresh) {
+            bgLayout.setVisibility(View.VISIBLE);
+        }
         String requestUrl;
         String uid = String.valueOf(SharedPreManager.getUser(mContext).getMuid());
+        String tstart = System.currentTimeMillis() + "";
         if (flag == PULL_DOWN_REFRESH) {
-            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "uid=" + uid;
+            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                NewsFeed firstItem = mArrNewsFeed.get(0);
+                tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
+            } else {
+                tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
+            }
+            requestUrl = HttpConstant.URL_FEED_FOCUS_PULL_DOWN + "uid=" + uid + "&tcr=" + tstart;
         } else {
-            requestUrl = HttpConstant.URL_FEED_FOCUS_LOAD_MORE + "uid=" + uid;
+            if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+                NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
+                tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
+            }
+            requestUrl = HttpConstant.URL_FEED_FOCUS_LOAD_MORE + "uid=" + uid + "&tcr=" + tstart;
         }
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
@@ -650,6 +664,19 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 if (mIsFirst || flag == PULL_DOWN_REFRESH) {
                     if (result == null || result.size() == 0) {
+                        mRefreshTitleBar.setText("已是最新数据");
+                        mRefreshTitleBar.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                                    mRefreshTitleBar.setVisibility(View.GONE);
+                                }
+
+                            }
+                        }, 1000);
+                        stopRefresh();
+                        mlvNewsFeed.onRefreshComplete();
                         return;
                     }
                     mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
