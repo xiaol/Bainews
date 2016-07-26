@@ -11,9 +11,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AvatarImageBehavior;
 import com.news.yazhidao.widget.AvatarTextBehavior;
+import com.news.yazhidao.widget.ListViewForScrollView;
 
 import org.json.JSONObject;
 
@@ -118,11 +121,11 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
         mPUrl = getIntent().getStringExtra(KEY_ATTENTION_HEADIMAGE);
         conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
-        ismAttention = conpubflag == 1 ? true : false;
+        ismAttention = conpubflag == 1;
 //        Logger.e("bbb", "mPName==" + mPName);
 //        Logger.e("bbb", "mPUrl==" + mPUrl);
 //        mPName = "蚕豆网";
-//        mPUrl = "http://file3.u148.net/2011/4/images/1302139148470.jpg"
+//        mPUrl = "http://file3.u148.net/2011/4/images/1302139148470.jpg";
 // ;
 
         mIvPlaceholder = (ImageView) findViewById(R.id.main_iv_placeholder);
@@ -157,6 +160,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             mAttention_btn.setBackgroundResource(R.drawable.attention_tv_shape);
             mAttention_btn.setTextColor(getResources().getColor(R.color.unattention_line_color));
 
+
         }else{
             mAttention_btn.setText("关注");
             mAttention_btn.setBackgroundResource(R.drawable.unattention_tv_shape);
@@ -164,15 +168,31 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         }
 
         mAttentionList = (PullToRefreshListView) findViewById(R.id.mAttentionList);
-        mAttentionList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
-
+        mAttentionList.setMode(PullToRefreshBase.Mode.BOTH);
         mAttentionList.isHaveScrollView(true);
+        mAttentionList.setMainFooterView(true);
+//        mAttentionList.requestFocus();
+//        mAttentionList.setFocusable(true);
+//        mAttentionList.setFocusableInTouchMode(true);
 
-//        final String[] data = getResources().getStringArray(R.array.students);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.text_item, data);
-        mAdapter = new NewsFeedAdapter(this, null, newsFeeds);
-        mAdapter.isFavoriteList();
-        mAttentionList.setAdapter(mAdapter);
+        mAttentionList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                loadData();
+            }
+        });
+
+
+        final String[] data = getResources().getStringArray(R.array.students);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.text_item, data);
+//        mAdapter = new NewsFeedAdapter(this, null, newsFeeds);
+//        mAdapter.isFavoriteList();
+        mAttentionList.setAdapter(adapter);
 
         mTbToolbar.setTitle("");
 
@@ -250,8 +270,8 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                         newsFeeds = (ArrayList<NewsFeed>) result.getNews();
                         if (!TextUtil.isListEmpty(newsFeeds)) {
 
-                            mAdapter.setNewsFeed(newsFeeds);
-                            mAdapter.notifyDataSetChanged();
+//                            mAdapter.setNewsFeed(newsFeeds);
+//                            mAdapter.notifyDataSetChanged();
                             ToastUtil.toastShort("添加数据！");
                         } else {
                             ToastUtil.toastShort("暂无相关数据！");
@@ -260,7 +280,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mAttentionList.onRefreshComplete();
+//                mAttentionList.onRefreshComplete();
                 Logger.e("jigang", "network fail");
             }
         });
@@ -372,9 +392,6 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //        mAttentionLeftBack,mAttentionRightMore, mAttention_btn
         switch (view.getId()) {
             case R.id.mAttentionLeftBack:
-                Intent in = new Intent();
-                in.putExtra(KEY_ATTENTION_CONPUBFLAG, ismAttention);
-                setResult(1234,in);
                 finish();
                 break;
             case R.id.mAttentionRightMore:
@@ -385,6 +402,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
 
+    }
+
+    @Override
+    public void finish() {
+        Intent in = new Intent();
+        in.putExtra(KEY_ATTENTION_CONPUBFLAG, ismAttention);
+        setResult(1234,in);
+        super.finish();
     }
 
     @Override

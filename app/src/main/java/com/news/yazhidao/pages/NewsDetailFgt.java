@@ -43,8 +43,11 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.AttentionListEntity;
+import com.news.yazhidao.entity.AttentionPbsEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
@@ -131,6 +134,8 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isLoadDate;
     private boolean isNetWork;
     private AttentionDetailDialog attentionDetailDialog;
+    private SimpleDraweeView iv_attention_icon;
+    private TextViewExtend tv_attention_title;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -428,6 +433,7 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
 
+        //添加关注源
         //源的关注
         RelativeLayout attention_item = (RelativeLayout) inflater.inflate(R.layout.detail_attention_item, container, false);
 
@@ -435,9 +441,22 @@ public class NewsDetailFgt extends BaseFragment {
         image_attention_line = (ImageView) attention_item.findViewById(R.id.image_attention_line);
         image_attention_success = (ImageView) attention_item.findViewById(R.id.image_attention_success);
         relativeLayout_attention = (RelativeLayout) attention_item.findViewById(R.id.relativeLayout_attention);
+        iv_attention_icon = (SimpleDraweeView) attention_item.findViewById(R.id.iv_attention_icon);
+        tv_attention_title = (TextViewExtend) attention_item.findViewById(R.id.tv_attention_title);
         detail_attention_addView.addView(attention_item);
-//        isAttention = true;
-        isAttention = mResult.getConpubflag() == 1 ? true : false;
+
+        String icon = mResult.getPurl();
+        String name = mResult.getPname();
+        if (!TextUtil.isEmptyString(icon)) {
+            iv_attention_icon.setImageURI(Uri.parse(icon));
+        }
+        if (!TextUtil.isEmptyString(name)) {
+            tv_attention_title.setText(name);
+        }
+
+
+        //        isAttention = true;
+        isAttention = mResult.getConpubflag() == 1 ;
         if(isAttention){
             image_attention_success.setVisibility(View.VISIBLE);
             image_attention_line.setVisibility(View.GONE);
@@ -469,7 +488,6 @@ public class NewsDetailFgt extends BaseFragment {
 
             }
         });
-
 
 
 
@@ -562,6 +580,47 @@ public class NewsDetailFgt extends BaseFragment {
 
     }
 
+//    public void isAddAttention(){
+//        RequestQueue requestQueue =  Volley.newRequestQueue(getActivity());
+//        String pname = null;
+//        String  tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
+//        try {
+//            pname = URLEncoder.encode(mResult.getPname(), "utf-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        Logger.e("jigang", "attention url=" + HttpConstant.URL_GETLIST_ATTENTION + "pname=" + pname + "&info=1" + "&tcr=" + tstart );
+//        NewsDetailRequest<AttentionPbsEntity> feedRequest = new NewsDetailRequest<AttentionPbsEntity>(Request.Method.GET,
+//                new TypeToken<AttentionPbsEntity>() {
+//                }.getType(),
+//                HttpConstant.URL_GETLIST_ATTENTION + "pname=" + pname + "&info=1" + "&tcr=" + tstart ,
+//                new Response.Listener<AttentionPbsEntity>() {
+//
+//                    @Override
+//                    public void onResponse(AttentionPbsEntity result) {
+//                        Logger.e("jigang", "result===" + result.toString());
+////                        mAttentionList.onRefreshComplete();
+//                        AttentionListEntity attentionListEntity = result.getInfo();
+//                        if (attentionListEntity != null ) {
+//
+//
+////
+////                            ToastUtil.toastShort("添加数据！");
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+////                mAttentionList.onRefreshComplete();
+//                Logger.e("jigang", "network fail");
+//            }
+//        });
+//
+//        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//        requestQueue.add(feedRequest);
+//
+//    }
+
 
     //    addNewsLoveListener addNewsLoveListener = new addNewsLoveListener() {
 //        @Override
@@ -577,51 +636,51 @@ public class NewsDetailFgt extends BaseFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
-            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                    (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
-                    "&p=" + (1)+ "&c=" + (20)
-                    , new Response.Listener<ArrayList<NewsDetailComment>>() {
+        feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+        }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
+                (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
+                "&p=" + (1)+ "&c=" + (20)
+                , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
-                @Override
-                public void onResponse(ArrayList<NewsDetailComment> result) {
-                    isCommentSuccess = true;
-                    isBgLayoutSuccess();
-                    mNewsDetailList.onRefreshComplete();
-                    Logger.e("jigang", "network success, comment" + result);
+            @Override
+            public void onResponse(ArrayList<NewsDetailComment> result) {
+                isCommentSuccess = true;
+                isBgLayoutSuccess();
+                mNewsDetailList.onRefreshComplete();
+                Logger.e("jigang", "network success, comment" + result);
 
-                    if (!TextUtil.isListEmpty(result)) {
-                        mComments = result;
-                        for(int i = 0;i<mComments.size();i++){
-                            if(i>2){
-                                mComments.remove(i);
-                            }
+                if (!TextUtil.isListEmpty(result)) {
+                    mComments = result;
+                    for(int i = 0;i<mComments.size();i++){
+                        if(i>2){
+                            mComments.remove(i);
                         }
+                    }
 //                        mAdapter.setCommentList(mComments);
 //                        mAdapter.notifyDataSetChanged();
-                        Logger.d("aaa", "评论加载完毕！！！！！！");
-                        //同步服务器上的评论数据到本地数据库
-                        //  addCommentInfoToSql(mComments);
-                        mDetailSharedHotComment.setText("热门评论");//
-                        addCommentContent(result);
-                    } else {
-                        detail_shared_CommentTitleLayout.setVisibility(View.GONE);
-                        detail_shared_MoreComment.setVisibility(View.GONE);
-
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    isCommentSuccess = true;
-                    isBgLayoutSuccess();
-                    mNewsDetailList.onRefreshComplete();
+                    Logger.d("aaa", "评论加载完毕！！！！！！");
+                    //同步服务器上的评论数据到本地数据库
+                    //  addCommentInfoToSql(mComments);
+                    mDetailSharedHotComment.setText("热门评论");//
+                    addCommentContent(result);
+                } else {
                     detail_shared_CommentTitleLayout.setVisibility(View.GONE);
                     detail_shared_MoreComment.setVisibility(View.GONE);
-                    Logger.e("jigang", "URL_FETCH_HOTCOMMENTS  network fail");
 
                 }
-            });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                isCommentSuccess = true;
+                isBgLayoutSuccess();
+                mNewsDetailList.onRefreshComplete();
+                detail_shared_CommentTitleLayout.setVisibility(View.GONE);
+                detail_shared_MoreComment.setVisibility(View.GONE);
+                Logger.e("jigang", "URL_FETCH_HOTCOMMENTS  network fail");
+
+            }
+        });
         Logger.e("jigang", "URL_NEWS_RELATED=" + HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID);
         related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
@@ -1250,15 +1309,15 @@ public class NewsDetailFgt extends BaseFragment {
         });
         HashMap<String, String> header = new HashMap<>();
         header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
-    header.put("Content-Type", "application/json");
-    header.put("X-Requested-With", "*");
-    request.setRequestHeader(header);
-    request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-    requestQueue.add(request);
+        header.put("Content-Type", "application/json");
+        header.put("X-Requested-With", "*");
+        request.setRequestHeader(header);
+        request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(request);
 
 
 
-}
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

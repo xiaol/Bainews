@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="124dp"
+    android:layout_height="104dp"
     >
     <RelativeLayout
         android:id="@+id/relativeLayout_attention"
@@ -13,16 +13,14 @@
         android:layout_marginRight="17dp"
         android:background="@color/white"
         android:layout_marginTop="32dp"
-        android:layout_marginBottom="25dp">
+        android:layout_marginBottom="5dp">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_attention_icon"
             android:layout_width="67dp"
             android:layout_height="67dp"
-            app:failureImage="@drawable/ic_user_comment_default"
-            app:placeholderImage="@drawable/ic_user_comment_default"
-            app:roundAsCircle="true"
-            app:roundingBorderColor="@color/bg_home_login_header"
-            app:roundingBorderWidth="2px"/>
+            android:padding="8dp"
+            app:failureImage="@drawable/detail_attention_placeholder"
+            app:placeholderImage="@drawable/detail_attention_placeholder"/>
 
 
         <LinearLayout
@@ -93,18 +91,7 @@
                 android:lines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/new_font2"/>
-            <com.news.yazhidao.widget.TextViewExtend
-                android:id="@+id/tv_attention_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:layout_marginTop="11dp"
-                android:text="音乐风云发布最新明星在北京做演唱会"
-                android:lines="1"
-                android:textColor="@color/new_color3"
-                android:textSize="@dimen/new_font3"
-                />
+
 
         </LinearLayout>
     </RelativeLayout>

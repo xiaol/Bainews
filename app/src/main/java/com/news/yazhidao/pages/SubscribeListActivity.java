@@ -49,7 +49,7 @@ public class SubscribeListActivity extends BaseActivity {
         mSubscribeListLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
     }
