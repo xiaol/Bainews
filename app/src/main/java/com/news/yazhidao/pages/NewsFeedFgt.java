@@ -242,6 +242,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Logger.e("jigang","----viewpager  fgt onDetach " + mstrChannelId);
+    }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle arguments = getArguments();
@@ -249,6 +254,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
+        Logger.e("jigang","----viewpager  fgt onCreateView " + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);

@@ -61,7 +61,6 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/red"
         android:scrollbars="none"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -69,17 +68,16 @@
             android:id="@+id/mAttentionList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/red"
+            android:background="@color/color7"
             android:cacheColorHint="@color/new_encounter_cell_bg"
+            android:drawingCacheQuality="auto"
+            android:animationCache="false"
             android:clipToPadding="false"
-            android:divider="@color/transparency"
-            android:dividerHeight="0dp"
             android:listSelector="@android:color/transparent"
             android:overScrollMode="never"
-            android:scrollbars="none" />
-
-
-
+            android:scrollbars="none"
+            android:visibility="visible"
+            />
 
     </android.support.v4.widget.NestedScrollView>
 
