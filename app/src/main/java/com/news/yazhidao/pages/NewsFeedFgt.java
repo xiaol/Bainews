@@ -37,6 +37,7 @@ import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.database.ReleaseSourceItemDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
@@ -288,7 +289,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
         mAdapter = new NewsFeedAdapter(getActivity(), this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
-
+        if (mstrChannelId != null && mstrChannelId.equals("1000")) {
+            ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
+            mAdapter.setReleaseSourceItems(releaseSourceItemDao.queryAndSetColor());
+        }
         mlvNewsFeed.setAdapter(mAdapter);
 
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
