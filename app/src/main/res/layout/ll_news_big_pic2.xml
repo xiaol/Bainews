@@ -39,58 +39,15 @@
         fresco:roundingBorderWidth="1px"
         fresco:viewAspectRatio="1.7777" />
 
-    <LinearLayout
+    <include
         android:id="@+id/source_content_linearLayout"
+        layout="@layout/ll_news_item_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_img_View"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp">
-
-        <ImageView
-            android:id="@+id/type_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:visibility="gone" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/news_source_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxEms="8"
-            android:singleLine="true"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/comment_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6" />
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/comment_num_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/source_content_linearLayout"
-            android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/delete_imageView"
-            android:textColor="@color/new_color3"
-            android:textSize="@dimen/new_font6" />
-
-        <ImageView
-            android:id="@+id/delete_imageView"
-            android:layout_width="35dp"
-            android:layout_height="18dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/btn_news_feed_delete" />
-    </LinearLayout>
+        android:layout_marginTop="5dp" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"

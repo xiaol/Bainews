@@ -1,7 +1,6 @@
 package com.news.yazhidao.database;
 
 import android.content.Context;
-import android.graphics.Color;
 
 import com.j256.ormlite.dao.Dao;
 import com.news.yazhidao.R;
@@ -10,9 +9,8 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by fengjigang on 15/10/28.
@@ -44,23 +42,27 @@ public class ReleaseSourceItemDao {
         }
     }
 
-    public ArrayList<ReleaseSourceItem> queryAndSetColor() {
+    public HashMap<String,Integer> queryReleaseSourceItem() {
+        HashMap<String,Integer> items = new HashMap<>();
         try {
             List<ReleaseSourceItem> list = mReleaseSourceItemDao.queryForAll();
             for (ReleaseSourceItem item : list) {
-                if (item.getBackground() == 0) {
-                    Random random = new Random();
-                    int index = random.nextInt(colorArr.length);
-                    item.setBackground(Color.parseColor(colorArr[index]));
-                    mReleaseSourceItemDao.update(item);
-                }
+                items.put(item.getpName(),item.getBackground());
             }
             if (!TextUtil.isListEmpty(list)) {
-                return new ArrayList<>(list);
+                return items;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return items;
+    }
+
+    public void insertOrUpdate(ReleaseSourceItem pItem) {
+        try {
+            mReleaseSourceItemDao.createOrUpdate(pItem);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

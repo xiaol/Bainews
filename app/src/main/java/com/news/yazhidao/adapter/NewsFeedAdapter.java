@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsFeedDao;
+import com.news.yazhidao.database.ReleaseSourceItemDao;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
@@ -49,6 +51,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 
 public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
@@ -70,7 +73,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private boolean isFavorite;
     private boolean isNeedShowDisLikeIcon = true;
     boolean isCkeckVisity;
-    ArrayList<ReleaseSourceItem> mReleaseSourceItems;
+    private HashMap<String, Integer> mReleaseSourceItem;
+    private ReleaseSourceItemDao mReleaseSourceItemDao;
+    private String[] mColorArr;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -84,18 +89,23 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_item_one_pic;
                     case 3:
                         return R.layout.ll_news_card;
+//                        return R.layout.ll_news_big_pic2;
                     case 900:
                         return R.layout.ll_news_item_time_line;
                     case 4://奇点号Item
                         return R.layout.ll_news_search_item;
+                    case 11://大图Item
+                    case 12:
+                    case 13:
+                        return R.layout.ll_news_big_pic2;
                     default:
-                        return 0;
+                        return R.layout.ll_news_item_no_pic;
                 }
             }
 
             @Override
             public int getViewTypeCount() {
-                return 5;
+                return 6;
             }
 
             @Override
@@ -108,12 +118,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.ONE_AND_TWO_PIC;
                     case 3:
                         return NewsFeed.THREE_PIC;
+//                        return NewsFeed.BIG_PIC;
                     case 900:
                         return NewsFeed.TIME_LINE;
                     case 4://奇点号Item
                         return NewsFeed.SERRCH_ITEM;
+                    case 11://大图Item
+                    case 12:
+                    case 13:
+                        return NewsFeed.BIG_PIC;
                     default:
-                        return 0;
+                        return NewsFeed.NO_PIC;
                 }
             }
         });
@@ -179,7 +194,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 LinearLayout llSourceNoPic = holder.getView(R.id.source_content_linearLayout);
                 setSourceViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceNoPic.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_textView), feed.getPtime());
@@ -248,7 +263,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 });
 
                 setSourceViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), (ImageView) llSourceOnePic.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_textView), feed.getPtime());
@@ -272,13 +287,33 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 LinearLayout llSourceCard = holder.getView(R.id.source_content_linearLayout);
                 setSourceViewText((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), (ImageView) llSourceCard.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceCard.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceCard.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
                 llSourceCard.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                break;
+            case R.layout.ll_news_big_pic2:
+                ArrayList<String> strArrBigImgUrl = feed.getImgs();
+                int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+                int num = feed.getStyle() % 10;
+                holder.setSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num - 1), with, (int) (with * 9 / 16.0f));
+                if (isFavorite) {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
+                } else {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
+                }
+                LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
+                setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceBigPic.findViewById(R.id.delete_imageView));
+                setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+                if (feed.getPtime() != null)
+                    setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
+                llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
@@ -472,19 +507,30 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setFocusBgColor(TextViewExtend textView, String pName) {
-        if (mReleaseSourceItems != null) {
-            for (ReleaseSourceItem item : mReleaseSourceItems) {
-                if (item.getpName().equals(pName)) {
-                    textView.setBackgroundColor(item.getBackground());
-                    break;
-                }
+    private void setFocusBgColor(TextViewExtend textView, String pName, TextViewExtend tvCommentNum, ImageView ivDelete) {
+        if (mReleaseSourceItem != null) {
+            textView.setBackgroundResource(R.drawable.bg_feed_item_comment);
+            tvCommentNum.setVisibility(View.GONE);
+            ivDelete.setVisibility(View.GONE);
+            Integer color = mReleaseSourceItem.get(pName);
+            if (color != null) {
+                textView.setBackgroundColor(color);
+            } else {
+                Random random = new Random();
+                int index = random.nextInt(mColorArr.length);
+                textView.setBackgroundColor(Color.parseColor(mColorArr[index]));
+                ReleaseSourceItem item = new ReleaseSourceItem();
+                item.setBackground(Color.parseColor(mColorArr[index]));
+                item.setpName(pName);
+                mReleaseSourceItemDao.insertOrUpdate(item);
             }
         }
     }
 
-    public void setReleaseSourceItems(ArrayList<ReleaseSourceItem> releaseSourceItems) {
-        mReleaseSourceItems = releaseSourceItems;
+    public void setReleaseSourceItems(ReleaseSourceItemDao releaseSourceItemDao, String[] colorArr) {
+        mReleaseSourceItemDao = releaseSourceItemDao;
+        mReleaseSourceItem = mReleaseSourceItemDao.queryReleaseSourceItem();
+        mColorArr = colorArr;
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
@@ -556,6 +602,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         break;
                     }
                 }
+                dao.setFocusOnline();
                 HashMap<String, String> hashmap = new HashMap();
                 hashmap.put("channel", channelName);
                 MobclickAgent.onEvent(mContext, "user_read_detail", hashmap);

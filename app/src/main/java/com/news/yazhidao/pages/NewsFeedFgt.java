@@ -101,6 +101,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
     private RefreshReceiver mRefreshReciver;
+    private View mlFocus;
     /**
      * 热词页面加载更多
      */
@@ -245,7 +246,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     @Override
     public void onDetach() {
         super.onDetach();
-        Logger.e("jigang","----viewpager  fgt onDetach " + mstrChannelId);
+        Logger.e("jigang", "----viewpager  fgt onDetach " + mstrChannelId);
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -254,7 +255,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        Logger.e("jigang","----viewpager  fgt onCreateView " + mstrChannelId);
+        Logger.e("jigang", "----viewpager  fgt onCreateView " + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
@@ -297,7 +298,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
-            mAdapter.setReleaseSourceItems(releaseSourceItemDao.queryAndSetColor());
+            String[] colorArr = mContext.getResources().getStringArray(R.array.bg_focus_colors);
+            mAdapter.setReleaseSourceItems(releaseSourceItemDao, colorArr);
         }
         mlvNewsFeed.setAdapter(mAdapter);
 
@@ -316,7 +318,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
             }
         };
-        mHandler.postDelayed(mThread, 1500);
+        if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
+            mHandler.postDelayed(mThread, 1500);
+        }
         return rootView;
     }
 
@@ -386,7 +390,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId;
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.getUser(mContext).getMuid();
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
@@ -898,8 +902,20 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
             mAdapter.notifyDataSetChanged();
         }
-
-
+        if (mstrChannelId != null && mstrChannelId.equals("1000")) {
+            User user = SharedPreManager.getUser(mContext);
+            RelativeLayout focusBg= (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
+            if (user != null && user.isVisitor()) {
+                if (mArrNewsFeed != null) {
+                    mArrNewsFeed.clear();
+                }
+                mAdapter.notifyDataSetChanged();
+                focusBg.setVisibility(View.VISIBLE);
+            } else {
+                focusBg.setVisibility(View.GONE);
+                loadFocusData(PULL_DOWN_REFRESH);
+            }
+        }
     }
 
     @Override
