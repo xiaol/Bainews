@@ -43,6 +43,18 @@ public class ReleaseSourceItem implements Serializable {
     @DatabaseField
     private boolean focus;
 
+    /**
+     * 栏目背景颜色
+     */
+    @DatabaseField
+    private int background;
+
+    /**
+     * 栏目对应的名称
+     */
+    @DatabaseField
+    private String pName;
+
     public String getId() {
         return id;
     }
@@ -91,4 +103,19 @@ public class ReleaseSourceItem implements Serializable {
         this.focus = focus;
     }
 
+    public int getBackground() {
+        return background;
+    }
+
+    public void setBackground(int background) {
+        this.background = background;
+    }
+
+    public String getpName() {
+        return pName;
+    }
+
+    public void setpName(String pName) {
+        this.pName = pName;
+    }
 }

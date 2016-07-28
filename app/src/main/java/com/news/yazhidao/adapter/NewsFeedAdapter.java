@@ -27,6 +27,7 @@ import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.SubscribeListActivity;
@@ -69,9 +70,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private boolean isFavorite;
     private boolean isNeedShowDisLikeIcon = true;
     boolean isCkeckVisity;
-
-
-
+    ArrayList<ReleaseSourceItem> mReleaseSourceItems;
 
     public NewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -131,16 +130,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
 
-
     public void setSearchKeyWord(String pKeyWord) {
         mstrKeyWord = pKeyWord;
         mDatas = null;
     }
-    public void isFavoriteList(){
+
+    public void isFavoriteList() {
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
-
 
 
     @Override
@@ -156,9 +154,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
 
                 }
-                if(feed.isFavorite()){
+                if (feed.isFavorite()) {
                     holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_check);
-                }else{
+                } else {
                     holder.getImageView(R.id.checkFavoriteDelete_image).setImageResource(R.drawable.favorite_uncheck);
                 }
                 if (isFavorite) {
@@ -174,26 +172,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
         switch (holder.getLayoutId()) {
             case R.layout.ll_news_item_no_pic:
-                if(isFavorite){
+                if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-                }else{
+                } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
                 LinearLayout llSourceNoPic = holder.getView(R.id.source_content_linearLayout);
                 setSourceViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), feed.getComment()+"");
+                setFocusBgColor((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname());
+                setCommentViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceNoPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceNoPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                llSourceNoPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_one_pic:
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0),mCardWidth,mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
                 final String strTitle = feed.getTitle();
-                if(isFavorite){
+                if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-                }else{
+                } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
                 final TextView tvTitle = holder.getView(R.id.title_textView);
@@ -249,35 +248,37 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 });
 
                 setSourceViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), feed.getComment()+"");
+                setFocusBgColor((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
+                setCommentViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_textView), feed.getPtime());
                 }
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceOnePic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceOnePic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                llSourceOnePic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-                holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0),mCardWidth,mCardHeight);
-                holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1),mCardWidth,mCardHeight);
-                holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2),mCardWidth,mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
+                holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card1), 15, 1, 3);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card2), 1, 1, 3);
                 setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card3), 1, 15, 3);
-                if(isFavorite){
+                if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
-                }else{
+                } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
                 LinearLayout llSourceCard = holder.getView(R.id.source_content_linearLayout);
                 setSourceViewText((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
-                setCommentViewText((TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), feed.getComment()+"");
+                setFocusBgColor((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
+                setCommentViewText((TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceCard.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceCard.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceCard.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                llSourceCard.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
@@ -290,12 +291,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             case R.layout.ll_news_search_item://奇点号Item
                 final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
                 int size = attentionListEntities.size();
-                if(size == 1){
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
+                if (size == 1) {
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,"更多");
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -319,14 +320,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
-                }else if(size == 2){
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo,attentionListEntities.get(1).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,attentionListEntities.get(1).getDescr());
+                } else if (size == 2) {
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getDescr());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree,"更多");
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -354,16 +355,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
-                }else if(size >= 3){
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne,attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne,attentionListEntities.get(0).getDescr());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo,attentionListEntities.get(1).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo,attentionListEntities.get(1).getDescr());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree,attentionListEntities.get(2).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree,attentionListEntities.get(2).getDescr());
+                } else if (size >= 3) {
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getDescr());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon());
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getDescr());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrFour,"更多");
+                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrFour, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -421,7 +422,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
-            Log.i("tag",updateTime+"date.getTime()");
+            Log.i("tag", updateTime + "date.getTime()");
             if (between >= (24 * 3600000)) {
 //                tvComment.setText(updateTime);
                 tvComment.setText("");
@@ -469,6 +470,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         if (strText != null && !"".equals(strText)) {
             textView.setText(strText);
         }
+    }
+
+    private void setFocusBgColor(TextViewExtend textView, String pName) {
+        if (mReleaseSourceItems != null) {
+            for (ReleaseSourceItem item : mReleaseSourceItems) {
+                if (item.getpName().equals(pName)) {
+                    textView.setBackgroundColor(item.getBackground());
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setReleaseSourceItems(ArrayList<ReleaseSourceItem> releaseSourceItems) {
+        mReleaseSourceItems = releaseSourceItems;
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
@@ -534,15 +550,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 String channelName = "";
                 ChannelItemDao dao = new ChannelItemDao(mContext);
                 ArrayList<ChannelItem> channelItems = dao.queryForAll();
-                for (ChannelItem item: channelItems){
-                    if (Integer.valueOf(feed.getChannel()).equals(item.getId())){
+                for (ChannelItem item : channelItems) {
+                    if (Integer.valueOf(feed.getChannel()).equals(item.getId())) {
                         channelName = item.getName();
                         break;
                     }
                 }
-                HashMap<String,String> hashmap = new HashMap();
-                hashmap.put("channel",channelName);
-                MobclickAgent.onEvent(mContext, "user_read_detail",hashmap);
+                HashMap<String, String> hashmap = new HashMap();
+                hashmap.put("channel", channelName);
+                MobclickAgent.onEvent(mContext, "user_read_detail", hashmap);
             }
         });
     }
@@ -561,7 +577,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             @Override
             public void onClick(View v) {
 //                ToastUtil.toastShort(feed.getPname());
-                MobclickAgent.onEvent(mContext,"qidian_feed_delete_dislike");
+                MobclickAgent.onEvent(mContext, "qidian_feed_delete_dislike");
                 DeleteView = view;
                 DeleteClickBean = feed;
                 int[] LocationInWindow = new int[2];
@@ -616,27 +632,29 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private introductionNewsFeed mIntroductionNewsFeed;
-    public void setIntroductionNewsFeed(introductionNewsFeed mIntroductionNewsFeed){
+
+    public void setIntroductionNewsFeed(introductionNewsFeed mIntroductionNewsFeed) {
         this.mIntroductionNewsFeed = mIntroductionNewsFeed;
     }
 
-    public void ClickDeleteFavorite(final ImageView checkDelete, final NewsFeed feed){
+    public void ClickDeleteFavorite(final ImageView checkDelete, final NewsFeed feed) {
         checkDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(feed.isFavorite()){
+                if (feed.isFavorite()) {
                     feed.setFavorite(false);
-                    mIntroductionNewsFeed.getDate(feed,false);
+                    mIntroductionNewsFeed.getDate(feed, false);
                     checkDelete.setImageResource(R.drawable.favorite_uncheck);
-                }else{
-                    mIntroductionNewsFeed.getDate(feed,true);
+                } else {
+                    mIntroductionNewsFeed.getDate(feed, true);
                     feed.setFavorite(true);
                     checkDelete.setImageResource(R.drawable.favorite_check);
                 }
             }
         });
     }
-    public void setVisitycheckFavoriteDeleteLayout(boolean isVisity){
+
+    public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
 
         isCkeckVisity = isVisity;
         notifyDataSetChanged();
@@ -644,11 +662,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     /**
      * 接口回调传入数据的添加与删除
-     *
+     * <p/>
      * isCheck true：添加   false：删除
      */
-    public interface introductionNewsFeed{
-        public void getDate(NewsFeed feed,boolean isCheck);
+    public interface introductionNewsFeed {
+        public void getDate(NewsFeed feed, boolean isCheck);
     }
 
     public interface clickShowPopWindow {

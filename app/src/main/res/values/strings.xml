@@ -118,6 +118,15 @@
         <item name="item13">#aba2d7</item>
     </string-array>
 
+    <string-array name="bg_focus_colors">
+        <item name="item1">#f46b75</item>
+        <item name="item2">#a87dd7</item>
+        <item name="item3">#5994e3</item>
+        <item name="item4">#85ca4b</item>
+        <item name="item5">#eba85d</item>
+        <item name="item6">#64b6eb</item>
+    </string-array>
+
     <!--新闻频道-->
     <string name="drawer_btn_rss">频道管理</string>
     <string name="subscribe_my_category">我的频道 (单击增删频道，长按拖拽排序)</string>
