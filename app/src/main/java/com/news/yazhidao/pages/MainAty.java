@@ -84,10 +84,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (ACTION_USER_LOGIN.equals(intent.getAction())) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
                 if (!TextUtil.isEmptyString(url)) {
+                    Logger.e("jigang","user login------1111");
                     mUserCenter.setImageURI(Uri.parse(url));
                 }
             } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
                 mUserCenter.setImageURI(null);
+                Logger.e("jigang","user login------2222");
             }
         }
     }
@@ -158,6 +160,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
             if (!TextUtil.isEmptyString(user.getUserIcon())) {
+                Logger.e("jigang","user login------3333");
                 mUserCenter.setImageURI(Uri.parse(user.getUserIcon()));
             }
         }
