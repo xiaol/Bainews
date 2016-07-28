@@ -1049,11 +1049,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         // NO-OP
                         break;
                 }
-//                if (isVisisyProgressBar) {
-//                    footView_progressbar.setVisibility(View.VISIBLE);
-//                } else {
-//                    footView_progressbar.setVisibility(View.GONE);
-//                }
+                if (isVisisyProgressBar) {
+                    footView_progressbar.setVisibility(View.VISIBLE);
+                } else {
+                    footView_progressbar.setVisibility(View.GONE);
+                }
                 mlvNewsFeed.setFooterViewInvisible();
             }
         });
