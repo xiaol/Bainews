@@ -11,7 +11,6 @@ import com.news.yazhidao.net.volley.RegisterVisitorRequest;
 import com.news.yazhidao.net.volley.VisitorLoginRequest;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +70,7 @@ public class UserManager {
             });
             YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
         }else {
-                if (user.isVisitor()){
+                if (user.isVisitor() && !user.isOnceLogin()){
                     JSONObject requestBody = new JSONObject();
                     try {
                         requestBody.put("uid", user.getMuid());
@@ -100,8 +99,6 @@ public class UserManager {
                         }
                     });
                     YaZhiDaoApplication.getInstance().getRequestQueue().add(loginRequest);
-                }else {
-                    ShareSdkHelper.reRegisterThirdUser();
                 }
         }
     }

@@ -1,6 +1,7 @@
 package com.news.yazhidao.entity;
 
 import com.news.yazhidao.utils.GsonUtil;
+import com.news.yazhidao.utils.TextUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -218,6 +219,12 @@ public class User implements Serializable {
         this.authorToken = authorToken;
     }
 
+    /**
+     * 是否曾经登录过
+     */
+    public boolean isOnceLogin(){
+        return !TextUtil.isEmptyString(token);
+    }
     /**
      * 把json 反序列化为 User 对象
      * @param userStr

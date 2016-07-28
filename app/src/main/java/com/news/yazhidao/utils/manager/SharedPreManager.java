@@ -45,7 +45,7 @@ public class SharedPreManager {
         SharedPreferences.Editor e = getSettings(spName, Context.MODE_PRIVATE).edit();
         e.putString(key, value);
         boolean result = e.commit();
-        Logger.d("jigang","save result = " + result + ",value="+value);
+        Logger.e("jigang","save result = " + result + ",value="+value);
     }
 
     @Deprecated
