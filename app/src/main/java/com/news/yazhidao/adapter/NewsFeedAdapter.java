@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -298,8 +299,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
                 int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
-                int num = feed.getStyle() % 10;
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num - 1), with, (int) (with * 9 / 16.0f));
+                int num = feed.getStyle() - 11;
+                holder.setSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f));
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
                 } else {
@@ -513,15 +514,19 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             tvCommentNum.setVisibility(View.GONE);
             ivDelete.setVisibility(View.GONE);
             Integer color = mReleaseSourceItem.get(pName);
+            GradientDrawable myGrad = (GradientDrawable) textView.getBackground();
+            textView.setTextColor(Color.WHITE);
             if (color != null) {
-                textView.setBackgroundColor(color);
+                myGrad.setColor(color);
             } else {
                 Random random = new Random();
                 int index = random.nextInt(mColorArr.length);
-                textView.setBackgroundColor(Color.parseColor(mColorArr[index]));
+                int bgColor = Color.parseColor(mColorArr[index]);
+                myGrad.setColor(bgColor);
                 ReleaseSourceItem item = new ReleaseSourceItem();
-                item.setBackground(Color.parseColor(mColorArr[index]));
+                item.setBackground(bgColor);
                 item.setpName(pName);
+                mReleaseSourceItem.put(pName, bgColor);
                 mReleaseSourceItemDao.insertOrUpdate(item);
             }
         }

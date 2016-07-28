@@ -917,7 +917,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 focusBg.setVisibility(View.VISIBLE);
             } else {
                 focusBg.setVisibility(View.GONE);
-                loadFocusData(PULL_DOWN_REFRESH);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFocusData(PULL_DOWN_REFRESH);
+                    }
+                }, 1000);
             }
         }
     }
@@ -1044,11 +1049,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                         // NO-OP
                         break;
                 }
-                if (isVisisyProgressBar) {
-                    footView_progressbar.setVisibility(View.VISIBLE);
-                } else {
-                    footView_progressbar.setVisibility(View.GONE);
-                }
+//                if (isVisisyProgressBar) {
+//                    footView_progressbar.setVisibility(View.VISIBLE);
+//                } else {
+//                    footView_progressbar.setVisibility(View.GONE);
+//                }
                 mlvNewsFeed.setFooterViewInvisible();
             }
         });
