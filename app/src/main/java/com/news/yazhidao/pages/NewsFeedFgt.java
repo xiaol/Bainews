@@ -683,8 +683,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                             }
                         }, 1000);
-                        stopRefresh();
                         mlvNewsFeed.onRefreshComplete();
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
+                            bgLayout.setVisibility(View.GONE);
+                        }
                         return;
                     }
                     mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
