@@ -68,9 +68,9 @@ public class SubscribeListActivity extends SwipeBackActivity {
     @Override
     protected void loadData() {
         ArrayList<AttentionListEntity> subscribeList = SharedPreManager.getSubscribeList();
-        if (!TextUtil.isListEmpty(subscribeList)){
+        if (!TextUtil.isListEmpty(subscribeList)) {
             mAttentionListEntities = subscribeList;
-        }else {
+        } else {
             mAttentionListEntities = (ArrayList<AttentionListEntity>) getIntent().getSerializableExtra(KEY_SUBSCRIBE_LIST);
         }
         mAttentionListTemp = TextUtil.copyArrayList(mAttentionListEntities);
@@ -80,11 +80,11 @@ public class SubscribeListActivity extends SwipeBackActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Logger.e("jigang", "----pos=" + position);
                 Intent attentionAty = new Intent(SubscribeListActivity.this, AttentionActivity.class);
-                AttentionListEntity attention = mAttentionListEntities.get(position);
+                AttentionListEntity attention = mAttentionListEntities.get(position - 1);
                 attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
                 attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, attention.getIcon());
                 attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, attention.getName());
-                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_INDEX, position);
+                attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_INDEX, position - 1 );
                 startActivityForResult(attentionAty, REQUEST_SUBSCRIBE_CODE);
             }
         });
@@ -120,7 +120,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                 }
             }
         } else if (resultCode == LoginAty.REQUEST_CODE) {
-            if (data != null){
+            if (data != null) {
                 int position = data.getIntExtra(KEY_ATTENTION_INDEX, 0);
                 changeAttentionStatus(mAdapter, mAttentionListEntities.get(position));
             }
@@ -170,7 +170,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                     User user = SharedPreManager.getUser(mContext);
                     if (user != null && user.isVisitor()) {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
-                        loginAty.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,position);
+                        loginAty.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, position);
                         startActivityForResult(loginAty, 1006);
                     } else {
                         changeAttentionStatus(SubscribeListAdapter.this, attentionListEntity);
@@ -204,11 +204,11 @@ public class SubscribeListActivity extends SwipeBackActivity {
         SharedPreManager.saveSubscribeList(mAttentionListEntities);
         /**用户退出时发送关注和取消关注的状态*/
         User user = SharedPreManager.getUser(this);
-        for (int i=0;i < mAttentionListTemp.size();i++){
+        for (int i = 0; i < mAttentionListTemp.size(); i++) {
             AttentionListEntity oldEntity = mAttentionListTemp.get(i);
             AttentionListEntity newEntity = mAttentionListEntities.get(i);
-            if (oldEntity.getFlag() != newEntity.getFlag()){
-                attentionSubscribe(newEntity,user);
+            if (oldEntity.getFlag() != newEntity.getFlag()) {
+                attentionSubscribe(newEntity, user);
             }
         }
     }
@@ -223,14 +223,14 @@ public class SubscribeListActivity extends SwipeBackActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject json = new JSONObject();
         final int requestMethod = attentionListEntity.getFlag() > 0 ? Request.Method.POST : Request.Method.DELETE;
-        Logger.e("jigang","attention url = " + (HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname) + ",==" + requestMethod);
+        Logger.e("jigang", "attention url = " + (HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname) + ",==" + requestMethod);
         DetailOperateRequest request = new DetailOperateRequest(requestMethod,
                 HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
-                Logger.e("jigang","attention data=" + data);
+                Logger.e("jigang", "attention data=" + data);
             }
         }, new Response.ErrorListener() {
             @Override
