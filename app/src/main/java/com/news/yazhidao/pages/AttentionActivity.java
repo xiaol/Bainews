@@ -480,25 +480,25 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                             mAttentionList.onRefreshComplete();
 //                            ToastUtil.toastShort("添加数据！");
                         } else {
-//                            lv.removeFooterView(footerView);
-//                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                            lv.removeFooterView(footerView);
+                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
                             if(TextUtil.isListEmpty(newsFeeds)){
                                 tv_attention_historyTitle.setVisibility(View.GONE);
                                 tv_attention_noData.setVisibility(View.VISIBLE);
                             }
 //                            ToastUtil.toastShort("暂无相关数据！");
                         }
-                        if(thisVisibleItemCount>=thisTotalItemCount&&mPageIndex ==2){//删除 footerView 这个方法可以显示无数据的情况
-                            Logger.e("aaa","==================================");
-                            lv.removeFooterView(footerView);
-                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
-                        }
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                            }
-//                        },1000);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
+                                    Logger.e("aaa","==================================");
+                                    lv.removeFooterView(footerView);
+                                    mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                                }
+                            }
+                        },100);
 
                     }
                 }, new Response.ErrorListener() {
