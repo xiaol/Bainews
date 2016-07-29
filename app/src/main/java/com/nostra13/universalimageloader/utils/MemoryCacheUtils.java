@@ -26,7 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Utility for generating of keys for memory cache, key comparing and other work with memory cache
+ * Utility  for generating of keys for memory cache, key comparing and other work with memory cache
  *
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  * @since 1.6.3

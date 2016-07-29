@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+       <com.facebook.drawee.view.SimpleDraweeView
+           android:id="@+id/iv_attention_headImage"
+           android:layout_width="@dimen/image_width"
+           android:layout_height="@dimen/image_width"
+           android:layout_gravity="top|center"
+           app:failureImage="@drawable/detail_attention_placeholder"
+           app:placeholderImage="@drawable/detail_attention_placeholder"
+           app:roundAsCircle="true"
+           android:layout_marginTop="54dp"
+
+           />
+
+       <TextView
+           android:id="@+id/tv_attention_title"
+           android:layout_marginTop="13dp"
+           android:layout_marginBottom="24dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_gravity="top|center"
+           android:text="孙骁骁"
+           android:textColor="@android:color/black"
+           android:textSize="@dimen/new_font10"
+
+           />
+
+
+    <ImageView
+        android:id="@+id/img_attention_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/new_color4"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
+    <LinearLayout
+        android:id="@+id/linear_attention_descrLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="@color/new_color9"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="介绍"
+            android:textSize="@dimen/font3"
+            android:textColor="@color/new_color3"/>
+        <TextView
+            android:id="@+id/attention_headViewItem_Content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注农村住宅产业"
+            android:layout_marginTop="15dp"
+            android:textSize="@dimen/new_font11"
+            android:textColor="@color/new_color1"/>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/new_color4"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
+       <TextView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="历史文章"
+           android:textSize="@dimen/font3"
+           android:textColor="@color/new_color3"
+           android:layout_marginLeft="15dp"
+           android:layout_marginTop="15dp"/>
+
+   </LinearLayout>
+
+</LinearLayout>

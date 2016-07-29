@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -79,10 +80,31 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<SimpleDrawee
         // 高度减小
         float heightToSubtract = ((mStartHeight - mFinalHeight) * (1f - expandedPercentageFactor));
 
-        // 图片位置
-        child.setY(mStartYPosition - distanceYToSubtract);
-        child.setX(mStartXPosition - distanceXToSubtract);
+//        Log.e("aaa", "getStatusBarHeight()==" + getStatusBarHeight());
+//        Logger.e("aaa", "mStartYPosition - distanceYToSubtract===" + (mStartYPosition - distanceYToSubtract));
+//
+//        Logger.e("aaa", "endY" + (mStartYPosition - (mStartYPosition - mFinalYPosition+child.getHeight() / 2)));
+//        Logger.e("aaa", "endY==" + (mStartYPosition - (mStartYPosition - mFinalYPosition)));
+//        Logger.e("aaa", "child.getHeight() / 2" + (child.getHeight() / 2));
 
+        int endY = (mStartYPosition - (mStartYPosition - mFinalYPosition +  mFinalHeight/ 2));
+        float practicalY = mStartYPosition - distanceYToSubtract;
+
+        // 图片位置Y
+        if(endY>practicalY){
+            child.setY(endY);
+        }else if(mStartYPosition<practicalY){
+            child.setY(mStartYPosition);
+        }else{
+            child.setY(practicalY);
+        }
+
+
+//        child.setY(mStartYPosition - distanceYToSubtract);
+        // 图片位置X
+        child.setX(mStartXPosition - distanceXToSubtract);
+//        Logger.e("aaa", "mStartHeight - heightToSubtract==" + (mStartHeight - heightToSubtract));
+//        Logger.e("aaa", "mFinalHeight==" + mFinalHeight);
         // 图片大小
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
         lp.width = (int) (mStartHeight - heightToSubtract);

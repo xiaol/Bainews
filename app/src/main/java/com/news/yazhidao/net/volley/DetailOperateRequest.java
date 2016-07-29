@@ -36,13 +36,13 @@ public class DetailOperateRequest extends JsonObjectRequest {
             JSONObject jsonObject = new JSONObject(jsonString);
             JSONObject data = new JSONObject();
 //            Logger.e("aaa", "返回的数据=====" + jsonObject.optString("code"));
-
-            if ("2000".equals(jsonObject.optString("code"))){
+            String code = jsonObject.optString("code");
+            if ("2000".equals(code)){
 //                data = jsonObject.getJSONObject("data");
                 return Response.success(jsonObject,
                         HttpHeaderParser.parseCacheHeaders(response));
             }else {
-                return Response.error(new VolleyError("服务器异常!"));
+                return Response.error(new VolleyError(code+"服务器异常!"));
             }
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));

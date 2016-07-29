@@ -429,24 +429,29 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
+        StringBuffer path = new StringBuffer();
+        path.append(HttpConstant.URL_FETCH_CONTENT);
+        path.append("nid=");
+        path.append(mUrl);
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
-        if (user != null) {
+        if (user != null& !user.isVisitor()) {
             mUserId = user.getMuid()+"";
             mPlatformType = user.getPlatformType();
+            path.append("&uid=");
+            path.append(mUserId);
         }
         uuid = DeviceInfoUtil.getUUID();
-
 //        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
 //        if(isFavorite){
-//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
 //        }else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
 //        }
 
-        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
+        Logger.e("jigang", "detail url=" + path.toString());
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-        }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl+"&uid="+mUserId, new Response.Listener<NewsDetail>() {
+        }.getType(), path.toString(), new Response.Listener<NewsDetail>() {
 
             @Override
             public void onResponse(NewsDetail result) {
@@ -990,11 +995,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 //                }
 //                CareForAnimation();
 //            }
+//        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
+//        request.setRequestHeader(header);
 //        });
 
 //        HashMap<String, String> header = new HashMap<>();
-//        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
-//        request.setRequestHeader(header);
 //        HashMap<String, String> mParams = new HashMap<>();
 //        mParams.put("nid", mUrl);
 //        mParams.put("uid", mUserId);
@@ -1002,5 +1007,12 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     }
 
-
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Logger.e("aaa", "NewsDetailAty2 <Aty> requestCode==" + requestCode + ",resultCode==" + resultCode);
+//        if(requestCode == NewsDetailFgt.REQUEST_CODE&&resultCode == LoginAty.REQUEST_CODE){
+//            loadData();
+//        }
+//    }
 }

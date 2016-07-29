@@ -594,7 +594,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             if (NetUtil.checkNetWork(mContext)) {
                 if (!isNoteLoadDate) {
                     if (mstrChannelId != null && mstrChannelId.equals("1000")) {
-                        loadFocusData(flag);
+                        if (!user.isVisitor()) {
+                            loadFocusData(flag);
+                        }
                     } else if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
                     } else if (!TextUtil.isEmptyString(mstrChannelId)) {
@@ -906,7 +908,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             User user = SharedPreManager.getUser(mContext);
-            RelativeLayout focusBg= (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
+            RelativeLayout focusBg = (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
             if (user != null && user.isVisitor()) {
                 if (mArrNewsFeed != null) {
                     mArrNewsFeed.clear();
@@ -915,7 +917,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 focusBg.setVisibility(View.VISIBLE);
             } else {
                 focusBg.setVisibility(View.GONE);
-                loadFocusData(PULL_DOWN_REFRESH);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFocusData(PULL_DOWN_REFRESH);
+                    }
+                }, 1000);
             }
         }
     }

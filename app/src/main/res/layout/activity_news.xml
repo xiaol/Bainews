@@ -19,16 +19,17 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbarThumbVertical="@drawable/listview_scrollbar"
         android:scrollbars="vertical" />
+
     <TextView
         android:id="@+id/mRefreshTitleBar"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@color/new_color8"
-        android:textColor="@color/new_color2"
-        android:text="又发现了10条新数据"
-        android:textSize="@dimen/font4"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:text="又发现了10条新数据"
+        android:textColor="@color/new_color2"
+        android:textSize="@dimen/font4"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/mHomeRetry"
@@ -67,14 +68,28 @@
         android:visibility="visible" />
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/focus_no_data_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
         <ImageView
-            android:background="@drawable/ic_launcher"
+            android:id="@+id/image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/bg_focus_no_data" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/font3"
+            android:text="快去关注吧"
+            android:textColor="@color/black" />
     </RelativeLayout>
 
 </RelativeLayout>

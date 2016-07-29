@@ -166,7 +166,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                     if (user != null && user.isVisitor()) {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         loginAty.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,position);
-                        startActivityForResult(loginAty, REQUEST_LOGIN_CODE);
+                        startActivityForResult(loginAty, 1006);
                     } else {
                         changeAttentionStatus(SubscribeListAdapter.this, attentionListEntity);
                     }
@@ -216,7 +216,8 @@ public class SubscribeListActivity extends SwipeBackActivity {
         }
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         JSONObject json = new JSONObject();
-        final int requestMethod = "0".equals(attentionListEntity.getFlag()) ? Request.Method.POST : Request.Method.DELETE;
+        final int requestMethod = attentionListEntity.getFlag() > 0 ? Request.Method.POST : Request.Method.DELETE;
+        Logger.e("jigang","attention url = " + (HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname) + ",==" + requestMethod);
         DetailOperateRequest request = new DetailOperateRequest(requestMethod,
                 HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname
                 , json.toString(), new Response.Listener<JSONObject>() {
