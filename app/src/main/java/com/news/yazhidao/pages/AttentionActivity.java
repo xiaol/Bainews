@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +42,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
+import com.news.yazhidao.widget.SharePopupWindow;
 
 import org.json.JSONObject;
 
@@ -48,7 +51,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AttentionActivity extends AppCompatActivity implements View.OnClickListener{
+public class AttentionActivity extends AppCompatActivity implements View.OnClickListener,SharePopupWindow.ShareDismiss{
 
     public static final String KEY_ATTENTION_TITLE = "key_attention_title";
     public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
@@ -108,6 +111,15 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 
     private boolean ismAttention;
 
+
+    /**
+     * 添加更多的属性
+     */
+    private ImageView mivShareBg;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
+    private SharePopupWindow mSharePopupWindow;
+    private View mAttentionRelativeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,8 +152,18 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         mAttention_btn = (TextView) findViewById(R.id.mAttention_btn);
         mAttentionCenterTitle = (TextView) findViewById(R.id.mAttentionCenterTitle);
 
+        mAttentionRelativeLayout = findViewById(R.id.mAttentionRelativeLayout);
+
+        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
+
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
+
         mAttentionCenterTitle.setText(mPName);
         mAttentionTitleLayout = (RelativeLayout) findViewById(R.id.mAttentionTitleLayout);
+        mAttentionTitleLayout.setOnClickListener(this);
 
         mAttentionLeftBack.setOnClickListener(this);
         mAttentionRightMore.setOnClickListener(this);
@@ -253,12 +275,21 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
              */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
-//                Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
+                Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
 //                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
 //                Logger.e("aaa", "totalItemCount==" + totalItemCount);
 //                if(){
 //
 //                }
+                if(firstVisibleItem <= 1){
+                    mAttention_btn.setVisibility(View.VISIBLE);
+                }else{
+                    mAttention_btn.setVisibility(View.GONE);
+                }
+                if (firstVisibleItem != 1) {
+
+                    return;
+                }
                 final int[] location = new int[2];
                 tv_attention_title.getLocationInWindow(location);
                 int mY = location[1];
@@ -293,6 +324,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 }
                 float proportion = (float) margin / (float)maxMargin;
                 Logger.e("aaa", "proportion==" + proportion);
+
                 mAttention_btn.setAlpha(proportion);
 //                mAttentionTitleLayout.setAlpha();
             }
@@ -306,10 +338,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private int maxMargin;
     private boolean isBottom;
     private TextView attention_headViewItem_Content,
-            footView_tv;
+            footView_tv,
+            tv_attention_historyTitle,
+            tv_attention_noData;
     private ImageView img_attention_line;
     private LinearLayout linear_attention_descrLayout;
     private ProgressBar footView_progressbar;
+    private LinearLayout footerView;
+
     public void addListOtherView(){
         LinearLayout attentionHeadView = (LinearLayout) getLayoutInflater().inflate(R.layout.attention_headview_item, null);
         ListView lv = mAttentionList.getRefreshableView();
@@ -317,6 +353,8 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         lv.addHeaderView(attentionHeadView);
         linear_attention_descrLayout = (LinearLayout) attentionHeadView.findViewById(R.id.linear_attention_descrLayout);
         attention_headViewItem_Content = (TextView) attentionHeadView.findViewById(R.id.attention_headViewItem_Content);
+        tv_attention_historyTitle = (TextView) attentionHeadView.findViewById(R.id.tv_attention_historyTitle);
+        tv_attention_noData = (TextView) attentionHeadView.findViewById(R.id.tv_attention_noData);
         img_attention_line = (ImageView) attentionHeadView.findViewById(R.id.img_attention_line);
 
         tv_attention_title = (TextView) attentionHeadView.findViewById(R.id.tv_attention_title);
@@ -327,7 +365,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 
 
 
-        final LinearLayout footerView = (LinearLayout) getLayoutInflater().inflate(R.layout.footerview_layout, null);
+        footerView = (LinearLayout) getLayoutInflater().inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
@@ -431,6 +469,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                             mAttentionList.onRefreshComplete();
 //                            ToastUtil.toastShort("添加数据！");
                         } else {
+                            ListView lv = mAttentionList.getRefreshableView();
+                            lv.removeFooterView(footerView);
+                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                            if(TextUtil.isListEmpty(newsFeeds)){
+                                tv_attention_historyTitle.setVisibility(View.GONE);
+                                tv_attention_noData.setVisibility(View.VISIBLE);
+                            }
+
 //                            ToastUtil.toastShort("暂无相关数据！");
                         }
                     }
@@ -439,6 +485,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             public void onErrorResponse(VolleyError error) {
 //                mAttentionList.onRefreshComplete();
                 Logger.e("jigang", "network fail");
+                mAttentionList.onRefreshComplete();
             }
         });
 
@@ -562,8 +609,21 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             case R.id.mAttentionLeftBack:
                 finish();
                 break;
+            case R.id.mAttentionTitleLayout:
+                //这里什么都不用写，这是title的点击事件
+                break;
             case R.id.mAttentionRightMore:
-
+//                if (mNewsFeed != null) {
+//                    mivShareBg.startAnimation(mAlphaAnimationIn);
+//                    mivShareBg.setVisibility(View.VISIBLE);
+//                    mSharePopupWindow = new SharePopupWindow(this, this);
+//                    String remark = mNewsFeed.getDescr();
+//                    String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+//                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+////                    mSharePopupWindow.setOnFavoritListener(listener);
+//                    mSharePopupWindow.showAtLocation(mAttentionRelativeLayout, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+//
+//                }
                 break;
             case R.id.mAttention_btn:
                 if (user != null && user.isVisitor()) {
@@ -592,6 +652,18 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             user = SharedPreManager.getUser(mContext);
             addordeleteAttention(false);
         }
+    }
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mivShareBg.setVisibility(View.INVISIBLE);
+//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        if(isFavorite){
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        }else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//        }
     }
     //    @Override
 //    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {

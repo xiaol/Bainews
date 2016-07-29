@@ -66,12 +66,14 @@
 
     </LinearLayout>
     <ImageView
+        android:id="@+id/img_attention_historyLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/new_color4"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"/>
        <TextView
+           android:id="@+id/tv_attention_historyTitle"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:text="历史文章"
@@ -79,6 +81,17 @@
            android:textColor="@color/new_color3"
            android:layout_marginLeft="15dp"
            android:layout_marginTop="15dp"/>
+
+       <TextView
+           android:id="@+id/tv_attention_noData"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="这个数据源目前没有数据。"
+           android:gravity="center"
+           android:textSize="@dimen/font3"
+           android:textColor="@color/new_color3"
+           android:layout_marginTop="48dp"
+           android:visibility="gone"/>
 
    </LinearLayout>
 

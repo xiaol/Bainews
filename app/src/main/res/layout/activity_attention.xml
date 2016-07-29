@@ -6,7 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/new_color9"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/mAttentionRelativeLayout">
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/mAttentionList"
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
         />
     <RelativeLayout
         android:id="@+id/mAttentionTitleLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparency">
         <TextView
@@ -47,6 +48,7 @@
             android:background="@drawable/bg_left_back_selector"
             android:clickable="true"
             android:paddingRight="15dp"
+            android:visibility="gone"
             />
 
         <TextView
@@ -73,11 +75,17 @@
             android:gravity="center"
             android:textColor="#ffe71f19"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             />
         <include layout="@layout/loading_view" />
     </RelativeLayout>
 
-
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>
