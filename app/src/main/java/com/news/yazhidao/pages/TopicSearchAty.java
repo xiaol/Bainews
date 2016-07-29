@@ -181,6 +181,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
         if (mKeyWord != null && !mKeyWord.equals("")) {
             mSearchTip.setText("暂无搜索结果");
             SharedPreManager.HistorySave(mKeyWord);
+            SharedPreManager.deleteSubscribeList();
             try {
                 historyEntities = SharedPreManager.HistoryGetList();
             } catch (JSONException e) {

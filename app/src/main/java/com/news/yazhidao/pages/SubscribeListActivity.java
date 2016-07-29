@@ -67,7 +67,12 @@ public class SubscribeListActivity extends SwipeBackActivity {
 
     @Override
     protected void loadData() {
-        mAttentionListEntities = (ArrayList<AttentionListEntity>) getIntent().getSerializableExtra(KEY_SUBSCRIBE_LIST);
+        ArrayList<AttentionListEntity> subscribeList = SharedPreManager.getSubscribeList();
+        if (!TextUtil.isListEmpty(subscribeList)){
+            mAttentionListEntities = subscribeList;
+        }else {
+            mAttentionListEntities = (ArrayList<AttentionListEntity>) getIntent().getSerializableExtra(KEY_SUBSCRIBE_LIST);
+        }
         mAttentionListTemp = TextUtil.copyArrayList(mAttentionListEntities);
         mAttentionListView.setMode(PullToRefreshBase.Mode.DISABLED);
         mAttentionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,6 +201,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        SharedPreManager.saveSubscribeList(mAttentionListEntities);
         /**用户退出时发送关注和取消关注的状态*/
         User user = SharedPreManager.getUser(this);
         for (int i=0;i < mAttentionListTemp.size();i++){

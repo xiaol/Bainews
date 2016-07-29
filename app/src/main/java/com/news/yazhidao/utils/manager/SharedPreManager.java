@@ -6,9 +6,11 @@ import android.text.TextUtils;
 
 import com.baidu.location.BDLocation;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.AppsItemInfo;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.HistoryEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.UploadLogDataEntity;
@@ -486,5 +488,20 @@ public class SharedPreManager {
         remove(CommonConstant.APPINFO, CommonConstant.APPINFO);
     }
 
+    public static void saveSubscribeList(ArrayList<AttentionListEntity> list){
+        save(CommonConstant.FILE_DATA,CommonConstant.KEY_SUBSCRIBE_LIST,GsonUtil.serialized(list));
+    }
 
+    public static void deleteSubscribeList(){
+        remove(CommonConstant.FILE_DATA, CommonConstant.KEY_SUBSCRIBE_LIST);
+    }
+
+    public static ArrayList<AttentionListEntity> getSubscribeList(){
+        String strList = get(CommonConstant.FILE_DATA, CommonConstant.KEY_SUBSCRIBE_LIST);
+        if (TextUtil.isEmptyString(strList)){
+            return new ArrayList<>();
+        }
+        return GsonUtil.deSerializedByType(strList,new TypeToken<ArrayList<AttentionListEntity>>() {
+        }.getType());
+    }
 }
