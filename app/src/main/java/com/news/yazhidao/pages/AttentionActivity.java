@@ -461,6 +461,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             e.printStackTrace();
         }
 
+
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
         JSONObject json = new JSONObject();
@@ -497,6 +498,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onErrorResponse(VolleyError error) {
 //                mNewsDetailList.onRefreshComplete();
+                if(error.getMessage().indexOf("2003")!=-1){
+                    ismAttention = true;
+                    ToastUtil.toastShort("用户已关注该信息！");
+                    mAttention_btn.setText("已关注");
+                    mAttention_btn.setBackgroundResource(R.drawable.attention_tv_shape);
+                    mAttention_btn.setTextColor(getResources().getColor(R.color.unattention_line_color));
+                    return;
+                }
                 Logger.e("jigang", "network fail");
                 isNetWork = false;
             }
@@ -576,7 +585,15 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         super.finish();
     }
 
-//    @Override
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == 1006) {
+            user = SharedPreManager.getUser(mContext);
+            addordeleteAttention(false);
+        }
+    }
+    //    @Override
 //    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
 //        int maxScroll = appBarLayout.getTotalScrollRange();
 //        float percentage = (float) Math.abs(i) / (float) (maxScroll-DensityUtil.dip2px(this, 48));

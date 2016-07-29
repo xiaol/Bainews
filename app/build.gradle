@@ -16,6 +16,12 @@ android {
     }
 
     productFlavors {
+        q9ht {}
+        appfun {}
+        hismarttv {}
+        anbei {}
+        iqiyi {}
+        coolchuan {}
         /**
          baidu {}q91shichang {}anzhuoshichang {}yingyongbao {}anzhishichang {}mumayi {}wandoujia {}jifengwang {}yingyonghui {}tongbu {}q360shoujizhushou {}Nduowang {}q3ganzhuoshichang {}woqushoujizhushou {}huawei {}lianxiang {}xiaomi {}sougouzhushou {}meizu {}oppo {}liquwang {}wangyiyingyongzhongxin {}newasp {}downcc {}PC6 {}*/
         /**91桌面换量渠道*/

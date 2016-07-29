@@ -1280,7 +1280,6 @@ public class NewsDetailFgt extends BaseFragment {
             user = SharedPreManager.getUser(getActivity());
         }
         isNetWork = true;
-        ToastUtil.toastShort("添加关注！！！！");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
         JSONObject json = new JSONObject();
@@ -1337,6 +1336,7 @@ public class NewsDetailFgt extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
         Logger.e("aaa", "NewsDetailFgt <Fgt> requestCode==" + requestCode + ",resultCode==" + resultCode);
+        user = SharedPreManager.getUser(getActivity());
         if(requestCode == 1234 && resultCode == 1234){
             isAttention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG,false);
             if(isAttention){

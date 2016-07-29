@@ -74,12 +74,12 @@ public class HttpConstant {
     /**
      * feed流上拉加载更多
      */
-    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/l?";
+    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/ln?";
 
     /**
      * feed流下拉刷新
      */
-    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/r?";
+    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/rn?";
     /**
      * feed流关注上拉加载更多
      */

@@ -43,6 +43,7 @@ public class YaZhiDaoApplication extends Application {
         crashHandler.init(this);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.setDebugMode(false);
+        mPushAgent.setMergeNotificaiton(false);//设置通知栏中存在多条推送信息
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
         //init fresco
         Fresco.initialize(this);
