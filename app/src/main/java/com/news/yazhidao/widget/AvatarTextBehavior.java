@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -78,7 +79,20 @@ public class AvatarTextBehavior extends CoordinatorLayout.Behavior<TextView>{
 //        float widthToSubtract = ((mStartWidth - mFinalWidth) * (1f - expandedPercentageFactor));
 
         // 文字位置
-        child.setY(mStartYPosition - distanceYToSubtract);
+//        if(mFinalYPosition == (mStartYPosition - distanceYToSubtract)){
+//            Logger.e("aaa","111111111111111111");
+//        }
+
+        int endY = (mStartYPosition - (mStartYPosition - mFinalYPosition + child.getHeight() / 2));
+        float practicalY = mStartYPosition - distanceYToSubtract;
+        if(endY>practicalY) {
+            child.setY(endY);
+        }else if(mStartYPosition<practicalY){
+            child.setY(mStartYPosition);
+        }else{
+            child.setY(practicalY);
+        }
+
         child.setX(mStartXPosition - distanceXToSubtract);
 
 //        // 文字大小

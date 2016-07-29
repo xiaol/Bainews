@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -68,6 +69,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private int mCardWidth, mCardHeight;
     private boolean isFavorite;
     private boolean isNeedShowDisLikeIcon = true;
+    private boolean isAttention;
     boolean isCkeckVisity;
 
 
@@ -140,6 +142,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
+    public void isAttention(){
+        isAttention = true;
+        isNeedShowDisLikeIcon = false;
+    }
 
 
 
@@ -187,6 +193,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceNoPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
                 llSourceNoPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                if(isAttention){
+                    llSourceNoPic.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                }
                 break;
             case R.layout.ll_news_item_one_pic:
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0),mCardWidth,mCardHeight);
@@ -256,6 +265,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceOnePic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
                 llSourceOnePic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                if(isAttention){
+                    llSourceOnePic.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                }
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -278,6 +290,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceCard.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
                 llSourceCard.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
+                if(isAttention){
+                    llSourceCard.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                }
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
@@ -417,17 +432,30 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+        Calendar calendar =  dateFormat.getCalendar();
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
             Log.i("tag",updateTime+"date.getTime()");
+            int month = calendar.get(Calendar.MONTH)+1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
             if (between >= (24 * 3600000)) {
 //                tvComment.setText(updateTime);
-                tvComment.setText("");
+                if(isAttention){
+//                    tvComment.setText(between / 3600000 + "小时前");
+                    tvComment.setText(month + "月" + day + "日");
+                }else{
+                    tvComment.setText("");
+                }
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-//                tvComment.setText(between / 3600000 + "小时前");
-                tvComment.setText("");
+                if(isAttention){
+                    tvComment.setText(between / 3600000 + "小时前");
+                }else{
+                    tvComment.setText("");
+                }
+
+//
             } else {
                 int time = (int) (between * 60 / 3600000);
                 if (time > 0)

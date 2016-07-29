@@ -482,8 +482,12 @@ public class NewsDetailFgt extends BaseFragment {
         linearlayout_attention.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addordeleteAttention(true);
-
+                if (user != null && user.isVisitor()) {
+                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+                    startActivityForResult(loginAty, 1030);
+                } else {
+                    addordeleteAttention(true);
+                }
 
 
             }
@@ -1272,7 +1276,9 @@ public class NewsDetailFgt extends BaseFragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
+        if(user != null && user.isVisitor()){
+            user = SharedPreManager.getUser(getActivity());
+        }
         isNetWork = true;
         ToastUtil.toastShort("添加关注！！！！");
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
@@ -1288,7 +1294,7 @@ public class NewsDetailFgt extends BaseFragment {
                 String data = response.optString("data");
                 Logger.e("aaa","json+++++++++++++++++++++++"+data);
 
-                attentionDetailDialog = new AttentionDetailDialog(getActivity(),"音乐风云");
+                attentionDetailDialog = new AttentionDetailDialog(getActivity(),mResult.getPname());
                 attentionDetailDialog.show();
                 image_attention_success.setVisibility(View.VISIBLE);
                 image_attention_line.setVisibility(View.GONE);
@@ -1302,6 +1308,14 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                mNewsDetailList.onRefreshComplete();
+                if(error.getMessage().indexOf("2003")!=-1){
+                    ToastUtil.toastShort("用户已关注该信息！");
+                    image_attention_success.setVisibility(View.VISIBLE);
+                    image_attention_line.setVisibility(View.GONE);
+                    linearlayout_attention.setVisibility(View.GONE);
+                    mResult.setConpubflag(1);
+                    return;
+                }
                 Logger.e("jigang", "network fail");
                 ToastUtil.toastShort("关注失败！");
                 isNetWork = false;
@@ -1321,8 +1335,8 @@ public class NewsDetailFgt extends BaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logger.e("aaa", "resultCode ==" + resultCode);
+//        super.onActivityResult(requestCode, resultCode, data);
+        Logger.e("aaa", "NewsDetailFgt <Fgt> requestCode==" + requestCode + ",resultCode==" + resultCode);
         if(requestCode == 1234 && resultCode == 1234){
             isAttention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG,false);
             if(isAttention){
@@ -1336,6 +1350,11 @@ public class NewsDetailFgt extends BaseFragment {
                 image_attention_line.setVisibility(View.VISIBLE);
                 linearlayout_attention.setVisibility(View.VISIBLE);
                 mResult.setConpubflag(0);
+            }
+        } else if(requestCode == 1030&&resultCode == 1006){
+            if (getActivity() instanceof NewsDetailAty2){
+                addordeleteAttention(true);
+//                mNewsDetailList.smoothScrollToPosition(pos);
             }
         }
     }

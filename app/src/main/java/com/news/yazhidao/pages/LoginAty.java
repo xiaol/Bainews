@@ -28,8 +28,8 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
         public void success(User user) {
             Intent intent = new Intent();
             intent.putExtra(KEY_USER_LOGIN,user);
-            setResult(REQUEST_CODE,intent);
-            LoginAty.this.finish();
+            setResult(1006,intent);
+            finish();
         }
 
         @Override
