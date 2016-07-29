@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -280,13 +281,13 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
                 Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
-//                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
-//                Logger.e("aaa", "totalItemCount==" + totalItemCount);
+                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
+                Logger.e("aaa", "totalItemCount==" + totalItemCount);
 
 //                if(){
 //
 //                }
-                if(thisVisibleItemCount == 0){
+                if(thisVisibleItemCount < totalItemCount){
                     thisTotalItemCount = totalItemCount;
                     thisVisibleItemCount = visibleItemCount;
                 }
@@ -354,10 +355,11 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout linear_attention_descrLayout;
     private ProgressBar footView_progressbar;
     private LinearLayout footerView;
+    ListView lv;
 
     public void addListOtherView(){
         LinearLayout attentionHeadView = (LinearLayout) getLayoutInflater().inflate(R.layout.attention_headview_item, null);
-        ListView lv = mAttentionList.getRefreshableView();
+        lv = mAttentionList.getRefreshableView();
 
         lv.addHeaderView(attentionHeadView);
         linear_attention_descrLayout = (LinearLayout) attentionHeadView.findViewById(R.id.linear_attention_descrLayout);
@@ -470,26 +472,34 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                         if(!TextUtil.isEmptyString(icon)){
                             iv_attention_headImage.setImageURI(Uri.parse(icon));
                         }
-                        ListView lv = mAttentionList.getRefreshableView();
+//                        ListView lv = mAttentionList.getRefreshableView();
                         if (!TextUtil.isListEmpty(result.getNews())) {
-                            if(thisVisibleItemCount>=thisTotalItemCount){
-                                lv.removeFooterView(footerView);
-                                mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
-                            }
                             newsFeeds.addAll(result.getNews());
                             mAdapter.setNewsFeed(newsFeeds);
                             mAdapter.notifyDataSetChanged();
                             mAttentionList.onRefreshComplete();
 //                            ToastUtil.toastShort("添加数据！");
                         } else {
-                            lv.removeFooterView(footerView);
-                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+//                            lv.removeFooterView(footerView);
+//                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
                             if(TextUtil.isListEmpty(newsFeeds)){
                                 tv_attention_historyTitle.setVisibility(View.GONE);
                                 tv_attention_noData.setVisibility(View.VISIBLE);
                             }
 //                            ToastUtil.toastShort("暂无相关数据！");
                         }
+                        if(thisVisibleItemCount>=thisTotalItemCount&&mPageIndex ==2){//删除 footerView 这个方法可以显示无数据的情况
+                            Logger.e("aaa","==================================");
+                            lv.removeFooterView(footerView);
+                            mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                        }
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        },1000);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
