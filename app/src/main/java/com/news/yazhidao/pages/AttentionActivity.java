@@ -3,7 +3,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -45,7 +44,6 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AvatarImageBehavior;
 import com.news.yazhidao.widget.AvatarTextBehavior;
-import com.news.yazhidao.widget.ListViewForScrollView;
 
 import org.json.JSONObject;
 
@@ -64,6 +62,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
 
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
+    public static final String KEY_ATTENTION_INDEX = "key_attention_index";
 
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
@@ -110,6 +109,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private int mPageIndex = 1;
 
     private boolean ismAttention;
+    private int mIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +121,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
         mPUrl = getIntent().getStringExtra(KEY_ATTENTION_HEADIMAGE);
         conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
+        mIndex = getIntent().getIntExtra(KEY_ATTENTION_INDEX, 0);
         ismAttention = conpubflag == 1;
 //        Logger.e("bbb", "mPName==" + mPName);
 //        Logger.e("bbb", "mPUrl==" + mPUrl);
@@ -159,7 +160,6 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             mAttention_btn.setText("已关注");
             mAttention_btn.setBackgroundResource(R.drawable.attention_tv_shape);
             mAttention_btn.setTextColor(getResources().getColor(R.color.unattention_line_color));
-
 
         }else{
             mAttention_btn.setText("关注");
@@ -408,6 +408,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     public void finish() {
         Intent in = new Intent();
         in.putExtra(KEY_ATTENTION_CONPUBFLAG, ismAttention);
+        in.putExtra(KEY_ATTENTION_INDEX, mIndex);
         setResult(1234,in);
         super.finish();
     }

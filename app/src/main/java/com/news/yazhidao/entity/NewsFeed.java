@@ -99,7 +99,8 @@ public class NewsFeed implements Serializable {
     /** 是(1)否(0)已关心该新闻对应的发布源 */
     private int conpubflag;
 
-    private ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
+    /**搜索频道中的订阅源*/
+    public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
 
 
     @Override
@@ -322,4 +323,5 @@ public class NewsFeed implements Serializable {
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
+
 }

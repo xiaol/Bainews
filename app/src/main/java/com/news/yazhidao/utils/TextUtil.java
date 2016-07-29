@@ -12,6 +12,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailAdd;
@@ -20,6 +21,7 @@ import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.umeng.message.proguard.T;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -642,6 +644,16 @@ public class TextUtil {
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
         return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);} var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}};</script>";
+    }
+
+    public static ArrayList<AttentionListEntity> copyArrayList(ArrayList<AttentionListEntity> target){
+        ArrayList<AttentionListEntity> newList = new ArrayList<>();
+        if (!TextUtil.isListEmpty(target)){
+            for (AttentionListEntity entity:target){
+                newList.add(new AttentionListEntity(entity.getConcern(),entity.getCtime(),entity.getDescr(),entity.getFlag(),entity.getIcon(),entity.getId(),entity.getName()));
+            }
+        }
+        return newList;
     }
 
     /**

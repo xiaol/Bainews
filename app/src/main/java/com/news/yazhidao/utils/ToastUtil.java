@@ -89,4 +89,20 @@ public class ToastUtil {
         });
 
     }
+
+    public static void showAttentionSuccessToast(final Context mContext) {
+        if (Looper.getMainLooper() != Looper.myLooper()) {
+            return;
+        }
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(mContext, "\t" + "关注成功", Toast.LENGTH_SHORT);
+                toast.setView(LayoutInflater.from(mContext).inflate(R.layout.attention_success_layout,null));
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        });
+
+    }
 }

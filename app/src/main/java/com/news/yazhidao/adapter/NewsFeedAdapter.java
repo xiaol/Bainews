@@ -30,6 +30,7 @@ import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
+import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.SubscribeListActivity;
@@ -37,7 +38,6 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
@@ -157,7 +157,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
 
     @Override
-    public void convert(final CommonViewHolder holder, NewsFeed feed, int position) {
+    public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
         switch (holder.getLayoutId()) {
             case R.layout.ll_news_item_no_pic:
             case R.layout.ll_news_item_one_pic:
@@ -328,10 +328,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 int size = attentionListEntities.size();
                 if (size == 1) {
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, "更多");
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -341,14 +341,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(0));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击更多");
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
                             mContext.startActivity(in);
 
                         }
@@ -357,12 +357,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size == 2) {
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree, "更多");
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -372,34 +372,34 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(0));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(1).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(1));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击更多");
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
                             mContext.startActivity(in);
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size >= 3) {
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
                     holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon());
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getDescr());
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
-                    holder.setTextViewTextandTextSice(R.id.tv_ll_news_search_item_descrFour, "更多");
+                    holder.setTextViewText(R.id.tv_ll_news_search_item_descrFour, "更多");
 
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setVisibility(View.VISIBLE);
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setVisibility(View.VISIBLE);
@@ -409,32 +409,40 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutOne).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(0).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(0));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutTwo).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(1).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(1));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击" + attentionListEntities.get(2).getDescr());
+                            setOpenAttentionPage(attentionListEntities.get(2));
                         }
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            ToastUtil.toastShort("点击更多");
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
                             mContext.startActivity(in);
                         }
                     });
                 }
                 break;
         }
+    }
+
+    private void setOpenAttentionPage(AttentionListEntity attention){
+        Intent attentionAty = new Intent(mContext, AttentionActivity.class);
+        attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
+        attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, attention.getIcon());
+        attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, attention.getName());
+        mContext.startActivity(attentionAty);
     }
 
     private void setCardMargin(SimpleDraweeView ivCard, int leftMargin, int rightMargin, int pageNum) {

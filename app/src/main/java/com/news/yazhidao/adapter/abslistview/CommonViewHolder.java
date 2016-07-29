@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -102,6 +101,11 @@ public class CommonViewHolder {
 
     public void setTextViewExtendTextColor(int ViewID, int color) {
         TextViewExtend text = getView(ViewID);
+        text.setTextColor(mContext.getResources().getColor(color));
+    }
+
+    public void setTextViewTextColor(int ViewID, int color) {
+        TextView text = getView(ViewID);
         text.setTextColor(mContext.getResources().getColor(color));
     }
 
