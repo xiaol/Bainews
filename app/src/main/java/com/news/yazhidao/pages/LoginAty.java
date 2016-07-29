@@ -23,13 +23,16 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     private View mLoginWeibo,mLoginWeixin,mLoginCancel,mLoginSetting;
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
+    private int mAttentionIndex;
+
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
             Intent intent = new Intent();
             intent.putExtra(KEY_USER_LOGIN,user);
-            setResult(1006,intent);
-            finish();
+            intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,mAttentionIndex);
+            setResult(REQUEST_CODE,intent);
+            LoginAty.this.finish();
         }
 
         @Override
@@ -67,7 +70,7 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
-
+            mAttentionIndex =  getIntent().getIntExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,0);
     }
 
     @Override

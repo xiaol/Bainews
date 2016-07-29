@@ -17,6 +17,8 @@ public class HttpConstant {
 
     public static final String URL_PRAISE = URL_SERVER_HOST + "/news/baijia/praise";
 
+    public static final String URL_SEARCH_WITH_SUBSCRIBE = URL_SERVER_HOST + "/ns/es/snp";//带有订阅信息的搜索
+
     public static final String URL_SEARCH = URL_SERVER_HOST + "/ns/es/s";//搜索
 
     public static final String URL_GET_NEWS_CONTENT = URL_SERVER_HOST + "/news/baijia/point";
