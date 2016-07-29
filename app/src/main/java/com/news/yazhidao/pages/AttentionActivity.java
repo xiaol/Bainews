@@ -122,6 +122,8 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private SharePopupWindow mSharePopupWindow;
     private View mAttentionRelativeLayout;
 
+    private int thisVisibleItemCount,thisTotalItemCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -280,9 +282,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
 //                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
 //                Logger.e("aaa", "totalItemCount==" + totalItemCount);
+
 //                if(){
 //
 //                }
+                if(thisVisibleItemCount == 0){
+                    thisTotalItemCount = totalItemCount;
+                    thisVisibleItemCount = visibleItemCount;
+                }
                 if(firstVisibleItem <= 1){
                     mAttention_btn.setVisibility(View.VISIBLE);
                 }else{
@@ -463,22 +470,24 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                         if(!TextUtil.isEmptyString(icon)){
                             iv_attention_headImage.setImageURI(Uri.parse(icon));
                         }
-
+                        ListView lv = mAttentionList.getRefreshableView();
                         if (!TextUtil.isListEmpty(result.getNews())) {
+                            if(thisVisibleItemCount>=thisTotalItemCount){
+                                lv.removeFooterView(footerView);
+                                mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
+                            }
                             newsFeeds.addAll(result.getNews());
                             mAdapter.setNewsFeed(newsFeeds);
                             mAdapter.notifyDataSetChanged();
                             mAttentionList.onRefreshComplete();
 //                            ToastUtil.toastShort("添加数据！");
                         } else {
-                            ListView lv = mAttentionList.getRefreshableView();
                             lv.removeFooterView(footerView);
                             mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
                             if(TextUtil.isListEmpty(newsFeeds)){
                                 tv_attention_historyTitle.setVisibility(View.GONE);
                                 tv_attention_noData.setVisibility(View.VISIBLE);
                             }
-
 //                            ToastUtil.toastShort("暂无相关数据！");
                         }
                     }
