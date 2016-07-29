@@ -31,6 +31,7 @@ public final class CommonConstant {
     public static final String US_BAINEWS_NOTIFICATION_OPENED = "notification_open";
 
     public static final String FILE_USER = "user";
+    public static final String FILE_DATA = "data";
     public static final String FILE_JPUSH = "jpush";
     public static final String FILE_UMENG = "umeng";
     public static final String KEY_USER_INFO = "user_info";
@@ -51,6 +52,7 @@ public final class CommonConstant {
     public static final String MY_FAVORITE = "my_favorite";//我的收藏
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
     public static final String APPINFO = "appinfo";//我的收藏
+    public static final String KEY_SUBSCRIBE_LIST = "key_subscribe_list";//订阅信息
 
 
     public static final int TEXT_SIZE_NORMAL = 16;
