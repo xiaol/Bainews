@@ -504,4 +504,28 @@ public class SharedPreManager {
         return GsonUtil.deSerializedByType(strList,new TypeToken<ArrayList<AttentionListEntity>>() {
         }.getType());
     }
+//    public void saveAttentionID(String newID){
+//        String getID = getAttentionID();
+//        save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, TextUtil.isEmptyString(getID) ? newID : "," + newID);
+//
+//    }
+//    public String getAttentionID(){
+//        return get(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID);
+//    }
+//    private boolean isSameAttention(String newID){
+//        String getID = getAttentionID();
+//        if(!TextUtil.isEmptyString(getID)){
+//            if (getID.indexOf(newID) == -1) {
+//                return false;
+//            }else{
+//                return true;
+//            }
+//        }else{
+//            return false;
+//        }
+//
+//    }
+//    public void removeAttentionID(){
+//        remove(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID);
+//    }
 }

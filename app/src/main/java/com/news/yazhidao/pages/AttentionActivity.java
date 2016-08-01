@@ -31,6 +31,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.AttentionPbsEntity;
@@ -38,6 +39,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -280,9 +282,9 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
              */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
-                Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
-                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
-                Logger.e("aaa", "totalItemCount==" + totalItemCount);
+//                Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
+//                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
+//                Logger.e("aaa", "totalItemCount==" + totalItemCount);
 
 //                if(){
 //
@@ -294,6 +296,10 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 if(firstVisibleItem <= 1){
                     mAttention_btn.setVisibility(View.VISIBLE);
                 }else{
+                    if(mAttentionCenterTitle.getVisibility() == View.GONE){
+                        mAttentionCenterTitle.setVisibility(View.VISIBLE);
+                        mAttentionTitleLayout.setBackgroundColor(getResources().getColor(R.color.bg_share));
+                    }
                     mAttention_btn.setVisibility(View.GONE);
                 }
                 if (firstVisibleItem != 1) {
@@ -436,15 +442,25 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //    AvatarImageBehavior avatarImageBehavior;
 //    AvatarTextBehavior avatarTextBehavior;
     private void loadData() {
-        Logger.e("jigang", "attention url=" + HttpConstant.URL_GETLIST_ATTENTION + "pname=" + mPName+"&info=1");
+
         RequestQueue requestQueue =  Volley.newRequestQueue(mContext);
         String pname = null;
-        String  tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
+        String tstart = null;
+        if(!TextUtil.isListEmpty(newsFeeds)){//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
+            int position = newsFeeds.size() - 1;
+            String Ptime = newsFeeds.get(position).getPtime();
+            Logger.e("aaa", "最后一条数据的position == " + position + ",Ptime == " + Ptime);
+            tstart = DateUtil.dateStr2Long(Ptime) + "";
+        }else{
+            tstart = System.currentTimeMillis()+"";
+        }
+
         try {
             pname = URLEncoder.encode(mPName, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        Logger.e("jigang", "attention url=" + HttpConstant.URL_GETLIST_ATTENTION + "pname=" + pname + "&info=1" + "&tcr=" + tstart + "&p=" + (mPageIndex));
         NewsDetailRequest<AttentionPbsEntity> feedRequest = new NewsDetailRequest<AttentionPbsEntity>(Request.Method.GET,
                 new TypeToken<AttentionPbsEntity>() {
                 }.getType(),
@@ -483,6 +499,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                             lv.removeFooterView(footerView);
                             mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
                             if(TextUtil.isListEmpty(newsFeeds)){
+                                bgLayout.setVisibility(View.VISIBLE);
                                 tv_attention_historyTitle.setVisibility(View.GONE);
                                 tv_attention_noData.setVisibility(View.VISIBLE);
                             }
@@ -549,8 +566,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                     mAttention_btn.setTextColor(getResources().getColor(R.color.attention_line_color));
                 }else{
                     ismAttention = true;
-                    AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,mPName );
-                    attentionDetailDialog.show();
+                    if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
+                        ToastUtil.showAttentionSuccessToast(mContext);
+                    }else{
+                        AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,mPName );
+                        attentionDetailDialog.show();
+                        SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
+                    }
+
                     mAttention_btn.setText("已关注");
                     mAttention_btn.setBackgroundResource(R.drawable.attention_tv_shape);
                     mAttention_btn.setTextColor(getResources().getColor(R.color.unattention_line_color));

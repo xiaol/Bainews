@@ -1293,8 +1293,14 @@ public class NewsDetailFgt extends BaseFragment {
                 String data = response.optString("data");
                 Logger.e("aaa","json+++++++++++++++++++++++"+data);
 
-                attentionDetailDialog = new AttentionDetailDialog(getActivity(),mResult.getPname());
-                attentionDetailDialog.show();
+                if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
+                    ToastUtil.showAttentionSuccessToast(getActivity());
+                }else{
+                    attentionDetailDialog = new AttentionDetailDialog(getActivity(),mResult.getPname());
+                    attentionDetailDialog.show();
+                    SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
+                }
+
                 image_attention_success.setVisibility(View.VISIBLE);
                 image_attention_line.setVisibility(View.GONE);
                 linearlayout_attention.setVisibility(View.GONE);

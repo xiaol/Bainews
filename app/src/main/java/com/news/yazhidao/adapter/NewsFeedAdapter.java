@@ -477,7 +477,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar calendar =  dateFormat.getCalendar();
         try {
             Date date = dateFormat.parse(updateTime);
