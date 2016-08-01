@@ -250,6 +250,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 ChannelItem item = channelItems.get(i);
                 if (item1.getId().equals(item.getId())) {
                     index = i;
+                    break;
                 }
             }
             if (index == -1) {
@@ -330,11 +331,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     }
                 }
             }
-            if (index == -1) {
-                return POSITION_NONE;
-            } else {
-                return POSITION_UNCHANGED;
-            }
+            return POSITION_NONE;
+//            if (index == -1) {
+//                return POSITION_NONE;
+//            } else {
+//                return POSITION_UNCHANGED;
+//            }
         }
 
         @Override
