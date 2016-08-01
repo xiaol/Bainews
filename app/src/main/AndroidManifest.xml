@@ -304,7 +304,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.LoginAty"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.UserCenterAty"

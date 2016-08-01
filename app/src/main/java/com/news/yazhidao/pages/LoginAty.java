@@ -1,6 +1,7 @@
 package com.news.yazhidao.pages;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
@@ -8,6 +9,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
@@ -24,6 +26,7 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
     private int mAttentionIndex;
+    private Context mContext;
 
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
@@ -49,6 +52,8 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_login);
+        mContext = this;
+
     }
 
     @Override

@@ -1,17 +1,23 @@
 package com.news.yazhidao.common;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+
+import java.util.List;
 
 import cn.sharesdk.framework.ShareSDK;
 
@@ -93,4 +99,5 @@ public abstract class BaseActivity extends AppCompatActivity {
 //            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 //        }
     }
+
 }
