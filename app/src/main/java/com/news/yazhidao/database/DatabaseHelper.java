@@ -135,9 +135,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
             NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
-            if (oldVersion <= 9){
+            if (oldVersion <= 25){
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
             }
+
+
             oldDiggerAlbumItems = albumSubItemDao.queryForAll();
 
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);

@@ -175,6 +175,7 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
                 break;
         }
     }
+    
 
     private void doSearch() {
         hideKeyboard();

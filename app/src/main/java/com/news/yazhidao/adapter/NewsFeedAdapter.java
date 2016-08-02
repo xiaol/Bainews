@@ -11,6 +11,8 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -207,6 +209,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     setNewsTime((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) llSourceNoPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
                 llSourceNoPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
                 if(isAttention){
                     llSourceNoPic.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
@@ -275,6 +278,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setSourceViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), (ImageView) llSourceOnePic.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_textView), feed.getPtime());
                 }
@@ -302,6 +306,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setSourceViewText((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), (ImageView) llSourceCard.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceCard.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
@@ -325,6 +330,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceBigPic.findViewById(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
                 if (feed.getPtime() != null)
                     setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
@@ -582,6 +588,36 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
+    public void newsTag(TextViewExtend tag,int type){
+        String content = "";
+        if(type == 1){
+            if(tag.getVisibility() == View.GONE){
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "热点";
+        }else if(type == 2){
+            if(tag.getVisibility() == View.GONE){
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "推送";
+        }else{
+            if(tag.getVisibility() == View.VISIBLE){
+                tag.setVisibility(View.GONE);
+            }
+            tag.setVisibility(View.GONE);
+            return;
+        }
+        tag.setText(content);
+        tag.setTextColor(mContext.getResources().getColor(R.color.color1));
+        tag.setGravity(Gravity.CENTER);
+        tag.setBackgroundResource(R.drawable.newstag_shape);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
+        params.width = DensityUtil.dip2px(mContext, 20);
+        params.height = DensityUtil.dip2px(mContext, 11);
+        tag.setLayoutParams(params);
+
+    }
+
     /**
      * item的点击事件
      *
@@ -747,6 +783,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isCkeckVisity = isVisity;
         notifyDataSetChanged();
     }
+
+
 
     /**
      * 接口回调传入数据的添加与删除

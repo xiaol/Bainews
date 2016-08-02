@@ -92,6 +92,12 @@ public class NewsFeed implements Serializable {
     @DatabaseField
     private String descr;
 
+    /**
+     * 0普通新闻(不用显示标识)、1热点、2推送
+     */
+    @DatabaseField
+    private int rtype;
+
     /** 是(1)否(0)已收藏 */
     private int colflag;
     /** 是(1)否(0)已关心 */
@@ -130,6 +136,14 @@ public class NewsFeed implements Serializable {
                 ", conflag=" + conflag +
                 ", conpubflag=" + conpubflag +
                 '}';
+    }
+
+    public int getRtype() {
+        return rtype;
+    }
+
+    public void setRtype(int rtype) {
+        this.rtype = rtype;
     }
 
     public ArrayList<AttentionListEntity> getAttentionListEntities() {
