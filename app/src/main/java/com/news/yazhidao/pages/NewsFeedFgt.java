@@ -920,7 +920,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        loadFocusData(PULL_DOWN_REFRESH);
+                        if (!TextUtil.isListEmpty(mArrNewsFeed)){
+                            loadFocusData(PULL_DOWN_REFRESH);
+                        }else {
+                            loadFocusData(PULL_UP_REFRESH);
+                        }
                     }
                 }, 1000);
             }
