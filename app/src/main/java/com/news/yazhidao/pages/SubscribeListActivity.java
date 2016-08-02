@@ -2,6 +2,7 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.User;
@@ -25,6 +28,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONObject;
@@ -56,7 +60,6 @@ public class SubscribeListActivity extends SwipeBackActivity {
     protected void setContentView() {
         setContentView(R.layout.activity_subscribe_list);
         mContext = this;
-
     }
 
     @Override
@@ -103,6 +106,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Logger.e("aaa", "requestCode == " + requestCode + ",resultCode == " + resultCode);
         if (resultCode == 1234) {
             if (data != null) {
                 boolean attention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, false);
@@ -119,7 +123,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                     mAdapter.notifyDataSetChanged();
                 }
             }
-        } else if (resultCode == LoginAty.REQUEST_CODE) {
+        } else if (requestCode == REQUEST_LOGIN_CODE && resultCode == LoginAty.REQUEST_CODE) {
             if (data != null) {
                 int position = data.getIntExtra(KEY_ATTENTION_INDEX, 0);
                 changeAttentionStatus(mAdapter, mAttentionListEntities.get(position));
@@ -171,7 +175,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
                     if (user != null && user.isVisitor()) {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         loginAty.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, position);
-                        startActivityForResult(loginAty, 1006);
+                        startActivityForResult(loginAty, REQUEST_LOGIN_CODE);
                     } else {
                         changeAttentionStatus(SubscribeListAdapter.this, attentionListEntity);
                     }
@@ -191,7 +195,13 @@ public class SubscribeListActivity extends SwipeBackActivity {
             attentionListEntity.setFlag(0);
             attentionListEntity.setConcern(attentionListEntity.getConcern() - 1);
         } else {
-            ToastUtil.showAttentionSuccessToast(this);
+            if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
+                ToastUtil.showAttentionSuccessToast(mContext);
+            }else{
+                AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,attentionListEntity.getName());
+                attentionDetailDialog.show();
+                SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
+            }
             attentionListEntity.setFlag(1);
             attentionListEntity.setConcern(attentionListEntity.getConcern() + 1);
         }

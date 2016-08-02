@@ -10,7 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
         android:visibility="gone"
-        android:text="papi"/>
+        android:text="papi"
+        android:textSize="@dimen/new_font7"
+        android:layout_gravity="center_vertical"
+        />
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/news_source_TextView"
@@ -20,7 +23,7 @@
         android:lines="1"
         android:maxEms="8"
         android:textColor="@color/new_color3"
-        android:textSize="@dimen/new_font6" />
+        android:textSize="@dimen/new_font6"/>
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/comment_textView"

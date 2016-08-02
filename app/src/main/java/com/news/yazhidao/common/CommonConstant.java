@@ -53,6 +53,7 @@ public final class CommonConstant {
     public static final String SEARCH_HISTORY = "search_history";//我的收藏
     public static final String APPINFO = "appinfo";//我的收藏
     public static final String KEY_SUBSCRIBE_LIST = "key_subscribe_list";//订阅信息
+    public static final String KEY_ATTENTION_ID = "key_attention_id";//是否是以一次点击关注源
 
 
     public static final int TEXT_SIZE_NORMAL = 16;
