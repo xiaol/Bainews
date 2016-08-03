@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -159,7 +158,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isFavorite = true;
         isNeedShowDisLikeIcon = false;
     }
-    public void isAttention(){
+
+    public void isAttention() {
         isAttention = true;
         isNeedShowDisLikeIcon = false;
     }
@@ -201,18 +201,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
-                LinearLayout llSourceNoPic = holder.getView(R.id.source_content_linearLayout);
-                setSourceViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceNoPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceNoPic.findViewById(R.id.delete_imageView));
-                setCommentViewText((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 if (feed.getPtime() != null)
-                    setNewsTime((TextViewExtend) llSourceNoPic.findViewById(R.id.comment_textView), feed.getPtime());
+                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setDeleteClick((ImageView) llSourceNoPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
-                llSourceNoPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
-                if(isAttention){
-                    llSourceNoPic.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                if (isAttention) {
+                    holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
                 break;
             case R.layout.ll_news_item_one_pic:
@@ -275,18 +274,18 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     }
                 });
 
-                setSourceViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceOnePic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), (ImageView) llSourceOnePic.findViewById(R.id.delete_imageView));
-                setCommentViewText((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
-                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 if (feed.getPtime() != null) {
-                    setNewsTime((TextViewExtend) llSourceOnePic.findViewById(R.id.comment_textView), feed.getPtime());
+                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 }
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setDeleteClick((ImageView) llSourceOnePic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceOnePic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
-                if(isAttention){
-                    llSourceOnePic.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                if (isAttention) {
+                    holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
                 break;
             case R.layout.ll_news_card:
@@ -302,18 +301,17 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
-                LinearLayout llSourceCard = holder.getView(R.id.source_content_linearLayout);
-                setSourceViewText((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceCard.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), (ImageView) llSourceCard.findViewById(R.id.delete_imageView));
-                setCommentViewText((TextViewExtend) llSourceCard.findViewById(R.id.comment_num_textView), feed.getComment() + "");
-                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 if (feed.getPtime() != null)
-                    setNewsTime((TextViewExtend) llSourceCard.findViewById(R.id.comment_textView), feed.getPtime());
+                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setDeleteClick((ImageView) llSourceCard.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceCard.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon?View.VISIBLE:View.INVISIBLE);
-                if(isAttention){
-                    llSourceCard.findViewById(R.id.news_source_TextView).setVisibility(View.GONE);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                if (isAttention) {
+                    holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
                 break;
             case R.layout.ll_news_big_pic2:
@@ -326,16 +324,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead());
                 }
-                LinearLayout llSourceBigPic = holder.getView(R.id.source_content_linearLayout);
-                setSourceViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname());
-                setFocusBgColor((TextViewExtend) llSourceBigPic.findViewById(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), (ImageView) llSourceBigPic.findViewById(R.id.delete_imageView));
-                setCommentViewText((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_num_textView), feed.getComment() + "");
-                newsTag((TextViewExtend) holder.getView(R.id.type_textView),feed.getRtype());
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 if (feed.getPtime() != null)
-                    setNewsTime((TextViewExtend) llSourceBigPic.findViewById(R.id.comment_textView), feed.getPtime());
+                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
-                llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {
@@ -370,7 +367,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         @Override
                         public void onClick(View view) {
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
-                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
                             mContext.startActivity(in);
 
                         }
@@ -407,7 +404,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         @Override
                         public void onClick(View view) {
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
-                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
                             mContext.startActivity(in);
                         }
                     });
@@ -450,7 +447,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         @Override
                         public void onClick(View view) {
                             Intent in = new Intent(mContext, SubscribeListActivity.class);
-                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST,attentionListEntities);
+                            in.putExtra(SubscribeListActivity.KEY_SUBSCRIBE_LIST, attentionListEntities);
                             mContext.startActivity(in);
                         }
                     });
@@ -459,7 +456,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setOpenAttentionPage(AttentionListEntity attention){
+    private void setOpenAttentionPage(AttentionListEntity attention) {
         Intent attentionAty = new Intent(mContext, AttentionActivity.class);
         attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, attention.getFlag());
         attentionAty.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, attention.getIcon());
@@ -484,25 +481,25 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     private void setNewsTime(TextViewExtend tvComment, String updateTime) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Calendar calendar =  dateFormat.getCalendar();
+        Calendar calendar = dateFormat.getCalendar();
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
-            Log.i("tag",updateTime+"date.getTime()");
-            int month = calendar.get(Calendar.MONTH)+1;
+            Log.i("tag", updateTime + "date.getTime()");
+            int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             if (between >= (24 * 3600000)) {
 //                tvComment.setText(updateTime);
-                if(isAttention){
+                if (isAttention) {
 //                    tvComment.setText(between / 3600000 + "小时前");
                     tvComment.setText(month + "月" + day + "日");
-                }else{
+                } else {
                     tvComment.setText("");
                 }
             } else if (between < (24 * 3600000) && between >= (1 * 3600000)) {
-                if(isAttention){
+                if (isAttention) {
                     tvComment.setText(between / 3600000 + "小时前");
-                }else{
+                } else {
                     tvComment.setText("");
                 }
 
@@ -588,20 +585,20 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    public void newsTag(TextViewExtend tag,int type){
+    public void newsTag(TextViewExtend tag, int type) {
         String content = "";
-        if(type == 1){
-            if(tag.getVisibility() == View.GONE){
+        if (type == 1) {
+            if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "热点";
-        }else if(type == 2){
-            if(tag.getVisibility() == View.GONE){
+        } else if (type == 2) {
+            if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "推送";
-        }else{
-            if(tag.getVisibility() == View.VISIBLE){
+        } else {
+            if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
             }
             tag.setVisibility(View.GONE);
@@ -783,7 +780,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         isCkeckVisity = isVisity;
         notifyDataSetChanged();
     }
-
 
 
     /**
