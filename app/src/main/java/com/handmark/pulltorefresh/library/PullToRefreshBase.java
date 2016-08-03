@@ -1129,6 +1129,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		// We need to create now layouts now
 		mHeaderLayout = createLoadingLayout(context, Mode.PULL_FROM_START, a);
 		mFooterLayout = createLoadingLayout(context, Mode.PULL_FROM_END, a);
+		setFooterViewInvisible();//隐藏footerView
 
 		/**
 		 * Styleables from XML
