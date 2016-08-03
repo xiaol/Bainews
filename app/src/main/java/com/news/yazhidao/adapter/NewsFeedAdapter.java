@@ -595,11 +595,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "热点";
+            tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
+            tag.setBackgroundResource(R.drawable.newstag_red_shape);
         }else if(type == 2){
             if(tag.getVisibility() == View.GONE){
                 tag.setVisibility(View.VISIBLE);
             }
             content = "推送";
+            tag.setTextColor(mContext.getResources().getColor(R.color.color1));
+            tag.setBackgroundResource(R.drawable.newstag_shape);
         }else{
             if(tag.getVisibility() == View.VISIBLE){
                 tag.setVisibility(View.GONE);
@@ -607,10 +611,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             tag.setVisibility(View.GONE);
             return;
         }
+
         tag.setText(content);
-        tag.setTextColor(mContext.getResources().getColor(R.color.color1));
+
         tag.setGravity(Gravity.CENTER);
-        tag.setBackgroundResource(R.drawable.newstag_shape);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tag.getLayoutParams();
         params.width = DensityUtil.dip2px(mContext, 20);
         params.height = DensityUtil.dip2px(mContext, 11);
