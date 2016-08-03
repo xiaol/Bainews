@@ -133,6 +133,8 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		// Show the ListView Loading View and set it to refresh.
 		if(!isFooterViewVisity||getCurrentMode() != Mode.PULL_FROM_END){
 			listViewLoadingView.setVisibility(View.VISIBLE);
+		}else{
+			listViewLoadingView.setVisibility(View.GONE);
 		}
 
 		listViewLoadingView.refreshing();

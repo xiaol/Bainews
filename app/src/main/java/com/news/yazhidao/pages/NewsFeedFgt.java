@@ -718,27 +718,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
 
-
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Logger.e("ccc", "mArrNewsFeed.size()===" + mArrNewsFeed.size());
-                                    if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
-                                        Logger.e("ccc","=================111=================");
-                                        if(footerView.getVisibility() == View.VISIBLE){
-                                            footerView.setVisibility(View.GONE);
-                                            mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                                        }
-                                    }else {
-                                        Logger.e("ccc","================222==================");
-                                        if(footerView.getVisibility() == View.GONE){
-                                            footerView.setVisibility(View.VISIBLE);
-                                            mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
-                                        }
-                                    }
-                                }
-                            },100);
-
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);
 //                            new Handler().postDelayed(new Runnable() {
@@ -752,7 +731,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //                            }, 1000);
                             break;
                         case PULL_UP_REFRESH:
-                            Logger.e("aaa", "===========PULL_UP_REFRESH==========");
+                            Logger.e("ccc", "===========PULL_UP_REFRESH==========");
                             if (isNewVisity) {//首次进入加入他
 //                                addSP(result);
                                 isNeedAddSP = false;
@@ -766,6 +745,26 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                             break;
                     }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
+                                Logger.e("ccc","=================111=================");
+                                if(footerView.getVisibility() == View.VISIBLE){
+                                    footerView.setVisibility(View.GONE);
+                                    mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                                }
+                            }else {
+                                Logger.e("ccc","================222==================");
+                                if(footerView.getVisibility() == View.GONE){
+                                    footerView.setVisibility(View.VISIBLE);
+                                    mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
+                                }
+                            }
+                        }
+                    },100);
+
+
                     if (mNewsSaveCallBack != null) {
                         mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
                     }
