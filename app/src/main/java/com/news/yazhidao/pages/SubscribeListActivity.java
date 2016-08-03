@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
@@ -192,9 +190,11 @@ public class SubscribeListActivity extends SwipeBackActivity {
      */
     private void changeAttentionStatus(SubscribeListAdapter subscribeListAdapter, AttentionListEntity attentionListEntity) {
         if (attentionListEntity.getFlag() == 1) {
+            SharedPreManager.deleteAttention(attentionListEntity.getName());
             attentionListEntity.setFlag(0);
             attentionListEntity.setConcern(attentionListEntity.getConcern() - 1);
         } else {
+            SharedPreManager.addAttention(attentionListEntity.getName());
             if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
                 ToastUtil.showAttentionSuccessToast(mContext);
             }else{
@@ -206,6 +206,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
             attentionListEntity.setConcern(attentionListEntity.getConcern() + 1);
         }
         subscribeListAdapter.notifyDataSetChanged();
+
     }
 
     @Override

@@ -1,14 +1,11 @@
 package com.news.yazhidao.pages;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
@@ -46,6 +43,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONObject;
 
@@ -54,7 +52,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AttentionActivity extends AppCompatActivity implements View.OnClickListener,SharePopupWindow.ShareDismiss{
+public class AttentionActivity extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_ATTENTION_TITLE = "key_attention_title";
     public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
@@ -103,9 +101,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 
     private SimpleDraweeView iv_attention_headImage;
 
-    private Context mContext;
-
-    private RelativeLayout bgLayout,mAttentionTitleLayout;
+    private RelativeLayout bgLayout, mAttentionTitleLayout;
 
     private User user;
 
@@ -125,20 +121,29 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private SharePopupWindow mSharePopupWindow;
     private View mAttentionRelativeLayout;
 
-    private int thisVisibleItemCount,thisTotalItemCount;
+    private int thisVisibleItemCount, thisTotalItemCount;
+
+    @Override
+    protected void initializeViews() {
+        super.initializeViews();
+        user = SharedPreManager.getUser(this);
+        mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
+        mPUrl = getIntent().getStringExtra(KEY_ATTENTION_HEADIMAGE);
+        conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
+        mIndex = getIntent().getIntExtra(KEY_ATTENTION_INDEX, 0);
+        ismAttention = (conpubflag > 0);
+    }
+
+    @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
 //        ButterKnife.bind(this);
-        mContext = this;
-        user = SharedPreManager.getUser(mContext);
-        mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
-        mPUrl = getIntent().getStringExtra(KEY_ATTENTION_HEADIMAGE);
-        conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
-        mIndex = getIntent().getIntExtra(KEY_ATTENTION_INDEX, 0);
-        ismAttention = (conpubflag > 0);
 //        Logger.e("bbb", "mPName==" + mPName);
 //        Logger.e("bbb", "mPUrl==" + mPUrl);
 //        mPName = "蚕豆网";
@@ -177,12 +182,12 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         mAttentionRightMore.setOnClickListener(this);
         mAttention_btn.setOnClickListener(this);
 
-        if(ismAttention){
+        if (ismAttention) {
             mAttention_btn.setText("已关注");
             mAttention_btn.setBackgroundResource(R.drawable.attention_tv_shape);
             mAttention_btn.setTextColor(getResources().getColor(R.color.unattention_line_color));
 
-        }else{
+        } else {
             mAttention_btn.setText("关注");
             mAttention_btn.setBackgroundResource(R.drawable.unattention_tv_shape);
             mAttention_btn.setTextColor(getResources().getColor(R.color.attention_line_color));
@@ -281,7 +286,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
              * totalItemCount item的总数
              */
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 //                Logger.e("aaa", "firstVisibleItem==" + firstVisibleItem);
 //                Logger.e("aaa", "visibleItemCount==" + visibleItemCount);
 //                Logger.e("aaa", "totalItemCount==" + totalItemCount);
@@ -289,14 +294,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //                if(){
 //
 //                }
-                if(thisVisibleItemCount < totalItemCount){
+                if (thisVisibleItemCount < totalItemCount) {
                     thisTotalItemCount = totalItemCount;
                     thisVisibleItemCount = visibleItemCount;
                 }
-                if(firstVisibleItem <= 1){
+                if (firstVisibleItem <= 1) {
                     mAttention_btn.setVisibility(View.VISIBLE);
-                }else{
-                    if(mAttentionCenterTitle.getVisibility() == View.GONE){
+                } else {
+                    if (mAttentionCenterTitle.getVisibility() == View.GONE) {
                         mAttentionCenterTitle.setVisibility(View.VISIBLE);
                         mAttentionTitleLayout.setBackgroundColor(getResources().getColor(R.color.bg_share));
                     }
@@ -317,28 +322,28 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 int gY = locationTitle[1];
                 Logger.e("aaa", "mY====" + locationTitle[1]);
 
-                if(gY>=mY){
-                    if(tv_attention_title.getVisibility() == View.VISIBLE){
+                if (gY >= mY) {
+                    if (tv_attention_title.getVisibility() == View.VISIBLE) {
                         tv_attention_title.setVisibility(View.INVISIBLE);
                     }
-                    if(mAttentionCenterTitle.getVisibility() == View.GONE){
+                    if (mAttentionCenterTitle.getVisibility() == View.GONE) {
                         mAttentionCenterTitle.setVisibility(View.VISIBLE);
                     }
                     mAttentionTitleLayout.setBackgroundColor(getResources().getColor(R.color.bg_share));
-                }else{
-                    if(tv_attention_title.getVisibility() == View.INVISIBLE){
+                } else {
+                    if (tv_attention_title.getVisibility() == View.INVISIBLE) {
                         tv_attention_title.setVisibility(View.VISIBLE);
                     }
-                    if(mAttentionCenterTitle.getVisibility() == View.VISIBLE){
+                    if (mAttentionCenterTitle.getVisibility() == View.VISIBLE) {
                         mAttentionCenterTitle.setVisibility(View.GONE);
                     }
                     mAttentionTitleLayout.setBackgroundColor(getResources().getColor(R.color.transparent));
                 }
                 int margin = mY - gY;
-                if(maxMargin<margin){
+                if (maxMargin < margin) {
                     maxMargin = margin;
                 }
-                float proportion = (float) margin / (float)maxMargin;
+                float proportion = (float) margin / (float) maxMargin;
                 Logger.e("aaa", "proportion==" + proportion);
 
                 mAttention_btn.setAlpha(proportion);
@@ -363,7 +368,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout footerView;
     ListView lv;
 
-    public void addListOtherView(){
+    public void addListOtherView() {
         LinearLayout attentionHeadView = (LinearLayout) getLayoutInflater().inflate(R.layout.attention_headview_item, null);
         lv = mAttentionList.getRefreshableView();
 
@@ -381,16 +386,14 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //        iv_attention_headImage.setImageURI(Uri.parse(mPUrl));
 
 
-
         footerView = (LinearLayout) getLayoutInflater().inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
 
 
-
-
     }
+
     //    @Override
 //    public void onWindowFocusChanged(boolean hasFocus) {
 //        super.onWindowFocusChanged(hasFocus);
@@ -441,18 +444,18 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //    }
 //    AvatarImageBehavior avatarImageBehavior;
 //    AvatarTextBehavior avatarTextBehavior;
-    private void loadData() {
+    public void loadData() {
 
-        RequestQueue requestQueue =  Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         String pname = null;
         String tstart = null;
-        if(!TextUtil.isListEmpty(newsFeeds)){//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
+        if (!TextUtil.isListEmpty(newsFeeds)) {//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
             int position = newsFeeds.size() - 1;
             String Ptime = newsFeeds.get(position).getPtime();
             Logger.e("aaa", "最后一条数据的position == " + position + ",Ptime == " + Ptime);
             tstart = DateUtil.dateStr2Long(Ptime) + "";
-        }else{
-            tstart = System.currentTimeMillis()+"";
+        } else {
+            tstart = System.currentTimeMillis() + "";
         }
 
         try {
@@ -469,23 +472,23 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 
                     @Override
                     public void onResponse(AttentionPbsEntity result) {
-                        if(bgLayout.getVisibility() == View.VISIBLE){
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
                             bgLayout.setVisibility(View.GONE);
                         }
                         Logger.e("jigang", "result===" + result.toString());
 //                        mAttentionList.onRefreshComplete();
                         AttentionListEntity attentionListEntity = result.getInfo();
                         String descr = attentionListEntity.getDescr();
-                        if(!TextUtil.isEmptyString(descr)){
+                        if (!TextUtil.isEmptyString(descr)) {
                             linear_attention_descrLayout.setVisibility(View.VISIBLE);
                             img_attention_line.setVisibility(View.VISIBLE);
                             attention_headViewItem_Content.setText(descr);
-                        }else{
+                        } else {
                             linear_attention_descrLayout.setVisibility(View.GONE);
                             img_attention_line.setVisibility(View.GONE);
                         }
                         String icon = attentionListEntity.getIcon();
-                        if(!TextUtil.isEmptyString(icon)){
+                        if (!TextUtil.isEmptyString(icon)) {
                             iv_attention_headImage.setImageURI(Uri.parse(icon));
                         }
 //                        ListView lv = mAttentionList.getRefreshableView();
@@ -498,7 +501,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                         } else {
                             lv.removeFooterView(footerView);
                             mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
-                            if(TextUtil.isListEmpty(newsFeeds)){
+                            if (TextUtil.isListEmpty(newsFeeds)) {
                                 bgLayout.setVisibility(View.VISIBLE);
                                 tv_attention_historyTitle.setVisibility(View.GONE);
                                 tv_attention_noData.setVisibility(View.VISIBLE);
@@ -509,13 +512,13 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
-                                    Logger.e("aaa","==================================");
+                                if (thisVisibleItemCount >= thisTotalItemCount) {//删除 footerView 这个方法可以显示无数据的情况
+                                    Logger.e("aaa", "==================================");
                                     lv.removeFooterView(footerView);
                                     mAttentionList.setMode(PullToRefreshBase.Mode.DISABLED);
                                 }
                             }
-                        },100);
+                        }, 100);
 
                     }
                 }, new Response.ErrorListener() {
@@ -533,8 +536,9 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     }
 
     boolean isNetWork;
-    public void addordeleteAttention(final boolean isAttention){
-        if(isNetWork){
+
+    public void addordeleteAttention(final boolean isAttention) {
+        if (isNetWork) {
             return;
         }
         isNetWork = true;
@@ -547,31 +551,33 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname=" + pname);
         JSONObject json = new JSONObject();
-        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa", "json+++++++++++++++++++++++" + json.toString());
 
-        DetailOperateRequest request = new DetailOperateRequest( isAttention ? Request.Method.DELETE : Request.Method.POST,
-                HttpConstant.URL_ADDORDELETE_ATTENTION+ "uid=" + user.getMuid() + "&pname="+pname
+        DetailOperateRequest request = new DetailOperateRequest(isAttention ? Request.Method.DELETE : Request.Method.POST,
+                HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
-                Logger.e("aaa","json+++++++++++++++++++++++"+data);
-                if(isAttention){
+                Logger.e("aaa", "json+++++++++++++++++++++++" + data);
+                if (isAttention) {
+                    SharedPreManager.deleteAttention(mPName);
                     ismAttention = false;
                     mAttention_btn.setText("关注");
                     mAttention_btn.setBackgroundResource(R.drawable.unattention_tv_shape);
                     mAttention_btn.setTextColor(getResources().getColor(R.color.attention_line_color));
-                }else{
+                } else {
+                    SharedPreManager.addAttention(mPName);
                     ismAttention = true;
-                    if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
-                        ToastUtil.showAttentionSuccessToast(mContext);
-                    }else{
-                        AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,mPName );
+                    if (SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)) {
+                        ToastUtil.showAttentionSuccessToast(AttentionActivity.this);
+                    } else {
+                        AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(AttentionActivity.this, mPName);
                         attentionDetailDialog.show();
-                        SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
+                        SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, true);
                     }
 
                     mAttention_btn.setText("已关注");
@@ -589,7 +595,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onErrorResponse(VolleyError error) {
 //                mNewsDetailList.onRefreshComplete();
-                if(error.getMessage().indexOf("2003")!=-1){
+                if (error.getMessage().indexOf("2003") != -1) {
                     ismAttention = true;
                     ToastUtil.toastShort("用户已关注该信息！");
                     mAttention_btn.setText("已关注");
@@ -602,13 +608,12 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Authorization", SharedPreManager.getUser(this).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
-
 
 
     }
@@ -643,9 +648,6 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //    }
 
 
-
-
-
     @Override
     public void onClick(View view) {
 //        mAttentionLeftBack,mAttentionRightMore, mAttention_btn
@@ -671,7 +673,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.mAttention_btn:
                 if (user != null && user.isVisitor()) {
-                    Intent loginAty = new Intent(mContext, LoginAty.class);
+                    Intent loginAty = new Intent(this, LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     addordeleteAttention(ismAttention);
@@ -686,7 +688,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         Intent in = new Intent();
         in.putExtra(KEY_ATTENTION_CONPUBFLAG, ismAttention);
         in.putExtra(KEY_ATTENTION_INDEX, mIndex);
-        setResult(1234,in);
+        setResult(1234, in);
         super.finish();
     }
 
@@ -694,7 +696,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == 1006) {
-            user = SharedPreManager.getUser(mContext);
+            user = SharedPreManager.getUser(this);
             addordeleteAttention(false);
         }
     }

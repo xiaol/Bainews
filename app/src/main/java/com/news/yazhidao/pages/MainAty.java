@@ -49,6 +49,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
+    public static final String KEY_CURRENT_CHANNEL = "key_current_channel";
     private ArrayList<ChannelItem> mUnSelChannelItems;
 
     private ChannelTabStrip mChannelTabStrip;
@@ -67,9 +68,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
      * 自定义的PopWindow
      */
     FeedDislikePopupWindow dislikePopupWindow;
-
-
-
+    private ChannelItem mCurrentChannel;
+    private int mCurrentChannelPos;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -212,6 +212,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 break;
             case R.id.mChannelExpand:
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
+                mCurrentChannel = mSelChannelItems.get(mViewPager.getCurrentItem());
+                mCurrentChannelPos = mViewPager.getCurrentItem();
                 MobclickAgent.onEvent(this, "user_open_channel_edit_page");
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
@@ -262,6 +264,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (item != null) {
                 ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
             }
+            Logger.e("jigang","--- onActivityResult");
             mViewPagerAdapter.setmChannelItems(channelItems);
             mViewPagerAdapter.notifyDataSetChanged();
             mChannelTabStrip.setViewPager(mViewPager);
@@ -322,21 +325,14 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         @Override
         public int getItemPosition(Object object) {
             Logger.e("jigang","----viewpager getItemPosition " + object.getClass().getSimpleName());
-            int index = -1;
-            if (channelItems != null && channelItems.size() > 0) {
-                for (int i = 0; i < channelItems.size(); i++) {
-                    ChannelItem item = channelItems.get(i);
-                    if (item1.getId().equals(item.getId())) {
-                        index = i;
-                    }
-                }
+            int newPos = mViewPager.getCurrentItem();
+            String currentId = mCurrentChannel.getName();
+            String newId = channelItems.get(newPos).getName();
+            if (newPos == mCurrentChannelPos && currentId.equals(newId)){
+                return POSITION_UNCHANGED;
+            }else {
+                return POSITION_NONE;
             }
-            return POSITION_NONE;
-//            if (index == -1) {
-//                return POSITION_NONE;
-//            } else {
-//                return POSITION_UNCHANGED;
-//            }
         }
 
         @Override

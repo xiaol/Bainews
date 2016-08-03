@@ -57,6 +57,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
@@ -923,8 +924,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     isClickHome = false;
                 }
             };
-            mHandler.postDelayed(mThread, 1000);
-
+            if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
+                mHandler.postDelayed(mThread, 1000);
+            }
         } else {
             if (mArrNewsFeed != null && bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
@@ -946,7 +948,18 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        loadFocusData(PULL_DOWN_REFRESH);
+                        if (TextUtil.isListEmpty(mArrNewsFeed)){
+                            loadFocusData(PULL_UP_REFRESH);
+                        }else {
+                            HashMap<String, String> attentions4Map = SharedPreManager.getAttentions4Map();
+                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+                            while (iterator.hasNext()){
+                                if (attentions4Map.get(iterator.next().getPname()) == null){
+                                    iterator.remove();
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
                     }
                 }, 1000);
             }
