@@ -606,6 +606,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     startTopRefresh();
                 } else {
                     isNoteLoadDate = false;
+                    mlvNewsFeed.onRefreshComplete();
                 }
             } else {
                 stopRefresh();
