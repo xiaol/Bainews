@@ -57,6 +57,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
@@ -923,6 +924,15 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     public void run() {
                         if (TextUtil.isListEmpty(mArrNewsFeed)){
                             loadFocusData(PULL_UP_REFRESH);
+                        }else {
+                            HashMap<String, String> attentions4Map = SharedPreManager.getAttentions4Map();
+                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+                            while (iterator.hasNext()){
+                                if (attentions4Map.get(iterator.next().getPname()) == null){
+                                    iterator.remove();
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 }, 1000);

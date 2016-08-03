@@ -9,6 +9,7 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -56,6 +57,45 @@ public class ReleaseSourceItemDao {
             e.printStackTrace();
         }
         return items;
+    }
+
+
+    public HashMap<String,ReleaseSourceItem> queryFocusItem() {
+        HashMap<String,ReleaseSourceItem> items = new HashMap<>();
+        try {
+            List<ReleaseSourceItem> list = mReleaseSourceItemDao.queryForAll();
+            for (ReleaseSourceItem item : list) {
+                if (item.isFocus()){
+                    items.put(item.getpName(),item);
+                }
+            }
+            if (!TextUtil.isListEmpty(list)) {
+                return items;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return items;
+    }
+
+    /**
+     * 获取所有的关注信息
+     */
+    public List<ReleaseSourceItem> queryFocusSourceItem(){
+        List<ReleaseSourceItem> mDatas = new ArrayList<>();
+        try {
+            List<ReleaseSourceItem> list = mReleaseSourceItemDao.queryForAll();
+            if (!TextUtil.isListEmpty(list)){
+                for (ReleaseSourceItem item : list) {
+                    if (item.isFocus()){
+                        mDatas.add(item);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return mDatas;
     }
 
     public void insertOrUpdate(ReleaseSourceItem pItem) {

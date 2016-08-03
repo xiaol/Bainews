@@ -15,7 +15,7 @@ public class ReleaseSourceItem implements Serializable {
     /**
      * 栏目对应ID
      */
-    @DatabaseField(id = true)
+    @DatabaseField
     private String id;
     /**
      * 栏目对应描述
@@ -52,8 +52,22 @@ public class ReleaseSourceItem implements Serializable {
     /**
      * 栏目对应的名称
      */
-    @DatabaseField
+    @DatabaseField(id = true)
     private String pName;
+
+    public ReleaseSourceItem() {
+    }
+
+    public ReleaseSourceItem(int background, int concern, String ctime, String descr, boolean focus, String icon, String id, String pName) {
+        this.background = background;
+        this.concern = concern;
+        this.ctime = ctime;
+        this.descr = descr;
+        this.focus = focus;
+        this.icon = icon;
+        this.id = id;
+        this.pName = pName;
+    }
 
     public String getId() {
         return id;
