@@ -69,7 +69,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
      */
     FeedDislikePopupWindow dislikePopupWindow;
     private ChannelItem mCurrentChannel;
-
+    private int mCurrentChannelPos;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -213,6 +213,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             case R.id.mChannelExpand:
                 Intent channelOperate = new Intent(MainAty.this, ChannelOperateAty.class);
                 mCurrentChannel = mSelChannelItems.get(mViewPager.getCurrentItem());
+                mCurrentChannelPos = mViewPager.getCurrentItem();
                 MobclickAgent.onEvent(this, "user_open_channel_edit_page");
                 startActivityForResult(channelOperate, REQUEST_CODE);
                 break;
@@ -324,7 +325,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         @Override
         public int getItemPosition(Object object) {
             Logger.e("jigang","----viewpager getItemPosition " + object.getClass().getSimpleName());
-            if (mCurrentChannel.getId().equals(channelItems.get(mViewPager.getCurrentItem()).getId())){
+            int newPos = mViewPager.getCurrentItem();
+            String currentId = mCurrentChannel.getName();
+            String newId = channelItems.get(newPos).getName();
+            if (newPos == mCurrentChannelPos && currentId.equals(newId)){
                 return POSITION_UNCHANGED;
             }else {
                 return POSITION_NONE;

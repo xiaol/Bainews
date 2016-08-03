@@ -1,14 +1,11 @@
 package com.news.yazhidao.pages;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
@@ -46,6 +43,7 @@ import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.SharePopupWindow;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
 import org.json.JSONObject;
 
@@ -54,7 +52,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AttentionActivity extends AppCompatActivity implements View.OnClickListener,SharePopupWindow.ShareDismiss{
+public class AttentionActivity extends SwipeBackActivity implements View.OnClickListener,SharePopupWindow.ShareDismiss{
 
     public static final String KEY_ATTENTION_TITLE = "key_attention_title";
     public static final String KEY_ATTENTION_HEADIMAGE = "key_detail_headimage";
@@ -103,8 +101,6 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 
     private SimpleDraweeView iv_attention_headImage;
 
-    private Context mContext;
-
     private RelativeLayout bgLayout,mAttentionTitleLayout;
 
     private User user;
@@ -128,17 +124,26 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     private int thisVisibleItemCount,thisTotalItemCount;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attention);
-//        ButterKnife.bind(this);
-        mContext = this;
-        user = SharedPreManager.getUser(mContext);
+    protected void initializeViews() {
+        super.initializeViews();
+        user = SharedPreManager.getUser(this);
         mPName = getIntent().getStringExtra(KEY_ATTENTION_TITLE);
         mPUrl = getIntent().getStringExtra(KEY_ATTENTION_HEADIMAGE);
         conpubflag = getIntent().getIntExtra(KEY_ATTENTION_CONPUBFLAG, 0);
         mIndex = getIntent().getIntExtra(KEY_ATTENTION_INDEX, 0);
         ismAttention = (conpubflag > 0);
+    }
+
+    @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_attention);
+//        ButterKnife.bind(this);
 //        Logger.e("bbb", "mPName==" + mPName);
 //        Logger.e("bbb", "mPUrl==" + mPUrl);
 //        mPName = "蚕豆网";
@@ -441,9 +446,9 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
 //    }
 //    AvatarImageBehavior avatarImageBehavior;
 //    AvatarTextBehavior avatarTextBehavior;
-    private void loadData() {
+    public void loadData() {
 
-        RequestQueue requestQueue =  Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue =  Volley.newRequestQueue(this);
         String pname = null;
         String tstart = null;
         if(!TextUtil.isListEmpty(newsFeeds)){//如果关注源列表数据不为空，拿到当前集合最后一条的时间给接口
@@ -547,7 +552,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
         JSONObject json = new JSONObject();
         Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
@@ -567,9 +572,9 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 }else{
                     ismAttention = true;
                     if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
-                        ToastUtil.showAttentionSuccessToast(mContext);
+                        ToastUtil.showAttentionSuccessToast(AttentionActivity.this);
                     }else{
-                        AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(mContext,mPName );
+                        AttentionDetailDialog attentionDetailDialog = new AttentionDetailDialog(AttentionActivity.this,mPName);
                         attentionDetailDialog.show();
                         SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
                     }
@@ -602,7 +607,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Authorization", SharedPreManager.getUser(this).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         request.setRequestHeader(header);
@@ -671,7 +676,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
                 break;
             case R.id.mAttention_btn:
                 if (user != null && user.isVisitor()) {
-                    Intent loginAty = new Intent(mContext, LoginAty.class);
+                    Intent loginAty = new Intent(this, LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     addordeleteAttention(ismAttention);
@@ -694,7 +699,7 @@ public class AttentionActivity extends AppCompatActivity implements View.OnClick
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == 1006) {
-            user = SharedPreManager.getUser(mContext);
+            user = SharedPreManager.getUser(this);
             addordeleteAttention(false);
         }
     }
