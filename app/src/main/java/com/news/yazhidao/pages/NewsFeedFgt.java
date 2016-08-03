@@ -129,6 +129,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private boolean isBottom;
     private boolean misFocus = false;
 
+    private int thisVisibleItemCount,thisTotalItemCount;//判断footerView 不滑动
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -478,13 +479,14 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             if (isNewVisity) {//首次进入加入他
 //                                addSP(result);
                                 isNeedAddSP = false;
-
                             }
                             if (mArrNewsFeed == null) {
                                 mArrNewsFeed = result;
+
                             } else {
                                 mArrNewsFeed.addAll(result);
                             }
+
                             break;
                     }
                     if (mNewsSaveCallBack != null) {
@@ -708,11 +710,34 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
+                            Logger.e("ccc","=================33================="+mArrNewsFeed.size());
                             if (mArrNewsFeed == null)
                                 mArrNewsFeed = result;
                             else
                                 mArrNewsFeed.addAll(0, result);
                             mlvNewsFeed.getRefreshableView().setSelection(0);
+
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Logger.e("ccc", "mArrNewsFeed.size()===" + mArrNewsFeed.size());
+                                    if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
+                                        Logger.e("ccc","=================111=================");
+                                        if(footerView.getVisibility() == View.VISIBLE){
+                                            footerView.setVisibility(View.GONE);
+                                            mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
+                                        }
+                                    }else {
+                                        Logger.e("ccc","================222==================");
+                                        if(footerView.getVisibility() == View.GONE){
+                                            footerView.setVisibility(View.VISIBLE);
+                                            mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
+                                        }
+                                    }
+                                }
+                            },100);
+
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);
 //                            new Handler().postDelayed(new Runnable() {
@@ -737,6 +762,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                             } else {
                                 mArrNewsFeed.addAll(result);
                             }
+
                             break;
                     }
                     if (mNewsSaveCallBack != null) {
@@ -987,6 +1013,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
     //    int lastY = 0;
 //    int MAX_PULL_BOTTOM_HEIGHT = 100;
+    LinearLayout footerView;
     public void addHFView(LayoutInflater LayoutInflater) {
         View mSearchHeaderView;
 //        if (mstrChannelId.equals("1000")) {
@@ -1014,7 +1041,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 MobclickAgent.onEvent(getActivity(), "qidian_user_enter_search_page");
             }
         });
-        final LinearLayout footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
+        footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
         footView_progressbar = (ProgressBar) footerView.findViewById(R.id.footerView_pb);
@@ -1082,6 +1109,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
+
+                if(thisVisibleItemCount < totalItemCount){
+                    thisTotalItemCount = totalItemCount;
+                    thisVisibleItemCount = visibleItemCount;
+                }
             }
         });
     }
