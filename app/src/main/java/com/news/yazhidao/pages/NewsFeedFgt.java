@@ -897,8 +897,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     isClickHome = false;
                 }
             };
-            mHandler.postDelayed(mThread, 1000);
-
+            if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
+                mHandler.postDelayed(mThread, 1000);
+            }
         } else {
             if (mArrNewsFeed != null && bgLayout.getVisibility() == View.VISIBLE) {
                 bgLayout.setVisibility(View.GONE);
@@ -920,9 +921,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (!TextUtil.isListEmpty(mArrNewsFeed)){
+                        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                             loadFocusData(PULL_DOWN_REFRESH);
-                        }else {
+                        } else {
                             loadFocusData(PULL_UP_REFRESH);
                         }
                     }
