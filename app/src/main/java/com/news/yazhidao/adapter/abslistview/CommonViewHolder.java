@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -147,5 +148,34 @@ public class CommonViewHolder {
     public void setSimpleDraweeViewResource(int draweeView, int Resource) {
         SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
         imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));
+    }
+
+    /**
+     * 奇点号列表专用获取图片
+     * @param draweeView
+     * @param strImg
+     * @param postion
+     */
+    public void setSimpleDraweeViewURI(int draweeView, String strImg,int postion) {
+        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            imageView.setImageURI(Uri.parse(strImg));
+            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        }else{
+            int type = postion % 5;
+            if (type == 0) {
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q1));
+            }else if(type == 1){
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q2));
+            }else if(type == 2){
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q3));
+            }else if(type == 3){
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q4));
+            }else if(type == 4){
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q5));
+            }
+
+
+        }
     }
 }

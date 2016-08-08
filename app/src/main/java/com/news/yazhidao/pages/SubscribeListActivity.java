@@ -143,7 +143,7 @@ public class SubscribeListActivity extends SwipeBackActivity {
 
         @Override
         public void convert(CommonViewHolder holder, final AttentionListEntity attentionListEntity, final int position) {
-            holder.setSimpleDraweeViewURI(R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon());
+            holder.setSimpleDraweeViewURI(R.id.img_SubscribeListItem_icon, attentionListEntity.getIcon(),position);
             holder.setTextViewText(R.id.tv_SubscribeListItem_name, attentionListEntity.getName());
             Logger.e("aaa", "attentionListEntity.getConcern()==" + attentionListEntity.getConcern());
             int concern = attentionListEntity.getConcern();
