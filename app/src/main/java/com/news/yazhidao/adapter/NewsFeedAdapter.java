@@ -679,7 +679,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         break;
                     }
                 }
-                dao.setFocusOnline();
                 HashMap<String, String> hashmap = new HashMap();
                 hashmap.put("channel", channelName);
                 MobclickAgent.onEvent(mContext, "user_read_detail", hashmap);

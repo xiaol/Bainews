@@ -25,6 +25,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -504,6 +505,40 @@ public class SharedPreManager {
         return GsonUtil.deSerializedByType(strList,new TypeToken<ArrayList<AttentionListEntity>>() {
         }.getType());
     }
+
+    public static ArrayList<String> getAttentions(){
+        String strList = get(CommonConstant.FILE_DATA_ATTENTION, CommonConstant.KEY_ATTENTIN_LIST);
+        ArrayList<String> datas = new ArrayList<>();
+        if (!TextUtil.isEmptyString(strList)){
+            return GsonUtil.deSerializedByType(strList,new TypeToken<ArrayList<String>>() {
+            }.getType());
+        }
+        return datas;
+    }
+
+    public static HashMap<String,String> getAttentions4Map(){
+        ArrayList<String> attentions = getAttentions();
+        HashMap<String,String> map = new HashMap<>();
+        for (String item:attentions){
+            map.put(item,item);
+        }
+        return map;
+    }
+
+    public static void deleteAttention(String pName){
+        ArrayList<String> attentions = getAttentions();
+        if (!TextUtil.isListEmpty(attentions)){
+            attentions.remove(pName);
+        }
+        save(CommonConstant.FILE_DATA_ATTENTION,CommonConstant.KEY_ATTENTIN_LIST,GsonUtil.serialized(attentions));
+    }
+
+    public static void addAttention(String pName){
+        ArrayList<String> attentions = getAttentions();
+        attentions.add(pName);
+        save(CommonConstant.FILE_DATA_ATTENTION,CommonConstant.KEY_ATTENTIN_LIST,GsonUtil.serialized(attentions));
+    }
+
 //    public void saveAttentionID(String newID){
 //        String getID = getAttentionID();
 //        save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, TextUtil.isEmptyString(getID) ? newID : "," + newID);

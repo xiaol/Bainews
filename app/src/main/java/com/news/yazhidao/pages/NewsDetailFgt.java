@@ -1,13 +1,11 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -43,11 +41,8 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
-import com.news.yazhidao.entity.AttentionListEntity;
-import com.news.yazhidao.entity.AttentionPbsEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
@@ -1292,6 +1287,9 @@ public class NewsDetailFgt extends BaseFragment {
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
                 Logger.e("aaa","json+++++++++++++++++++++++"+data);
+
+             //保存关注信息
+                SharedPreManager.addAttention(mResult.getPname());
 
                 if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
                     ToastUtil.showAttentionSuccessToast(getActivity());
