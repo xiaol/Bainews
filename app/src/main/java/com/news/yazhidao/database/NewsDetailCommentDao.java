@@ -4,6 +4,9 @@ import android.content.Context;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.utils.Logger;
+
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +46,14 @@ public class NewsDetailCommentDao implements Serializable{
             e.printStackTrace();
         }
     }
+    /**
+     * 增加一条评论
+     */
+    public void addList(List<NewsDetailComment> newsDetailCommentItem){
+       for(NewsDetailComment bean:newsDetailCommentItem){
+           add(bean);
+       }
+    }
 
     public void update(NewsDetailComment newsDetailCommentItem){
         try {
@@ -69,6 +80,7 @@ public class NewsDetailCommentDao implements Serializable{
         try {
             QueryBuilder<NewsDetailComment, Integer> builder = newsDetailCommentDaoOpe.queryBuilder();
             builder.orderBy("ctime", false);
+            builder.where().eq("uid", userId);
             newsDetailCommentItems = builder.query();
             if(newsDetailCommentItems!=null&&newsDetailCommentItems.size()!=0){
                 return (ArrayList<NewsDetailComment>)newsDetailCommentItems;
@@ -106,6 +118,15 @@ public class NewsDetailCommentDao implements Serializable{
             e.printStackTrace();
         }
         return (ArrayList<NewsDetailComment>)newsDetailCommentItems;
+    }
+    public int executeRaw(String sql) {
+        try {
+            return newsDetailCommentDaoOpe.executeRaw(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Logger.e("aaa", "executeRaw " + NewsFeed.class.getSimpleName() + " failure >>>" + e.getMessage());
+        }
+        return -1;
     }
 
 
