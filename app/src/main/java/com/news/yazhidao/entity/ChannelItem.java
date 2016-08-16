@@ -33,7 +33,7 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
      * 栏目是否上线,1表示上线
      */
     @DatabaseField
-    private String online;
+    private String state;
     /**
      * 栏目对应的图片
      */
@@ -53,12 +53,12 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
     public ChannelItem() {
     }
 
-    public ChannelItem(String id, String cname, int orderId, boolean selected,String online) {
+    public ChannelItem(String id, String cname, int orderId, boolean selected,String state) {
         this.id = id;
         this.cname = cname;
         this.orderId = orderId;
         this.selected = selected;
-        this.online = online;
+        this.state = state;
     }
 
     public String getId() {
@@ -97,17 +97,17 @@ public class ChannelItem implements Serializable, Comparable<ChannelItem> {
         return des;
     }
 
-    public String getOnline() {
-        return online;
+    public String getState() {
+        return state;
     }
 
-    public void setOnline(String online) {
-        this.online = online;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String toString() {
         return "ChannelItem [id=" + this.id + ",orderId = " + this.orderId + " cname=" + this.cname
-                + ", selected=" + this.selected + ", online=" + this.online +"]";
+                + ", selected=" + this.selected + ", state=" + this.state +"]";
     }
 
     @Override

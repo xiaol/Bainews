@@ -26,7 +26,7 @@ public class ChannelItemDao {
      * 用户是否选择了该频道
      */
     private static final String COLUMN_SELECTED = "selected";
-    private static final String COLUMN_ONLINE = "online";
+    private static final String COLUMN_STATE = "state";
     private final Context mContext;
     private Dao<ChannelItem, String> mChannelItemDao;
 
@@ -148,7 +148,7 @@ public class ChannelItemDao {
     private ArrayList<ChannelItem> queryForSelected(boolean isSelected) {
         try {
             QueryBuilder<ChannelItem, String> builder = mChannelItemDao.queryBuilder();
-            builder.where().eq(COLUMN_SELECTED, isSelected).and().eq(COLUMN_ONLINE, "1");
+            builder.where().eq(COLUMN_SELECTED, isSelected).and().eq(COLUMN_STATE, "1");
             builder.orderBy(COLUMN_ORDERID, true);
             List<ChannelItem> list = builder.query();
             if (!TextUtil.isListEmpty(list)) {
@@ -195,7 +195,7 @@ public class ChannelItemDao {
         try {
             ChannelItem channelItem = mChannelItemDao.queryForId("1000");
             if (null != channelItem) {
-                channelItem.setOnline("1");
+                channelItem.setState("1");
                 mChannelItemDao.createOrUpdate(channelItem);
             }
         } catch (SQLException e) {
@@ -207,7 +207,7 @@ public class ChannelItemDao {
         List<ChannelItem> list = null;
         QueryBuilder<ChannelItem, String> builder = mChannelItemDao.queryBuilder();
         try {
-            builder.where().eq(COLUMN_ONLINE, "0");
+            builder.where().eq(COLUMN_STATE, "0");
             list = builder.query();
         } catch (SQLException e) {
             e.printStackTrace();

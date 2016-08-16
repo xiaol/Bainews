@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -485,7 +484,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
-            Log.i("tag", updateTime + "date.getTime()");
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             if (between >= (24 * 3600000)) {
@@ -594,15 +592,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             content = "热点";
             tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
             tag.setBackgroundResource(R.drawable.newstag_red_shape);
-        }else if(type == 2){
-            if(tag.getVisibility() == View.GONE){
+        } else if (type == 2) {
+            if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "推送";
             tag.setTextColor(mContext.getResources().getColor(R.color.color1));
             tag.setBackgroundResource(R.drawable.newstag_shape);
-        }else{
-            if(tag.getVisibility() == View.VISIBLE){
+        } else {
+            if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
             }
             return;
@@ -627,7 +625,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
-
             public void onClick(View paramAnonymousView) {
                 if (System.currentTimeMillis() - firstClick <= 1500L) {
                     firstClick = System.currentTimeMillis();
