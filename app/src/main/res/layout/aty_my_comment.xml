@@ -119,4 +119,6 @@
         android:textColor="#f00"
         android:textSize="12sp"
         android:visibility="gone" />
+
+    <include layout="@layout/loading_view" />
 </FrameLayout>

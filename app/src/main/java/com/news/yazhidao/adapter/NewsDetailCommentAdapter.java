@@ -24,6 +24,8 @@ import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.ToastUtil;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -74,14 +76,14 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
         TextView original = holder.getView(R.id.original);
-        CharSequence originalStr = Html.fromHtml("<b>【原文】</b>"+newsDetailCommentItem.getOriginal());
+        CharSequence originalStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(newsDetailCommentItem.getOriginal()) ? "" : newsDetailCommentItem.getOriginal()));
         original.setText(originalStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
-        if(newsDetailCommentItem.isPraise()){
-            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
-        }else {
-            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
-        }
+//        if(newsDetailCommentItem.getUpflag() == 1){
+//            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
+//        }else {
+//            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
+//        }
         int love_num = newsDetailCommentItem.getCommend();
         final TextView love_count = holder.getView(R.id.love_count);
         if(love_num > 0){
@@ -97,7 +99,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
             love_count.setVisibility(View.GONE);
         }
 
-        ImageView del_icon = holder.getView(R.id.del_icon);
+//        ImageView del_icon = holder.getView(R.id.del_icon);
         original.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -107,7 +109,112 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
                 mContext.startActivity(intent);
             }
         });
-        del_icon.setOnClickListener(new View.OnClickListener() {
+
+        love_imagebt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(final View view) {
+
+                if(newsDetailCommentItem.getUpflag() == 1){//用户是否能对该条评论点赞，0、1 对应 可点、不可点
+                    ToastUtil.toastShort("不可以给自己点赞！");
+                }else {
+                    ToastUtil.toastShort("不可以给自己点赞！");
+                    //点赞动画
+//                    newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
+//                    if (newsDetailCommentItem.isPraise()) {
+//                        newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend() + 1);
+//                        ((ImageButton) view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
+//                        int[] location = new int[2];
+//                        view.getLocationOnScreen(location);
+//                        AnimatorSet set = new AnimatorSet();
+//                        set.playTogether(ObjectAnimator.ofFloat(view,
+//                                "scaleX", 1, 2, 1), ObjectAnimator
+//                                .ofFloat(view, "scaleY", 1, 2, 1));
+//                        set.setDuration(1 * 1000).start();
+//                        clip_pic.setVisibility(View.VISIBLE);
+//                        int l = location[0] + view.getMeasuredWidth() / 2;
+//                        int t = location[1] - daoHeight - 60;
+//                        int r = location[0] + view.getMeasuredWidth() / 2 + clip_pic.getMeasuredWidth();
+//                        int b = location[1] + clip_pic.getMeasuredHeight() - daoHeight - 30;
+////                    Toast.makeText(mContext, "l="+l+"  t="+t+"  r="+r+"  b="+b, Toast.LENGTH_SHORT).show();
+////                    Log.e("xzj","l="+l+"  t="+t+"  r="+r+"  b="+b);
+//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                        layoutParams.leftMargin = l;
+//                        layoutParams.topMargin = t;
+//                        clip_pic.setLayoutParams(layoutParams);
+//                        clip_pic.requestLayout();
+////                    clip_pic.layout(l,t,r,b);
+////                    clip_pic.requestLayout();
+//
+////                    clip_pic.layout(
+////                            location[0] + view.getMeasuredWidth()
+////                                    / 2,
+////                            location[1] - daoHeight,
+////                            location[0]
+////                                    + view.getMeasuredWidth()
+////                                    / 2
+////                                    + clip_pic
+////                                    .getMeasuredWidth(),
+////                            location[1]
+////                                    + clip_pic
+////                                    .getMeasuredHeight()
+////                                    - daoHeight);
+//
+//                        AnimatorSet set1 = new AnimatorSet();
+//                        set1.addListener(new Animator.AnimatorListener() {
+//                            @Override
+//                            public void onAnimationStart(Animator animation) {
+//                                //动画开始时将按钮设置成不可点击，防止用户频繁点击
+//                                view.setClickable(false);
+//                            }
+//
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                                //动画结束后恢复按钮可点击
+//                                notifyDataSetChanged();
+//                                view.setClickable(true);
+//                            }
+//
+//                            @Override
+//                            public void onAnimationCancel(Animator animation) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onAnimationRepeat(Animator animation) {
+//
+//                            }
+//                        });
+//                        set1.playTogether(ObjectAnimator.ofFloat(
+//                                clip_pic, "translationY", 0, -100),
+//                                ObjectAnimator.ofFloat(clip_pic,
+//                                        "alpha", 1, 0));
+//                        set1.setInterpolator(new DecelerateInterpolator());
+//                        set1.setDuration(1 * 1000).start();
+//
+//
+//                        set1 = null;
+//
+//
+//                    } else {
+//                        newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend() - 1);
+//
+//                        ((ImageButton) view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
+//                        notifyDataSetChanged();
+//                    }
+//
+//
+//                    newsDetailCommentDao.update(newsDetailCommentItem);
+                }
+
+            }
+        });
+
+        deleteCommentItem((ImageView) holder.getView(R.id.del_icon), positon);
+
+//        addorDeleteLoveItem((RelativeLayout) holder.getView(R.id.love_layout), positon,newsDetailCommentItem);
+    }
+    public void deleteCommentItem(ImageView deleteImage, final int position){
+        deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -117,12 +224,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        newsDetailCommentDao.delete(newsDetailCommentItem);
-                        mDatas.remove(newsDetailCommentItem);
-                        if (mDatas.size()==0){
-                            onDataIsNullListener.onChangeLayout();
-                        }
-                        notifyDataSetChanged();
+                        clickDeleteCommentItemListener.delete(position);
                     }
                 });
                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -134,102 +236,41 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
                 builder.create().show();
             }
         });
-        love_imagebt.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(final View view) {
+//        deleteImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                clickDeleteCommentItemListener.delete(position);
+//            }
+//        });
 
-                newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
-                if(newsDetailCommentItem.isPraise()){
-                    newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend()+1);
-                    ((ImageButton)view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
-                    int[] location = new int[2];
-                    view.getLocationOnScreen(location);
-                    AnimatorSet set = new AnimatorSet();
-                    set.playTogether(ObjectAnimator.ofFloat(view,
-                            "scaleX", 1, 2, 1), ObjectAnimator
-                            .ofFloat(view, "scaleY", 1, 2, 1));
-                    set.setDuration(1 * 1000).start();
-                    clip_pic.setVisibility(View.VISIBLE);
-                    int l =location[0] + view.getMeasuredWidth()/ 2;
-                    int t =location[1] - daoHeight-60;
-                    int r =location[0]+ view.getMeasuredWidth()/ 2+ clip_pic.getMeasuredWidth();
-                    int b =location[1]+ clip_pic.getMeasuredHeight()- daoHeight-30;
-//                    Toast.makeText(mContext, "l="+l+"  t="+t+"  r="+r+"  b="+b, Toast.LENGTH_SHORT).show();
-//                    Log.e("xzj","l="+l+"  t="+t+"  r="+r+"  b="+b);
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    layoutParams.leftMargin = l;
-                    layoutParams.topMargin = t;
-                    clip_pic.setLayoutParams(layoutParams);
-                    clip_pic.requestLayout();
-//                    clip_pic.layout(l,t,r,b);
-//                    clip_pic.requestLayout();
+    }
+//    public void addorDeleteLoveItem(RelativeLayout loveLayout,final int position,final NewsDetailComment newsDetailCommentItem){
+//        loveLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                int upflag = newsDetailCommentItem.getUpflag();
+//                clickAddorDeleteLoveItemListener.addorDele(position, upflag);
+//            }
+//        });
+//
+//    }
 
-//                    clip_pic.layout(
-//                            location[0] + view.getMeasuredWidth()
-//                                    / 2,
-//                            location[1] - daoHeight,
-//                            location[0]
-//                                    + view.getMeasuredWidth()
-//                                    / 2
-//                                    + clip_pic
-//                                    .getMeasuredWidth(),
-//                            location[1]
-//                                    + clip_pic
-//                                    .getMeasuredHeight()
-//                                    - daoHeight);
-
-                    AnimatorSet set1 = new AnimatorSet();
-                    set1.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            //动画开始时将按钮设置成不可点击，防止用户频繁点击
-                            view.setClickable(false);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            //动画结束后恢复按钮可点击
-                            notifyDataSetChanged();
-                            view.setClickable(true);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    set1.playTogether(ObjectAnimator.ofFloat(
-                            clip_pic, "translationY", 0, -100),
-                            ObjectAnimator.ofFloat(clip_pic,
-                                    "alpha", 1, 0));
-                    set1.setInterpolator(new DecelerateInterpolator());
-                    set1.setDuration(1 * 1000).start();
-
-
-                    set1 = null;
-
-
-
-                }else {
-                    newsDetailCommentItem.setCommend(newsDetailCommentItem.getCommend()-1);
-
-                    ((ImageButton)view).setImageResource(R.drawable.list_icon_gif_nor_icon_heart_nor);
-                    notifyDataSetChanged();
-                }
-
-
-                newsDetailCommentDao.update(newsDetailCommentItem);
-
-
-            }
-        });
+    ClickDeleteCommentItemListener clickDeleteCommentItemListener;
+    public void setClickDeleteCommentItemListener(ClickDeleteCommentItemListener clickDeleteCommentItemListener){
+        this.clickDeleteCommentItemListener = clickDeleteCommentItemListener;
     }
 
+//    ClickAddorDeleteLoveItemListener clickAddorDeleteLoveItemListener;
+//    public void setClickAddorDeleteLoveItemListener(ClickAddorDeleteLoveItemListener clickAddorDeleteLoveItemListener){
+//        this.clickAddorDeleteLoveItemListener = clickAddorDeleteLoveItemListener;
+//    }
+
+    public interface  ClickDeleteCommentItemListener{
+        public void delete(int position);
+    }
+//    public interface  ClickAddorDeleteLoveItemListener{
+//        public void addorDele(int upflag,int position);
+//    }
 
 
 

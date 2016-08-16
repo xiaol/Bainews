@@ -61,6 +61,7 @@
             android:visibility="visible" />
 
         <RelativeLayout
+            android:id="@+id/love_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -100,7 +101,6 @@
         android:drawableRight="@drawable/notationdetails_icn_more"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:text="asdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
         android:textColor="@color/new_color7"
         android:textSize="@dimen/font3"
         android:paddingBottom="2dp"
