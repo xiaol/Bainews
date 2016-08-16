@@ -280,7 +280,7 @@ public class SplashAty extends BaseActivity {
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
-        getChannelList();
+//        getChannelList();
     }
 
     private PackageManager pManager;
