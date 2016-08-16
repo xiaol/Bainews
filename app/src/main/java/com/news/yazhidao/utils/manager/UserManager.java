@@ -70,7 +70,7 @@ public class UserManager {
             });
             YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
         }else {
-                if (user.isVisitor() && !user.isOnceLogin()){
+                if (user.isVisitor()){
                     JSONObject requestBody = new JSONObject();
                     try {
                         requestBody.put("uid", user.getMuid());
