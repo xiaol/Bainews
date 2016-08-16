@@ -70,7 +70,8 @@ public class UserManager {
             });
             YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
         }else {
-                if (user.isVisitor() && !user.isOnceLogin()){
+//            && !user.isOnceLogin()
+                if (user.isVisitor()){
                     JSONObject requestBody = new JSONObject();
                     try {
                         requestBody.put("uid", user.getMuid());
@@ -86,7 +87,7 @@ public class UserManager {
                             user.setUtype(response.optString("utype"));
                             user.setMuid(response.optInt("uid"));
                             user.setPassword(response.optString("password"));
-                            SharedPreManager.saveUser(user);
+//                            SharedPreManager.saveUser(user);
                             Logger.e("jigang","user visitor login="+SharedPreManager.getUser(mContext).toJsonString());
                             if (mListener != null){
                                 mListener.registeSuccess();

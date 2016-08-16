@@ -560,8 +560,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     User user = SharedPreManager.getUser(getActivity());
                     user.setUtype("2");
                     SharedPreManager.saveUser(user);
-                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
-                    startActivityForResult(loginAty, REQUEST_CODE);
+                    UserManager.registerVisitor(mContext,null);
+//                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+//                    startActivityForResult(loginAty, REQUEST_CODE);
                 }
                 if (TextUtil.isListEmpty(mArrNewsFeed)) {
                     ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
