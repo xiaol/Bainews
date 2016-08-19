@@ -148,6 +148,7 @@ public class ShareSdkHelper {
                 Logger.e("jigang","merge user success");
                 try {
                     newUser.setAuthorToken(response.getString("Authorization"));
+                    newUser.setMuid(Integer.valueOf(response.getString("uid")));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
