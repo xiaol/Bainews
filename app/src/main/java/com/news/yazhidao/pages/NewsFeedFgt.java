@@ -218,6 +218,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mRefreshReciver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
         mContext.registerReceiver(mRefreshReciver, intentFilter);
+
     }
 
     @Override
@@ -1107,7 +1108,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
@@ -1142,7 +1143,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mStartAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mRefreshTitleBar.setVisibility(View.VISIBLE);
+                if(mRefreshTitleBar.getVisibility() == View.GONE){
+                    mRefreshTitleBar.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override
@@ -1161,7 +1165,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                mRefreshTitleBar.setVisibility(View.GONE);
+                                if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
+                                    mRefreshTitleBar.setVisibility(View.GONE);
+                                }
                             }
 
                             @Override

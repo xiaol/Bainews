@@ -20,6 +20,7 @@ import com.news.yazhidao.entity.FeedBackList;
 import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
@@ -70,7 +71,7 @@ public class ChatAty extends SwipeBackActivity {
             public void success(ArrayList<FeedBackList> result) {
                 mFeedList = result;
                 mAdapter.setData(mFeedList);
-                Log.i("tag", result.toString());
+                Logger.i("tag", result.toString());
                 mAdapter.notifyDataSetChanged();
             }
 

@@ -249,7 +249,7 @@ public class NewsDetailFgt extends BaseFragment {
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
 
 
@@ -397,12 +397,18 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
             @Override
             public void After() {
-                Log.e("aaa", "22222");
+                Logger.e("aaa", "22222");
                 isWebSuccess = true;
                 mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
+            }
+        });
+        mDetailWebView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return false;
             }
         });
         //第2部分的CommentTitle

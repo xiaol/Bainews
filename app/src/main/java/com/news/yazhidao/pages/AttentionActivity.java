@@ -269,7 +269,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
-                            Log.e("aaa", "滑动到底部");
+                            Logger.e("aaa", "滑动到底部");
                             isBottom = true;
                         } else {
                             isBottom = false;

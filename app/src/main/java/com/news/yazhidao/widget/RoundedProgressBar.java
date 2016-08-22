@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 
 
 public class RoundedProgressBar extends View {
@@ -112,7 +113,7 @@ public class RoundedProgressBar extends View {
         paint.setAntiAlias(true);  //消除锯齿
         canvas.drawCircle(centre, centre, radius, paint); //画出圆环
 
-        Log.e("log", centre + "");
+        Logger.e("log", centre + "");
 
         /**
          * 画进度百分比

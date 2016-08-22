@@ -19,6 +19,7 @@ import android.view.View;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 import java.util.ArrayList;
@@ -146,7 +147,7 @@ public class TextViewVertical extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.v("TextViewVertical", "onDraw");
+        Logger.v("TextViewVertical", "onDraw");
         if (drawable != null) {
             //画背景
             Bitmap b = Bitmap.createBitmap(drawable.getBitmap(), 0, 0, mTextWidth, mTextHeight);
@@ -197,7 +198,7 @@ public class TextViewVertical extends View {
 
     //计算文字行数和总宽
     private void GetTextInfo() {
-        Log.v("TextViewVertical", "GetTextInfo");
+        Logger.v("TextViewVertical", "GetTextInfo");
         char ch;
         int h = 0;
         paint.setTextSize(mFontSize);

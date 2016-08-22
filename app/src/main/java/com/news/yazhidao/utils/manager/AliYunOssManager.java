@@ -81,7 +81,7 @@ public class AliYunOssManager {
                 @Override
                 public void onSuccess(String objectKey) {
                     retryTime=0;
-                    Log.e("jigang", "upload speech file success,objKey=" + objectKey);
+                    Logger.e("jigang", "upload speech file success,objKey=" + objectKey);
                 }
 
                 @Override
