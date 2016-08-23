@@ -24,6 +24,7 @@ import com.news.yazhidao.listener.UserLoginListener;
 import com.news.yazhidao.pages.LoginModeFgt;
 import com.news.yazhidao.utils.AMRAudioRecorder;
 import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -134,13 +135,13 @@ public class InputBar extends FrameLayout {
     }
 
     public void startReply() {
-        Log.i("---", "startReply");
+        Logger.i("---", "startReply");
 //        mReplyData = argData;
 //        mTextField.setHint("回复" + mReplyData.getM_strNickname() + ":");
 //        mRecordButton.setText("按住回复" + mReplyData.getM_strNickname());
 
         if (m_eCurType == InputBarType.eText) {
-            Log.i("---", "startReply Text");
+            Logger.i("---", "startReply Text");
             mTextField.beginBatchEdit();
         }
     }
@@ -217,7 +218,7 @@ public class InputBar extends FrameLayout {
                         public void run() {
                             try {
                                 while (true) {
-                                    Log.i("tag", "tag111111111");
+                                    Logger.i("tag", "tag111111111");
                                     mfCurDuration += 0.1;
                                     mRecordState = RECORD_ING;
                                     mRecordVolume = mRecorder.getAmplitude();

@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.news.yazhidao.utils.Logger;
+
 import java.util.List;
 /***
  * 视图工具类
@@ -64,7 +66,7 @@ public class ViewUtil {
         if (view == null || view.getParent() instanceof ListView) {
             return view;
         } else {
-            Log.i("---", "---" + view);
+            Logger.i("---", "---" + view);
             return findListViewByItemView((ViewGroup) view.getParent());
         }
     }

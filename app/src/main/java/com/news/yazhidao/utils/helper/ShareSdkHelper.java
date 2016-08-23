@@ -260,7 +260,7 @@ public class ShareSdkHelper {
         PlatformActionListener pShareListner = new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
-                Log.i("jigang", "share complete");
+                Logger.i("jigang", "share complete");
                 Runnable myRunnable = new Runnable() {
                     @Override
                     public void run() {
@@ -273,7 +273,7 @@ public class ShareSdkHelper {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
-                Log.e("jigang", "share error " + throwable.getMessage());
+                Logger.e("jigang", "share error " + throwable.getMessage());
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -284,7 +284,7 @@ public class ShareSdkHelper {
 
             @Override
             public void onCancel(Platform platform, int i) {
-                Log.i("jigang", "share cancel");
+                Logger.i("jigang", "share cancel");
             }
         };
         String strShareText = "这里是分享的标题";

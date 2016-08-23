@@ -17,6 +17,7 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.DataCleanManager;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
@@ -180,14 +181,14 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
                 startActivity(privacyAty);
                 break;
             case R.id.mSettingUpdate:
-                Log.e("jigang","update=");
+                Logger.e("jigang","update=");
                 UmengUpdateAgent.setUpdateAutoPopup(false);
                 UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
                     @Override
                     public void onUpdateReturned(int status, UpdateResponse updateResponse) {
                         if (status == UpdateStatus.Yes) {
                             UmengUpdateAgent.showUpdateDialog(SettingAty.this, updateResponse);
-                            Log.e("jigang","update=");
+                            Logger.e("jigang","update=");
                         } else {
                             ToastUtil.toastShort("已是最新版本");
                         }
