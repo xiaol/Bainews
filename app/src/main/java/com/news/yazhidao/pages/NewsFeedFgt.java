@@ -344,7 +344,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
-        ((ViewGroup) rootView.getParent()).removeView(rootView);
+        if (rootView != null ) {
+            ((ViewGroup) rootView.getParent()).removeView(rootView);
+        }
+
     }
 
     /**
