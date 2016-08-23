@@ -157,7 +157,7 @@ public class CloudTagManager extends FrameLayout implements
 		int size = getChildCount();
 		for (int i = size - 1; i >= 0; i--) {
 			final TextView txt = (TextView) getChildAt(i);
-			if (txt.getVisibility() == View.GONE) {
+			if (txt != null && txt.getVisibility() == View.GONE) {
 				removeView(txt);
 				continue;
 			}
