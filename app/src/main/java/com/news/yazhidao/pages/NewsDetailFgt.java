@@ -408,7 +408,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                return false;
+                return true;
             }
         });
         //第2部分的CommentTitle
