@@ -326,11 +326,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+//                    Logger.e("aaa","上传成功！");
                     SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+//                    Logger.e("aaa","上传失败！");
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
                 }
             });
             requestQueue.add(request);

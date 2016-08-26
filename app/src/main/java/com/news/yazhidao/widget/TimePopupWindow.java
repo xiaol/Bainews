@@ -26,6 +26,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.entity.TimeFeed;
 import com.news.yazhidao.utils.FastBlur;
 import com.news.yazhidao.utils.ImageUtils;
+import com.news.yazhidao.utils.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -171,7 +172,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         if (overlay != null) {
             overlay = null;
         }
-        Log.e("xxxx", System.currentTimeMillis() - startMs + "ms");
+        Logger.e("xxxx", System.currentTimeMillis() - startMs + "ms");
     }
 
     public class AccelerateInterpolator implements Interpolator {
@@ -274,7 +275,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
         }
         if (mCurrentTimeFeed.getHistory_date() != null) {
             ArrayList<String> arrTimeList = mCurrentTimeFeed.getHistory_date();
-            Log.i("tag", "i===" + mStrSelectedDate);
+            Logger.i("tag", "i===" + mStrSelectedDate);
             for (int i = 0; i < arrTimeList.size(); i++) {
                 if (mStrSelectedDate != null && mStrSelectedDate.equals(arrTimeList.get(i))) {
                     final int j = i;
@@ -353,7 +354,7 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
             holder.ivMorning.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("tag", strCurrentDate);
+                    Logger.i("tag", strCurrentDate);
                     mUpdateUI.refreshUI(strCurrentDate, "0");
                     dismiss();
                 }
@@ -370,13 +371,13 @@ public class TimePopupWindow extends PopupWindow implements Handler.Callback {
                             calendar.add(Calendar.DAY_OF_MONTH, -1);
                             date = calendar.getTime();
                             String strDate = df.format(date);
-                            Log.i("tag", strDate);
+                            Logger.i("tag", strDate);
                             mUpdateUI.refreshUI(strDate, "1");
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        Log.i("tag", strCurrentDate);
+                        Logger.i("tag", strCurrentDate);
                         mUpdateUI.refreshUI(strCurrentDate, "1");
                     }
                     dismiss();

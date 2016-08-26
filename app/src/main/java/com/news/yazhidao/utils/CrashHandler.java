@@ -121,7 +121,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 infos.put("versionCode", versionCode);
             }
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "an error occured when collect package info", e);
+//            Log.e(TAG, "an error occured when collect package info", e);
+            Logger.e(TAG, "an error occured when collect package info");
         }
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -129,7 +130,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 field.setAccessible(true);
                 infos.put(field.getName(), field.get(null).toString());
             } catch (Exception e) {
-                Log.e(TAG, "an error occured when collect crash info", e);
+//                Log.e(TAG, "an error occured when collect crash info", e);
+                Logger.e(TAG, "an error occured when collect crash info");
             }
         }
     }
@@ -181,7 +183,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
             return fileName;
         } catch (Exception e) {
-            Log.e(TAG, "an error occured while writing file", e);
+//            Log.e(TAG, "an error occured while writing file", e);
+            Logger.e(TAG, "an error occured while writing file");
         }
         return null;
     }
@@ -209,7 +212,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                     continue;
                 }
                 files[i].delete();
-                Log.e(TAG, "----> 已删除文件" + files[i].getName());
+                Logger.e(TAG, "----> 已删除文件" + files[i].getName());
             }
         }
     }

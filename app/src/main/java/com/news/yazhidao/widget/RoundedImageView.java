@@ -13,6 +13,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.Logger;
 
 
 @SuppressWarnings("UnusedDeclaration")
@@ -201,7 +202,8 @@ public class RoundedImageView extends ImageView {
             try {
                 d = rsrc.getDrawable(mResource);
             } catch (Exception e) {
-                Log.w(TAG, "Unable to find resource: " + mResource, e);
+//                Log.w(TAG, "Unable to find resource: " + mResource, e);
+                Logger.w(TAG, "Unable to find resource: " + mResource);
                 // Don't try again.
                 mResource = 0;
             }

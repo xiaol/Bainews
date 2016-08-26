@@ -114,7 +114,7 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
     }
     @Override
     public void onClick(View v) {
-        Log.e("jigang", "--onclick----" + mUrl);
+        Logger.e("jigang", "--onclick----" + mUrl);
         if (TextUtils.isEmpty(mUrl)) {
             return;
         }
@@ -138,7 +138,7 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         boolean existFile = FileUtils.isExistFile(mContext, mUrl);
         if (existFile) {
             String filePath = FileUtils.getFilePath(mContext, mUrl);
-            Log.e("jigang", "----filepath--" + filePath );
+            Logger.e("jigang", "----filepath--" + filePath );
             MediaPlayerManager.getInstance().setData(SpeechView.this, mHandler, filePath);
             startAnimation();
 
@@ -149,7 +149,7 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
         AliYunOssManager.getInstance(mContext).downloadSpeechFile(mUrl, new GetBytesCallback() {
             @Override
             public void onSuccess(String s, byte[] bytes) {
-                Log.e("jigang", "---onSuccess- success--"+bytes.length);
+                Logger.e("jigang", "---onSuccess- success--"+bytes.length);
                 //把文件写入到cache中
                 File path = FileUtils.writeFile2SDCard(mContext, FileUtils.getMD5(mUrl), bytes);
                 Message msg = Message.obtain();
@@ -160,12 +160,12 @@ public class SpeechView extends LinearLayout implements View.OnClickListener {
 
             @Override
             public void onProgress(String s, int i, int i1) {
-                Log.e("jigang", "---onProgress-");
+                Logger.e("jigang", "---onProgress-");
             }
 
             @Override
             public void onFailure(String s, OSSException e) {
-                Log.e("jigang", "---onFailure- " + e.getMessage());
+                Logger.e("jigang", "---onFailure- " + e.getMessage());
             }
         });
     }

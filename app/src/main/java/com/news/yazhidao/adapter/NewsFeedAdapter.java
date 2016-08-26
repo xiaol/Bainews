@@ -39,6 +39,7 @@ import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -485,7 +486,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         try {
             Date date = dateFormat.parse(updateTime);
             long between = System.currentTimeMillis() - date.getTime();
-            Log.i("tag", updateTime + "date.getTime()");
+            Logger.i("tag", updateTime + "date.getTime()");
             int month = calendar.get(Calendar.MONTH) + 1;
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             if (between >= (24 * 3600000)) {

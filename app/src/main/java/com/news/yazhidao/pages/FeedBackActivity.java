@@ -31,6 +31,7 @@ import com.news.yazhidao.net.JsonCallback;
 import com.news.yazhidao.net.MyAppException;
 import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.request.SendMessageRequest;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.RoundedImageView;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -175,7 +176,7 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
                 Date date = new Date();
                 String strDate = df.format(date);
                 mFeedBack.updateTime = strDate;
-                Log.i("tag", strDate);
+                Logger.i("tag", strDate);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -319,7 +320,7 @@ public class FeedBackActivity extends SwipeBackActivity implements SendMessageLi
                     Date date = new Date();
                     String strDate = df.format(date);
                     mFeedBack.updateTime = strDate;
-                    Log.i("tag", strDate);
+                    Logger.i("tag", strDate);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

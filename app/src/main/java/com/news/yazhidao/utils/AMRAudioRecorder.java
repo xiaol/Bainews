@@ -49,7 +49,7 @@ public class AMRAudioRecorder implements Callback {
             //创建一个临时的音频输出文件
         }
         audioFile = new File(FileUtils.getSaveDir(mContext) + File.separator + m_strFileName + ".amr");
-        Log.i("---", "audioFile.getAbsolutePath()---" + audioFile.getAbsolutePath());
+        Logger.i("---", "audioFile.getAbsolutePath()---" + audioFile.getAbsolutePath());
         //第4步：指定音频输出文件
         mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
 
