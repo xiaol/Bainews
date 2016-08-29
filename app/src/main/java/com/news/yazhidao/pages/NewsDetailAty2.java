@@ -304,12 +304,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
         if(!TextUtil.isEmptyString(LogData)){
             SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-            Log.e("aaa", "111111111！++++"+SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         }
 
 //        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
 //        if (saveNum >= 5) {
-        Log.e("aaa", "确认上传日志！");
+        Logger.e("aaa", "确认上传日志！");
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -336,13 +335,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onResponse(String response) {
                 SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
-                Log.e("aaa", "上传成功！+++++" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-                Log.e("aaa", "上传失败！====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
             }
         });
         requestQueue.add(request);
