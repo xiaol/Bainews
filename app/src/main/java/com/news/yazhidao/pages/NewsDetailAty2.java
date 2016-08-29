@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -285,59 +286,67 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      *
      * @throws IOException
      */
-    private void upLoadLog()  {
-//
-        if (mNewsFeed == null&&mUserId != null &&mUserId.length() != 0) {
+    private void upLoadLog() {
+        Log.e("aaa", "开始上传日志！");
+        if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
             return;
         }
-        UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
-        uploadLogDataEntity.setN(mNewsFeed.getNid()+"");
-        uploadLogDataEntity.setC(mNewsFeed.getChannel()+"");
+        final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
+        uploadLogDataEntity.setN(mNewsFeed.getNid() + "");
+        uploadLogDataEntity.setC(mNewsFeed.getChannel() + "");
         uploadLogDataEntity.setT("0");
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
-        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        int saveNum = SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
-        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-        if (saveNum >= 30) {
-            Gson gson = new Gson();
-            LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-            RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String userid = null, p= null, t= null, i= null;
-            try {
-                userid = URLEncoder.encode(mUserId+"", "utf-8");
-//                p = URLEncoder.encode(locationEntity.getProvince()+"", "utf-8");
-//                t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
-//                i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
-                p = (locationEntity.getProvince() != null) ? URLEncoder.encode(locationEntity.getProvince() + "", "utf-8") : "";
-                t = (locationEntity.getCity() != null) ? URLEncoder.encode(locationEntity.getCity()+"", "utf-8") : "";
-                i = (locationEntity.getDistrict() != null) ? URLEncoder.encode(locationEntity.getDistrict()+"", "utf-8") : "";
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-
-
-            String url = HttpConstant.URL_UPLOAD_LOG+"u=" + userid + "&p=" + p +
-                    "&t=" + t + "&i=" +i + "&d=" + TextUtil.getBase64(SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
-            Logger.d("aaa", "url===" + url);
-
-            UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-//                    Logger.e("aaa","上传成功！");
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-//                    Logger.e("aaa","上传失败！");
-                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
-                }
-            });
-            requestQueue.add(request);
+        final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
+        String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        LocationEntity locationEntity = null;
+        Gson gson = new Gson();
+        locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
+        if(!TextUtil.isEmptyString(LogData)){
+            SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+            Log.e("aaa", "111111111！++++"+SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         }
+
+//        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+//        if (saveNum >= 5) {
+        Log.e("aaa", "确认上传日志！");
+
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String userid = null, p = null, t = null, i = null;
+        try {
+            userid = URLEncoder.encode(mUserId + "", "utf-8");
+            if (locationEntity != null) {
+                if (locationEntity.getProvince() != null)
+                    p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
+                if (locationEntity.getCity() != null)
+                    t = URLEncoder.encode(locationEntity.getCity(), "utf-8");
+                if (locationEntity.getDistrict() != null)
+                    i = URLEncoder.encode(locationEntity.getDistrict(), "utf-8");
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData)?gson.toJson(uploadLogDataEntity):SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+        Logger.d("aaa", "url===" + url);
+
+        UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                Log.e("aaa", "上传成功！+++++" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                Log.e("aaa", "上传失败！====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+            }
+        });
+        requestQueue.add(request);
+//        }
     }
 
     FragmentPagerAdapter pagerAdapter;
