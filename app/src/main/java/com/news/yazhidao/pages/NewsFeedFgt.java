@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +30,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -38,6 +42,9 @@ import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.database.ReleaseSourceItemDao;
+import com.news.yazhidao.entity.AdDeviceEntity;
+import com.news.yazhidao.entity.AdEntity;
+import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.NetworkRequest;
@@ -54,7 +61,9 @@ import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.protobuffer.PushResponse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -161,6 +170,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         }
     }
+
 
     public void setIsFocus() {
         misFocus = true;
@@ -390,6 +400,31 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
     }
 
+    public AdEntity getAdMessage(){
+
+        AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
+        adImpressionEntity.setAid("100");
+
+        AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
+        TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(getActivity().TELEPHONY_SERVICE);
+        /** 添加IMEI */
+        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
+        /** 添加AndroidID */
+        String androidId = Settings.Secure.getString(getActivity().getContentResolver(),Settings.Secure.ANDROID_ID);
+        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId)?null:DeviceInfoUtil.generateMD5(androidId));
+
+
+
+
+
+        AdEntity adEntity = new AdEntity();
+        adEntity.setTs((System.currentTimeMillis()/1000)+"");
+        adEntity.setDevice(adDeviceEntity);
+        adEntity.getImpression().add(adImpressionEntity);
+        return adEntity;
+
+    }
+
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
             bgLayout.setVisibility(View.VISIBLE);
@@ -599,6 +634,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public void loadData(final int flag) {
+        Logger.e("ccc","getAdMessage=="+getAdMessage());
         User user = SharedPreManager.getUser(mContext);
         Logger.e("jigang", "loaddata -----" + flag);
         if (null != user) {
