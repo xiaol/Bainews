@@ -7,9 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +38,6 @@ import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.database.ReleaseSourceItemDao;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
@@ -52,14 +49,13 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
-import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class NewsFeedFgt extends Fragment implements Handler.Callback {
+public class NewsFeedFgt extends Fragment{
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -93,7 +89,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private NewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private Context mContext;
-    private NetworkRequest mRequest;
     private PullToRefreshListView mlvNewsFeed;
     private View rootView;
     private String mstrDeviceId, mstrUserId, mstrChannelId, mstrKeyWord;
@@ -102,13 +97,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
     private RefreshReceiver mRefreshReciver;
-    private View mlFocus;
     /**
      * 热词页面加载更多
      */
     private int mSearchPage = 1;
-    //    private Handler mHandler;
-//    private Runnable mRunnable;
     private boolean mIsFirst = true;
     private int mDeleteIndex;
     /**
@@ -128,9 +120,8 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     private TextView footView_tv, mRefreshTitleBar;
     private ProgressBar footView_progressbar;
     private boolean isBottom;
-    private boolean misFocus = false;
 
-    private int thisVisibleItemCount,thisTotalItemCount;//判断footerView 不滑动
+    private int thisVisibleItemCount, thisTotalItemCount;//判断footerView 不滑动
 
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
@@ -160,10 +151,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 bgLayout.setVisibility(View.GONE);
             }
         }
-    }
-
-    public void setIsFocus() {
-        misFocus = true;
     }
 
     @Override
@@ -201,7 +188,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
         mstrDeviceId = DeviceInfoUtil.getUUID();
-//        mHandler = new Handler(this);
         User user = SharedPreManager.getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
@@ -209,16 +195,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
-//        mRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                mlvNewsFeed.setRefreshing();
-//            }
-//        };
         mRefreshReciver = new RefreshReceiver();
         IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
         mContext.registerReceiver(mRefreshReciver, intentFilter);
-
     }
 
     @Override
@@ -242,14 +221,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             }
         } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
-
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Logger.e("jigang", "----viewpager  fgt onDetach " + mstrChannelId);
     }
 
     public View onCreateView(LayoutInflater LayoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -258,13 +230,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
         }
-        Logger.e("jigang", "----viewpager  fgt onCreateView " + mstrChannelId);
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         mHomeRelative = rootView.findViewById(R.id.mHomeRelative);
         mRefreshTitleBar = (TextView) rootView.findViewById(R.id.mRefreshTitleBar);
-
-
         mHomeRetry = rootView.findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -273,12 +242,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 mHomeRetry.setVisibility(View.GONE);
             }
         });
-
-
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setMainFooterView(true);
-
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -290,14 +256,11 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_UP_REFRESH);
-
             }
         });
-
         addHFView(LayoutInflater);
 
-
-        mAdapter = new NewsFeedAdapter(getActivity(), this, null);
+        mAdapter = new NewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
@@ -305,11 +268,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             mAdapter.setReleaseSourceItems(releaseSourceItemDao, colorArr);
         }
         mlvNewsFeed.setAdapter(mAdapter);
-
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
 
         setUserVisibleHint(getUserVisibleHint());
-        String platform = AnalyticsConfig.getChannel(getActivity());
         //load news data
         mHandler = new Handler();
         mThread = new Runnable() {
@@ -318,7 +279,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 //                mlvNewsFeed.setRefreshing();
                 loadData(PULL_UP_REFRESH);
                 isListRefresh = false;
-
             }
         };
         if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
@@ -332,7 +292,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         public void showPopWindow(int x, int y, NewsFeed feed) {
             String pName = feed.getPname();
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", mAdapter);
-
         }
     };
 
@@ -344,10 +303,9 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         }
         mContext.unregisterReceiver(mRefreshReciver);
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
-        if (rootView != null ) {
+        if (rootView != null && rootView.getParent() != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
-
     }
 
     /**
@@ -564,10 +522,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     User user = SharedPreManager.getUser(getActivity());
                     user.setUtype("2");
                     SharedPreManager.saveUser(user);
+//                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
+//                    startActivityForResult(loginAty, REQUEST_CODE);
                     UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
                         @Override
                         public void registeSuccess() {
-                            loadNewsFeedData("",flag);
+                            mlvNewsFeed.onRefreshComplete();
+                            loadNewsFeedData("", flag);
                         }
                     });
                 }
@@ -616,10 +577,10 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     startTopRefresh();
                 } else {
                     isNoteLoadDate = false;
-                    mlvNewsFeed.onRefreshComplete();
+                    setRefreshComplete();
                 }
             } else {
-                stopRefresh();
+                setRefreshComplete();
                 ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
                 if (TextUtil.isListEmpty(newsFeeds)) {
                     mHomeRetry.setVisibility(View.VISIBLE);
@@ -628,27 +589,34 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 }
                 mAdapter.setNewsFeed(newsFeeds);
                 mAdapter.notifyDataSetChanged();
-                mlvNewsFeed.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mlvNewsFeed.onRefreshComplete();
-                    }
-                }, 500);
-
                 if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
                 showChangeTextSizeView();
             }
         } else {
-            //请求token
-            UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
-                @Override
-                public void registeSuccess() {
-                    loadData(flag);
-                }
-            });
+            setRefreshComplete();
+            registerVisitor(flag);
         }
+    }
+
+    private void setRefreshComplete() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mlvNewsFeed.onRefreshComplete();
+            }
+        }, 500);
+    }
+
+    private void registerVisitor(final int flag) {
+        //请求token
+        UserManager.registerVisitor(mContext, new UserManager.RegisterVisitorListener() {
+            @Override
+            public void registeSuccess() {
+                loadData(flag);
+            }
+        });
     }
 
     public void loadFocusData(final int flag) {
@@ -688,13 +656,12 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     if (result == null || result.size() == 0) {
                         mRefreshTitleBar.setText("已是最新数据");
                         mRefreshTitleBar.setVisibility(View.VISIBLE);
-                        new Handler().postDelayed(new Runnable() {
+                        mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
                                     mRefreshTitleBar.setVisibility(View.GONE);
                                 }
-
                             }
                         }, 1000);
                         mlvNewsFeed.onRefreshComplete();
@@ -720,7 +687,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     mSearchPage++;
                     switch (flag) {
                         case PULL_DOWN_REFRESH:
-                            Logger.e("ccc","=================33================="+mArrNewsFeed.size());
+                            Logger.e("ccc", "=================33=================" + mArrNewsFeed.size());
                             if (mArrNewsFeed == null)
                                 mArrNewsFeed = result;
                             else
@@ -757,21 +724,21 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if(thisVisibleItemCount>=thisTotalItemCount){//删除 footerView 这个方法可以显示无数据的情况
-                                Logger.e("ccc","=================111=================");
-                                if(footerView.getVisibility() == View.VISIBLE){
+                            if (thisVisibleItemCount >= thisTotalItemCount) {//删除 footerView 这个方法可以显示无数据的情况
+                                Logger.e("ccc", "=================111=================");
+                                if (footerView.getVisibility() == View.VISIBLE) {
                                     footerView.setVisibility(View.GONE);
                                     mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
                                 }
-                            }else {
-                                Logger.e("ccc","================222==================");
-                                if(footerView.getVisibility() == View.GONE){
+                            } else {
+                                Logger.e("ccc", "================222==================");
+                                if (footerView.getVisibility() == View.GONE) {
                                     footerView.setVisibility(View.VISIBLE);
                                     mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
                                 }
                             }
                         }
-                    },100);
+                    }, 100);
 
 
                     if (mNewsSaveCallBack != null) {
@@ -877,12 +844,6 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         requestQueue.add(feedRequest);
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        return false;
-    }
-
-
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
 
     public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
@@ -890,7 +851,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     }
 
     public interface NewsFeedFgtPopWindow {
-        public void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {
@@ -960,13 +921,13 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if (TextUtil.isListEmpty(mArrNewsFeed)){
+                        if (TextUtil.isListEmpty(mArrNewsFeed)) {
                             loadFocusData(PULL_UP_REFRESH);
-                        }else {
+                        } else {
                             HashMap<String, String> attentions4Map = SharedPreManager.getAttentions4Map();
                             Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
-                            while (iterator.hasNext()){
-                                if (attentions4Map.get(iterator.next().getPname()) == null){
+                            while (iterator.hasNext()) {
+                                if (attentions4Map.get(iterator.next().getPname()) == null) {
                                     iterator.remove();
                                 }
                             }
@@ -1039,6 +1000,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
     //    int lastY = 0;
 //    int MAX_PULL_BOTTOM_HEIGHT = 100;
     LinearLayout footerView;
+
     public void addHFView(LayoutInflater LayoutInflater) {
         View mSearchHeaderView;
 //        if (mstrChannelId.equals("1000")) {
@@ -1135,7 +1097,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
             public void onScroll(AbsListView view, int firstVisibleItem,
                                  int visibleItemCount, int totalItemCount) {
 
-                if(thisVisibleItemCount < totalItemCount){
+                if (thisVisibleItemCount < totalItemCount) {
                     thisTotalItemCount = totalItemCount;
                     thisVisibleItemCount = visibleItemCount;
                 }
@@ -1154,7 +1116,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
         mStartAlphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                if(mRefreshTitleBar.getVisibility() == View.GONE){
+                if (mRefreshTitleBar.getVisibility() == View.GONE) {
                     mRefreshTitleBar.setVisibility(View.VISIBLE);
                 }
 
@@ -1176,7 +1138,7 @@ public class NewsFeedFgt extends Fragment implements Handler.Callback {
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
+                                if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
                                     mRefreshTitleBar.setVisibility(View.GONE);
                                 }
                             }

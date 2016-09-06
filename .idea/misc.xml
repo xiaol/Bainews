@@ -86,9 +86,12 @@
   <component name="ProjectType">
     <option name="id" value="Android" />
   </component>
+<<<<<<< HEAD
   <component name="SvnConfiguration">
     <configuration>$USER_HOME$/.subversion</configuration>
   </component>
+=======
+>>>>>>> logintoken
   <component name="masterDetails">
     <states>
       <state key="Copyright.UI">
