@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.news.yazhidao.utils.Logger;
+
 import cn.sharesdk.wechat.utils.WXAppExtendObject;
 import cn.sharesdk.wechat.utils.WXMediaMessage;
 import cn.sharesdk.wechat.utils.WechatHandlerActivity;
@@ -53,12 +55,12 @@ public class WXEntryActivity extends WechatHandlerActivity {
 	@Override
 	protected void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		Log.e("jigang", "------oncreate");
+		Logger.e("jigang", "------oncreate");
 	}
 
 	@Override
 	public void finish() {
 		super.finish();
-		Log.e("jigang", "------finish");
+		Logger.e("jigang", "------finish");
 	}
 }

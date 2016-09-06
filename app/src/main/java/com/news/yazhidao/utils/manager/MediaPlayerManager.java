@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.widget.SpeechView;
 
 import java.io.IOException;
@@ -81,7 +82,7 @@ public class MediaPlayerManager {
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
-                    Log.e("jigang","prepared---");
+                    Logger.e("jigang","prepared---");
                     Message msg= Message.obtain();
                     msg.what= SpeechView.START_PLAY;
                     mHandler.sendMessage(msg);

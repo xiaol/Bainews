@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.utils.Logger;
 
 
 /**
@@ -97,7 +98,7 @@ public class ChangeTextSizePopupWindow extends PopupWindow {
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i("tag", progress + "progress");
+                Logger.i("tag", progress + "progress");
             }
 
             @Override

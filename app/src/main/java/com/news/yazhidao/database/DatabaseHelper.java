@@ -139,6 +139,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
                 newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
             }
+            NewsDetailCommentDao newsDetailCommentDao = new NewsDetailCommentDao(mContext);
+            if (oldVersion <= 25){
+                newsDetailCommentDao.executeRaw("ALTER TABLE `tb_news_detail_comment_item` ADD COLUMN uid STRING;");
+            }
 
 
             oldDiggerAlbumItems = albumSubItemDao.queryForAll();

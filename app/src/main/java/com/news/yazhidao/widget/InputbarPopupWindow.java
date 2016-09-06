@@ -198,7 +198,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
             }
         });
-        Log.i("tag", argContent);
+        Logger.i("tag", argContent);
     }
 
     @Override

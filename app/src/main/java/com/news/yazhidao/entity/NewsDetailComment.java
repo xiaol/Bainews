@@ -42,7 +42,7 @@ public class NewsDetailComment implements Serializable{
     private String avatar;
 
     private String uname;
-
+    @DatabaseField(columnName="uid")
     private String uid;
     public NewsDetailComment(){}
     @DatabaseField(columnName="docid")
