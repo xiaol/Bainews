@@ -54,6 +54,13 @@ public class DeviceInfoUtil {
         return outMetrics;
     }
 
+    public static float obtainDensity() {
+        WindowManager wm = (WindowManager) YaZhiDaoApplication.getAppContext().getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);
+        return outMetrics.density;
+    }
+
     /**
      * 获取手机屏幕宽度,此方法有效防止空指针
      * @param pContext
