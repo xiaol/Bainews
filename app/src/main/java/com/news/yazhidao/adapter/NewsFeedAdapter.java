@@ -38,7 +38,6 @@ import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -103,13 +102,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 13:
                         return R.layout.ll_news_big_pic2;
                     default:
-                        return R.layout.ll_news_item_no_pic;
+                        return R.layout.ll_news_item_empty;
                 }
             }
 
             @Override
             public int getViewTypeCount() {
-                return 6;
+                return 7;
             }
 
             @Override
@@ -132,7 +131,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 13:
                         return NewsFeed.BIG_PIC;
                     default:
-                        return NewsFeed.NO_PIC;
+                        return NewsFeed.EMPTY;
                 }
             }
         });
@@ -195,6 +194,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
         }
         switch (holder.getLayoutId()) {
+            case R.layout.ll_news_item_empty:
+                holder.getView(R.id.news_content_relativeLayout).setVisibility(View.GONE);
+                break;
             case R.layout.ll_news_item_no_pic:
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -505,9 +507,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 int time = (int) (between * 60 / 3600000);
                 if (time > 0) {
                     tvComment.setText(between * 60 / 3600000 + "分钟前");
-                }else if (time <=0){
+                } else if (time <= 0) {
                     tvComment.setText("");
-                }else {
+                } else {
                     tvComment.setText(between * 60 * 60 / 3600000 + "秒前");
                 }
 //                if (between / 3600000 == 0) {
@@ -627,6 +629,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
+
             public void onClick(View paramAnonymousView) {
                 if (System.currentTimeMillis() - firstClick <= 1500L) {
                     firstClick = System.currentTimeMillis();
