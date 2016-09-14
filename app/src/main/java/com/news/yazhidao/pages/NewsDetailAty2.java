@@ -278,7 +278,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             mRefreshReceiber = null;
         }
         upLoadLog();
-
     }
 
     /**
