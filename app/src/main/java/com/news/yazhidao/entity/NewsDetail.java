@@ -62,6 +62,31 @@ public class NewsDetail implements Serializable {
     /** 是(1)否(0)已关心该新闻对应的发布源 */
     private int conpubflag;
 
+    @Override
+    public String toString() {
+        return "NewsDetail{" +
+                "nid=" + nid +
+                ", imgNum=" + imgNum +
+                ", ptime='" + ptime + '\'' +
+                ", url='" + url + '\'' +
+                ", docid='" + docid + '\'' +
+                ", descr='" + descr + '\'' +
+                ", pname='" + pname + '\'' +
+                ", purl='" + purl + '\'' +
+                ", commentSize=" + commentSize +
+                ", title='" + title + '\'' +
+                ", channel=" + channel +
+                ", tags=" + tags +
+                ", content=" + content +
+                ", inum=" + inum +
+                ", collect=" + collect +
+                ", concern=" + concern +
+                ", comment=" + comment +
+                ", colflag=" + colflag +
+                ", conflag=" + conflag +
+                ", conpubflag=" + conpubflag +
+                '}';
+    }
 
     public int getColflag() {
         return colflag;

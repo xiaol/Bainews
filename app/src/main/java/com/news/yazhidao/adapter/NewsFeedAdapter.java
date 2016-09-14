@@ -33,6 +33,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
@@ -595,14 +596,21 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             content = "热点";
             tag.setTextColor(mContext.getResources().getColor(R.color.newsfeed_red));
-            tag.setBackgroundResource(R.drawable.newstag_red_shape);
+            tag.setBackgroundResource(R.drawable.newstag_hotspot_shape);
         } else if (type == 2) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "推送";
             tag.setTextColor(mContext.getResources().getColor(R.color.color1));
-            tag.setBackgroundResource(R.drawable.newstag_shape);
+            tag.setBackgroundResource(R.drawable.newstag_push_shape);
+        } else if (type == 3) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "广告";
+            tag.setTextColor(mContext.getResources().getColor(R.color.theme_color));
+            tag.setBackgroundResource(R.drawable.newstag_ad_shape);
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -636,17 +644,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     return;
                 }
                 firstClick = System.currentTimeMillis();
-                Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                if (feed.getRtype() == 3) {
+                    Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                    AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(AdIntent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
+                    }
+                }else {
+                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
 
-                ArrayList<String> imageList = feed.getImgs();
-                if (imageList != null && imageList.size() != 0) {
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
-                }
-                if (mNewsFeedFgt != null) {
-                    mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                } else {
-                    ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    ArrayList<String> imageList = feed.getImgs();
+                    if (imageList != null && imageList.size() != 0) {
+                        intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
+                    }
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    }
                 }
                 //推送人员使用
                 if (DeviceInfoUtil.getUUID().equals("3b7976c8c1b8cd372a59b05bfa9ac5b3")) {

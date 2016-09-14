@@ -4,10 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -129,6 +132,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     protected void initializeViews() {
 
         mNewsUrl=getIntent().getStringExtra(KEY_URL);
+        Logger.e("aaa", "mNewsUrl==" + mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
@@ -148,6 +152,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
                 }
             }
         });
+
         mNewsSourcesiteWebview.setWebViewClient(new WebViewClient() {
             @Override
             public void onFormResubmission(WebView view, Message dontResend, Message resend) {
@@ -182,6 +187,18 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         });
 
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
+        mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
+    }
+    private class MyWebViewDownLoadListener implements DownloadListener {
+
+        @Override
+        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype,
+                                    long contentLength) {
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
+
     }
 
     @Override
