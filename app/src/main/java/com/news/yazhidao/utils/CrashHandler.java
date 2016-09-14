@@ -233,6 +233,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(dm);
-        return dm.heightPixels + "x" + dm.widthPixels;
+        return dm.heightPixels + "*" + dm.widthPixels;
     }
 }

@@ -234,7 +234,7 @@
     <color name="subscribe_bg">#fff5f5f5</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
 
-    <color name="theme_color" >#0091fa</color>
+    <color name="theme_color" >#ff0091fa</color>
     <color name="do_search_not_do" >#c3c3c3</color>
     <color name="do_search_can_do" >@color/white</color>
     <color name="search_hot_label" >#959595</color>

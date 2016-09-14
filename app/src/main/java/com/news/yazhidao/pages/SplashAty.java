@@ -39,7 +39,6 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.utils.manager.UserManager;
 
 import org.json.JSONException;
 
@@ -205,7 +204,7 @@ public class SplashAty extends BaseActivity {
             }
         });
 
-        UserManager.registerVisitor(this,null);
+//        UserManager.registerVisitor(this,null);
 
 
 
@@ -280,7 +279,7 @@ public class SplashAty extends BaseActivity {
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
-        getChannelList();
+//        getChannelList();
     }
 
     private PackageManager pManager;

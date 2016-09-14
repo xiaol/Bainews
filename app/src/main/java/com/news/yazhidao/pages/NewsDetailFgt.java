@@ -353,7 +353,7 @@ public class NewsDetailFgt extends BaseFragment {
     boolean isAttention;
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         //第1部分的WebView
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
@@ -366,7 +366,8 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
 
-        mDetailWebView = (LoadWebView) mNewsDetailHeaderView.findViewById(R.id.mDetailWebView);
+        mDetailWebView = new LoadWebView(getActivity().getApplicationContext());
+        mDetailWebView.setLayoutParams(params);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 //        } else {
@@ -411,6 +412,8 @@ public class NewsDetailFgt extends BaseFragment {
                 return true;
             }
         });
+        mNewsDetailHeaderView.addView(mDetailWebView);
+
         //第2部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);

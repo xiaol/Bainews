@@ -30,8 +30,7 @@ public class AdDeviceEntity implements Serializable {
     private String os;
     /** 设备操作系统版本号 */
     private String os_version;
-    /** 屏幕分辨率，例如：1024*768。建议填写，可以帮助获取
-     最优尺寸创意。 */
+    /** 屏幕分辨率，例如：1024*768。建议填写，可以帮助获取最优尺寸创意。 */
     private String device_size;
     /** 网络环境 0：未知 1：wifi 2：2G 3：3G 4：4G */
     private String network;

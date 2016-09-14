@@ -1,6 +1,7 @@
 package com.news.yazhidao.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public class AdEntity implements Serializable{
     /** 自定义数据，在广告 Response 时一同携带返回 */
     private String extend_data;
     /** 曝光对象，一次 request 可以包含多个 impression */
-    private List<AdImpressionEntity> impression;
+    private List<AdImpressionEntity> impression = new ArrayList<AdImpressionEntity>();
     /** 设备对象 */
     private AdDeviceEntity device;
 
