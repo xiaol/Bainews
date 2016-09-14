@@ -15,36 +15,35 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
-import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
+import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.AppsItemInfo;
-import com.news.yazhidao.entity.UploadLogDataEntity;
-import com.news.yazhidao.entity.UploadLogEntity;
-import com.news.yazhidao.entity.User;
-import com.news.yazhidao.net.volley.UpLoadLogRequest;
+import com.news.yazhidao.entity.ChannelItem;
+import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.utils.manager.UserManager;
 
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,6 +59,7 @@ public class SplashAty extends BaseActivity {
     private View mSplashContent;
     private TextView mSplashVersion;
     private String TAG = "SplashAty";
+    private ChannelItemDao mChannelItemDao;
     //baidu Map
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
@@ -167,6 +167,7 @@ public class SplashAty extends BaseActivity {
 
     @Override
     protected void initializeViews() {
+        mChannelItemDao = new ChannelItemDao(this);
         final SharedPreferences sp = getSharedPreferences("showflag", 0);
         flag = sp.getBoolean("isshow", false);
         iv_splash_background = (ImageView) findViewById(R.id.iv_splash_background);
@@ -203,7 +204,7 @@ public class SplashAty extends BaseActivity {
             }
         });
 
-        UserManager.registerVisitor(this,null);
+//        UserManager.registerVisitor(this,null);
 
 
 
@@ -278,6 +279,7 @@ public class SplashAty extends BaseActivity {
         mLocationClient.registerLocationListener(myListener);    //注册监听函数
         initLocation();
         mLocationClient.start();
+//        getChannelList();
     }
 
     private PackageManager pManager;
@@ -377,5 +379,32 @@ public class SplashAty extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void getChannelList(){
+        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+        FeedRequest<ArrayList<ChannelItem>> feedRequest = new FeedRequest<>(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
+        }.getType(), HttpConstant.URL_COMMON_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
+
+            @Override
+            public void onResponse(final ArrayList<ChannelItem> result) {
+                ChannelItemDao channelItemDao = new ChannelItemDao(SplashAty.this);
+                if(result!=null) {
+                    channelItemDao.deletaForAll();
+                    channelItemDao.insertList(result);
+                    channelItemDao.insert(new ChannelItem("1000","关注",0,false,"0"));
+                }
+                Log.i("tag","ChannelItem:"+result.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("tag","ChannelItem:"+error.toString());
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
+        feedRequest.setRequestHeader(header);
+        feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(feedRequest);
     }
 }

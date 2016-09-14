@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -385,7 +386,7 @@ public class DeviceInfoUtil {
      */
     public static String getUUID() {
         TelephonyManager telephonyManager = (TelephonyManager) YaZhiDaoApplication.getAppContext().getSystemService(Context.TELEPHONY_SERVICE);
-        String uuid = Build.PRODUCT+telephonyManager.getDeviceId()+getMacAddress(YaZhiDaoApplication.getAppContext())+getDeviceSerial()+Settings.Secure.getString(YaZhiDaoApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String uuid = Build.PRODUCT+getMacAddress(YaZhiDaoApplication.getAppContext())+getDeviceSerial()+Settings.Secure.getString(YaZhiDaoApplication.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         return generateMD5(uuid);
     }
 
@@ -507,5 +508,24 @@ public class DeviceInfoUtil {
         int realHeiht = getDpi((Activity) poCotext);
         int virvalHeight = realHeiht - location[1];
         return virvalHeight;
+    }
+
+    /**
+     * 判断横竖屏幕
+     * @return
+     */
+    public static boolean isScreenChange(Context mContext) {
+
+        Configuration mConfiguration = mContext.getResources().getConfiguration(); //获取设置的配置信息
+        int ori = mConfiguration.orientation ; //获取屏幕方向
+
+        if(ori == mConfiguration.ORIENTATION_LANDSCAPE){
+            //横屏
+            return true;
+        }else if(ori == mConfiguration.ORIENTATION_PORTRAIT){
+            //竖屏
+            return false;
+        }
+        return false;
     }
 }
