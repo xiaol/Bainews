@@ -1257,7 +1257,7 @@ public class NewsDetailFgt extends BaseFragment {
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             mNewsDetailHeaderView.removeView(mDetailWebView);
         }
-
+        mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
     }
 

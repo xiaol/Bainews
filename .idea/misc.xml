@@ -28,6 +28,9 @@
     </option>
   </component>
 <<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+=======
+<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK" />
 =======
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -131,4 +134,5 @@
     </states>
   </component>
 >>>>>>> c15e807210bae55d8038dc81df71fdd4d09dfa25
+>>>>>>> 6b260b529b2863c32cb274ee6fd72382245d9547
 </project>
