@@ -320,6 +320,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
                 int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
                 int num = feed.getStyle() - 11;
+                ImageView ivBig  = holder.getView(R.id.title_img_View);
+                RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) ivBig.getLayoutParams();
+                lpBig.width = with;
+                lpBig.height = (int) (with * 9 / 16.0f);
+                ivBig.setLayoutParams(lpBig);
                 holder.setSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f));
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
