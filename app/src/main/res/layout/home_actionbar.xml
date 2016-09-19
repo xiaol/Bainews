@@ -25,18 +25,18 @@
         android:scaleType="centerInside"
         android:src="@drawable/btn_home_search"
         />
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/mMainUserLogin"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/btn_home_mycenter"
-        app:placeholderImageScaleType="centerInside"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="@color/black"
-        />
+        android:layout_marginRight="8dp"/>
+        <!--app:actualImageScaleType="centerInside"-->
+        <!--app:placeholderImage="@drawable/btn_home_mycenter"-->
+        <!--app:placeholderImageScaleType="centerInside"-->
+        <!--app:roundAsCircle="true"-->
+        <!--app:roundingBorderColor="@color/black"-->
+        <!--/>-->
 
 </RelativeLayout>

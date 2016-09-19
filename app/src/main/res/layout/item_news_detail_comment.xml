@@ -24,16 +24,16 @@
         >
 
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/mDetailCommentUserIcon"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="16dp"
-            app:failureImage="@drawable/ic_user_comment_default"
-            app:placeholderImage="@drawable/ic_user_comment_default"
-            app:roundAsCircle="true"
-            />
+            android:layout_marginTop="16dp"/>
+            <!--app:failureImage="@drawable/ic_user_comment_default"-->
+            <!--app:placeholderImage="@drawable/ic_user_comment_default"-->
+            <!--app:roundAsCircle="true"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/mDetailCommentUserName"

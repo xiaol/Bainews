@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -228,7 +227,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 final TextView tvTitle = holder.getView(R.id.title_textView);
                 final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
                 final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-                SimpleDraweeView ivCard = holder.getView(R.id.title_img_View);
+                ImageView ivCard = holder.getView(R.id.title_img_View);
                 RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
                 lpCard.width = mCardWidth;
                 lpCard.height = mCardHeight;
@@ -296,9 +295,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
                 holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
                 holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
-                setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card1), 15, 1, 3);
-                setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card2), 1, 1, 3);
-                setCardMargin((SimpleDraweeView) holder.getView(R.id.image_card3), 1, 15, 3);
+                setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
+                setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
+                setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
                 } else {
@@ -467,7 +466,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mContext.startActivity(attentionAty);
     }
 
-    private void setCardMargin(SimpleDraweeView ivCard, int leftMargin, int rightMargin, int pageNum) {
+    private void setCardMargin(ImageView ivCard, int leftMargin, int rightMargin, int pageNum) {
         LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) ivCard.getLayoutParams();
         localLayoutParams.leftMargin = DensityUtil.dip2px(mContext, leftMargin);
         localLayoutParams.rightMargin = DensityUtil.dip2px(mContext, rightMargin);

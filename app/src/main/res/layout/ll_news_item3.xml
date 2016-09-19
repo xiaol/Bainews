@@ -18,21 +18,21 @@
             android:layout_marginLeft="12dp"
             android:layout_marginTop="11dp">
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/title_img_View"
                 android:layout_width="102dp"
-                android:layout_height="74dp"
-                fresco:actualImageScaleType="centerCrop"
-                fresco:placeholderImage="@drawable/bg_load_default_small"
-                fresco:placeholderImageScaleType="centerCrop"
-                fresco:roundBottomLeft="false"
-                fresco:roundBottomRight="false"
-                fresco:roundTopLeft="false"
-                fresco:roundTopRight="false"
-                fresco:roundedCornerRadius="2dp"
-                fresco:roundingBorderColor="@color/color5"
-                fresco:roundingBorderWidth="1px"
-                />
+                android:layout_height="74dp"/>
+                <!--fresco:actualImageScaleType="centerCrop"-->
+                <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+                <!--fresco:placeholderImageScaleType="centerCrop"-->
+                <!--fresco:roundBottomLeft="false"-->
+                <!--fresco:roundBottomRight="false"-->
+                <!--fresco:roundTopLeft="false"-->
+                <!--fresco:roundTopRight="false"-->
+                <!--fresco:roundedCornerRadius="2dp"-->
+                <!--fresco:roundingBorderColor="@color/color5"-->
+                <!--fresco:roundingBorderWidth="1px"-->
+                <!--/>-->
         </FrameLayout>
 
         <TextView

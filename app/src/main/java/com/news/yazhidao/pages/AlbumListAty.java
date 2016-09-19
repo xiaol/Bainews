@@ -22,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.AlbumSubItemDao;
@@ -318,7 +317,7 @@ public class AlbumListAty extends SwipeBackActivity implements View.OnClickListe
                 holder = new SpecialLvHolder();
                 convertView = View.inflate(AlbumListAty.this.getApplicationContext(), R.layout.aty_album_list_item, null);
                 convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (150.0f / 1280 * mScreenHeight)));
-                holder.mSpecialItemIcon = (SimpleDraweeView) convertView.findViewById(R.id.mSpecialItemIcon);
+                holder.mSpecialItemIcon = (ImageView) convertView.findViewById(R.id.mSpecialItemIcon);
                 RelativeLayout.LayoutParams iconParams = new RelativeLayout.LayoutParams((int) (156.0f / 720 * mScreenWidth), (int) (120.0f / 1280 * mScreenHeight));
                 iconParams.setMargins(DensityUtil.dip2px(AlbumListAty.this, 8), 0, 0, 0);
                 iconParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -369,7 +368,7 @@ public class AlbumListAty extends SwipeBackActivity implements View.OnClickListe
     }
 
     static class SpecialLvHolder {
-        SimpleDraweeView mSpecialItemIcon;
+        ImageView mSpecialItemIcon;
         TextView mSpecialItemTitle;
         TextView mSpecialItemOnlyOne;
         TextView mSpecialItemUrl;

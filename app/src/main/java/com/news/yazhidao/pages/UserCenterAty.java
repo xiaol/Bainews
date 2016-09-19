@@ -3,9 +3,9 @@ package com.news.yazhidao.pages;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.SharedPreManager;
@@ -20,7 +20,7 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
     public static final int REQUEST_CODE = 1008;
 
     private View mCenterCancel,mCenterComment,mCenterFavorite,mCenterMessage,mCenterDigger,mCenterSetting;
-    private SimpleDraweeView mCenterUserIcon;
+    private ImageView mCenterUserIcon;
     private TextView mCenterUserName;
 
     @Override
@@ -32,7 +32,7 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
     protected void initializeViews() {
         mCenterCancel = findViewById(R.id.mCenterCancel);
         mCenterCancel.setOnClickListener(this);
-        mCenterUserIcon = (SimpleDraweeView)findViewById(R.id.mCenterUserIcon);
+        mCenterUserIcon = (ImageView)findViewById(R.id.mCenterUserIcon);
         mCenterUserName = (TextView)findViewById(R.id.mCenterUserName);
         mCenterComment = findViewById(R.id.mCenterComment);
         mCenterComment.setOnClickListener(this);

@@ -2,7 +2,13 @@ package com.news.yazhidao.adapter.abslistview;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.text.Html;
 import android.util.SparseArray;
@@ -12,10 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 
 /**
@@ -75,6 +85,7 @@ public class CommonViewHolder {
         TextView text = getView(ViewID);
         text.setBackgroundResource(resource);
     }
+
     public void setTextViewTextandTextSice(int ViewID, String content) {
         TextView text = getView(ViewID);
         text.setText(content);
@@ -93,7 +104,8 @@ public class CommonViewHolder {
         text.setText(Html.fromHtml(content));
         text.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
     }
-    public void setRelatedTitleTextViewExtendTextandTextSice(int ViewID ,String content){
+
+    public void setRelatedTitleTextViewExtendTextandTextSice(int ViewID, String content) {
         TextViewExtend text = getView(ViewID);
         text.setText(content);
         text.setText(Html.fromHtml(content));
@@ -130,52 +142,137 @@ public class CommonViewHolder {
     }
 
     public void setSimpleDraweeViewURI(int draweeView, String strImg) {
-        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
             imageView.setImageURI(Uri.parse(strImg));
-            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+//            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
     }
 
     public void setSimpleDraweeViewURI(int draweeView, String strImg, int width, int height) {
-        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
             String img = strImg.replace("bdp-", "pro-");
-            imageView.setImageURI(Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg"));
-            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+            Uri uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
+            Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().transform(new GlideTransform(mContext, 1)).into(imageView);
         }
     }
+
     public void setSimpleDraweeViewResource(int draweeView, int Resource) {
-        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+        ImageView imageView = getView(draweeView);
         imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));
     }
 
     /**
      * 奇点号列表专用获取图片
+     *
      * @param draweeView
      * @param strImg
      * @param postion
      */
-    public void setSimpleDraweeViewURI(int draweeView, String strImg,int postion) {
-        SimpleDraweeView imageView = (SimpleDraweeView) getView(draweeView);
+    public void setSimpleDraweeViewURI(int draweeView, String strImg, int postion) {
+        ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
             imageView.setImageURI(Uri.parse(strImg));
-            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
-        }else{
+//            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        } else {
             int type = postion % 5;
             if (type == 0) {
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q1));
-            }else if(type == 1){
+            } else if (type == 1) {
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q2));
-            }else if(type == 2){
+            } else if (type == 2) {
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q3));
-            }else if(type == 3){
+            } else if (type == 3) {
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q4));
-            }else if(type == 4){
+            } else if (type == 4) {
                 imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q5));
             }
 
 
+        }
+    }
+
+    public static class GlideTransform extends BitmapTransformation {
+
+        private float radius = 1f;
+
+        public GlideTransform(Context context, int px) {
+            super(context);
+            this.radius = px;
+        }
+
+
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            return roundCrop(pool, toTransform);
+        }
+
+        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
+            if (source == null) return null;
+
+            Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            if (result == null) {
+                result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            }
+
+            Canvas canvas = new Canvas(result);
+            Paint paint = new Paint();
+//            paint.setAntiAlias(true);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(YaZhiDaoApplication.getAppContext().getResources().getColor(R.color.new_color4));
+            paint.setStrokeWidth(radius);
+            RectF rectF = new RectF(0, 0, source.getWidth(), source.getHeight());
+            canvas.drawRect(rectF, paint);
+
+            Paint paint1 = new Paint();
+            paint1.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+            RectF rectF1 = new RectF(radius / 2.0f, radius / 2.0f, source.getWidth() - radius / 2.0f, source.getHeight() - radius / 2.0f);
+            canvas.drawRect(rectF1, paint1);
+            return result;
+        }
+
+        @Override
+        public String getId() {
+            return getClass().getName();
+        }
+    }
+
+    public static class GlideRoundTransform extends BitmapTransformation {
+        private float radius = 1f;
+
+        public GlideRoundTransform(Context context) {
+            this(context, 4);
+        }
+
+        public GlideRoundTransform(Context context, int dp) {
+            super(context);
+            this.radius = Resources.getSystem().getDisplayMetrics().density * dp;
+        }
+
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            return roundCrop(pool, toTransform);
+        }
+
+        private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
+            if (source == null) return null;
+
+            Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            if (result == null) {
+                result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
+            }
+            Canvas canvas = new Canvas(result);
+            Paint paint = new Paint();
+            paint.setShader(new BitmapShader(source, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP));
+            paint.setAntiAlias(true);
+            RectF rectF = new RectF(0f, 0f, source.getWidth(), source.getHeight());
+            canvas.drawRoundRect(rectF, radius, radius, paint);
+            return result;
+        }
+
+        @Override
+        public String getId() {
+            return getClass().getName() + Math.round(radius);
         }
     }
 }

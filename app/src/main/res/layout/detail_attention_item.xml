@@ -14,13 +14,13 @@
         android:background="@color/white"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="5dp">
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/iv_attention_icon"
             android:layout_width="67dp"
             android:layout_height="67dp"
-            android:padding="8dp"
-            app:failureImage="@drawable/detail_attention_placeholder"
-            app:placeholderImage="@drawable/detail_attention_placeholder"/>
+            android:padding="8dp"/>
+            <!--app:failureImage="@drawable/detail_attention_placeholder"-->
+            <!--app:placeholderImage="@drawable/detail_attention_placeholder"/>-->
 
 
         <LinearLayout

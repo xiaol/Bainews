@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.entity.NewsDetailForDigger;
 import com.news.yazhidao.utils.DensityUtil;
@@ -158,20 +154,20 @@ public class DiggerNewsDetail extends SwipeBackActivity implements View.OnClickL
 
                     ll_digger_news_detail.addView(tv, params);
                 } else if (entity.getSrc() != null) {
-                    SimpleDraweeView img = new SimpleDraweeView(this);
-                    img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, 0.35f));
+                    ImageView img = new ImageView(this);
+//                    img.getHierarchy().setActualImageFocusPoint(new PointF(.5f, 0.35f));
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(mScreenHeight * 0.3));
                     params.topMargin = DensityUtil.dip2px(this, 7);
                     params.bottomMargin = DensityUtil.dip2px(this, 7);
 
                     img.setLayoutParams(params);
-                    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-                            .setAutoPlayAnimations(true)
-                            .setUri(Uri.parse(entity.getSrc()))//设置uri
-                            .build();
-                    //设置Controller
-                    img.setController(draweeController);
-//                    img.setImageURI(Uri.parse(entity.getSrc()));
+//                    DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+//                            .setAutoPlayAnimations(true)
+//                            .setUri(Uri.parse(entity.getSrc()))//设置uri
+//                            .build();
+//                    //设置Controller
+//                    img.setController(draweeController);
+                    img.setImageURI(Uri.parse(entity.getSrc()));
 
                     ll_digger_news_detail.addView(img);
                 }

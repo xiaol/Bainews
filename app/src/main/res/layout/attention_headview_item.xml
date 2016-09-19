@@ -9,17 +9,17 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:orientation="vertical">
-       <com.facebook.drawee.view.SimpleDraweeView
+       <ImageView
            android:id="@+id/iv_attention_headImage"
            android:layout_width="@dimen/image_width"
            android:layout_height="@dimen/image_width"
-           android:layout_gravity="top|center"
-           app:failureImage="@drawable/detail_attention_placeholder"
-           app:placeholderImage="@drawable/detail_attention_placeholder"
-           app:roundAsCircle="true"
-           android:layout_marginTop="54dp"
+           android:layout_gravity="top|center"/>
+           <!--app:failureImage="@drawable/detail_attention_placeholder"-->
+           <!--app:placeholderImage="@drawable/detail_attention_placeholder"-->
+           <!--app:roundAsCircle="true"-->
+           <!--android:layout_marginTop="54dp"-->
 
-           />
+           <!--/>-->
 
        <TextView
            android:id="@+id/tv_attention_title"

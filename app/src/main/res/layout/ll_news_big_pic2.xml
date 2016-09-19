@@ -19,24 +19,24 @@
         android:textColor="@color/new_color1"
         android:textSize="@dimen/new_font2" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/title_img_View"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_textView"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        fresco:actualImageScaleType="centerCrop"
-        fresco:placeholderImage="@drawable/bg_load_default_small"
-        fresco:placeholderImageScaleType="centerCrop"
-        fresco:roundBottomLeft="false"
-        fresco:roundBottomRight="false"
-        fresco:roundTopLeft="false"
-        fresco:roundTopRight="false"
-        fresco:roundedCornerRadius="2dp"
-        fresco:roundingBorderColor="@color/new_color4"
-        fresco:roundingBorderWidth="1px"
-        fresco:viewAspectRatio="1.7777" />
+        android:layout_marginRight="15dp"/>
+        <!--fresco:actualImageScaleType="centerCrop"-->
+        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+        <!--fresco:placeholderImageScaleType="centerCrop"-->
+        <!--fresco:roundBottomLeft="false"-->
+        <!--fresco:roundBottomRight="false"-->
+        <!--fresco:roundTopLeft="false"-->
+        <!--fresco:roundTopRight="false"-->
+        <!--fresco:roundedCornerRadius="2dp"-->
+        <!--fresco:roundingBorderColor="@color/new_color4"-->
+        <!--fresco:roundingBorderWidth="1px"-->
+        <!--fresco:viewAspectRatio="1.7777" />-->
 
     <include
         android:id="@+id/source_content_linearLayout"

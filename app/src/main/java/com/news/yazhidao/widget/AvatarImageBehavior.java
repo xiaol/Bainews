@@ -3,14 +3,10 @@ package com.news.yazhidao.widget;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.utils.DeviceInfoUtil;
-import com.news.yazhidao.utils.Logger;
 
 
 /**
@@ -19,7 +15,7 @@ import com.news.yazhidao.utils.Logger;
  * @author wangchenlong
  */
 @SuppressWarnings("unused")
-public class AvatarImageBehavior extends CoordinatorLayout.Behavior<SimpleDraweeView> {
+public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {
 
     private final static float MIN_AVATAR_PERCENTAGE_SIZE = 0.3f;
     private final static int EXTRA_FINAL_AVATAR_PADDING = 80;
@@ -52,13 +48,13 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<SimpleDrawee
 
 
     @Override
-    public boolean layoutDependsOn(CoordinatorLayout parent, SimpleDraweeView child, View dependency) {
+    public boolean layoutDependsOn(CoordinatorLayout parent, ImageView child, View dependency) {
         // 依赖Toolbar控件
         return dependency instanceof Toolbar;
     }
 
     @Override
-    public boolean onDependentViewChanged(CoordinatorLayout parent, SimpleDraweeView child, View dependency) {
+    public boolean onDependentViewChanged(CoordinatorLayout parent, ImageView child, View dependency) {
 
         // 初始化属性
         shouldInitProperties(child, dependency);
@@ -120,7 +116,7 @@ public class AvatarImageBehavior extends CoordinatorLayout.Behavior<SimpleDrawee
      * @param child      图片控件
      * @param dependency ToolBar
      */
-    private void shouldInitProperties(SimpleDraweeView child, View dependency) {
+    private void shouldInitProperties(ImageView child, View dependency) {
 
         // 图片控件中心
         if (mStartYPosition == 0)

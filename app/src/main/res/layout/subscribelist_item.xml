@@ -10,20 +10,20 @@
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
         android:id="@+id/img_SubscribeListItem_icon"
         android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:failureImage="@drawable/search_item_placeholder"
-        app:placeholderImage="@drawable/search_item_placeholder"
-        android:scaleType="centerCrop"
-        app:roundedCornerRadius="5dp"
-        app:roundBottomRight="true"
-        app:roundTopLeft="true"
-        app:roundTopRight="true"
-        app:roundBottomLeft="true"
+        android:layout_height="40dp"/>
+        <!--app:failureImage="@drawable/search_item_placeholder"-->
+        <!--app:placeholderImage="@drawable/search_item_placeholder"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:roundedCornerRadius="5dp"-->
+        <!--app:roundBottomRight="true"-->
+        <!--app:roundTopLeft="true"-->
+        <!--app:roundTopRight="true"-->
+        <!--app:roundBottomLeft="true"-->
 
-        />
+        <!--/>-->
     <LinearLayout
         android:id="@+id/linear_SubscribeListItem_content"
         android:layout_width="wrap_content"
