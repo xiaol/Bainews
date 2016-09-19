@@ -454,7 +454,7 @@ public class NewsFeedFgt extends Fragment{
 
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
-            bgLayout.setVisibility(View.VISIBLE);
+            bgLayout.setVisibility(View.VISIBLE);  
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";

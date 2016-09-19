@@ -63,4 +63,6 @@ public final class CommonConstant {
 
     public static final String FILE_DATA_ATTENTION = "file_data_attention";
     public static final String KEY_ATTENTIN_LIST = "key_attentin_list";
+
+    public static final String TYPE_SHOWIMAGES = "showImagesType";
 }

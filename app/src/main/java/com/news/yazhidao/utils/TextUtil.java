@@ -643,7 +643,7 @@ public class TextUtil {
 
     public static String generateJs() {
 //        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url);}</script>";
-        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url){console.log(\"img pro \"+url);if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";
+        return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url,isLoadImag){console.log(\"img pro \"+url);if(!isLoadImag){return}if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";
     }
 
     public static ArrayList<AttentionListEntity> copyArrayList(ArrayList<AttentionListEntity> target){
@@ -659,34 +659,34 @@ public class TextUtil {
     /**
      * 生成新闻详情的html
      */
-    public static String genarateHTML(NewsDetail detail, int textSize) {
+    public static String genarateHTML(NewsDetail detail, int textSize,boolean isLoadImgs) {
         if (detail == null) {
             return "";
         }
         int titleTextSize, commentTextSize, contentTextSize;
         if (textSize == CommonConstant.TEXT_SIZE_NORMAL) {
-            titleTextSize = 20;
-            commentTextSize = 13;
-            contentTextSize = 17;
-        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
-            titleTextSize = 22;
-            commentTextSize = 15;
+            titleTextSize = 24;
+            commentTextSize = 12;
             contentTextSize = 18;
+        } else if (textSize == CommonConstant.TEXT_SIZE_BIG) {
+            titleTextSize = 18;
+            commentTextSize = 12;
+            contentTextSize = 14;
         } else {
-            titleTextSize = 23;
-            commentTextSize = 16;
-            contentTextSize = 19;
+            titleTextSize = 26;
+            commentTextSize = 22;
+            contentTextSize = 22;
         }
         StringBuilder contentBuilder = new StringBuilder("<!DOCTYPE html><html><head lang=\"en\"><meta charset=\"UTF-8\"><meta name=\"“viewport”\" content=\"“width=device-width,\" initial-scale=\"1.0,\" user-scalable=\"yes,target-densitydpi=device-dpi”\">" +
                 generateCSS() + generateJs() +
                 "</head>" +
-                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;\">" +
+                "<body><div style=\"font-size:" + titleTextSize + "px;font-weight:bold;margin: 0px 0px 11px 0px;color: #333333;\">" +
                 detail.getTitle() +
-                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #9a9a9a;\" class=\"top\"><span>" +
+                "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #999999;\" class=\"top\"><span>" +
                 detail.getPname() + "</span>" +
-                "&nbsp; <span>" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
+                "&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
         if (detail.getCommentSize() != 0) {
-            contentBuilder.append("&nbsp; <span>" + detail.getCommentSize() + "评论" + "</span>");
+            contentBuilder.append("&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + detail.getCommentSize() + "评论" + "</span>");
         }
         contentBuilder.append("</div><div class=\"content\">");
 
@@ -700,16 +700,17 @@ public class TextUtil {
                 String img = map.get("img");
                 String vid = map.get("vid");
                 String imgUrl = "file:///android_asset/deail_default.png";
-                int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
-                int h = (int) (w * 0.75);
                 if (!TextUtil.isEmptyString(txt)) {
                     contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
                 }
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);
-                    contentBuilder.append("<p class=\"p_img\"><img  src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "')\"></p>");
+                    /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "',"+!isLoadImgs+")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
+                    int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
+                    int h = (int) (w * 0.75);
                     String url = parseVideoUrl(vid, w, h);
                     contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
                 }

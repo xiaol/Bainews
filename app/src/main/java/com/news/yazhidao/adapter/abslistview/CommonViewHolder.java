@@ -16,6 +16,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 
 /**
@@ -142,6 +143,21 @@ public class CommonViewHolder {
         if (!TextUtil.isEmptyString(strImg)) {
             String img = strImg.replace("bdp-", "pro-");
             imageView.setImageURI(Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg"));
+            imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
+        }
+    }
+        public void setIsShowImagesSimpleDraweeViewURI(int draweeView, String strImg, int width, int height) {
+        SimpleDraweeView imageView = (SimpleDraweeView)getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            //梁帅：判断图片是不是  不显示
+            if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
+                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
+            }else{
+                String img = strImg.replace("bdp-", "pro-");
+                imageView.setImageURI(Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg"));
+            }
+
+
             imageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5F, 0.4F));
         }
     }
