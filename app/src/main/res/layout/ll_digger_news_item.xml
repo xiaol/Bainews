@@ -14,14 +14,14 @@
         android:textSize="18sp"
         android:textColor="@color/black" />
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/sdv_digger_img"
         android:layout_width="match_parent"
         android:layout_height="270dp"
-        android:contentDescription=""
-        fresco:actualImageScaleType="focusCrop"
-        fresco:placeholderImage="@drawable/img_digger_base"
-        fresco:placeholderImageScaleType="fitXY"
-        />
+        android:contentDescription=""/>
+        <!--fresco:actualImageScaleType="focusCrop"-->
+        <!--fresco:placeholderImage="@drawable/img_digger_base"-->
+        <!--fresco:placeholderImageScaleType="fitXY"-->
+        <!--/>-->
 
 </LinearLayout>

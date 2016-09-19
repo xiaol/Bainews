@@ -44,20 +44,20 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/img_ll_news_search_item_iconOne"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="top|center"
-                    app:failureImage="@drawable/r_q1"
-                    app:placeholderImage="@drawable/r_q1"
-                    android:scaleType="centerCrop"
-                    app:roundedCornerRadius="7dp"
-                    app:roundBottomRight="true"
-                    app:roundTopLeft="true"
-                    app:roundTopRight="true"
-                    app:roundBottomLeft="true"
-                    />
+                    android:layout_gravity="top|center"/>
+                    <!--app:failureImage="@drawable/r_q1"-->
+                    <!--app:placeholderImage="@drawable/r_q1"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--app:roundedCornerRadius="7dp"-->
+                    <!--app:roundBottomRight="true"-->
+                    <!--app:roundTopLeft="true"-->
+                    <!--app:roundTopRight="true"-->
+                    <!--app:roundBottomLeft="true"-->
+                    <!--/>-->
                 <TextView
                     android:id="@+id/tv_ll_news_search_item_descrOne"
                     android:layout_width="match_parent"
@@ -78,20 +78,20 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="30dp"
                 >
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/img_ll_news_search_item_iconTwo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="top|center"
-                    app:failureImage="@drawable/r_q2"
-                    app:placeholderImage="@drawable/r_q2"
                     android:scaleType="centerCrop"
-                    app:roundedCornerRadius="7dp"
-                    app:roundBottomRight="true"
-                    app:roundTopLeft="true"
-                    app:roundTopRight="true"
-                    app:roundBottomLeft="true"
-                    />
+                    android:layout_gravity="top|center"/>
+                    <!--app:failureImage="@drawable/r_q2"-->
+                    <!--app:placeholderImage="@drawable/r_q2"-->
+                    <!--app:roundedCornerRadius="7dp"-->
+                    <!--app:roundBottomRight="true"-->
+                    <!--app:roundTopLeft="true"-->
+                    <!--app:roundTopRight="true"-->
+                    <!--app:roundBottomLeft="true"-->
+                    <!--/>-->
                 <TextView
                     android:id="@+id/tv_ll_news_search_item_descrTwo"
                     android:layout_width="match_parent"
@@ -112,20 +112,20 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="30dp"
                 >
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/img_ll_news_search_item_iconThree"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="top|center"
-                    app:failureImage="@drawable/r_q3"
-                    app:placeholderImage="@drawable/r_q3"
-                    android:scaleType="centerCrop"
-                    app:roundedCornerRadius="7dp"
-                    app:roundBottomRight="true"
-                    app:roundTopLeft="true"
-                    app:roundTopRight="true"
-                    app:roundBottomLeft="true"
-                    />
+                    android:scaleType="centerCrop"/>
+                    <!--app:failureImage="@drawable/r_q3"-->
+                    <!--app:placeholderImage="@drawable/r_q3"-->
+                    <!--app:roundedCornerRadius="7dp"-->
+                    <!--app:roundBottomRight="true"-->
+                    <!--app:roundTopLeft="true"-->
+                    <!--app:roundTopRight="true"-->
+                    <!--app:roundBottomLeft="true"-->
+                    <!--/>-->
                 <TextView
                     android:id="@+id/tv_ll_news_search_item_descrThree"
                     android:layout_width="match_parent"
@@ -146,20 +146,20 @@
                 android:orientation="vertical"
                 android:layout_marginLeft="30dp"
                 >
-                <com.facebook.drawee.view.SimpleDraweeView
+                <ImageView
                     android:id="@+id/img_ll_news_search_item_iconFour"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="top|center"
-                    app:failureImage="@drawable/search_item_more"
-                    app:placeholderImage="@drawable/search_item_more"
-                    android:scaleType="centerCrop"
-                    app:roundedCornerRadius="7dp"
-                    app:roundBottomRight="true"
-                    app:roundTopLeft="true"
-                    app:roundTopRight="true"
-                    app:roundBottomLeft="true"
-                    />
+                    android:scaleType="centerCrop"/>
+                    <!--app:failureImage="@drawable/search_item_more"-->
+                    <!--app:placeholderImage="@drawable/search_item_more"-->
+                    <!--app:roundedCornerRadius="7dp"-->
+                    <!--app:roundBottomRight="true"-->
+                    <!--app:roundTopLeft="true"-->
+                    <!--app:roundTopRight="true"-->
+                    <!--app:roundBottomLeft="true"-->
+                    <!--/>-->
                 <TextView
                     android:id="@+id/tv_ll_news_search_item_descrFour"
                     android:layout_width="match_parent"

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.AbsListView;
@@ -22,7 +21,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -99,7 +97,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
 
     private int conpubflag;
 
-    private SimpleDraweeView iv_attention_headImage;
+    private ImageView iv_attention_headImage;
 
     private RelativeLayout bgLayout, mAttentionTitleLayout;
 
@@ -382,7 +380,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
         tv_attention_title = (TextView) attentionHeadView.findViewById(R.id.tv_attention_title);
         tv_attention_title.setText(mPName);
 
-        iv_attention_headImage = (SimpleDraweeView) attentionHeadView.findViewById(R.id.iv_attention_headImage);
+        iv_attention_headImage = (ImageView) attentionHeadView.findViewById(R.id.iv_attention_headImage);
 //        iv_attention_headImage.setImageURI(Uri.parse(mPUrl));
 
 

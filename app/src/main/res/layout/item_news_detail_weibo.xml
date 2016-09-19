@@ -11,17 +11,17 @@
     >
 
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/mDetailWeiboUserIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="16dp"
-        app:placeholderImage="@drawable/ic_user_comment_default"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="@color/bg_home_login_header"
-        app:roundingBorderWidth="2px"
-        />
+        android:layout_marginTop="16dp"></ImageView>
+        <!--app:placeholderImage="@drawable/ic_user_comment_default"-->
+        <!--app:roundAsCircle="true"-->
+        <!--app:roundingBorderColor="@color/bg_home_login_header"-->
+        <!--app:roundingBorderWidth="2px"-->
+        <!--/>-->
 
     <TextView
         android:id="@+id/mDetailWeiboUserName"
@@ -62,15 +62,15 @@
             android:textSize="@dimen/detail_weibo_username_speech"
             />
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/mDetailWeiboImg"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
-            android:orientation="vertical"
-            app:roundedCornerRadius="3dp"
+            android:orientation="vertical"/>
+            <!--app:roundedCornerRadius="3dp"-->
 
-            />
+            <!--/>-->
 
     </LinearLayout>
 

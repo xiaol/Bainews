@@ -14,9 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.utils.DensityUtil;
@@ -86,10 +83,11 @@ public class WallActivity extends BaseActivity implements View.OnClickListener {
         });
         mWallDesc.setMovementMethod(ScrollingMovementMethod.getInstance());
         for (int i = 0; i < mImageWalls.size(); i++) {
-            final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            final ImageView imageView = new ImageView(this);
             ViewGroup.LayoutParams  params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             imageView.setLayoutParams(params);
-            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
             mViews.add(imageView);
             imageView.setImageURI(Uri.parse(mImageWalls.get(i).get("img")));
         }

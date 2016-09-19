@@ -4,14 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipeline;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -149,8 +145,8 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
 //                1.清理fresco 中缓存的图片数据
-                        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-                        imagePipeline.clearCaches();
+//                        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+//                        imagePipeline.clearCaches();
 //                2.清理webview 中缓存的数据
                         DataCleanManager.clearWebViewCache(SettingAty.this);
 //                3.删除缓存的新闻数据

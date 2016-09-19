@@ -11,15 +11,15 @@
         android:paddingLeft="15dp"
         android:paddingRight="14dp"
         android:paddingTop="15dp">
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/iv_user_icon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            app:failureImage="@drawable/ic_user_comment_default"
-            app:placeholderImage="@drawable/ic_user_comment_default"
-            app:roundAsCircle="true"
-            app:roundingBorderColor="@color/bg_home_login_header"
-            app:roundingBorderWidth="2px"/>
+            android:layout_width="33dp"
+            android:layout_height="33dp"/>
+            <!--app:failureImage="@drawable/ic_user_comment_default"-->
+            <!--app:placeholderImage="@drawable/ic_user_comment_default"-->
+            <!--app:roundAsCircle="true"-->
+            <!--app:roundingBorderColor="@color/bg_home_login_header"-->
+            <!--app:roundingBorderWidth="2px"/>-->
 
 
 

@@ -1,7 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.graphics.drawable.Animatable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -9,15 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -61,30 +52,30 @@ public class ImageWallFgt extends BaseFragment implements ViewPager.OnPageChange
         super.onResume();
         mViews = new ArrayList<>();
         for (int i = 0; i < mImageList.size(); i++) {
-            final SimpleDraweeView imageView = new SimpleDraweeView(getActivity());
-            mViews.add(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            DraweeController controller = Fresco.newDraweeControllerBuilder()
-                    .setUri(Uri.parse(mImageList.get(i).get("img")))
-                    .setTapToRetryEnabled(true)
-                    .setOldController(imageView.getController())
-                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
-                        @Override
-                        public void onFinalImageSet(
-                                String id,
-                                @Nullable ImageInfo imageInfo,
-                                @Nullable Animatable anim) {
-                            if (imageInfo == null) {
-                                return;
-                            }
-                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mImageWallVPager.getLayoutParams();
-                            lp.width = mScreenWidth;
-                            lp.height = (int) (mScreenWidth * imageInfo.getHeight() / (float) imageInfo.getWidth());
-                            mImageWallVPager.setLayoutParams(lp);
-                        }
-                    })
-                    .build();
-            imageView.setController(controller);
+//            final SimpleDraweeView imageView = new SimpleDraweeView(getActivity());
+//            mViews.add(imageView);
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//            DraweeController controller = Fresco.newDraweeControllerBuilder()
+//                    .setUri(Uri.parse(mImageList.get(i).get("img")))
+//                    .setTapToRetryEnabled(true)
+//                    .setOldController(imageView.getController())
+//                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+//                        @Override
+//                        public void onFinalImageSet(
+//                                String id,
+//                                @Nullable ImageInfo imageInfo,
+//                                @Nullable Animatable anim) {
+//                            if (imageInfo == null) {
+//                                return;
+//                            }
+//                            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mImageWallVPager.getLayoutParams();
+//                            lp.width = mScreenWidth;
+//                            lp.height = (int) (mScreenWidth * imageInfo.getHeight() / (float) imageInfo.getWidth());
+//                            mImageWallVPager.setLayoutParams(lp);
+//                        }
+//                    })
+//                    .build();
+//            imageView.setController(controller);
         }
         mImageWallVPager.setOnPageChangeListener(this);
         mImageWallVPager.setAdapter(new ImagePagerAdapter(mViews));

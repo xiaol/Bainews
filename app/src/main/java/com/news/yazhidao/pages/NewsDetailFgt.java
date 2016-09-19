@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -129,7 +127,7 @@ public class NewsDetailFgt extends BaseFragment {
     private boolean isLoadDate;
     private boolean isNetWork;
     private AttentionDetailDialog attentionDetailDialog;
-    private SimpleDraweeView iv_attention_icon;
+    private ImageView iv_attention_icon;
     private TextViewExtend tv_attention_title;
 
     @Override
@@ -446,7 +444,7 @@ public class NewsDetailFgt extends BaseFragment {
         image_attention_line = (ImageView) attention_item.findViewById(R.id.image_attention_line);
         image_attention_success = (ImageView) attention_item.findViewById(R.id.image_attention_success);
         relativeLayout_attention = (RelativeLayout) attention_item.findViewById(R.id.relativeLayout_attention);
-        iv_attention_icon = (SimpleDraweeView) attention_item.findViewById(R.id.iv_attention_icon);
+        iv_attention_icon = (ImageView) attention_item.findViewById(R.id.iv_attention_icon);
         tv_attention_title = (TextViewExtend) attention_item.findViewById(R.id.tv_attention_title);
         detail_attention_addView.addView(attention_item);
 
@@ -1043,7 +1041,7 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
     class CommentHolder {
-        SimpleDraweeView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;
@@ -1052,7 +1050,7 @@ public class NewsDetailFgt extends BaseFragment {
 
         public CommentHolder(View convertView) {
             tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
-            ivHeadIcon = (SimpleDraweeView) convertView.findViewById(R.id.iv_user_icon);
+            ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
             tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
             ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
             tvPraiseCount = (TextViewExtend) convertView.findViewById(R.id.tv_praise_count);
@@ -1261,7 +1259,7 @@ public class NewsDetailFgt extends BaseFragment {
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
             mNewsDetailHeaderView.removeView(mDetailWebView);
         }
-
+        mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
     }
 

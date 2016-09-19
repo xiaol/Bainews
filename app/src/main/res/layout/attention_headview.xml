@@ -10,17 +10,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center">
-    <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
         android:id="@+id/iv_attention_headView_icon"
         android:layout_width="65dp"
-        android:layout_height="65dp"
-        app:failureImage="@drawable/ic_user_comment_default"
-        app:placeholderImage="@drawable/ic_user_comment_default"
-        app:roundAsCircle="true"
-        app:roundingBorderColor="@color/black"
-        app:roundingBorderWidth="2px"
-        android:layout_marginTop="4dp"
-        />
+        android:layout_height="65dp"/>
+        <!--app:failureImage="@drawable/ic_user_comment_default"-->
+        <!--app:placeholderImage="@drawable/ic_user_comment_default"-->
+        <!--app:roundAsCircle="true"-->
+        <!--app:roundingBorderColor="@color/black"-->
+        <!--app:roundingBorderWidth="2px"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--/>-->
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_attention_headView_title"

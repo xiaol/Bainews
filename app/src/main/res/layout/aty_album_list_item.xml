@@ -8,15 +8,15 @@
               >
 
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/mSpecialItemIcon"
             android:layout_width="78dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
-            app:placeholderImage="@drawable/bg_load_default_small"
-            app:placeholderImageScaleType="centerCrop"
-            />
+            android:layout_marginLeft="8dp"/>
+            <!--app:placeholderImage="@drawable/bg_load_default_small"-->
+            <!--app:placeholderImageScaleType="centerCrop"-->
+            <!--/>-->
 
         <TextView
             android:id="@+id/mSpecialItemTitle"

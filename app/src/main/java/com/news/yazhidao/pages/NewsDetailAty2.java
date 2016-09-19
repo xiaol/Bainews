@@ -34,8 +34,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -278,7 +276,6 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             mRefreshReceiber = null;
         }
         upLoadLog();
-
     }
 
     /**
@@ -679,10 +676,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mDetailView.setBackgroundColor(getResources().getColor(R.color.black));
         mDetailAddComment.setPadding(padding, padding, padding, padding);
         for (int i = 0; i < mImages.size(); i++) {
-            final SimpleDraweeView imageView = new SimpleDraweeView(this);
+            final ImageView imageView = new ImageView(this);
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             imageView.setLayoutParams(params);
-            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//            imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
             mImageViews.add(imageView);
             imageView.setImageURI(Uri.parse(mImages.get(i).get("img")));
         }

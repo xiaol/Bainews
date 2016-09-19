@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
 import com.news.yazhidao.pages.ChatAty;
@@ -46,7 +45,7 @@ public class YaZhiDaoApplication extends Application {
         mPushAgent.setMergeNotificaiton(false);//设置通知栏中存在多条推送信息
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
         //init fresco
-        Fresco.initialize(this);
+//        Fresco.initialize(this);
         String device_token = UmengRegistrar.getRegistrationId(this);
         Logger.e("device_token","token="+device_token);
         super.onCreate();

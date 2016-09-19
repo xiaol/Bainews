@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.common.BaseActivity;
@@ -62,7 +61,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private long mLastPressedBackKeyTime;
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
-    private SimpleDraweeView mUserCenter;
+    private ImageView mUserCenter;
 
     /**
      * 自定义的PopWindow
@@ -120,7 +119,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
-        mUserCenter = (SimpleDraweeView) findViewById(R.id.mUserCenter);
+        mUserCenter = (ImageView) findViewById(R.id.mUserCenter);
         mUserCenter.setOnClickListener(this);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);

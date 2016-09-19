@@ -62,7 +62,7 @@
         android:layout_toRightOf="@+id/line_layout"
         android:background="@drawable/white_relate_onepx_solid">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/mDetailRelateOpinionImg"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -70,10 +70,10 @@
             android:layout_centerVertical="true"
             android:layout_marginBottom="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            fresco:placeholderImage="@drawable/bg_load_default_small"
-            fresco:placeholderImageScaleType="fitXY"
-            fresco:roundedCornerRadius="3dp" />
+            android:layout_marginTop="5dp"/>
+            <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+            <!--fresco:placeholderImageScaleType="fitXY"-->
+            <!--fresco:roundedCornerRadius="3dp" />-->
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/mDetailRelateOpinionContent"

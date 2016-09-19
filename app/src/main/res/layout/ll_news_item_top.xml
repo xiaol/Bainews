@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/iv_title_img"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        fresco:actualImageScaleType="focusCrop"
-        fresco:placeholderImage="@drawable/bg_load_default_small"
-        fresco:placeholderImageScaleType="centerCrop" />
+        android:layout_height="wrap_content"/>
+        <!--fresco:actualImageScaleType="focusCrop"-->
+        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+        <!--fresco:placeholderImageScaleType="centerCrop" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"

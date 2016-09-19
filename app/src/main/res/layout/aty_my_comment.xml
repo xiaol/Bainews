@@ -11,13 +11,10 @@
         android:layout_height="match_parent"
         android:background="@color/common_header_bg">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <ImageView
             android:id="@+id/mCommentBgImg"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            fresco:placeholderImage="@drawable/ic_comment_bg"
-            fresco:placeholderImageScaleType="centerCrop"
-            fresco:actualImageScaleType="centerCrop"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
@@ -37,12 +34,12 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <ImageView
                 android:id="@+id/mCommentUserIcon"
                 android:layout_width="64dp"
-                android:layout_height="64dp"
-                fresco:placeholderImage="@drawable/ic_user_comment_default"
-                fresco:roundAsCircle="true" />
+                android:layout_height="64dp"/>
+                <!--fresco:placeholderImage="@drawable/ic_user_comment_default"-->
+                <!--fresco:roundAsCircle="true" />-->
                 <!--fresco:roundingBorderColor="@color/white"-->
                 <!--fresco:roundingBorderWidth="3dp"-->
 
