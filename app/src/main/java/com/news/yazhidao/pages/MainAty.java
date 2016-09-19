@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
@@ -83,12 +85,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (ACTION_USER_LOGIN.equals(intent.getAction())) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
                 if (!TextUtil.isEmptyString(url)) {
-                    Logger.e("jigang","user login------1111");
-                    mUserCenter.setImageURI(Uri.parse(url));
+                    Logger.e("jigang", "user login------1111");
+                    setUserCenterIcon(Uri.parse(url));
                 }
             } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
-                mUserCenter.setImageURI(null);
-                Logger.e("jigang","user login------2222");
+                Logger.e("jigang", "user login------2222");
+                setUserCenterIcon(null);
             }
         }
     }
@@ -112,7 +114,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     protected void initializeViews() {
         AnalyticsConfig.setChannel("official");
-        MobclickAgent.onEvent(this,"bainews_user_assess_app");
+        MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
@@ -121,6 +123,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         mUserCenter = (ImageView) findViewById(R.id.mUserCenter);
         mUserCenter.setOnClickListener(this);
+        setUserCenterIcon(null);
         mViewPager.setOffscreenPageLimit(2);
         mChannelExpand = (ImageView) findViewById(R.id.mChannelExpand);
         mChannelExpand.setOnClickListener(this);
@@ -159,20 +162,21 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
             if (!TextUtil.isEmptyString(user.getUserIcon())) {
-                Logger.e("jigang","user login------3333");
-                mUserCenter.setImageURI(Uri.parse(user.getUserIcon()));
+                Logger.e("jigang", "user login------3333");
+                setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
+            /**注册用户登录广播*/
+            mReceiver = new UserLoginReceiver();
+            IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
+            filter.addAction(ACTION_USER_LOGOUT);
+            registerReceiver(mReceiver, filter);
         }
-        /**注册用户登录广播*/
-        mReceiver = new UserLoginReceiver();
-        IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
-        filter.addAction(ACTION_USER_LOGOUT);
-        registerReceiver(mReceiver, filter);
     }
 
     /**
      * 开始顶部 progress 刷新动画
      */
+
     public void startTopRefresh() {
     }
 
@@ -224,16 +228,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //                    user.setUserName("forward_one");
 //                    user.setUserIcon("http://wx.qlogo.cn/mmopen/PiajxSqBRaEIVrCBZPyFk7SpBj8OW2HA5IGjtic5f9bAtoIW2uDr8LxIRhTTmnYXfejlGvgsqcAoHgkBM0iaIx6WA/0");
 //                }
-                if (user != null && !user.isVisitor()){
+                if (user != null && !user.isVisitor()) {
                     Intent userCenterAty = new Intent(this, UserCenterAty.class);
                     startActivity(userCenterAty);
-                }else {
+                } else {
                     Intent loginAty = new Intent(this, LoginAty.class);
                     startActivity(loginAty);
                 }
-                MobclickAgent.onEvent(this,"qidian_user_open_user_center");
+                MobclickAgent.onEvent(this, "qidian_user_open_user_center");
                 break;
         }
+    }
+
+    private void setUserCenterIcon(Uri uri) {
+        Glide.with(MainAty.this).load(uri).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(MainAty.this, 2, getResources().getColor(R.color.blue))).into(mUserCenter);
     }
 
     ChannelItem item1;
@@ -263,7 +271,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if (item != null) {
                 ((NewsFeedFgt) item).setNewsFeed(mSaveData.get(item1.getId()));
             }
-            Logger.e("jigang","--- onActivityResult");
+            Logger.e("jigang", "--- onActivityResult");
             mViewPagerAdapter.setmChannelItems(channelItems);
             mViewPagerAdapter.notifyDataSetChanged();
             mChannelTabStrip.setViewPager(mViewPager);
@@ -323,13 +331,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public int getItemPosition(Object object) {
-            Logger.e("jigang","----viewpager getItemPosition " + object.getClass().getSimpleName());
+            Logger.e("jigang", "----viewpager getItemPosition " + object.getClass().getSimpleName());
             int newPos = mViewPager.getCurrentItem();
             String currentId = mCurrentChannel.getName();
             String newId = channelItems.get(newPos).getName();
-            if (newPos == mCurrentChannelPos && currentId.equals(newId)){
+            if (newPos == mCurrentChannelPos && currentId.equals(newId)) {
                 return POSITION_UNCHANGED;
-            }else {
+            } else {
                 return POSITION_NONE;
             }
         }
@@ -341,7 +349,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Fragment getItem(int position) {
-            Logger.e("jigang","----viewpager getItem " + position);
+            Logger.e("jigang", "----viewpager getItem " + position);
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt feedFgt = NewsFeedFgt.newInstance(channelId);
             feedFgt.setNewsFeedFgtPopWindow(mNewsFeedFgtPopWindow);
@@ -351,7 +359,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Logger.e("jigang","----viewpager instantiateItem " + position);
+            Logger.e("jigang", "----viewpager instantiateItem " + position);
             String channelId = mSelChannelItems.get(position).getId();
             NewsFeedFgt fgt = (NewsFeedFgt) super.instantiateItem(container, position);
             ArrayList<NewsFeed> newsFeeds = mSaveData.get(channelId);
@@ -366,7 +374,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             super.destroyItem(container, position, object);
-            Logger.e("jigang","----viewpager destroyItem " + position);
+            Logger.e("jigang", "----viewpager destroyItem " + position);
         }
 
     }
