@@ -241,7 +241,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     }
 
     private void setUserCenterIcon(Uri uri) {
-        Glide.with(MainAty.this).load(uri).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(MainAty.this, 2, getResources().getColor(R.color.blue))).into(mUserCenter);
+        Glide.with(MainAty.this).load(uri).placeholder(R.drawable.btn_user_center).transform(new CommonViewHolder.GlideCircleTransform(MainAty.this, 2, getResources().getColor(R.color.white))).into(mUserCenter);
     }
 
     ChannelItem item1;

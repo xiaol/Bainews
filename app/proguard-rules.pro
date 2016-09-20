@@ -156,13 +156,24 @@ java.lang.Object readResolve();
 #fresco 混淆相关
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
--keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
+#-keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
 
 # Do not strip any method/class that is annotated with @DoNotStrip
--keep @com.facebook.common.internal.DoNotStrip class *
--keepclassmembers class * {
-    @com.facebook.common.internal.DoNotStrip *;
+#-keep @com.facebook.common.internal.DoNotStrip class *
+#-keepclassmembers class * {
+#    @com.facebook.common.internal.DoNotStrip *;
+#}
+
+#glide 混淆相关
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
 }
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+
 
 # Keep native methods
 -keepclassmembers class * {

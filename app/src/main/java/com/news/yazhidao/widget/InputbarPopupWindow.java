@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -299,7 +298,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_comment1, null, false);
                 holder.tvContent = (TextViewExtend) convertView.findViewById(R.id.tv_comment_content);
 //                holder.mSpeechView = (SpeechView) convertView.findViewById(R.id.mSpeechView);
-                holder.ivHeadIcon = (RoundedImageView) convertView.findViewById(R.id.iv_user_icon);
+                holder.ivHeadIcon = (ImageView) convertView.findViewById(R.id.iv_user_icon);
                 holder.ivHeadIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 holder.tvName = (TextViewExtend) convertView.findViewById(R.id.tv_user_name);
                 holder.ivPraise = (ImageView) convertView.findViewById(R.id.iv_praise);
@@ -349,7 +348,7 @@ public class InputbarPopupWindow extends PopupWindow implements InputBarDelegate
 
 
     class Holder {
-        RoundedImageView ivHeadIcon;
+        ImageView ivHeadIcon;
         TextViewExtend tvName;
         TextViewExtend tvContent;
         TextViewExtend tvPraiseCount;

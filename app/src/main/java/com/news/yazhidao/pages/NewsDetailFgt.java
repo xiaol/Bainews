@@ -29,11 +29,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -113,7 +115,7 @@ public class NewsDetailFgt extends BaseFragment {
     ViewGroup container;
     private RefreshPageBroReceiber mRefreshReceiber;
     private RefreshLikeBroReceiber mRefreshLike;
-    private boolean isWebSuccess,isCommentSuccess, isCorrelationSuccess;
+    private boolean isWebSuccess, isCommentSuccess, isCorrelationSuccess;
     private TextView mDetailSharedHotComment;
     boolean isNoHaveBean;
     private final int LOAD_MORE = 0;
@@ -346,9 +348,8 @@ public class NewsDetailFgt extends BaseFragment {
     }
 
 
-
-
     boolean isAttention;
+
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -378,14 +379,12 @@ public class NewsDetailFgt extends BaseFragment {
         mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 //        mDetailWebView.getSettings().setLoadsImagesAutomatically(false);
         mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8") ;//
-        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()),"VideoJavaScriptBridge");
+        mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8");//
+        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()), "VideoJavaScriptBridge");
 //        //设置WebView 可以加载更多格式页面
 //        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
 //        //设置WebView使用广泛的视窗
 //        mDetailWebView.getSettings().setUseWideViewPort(true);
-
-
 
 
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
@@ -424,10 +423,10 @@ public class NewsDetailFgt extends BaseFragment {
 
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
-        if(mResult.getConflag() == 1){
+        if (mResult.getConflag() == 1) {
             isLike = true;
             detail_shared_AttentionImage.setImageResource(R.drawable.bg_attention);
-        }else{
+        } else {
             isLike = false;
             detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
         }
@@ -451,7 +450,7 @@ public class NewsDetailFgt extends BaseFragment {
         String icon = mResult.getPurl();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
-            iv_attention_icon.setImageURI(Uri.parse(icon));
+            Glide.with(getActivity()).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
             tv_attention_title.setText(name);
@@ -459,13 +458,13 @@ public class NewsDetailFgt extends BaseFragment {
 
 
         //        isAttention = true;
-        isAttention = mResult.getConpubflag() == 1 ;
-        if(isAttention){
+        isAttention = mResult.getConpubflag() == 1;
+        if (isAttention) {
             image_attention_success.setVisibility(View.VISIBLE);
             image_attention_line.setVisibility(View.GONE);
             linearlayout_attention.setVisibility(View.GONE);
 
-        }else{
+        } else {
             image_attention_success.setVisibility(View.GONE);
             image_attention_line.setVisibility(View.VISIBLE);
             linearlayout_attention.setVisibility(View.VISIBLE);
@@ -479,7 +478,7 @@ public class NewsDetailFgt extends BaseFragment {
                 in.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, mResult.getPurl());
                 in.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, mResult.getPname());
                 in.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, mResult.getConpubflag());
-                startActivityForResult(in,1234);
+                startActivityForResult(in, 1234);
             }
         });
         linearlayout_attention.setOnClickListener(new View.OnClickListener() {
@@ -497,13 +496,12 @@ public class NewsDetailFgt extends BaseFragment {
         });
 
 
-
         detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
         detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Logger.e("aaa", "点击朋友圈");
-                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1" );
+                ShareSdkHelper.ShareToPlatformByNewsDetail(getActivity(), WechatMoments.NAME, mTitle, mNewID, "1");
                 MobclickAgent.onEvent(getActivity(), "qidian_detail_middle_share_weixin");
 
             }
@@ -513,7 +511,7 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!NetUtil.checkNetWork(getActivity())){
+                if (!NetUtil.checkNetWork(getActivity())) {
                     ToastUtil.toastShort("无法连接到网络，请稍后再试");
                     return;
                 }
@@ -645,8 +643,8 @@ public class NewsDetailFgt extends BaseFragment {
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                (user!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
-                "&p=" + (1)+ "&c=" + (20)
+                (user != null ? "&uid=" + SharedPreManager.getUser(getActivity()).getMuid() : "") +
+                "&p=" + (1) + "&c=" + (20)
                 , new Response.Listener<ArrayList<NewsDetailComment>>() {
 
             @Override
@@ -658,8 +656,8 @@ public class NewsDetailFgt extends BaseFragment {
 
                 if (!TextUtil.isListEmpty(result)) {
                     mComments = result;
-                    for(int i = 0;i<mComments.size();i++){
-                        if(i>2){
+                    for (int i = 0; i < mComments.size(); i++) {
+                        if (i > 2) {
                             mComments.remove(i);
                         }
                     }
@@ -698,7 +696,7 @@ public class NewsDetailFgt extends BaseFragment {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
 
-                        Logger.e("jigang", "URL_NEWS_RELATED  network success~~"+relatedItemEntities.toString());
+                        Logger.e("jigang", "URL_NEWS_RELATED  network success~~" + relatedItemEntities.toString());
                         isCorrelationSuccess = true;
                         isBgLayoutSuccess();
 //                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
@@ -829,8 +827,8 @@ public class NewsDetailFgt extends BaseFragment {
                 if (MAXPage <= viewpointPage) {
                     mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
                     footView_tv.setText("内容加载完毕");
-                }else{
-                    if(mNewsDetailList.getMode()!=PullToRefreshBase.Mode.PULL_FROM_END){
+                } else {
+                    if (mNewsDetailList.getMode() != PullToRefreshBase.Mode.PULL_FROM_END) {
                         mNewsDetailList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
                     }
                 }
@@ -843,7 +841,7 @@ public class NewsDetailFgt extends BaseFragment {
 
     }
 
-    private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder,final boolean isAdd) {
+    private void addNewsLove(NewsDetailComment comment, final int position, final CommentHolder holder, final boolean isAdd) {
 //        try {
 //            String name = URLEncoder.encode(user.getUserName(), "utf-8");
 //            String cid = URLEncoder.encode(comment.getId(), "utf-8");
@@ -893,7 +891,7 @@ public class NewsDetailFgt extends BaseFragment {
 //        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 //        requestQueue.add(loveRequest);
 
-        if(isNetWork){
+        if (isNetWork) {
             return;
         }
         isNetWork = true;
@@ -908,7 +906,7 @@ public class NewsDetailFgt extends BaseFragment {
 //            e.printStackTrace();
 //        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
         JSONObject json = new JSONObject();
 //        try {
 //            json.put("cid", comment.getId());
@@ -916,9 +914,9 @@ public class NewsDetailFgt extends BaseFragment {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa", "json+++++++++++++++++++++++" + json.toString());
 
-        DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
+        DetailOperateRequest request = new DetailOperateRequest(isAdd ? Request.Method.POST : Request.Method.DELETE,
                 HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
@@ -937,10 +935,10 @@ public class NewsDetailFgt extends BaseFragment {
                 mNewsDetailList.onRefreshComplete();
                 Logger.e("jigang", "network success, love" + data);
                 if (!TextUtil.isEmptyString(data)) {
-                    if(isAdd){
+                    if (isAdd) {
                         mComments.get(position).setUpflag(1);
                         holder.ivPraise.setImageResource(R.drawable.bg_praised);
-                    }else{
+                    } else {
                         mComments.get(position).setUpflag(0);
                         holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
                     }
@@ -948,7 +946,7 @@ public class NewsDetailFgt extends BaseFragment {
                     mComments.get(position).setCommend(commend);
                     holder.tvPraiseCount.setText(commend + "");
                     Intent intent = new Intent(ACTION_REFRESH_DTC);
-                    intent.putExtra(NewsCommentFgt.LIKETYPE,isAdd);
+                    intent.putExtra(NewsCommentFgt.LIKETYPE, isAdd);
                     intent.putExtra((NewsCommentFgt.LIKEBEAN), mComments.get(position));
                     getActivity().sendBroadcast(intent);
 
@@ -971,8 +969,6 @@ public class NewsDetailFgt extends BaseFragment {
         request.setRequestHeader(header);
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
-
-
 
 
     }
@@ -1091,22 +1087,22 @@ public class NewsDetailFgt extends BaseFragment {
     /**
      * 点赞的广播
      */
-    public class RefreshLikeBroReceiber extends BroadcastReceiver{
+    public class RefreshLikeBroReceiber extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(!CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())){
+            if (!CommonConstant.CHANGE_TEXT_ACTION.equals(intent.getAction())) {
 
             }
             Logger.e("aaa", "详情接收到！");
             NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
-            boolean isAdd = intent.getBooleanExtra(NewsCommentFgt.LIKETYPE,false);
+            boolean isAdd = intent.getBooleanExtra(NewsCommentFgt.LIKETYPE, false);
             boolean isLikeType = false;
             int size = mComments.size();
-            for(int i = 0;i<mComments.size();i++)
+            for (int i = 0; i < mComments.size(); i++)
                 if (mComments.get(i).getId().equals(bean.getId())) {
                     isLikeType = true;
-                    mComments.set(i,bean);
+                    mComments.set(i, bean);
                     CCViewNotifyDataSetChanged();
                 }
             if (!isLikeType && isAdd && size < 3) {
@@ -1120,7 +1116,7 @@ public class NewsDetailFgt extends BaseFragment {
 
 //                NewsDetailComment comment = result.get(i);
 
-                UpdateCCView(holder, bean, CommentType-1);
+                UpdateCCView(holder, bean, CommentType - 1);
                 holderList.add(holder);
                 viewList.add(mCCView);
                 if (size == 2) {
@@ -1189,7 +1185,10 @@ public class NewsDetailFgt extends BaseFragment {
     public void UpdateCCView(final CommentHolder holder, final NewsDetailComment comment, final int position) {
         final User user = SharedPreManager.getUser(getActivity());
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
-            holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+            Uri uri = Uri.parse(comment.getAvatar());
+            Glide.with(getActivity()).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+        } else {
+            Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1230,14 +1229,14 @@ public class NewsDetailFgt extends BaseFragment {
                     Intent loginAty = new Intent(getActivity(), LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
-                    if(comment.getUpflag()==0){
-                        if((user.getMuid()+"").equals(comment.getUid())){
+                    if (comment.getUpflag() == 0) {
+                        if ((user.getMuid() + "").equals(comment.getUid())) {
                             Toast.makeText(getActivity(), "不能给自己点赞。", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         Logger.e("aaa", "点赞");
                         addNewsLove(comment, position, holder, true);
-                    }else{
+                    } else {
                         Logger.e("aaa", "取消点赞");
                         addNewsLove(comment, position, holder, false);
                     }
@@ -1272,8 +1271,9 @@ public class NewsDetailFgt extends BaseFragment {
     public void setShowCareforLayout(ShowCareforLayout showCareforLayout) {
         mShowCareforLayout = showCareforLayout;
     }
-    public void addordeleteAttention(boolean isAttention){
-        if(isNetWork){
+
+    public void addordeleteAttention(boolean isAttention) {
+        if (isNetWork) {
             return;
         }
         String pname = null;
@@ -1283,32 +1283,32 @@ public class NewsDetailFgt extends BaseFragment {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if(user != null && user.isVisitor()){
+        if (user != null && user.isVisitor()) {
             user = SharedPreManager.getUser(getActivity());
         }
         isNetWork = true;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname="+pname);
+        Logger.e("jigang", "attention url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&pname=" + pname);
         JSONObject json = new JSONObject();
-        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa", "json+++++++++++++++++++++++" + json.toString());
 
-        DetailOperateRequest request = new DetailOperateRequest( isAttention ? Request.Method.POST : Request.Method.DELETE,
-                HttpConstant.URL_ADDORDELETE_ATTENTION+ "uid=" + user.getMuid() + "&pname="+pname
+        DetailOperateRequest request = new DetailOperateRequest(isAttention ? Request.Method.POST : Request.Method.DELETE,
+                HttpConstant.URL_ADDORDELETE_ATTENTION + "uid=" + user.getMuid() + "&pname=" + pname
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
-                Logger.e("aaa","json+++++++++++++++++++++++"+data);
+                Logger.e("aaa", "json+++++++++++++++++++++++" + data);
 
-             //保存关注信息
+                //保存关注信息
                 SharedPreManager.addAttention(mResult.getPname());
 
-                if(SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)){
+                if (SharedPreManager.getBoolean(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID)) {
                     ToastUtil.showAttentionSuccessToast(getActivity());
-                }else{
-                    attentionDetailDialog = new AttentionDetailDialog(getActivity(),mResult.getPname());
+                } else {
+                    attentionDetailDialog = new AttentionDetailDialog(getActivity(), mResult.getPname());
                     attentionDetailDialog.show();
-                    SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID,true);
+                    SharedPreManager.save(CommonConstant.FILE_DATA, CommonConstant.KEY_ATTENTION_ID, true);
                 }
 
                 image_attention_success.setVisibility(View.VISIBLE);
@@ -1323,7 +1323,7 @@ public class NewsDetailFgt extends BaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
 //                mNewsDetailList.onRefreshComplete();
-                if(error.getMessage().indexOf("2003")!=-1){
+                if (error.getMessage().indexOf("2003") != -1) {
                     ToastUtil.toastShort("用户已关注该信息！");
                     image_attention_success.setVisibility(View.VISIBLE);
                     image_attention_line.setVisibility(View.GONE);
@@ -1345,7 +1345,6 @@ public class NewsDetailFgt extends BaseFragment {
         requestQueue.add(request);
 
 
-
     }
 
     @Override
@@ -1353,22 +1352,22 @@ public class NewsDetailFgt extends BaseFragment {
 //        super.onActivityResult(requestCode, resultCode, data);
         Logger.e("aaa", "NewsDetailFgt <Fgt> requestCode==" + requestCode + ",resultCode==" + resultCode);
         user = SharedPreManager.getUser(getActivity());
-        if(requestCode == 1234 && resultCode == 1234){
-            isAttention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG,false);
-            if(isAttention){
+        if (requestCode == 1234 && resultCode == 1234) {
+            isAttention = data.getBooleanExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, false);
+            if (isAttention) {
                 image_attention_success.setVisibility(View.VISIBLE);
                 image_attention_line.setVisibility(View.GONE);
                 linearlayout_attention.setVisibility(View.GONE);
                 mResult.setConpubflag(1);
 
-            }else{
+            } else {
                 image_attention_success.setVisibility(View.GONE);
                 image_attention_line.setVisibility(View.VISIBLE);
                 linearlayout_attention.setVisibility(View.VISIBLE);
                 mResult.setConpubflag(0);
             }
-        } else if(requestCode == 1030&&resultCode == 1006){
-            if (getActivity() instanceof NewsDetailAty2){
+        } else if (requestCode == 1030 && resultCode == 1006) {
+            if (getActivity() instanceof NewsDetailAty2) {
                 addordeleteAttention(true);
 //                mNewsDetailList.smoothScrollToPosition(pos);
             }
