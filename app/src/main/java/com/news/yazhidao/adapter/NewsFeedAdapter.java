@@ -217,7 +217,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_item_one_pic:
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight);
                 final String strTitle = feed.getTitle();
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -292,9 +292,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-                holder.setSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
-                holder.setSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
-                holder.setSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight);
                 setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
@@ -325,7 +325,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 lpBig.width = with;
                 lpBig.height = (int) (with * 9 / 16.0f);
                 ivBig.setLayoutParams(lpBig);
-                holder.setSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f));
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f));
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
                 } else {

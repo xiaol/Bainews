@@ -388,7 +388,8 @@ public class NewsDetailFgt extends BaseFragment {
 
 
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
-        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+                SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
 //        mDetailWebView.loadDataWithBaseURL(null, "<!DOCTYPE html><html><body><h1>sssssss</h1></body></html>",
 //                "text/html;charset=UTF-8", "UTF-8", null);
@@ -397,7 +398,7 @@ public class NewsDetailFgt extends BaseFragment {
             public void After() {
                 Logger.e("aaa", "22222");
                 isWebSuccess = true;
-                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
+//                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
                 isBgLayoutSuccess();
 
 //                Log.e("aaa","1111");
@@ -1065,7 +1066,8 @@ public class NewsDetailFgt extends BaseFragment {
                 Logger.e("aaa", "详情页===文字的改变！！！");
 //                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
-                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)),
+                mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
+                        SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                         "text/html", "utf-8", null);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 mDetailWebView.setLayoutParams(params);

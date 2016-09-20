@@ -94,7 +94,7 @@ public class NewsFeed implements Serializable {
     private String descr;
 
     /**
-     * 0普通新闻(不用显示标识)、1热点、2推送
+     * 0普通新闻(不用显示标识)、1热点、2推送、3广告
      */
     @DatabaseField
     private int rtype;

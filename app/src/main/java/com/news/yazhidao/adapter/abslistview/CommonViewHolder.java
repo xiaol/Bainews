@@ -24,6 +24,7 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 
 /**
@@ -156,6 +157,28 @@ public class CommonViewHolder {
         }
     }
 
+    /**
+     * 设置无图的方法
+     * @param draweeView
+     * @param strImg
+     * @param width
+     * @param height
+     */
+    public void setIsShowImagesSimpleDraweeViewURI(int draweeView, String strImg, int width, int height) {
+        ImageView imageView = getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
+                imageView.setImageResource(R.drawable.bg_load_default_small);
+//                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
+//                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
+            }else{
+                String img = strImg.replace("bdp-", "pro-");
+                Uri uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().transform(new GlideTransform(mContext, 1)).into(imageView);
+            }
+
+        }
+    }
     public void setSimpleDraweeViewResource(int draweeView, int Resource) {
         ImageView imageView = getView(draweeView);
         imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));

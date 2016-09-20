@@ -162,6 +162,8 @@ public class SplashAty extends BaseActivity {
         //全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
+    /**  梁帅：设置无图 */
+//     SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, true);
     }
 
 
