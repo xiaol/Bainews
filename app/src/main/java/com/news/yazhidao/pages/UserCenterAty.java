@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
@@ -60,8 +62,10 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
     protected void loadData() {
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()){
-            mCenterUserIcon.setImageURI(Uri.parse(user.getUserIcon()));
+            Glide.with(UserCenterAty.this).load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
             mCenterUserName.setText(user.getUserName());
+        }else {
+            Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
         }
     }
 

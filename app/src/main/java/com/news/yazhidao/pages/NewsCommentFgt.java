@@ -26,10 +26,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -308,7 +310,9 @@ public class NewsCommentFgt extends BaseFragment {
             holder.tvTime.setText("" + DateUtil.getTimes(DateUtil.dateStr2Long(comment.getCtime())));
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                holder.ivHeadIcon.setImageURI(Uri.parse(comment.getAvatar()));
+                Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            }else{
+                Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             int count = comment.getCommend();
