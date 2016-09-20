@@ -563,6 +563,7 @@ public class NewsFeedFgt extends Fragment{
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result,int flag){
+        Logger.e("aaa","==="+ result.toString());
         if (mDeleteIndex != 0) {
             mArrNewsFeed.remove(mDeleteIndex);
             mDeleteIndex = 0;
