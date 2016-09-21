@@ -164,6 +164,7 @@ public class SplashAty extends BaseActivity {
         setContentView(R.layout.aty_splash);
     /**  梁帅：设置无图 */
 //     SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, true);
+
     }
 
 
