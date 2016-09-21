@@ -87,7 +87,7 @@
             android:layout_marginTop="5dp"
             android:textSize="@dimen/font3"
             android:text="快去关注吧"
-            android:textColor="@color/black" />
+            android:textColor="@color/color4" />
     </RelativeLayout>
 
 </RelativeLayout>
