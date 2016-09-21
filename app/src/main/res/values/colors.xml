@@ -259,5 +259,6 @@
     <color name="unattention_line_color" >#ffc0c0c0</color>
     <color name="attention_line_color" >#ffe71f19</color>
     <color name="newsfeed_red" >#fff83b3b</color>
+    <color name="newscomment_noData" >#ffbcbcbc</color>
 
 </resources>

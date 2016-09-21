@@ -90,7 +90,7 @@
             android:src="@drawable/ic_user_center_comment"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="15dp"
             android:paddingTop="1dp"
             />
         <TextView
@@ -173,7 +173,7 @@
             android:src="@drawable/ic_user_center_message"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="15dp"
             />
         <TextView
             android:layout_width="wrap_content"

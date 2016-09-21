@@ -495,8 +495,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
-                if(mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE){
-                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                if(mNewsDetailLoaddingWrapper.getVisibility() == View.GONE){
+                    mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+                }
+                if(mNewsLoadingImg.getVisibility() == View.GONE){
+                    mNewsLoadingImg.setVisibility(View.VISIBLE);
                 }
 
                 if(bgLayout.getVisibility() == View.VISIBLE){

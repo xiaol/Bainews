@@ -42,10 +42,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawablePadding="15dp"
+        android:gravity="center"
         android:drawableTop="@drawable/ic_user_center_no_message"
         android:text="暂无消息"
-        android:textColor="@color/new_color5"
+        android:textColor="@color/newscomment_noData"
         android:textSize="@dimen/font3"
         />
 </RelativeLayout>
