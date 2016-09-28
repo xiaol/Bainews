@@ -198,6 +198,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:visibility="visible"
+        android:layout_below="@+id/mDetailHeader"
         >
 
         <ImageView
@@ -212,9 +213,10 @@
             android:visibility="gone"
             />
 
-        <include layout="@layout/loading_view"/>
+
 
     </RelativeLayout>
+    <include layout="@layout/loading_view"/>
 
     <!--需要占位不显示-->
     <ImageView

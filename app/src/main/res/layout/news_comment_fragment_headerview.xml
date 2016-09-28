@@ -65,7 +65,7 @@
         android:id="@+id/news_comment_NoCommentsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="169dp"
+        android:layout_marginTop="144dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -78,9 +78,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="哎呦，快来抢沙发"
-            android:textColor="@color/color3" />
+            android:text="还不快来抢沙发"
+            android:textColor="@color/newscomment_noData" />
     </LinearLayout>
 
 

@@ -380,7 +380,7 @@ public class NewsFeedFgt extends Fragment{
 
         Gson gson = new Gson();
 
-        Activity mActivity = getActivity();
+        Activity mActivity = this.getActivity();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */
@@ -514,10 +514,11 @@ public class NewsFeedFgt extends Fragment{
                 requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
         }
-        Logger.e("ccc", "requestUrl==" + requestUrl);
 
+        Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         if("1".equals(mstrChannelId)){
+
             Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override

@@ -51,7 +51,6 @@ import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
 import com.news.yazhidao.net.volley.UpLoadLogRequest;
-import com.news.yazhidao.pages.NewsDetailFgt.ShowCareforLayout;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -393,7 +392,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     args.putString(NewsDetailFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailFgt.KEY_NEWS_ID, mUrl);
                     args.putString(NewsDetailFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
-                    detailFgt.setShowCareforLayout(mShowCareforLayout);
+//                    detailFgt.setShowCareforLayout(mShowCareforLayout);
                     detailFgt.setArguments(args);
                     return detailFgt;
                 } else {
@@ -435,12 +434,13 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
+//                mUrl = "6562498";
         StringBuffer path = new StringBuffer();
         path.append(HttpConstant.URL_FETCH_CONTENT);
         path.append("nid=");
         path.append(mUrl);
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
-        if (user != null& !user.isVisitor()) {
+        if (user != null&& !user.isVisitor()) {
             mUserId = user.getMuid()+"";
             mPlatformType = user.getPlatformType();
             path.append("&uid=");
@@ -495,8 +495,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
-                if(mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE){
-                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                if(mNewsDetailLoaddingWrapper.getVisibility() == View.GONE){
+                    mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+                }
+                if(mNewsLoadingImg.getVisibility() == View.GONE){
+                    mNewsLoadingImg.setVisibility(View.VISIBLE);
                 }
 
                 if(bgLayout.getVisibility() == View.VISIBLE){
@@ -639,7 +642,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
                     Logger.e("bbb","收藏触发的点击事件！！！！！");
-                    loadOperate(true);
+                    loadOperate();
                 }
                 MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
                 break;
@@ -650,7 +653,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         @Override
         public void FavoritListener(boolean isFavoriteType) {
             isFavorite = isFavoriteType;
-            loadOperate(true);
+            loadOperate();
         }
     };
     @Override
@@ -814,13 +817,13 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
     }
 
-    ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
-        @Override
-        public void show(boolean type) {
-            isCareFor = type;
-            loadOperate(false);
-        }
-    };
+//    ShowCareforLayout mShowCareforLayout = new ShowCareforLayout() {
+//        @Override
+//        public void show(boolean type) {
+//            isCareFor = type;
+//            loadOperate(false);
+//        }
+//    };
 
     public void CareForAnimation() {
 
@@ -880,10 +883,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     }
 
     /**
-     *
-     * @param isType ture 是收藏  false 是关心
+     * 梁帅：收藏上传接口(关心放到NewsDetailFgt)
      */
-    public void loadOperate(final boolean isType){
+    public void loadOperate(){
+        Logger.e("aaa","222222222222222");
         if(!NetUtil.checkNetWork(NewsDetailAty2.this)){
             ToastUtil.toastShort("无法连接到网络，请稍后再试");
             return;
@@ -892,59 +895,36 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
         JSONObject json = new JSONObject();
         RequestQueue requestQueue = Volley.newRequestQueue(NewsDetailAty2.this);
-        Logger.e("aaa", "type====" + (isType ? (isFavorite ? Request.Method.DELETE : Request.Method.POST) :
-                (isCareFor ? Request.Method.POST : Request.Method.DELETE)));
-        Logger.e("aaa", "url===" + (isType ? HttpConstant.URL_ADDORDELETE_FAVORITE : HttpConstant.URL_ADDORDELETE_CAREFOR) + "nid=" + mUrl + "&uid=" + mUserId);
+        Logger.e("aaa", "type====" +  (isFavorite ? Request.Method.DELETE : Request.Method.POST));
+        Logger.e("aaa", "url===" +  HttpConstant.URL_ADDORDELETE_FAVORITE  + "nid=" + mUrl + "&uid=" + mUserId);
 
 
 
-        DetailOperateRequest detailOperateRequest = new DetailOperateRequest(isType ? (isFavorite ? Request.Method.DELETE : Request.Method.POST) :
-                (isCareFor ? Request.Method.POST : Request.Method.DELETE),
-                (isType ? HttpConstant.URL_ADDORDELETE_FAVORITE : HttpConstant.URL_ADDORDELETE_CAREFOR)+"nid="+ mUrl+"&uid="+mUserId,
-
+        DetailOperateRequest detailOperateRequest = new DetailOperateRequest(  (isFavorite ? Request.Method.DELETE : Request.Method.POST),
+                HttpConstant.URL_ADDORDELETE_FAVORITE +"nid="+ mUrl+"&uid="+mUserId,
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-//                if(mDetailFavorite.getVisibility() == View.GONE){
-//                    mDetailFavorite.setVisibility(View.VISIBLE);
-//                }
-                if(isType){
-                    carefor_Image.setImageResource(R.drawable.hook_image);
-                    if(isFavorite){
-                        isFavorite = false;
-                        carefor_Text.setText("收藏已取消");
-                        SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid()+"");
-                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-                    }else{
-                        isFavorite = true;
-                        carefor_Text.setText("收藏成功");
-                        Logger.e("aaa","收藏成功数据："+mNewsFeed.toString());
-                        SharedPreManager.myFavoriteSaveList(mNewsFeed);
-                        mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-                    }
-                    CareForAnimation();
+                carefor_Image.setImageResource(R.drawable.hook_image);
+                if(isFavorite){
+                    isFavorite = false;
+                    carefor_Text.setText("收藏已取消");
+                    SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid()+"");
+                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                 }else{
-                    if(isCareFor){
-                        carefor_Image.setImageResource(R.drawable.carefor_image);
-                        carefor_Text.setText("将推荐更多此类文章");
-                        CareForAnimation();
-                    }else{
-
-                    }
-
+                    isFavorite = true;
+                    carefor_Text.setText("收藏成功");
+                    Logger.e("aaa","收藏成功数据："+mNewsFeed.toString());
+                    SharedPreManager.myFavoriteSaveList(mNewsFeed);
+                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                 }
+                CareForAnimation();
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                if(mDetailFavorite.getVisibility() == View.VISIBLE){
-//                    mDetailFavorite.setVisibility(View.GONE);
-//                }
-                if(isType){
-                    carefor_Text.setText("收藏失败");
-                }else{
-                    carefor_Text.setText("关心失败");
-                }
+                carefor_Text.setText("收藏失败");
                 CareForAnimation();
             }
         });

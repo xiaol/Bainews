@@ -16,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_comment_bg"
+            />
 
         <ImageView
             android:id="@+id/mCommentLeftBack"
@@ -83,10 +85,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginTop="14dp"
                 android:text="@string/my_comment_cool_person"
                 android:id="@+id/textView"
-                android:textColor="#d4d4d4"
+                android:textColor="@color/newscomment_noData"
                 android:textSize="17sp"
                 android:layout_below="@+id/comment_nor_icon"
                 android:layout_centerHorizontal="true" />
@@ -97,7 +98,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/my_comment_nor_comment"
                 android:id="@+id/textView2"
-                android:textColor="#d4d4d4"
+                android:textColor="@color/newscomment_noData"
                 android:textSize="17sp"
                 android:layout_below="@+id/textView"
                 android:layout_centerHorizontal="true"

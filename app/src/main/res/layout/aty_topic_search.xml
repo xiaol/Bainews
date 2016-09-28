@@ -112,12 +112,11 @@
             android:id="@+id/mSearchTipImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:maxHeight="90dp"
-            android:maxWidth="90dp"
+            android:layout_centerHorizontal="true"
             android:scaleType="centerInside"
             android:src="@drawable/ic_no_result"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginTop="180dp" />
 
         <TextView
             android:id="@+id/mSearchTip"
@@ -125,9 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/mSearchTipImg"
             android:layout_centerInParent="true"
-            android:layout_marginTop="16dp"
             android:text="暂无搜索结果"
-            android:textColor="@color/search_hot_label"
+            android:textColor="@color/newscomment_noData"
             android:textSize="14sp"
             android:visibility="gone" />
 

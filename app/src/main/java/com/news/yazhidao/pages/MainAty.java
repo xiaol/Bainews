@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -70,7 +69,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private ImageView mUserCenter;
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
-
+    private IntentFilter mFilter;
     /**
      * 自定义的PopWindow
      */
@@ -91,6 +90,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             String action = intent.getAction();
             if (ACTION_USER_LOGIN.equals(action)) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
+                Logger.e("liang", "url main=" + url);
                 if (!TextUtil.isEmptyString(url)) {
                     Logger.e("jigang", "user login------1111");
                     setUserCenterIcon(Uri.parse(url));
@@ -98,7 +98,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
-            }else if(action.equals(ConnectivityManager.CONNECTIVITY_ACTION)){
+            }else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
                 mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.isAvailable()) {
@@ -129,16 +129,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         return false;
     }
 
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_main);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
+    /**
+     * 长按菜单键会弹出菜单（注销无用的）
+      */
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_home, menu);
+//        return true;
+//    }
 
     @Override
     protected void initializeViews() {
@@ -176,7 +180,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             public void itemClick(int position) {
                 switch (position) {
                     case 0://不喜欢
-//
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
 //                        newsFeedFgt.disLikeItem();
                     case 1://重复、旧闻
@@ -195,8 +198,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         });
         mReceiver = new UserLoginReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        mFilter = new IntentFilter();
+        /**注册用户登录广播*/
+        mFilter.addAction(ACTION_USER_LOGIN);
+        mFilter.addAction(ACTION_USER_LOGOUT);
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
@@ -204,11 +210,14 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 Logger.e("jigang", "user login------3333");
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
-            /**注册用户登录广播*/
-            filter.addAction(ACTION_USER_LOGIN);
-            filter.addAction(ACTION_USER_LOGOUT);
         }
-        registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //registerReceiver 最好放到onResume
+        registerReceiver(mReceiver, mFilter);
     }
 
     /**

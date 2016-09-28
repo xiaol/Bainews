@@ -162,6 +162,7 @@ public class ShareSdkHelper {
                     UploadJpushidRequest.uploadJpushId(mContext, jPushId);
                 }
                 if (mContext != null && platformDb != null){
+                    Logger.e("liang", "url share=" + newUser.getUserIcon());
                     Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
                     intent.putExtra(MainAty.KEY_INTENT_USER_URL, newUser.getUserIcon());
                     mContext.sendBroadcast(intent);
@@ -582,6 +583,9 @@ public class ShareSdkHelper {
                 }
                 newUser.setPassword(oldUser.getPassword());
                 newUser.setMuid(oldUser.getMuid());
+                /**第三方登录后，从新给user赋值*/
+//                newUser.setTuid(oldUser.getTuid());
+//                newUser.setTpassword(oldUser.getTpassword());
                 newUser.setPlatformType(platformNname);
                 newUser.setUtype((SinaWeibo.NAME.equals(platformNname) ? 3 : 4) + "");
                 newUser.setUserId(userId);

@@ -20,6 +20,7 @@
 
             <ImageView
                 android:id="@+id/title_img_View"
+                android:scaleType="centerCrop"
                 android:layout_width="102dp"
                 android:layout_height="74dp"/>
                 <!--fresco:actualImageScaleType="centerCrop"-->

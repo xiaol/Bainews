@@ -45,6 +45,7 @@ public class NewsDetailRequest<T> extends GsonRequest<T> {
         }
         return "";
     }
+
 //    @Override
 //    public Map<String, String> getHeaders() throws AuthFailureError {
 //        return mHeader;

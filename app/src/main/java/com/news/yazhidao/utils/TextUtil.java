@@ -21,7 +21,7 @@ import com.news.yazhidao.entity.NewsDetailEntry;
 import com.news.yazhidao.entity.NewsDetailImageWall;
 import com.news.yazhidao.net.request.UploadCommentRequest;
 import com.news.yazhidao.widget.TextViewExtend;
-import com.umeng.message.proguard.T;
+import com.umeng.message.proguard.S;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -590,37 +590,10 @@ public class TextUtil {
             }
         }
         Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-
-        String params = url.substring(url.indexOf("?") + 1);
-        Logger.e("jigang", "params url=" + params);
-        String[] paramsArr = params.split("=|&");
-        for (int i = 0; i < paramsArr.length; i++) {
-            Logger.e("jigang", "param --->" + paramsArr[i] + "\n");
+        if (url.contains("vid=")){
+            url = url.substring(0,url.indexOf("&"));
         }
-        for (int i = 0; i < paramsArr.length; i++) {
-            if (paramsArr[i].contains("width")) {
-                paramsArr[i + 1] = w + "";
-            }
-            if (paramsArr[i].contains("auto")) {
-                paramsArr[i + 1] = "1";
-            }
-            if (paramsArr[i].contains("height")) {
-                paramsArr[i + 1] = h + "";
-            }
-        }
-        StringBuilder sb = new StringBuilder(url.substring(0, url.indexOf("?") + 1));
-        for (int i = 0; i < paramsArr.length; i++) {
-            if (i % 2 == 0) {
-                sb.append(paramsArr[i] + "=");
-            } else {
-                if (i != paramsArr.length - 1) {
-                    sb.append(paramsArr[i] + "&");
-                } else {
-                    sb.append(paramsArr[i]);
-                }
-            }
-        }
-        return sb.toString();
+        return url;
     }
 
     /**
@@ -700,6 +673,7 @@ public class TextUtil {
                 String img = map.get("img");
                 String vid = map.get("vid");
                 String imgUrl = "file:///android_asset/deail_default.png";
+                String playImgUrl = "file:///android_asset/detail_play_default.png";
                 if (!TextUtil.isEmptyString(txt)) {
                     contentBuilder.append("<p style=\"font-size:" + contentTextSize + "px;color: #333333;\">" + txt + "</p>");
                 }
@@ -712,7 +686,11 @@ public class TextUtil {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
                     int h = (int) (w * 0.75);
                     String url = parseVideoUrl(vid, w, h);
-                    contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
+                    if (url.contains("player.html")){
+                        contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
+                    }else {
+                        contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><img src=\"" + playImgUrl + "\" style=\"width: 100%;height: auto\"></p>");
+                    }
                 }
             }
         }
