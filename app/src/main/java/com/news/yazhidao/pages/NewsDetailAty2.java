@@ -434,6 +434,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
+//                mUrl = "6562498";
         StringBuffer path = new StringBuffer();
         path.append(HttpConstant.URL_FETCH_CONTENT);
         path.append("nid=");

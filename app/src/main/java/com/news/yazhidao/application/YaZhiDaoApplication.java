@@ -18,6 +18,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.helper.NotificationHelper;
+import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengNotificationClickHandler;
@@ -48,6 +49,8 @@ public class YaZhiDaoApplication extends Application {
 //        Fresco.initialize(this);
         String device_token = UmengRegistrar.getRegistrationId(this);
         Logger.e("device_token","token="+device_token);
+        QbSdk.allowThirdPartyAppDownload(true);
+        QbSdk.initX5Environment(mContext.getApplicationContext(), QbSdk.WebviewInitType.FIRSTUSE_AND_PRELOAD, null);
         super.onCreate();
     }
     public static Context getAppContext(){
