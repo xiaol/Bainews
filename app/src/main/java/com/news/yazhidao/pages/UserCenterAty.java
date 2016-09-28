@@ -25,44 +25,31 @@ import com.umeng.analytics.MobclickAgent;
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class UserCenterAty extends Activity implements View.OnClickListener {
+public class UserCenterAty extends SwipeBackActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1008;
 
-    private View mCenterCancel,mCenterComment,mCenterFavorite,mCenterMessage,mCenterDigger,mCenterSetting,mCenterOfferWall;
+    private View mCenterCancel,mCenterComment,mCenterFavorite,mCenterMessage,mCenterDigger,mCenterSetting;
     private ImageView mCenterUserIcon;
     private TextView mCenterUserName;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView();
-        initializeViews();
-        loadData();
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        setContentView();
+//        initializeViews();
+//        loadData();
+//    }
 
-    //    @Override
+        @Override
     protected void setContentView() {
         setContentView(R.layout.aty_user_center);
-        NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
-        NccOfferWallAPI.init(this);
-        NccOfferWallAPI
-                .setOnCloseListener(new NccOfferWallListener<Void>() {
-                    @Override
-                    public void onSucceed(Void result) {
 
-                        Logger.e("aaa","应用墙关闭了！");
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                    }
-                });
 
     }
 
-//    @Override
+    @Override
     protected void initializeViews() {
 
         mCenterCancel = findViewById(R.id.mCenterCancel);
@@ -79,10 +66,22 @@ public class UserCenterAty extends Activity implements View.OnClickListener {
         mCenterDigger.setOnClickListener(this);
         mCenterSetting = findViewById(R.id.mCenterSetting);
         mCenterSetting.setOnClickListener(this);
-        mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
-
-        mCenterOfferWall.setOnClickListener(this);
+//        mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
+//        mCenterOfferWall.setOnClickListener(this);
     }
+
+    @Override
+    protected boolean isNeedAnimation() {
+        return true;
+    }
+
+    @Override
+    protected boolean translucentStatus() {
+        return false;
+    }
+
+
+
 
     protected void loadData() {
         User user = SharedPreManager.getUser(this);
@@ -133,30 +132,25 @@ public class UserCenterAty extends Activity implements View.OnClickListener {
                 startActivityForResult(userCenterAty,REQUEST_CODE);
                 MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
                 break;
-            case R.id.mCenterOfferWall:
-//                Intent userOfferWall = new Intent(this,OfferWallActivity.class);
-//                startActivityForResult(userOfferWall,REQUEST_CODE);
-//                MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
-
-                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
-                    @Override
-                    public void onSucceed(Void result) {
-                        Logger.e("aaa","打开应用墙成功！");
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
-                                + errorMsg);
-                    }
-                });
-                break;
+//            case R.id.mCenterOfferWall:
+////                Intent userOfferWall = new Intent(this,OfferWallActivity.class);
+////                startActivityForResult(userOfferWall,REQUEST_CODE);
+////                MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
+//
+//                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
+//                    @Override
+//                    public void onSucceed(Void result) {
+//                        Logger.e("aaa","打开应用墙成功！");
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode, String errorMsg) {
+//                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
+//                                + errorMsg);
+//                    }
+//                });
+//                break;
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        NccOfferWallAPI.destroy(this);
-        super.onDestroy();
-    }
 }

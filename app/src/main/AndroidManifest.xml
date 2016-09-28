@@ -342,11 +342,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.UserCenterAty"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"/>
         <activity
             android:name=".pages.SettingAty"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme" />
+             />
         <activity
             android:name=".pages.MyCommentAty"
             android:screenOrientation="portrait"

@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="98dp"
+        android:layout_marginTop="108dp"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
         >
@@ -73,7 +73,7 @@
     <RelativeLayout
         android:id="@+id/mCenterComment"
         android:layout_below="@id/mCenterUserInfo"
-        android:layout_marginTop="59dp"
+        android:layout_marginTop="79dp"
         android:layout_width="match_parent"
         android:layout_height="48.56dp"
         android:background="@color/new_color12"
@@ -193,54 +193,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="26dp"
             />
-        <!--<ImageView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="0.56dp"-->
-            <!--android:background="@color/new_color5"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--/>-->
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/mCenterOfferWall"
-        android:layout_below="@id/mCenterMessage"
-        android:layout_width="match_parent"
-        android:layout_height="49dp"
-        android:background="@color/new_color12"
-        >
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/news_list_table_devider"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="18dp"
-            />
-        <ImageView
-            android:id="@+id/mCenterOfferWallIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_offerwall"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="18dp"
-            android:layout_marginRight="15dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/mCenterOfferWallIcon"
-            android:textSize="@dimen/font2"
-            android:drawablePadding="12dp"
-            android:textColor="@color/new_color1"
-            android:text="应用推荐"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_right_arrow"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="26dp"
-            />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
@@ -248,6 +200,7 @@
             android:layout_alignParentBottom="true"
             />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

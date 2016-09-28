@@ -1,13 +1,19 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.ncc.sdk.offerwall.NccOfferWallAPI;
+import com.ncc.sdk.offerwall.NccOfferWallListener;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -26,7 +32,7 @@ import com.umeng.update.UpdateStatus;
 /**
  * Created by fengjigang on 16/4/7.
  */
-public class SettingAty extends SwipeBackActivity implements View.OnClickListener {
+public class SettingAty extends Activity implements View.OnClickListener {
 
     public final static int RESULT_CODE = 1008;
     public static final String KEY_NEED_NOT_SETTING = "key_need_not_setting";
@@ -42,14 +48,38 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
     private View mSettingAbout;
     private View mSettingPrivacyPolicy;
     private View mSettingUpdate;
+    private View mSettingOfferWall;
     private SharedPreferences mSharedPreferences;
 
     @Override
-    protected void setContentView() {
-        setContentView(R.layout.aty_setting);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView();
+        initializeViews();
+        loadData();
     }
 
-    @Override
+//    @Override
+    protected void setContentView() {
+        setContentView(R.layout.aty_setting);
+        NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
+        NccOfferWallAPI.init(this);
+        NccOfferWallAPI
+                .setOnCloseListener(new NccOfferWallListener<Void>() {
+                    @Override
+                    public void onSucceed(Void result) {
+
+                        Logger.e("aaa","应用墙关闭了！");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                    }
+                });
+    }
+
+//    @Override
     protected void initializeViews() {
         mSettingtLeftBack = findViewById(R.id.mSettingtLeftBack);
         mSettingtLeftBack.setOnClickListener(this);
@@ -96,14 +126,16 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
         mSettingPrivacyPolicy.setOnClickListener(this);
         mSettingUpdate = findViewById(R.id.mSettingUpdate);
         mSettingUpdate.setOnClickListener(this);
+        mSettingOfferWall = findViewById(R.id.mSettingOfferWall);
+        mSettingOfferWall.setOnClickListener(this);
     }
 
-    @Override
-    protected boolean translucentStatus() {
-        return false;
-    }
-
-    @Override
+//    @Override
+//    protected boolean translucentStatus() {
+//        return false;
+//    }
+//
+//    @Override
     protected void loadData() {
     }
 
@@ -221,7 +253,26 @@ public class SettingAty extends SwipeBackActivity implements View.OnClickListene
                     startActivity(loginAty);
                 }
                 break;
+            case R.id.mSettingOfferWall:
+                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
+                    @Override
+                    public void onSucceed(Void result) {
+                        Logger.e("aaa","打开应用墙成功！");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
+                                + errorMsg);
+                    }
+                });
+                break;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        NccOfferWallAPI.destroy(this);
+        super.onDestroy();
     }
 
 }
