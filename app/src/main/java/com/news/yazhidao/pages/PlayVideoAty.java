@@ -6,19 +6,19 @@ import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.widget.x5webview.X5WebView;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 public class PlayVideoAty extends BaseActivity {
-    private WebView mPlayVideoWebView;
+    private X5WebView mPlayVideoWebView;
     private String mVideoUrl;
 //    private JavascriptInterface javascriptInterface;
 
@@ -36,10 +36,7 @@ public class PlayVideoAty extends BaseActivity {
     @Override
     protected void initializeViews() {
         mVideoUrl = getIntent().getStringExtra(VideoJavaScriptBridge.KEY_VIDEO_URL);
-        if (!TextUtil.isEmptyString(mVideoUrl)){
-            mVideoUrl = mVideoUrl.substring(0,mVideoUrl.indexOf("&"));
-        }
-        mPlayVideoWebView = (WebView) findViewById(R.id.mPlayVideoWebView);
+        mPlayVideoWebView = (X5WebView) findViewById(R.id.mPlayVideoWebView);
 //
         Logger.e("jigang","aty url =" + mVideoUrl);
         initWebView();
