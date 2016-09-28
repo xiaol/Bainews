@@ -1,8 +1,11 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +25,7 @@ import com.umeng.analytics.MobclickAgent;
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class UserCenterAty extends SwipeBackActivity implements View.OnClickListener {
+public class UserCenterAty extends Activity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1008;
 
@@ -31,6 +34,15 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
     private TextView mCenterUserName;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView();
+        initializeViews();
+        loadData();
+    }
+
+    //    @Override
     protected void setContentView() {
         setContentView(R.layout.aty_user_center);
         NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
@@ -47,21 +59,10 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
                     public void onError(int errorCode, String errorMsg) {
                     }
                 });
-        NccOfferWallAPI
-                .setOnActivatedListener(new NccOfferWallListener<Void>() {
-                    @Override
-                    public void onSucceed(Void result) {
-                        Logger.e("aaa","应用激活了");
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                    }
-                });
 
     }
 
-    @Override
+//    @Override
     protected void initializeViews() {
 
         mCenterCancel = findViewById(R.id.mCenterCancel);
@@ -79,20 +80,10 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         mCenterSetting = findViewById(R.id.mCenterSetting);
         mCenterSetting.setOnClickListener(this);
         mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
+
         mCenterOfferWall.setOnClickListener(this);
     }
 
-    @Override
-    protected boolean isNeedAnimation() {
-        return true;
-    }
-
-    @Override
-    protected boolean translucentStatus() {
-        return false;
-    }
-
-    @Override
     protected void loadData() {
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()){

@@ -218,7 +218,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_item_one_pic:
-
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight,feed.getRtype());
                 final String strTitle = feed.getTitle();
                 if (isFavorite) {

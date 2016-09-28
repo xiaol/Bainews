@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected SwipeBackActivityHelper mHelper;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);

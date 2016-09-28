@@ -193,12 +193,12 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="26dp"
             />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0.56dp"
-            android:background="@color/new_color5"
-            android:layout_alignParentBottom="true"
-            />
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0.56dp"-->
+            <!--android:background="@color/new_color5"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--/>-->
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/mCenterOfferWall"
