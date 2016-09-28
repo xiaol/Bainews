@@ -23,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -180,10 +179,8 @@ public class CommonViewHolder {
                 }else{
                     uri = Uri.parse(strImg);
                 }
-
                 Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).crossFade().centerCrop().transform(new GlideTransform(mContext, 1)).into(imageView);
             }
-
         }
     }
 

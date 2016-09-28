@@ -39,7 +39,6 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.utils.manager.UserManager;
 
 import org.json.JSONException;
 

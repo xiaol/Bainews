@@ -440,7 +440,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         path.append("nid=");
         path.append(mUrl);
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
-        if (user != null& !user.isVisitor()) {
+        if (user != null&& !user.isVisitor()) {
             mUserId = user.getMuid()+"";
             mPlatformType = user.getPlatformType();
             path.append("&uid=");

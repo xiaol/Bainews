@@ -38,7 +38,6 @@ import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -292,7 +291,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_card:
-
                 ArrayList<String> strArrImgUrl = feed.getImgs();
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight,feed.getRtype());
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight,feed.getRtype());
@@ -805,7 +803,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
-
         isCkeckVisity = isVisity;
         notifyDataSetChanged();
     }
