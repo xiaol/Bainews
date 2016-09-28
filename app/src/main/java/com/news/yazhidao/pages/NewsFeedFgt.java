@@ -187,6 +187,9 @@ public class NewsFeedFgt extends Fragment{
 
             isNeedAddSP = false;
         }
+        if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
+            loadData(PULL_DOWN_REFRESH);
+        }
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
 //            mHandler.removeCallbacks(mRunnable);
