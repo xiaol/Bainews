@@ -377,7 +377,7 @@ public class NewsFeedFgt extends Fragment{
 
         Gson gson = new Gson();
 
-        Activity mActivity = getActivity();
+        Activity mActivity = this.getActivity();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */

@@ -141,6 +141,9 @@ public class SharedPreManager {
                 ShareSDK.getPlatform(mContext, user.getPlatformType()).removeAccount();
             }
         }
+        /**用户点击退出之后，把原来第一次打开应用的uid和password 的值赋给当前用户*/
+//        user.setMuid(user.getTuid());
+//        user.setPassword(user.getTpassword());
         user.setUtype("2");
         saveUser(user);
 //        remove(CommonConstant.FILE_USER, CommonConstant.KEY_USER_INFO);
@@ -345,8 +348,11 @@ public class SharedPreManager {
     public static  ArrayList<NewsFeed> myFavoriteGetList() throws JSONException {
         Gson gson = new Gson();
         String mf = get(CommonConstant.MY_FAVORITE, CommonConstant.MY_FAVORITE);
-        JSONArray array;
         ArrayList<NewsFeed> list = new ArrayList<NewsFeed>();
+        if(TextUtil.isEmptyString(mf)){/** 梁帅：如果无数据就直接返回 */
+            return list;
+        }
+        JSONArray array;
         array = new JSONArray(mf);
         for (int i = 0; i < array.length(); i++) {
             String str = array.getString(i);

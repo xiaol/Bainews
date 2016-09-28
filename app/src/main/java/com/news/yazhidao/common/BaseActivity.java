@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivityHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -36,6 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (isNeedAnimation()){
             overridePendingTransition(R.anim.aty_right_enter, R.anim.aty_no_ani);
         }
+        UserManager.registerVisitor(this, null);
         PushAgent mPushAgent = PushAgent.getInstance(this);
         mPushAgent.enable();
         PushAgent.getInstance(this).onAppStart();

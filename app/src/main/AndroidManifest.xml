@@ -4,6 +4,8 @@
     android:versionCode="125"
     android:versionName="@string/app_version">
 
+
+
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,7 +14,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!--<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+    <!-- <uses-permission android:name="android.permission.RECORD_AUDIO" /> -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -49,6 +51,22 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/Theme.AppCompat.Light">
+
+        <!-- <receiver android:name=".pages.MainAty$UserLoginReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.news.yazhidao.ACTION_USER_LOGIN"/> -->
+        <!-- </intent-filter> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.news.yazhidao.ACTION_USER_LOGOUT"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
+        <!--梁帅：配置平台id：平台ID这里配置或则用代码调用函数传递平台ID。-->
+        <meta-data
+            android:name="ncc_id"
+            android:value="4723e8b862a0ad34598189a35cf713b8" />
+
+
         <meta-data
             android:name="platform_id"
             android:value="13872c5a3cfafb1e639b619c3a25c7ab" />
@@ -99,6 +117,22 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait" />
+
+        <!--4、应用墙配置Activity及Receiver（后续还需要在代码中调用接口init、open、destroy，具体参考DEMO及接口文档）：-->
+        <!-- 配置应用墙Activity(必须) -->
+        <receiver
+            android:name="com.ncc.sdk.offerwall.receiver.NccOfferWallStateReceiver"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.ncc.sdk.offerwall.action.STATE_CHANGE" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
 
         <!-- UmengPush监听通知点击或者忽略处理的广播 -->
         <receiver
@@ -243,10 +277,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Splash">
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".pages.FeedBackActivity"
@@ -345,20 +379,25 @@
             android:name=".pages.AttentionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".pages.SubscribeListActivity"
+        <activity
+            android:name=".pages.SubscribeListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
         <!-- 配置Receiver(必须) -->
@@ -391,7 +430,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
 
     </application>
 

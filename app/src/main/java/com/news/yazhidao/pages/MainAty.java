@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -82,8 +81,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Logger.e("liang", "action=" + intent.getAction());
             if (ACTION_USER_LOGIN.equals(intent.getAction())) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
+                Logger.e("liang", "url main=" + url);
                 if (!TextUtil.isEmptyString(url)) {
                     Logger.e("jigang", "user login------1111");
                     setUserCenterIcon(Uri.parse(url));
@@ -100,16 +101,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         return false;
     }
 
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_main);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
+    /**
+     * 长按菜单键会弹出菜单（注销无用的）
+      */
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_home, menu);
+//        return true;
+//    }
 
     @Override
     protected void initializeViews() {
@@ -165,12 +170,22 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 Logger.e("jigang", "user login------3333");
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //registerReceiver 最好放到onResume
+        if (mReceiver == null) {
             /**注册用户登录广播*/
             mReceiver = new UserLoginReceiver();
             IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
             filter.addAction(ACTION_USER_LOGOUT);
             registerReceiver(mReceiver, filter);
         }
+
     }
 
     /**

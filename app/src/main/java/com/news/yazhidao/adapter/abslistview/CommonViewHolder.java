@@ -189,7 +189,8 @@ public class CommonViewHolder {
 
     public void setSimpleDraweeViewResource(int draweeView, int Resource) {
         ImageView imageView = getView(draweeView);
-        imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));
+//        imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + Resource));
+        imageView.setImageResource(Resource);
     }
 
     /**
@@ -207,15 +208,15 @@ public class CommonViewHolder {
         } else {
             int type = postion % 5;
             if (type == 0) {
-                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q1));
+                imageView.setImageResource(R.drawable.m_r_q1);
             } else if (type == 1) {
-                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q2));
+                imageView.setImageResource(R.drawable.m_r_q2);
             } else if (type == 2) {
-                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q3));
+                imageView.setImageResource(R.drawable.m_r_q3);
             } else if (type == 3) {
-                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q4));
+                imageView.setImageResource(R.drawable.m_r_q4);
             } else if (type == 4) {
-                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.m_r_q5));
+                imageView.setImageResource(R.drawable.m_r_q5);
             }
 
 

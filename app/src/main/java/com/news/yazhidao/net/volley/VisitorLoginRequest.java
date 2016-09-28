@@ -1,5 +1,6 @@
 package com.news.yazhidao.net.volley;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
@@ -11,12 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 游客登录
  * Created by fengjigang on 16/5/25.
  */
 public class VisitorLoginRequest extends JsonObjectRequest {
+    private HashMap mParams, mHeader;
     public VisitorLoginRequest(String requestBody, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
         super(Method.POST, HttpConstant.URL_VISITOR_LOGIN,requestBody, listener, errorListener);
     }
@@ -39,6 +43,13 @@ public class VisitorLoginRequest extends JsonObjectRequest {
         } catch (JSONException je) {
             return Response.error(new ParseError(je));
         }
+    }
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return mHeader;
+    }
+    public void setRequestHeader(HashMap header) {
+        this.mHeader = header;
     }
 
 }

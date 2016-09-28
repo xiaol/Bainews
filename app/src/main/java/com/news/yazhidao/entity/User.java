@@ -1,6 +1,7 @@
 package com.news.yazhidao.entity;
 
 import com.news.yazhidao.utils.GsonUtil;
+import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  */
 public class User implements Serializable {
     private int muid;// 游客用户合并三方用户时提供对应的游客用户ID
+//    private int tuid;// 用户安装应用第一次注册的游客的 id
     private String msuid;// 三方用户相互合并时提供对应的三方用户ID
     private String uuid;
     private String utype = "2";//本地注册用户	1 ;游客用户	2;微博三方用户	3;微信三方用户	4
@@ -33,23 +35,53 @@ public class User implements Serializable {
     private String authorToken;//访问接口时的token
     private boolean isVisitor = true;//是否是游客用户
     private String password;
+//    private String tpassword;//用户安装应用第一次注册的游客的 password
     private ArrayList<String> channel;
+
     @Override
     public String toString() {
         return "User{" +
-                "uuid='" + uuid + '\'' +
+                "muid=" + muid +
+//                ", tuid=" + tuid +
+                ", msuid='" + msuid + '\'' +
+                ", uuid='" + uuid + '\'' +
+                ", utype='" + utype + '\'' +
                 ", userId='" + userId + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
                 ", expiresIn=" + expiresIn +
-                ", expiresTime=" + expiresTime +
+                ", expiresTime='" + expiresTime + '\'' +
                 ", token='" + token + '\'' +
-                ", userGender='" + userGender + '\'' +
+                ", userGender=" + userGender +
                 ", userIcon='" + userIcon + '\'' +
                 ", userName='" + userName + '\'' +
                 ", platformType='" + platformType + '\'' +
                 ", firstLoginTime=" + firstLoginTime +
                 ", lastLoginTime=" + lastLoginTime +
+                ", authorToken='" + authorToken + '\'' +
+                ", isVisitor=" + isVisitor +
+                ", password='" + password + '\'' +
+//                ", tpassword='" + tpassword + '\'' +
+                ", channel=" + channel +
                 '}';
     }
+
+//    public int getTuid() {
+//        return tuid;
+//    }
+//
+//    public void setTuid(int tuid) {
+//        this.tuid = tuid;
+//    }
+//
+//    public String getTpassword() {
+//        return tpassword;
+//    }
+//
+//    public void setTpassword(String tpassword) {
+//        this.tpassword = tpassword;
+//    }
 
     public String getUuid() {
         return uuid;
@@ -208,6 +240,7 @@ public class User implements Serializable {
     }
 
     public void setUtype(String utype) {
+        Logger.e("aaa", "utype======" + utype);
         this.utype = utype;
     }
 

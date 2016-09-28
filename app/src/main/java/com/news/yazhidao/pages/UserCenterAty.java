@@ -5,11 +5,16 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.ncc.sdk.offerwall.NccOfferWallAPI;
+import com.ncc.sdk.offerwall.NccOfferWallListener;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
@@ -21,17 +26,44 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
 
     public static final int REQUEST_CODE = 1008;
 
-    private View mCenterCancel,mCenterComment,mCenterFavorite,mCenterMessage,mCenterDigger,mCenterSetting;
+    private View mCenterCancel,mCenterComment,mCenterFavorite,mCenterMessage,mCenterDigger,mCenterSetting,mCenterOfferWall;
     private ImageView mCenterUserIcon;
     private TextView mCenterUserName;
 
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_user_center);
+        NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
+        NccOfferWallAPI.init(this);
+        NccOfferWallAPI
+                .setOnCloseListener(new NccOfferWallListener<Void>() {
+                    @Override
+                    public void onSucceed(Void result) {
+
+                        Logger.e("aaa","应用墙关闭了！");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                    }
+                });
+        NccOfferWallAPI
+                .setOnActivatedListener(new NccOfferWallListener<Void>() {
+                    @Override
+                    public void onSucceed(Void result) {
+                        Logger.e("aaa","应用激活了");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                    }
+                });
+
     }
 
     @Override
     protected void initializeViews() {
+
         mCenterCancel = findViewById(R.id.mCenterCancel);
         mCenterCancel.setOnClickListener(this);
         mCenterUserIcon = (ImageView)findViewById(R.id.mCenterUserIcon);
@@ -46,6 +78,8 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         mCenterDigger.setOnClickListener(this);
         mCenterSetting = findViewById(R.id.mCenterSetting);
         mCenterSetting.setOnClickListener(this);
+        mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
+        mCenterOfferWall.setOnClickListener(this);
     }
 
     @Override
@@ -108,6 +142,30 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
                 startActivityForResult(userCenterAty,REQUEST_CODE);
                 MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
                 break;
+            case R.id.mCenterOfferWall:
+//                Intent userOfferWall = new Intent(this,OfferWallActivity.class);
+//                startActivityForResult(userOfferWall,REQUEST_CODE);
+//                MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
+
+                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
+                    @Override
+                    public void onSucceed(Void result) {
+                        Logger.e("aaa","打开应用墙成功！");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
+                                + errorMsg);
+                    }
+                });
+                break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        NccOfferWallAPI.destroy(this);
+        super.onDestroy();
     }
 }
