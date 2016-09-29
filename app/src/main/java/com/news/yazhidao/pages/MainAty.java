@@ -188,11 +188,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(MainAty.this);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        }, 100);
                         break;
                 }
             }
