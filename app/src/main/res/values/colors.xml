@@ -260,5 +260,6 @@
     <color name="attention_line_color" >#ffe71f19</color>
     <color name="newsfeed_red" >#fff83b3b</color>
     <color name="newscomment_noData" >#ffbcbcbc</color>
+    <color name="newscomment_numColor" >#e94221</color>
 
 </resources>
