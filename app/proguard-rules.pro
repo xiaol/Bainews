@@ -28,7 +28,6 @@
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
--libraryjars libs/ncc_offerwall.jar
 #-libraryjars libs/ormlite-core-4.48.jar
 #-libraryjars ../../external-libs/analytics-5.4.2.jar
 #-libraryjars ../../External-libs/gson-2.3.1.jar
