@@ -28,7 +28,7 @@
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 
-#-libraryjars libs/ormlite-android-4.48.jar
+-libraryjars libs/ncc_offerwall.jar
 #-libraryjars libs/ormlite-core-4.48.jar
 #-libraryjars ../../external-libs/analytics-5.4.2.jar
 #-libraryjars ../../External-libs/gson-2.3.1.jar
@@ -56,6 +56,7 @@
 -dontwarn android.support.**
 -dontwarn com.etsy.android.grid.**
 -dontwarn com.j256.ormlite.**
+-dontwarn com.ncc.sdk.**
 -dontwarn org.apache.http.**
 -dontwarn com.umeng.socialize.**
 -dontwarn com.tencent.**

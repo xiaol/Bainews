@@ -22,7 +22,6 @@ import com.news.yazhidao.utils.DataCleanManager;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
