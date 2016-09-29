@@ -217,6 +217,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_item_one_pic:
+                ImageView ivCard = holder.getView(R.id.title_img_View);
+                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+                lpCard.width = mCardWidth;
+                lpCard.height = mCardHeight;
+                ivCard.setLayoutParams(lpCard);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight,feed.getRtype());
                 final String strTitle = feed.getTitle();
                 if (isFavorite) {
@@ -227,11 +232,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 final TextView tvTitle = holder.getView(R.id.title_textView);
                 final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
                 final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-                ImageView ivCard = holder.getView(R.id.title_img_View);
-                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
-                lpCard.width = mCardWidth;
-                lpCard.height = mCardHeight;
-                ivCard.setLayoutParams(lpCard);
                 RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
                 RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
                 RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();

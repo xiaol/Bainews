@@ -43,7 +43,6 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
 
     @Override
     protected void initializeViews() {
-
         mCenterCancel = findViewById(R.id.mCenterCancel);
         mCenterCancel.setOnClickListener(this);
         mCenterUserIcon = (ImageView)findViewById(R.id.mCenterUserIcon);
@@ -60,6 +59,7 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         mCenterSetting.setOnClickListener(this);
 //        mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
 //        mCenterOfferWall.setOnClickListener(this);
+        Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
     }
 
     @Override
@@ -80,8 +80,6 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         if (user != null && !user.isVisitor()){
             Glide.with(UserCenterAty.this).load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
             mCenterUserName.setText(user.getUserName());
-        }else {
-            Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
         }
     }
 
