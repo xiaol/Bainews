@@ -154,15 +154,16 @@
                 android:id="@+id/mDetailCommentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/bg_news_detail_commit_num"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="24dp"
+                android:background="@color/new_color9"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/white"
-                android:textSize="8sp"
+                android:paddingLeft="1dp"
+                android:textColor="@color/newscomment_numColor"
+                android:textSize="13sp"
                 android:visibility="gone"
+                android:includeFontPadding="false"
                 />
         </FrameLayout>
 
