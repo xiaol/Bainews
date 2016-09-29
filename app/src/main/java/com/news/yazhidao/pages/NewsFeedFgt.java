@@ -511,6 +511,7 @@ public class NewsFeedFgt extends Fragment{
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
 //              requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
+
                 requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
         }
@@ -518,7 +519,7 @@ public class NewsFeedFgt extends Fragment{
         Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         if("1".equals(mstrChannelId)){
-
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
             Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override

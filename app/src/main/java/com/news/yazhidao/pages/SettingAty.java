@@ -11,9 +11,11 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ncc.sdk.offerwall.NccOfferWallAPI;
 import com.ncc.sdk.offerwall.NccOfferWallListener;
+import com.ncc.sdk.offerwall.entity.Point;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -70,6 +72,21 @@ public class SettingAty extends Activity implements View.OnClickListener {
                     public void onSucceed(Void result) {
 
                         Logger.e("aaa","应用墙关闭了！");
+                    }
+
+                    @Override
+                    public void onError(int errorCode, String errorMsg) {
+                    }
+                });
+        NccOfferWallAPI
+                .setOnActivatedListener(new NccOfferWallListener<Point>() {
+                    @Override
+                    public void onSucceed(Point result) {
+                        Toast.makeText(
+                                SettingAty.this,
+                                "应用激活了：balance=" + result.balance + " total="
+                                        + result.total + " used=" + result.used,
+                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
