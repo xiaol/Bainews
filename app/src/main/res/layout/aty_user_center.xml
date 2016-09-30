@@ -108,7 +108,7 @@
             android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="26dp"
+            android:layout_marginRight="18dp"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -149,7 +149,7 @@
             android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="26dp"
+            android:layout_marginRight="18dp"
             />
     </RelativeLayout>
     <RelativeLayout
@@ -191,7 +191,7 @@
             android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="26dp"
+            android:layout_marginRight="18dp"
             />
         <ImageView
             android:layout_width="match_parent"
@@ -200,6 +200,7 @@
             android:layout_alignParentBottom="true"
             />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -9,11 +9,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +30,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -49,7 +45,6 @@ import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.AdDeviceEntity;
 import com.news.yazhidao.entity.AdEntity;
 import com.news.yazhidao.entity.AdImpressionEntity;
-import com.news.yazhidao.entity.LocationEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FeedRequest;
@@ -66,11 +61,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.protobuffer.PushResponse;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -186,6 +177,9 @@ public class NewsFeedFgt extends Fragment{
 //            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
 
             isNeedAddSP = false;
+        }
+        if (mHomeRetry != null && mHomeRetry.getVisibility() == View.VISIBLE) {
+            loadData(PULL_DOWN_REFRESH);
         }
 //        if (rootView != null && !isVisibleToUser) {
 //            mlvNewsFeed.onRefreshComplete();
@@ -377,7 +371,7 @@ public class NewsFeedFgt extends Fragment{
 
         Gson gson = new Gson();
 
-        Activity mActivity = getActivity();
+        Activity mActivity = this.getActivity();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */
@@ -508,6 +502,7 @@ public class NewsFeedFgt extends Fragment{
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
 //              requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart)?null:Long.parseLong(tstart));
+
                 requestUrl = "1".equals(mstrChannelId)?HttpConstant.URL_FEED_AD_LOAD_MORE: HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
             }
         }
@@ -515,7 +510,7 @@ public class NewsFeedFgt extends Fragment{
         Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         if("1".equals(mstrChannelId)){
-
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
             Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
             NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
                 @Override
@@ -666,6 +661,8 @@ public class NewsFeedFgt extends Fragment{
 
         mIsFirst = false;
         mlvNewsFeed.onRefreshComplete();
+        //发版时候去掉
+//        bgLayout.setVisibility(View.VISIBLE);
 
     }
     private void loadNewFeedError(VolleyError error,final int flag){

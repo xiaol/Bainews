@@ -25,9 +25,20 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
     private ImageView mCenterUserIcon;
     private TextView mCenterUserName;
 
-    @Override
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        setContentView();
+//        initializeViews();
+//        loadData();
+//    }
+
+        @Override
     protected void setContentView() {
         setContentView(R.layout.aty_user_center);
+
+
     }
 
     @Override
@@ -46,6 +57,9 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         mCenterDigger.setOnClickListener(this);
         mCenterSetting = findViewById(R.id.mCenterSetting);
         mCenterSetting.setOnClickListener(this);
+//        mCenterOfferWall = findViewById(R.id.mCenterOfferWall);
+//        mCenterOfferWall.setOnClickListener(this);
+        Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
     }
 
     @Override
@@ -58,14 +72,14 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
         return false;
     }
 
-    @Override
+
+
+
     protected void loadData() {
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()){
             Glide.with(UserCenterAty.this).load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
             mCenterUserName.setText(user.getUserName());
-        }else {
-            Glide.with(UserCenterAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(UserCenterAty.this, 5, getResources().getColor(R.color.white))).into(mCenterUserIcon);
         }
     }
 
@@ -108,6 +122,25 @@ public class UserCenterAty extends SwipeBackActivity implements View.OnClickList
                 startActivityForResult(userCenterAty,REQUEST_CODE);
                 MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
                 break;
+//            case R.id.mCenterOfferWall:
+////                Intent userOfferWall = new Intent(this,OfferWallActivity.class);
+////                startActivityForResult(userOfferWall,REQUEST_CODE);
+////                MobclickAgent.onEvent(this,"qidian_user_center_my_setting");
+//
+//                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
+//                    @Override
+//                    public void onSucceed(Void result) {
+//                        Logger.e("aaa","打开应用墙成功！");
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode, String errorMsg) {
+//                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
+//                                + errorMsg);
+//                    }
+//                });
+//                break;
         }
     }
+
 }

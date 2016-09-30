@@ -38,6 +38,11 @@ public class YaZhiDaoApplication extends Application {
     public void onCreate() {
         mContext=this;
         mInstance = this;
+
+        // 设置Thread Exception Handler
+        UnCatchExceptionHandler catchException = new UnCatchExceptionHandler(this);
+        Thread.setDefaultUncaughtExceptionHandler(catchException);
+
         //在这里为应用设置异常处理程序，然后我们的程序才能捕获未处理的异常
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);

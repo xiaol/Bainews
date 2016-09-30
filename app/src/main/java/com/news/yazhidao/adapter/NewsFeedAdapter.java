@@ -38,7 +38,6 @@ import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ZipperUtil;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -218,7 +217,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_item_one_pic:
-
+                ImageView ivCard = holder.getView(R.id.title_img_View);
+                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
+                lpCard.width = mCardWidth;
+                lpCard.height = mCardHeight;
+                ivCard.setLayoutParams(lpCard);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight,feed.getRtype());
                 final String strTitle = feed.getTitle();
                 if (isFavorite) {
@@ -229,11 +232,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 final TextView tvTitle = holder.getView(R.id.title_textView);
                 final LinearLayout llSourceOnePic = holder.getView(R.id.source_content_linearLayout);
                 final ImageView ivBottomLine = holder.getView(R.id.line_bottom_imageView);
-                ImageView ivCard = holder.getView(R.id.title_img_View);
-                RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) ivCard.getLayoutParams();
-                lpCard.width = mCardWidth;
-                lpCard.height = mCardHeight;
-                ivCard.setLayoutParams(lpCard);
                 RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) llSourceOnePic.getLayoutParams();
                 RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) tvTitle.getLayoutParams();
                 RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
@@ -293,7 +291,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_news_card:
-
                 ArrayList<String> strArrImgUrl = feed.getImgs();
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight,feed.getRtype());
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight,feed.getRtype());
@@ -356,7 +353,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
                 int size = attentionListEntities.size();
                 if (size == 1) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
@@ -385,9 +382,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size == 2) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(),1);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
@@ -420,11 +417,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size >= 3) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(),1);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon());
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon(),2);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
@@ -806,7 +803,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     public void setVisitycheckFavoriteDeleteLayout(boolean isVisity) {
-
         isCkeckVisity = isVisity;
         notifyDataSetChanged();
     }

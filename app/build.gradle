@@ -10,8 +10,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 125
-        versionName "3.4"
+        versionCode 126
+        versionName "3.5"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     ndk {
 
@@ -258,4 +258,5 @@ dependencies {
     compile 'com.android.support:design:22.2.1'
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
+    compile files('libs/ncc_offerwall.jar')
 }

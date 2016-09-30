@@ -4,17 +4,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
@@ -64,7 +67,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private ArrayList<ChannelItem> mSelChannelItems;//默认展示的频道
     private HashMap<String, ArrayList<NewsFeed>> mSaveData = new HashMap<>();
     private ImageView mUserCenter;
-
+    private TextView mtvNewWorkBar;
+    private ConnectivityManager mConnectivityManager;
+    private IntentFilter mFilter;
     /**
      * 自定义的PopWindow
      */
@@ -82,15 +87,39 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (ACTION_USER_LOGIN.equals(intent.getAction())) {
+            String action = intent.getAction();
+            if (ACTION_USER_LOGIN.equals(action)) {
                 String url = intent.getStringExtra(KEY_INTENT_USER_URL);
+                Logger.e("liang", "url main=" + url);
                 if (!TextUtil.isEmptyString(url)) {
                     Logger.e("jigang", "user login------1111");
                     setUserCenterIcon(Uri.parse(url));
                 }
-            } else if (ACTION_USER_LOGOUT.equals(intent.getAction())) {
+            } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
+            }else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
+                mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
+                if (netInfo != null && netInfo.isAvailable()) {
+                    /////////////网络连接
+                    String name = netInfo.getTypeName();
+
+                    if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        /////WiFi网络
+
+                    } else if (netInfo.getType() == ConnectivityManager.TYPE_ETHERNET) {
+                        /////有线网络
+
+                    } else if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        /////////3g网络
+
+                    }
+                    mtvNewWorkBar.setVisibility(View.GONE);
+                } else {
+                    ////////网络断开
+                    mtvNewWorkBar.setVisibility(View.VISIBLE);
+                }
             }
         }
     }
@@ -100,16 +129,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         return false;
     }
 
+
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_main);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
+    /**
+     * 长按菜单键会弹出菜单（注销无用的）
+      */
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.menu_home, menu);
+//        return true;
+//    }
 
     @Override
     protected void initializeViews() {
@@ -120,7 +153,14 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
-
+        mtvNewWorkBar = (TextView) findViewById(R.id.mNetWorkBar);
+        mtvNewWorkBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                startActivity(intent);
+            }
+        });
         mUserCenter = (ImageView) findViewById(R.id.mUserCenter);
         mUserCenter.setOnClickListener(this);
         setUserCenterIcon(null);
@@ -140,7 +180,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             public void itemClick(int position) {
                 switch (position) {
                     case 0://不喜欢
-//
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
 //                        newsFeedFgt.disLikeItem();
                     case 1://重复、旧闻
@@ -149,15 +188,16 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(MainAty.this);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                            }
-                        }, 100);
                         break;
                 }
             }
         });
+        mReceiver = new UserLoginReceiver();
+        mFilter = new IntentFilter();
+        /**注册用户登录广播*/
+        mFilter.addAction(ACTION_USER_LOGIN);
+        mFilter.addAction(ACTION_USER_LOGOUT);
+        mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor()) {
@@ -165,12 +205,14 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 Logger.e("jigang", "user login------3333");
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
-            /**注册用户登录广播*/
-            mReceiver = new UserLoginReceiver();
-            IntentFilter filter = new IntentFilter(ACTION_USER_LOGIN);
-            filter.addAction(ACTION_USER_LOGOUT);
-            registerReceiver(mReceiver, filter);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //registerReceiver 最好放到onResume
+        registerReceiver(mReceiver, mFilter);
     }
 
     /**

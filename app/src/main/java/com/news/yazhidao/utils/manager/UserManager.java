@@ -11,11 +11,14 @@ import com.news.yazhidao.net.volley.RegisterVisitorRequest;
 import com.news.yazhidao.net.volley.VisitorLoginRequest;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
+import com.news.yazhidao.utils.helper.ShareSdkHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 用户管理类
@@ -48,8 +51,15 @@ public class UserManager {
                     User user = new User();
                     user.setAuthorToken(response.optString("Authorization"));
                     user.setUtype(response.optString("utype"));
-                    user.setMuid(response.optInt("uid"));
-                    user.setPassword(response.optString("password"));
+                    int uid = response.optInt("uid");
+                    String password = response.optString("password");
+
+                    user.setMuid(uid);
+                    user.setPassword(password);
+
+                    /** 用户第一次安装保存的 uid  和 password */
+//                    user.setTuid(uid);
+//                    user.setTpassword(password);
                     try {
                         ArrayList<String> channels = GsonUtil.deSerializedByType(response.getJSONArray("channel").toString(), new TypeToken<ArrayList<String>>() {
                         }.getType());
@@ -71,36 +81,60 @@ public class UserManager {
             YaZhiDaoApplication.getInstance().getRequestQueue().add(jsonObjectRequest);
         }else {
 //            && !user.isOnceLogin()
-                if (user.isVisitor()){
-                    JSONObject requestBody = new JSONObject();
-                    try {
-                        requestBody.put("uid", user.getMuid());
-                        requestBody.put("password", user.getPassword());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Logger.e("jigang","user visitor login body="+requestBody.toString());
-                    VisitorLoginRequest loginRequest = new VisitorLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            user.setAuthorToken(response.optString("Authorization"));
-                            user.setUtype(response.optString("utype"));
-                            user.setMuid(response.optInt("uid"));
-                            user.setPassword(response.optString("password"));
-//                            SharedPreManager.saveUser(user);
-                            Logger.e("jigang","user visitor login="+SharedPreManager.getUser(mContext).toJsonString());
-                            if (mListener != null){
-                                mListener.registeSuccess();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Logger.e("jigang", "error" + error.getMessage());
-                        }
-                    });
-                    YaZhiDaoApplication.getInstance().getRequestQueue().add(loginRequest);
+            if (TextUtil.isEmptyString(user.getUtype()) || user.isVisitor()) {
+                JSONObject requestBody = new JSONObject();
+                try {
+                    requestBody.put("uid", user.getMuid());
+                    requestBody.put("password", user.getPassword());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                Logger.e("jigang", "user visitor login body=" + requestBody.toString());
+                VisitorLoginRequest loginRequest = new VisitorLoginRequest(requestBody.toString(), new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Logger.e("aaa", "response==" + response.toString());
+                        String authorization = response.optString("Authorization");
+                        int uid = response.optInt("uid");
+                        String password = response.optString("password");
+                        if(!TextUtil.isEmptyString(authorization)){
+                            user.setAuthorToken(authorization);
+                        }
+                        if(uid != 0){
+                            user.setMuid(uid);
+                        }
+                        if(!TextUtil.isEmptyString(password)){
+                            user.setPassword(password);
+                        }
+
+                        /**本来想这样写，但是没有必要，直接把utype 改为2（游客）*/
+//                        String utype = response.optString("utype");
+//                        if(!"2".equals(utype)){
+//                            user.setUtype("2");
+//                        }
+                        user.setUtype("2");
+
+                        SharedPreManager.saveUser(user);
+                        Logger.e("jigang", "user visitor login=" + SharedPreManager.getUser(mContext).toJsonString());
+                        if (mListener != null) {
+                            mListener.registeSuccess();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Logger.e("jigang", "error" + error.getMessage());
+                    }
+                });
+                HashMap<String, String> header = new HashMap<>();
+                header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+                header.put("Content-Type", "application/json");
+                header.put("X-Requested-With", "*");
+                loginRequest.setRequestHeader(header);
+                YaZhiDaoApplication.getInstance().getRequestQueue().add(loginRequest);
+            } else {
+                ShareSdkHelper.mergeThirdUser(null);
+            }
         }
     }
 }
