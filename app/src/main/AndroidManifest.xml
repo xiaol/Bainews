@@ -336,7 +336,8 @@
         <activity
             android:name=".pages.PlayVideoAty"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".pages.ComplaintsActivity"
             android:launchMode="singleTask"

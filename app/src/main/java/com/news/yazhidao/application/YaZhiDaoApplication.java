@@ -50,7 +50,18 @@ public class YaZhiDaoApplication extends Application {
         String device_token = UmengRegistrar.getRegistrationId(this);
         Logger.e("device_token","token="+device_token);
         QbSdk.allowThirdPartyAppDownload(true);
-        QbSdk.initX5Environment(mContext.getApplicationContext(), QbSdk.WebviewInitType.FIRSTUSE_AND_PRELOAD, null);
+        QbSdk.PreInitCallback preInitCallback = new QbSdk.PreInitCallback() {
+            @Override
+            public void onCoreInitFinished() {
+                Logger.e("jigang","---onCoreInitFinished");
+            }
+
+            @Override
+            public void onViewInitFinished(boolean b) {
+                Logger.e("jigang","---onViewInitFinished=" + b);
+            }
+        };
+        QbSdk.initX5Environment(mContext.getApplicationContext(), QbSdk.WebviewInitType.FIRSTUSE_AND_PRELOAD, preInitCallback);
         super.onCreate();
     }
     public static Context getAppContext(){

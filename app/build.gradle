@@ -13,8 +13,12 @@ android {
         versionCode 125
         versionName "3.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
-    }
+    ndk {
 
+        abiFilters "armeabi","armeabi-v7a","x86","mips"
+
+    }
+    }
     productFlavors {
 //        oppo {}
 //        adcocoa {}
