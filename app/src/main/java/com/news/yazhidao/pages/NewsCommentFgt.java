@@ -159,7 +159,7 @@ public class NewsCommentFgt extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
-        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
+        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayoutAty);
         mNewsCommentList.setMode(PullToRefreshBase.Mode.PULL_FROM_END);
         mCommentsAdapter = new CommentsAdapter(getActivity());
         mNewsCommentList.setAdapter(mCommentsAdapter);

@@ -210,7 +210,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsLoadingImg.setOnClickListener(this);
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mNewsDetailProgress = (ProgressBar) findViewById(R.id.mNewsDetailProgress);
-        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayoutAty);
         mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mDetailHeader = findViewById(R.id.mDetailHeader);
         mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
