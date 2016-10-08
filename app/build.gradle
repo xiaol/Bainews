@@ -10,7 +10,7 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 126
+        versionCode 127
         versionName "3.5"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     ndk {
@@ -36,7 +36,7 @@ android {
 //        adcoco {}
 //        official {}
 
-//        /**
+        /**
 //         * 上海发包渠道
         baidu {}
         q91 {}
@@ -103,8 +103,29 @@ android {
         anbei {}
         iqiyi {}
         coolchuan {}
-//         */
-
+         */
+        baidu        {}
+        hiapk{}
+        q91{}
+        yingyongbao{}
+        q360{}
+        wandoujia{}
+        yingyonghui{}
+        huawei{}
+        xiaomi{}
+        samsungapps{}
+        hiapk{}
+        anzhi{}
+        liquwang{}
+        sougou
+        lenovomm{}
+        oppo{}
+        vivo{}
+        meizu{}
+        jinli{}
+        jifeng{}
+        ucpp{}
+        mumayi{}
         /**
          baidu {}q91shichang {}anzhuoshichang {}yingyongbao {}anzhishichang {}mumayi {}wandoujia {}jifengwang {}yingyonghui {}tongbu {}q360shoujizhushou {}Nduowang {}q3ganzhuoshichang {}woqushoujizhushou {}huawei {}lianxiang {}xiaomi {}sougouzhushou {}meizu {}oppo {}liquwang {}wangyiyingyongzhongxin {}newasp {}downcc {}PC6 {}*/
         /**91桌面换量渠道*/
