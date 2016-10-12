@@ -118,5 +118,5 @@
         android:textSize="12sp"
         android:visibility="gone" />
 
-    <include layout="@layout/loading_view" />
+    <include layout="@layout/loading_view_anim" />
 </FrameLayout>

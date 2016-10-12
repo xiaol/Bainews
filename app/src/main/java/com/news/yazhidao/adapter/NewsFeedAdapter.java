@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -30,6 +31,7 @@ import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
+import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
@@ -40,6 +42,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.FileUtils;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ZipperUtil;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -222,7 +225,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 lpCard.width = mCardWidth;
                 lpCard.height = mCardHeight;
                 ivCard.setLayoutParams(lpCard);
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight,feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), mCardWidth, mCardHeight, feed.getRtype());
                 final String strTitle = feed.getTitle();
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
@@ -289,12 +292,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
+                Log.i("tag", "2222" + SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE).toString());
+                Log.i("tag", "3333" + SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE).toString());
+                String url = feed.getAdimpression();
+                //广告
+                if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
+                    feed.setUpload(true);
+                    String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                    String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                    String requestUrl = url + "&lon=" + lon + "&lat=" + lat;
+                    Log.i("tag", "request" + requestUrl);
+                    NetworkRequest request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    request.getParams = hashMap;
+                    request.execute();
+                }
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight,feed.getRtype());
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight,feed.getRtype());
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight,feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
                 setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
@@ -320,12 +338,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
                 int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
                 int num = feed.getStyle() - 11;
-                ImageView ivBig  = holder.getView(R.id.title_img_View);
+                ImageView ivBig = holder.getView(R.id.title_img_View);
                 RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) ivBig.getLayoutParams();
                 lpBig.width = with;
                 lpBig.height = (int) (with * 9 / 16.0f);
                 ivBig.setLayoutParams(lpBig);
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f),feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false);
                 } else {
@@ -353,7 +371,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 final ArrayList<AttentionListEntity> attentionListEntities = feed.getAttentionListEntities();
                 int size = attentionListEntities.size();
                 if (size == 1) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconTwo, R.drawable.search_item_more);
@@ -382,9 +400,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.linear_ll_news_search_item_layoutThree).setOnClickListener(null);
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size == 2) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(),1);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconThree, R.drawable.search_item_more);
@@ -417,11 +435,11 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     });
                     holder.getView(R.id.linear_ll_news_search_item_layoutFour).setOnClickListener(null);
                 } else if (size >= 3) {
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(),0);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconOne, attentionListEntities.get(0).getIcon(), 0);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrOne, attentionListEntities.get(0).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(),1);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconTwo, attentionListEntities.get(1).getIcon(), 1);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrTwo, attentionListEntities.get(1).getName());
-                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon(),2);
+                    holder.setSimpleDraweeViewURI(R.id.img_ll_news_search_item_iconThree, attentionListEntities.get(2).getIcon(), 2);
                     holder.setTextViewText(R.id.tv_ll_news_search_item_descrThree, attentionListEntities.get(2).getName());
 
                     holder.setSimpleDraweeViewResource(R.id.img_ll_news_search_item_iconFour, R.drawable.search_item_more);
@@ -656,7 +674,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     } else {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
-                }else {
+                } else {
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
 

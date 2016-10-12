@@ -90,5 +90,5 @@
             android:textColor="@color/white"
             android:textSize="@dimen/font3"/>
     </LinearLayout>
-    <include layout="@layout/loading_view" />
+    <include layout="@layout/loading_view_anim" />
 </RelativeLayout>

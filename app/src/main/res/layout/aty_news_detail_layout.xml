@@ -217,7 +217,7 @@
 
 
     </RelativeLayout>
-    <include layout="@layout/loading_view"/>
+    <include layout="@layout/loading_view_anim"/>
 
     <!--需要占位不显示-->
     <ImageView

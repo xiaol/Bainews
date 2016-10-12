@@ -98,6 +98,13 @@ public class NewsFeed implements Serializable {
      */
     @DatabaseField
     private int rtype;
+    /**
+     * 印象展示
+     */
+    @DatabaseField
+    private String adimpression;
+
+    private boolean isUpload;
 
     /** 是(1)否(0)已收藏 */
     private int colflag;
@@ -339,4 +346,19 @@ public class NewsFeed implements Serializable {
         isFavorite = favorite;
     }
 
+    public String getAdimpression() {
+        return adimpression;
+    }
+
+    public void setAdimpression(String adimpression) {
+        this.adimpression = adimpression;
+    }
+
+    public boolean isUpload() {
+        return isUpload;
+    }
+
+    public void setUpload(boolean upload) {
+        isUpload = upload;
+    }
 }

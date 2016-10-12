@@ -77,7 +77,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             />
-        <include layout="@layout/loading_view" />
+        <include layout="@layout/loading_view_anim" />
     </RelativeLayout>
 
     <ImageView

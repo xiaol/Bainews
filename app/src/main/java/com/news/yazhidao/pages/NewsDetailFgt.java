@@ -168,7 +168,7 @@ public class NewsDetailFgt extends BaseFragment {
         this.container = container;
         user = SharedPreManager.getUser(getActivity());
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
-        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayoutAty);
+        bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
