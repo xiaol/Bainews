@@ -30,6 +30,7 @@ import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+import com.news.yazhidao.widget.SpecialNewsHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -42,7 +43,7 @@ import java.util.HashMap;
 public class SpecialNewsAty extends BaseActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1006;
-    private RelativeLayout mHomeRetry;
+    private RelativeLayout mHomeRetry, bgLayout;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private ArrayList<NewsFeed> mArrSpecialNewsFeed = new ArrayList<>();
@@ -52,6 +53,7 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
     private Handler mHandler;
     private SharedPreferences mSharedPreferences;
     private int mScreenWidth, mCardWidth, mCardHeight;
+    private SpecialNewsHeaderView mSpecialNewsHeaderView;
 
     @Override
     protected void setContentView() {
@@ -67,6 +69,8 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
+        mSpecialNewsHeaderView = new SpecialNewsHeaderView(this);
+        bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_special_listView);
         mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
         mlvSpecialNewsFeed.setMainFooterView(true);
@@ -83,6 +87,7 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
                 loadData();
             }
         });
+        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,54 +1,43 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
-import com.news.yazhidao.entity.NewsDetailAdd;
-import com.news.yazhidao.utils.TextUtil;
 
 public class SpecialNewsHeaderView extends RelativeLayout {
 
-    private TextView mNewsDetailSourceAndTime;
-    private TextView mNewsDetailTitle;
+    private TextView mSpecialDetail;
+    private ImageView mSpecialView;
+    private Context mContext;
 
     //新闻标题,新闻时间,新闻描述
     public SpecialNewsHeaderView(Context context) {
         this(context, null);
+        mContext = context;
     }
 
     public SpecialNewsHeaderView(Context context, AttributeSet attrs) {
         this(context, attrs, -1);
+        mContext = context;
     }
 
     public SpecialNewsHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View root = View.inflate(context, R.layout.aty_news_detail_header_view2, this);
-        mNewsDetailSourceAndTime = (TextView)root.findViewById(R.id.mNewsDetailSourceAndTime);
-        mNewsDetailTitle = (TextView)root.findViewById(R.id.mNewsDetailTitle);
+        mContext = context;
+        View root = View.inflate(context, R.layout.aty_special_news_hearder_view, this);
+        mSpecialDetail = (TextView) root.findViewById(R.id.mSpecialDetail);
+        mSpecialView = (ImageView) root.findViewById(R.id.mSpecialView);
     }
 
-    public void setHeaderViewData(Object pNewsDetail){
-         if(pNewsDetail instanceof NewsDetailAdd){
-            NewsDetailAdd detail = (NewsDetailAdd)pNewsDetail;
-             mNewsDetailTitle.setText(detail.title);
-             String source = detail.sourceSiteName;
-             String time = detail.updateTime;
-             if (!TextUtil.isEmptyString(source)){
-                 source = source.replace("\n","") + "  ";
-             }else {
-                 source ="";
-             }
-             if (!TextUtil.isEmptyString(time)){
-                 time = time.replace("\n","");
-             }
-             if (TextUtil.isEmptyString(source + time)){
-                 mNewsDetailSourceAndTime.setVisibility(GONE);
-             }
-             mNewsDetailSourceAndTime.setText(source+time);
-        }
+    public void setHeaderViewData(Uri uri, String detail) {
+        Glide.with(mContext).load(uri).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mSpecialView);
+        mSpecialDetail.setText(detail);
     }
 }
