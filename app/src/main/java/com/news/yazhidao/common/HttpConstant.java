@@ -95,11 +95,11 @@ public class HttpConstant {
     /**
      *  频道刷新加上广告
      */
-    public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?t=1&";
+    public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?";
     /**
      *  频道加载加上广告
      */
-    public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la?t=1&";
+    public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la?";
     /**
      *  专题详情
      */

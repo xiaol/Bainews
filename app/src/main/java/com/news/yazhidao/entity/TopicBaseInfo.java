@@ -17,7 +17,6 @@ public class TopicBaseInfo implements Serializable {
     private int news_count;
     private int online;
     private int top;
-    private TopicClass topicClass;
 
     public int getId() {
         return id;
@@ -91,11 +90,4 @@ public class TopicBaseInfo implements Serializable {
         this.top = top;
     }
 
-    public TopicClass getTopicClass() {
-        return topicClass;
-    }
-
-    public void setTopicClass(TopicClass topicClass) {
-        this.topicClass = topicClass;
-    }
 }

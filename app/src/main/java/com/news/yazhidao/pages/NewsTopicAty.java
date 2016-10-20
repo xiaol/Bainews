@@ -34,6 +34,7 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.NewsTopic;
 import com.news.yazhidao.entity.TopicBaseInfo;
 import com.news.yazhidao.entity.TopicClass;
 import com.news.yazhidao.net.volley.NewsTopicRequestGet;
@@ -57,7 +58,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
     private RelativeLayout mHomeRetry, bgLayout;
-    private int mNid;
+    private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsTopic = new ArrayList<>();
@@ -79,7 +80,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initializeViews() {
-        mNid = getIntent().getIntExtra(KEY_NID, 0);
+        mtid = getIntent().getIntExtra(KEY_NID, 0);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
@@ -122,20 +123,21 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
-        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "nid=" + mNid;
+        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid;
         if (NetUtil.checkNetWork(mContext)) {
             RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
-            NewsTopicRequestGet<TopicBaseInfo> topicRequestGet = new NewsTopicRequestGet<TopicBaseInfo>(Request.Method.GET, new TypeToken<TopicBaseInfo>() {
-            }.getType(), requestUrl, new Response.Listener<TopicBaseInfo>() {
+            NewsTopicRequestGet<NewsTopic> topicRequestGet = new NewsTopicRequestGet<>(Request.Method.GET, new TypeToken<NewsTopic>() {
+            }.getType(), requestUrl, new Response.Listener<NewsTopic>() {
 
                 @Override
-                public void onResponse(final TopicBaseInfo result) {
+                public void onResponse(final NewsTopic result) {
                     Log.i("tag", result.toString());
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Log.i("tag", error.toString());
                 }
             });
             HashMap<String, String> header = new HashMap<>();

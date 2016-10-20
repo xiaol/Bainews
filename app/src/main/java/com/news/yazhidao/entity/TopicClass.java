@@ -9,8 +9,9 @@ import java.util.ArrayList;
  */
 public class TopicClass implements Serializable {
 
+
     private TopicClassBaseInfo topicClassBaseInfo;
-    private ArrayList<NewsFeed> newsFeedArrayList;
+    private ArrayList<NewsFeed> newsFeed;
 
     public TopicClassBaseInfo getTopicClassBaseInfo() {
         return topicClassBaseInfo;
@@ -20,19 +21,20 @@ public class TopicClass implements Serializable {
         this.topicClassBaseInfo = topicClassBaseInfo;
     }
 
-    public ArrayList<NewsFeed> getNewsFeedArrayList() {
-        return newsFeedArrayList;
+    public ArrayList<NewsFeed> getNewsFeed() {
+        return newsFeed;
     }
 
-    public void setNewsFeedArrayList(ArrayList<NewsFeed> newsFeedArrayList) {
-        this.newsFeedArrayList = newsFeedArrayList;
+    public void setNewsFeed(ArrayList<NewsFeed> newsFeed) {
+        this.newsFeed = newsFeed;
     }
 
     class TopicClassBaseInfo implements Serializable {
         private int id;
         private String name;
         private int topic;
-        private int puorderrl;
+        private int order;
+        private ArrayList<NewsFeed> newsFeed;
 
         public int getId() {
             return id;
@@ -58,12 +60,20 @@ public class TopicClass implements Serializable {
             this.topic = topic;
         }
 
-        public int getPuorderrl() {
-            return puorderrl;
+        public int getOrder() {
+            return order;
         }
 
-        public void setPuorderrl(int puorderrl) {
-            this.puorderrl = puorderrl;
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        public ArrayList<NewsFeed> getArrNewsFeed() {
+            return newsFeed;
+        }
+
+        public void setArrNewsFeed(ArrayList<NewsFeed> arrNewsFeed) {
+            this.newsFeed = arrNewsFeed;
         }
     }
 }

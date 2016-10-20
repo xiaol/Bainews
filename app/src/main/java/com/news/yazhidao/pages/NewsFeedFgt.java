@@ -456,6 +456,7 @@ public class NewsFeedFgt extends Fragment{
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId)?null:Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setT(1);
         Gson gson = new Gson();
         Logger.e("ccc", "getAdMessage==" + getAdMessage());
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
