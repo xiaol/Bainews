@@ -76,12 +76,12 @@ public class HttpConstant {
     /**
      * feed流上拉加载更多
      */
-    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/ln?";
+    public static final String URL_FEED_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/ln?t=1&";
 
     /**
      * feed流下拉刷新
      */
-    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/rn?";
+    public static final String URL_FEED_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/rn?t=1&";
     /**
      * feed流关注上拉加载更多
      */
@@ -95,12 +95,15 @@ public class HttpConstant {
     /**
      *  频道刷新加上广告
      */
-    public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra";
+    public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?t=1&";
     /**
      *  频道加载加上广告
      */
-    public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la";
-
+    public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la?t=1&";
+    /**
+     *  专题详情
+     */
+    public static final String URL_NEWS_TOPIC = URL_SERVER_HOST + "/ns/tdq?";
 
     /**
      * 普通频道列表

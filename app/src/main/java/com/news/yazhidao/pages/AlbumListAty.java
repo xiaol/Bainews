@@ -108,7 +108,7 @@ public class AlbumListAty extends SwipeBackActivity implements View.OnClickListe
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.aty_special_layout);
+        setContentView(R.layout.aty_topic_layout);
     }
 
     @Override

@@ -269,6 +269,11 @@
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
+            android:name=".pages.NewsTopicAty"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
             android:name=".pages.ChatAty"
             android:screenOrientation="portrait" />
         <activity

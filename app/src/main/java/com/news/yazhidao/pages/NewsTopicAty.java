@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +17,32 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
+import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
+import com.news.yazhidao.entity.TopicBaseInfo;
+import com.news.yazhidao.entity.TopicClass;
+import com.news.yazhidao.net.volley.NewsTopicRequestGet;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
-import com.news.yazhidao.widget.SpecialNewsHeaderView;
+import com.news.yazhidao.widget.NewsTopicHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -40,38 +52,43 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class SpecialNewsAty extends BaseActivity implements View.OnClickListener {
+public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1006;
+    public static final String KEY_NID = "key_nid";
     private RelativeLayout mHomeRetry, bgLayout;
+    private int mNid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
-    private ArrayList<NewsFeed> mArrSpecialNewsFeed = new ArrayList<>();
+    private ArrayList<NewsFeed> mArrNewsTopic = new ArrayList<>();
     private Context mContext;
     private PullToRefreshExpandableListView mlvSpecialNewsFeed;
     private boolean isListRefresh;
+    private TopicBaseInfo mTopicBaseInfo;
+    private TopicClass mTopicClass;
     private Handler mHandler;
     private SharedPreferences mSharedPreferences;
     private int mScreenWidth, mCardWidth, mCardHeight;
-    private SpecialNewsHeaderView mSpecialNewsHeaderView;
+    private NewsTopicHeaderView mSpecialNewsHeaderView;
 
     @Override
     protected void setContentView() {
-        setContentView(R.layout.aty_special_news);
+        setContentView(R.layout.aty_news_topic);
         mContext = this;
     }
 
     @Override
     protected void initializeViews() {
+        mNid = getIntent().getIntExtra(KEY_NID, 0);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
-        mSpecialNewsHeaderView = new SpecialNewsHeaderView(this);
+        mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
-        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_special_listView);
+        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
         mlvSpecialNewsFeed.setMainFooterView(true);
         mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
@@ -105,8 +122,27 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void loadData() {
+        String requestUrl = HttpConstant.URL_NEWS_TOPIC + "nid=" + mNid;
         if (NetUtil.checkNetWork(mContext)) {
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            NewsTopicRequestGet<TopicBaseInfo> topicRequestGet = new NewsTopicRequestGet<TopicBaseInfo>(Request.Method.GET, new TypeToken<TopicBaseInfo>() {
+            }.getType(), requestUrl, new Response.Listener<TopicBaseInfo>() {
 
+                @Override
+                public void onResponse(final TopicBaseInfo result) {
+                    Log.i("tag", result.toString());
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            });
+            HashMap<String, String> header = new HashMap<>();
+            header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+            topicRequestGet.setRequestHeader(header);
+            topicRequestGet.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(topicRequestGet);
         } else {
             setRefreshComplete();
 //            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
@@ -188,9 +224,9 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
             int iCount = 0;
             // In each group, we need to display the tip at the first child view
             if (groupPosition == 0)
-                iCount = mArrSpecialNewsFeed == null ? 0 : mArrSpecialNewsFeed.size() + 1;
+                iCount = mArrNewsTopic == null ? 0 : mArrNewsTopic.size() + 1;
             if (groupPosition == 1)
-                iCount = mArrSpecialNewsFeed == null ? 0 : mArrSpecialNewsFeed.size() + 1;
+                iCount = mArrNewsTopic == null ? 0 : mArrNewsTopic.size() + 1;
             return iCount;
         }
 
@@ -263,7 +299,7 @@ public class SpecialNewsAty extends BaseActivity implements View.OnClickListener
             ChildOnePicHolder childOnePicHolder;
             ChildThreePicHolder childThreePicHolder;
             ChildBigPicHolder childBigPicHolder;
-            NewsFeed feed = mArrSpecialNewsFeed.get(childPosition);
+            NewsFeed feed = mArrNewsTopic.get(childPosition);
             int type = feed.getStyle();
             if (NewsFeed.NO_PIC == type) {
                 if (convertView == null) {

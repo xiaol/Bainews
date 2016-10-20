@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -19,10 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
 import com.news.yazhidao.adapter.abslistview.MultiItemTypeSupport;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -31,11 +35,11 @@ import com.news.yazhidao.entity.AttentionListEntity;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
-import com.news.yazhidao.net.NetworkRequest;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
+import com.news.yazhidao.pages.NewsTopicAty;
 import com.news.yazhidao.pages.SubscribeListActivity;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -292,20 +296,27 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                Log.i("tag", "2222" + SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE).toString());
-                Log.i("tag", "3333" + SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE).toString());
-                String url = feed.getAdimpression();
-                //广告
-                if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
-                    feed.setUpload(true);
-                    String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                    String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                    String requestUrl = url + "&lon=" + lon + "&lat=" + lat;
-                    Log.i("tag", "request" + requestUrl);
-                    NetworkRequest request = new NetworkRequest(requestUrl, NetworkRequest.RequestMethod.GET);
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    request.getParams = hashMap;
-                    request.execute();
+                if (feed.getRtype() == 3) {
+                    String url = null;
+                    ArrayList<String> arrUrl = feed.getAdimpression();
+                    if (!TextUtil.isListEmpty(arrUrl)) {
+                        url = arrUrl.get(0);
+                    }
+                    //广告
+                    if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
+                        feed.setUpload(true);
+                        String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                        String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                        String[] realUrl = url.split("&lon");
+                        final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
+                        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                        StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                            }
+                        }, null);
+                        requestQueue.add(request);
+                    }
                 }
                 break;
             case R.layout.ll_news_card:
@@ -633,6 +644,13 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             content = "广告";
             tag.setTextColor(mContext.getResources().getColor(R.color.theme_color));
             tag.setBackgroundResource(R.drawable.newstag_ad_shape);
+        } else if (type == 4) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "专题";
+            tag.setTextColor(mContext.getResources().getColor(R.color.new_topic));
+            tag.setBackgroundResource(R.drawable.newstag_topic);
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -669,6 +687,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (feed.getRtype() == 3) {
                     Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
                     AdIntent.putExtra(NewsDetailWebviewAty.KEY_URL, feed.getPurl());
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(AdIntent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
+                    }
+                } else if (feed.getRtype() == 4) {
+                    Intent AdIntent = new Intent(mContext, NewsTopicAty.class);
+                    AdIntent.putExtra(NewsTopicAty.KEY_NID, feed.getNid());
                     if (mNewsFeedFgt != null) {
                         mNewsFeedFgt.startActivityForResult(AdIntent, REQUEST_CODE);
                     } else {

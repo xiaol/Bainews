@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/mSpecialView"
+        android:id="@+id/mTopicView"
         android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -16,7 +16,7 @@
         android:background="@color/common_header_bg">
 
         <TextView
-            android:id="@+id/mSpecialDetail"
+            android:id="@+id/mTopicDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

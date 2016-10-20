@@ -4,13 +4,13 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/mSpecialHeader"
+        android:id="@+id/mTopicHeader"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/common_header_bg">
 
         <TextView
-            android:id="@+id/mSpecialLeftBack"
+            android:id="@+id/mTopicLeftBack"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/bg_left_back_selector"
@@ -19,7 +19,7 @@
             android:paddingLeft="15dp" />
 
         <TextView
-            android:id="@+id/mSpecialRightMore"
+            android:id="@+id/mTopicRightMore"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
@@ -29,7 +29,7 @@
             android:paddingRight="15dp" />
 
         <TextView
-            android:id="@+id/mSpecialTitle"
+            android:id="@+id/mTopicTitle"
             android:layout_width="225dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -47,7 +47,7 @@
         android:background="@color/new_color5" />
 
     <com.handmark.pulltorefresh.library.PullToRefreshExpandableListView
-        android:id="@+id/news_special_listView"
+        android:id="@+id/news_Topic_listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/mHeaderDivider"
