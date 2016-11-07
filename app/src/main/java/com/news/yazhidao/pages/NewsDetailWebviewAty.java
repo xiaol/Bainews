@@ -10,11 +10,13 @@ import android.net.Uri;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
@@ -36,10 +38,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     private View mNewsSourcesiteFooterShare;
     private TextView mNewsSourcesiteBlameNum;
     private TextView mNewsSourcesitePraiseNum;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private TextView mNewsSourcesiteBlameNumReduce;
     private TextView mNewsSourcesitePraiseNumIncrease;
-    private int mClickNum=0;
+    private int mClickNum = 0;
     private ProgressBar mNewsSourcesiteProgress;
     private SwipeBackLayout mSwipeBackLayout;
     private View mLeftBack;
@@ -52,44 +54,51 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_news_webview_sourcesite);
-        mNewsSourcesiteProgress=(ProgressBar)findViewById(R.id.mNewsSourcesiteProgress);
-        mNewsSourcesiteWebview = (WebView) findViewById(R.id.mNewsSourcesiteWebview);
-        mLeftBack=findViewById(R.id.mLeftBack);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.content_layout);
+        mNewsSourcesiteProgress = (ProgressBar) findViewById(R.id.mNewsSourcesiteProgress);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.BELOW, R.id.mDetailWebHeader);
+        mNewsSourcesiteWebview = new WebView(getApplicationContext());
+        mNewsSourcesiteWebview.setLayoutParams(params);
+        layout.addView(mNewsSourcesiteWebview);
+        mLeftBack = findViewById(R.id.mLeftBack);
         mLeftBack.setOnClickListener(this);
 
-        mNewsSourcesiteFooterPraise=findViewById(R.id.mNewsSourcesiteFooterPraise);
+        mNewsSourcesiteFooterPraise = findViewById(R.id.mNewsSourcesiteFooterPraise);
         mNewsSourcesiteFooterPraise.setOnClickListener(this);
-        mNewsSourcesiteFooterBlame=findViewById(R.id.mNewsSourcesiteFooterBlame);
+        mNewsSourcesiteFooterBlame = findViewById(R.id.mNewsSourcesiteFooterBlame);
         mNewsSourcesiteFooterBlame.setOnClickListener(this);
-        mNewsSourcesiteFooterShare=findViewById(R.id.mNewsSourcesiteFooterShare);
+        mNewsSourcesiteFooterShare = findViewById(R.id.mNewsSourcesiteFooterShare);
         mNewsSourcesiteFooterShare.setOnClickListener(this);
-        mNewsSourcesitePraiseNum= (TextView) findViewById(R.id.mNewsSourcesitePraiseNum);
-        mNewsSourcesiteBlameNum=(TextView)findViewById(R.id.mNewsSourcesiteBlameNum);
-        mNewsSourcesitePraiseNumIncrease= (TextView) findViewById(R.id.mNewsSourcesitePraiseNumIncrease);
-        mNewsSourcesiteBlameNumReduce= (TextView) findViewById(R.id.mNewsSourcesiteBlameNumReduce);
+        mNewsSourcesitePraiseNum = (TextView) findViewById(R.id.mNewsSourcesitePraiseNum);
+        mNewsSourcesiteBlameNum = (TextView) findViewById(R.id.mNewsSourcesiteBlameNum);
+        mNewsSourcesitePraiseNumIncrease = (TextView) findViewById(R.id.mNewsSourcesitePraiseNumIncrease);
+        mNewsSourcesiteBlameNumReduce = (TextView) findViewById(R.id.mNewsSourcesiteBlameNumReduce);
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mNewsSourcesiteFooterPraise:
-                if(mClickNum==0){
+                if (mClickNum == 0) {
                     mClickNum++;
                     performAnimator(mNewsSourcesitePraiseNumIncrease);
-                    mNewsSourcesitePraiseNum.setText(Integer.valueOf(mNewsSourcesitePraiseNum.getText().toString())+1+"");
-                }else if(mClickNum==1){
+                    mNewsSourcesitePraiseNum.setText(Integer.valueOf(mNewsSourcesitePraiseNum.getText().toString()) + 1 + "");
+                } else if (mClickNum == 1) {
                     ToastUtil.toastShort("您已经赞过");
-                }else if(mClickNum==-1){
+                } else if (mClickNum == -1) {
                     ToastUtil.toastShort("您已经踩过");
                 }
                 break;
             case R.id.mNewsSourcesiteFooterBlame:
-                if(mClickNum==0){
+                if (mClickNum == 0) {
                     mClickNum--;
                     performAnimator(mNewsSourcesiteBlameNumReduce);
-                    mNewsSourcesiteBlameNum.setText(Integer.valueOf(mNewsSourcesiteBlameNum.getText().toString()) - 1 + "");                break;
-                }else if(mClickNum==1){
+                    mNewsSourcesiteBlameNum.setText(Integer.valueOf(mNewsSourcesiteBlameNum.getText().toString()) - 1 + "");
+                    break;
+                } else if (mClickNum == 1) {
                     ToastUtil.toastShort("您已经赞过");
-                }else if(mClickNum==-1){
+                } else if (mClickNum == -1) {
                     ToastUtil.toastShort("您已经踩过");
                 }
                 break;
@@ -106,16 +115,17 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     /**
      * 执行动画
+     *
      * @param pView
      */
     private void performAnimator(final View pView) {
         pView.setVisibility(View.VISIBLE);
-        AnimatorSet _AnimatorSet=new AnimatorSet();
+        AnimatorSet _AnimatorSet = new AnimatorSet();
         _AnimatorSet.playTogether(
                 ObjectAnimator.ofFloat(pView, "translationY", -50),
-                ObjectAnimator.ofFloat(pView, "alpha", 1f,0f),
-                ObjectAnimator.ofFloat(pView, "scaleX", 1f,.5f),
-                ObjectAnimator.ofFloat(pView, "scaleY", 1f,.5f)
+                ObjectAnimator.ofFloat(pView, "alpha", 1f, 0f),
+                ObjectAnimator.ofFloat(pView, "scaleX", 1f, .5f),
+                ObjectAnimator.ofFloat(pView, "scaleY", 1f, .5f)
 
         );
         _AnimatorSet.setDuration(800);
@@ -131,13 +141,14 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     @Override
     protected void initializeViews() {
 
-        mNewsUrl=getIntent().getStringExtra(KEY_URL);
+        mNewsUrl = getIntent().getStringExtra(KEY_URL);
         Logger.e("aaa", "mNewsUrl==" + mNewsUrl);
         mNewsSourcesiteWebview.getSettings().setUseWideViewPort(true);                    //让webview读取网页设置的viewport
         mNewsSourcesiteWebview.getSettings().setLoadWithOverviewMode(true);           //设置一个默认的viewport=800，如果网页自己没有设置viewport，就用800
         mNewsSourcesiteWebview.getSettings().setJavaScriptEnabled(true);
         mNewsSourcesiteWebview.getSettings().setSupportZoom(true);
         mNewsSourcesiteWebview.getSettings().setBuiltInZoomControls(true);
+        mNewsSourcesiteWebview.getSettings().setDisplayZoomControls(false);
         mNewsSourcesiteWebview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -189,6 +200,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
     }
+
     private class MyWebViewDownLoadListener implements DownloadListener {
 
         @Override
@@ -208,24 +220,26 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mNewsSourcesiteWebview.canGoBack()){
-                mNewsSourcesiteWebview.goBack();
-                return true;
-            }else {
-                finish();
-            }
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            if (mNewsSourcesiteWebview.canGoBack()) {
+//                mNewsSourcesiteWebview.goBack();
+//                return true;
+//            } else {
+//                finish();
+//            }
+//        }
 
         return super.onKeyDown(keyCode, event);
     }
 
     @Override
-    public void finish() {
+    protected void onDestroy() {
+        super.onDestroy();
         if (mNewsSourcesiteWebview != null) {
-            mNewsSourcesiteWebview.removeAllViews();
-            mNewsSourcesiteWebview.clearFormData();
+            ((ViewGroup) mNewsSourcesiteWebview.getParent()).removeView(mNewsSourcesiteWebview);
+//            mNewsSourcesiteWebview.removeAllViews();
+            mNewsSourcesiteWebview.destroy();
+            mNewsSourcesiteWebview = null;
         }
-        super.finish();
     }
 }

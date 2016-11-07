@@ -10,8 +10,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 128
-        versionName "3.5.1"
+        versionCode 129
+        versionName "3.5.2"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     ndk {
 

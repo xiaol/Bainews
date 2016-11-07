@@ -24,8 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshExpandableListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
@@ -61,16 +59,19 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
-    private ArrayList<NewsFeed> mArrNewsTopic = new ArrayList<>();
     private Context mContext;
-    private PullToRefreshExpandableListView mlvSpecialNewsFeed;
+    private TextView mDetailLeftBack,mDetailRightMore;
+    private ExpandableListView mlvSpecialNewsFeed;
+    //    private ExpandableListView mExpandableListView;
     private boolean isListRefresh;
     private TopicBaseInfo mTopicBaseInfo;
-    private TopicClass mTopicClass;
+    private ArrayList<TopicClass> marrTopicClass;
+    private NewsTopic mNewTopic;
     private Handler mHandler;
     private SharedPreferences mSharedPreferences;
     private int mScreenWidth, mCardWidth, mCardHeight;
     private NewsTopicHeaderView mSpecialNewsHeaderView;
+    private TextView mTopicTitle;
 
     @Override
     protected void setContentView() {
@@ -89,29 +90,62 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         mHandler = new Handler();
         mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
-        mlvSpecialNewsFeed = (PullToRefreshExpandableListView) findViewById(R.id.news_Topic_listView);
-        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
-        mlvSpecialNewsFeed.setMainFooterView(true);
-        mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-                isListRefresh = true;
-                loadData();
-            }
+        mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
+        mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
+        mlvSpecialNewsFeed.setAdapter(mAdapter);
+        mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
+//        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
+//        mlvSpecialNewsFeed.setMainFooterView(true);
+//        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
+//        mExpandableListView.setAdapter(mAdapter);
+//        mExpandableListView.addHeaderView(mSpecialNewsHeaderView);
+//        mlvSpecialNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ExpandableListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+//                isListRefresh = true;
+//                loadData();
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
+//                isListRefresh = true;
+//                loadData();
+//            }
+//        });
+        mlvSpecialNewsFeed.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ExpandableListView> refreshView) {
-                isListRefresh = true;
-                loadData();
+            public boolean onGroupClick(ExpandableListView parent, View v,
+                                        int groupPosition, long id) {
+                // TODO Auto-generated method stub
+                return true;
             }
         });
-        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
+//        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
         mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
         mHomeRetry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mlvSpecialNewsFeed.setRefreshing();
+//                mlvSpecialNewsFeed.setRefreshing();
                 mHomeRetry.setVisibility(View.GONE);
+            }
+        });
+        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
+        mDetailLeftBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
+        mDetailRightMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                SharePopupWindow  mSharePopupWindow = new SharePopupWindow(this, this);
+//                String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
+//                mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+//                mSharePopupWindow.setOnFavoritListener(listener);
+//                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
     }
@@ -123,6 +157,9 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
+        if (!isListRefresh) {
+            bgLayout.setVisibility(View.VISIBLE);
+        }
         String requestUrl = HttpConstant.URL_NEWS_TOPIC + "tid=" + mtid;
         if (NetUtil.checkNetWork(mContext)) {
             RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
@@ -131,8 +168,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 
                 @Override
                 public void onResponse(final NewsTopic result) {
-                    Log.i("tag", result.toString());
-
+                    mNewTopic = result;
+                    mTopicBaseInfo = mNewTopic.getTopicBaseInfo();
+                    mTopicTitle.setText(mTopicBaseInfo.getName());
+                    marrTopicClass = mNewTopic.getTopicClass();
+                    for (int i = 0; i < marrTopicClass.size(); i++) {
+                        mlvSpecialNewsFeed.expandGroup(i);
+                    }
+                    mSpecialNewsHeaderView.setHeaderViewData(mTopicBaseInfo, mScreenWidth);
+                    mAdapter.setTopicData(marrTopicClass);
+                    mAdapter.notifyDataSetChanged();
+                    bgLayout.setVisibility(View.GONE);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -155,9 +201,9 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
 //            }
 //            mAdapter.setNewsFeed(newsFeeds);
 //            mAdapter.notifyDataSetChanged();
-//            if (bgLayout.getVisibility() == View.VISIBLE) {
-//                bgLayout.setVisibility(View.GONE);
-//            }
+            if (bgLayout.getVisibility() == View.VISIBLE) {
+                bgLayout.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -167,12 +213,12 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     }
 
     private void setRefreshComplete() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mlvSpecialNewsFeed.onRefreshComplete();
-            }
-        }, 500);
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+////                mlvSpecialNewsFeed.onRefreshComplete();
+////            }
+//        }, 500);
     }
 
     @Override
@@ -209,27 +255,27 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {
 
         private Context mContext;
+        private ArrayList<TopicClass> arrTopicClass;
+        private int currentType;
 
         public ExpandableSpecialListViewAdapter(Context context) {
             mContext = context;
         }
 
+        public void setTopicData(ArrayList<TopicClass> topicClass) {
+            arrTopicClass = topicClass;
+        }
+
         @Override
         public int getGroupCount() {
             // TODO Auto-generated method stub
-            return 2;
+            return arrTopicClass == null ? 0 : arrTopicClass.size();
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
             // TODO Auto-generated method stub
-            int iCount = 0;
-            // In each group, we need to display the tip at the first child view
-            if (groupPosition == 0)
-                iCount = mArrNewsTopic == null ? 0 : mArrNewsTopic.size() + 1;
-            if (groupPosition == 1)
-                iCount = mArrNewsTopic == null ? 0 : mArrNewsTopic.size() + 1;
-            return iCount;
+            return arrTopicClass == null ? 0 : arrTopicClass.get(groupPosition).getNewsFeed().size();
         }
 
         @Override
@@ -262,6 +308,27 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             return true;
         }
 
+        @Override
+        public int getChildType(int groupPosition, int childPosition) {
+            NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
+            int type = feed.getStyle();
+            if (0 == type) {
+                return NewsFeed.NO_PIC;
+            } else if (1 == type || 2 == type) {
+                return NewsFeed.ONE_AND_TWO_PIC;
+            } else if (3 == type) {
+                return NewsFeed.THREE_PIC;
+            } else if (11 == type || 12 == type || 13 == type) {
+                return NewsFeed.BIG_PIC;
+            } else {
+                return NewsFeed.EMPTY;
+            }
+        }
+
+        @Override
+        public int getChildTypeCount() {
+            return 5;
+        }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
@@ -272,8 +339,9 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
+            TopicClass.TopicClassBaseInfo topicClassBaseInfo = arrTopicClass.get(groupPosition).getTopicClassBaseInfo();
             final GroupHolder groupHolder;
-            if (convertView == null) {
+            if (convertView == null || convertView.getTag().getClass() != GroupHolder.class) {
                 groupHolder = new GroupHolder();
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.item_special_news_group, null, false);
                 groupHolder.ivColor = (ImageView) convertView.findViewById(R.id.mGroupColor);
@@ -282,13 +350,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else {
                 groupHolder = (GroupHolder) convertView.getTag();
             }
-            if (groupPosition == 0) {
-                groupHolder.tvTitle.setText("焦点新闻");
-                groupHolder.ivColor.setBackgroundColor(getResources().getColor(R.color.new_color2));
-            } else {
-                groupHolder.tvTitle.setText("评论观点");
-                groupHolder.ivColor.setBackgroundColor(getResources().getColor(R.color.red));
-            }
+            groupHolder.tvTitle.setText(topicClassBaseInfo.getName());
+            groupHolder.ivColor.setBackgroundColor(getResources().getColor(R.color.new_color2));
             convertView.setOnClickListener(null);
             return convertView;
         }
@@ -297,22 +360,31 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         @Override
         public View getChildView(final int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
+            NewsFeed feed = arrTopicClass.get(groupPosition).getNewsFeed().get(childPosition);
             ChildNoPicHolder childNoPicHolderHolder;
-            ChildOnePicHolder childOnePicHolder;
+            final ChildOnePicHolder childOnePicHolder;
             ChildThreePicHolder childThreePicHolder;
             ChildBigPicHolder childBigPicHolder;
-            NewsFeed feed = mArrNewsTopic.get(childPosition);
-            int type = feed.getStyle();
-            if (NewsFeed.NO_PIC == type) {
+            View vNoPic;
+            View vOnePic;
+            View vThreePic;
+            View vBigPic;
+            View vEmpty;
+            currentType = getChildType(groupPosition, childPosition);
+            if (currentType == NewsFeed.NO_PIC) {
                 if (convertView == null) {
                     childNoPicHolderHolder = new ChildNoPicHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_no_pic, null);
-                    childNoPicHolderHolder.rlContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
-                    childNoPicHolderHolder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
-                    childNoPicHolderHolder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
-                    childNoPicHolderHolder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
-                    childNoPicHolderHolder.tvType = (TextViewExtend) convertView.findViewById(R.id.type_textView);
-                    childNoPicHolderHolder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    vNoPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_no_pic, null);
+                    childNoPicHolderHolder.rlContent = (RelativeLayout) vNoPic.findViewById(R.id.news_content_relativeLayout);
+                    childNoPicHolderHolder.tvTitle = (TextView) vNoPic.findViewById(R.id.title_textView);
+                    childNoPicHolderHolder.tvSource = (TextViewExtend) vNoPic.findViewById(R.id.news_source_TextView);
+                    childNoPicHolderHolder.tvCommentNum = (TextViewExtend) vNoPic.findViewById(R.id.comment_num_textView);
+                    childNoPicHolderHolder.tvType = (TextViewExtend) vNoPic.findViewById(R.id.type_textView);
+                    childNoPicHolderHolder.ivDelete = (ImageView) vNoPic.findViewById(R.id.delete_imageView);
+                    childNoPicHolderHolder.ivBottomLine = (ImageView) vNoPic.findViewById(R.id.line_bottom_imageView);
+                    vNoPic.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
+                    vNoPic.setTag(childNoPicHolderHolder);
+                    convertView = vNoPic;
                 } else {
                     childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
                 }
@@ -322,20 +394,51 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setNewsContentClick(childNoPicHolderHolder.rlContent, feed);
                 newsTag(childNoPicHolderHolder.tvType, feed.getRtype());
                 childNoPicHolderHolder.ivDelete.setVisibility(View.INVISIBLE);
-            } else if (NewsFeed.ONE_AND_TWO_PIC == type) {
+                setBottomLine(childNoPicHolderHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+            } else if (currentType == NewsFeed.ONE_AND_TWO_PIC) {
                 if (convertView == null) {
                     childOnePicHolder = new ChildOnePicHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_one_pic, null);
-                    childOnePicHolder.ivPicture = (ImageView) convertView.findViewById(R.id.title_img_View);
-                    childOnePicHolder.rlContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
-                    childOnePicHolder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
-                    childOnePicHolder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
-                    childOnePicHolder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
-                    childOnePicHolder.tvType = (TextViewExtend) convertView.findViewById(R.id.type_textView);
-                    childOnePicHolder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    vOnePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_one_pic, null);
+                    childOnePicHolder.ivPicture = (ImageView) vOnePic.findViewById(R.id.title_img_View);
+                    childOnePicHolder.rlContent = (RelativeLayout) vOnePic.findViewById(R.id.news_content_relativeLayout);
+                    childOnePicHolder.tvTitle = (TextView) vOnePic.findViewById(R.id.title_textView);
+                    childOnePicHolder.tvSource = (TextViewExtend) vOnePic.findViewById(R.id.news_source_TextView);
+                    childOnePicHolder.tvCommentNum = (TextViewExtend) vOnePic.findViewById(R.id.comment_num_textView);
+                    childOnePicHolder.tvType = (TextViewExtend) vOnePic.findViewById(R.id.type_textView);
+                    childOnePicHolder.ivDelete = (ImageView) vOnePic.findViewById(R.id.delete_imageView);
+                    childOnePicHolder.llSourceOnePic = (LinearLayout) vOnePic.findViewById(R.id.source_content_linearLayout);
+                    childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
+                    childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
+                    vOnePic.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
+                    vOnePic.setTag(childOnePicHolder);
+                    convertView = vOnePic;
                 } else {
                     childOnePicHolder = (ChildOnePicHolder) convertView.getTag();
                 }
+                childOnePicHolder.tvTitle.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) childOnePicHolder.llSourceOnePic.getLayoutParams();
+                        RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) childOnePicHolder.tvTitle.getLayoutParams();
+                        RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) childOnePicHolder.ivBottomLine.getLayoutParams();
+                        int lineCount = childOnePicHolder.tvTitle.getLineCount();
+                        if (lineCount >= 3) {
+                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                            lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
+                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
+                        } else if (lineCount <= 1) {
+                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
+                            lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                        } else {
+                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
+                            lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
+                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
+                        }
+                        childOnePicHolder.llSourceOnePic.setLayoutParams(lpSourceContent);
+                        childOnePicHolder.ivBottomLine.setLayoutParams(lpBottomLine);
+                    }
+                });
                 RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childOnePicHolder.ivPicture.getLayoutParams();
                 lpCard.width = mCardWidth;
                 lpCard.height = mCardHeight;
@@ -347,19 +450,24 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setNewsContentClick(childOnePicHolder.rlContent, feed);
                 newsTag(childOnePicHolder.tvType, feed.getRtype());
                 childOnePicHolder.ivDelete.setVisibility(View.INVISIBLE);
-            } else if (NewsFeed.THREE_PIC == type) {
+                setBottomLine(childOnePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+            } else if (currentType == NewsFeed.THREE_PIC) {
                 if (convertView == null) {
                     childThreePicHolder = new ChildThreePicHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.ll_news_card, null);
-                    childThreePicHolder.ivPicture1 = (ImageView) convertView.findViewById(R.id.image_card1);
-                    childThreePicHolder.ivPicture2 = (ImageView) convertView.findViewById(R.id.image_card2);
-                    childThreePicHolder.ivPicture3 = (ImageView) convertView.findViewById(R.id.image_card3);
-                    childThreePicHolder.rlContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
-                    childThreePicHolder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
-                    childThreePicHolder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
-                    childThreePicHolder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
-                    childThreePicHolder.tvType = (TextViewExtend) convertView.findViewById(R.id.type_textView);
-                    childThreePicHolder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    vThreePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_card, null);
+                    childThreePicHolder.ivPicture1 = (ImageView) vThreePic.findViewById(R.id.image_card1);
+                    childThreePicHolder.ivPicture2 = (ImageView) vThreePic.findViewById(R.id.image_card2);
+                    childThreePicHolder.ivPicture3 = (ImageView) vThreePic.findViewById(R.id.image_card3);
+                    childThreePicHolder.rlContent = (RelativeLayout) vThreePic.findViewById(R.id.news_content_relativeLayout);
+                    childThreePicHolder.tvTitle = (TextView) vThreePic.findViewById(R.id.title_textView);
+                    childThreePicHolder.tvSource = (TextViewExtend) vThreePic.findViewById(R.id.news_source_TextView);
+                    childThreePicHolder.tvCommentNum = (TextViewExtend) vThreePic.findViewById(R.id.comment_num_textView);
+                    childThreePicHolder.tvType = (TextViewExtend) vThreePic.findViewById(R.id.type_textView);
+                    childThreePicHolder.ivDelete = (ImageView) vThreePic.findViewById(R.id.delete_imageView);
+                    childThreePicHolder.ivBottomLine = (ImageView) vThreePic.findViewById(R.id.line_bottom_imageView);
+                    vThreePic.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
+                    vThreePic.setTag(childThreePicHolder);
+                    convertView = vThreePic;
                 } else {
                     childThreePicHolder = (ChildThreePicHolder) convertView.getTag();
                 }
@@ -368,25 +476,28 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setImageUri(childThreePicHolder.ivPicture2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
                 setImageUri(childThreePicHolder.ivPicture3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
                 setCardMargin(childThreePicHolder.ivPicture1, 15, 1, 3);
-                setCardMargin(childThreePicHolder.ivPicture1, 1, 1, 3);
-                setCardMargin(childThreePicHolder.ivPicture1, 1, 15, 3);
+                setCardMargin(childThreePicHolder.ivPicture2, 1, 1, 3);
+                setCardMargin(childThreePicHolder.ivPicture3, 1, 15, 3);
                 setTitleTextBySpannable(childThreePicHolder.tvTitle, feed.getTitle(), false);
                 setSourceViewText(childThreePicHolder.tvSource, feed.getPname());
                 setCommentViewText(childThreePicHolder.tvCommentNum, feed.getComment() + "");
                 setNewsContentClick(childThreePicHolder.rlContent, feed);
                 newsTag(childThreePicHolder.tvType, feed.getRtype());
                 childThreePicHolder.ivDelete.setVisibility(View.INVISIBLE);
-            } else if (NewsFeed.BIG_PIC == type) {
+                setBottomLine(childThreePicHolder.ivBottomLine, getChildrenCount(groupPosition), childPosition);
+            } else if (currentType == NewsFeed.BIG_PIC) {
                 if (convertView == null) {
                     childBigPicHolder = new ChildBigPicHolder();
-                    convertView = LayoutInflater.from(mContext).inflate(R.layout.ll_news_big_pic2, null);
-                    childBigPicHolder.ivBigPicture = (ImageView) convertView.findViewById(R.id.title_img_View);
-                    childBigPicHolder.rlContent = (RelativeLayout) convertView.findViewById(R.id.news_content_relativeLayout);
-                    childBigPicHolder.tvTitle = (TextView) convertView.findViewById(R.id.title_textView);
-                    childBigPicHolder.tvSource = (TextViewExtend) convertView.findViewById(R.id.news_source_TextView);
-                    childBigPicHolder.tvCommentNum = (TextViewExtend) convertView.findViewById(R.id.comment_num_textView);
-                    childBigPicHolder.tvType = (TextViewExtend) convertView.findViewById(R.id.type_textView);
-                    childBigPicHolder.ivDelete = (ImageView) convertView.findViewById(R.id.delete_imageView);
+                    vBigPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_big_pic2, null);
+                    childBigPicHolder.ivBigPicture = (ImageView) vBigPic.findViewById(R.id.title_img_View);
+                    childBigPicHolder.rlContent = (RelativeLayout) vBigPic.findViewById(R.id.news_content_relativeLayout);
+                    childBigPicHolder.tvTitle = (TextView) vBigPic.findViewById(R.id.title_textView);
+                    childBigPicHolder.tvSource = (TextViewExtend) vBigPic.findViewById(R.id.news_source_TextView);
+                    childBigPicHolder.tvCommentNum = (TextViewExtend) vBigPic.findViewById(R.id.comment_num_textView);
+                    childBigPicHolder.tvType = (TextViewExtend) vBigPic.findViewById(R.id.type_textView);
+                    childBigPicHolder.ivDelete = (ImageView) vBigPic.findViewById(R.id.delete_imageView);
+                    vBigPic.setTag(childBigPicHolder);
+                    convertView = vBigPic;
                 } else {
                     childBigPicHolder = (ChildBigPicHolder) convertView.getTag();
                 }
@@ -404,6 +515,17 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 setNewsContentClick(childBigPicHolder.rlContent, feed);
                 newsTag(childBigPicHolder.tvType, feed.getRtype());
                 childBigPicHolder.ivDelete.setVisibility(View.INVISIBLE);
+            } else if (currentType == NewsFeed.EMPTY) {
+                if (convertView == null) {
+                    childNoPicHolderHolder = new ChildNoPicHolder();
+                    vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_empty, null);
+                    childNoPicHolderHolder.rlContent = (RelativeLayout) vEmpty.findViewById(R.id.news_content_relativeLayout);
+                    vEmpty.setTag(childNoPicHolderHolder);
+                    convertView = vEmpty;
+                } else {
+                    childNoPicHolderHolder = (ChildNoPicHolder) convertView.getTag();
+                }
+                childNoPicHolderHolder.rlContent.setVisibility(View.GONE);
             }
             return convertView;
         }
@@ -450,6 +572,15 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
                 }
                 tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+            }
+        }
+
+        private void setBottomLine(ImageView ivBottom, int count, int position) {
+            Log.i("tag", count + "====" + position);
+            if (count == position + 1) {//去掉最后一条的线
+                ivBottom.setVisibility(View.GONE);
+            } else {
+                ivBottom.setVisibility(View.VISIBLE);
             }
         }
 
@@ -559,10 +690,13 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             TextViewExtend tvType;
             RelativeLayout rlContent;
             ImageView ivDelete;
+            ImageView ivBottomLine;
         }
 
         class ChildOnePicHolder extends ChildNoPicHolder {
             ImageView ivPicture;
+            LinearLayout llSourceOnePic;
+            ImageView ivBottomLine;
         }
 
         class ChildThreePicHolder extends ChildNoPicHolder {

@@ -6,14 +6,14 @@
 
     <ImageView
         android:id="@+id/mTopicView"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/common_header_bg">
+        android:background="@color/bg_home_login_header">
 
         <TextView
             android:id="@+id/mTopicDetail"
@@ -24,14 +24,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:text="sdsfsfsdfsdfsfsdfsfsdfdsfsfsfsdfsfsfsdfddfddddddddd"
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font5" />
     </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="#f0f0f0" />
-
 </LinearLayout>

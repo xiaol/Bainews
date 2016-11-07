@@ -1254,11 +1254,13 @@ public class NewsDetailFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
         if (mNewsDetailHeaderView != null && mDetailWebView != null) {
-            mNewsDetailHeaderView.removeView(mDetailWebView);
+            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
         }
         mDetailWebView.removeAllViews();
         mDetailWebView.destroy();
+        mDetailWebView = null;
     }
 
 //    public interface ShowCareforLayout {

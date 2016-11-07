@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
 import com.news.yazhidao.utils.Logger;
@@ -32,13 +32,16 @@ public class PlayVideoAty extends BaseActivity {
     @Override
     protected void setContentView() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_play_video);
+        mPlayVideoWebView = new X5WebView(this);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        mPlayVideoWebView.setLayoutParams(layoutParams);
+        setContentView(mPlayVideoWebView);
     }
 
     @Override
     protected void initializeViews() {
         mVideoUrl = getIntent().getStringExtra(VideoJavaScriptBridge.KEY_VIDEO_URL);
-        mPlayVideoWebView = (X5WebView) findViewById(R.id.mPlayVideoWebView);
+//        mPlayVideoWebView = (X5WebView) findViewById(R.id.mPlayVideoWebView);
 //
         Logger.e("jigang","aty url =" + mVideoUrl);
         initWebView();
@@ -103,7 +106,11 @@ public class PlayVideoAty extends BaseActivity {
     }
     @Override
     public void onDestroy() {
-        mPlayVideoWebView.destroy();
+        if (mPlayVideoWebView != null) {
+            mPlayVideoWebView.removeAllViews();
+            mPlayVideoWebView.destroy();
+            mPlayVideoWebView = null;
+        }
         super.onDestroy();
     }
     @Override

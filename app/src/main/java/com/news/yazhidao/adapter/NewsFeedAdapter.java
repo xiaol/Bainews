@@ -173,6 +173,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     @Override
     public void convert(final CommonViewHolder holder, final NewsFeed feed, int position) {
+        //广告
+        upLoadAd(feed);
         switch (holder.getLayoutId()) {
             case R.layout.ll_news_item_no_pic:
             case R.layout.ll_news_item_one_pic:
@@ -295,28 +297,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
-                }
-                if (feed.getRtype() == 3) {
-                    String url = null;
-                    ArrayList<String> arrUrl = feed.getAdimpression();
-                    if (!TextUtil.isListEmpty(arrUrl)) {
-                        url = arrUrl.get(0);
-                    }
-                    //广告
-                    if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
-                        feed.setUpload(true);
-                        String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
-                        String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
-                        String[] realUrl = url.split("&lon");
-                        final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
-                        RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
-                        StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                            }
-                        }, null);
-                        requestQueue.add(request);
-                    }
                 }
                 break;
             case R.layout.ll_news_card:
@@ -491,6 +471,32 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
         }
     }
+
+    private void upLoadAd(NewsFeed feed) {
+        if (feed.getRtype() == 3) {
+            String url = null;
+            ArrayList<String> arrUrl = feed.getAdimpression();
+            if (!TextUtil.isListEmpty(arrUrl)) {
+                url = arrUrl.get(0);
+            }
+            //广告
+            if (!TextUtil.isEmptyString(url) && !feed.isUpload()) {
+                feed.setUpload(true);
+                String lat = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE);
+                String lon = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE);
+                String[] realUrl = url.split("&lon");
+                final String requestUrl = realUrl[0] + "&lon=" + lon + "&lat=" + lat;
+                RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                }, null);
+                requestQueue.add(request);
+            }
+        }
+    }
+
 
     private void setOpenAttentionPage(AttentionListEntity attention) {
         Intent attentionAty = new Intent(mContext, AttentionActivity.class);

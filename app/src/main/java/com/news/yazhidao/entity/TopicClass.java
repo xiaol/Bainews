@@ -29,7 +29,7 @@ public class TopicClass implements Serializable {
         this.newsFeed = newsFeed;
     }
 
-    class TopicClassBaseInfo implements Serializable {
+    public class TopicClassBaseInfo implements Serializable {
         private int id;
         private String name;
         private int topic;

@@ -181,4 +181,9 @@ public class HttpConstant {
      */
     public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
 
+    /**
+     *  手机信息上传
+     */
+    public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/rep/v2/p";
+
 }

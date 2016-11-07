@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -38,9 +40,12 @@ import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
+import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -147,10 +152,14 @@ public class SplashAty extends BaseActivity {
                     sb.append(p.getId() + " " + p.getName() + " " + p.getRank());
                 }
             }
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, location.getProvince());
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, location.getCity());
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY, location.getCountry());
             Logger.i("BaiduLocationApiDem", sb.toString());
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION, GsonUtil.serialized(location.getAddress()));
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE, location.getLatitude()+"");
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE, location.getLongitude()+"");
+            uploadInformation();
         }
     }
     @Override
@@ -411,5 +420,49 @@ public class SplashAty extends BaseActivity {
         feedRequest.setRequestHeader(header);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
+    }
+
+    //上传地理位置等信息
+    private void uploadInformation() {
+        if (SharedPreManager.getUser(this) != null) {
+            try {
+                List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
+                JSONArray array = new JSONArray();
+                for (int i = 0; i < packages.size(); i++) {
+                    PackageInfo packageInfo = packages.get(i);
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("an", packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
+                    jsonObject.put("ac", 1);
+                    jsonObject.put("ai", packageInfo.packageName);
+                    array.put(jsonObject);
+                }
+                /** 设置品牌 */
+                String brand = Build.BRAND;
+                /** 设置设备型号 */
+                String platform = Build.MODEL;
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("b", brand);
+                jsonObject.put("v", platform);
+                jsonObject.put("apps", array);
+                String uid = "";
+                if (SharedPreManager.getUser(this) != null) {
+                    uid = String.valueOf(SharedPreManager.getUser(this).getMuid());
+                }
+                String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
+                String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
+                String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
+                String d = TextUtil.getBase64(jsonObject.toString());
+                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
+                RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    }
+                }, null);
+                requestQueue.add(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

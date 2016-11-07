@@ -591,7 +591,9 @@ public class TextUtil {
         }
         Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
         if (url.contains("vid=")){
-            url = url.substring(0,url.indexOf("&"));
+            if (url.contains("&")) {
+                url = url.substring(0, url.indexOf("&"));
+            }
         }
         return url;
     }
