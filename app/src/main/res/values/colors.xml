@@ -263,4 +263,10 @@
     <color name="newscomment_noData" >#ffbcbcbc</color>
     <color name="newscomment_numColor" >#e94221</color>
 
+    <color name="news_type_color1" >#ff7d68</color>
+    <color name="news_type_color2" >#ceebff</color>
+    <color name="news_type_color3" >#ededed</color>
+    <color name="news_channel_tab_color1" >#787878</color>
+    <color name="news_channel_tab_color2" >#fb7a12</color>
+
 </resources>

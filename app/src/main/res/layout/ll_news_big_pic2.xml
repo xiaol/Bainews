@@ -1,43 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/new_color9">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_feed_list_select">
+
+    <include
+        android:id="@+id/layout_source"
+        layout="@layout/ll_news_item_source_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="12dp" />
+
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/title_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/layout_source"
+        android:layout_below="@+id/layout_source"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/new_color1"
-        android:textSize="@dimen/new_font2" />
+        android:textColor="#333333"
+        android:textSize="15sp" />
+
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/type_textView"
+        android:layout_width="28dp"
+        android:layout_height="14dp"
+        android:gravity="center"
+        android:background="@drawable/newstag_hotspot_shape"
+        android:layout_alignLeft="@+id/layout_source"
+        android:layout_below="@+id/layout_source"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="12dp"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/title_img_View"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_textView"
-        android:scaleType="centerCrop"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
-        <!--fresco:actualImageScaleType="centerCrop"-->
-        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
-        <!--fresco:placeholderImageScaleType="centerCrop"-->
-        <!--fresco:roundBottomLeft="false"-->
-        <!--fresco:roundBottomRight="false"-->
-        <!--fresco:roundTopLeft="false"-->
-        <!--fresco:roundTopRight="false"-->
-        <!--fresco:roundedCornerRadius="2dp"-->
-        <!--fresco:roundingBorderColor="@color/new_color4"-->
-        <!--fresco:roundingBorderWidth="1px"-->
-        <!--fresco:viewAspectRatio="1.7777" />-->
+        android:layout_marginRight="15dp"
+        android:scaleType="centerCrop" />
+    <!--fresco:actualImageScaleType="centerCrop"-->
+    <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+    <!--fresco:placeholderImageScaleType="centerCrop"-->
+    <!--fresco:roundBottomLeft="false"-->
+    <!--fresco:roundBottomRight="false"-->
+    <!--fresco:roundTopLeft="false"-->
+    <!--fresco:roundTopRight="false"-->
+    <!--fresco:roundedCornerRadius="2dp"-->
+    <!--fresco:roundingBorderColor="@color/new_color4"-->
+    <!--fresco:roundingBorderWidth="1px"-->
+    <!--fresco:viewAspectRatio="1.7777" />-->
 
     <include
         android:id="@+id/source_content_linearLayout"
@@ -46,14 +69,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_img_View"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginRight="3dp" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="4dp"
         android:layout_below="@+id/source_content_linearLayout"
-        android:layout_marginTop="2dp"
-        android:background="@drawable/list_divider" />
+        android:background="#f8f8f8" />
+    <!--android:background="@drawable/list_divider"-->
 </RelativeLayout>

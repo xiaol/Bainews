@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 
 public class ChannelTabStrip extends HorizontalScrollView {
@@ -126,9 +127,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
                 TextView child = (TextView) tab.findViewById(R.id.category_text);
                 if (i == position) {
-                    child.setTextColor(getResources().getColor(R.color.new_color2));
+                    child.setTextColor(getResources().getColor(R.color.news_channel_tab_color2));
                 } else {
-                    child.setTextColor(getResources().getColor(R.color.new_color1));
+                    child.setTextColor(getResources().getColor(R.color.news_channel_tab_color1));
                 }
             }
         }
@@ -174,14 +175,18 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
         rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
                 ((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
-        sliderRect.set(((int) left) + getPaddingLeft(), getHeight(),
-                ((int) width) + getPaddingLeft(), getHeight());
+        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,8), getHeight() - DensityUtil.dip2px(mContext,2),
+                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,6), getHeight());
 //		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
     }
 
     // 计算滚动范围
     private int getScrollRange() {
         return getChildCount() > 0 ? Math.max(0, getChildAt(0).getWidth() - getWidth() + getPaddingLeft() + getPaddingRight()) : 0;
+    }
+
+    public void scrollToFirstItem(){
+        scrollTo(0,0);
     }
 
     // CategoryTabStrip与ViewPager联动逻辑
@@ -215,10 +220,10 @@ public class ChannelTabStrip extends HorizontalScrollView {
 
         // 绘制高亮背景矩形红框
         calculateIndicatorRect(indicatorRect);
-        if (indicator != null) {
-            indicator.setBounds(indicatorRect);
-            indicator.draw(canvas);
-        }
+//        if (indicator != null) {
+//            indicator.setBounds(indicatorRect);
+//            indicator.draw(canvas);
+//        }
         if (sliderDrawable != null) {
             sliderDrawable.setBounds(sliderRect);
             sliderDrawable.draw(canvas);
@@ -307,9 +312,9 @@ public class ChannelTabStrip extends HorizontalScrollView {
                 ViewGroup tab = (ViewGroup) tabsContainer.getChildAt(i);
                 TextView child = (TextView) tab.findViewById(R.id.category_text);
                 if (i == position) {
-                    child.setTextColor(getResources().getColor(R.color.new_color2));
+                    child.setTextColor(getResources().getColor(R.color.news_channel_tab_color2));
                 } else {
-                    child.setTextColor(getResources().getColor(R.color.new_color1));
+                    child.setTextColor(getResources().getColor(R.color.news_channel_tab_color1));
                 }
             }
         }

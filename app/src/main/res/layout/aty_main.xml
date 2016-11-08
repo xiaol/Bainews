@@ -19,7 +19,7 @@
             android:id="@+id/mUserCenter"
             android:layout_width="45dp"
             android:layout_height="48dp"
-            android:padding="10dp"
+            android:scaleType="centerInside"
             android:layout_centerVertical="true"/>
             <!--fresco:placeholderImage="@drawable/btn_user_center"-->
             <!--fresco:roundAsCircle="true"-->
@@ -43,6 +43,7 @@
             android:layout_width="46dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
+            android:scaleType="centerInside"
             android:padding="10dp"
             android:src="@drawable/btn_channel_add"
             />
@@ -50,9 +51,9 @@
     <ImageView
         android:id="@+id/mDividingLine"
         android:layout_below="@id/mChannelLayout"
-        android:background="@color/new_color2"
+        android:background="#e6e6e6"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1px"/>
     <TextView
         android:id="@+id/mNetWorkBar"
         android:layout_width="match_parent"

@@ -452,6 +452,8 @@ public class NewsDetailFgt extends BaseFragment {
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
             Glide.with(getActivity()).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
+        }else {
+            Glide.with(getActivity()).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
             tv_attention_title.setText(name);
