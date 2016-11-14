@@ -17,8 +17,11 @@
 
         <ImageView
             android:id="@+id/mUserCenter"
-            android:layout_width="45dp"
+            android:layout_width="40dp"
             android:layout_height="48dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:scaleType="centerInside"
             android:layout_centerVertical="true"/>
             <!--fresco:placeholderImage="@drawable/btn_user_center"-->

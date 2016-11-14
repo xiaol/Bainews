@@ -11,11 +11,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ncc.sdk.offerwall.NccOfferWallAPI;
-import com.ncc.sdk.offerwall.NccOfferWallListener;
-import com.ncc.sdk.offerwall.entity.Point;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.database.NewsFeedDao;
@@ -64,35 +60,35 @@ public class SettingAty extends Activity implements View.OnClickListener {
 //    @Override
     protected void setContentView() {
         setContentView(R.layout.aty_setting);
-        NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
-        NccOfferWallAPI.init(this);
-        NccOfferWallAPI
-                .setOnCloseListener(new NccOfferWallListener<Void>() {
-                    @Override
-                    public void onSucceed(Void result) {
-
-                        Logger.e("aaa","应用墙关闭了！");
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                    }
-                });
-        NccOfferWallAPI
-                .setOnActivatedListener(new NccOfferWallListener<Point>() {
-                    @Override
-                    public void onSucceed(Point result) {
-                        Toast.makeText(
-                                SettingAty.this,
-                                "应用激活了：balance=" + result.balance + " total="
-                                        + result.total + " used=" + result.used,
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                    }
-                });
+//        NccOfferWallAPI.setPlatformId("4723e8b862a0ad34598189a35cf713b8");
+//        NccOfferWallAPI.init(this);
+//        NccOfferWallAPI
+//                .setOnCloseListener(new NccOfferWallListener<Void>() {
+//                    @Override
+//                    public void onSucceed(Void result) {
+//
+//                        Logger.e("aaa","应用墙关闭了！");
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode, String errorMsg) {
+//                    }
+//                });
+//        NccOfferWallAPI
+//                .setOnActivatedListener(new NccOfferWallListener<Point>() {
+//                    @Override
+//                    public void onSucceed(Point result) {
+//                        Toast.makeText(
+//                                SettingAty.this,
+//                                "应用激活了：balance=" + result.balance + " total="
+//                                        + result.total + " used=" + result.used,
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode, String errorMsg) {
+//                    }
+//                });
     }
 
 //    @Override
@@ -270,24 +266,24 @@ public class SettingAty extends Activity implements View.OnClickListener {
                 }
                 break;
             case R.id.mSettingOfferWall:
-                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
-                    @Override
-                    public void onSucceed(Void result) {
-                        Logger.e("aaa","打开应用墙成功！");
-                    }
-
-                    @Override
-                    public void onError(int errorCode, String errorMsg) {
-                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
-                                + errorMsg);
-                    }
-                });
+//                NccOfferWallAPI.open(this, new NccOfferWallListener<Void>() {
+//                    @Override
+//                    public void onSucceed(Void result) {
+//                        Logger.e("aaa","打开应用墙成功！");
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode, String errorMsg) {
+//                        Logger.e("aaa","打开应用墙失败 --> " + errorCode + " --> "
+//                                + errorMsg);
+//                    }
+//                });
                 break;
         }
     }
     @Override
     protected void onDestroy() {
-        NccOfferWallAPI.destroy(this);
+//        NccOfferWallAPI.destroy(this);
         super.onDestroy();
     }
 

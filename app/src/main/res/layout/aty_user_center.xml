@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/new_color9"
-    >
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_color9">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:background="@color/common_header_bg"
-        >
+        android:background="@color/common_header_bg">
 
         <TextView
             android:id="@+id/mCenterCancel"
             android:layout_width="66dp"
             android:layout_height="48dp"
-            android:paddingLeft="2dp"
             android:gravity="center"
+            android:paddingLeft="2dp"
             android:text="关闭"
             android:textColor="@color/new_color1"
-            android:textSize="@dimen/new_font2"
-            />
+            android:textSize="@dimen/new_font2" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,36 +26,33 @@
             android:layout_centerInParent="true"
             android:text="我"
             android:textColor="@color/new_color7"
-            android:textSize="@dimen/font1"
-            />
+            android:textSize="@dimen/font1" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/new_color5"
-            />
+            android:background="@color/new_color5" />
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mCenterUserInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="108dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="108dp"
         android:gravity="center_horizontal"
-        >
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/mCenterUserIcon"
             android:layout_width="70dp"
-            android:layout_height="70dp"/>
-            <!--fresco:placeholderImage="@drawable/ic_user_comment_default"-->
-            <!--fresco:roundAsCircle="true"-->
-            <!--fresco:roundingBorderColor="@color/white"-->
-            <!--fresco:roundingBorderWidth="5dp"-->
-            <!--/>-->
+            android:layout_height="70dp" />
+        <!--fresco:placeholderImage="@drawable/ic_user_comment_default"-->
+        <!--fresco:roundAsCircle="true"-->
+        <!--fresco:roundingBorderColor="@color/white"-->
+        <!--fresco:roundingBorderWidth="5dp"-->
+        <!--/>-->
 
         <TextView
             android:id="@+id/mCenterUserName"
@@ -67,178 +61,176 @@
             android:layout_marginTop="10dp"
             android:text="@string/app_name"
             android:textColor="@color/new_color1"
-            android:textSize="@dimen/new_font2"
-            />
+            android:textSize="@dimen/new_font2" />
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/mCenterComment"
-        android:layout_below="@id/mCenterUserInfo"
-        android:layout_marginTop="79dp"
         android:layout_width="match_parent"
         android:layout_height="48.56dp"
-        android:background="@color/new_color12"
-        >
+        android:layout_below="@id/mCenterUserInfo"
+        android:layout_marginTop="79dp"
+        android:background="@color/new_color12">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
-            android:background="@color/new_color5"
-            />
+            android:background="@color/new_color5" />
+
         <ImageView
             android:id="@+id/mCenterCommentIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_comment"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="15dp"
             android:paddingTop="1dp"
-            />
+            android:src="@drawable/ic_user_center_comment" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/mCenterCommentIcon"
-            android:textSize="@dimen/font2"
-            android:textColor="@color/new_color1"
             android:text="我的评论"
-            />
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            />
+            android:src="@drawable/ic_user_center_right_arrow" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/mCenterFavorite"
-        android:layout_below="@id/mCenterComment"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:background="@color/new_color12"
-        >
+        android:layout_below="@id/mCenterComment"
+        android:background="@color/new_color12">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/news_list_table_devider"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
-            />
+            android:background="@color/news_list_table_devider" />
+
         <ImageView
             android:id="@+id/mCenterFavoriteIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_favorite"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="12dp"
-            />
+            android:src="@drawable/ic_user_center_favorite" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/mCenterFavoriteIcon"
-            android:textSize="@dimen/font2"
-            android:textColor="@color/new_color1"
             android:text="我的收藏"
-            />
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            />
+            android:src="@drawable/ic_user_center_right_arrow" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/mCenterMessage"
-        android:layout_below="@id/mCenterFavorite"
         android:layout_width="match_parent"
         android:layout_height="49dp"
-        android:background="@color/new_color12"
-        >
+        android:layout_below="@id/mCenterFavorite"
+        android:background="@color/new_color12">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/news_list_table_devider"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
-            />
+            android:background="@color/news_list_table_devider" />
+
         <ImageView
             android:id="@+id/mCenterMessageIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_message"
             android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="15dp"
-            />
+            android:src="@drawable/ic_user_center_message" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/mCenterMessageIcon"
-            android:textSize="@dimen/font2"
             android:drawablePadding="12dp"
-            android:textColor="@color/new_color1"
             android:text="我的消息"
-            />
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font2" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_user_center_right_arrow"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="18dp"
-            />
+            android:src="@drawable/ic_user_center_right_arrow" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.56dp"
-            android:background="@color/new_color5"
             android:layout_alignParentBottom="true"
-            />
+            android:background="@color/new_color5" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="86dp"
-        android:layout_marginRight="86dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="26dp"
-        >
+        android:layout_marginLeft="86dp"
+        android:layout_marginRight="86dp"
+        android:orientation="horizontal">
+
         <TextView
             android:id="@+id/mCenterDigger"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/font3"
-            android:drawableTop="@drawable/ic_user_center_digger"
+            android:layout_weight="1"
             android:drawablePadding="10dp"
+            android:drawableTop="@drawable/ic_user_center_digger"
+            android:gravity="center"
             android:padding="12dp"
             android:text="一订"
-            android:gravity="center"
-            />
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3" />
+
         <TextView
             android:id="@+id/mCenterSetting"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:textColor="@color/new_color1"
-            android:textSize="@dimen/font3"
-            android:drawableTop="@drawable/btn_setting"
+            android:layout_weight="1"
             android:drawablePadding="10dp"
-            android:padding="12dp"
+            android:drawableTop="@drawable/btn_setting"
             android:gravity="center"
+            android:padding="12dp"
             android:text="设置"
-            />
+            android:textColor="@color/new_color1"
+            android:textSize="@dimen/font3" />
     </LinearLayout>
 </RelativeLayout>

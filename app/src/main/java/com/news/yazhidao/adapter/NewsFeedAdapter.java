@@ -103,6 +103,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_item_time_line;
                     case 4://奇点号Item
                         return R.layout.ll_news_search_item;
+                    case 5:
+                        return R.layout.ll_news_item_topic;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -114,7 +116,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 7;
+                return 8;
             }
 
             @Override
@@ -132,6 +134,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.TIME_LINE;
                     case 4://奇点号Item
                         return NewsFeed.SERRCH_ITEM;
+                    case 5:
+                        return NewsFeed.TOPIC;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -332,14 +336,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
-                int with = mScreenWidth - DensityUtil.dip2px(mContext, 30);
+                int width = mScreenWidth - DensityUtil.dip2px(mContext, 30);
                 int num = feed.getStyle() - 11;
                 ImageView ivBig = holder.getView(R.id.title_img_View);
                 RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) ivBig.getLayoutParams();
-                lpBig.width = with;
-                lpBig.height = (int) (with * 185 / 330.0f);
+                lpBig.width = width;
+                lpBig.height = (int) (width * 185 / 330.0f);
                 ivBig.setLayoutParams(lpBig);
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), with, (int) (with * 9 / 16.0f), feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), width, (int) (width * 9 / 16.0f), feed.getRtype());
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false, feed.getRtype());
                 } else {
@@ -354,6 +358,22 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                break;
+            case R.layout.ll_news_item_topic:
+                ImageView ivTopic = holder.getView(R.id.title_img_View);
+                int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 50);
+                RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
+                lpTopic.width = ivWidth;
+                lpTopic.height = (int) (ivWidth * 91 / 310.0f);
+                ivTopic.setLayoutParams(lpTopic);
+                if (isFavorite) {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false, feed.getRtype());
+                } else {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead(), feed.getRtype());
+                }
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {

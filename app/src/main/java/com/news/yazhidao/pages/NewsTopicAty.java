@@ -60,7 +60,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private TextView mDetailLeftBack,mDetailRightMore;
+    private TextView mTopicLeftBack,mTopicRightMore;
     private ExpandableListView mlvSpecialNewsFeed;
     //    private ExpandableListView mExpandableListView;
     private boolean isListRefresh;
@@ -130,15 +130,15 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                 mHomeRetry.setVisibility(View.GONE);
             }
         });
-        mDetailLeftBack = (TextView) findViewById(R.id.mDetailLeftBack);
-        mDetailLeftBack.setOnClickListener(new View.OnClickListener() {
+        mTopicLeftBack = (TextView) findViewById(R.id.mTopicLeftBack);
+        mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-        mDetailRightMore = (TextView) findViewById(R.id.mDetailRightMore);
-        mDetailRightMore.setOnClickListener(new View.OnClickListener() {
+        mTopicRightMore = (TextView) findViewById(R.id.mTopicRightMore);
+        mTopicRightMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                SharePopupWindow  mSharePopupWindow = new SharePopupWindow(this, this);

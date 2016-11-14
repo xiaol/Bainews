@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_content_relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f8f8f8">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:background="@drawable/bg_feed_list_select">
+
+        <ImageView
+            android:id="@+id/news_item_image_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/news_item_image_type" />
+
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/title_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/news_item_image_type"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="#333333"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/title_img_View"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_textView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop" />
+        <!--fresco:actualImageScaleType="centerCrop"-->
+        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+        <!--fresco:placeholderImageScaleType="centerCrop"-->
+        <!--fresco:roundBottomLeft="false"-->
+        <!--fresco:roundBottomRight="false"-->
+        <!--fresco:roundTopLeft="false"-->
+        <!--fresco:roundTopRight="false"-->
+        <!--fresco:roundedCornerRadius="2dp"-->
+        <!--fresco:roundingBorderColor="@color/new_color4"-->
+        <!--fresco:roundingBorderWidth="1px" />-->
+
+        <include
+            android:id="@+id/source_content_linearLayout"
+            layout="@layout/ll_news_item_source"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title_img_View"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp" />
+
+        <ImageView
+            android:id="@+id/checkFavoriteDelete_image"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/line_bottom_imageView"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/favorite_surface"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:scaleType="center"
+            android:src="@drawable/favorite_uncheck" />
+    </RelativeLayout>
+</RelativeLayout>

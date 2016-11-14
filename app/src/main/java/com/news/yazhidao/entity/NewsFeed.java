@@ -21,7 +21,7 @@ public class NewsFeed implements Serializable {
     public static final int SERRCH_ITEM = 4;
     public static final int BIG_PIC = 5;
     public static final int EMPTY = 6;
-
+    public static final int TOPIC = 7;
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
     public static final String COLUMN_UPDATE_TIME = "ptime";
