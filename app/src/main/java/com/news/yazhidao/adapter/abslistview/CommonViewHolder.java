@@ -161,24 +161,25 @@ public class CommonViewHolder {
 
     /**
      * 设置无图的方法
+     *
      * @param draweeView
      * @param strImg
      * @param width
      * @param height
      */
-    public void setIsShowImagesSimpleDraweeViewURI(int draweeView, String strImg, int width, int height,int rType) {
+    public void setIsShowImagesSimpleDraweeViewURI(int draweeView, String strImg, int width, int height, int rType) {
         ImageView imageView = getView(draweeView);
         if (!TextUtil.isEmptyString(strImg)) {
-            if(SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)){
+            if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
                 imageView.setImageResource(R.drawable.bg_load_default_small);
 //                imageView.setImageURI(Uri.parse("res://com.news.yazhidao/" + R.drawable.bg_load_default_small));
 //                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
-            }else{
+            } else {
                 Uri uri;
-                if(rType != 3){
+                if (rType != 3 && rType != 4) {
                     String img = strImg.replace("bdp-", "pro-");
                     uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
-                }else{
+                } else {
                     uri = Uri.parse(strImg);
                 }
                 Glide.with(mContext).load(uri).centerCrop().placeholder(R.drawable.bg_load_default_small).into(imageView);

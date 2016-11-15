@@ -343,7 +343,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             final GroupHolder groupHolder;
             if (convertView == null || convertView.getTag().getClass() != GroupHolder.class) {
                 groupHolder = new GroupHolder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_special_news_group, null, false);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.item_news_topic_group, null, false);
                 groupHolder.ivColor = (ImageView) convertView.findViewById(R.id.mGroupColor);
                 groupHolder.tvTitle = (TextView) convertView.findViewById(R.id.mGroupTitle);
                 convertView.setTag(groupHolder);
@@ -374,7 +374,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             if (currentType == NewsFeed.NO_PIC) {
                 if (convertView == null) {
                     childNoPicHolderHolder = new ChildNoPicHolder();
-                    vNoPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_no_pic, null);
+                    vNoPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_item_no_pic, null);
                     childNoPicHolderHolder.rlContent = (RelativeLayout) vNoPic.findViewById(R.id.news_content_relativeLayout);
                     childNoPicHolderHolder.tvTitle = (TextView) vNoPic.findViewById(R.id.title_textView);
                     childNoPicHolderHolder.tvSource = (TextViewExtend) vNoPic.findViewById(R.id.news_source_TextView);
@@ -398,7 +398,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else if (currentType == NewsFeed.ONE_AND_TWO_PIC) {
                 if (convertView == null) {
                     childOnePicHolder = new ChildOnePicHolder();
-                    vOnePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_one_pic, null);
+                    vOnePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_item_one_pic, null);
                     childOnePicHolder.ivPicture = (ImageView) vOnePic.findViewById(R.id.title_img_View);
                     childOnePicHolder.rlContent = (RelativeLayout) vOnePic.findViewById(R.id.news_content_relativeLayout);
                     childOnePicHolder.tvTitle = (TextView) vOnePic.findViewById(R.id.title_textView);
@@ -454,7 +454,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else if (currentType == NewsFeed.THREE_PIC) {
                 if (convertView == null) {
                     childThreePicHolder = new ChildThreePicHolder();
-                    vThreePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_card, null);
+                    vThreePic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_card, null);
                     childThreePicHolder.ivPicture1 = (ImageView) vThreePic.findViewById(R.id.image_card1);
                     childThreePicHolder.ivPicture2 = (ImageView) vThreePic.findViewById(R.id.image_card2);
                     childThreePicHolder.ivPicture3 = (ImageView) vThreePic.findViewById(R.id.image_card3);
@@ -488,7 +488,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else if (currentType == NewsFeed.BIG_PIC) {
                 if (convertView == null) {
                     childBigPicHolder = new ChildBigPicHolder();
-                    vBigPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_big_pic2, null);
+                    vBigPic = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_big_pic2, null);
                     childBigPicHolder.ivBigPicture = (ImageView) vBigPic.findViewById(R.id.title_img_View);
                     childBigPicHolder.rlContent = (RelativeLayout) vBigPic.findViewById(R.id.news_content_relativeLayout);
                     childBigPicHolder.tvTitle = (TextView) vBigPic.findViewById(R.id.title_textView);
@@ -518,7 +518,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             } else if (currentType == NewsFeed.EMPTY) {
                 if (convertView == null) {
                     childNoPicHolderHolder = new ChildNoPicHolder();
-                    vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_item_empty, null);
+                    vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_item_empty, null);
                     childNoPicHolderHolder.rlContent = (RelativeLayout) vEmpty.findViewById(R.id.news_content_relativeLayout);
                     vEmpty.setTag(childNoPicHolderHolder);
                     convertView = vEmpty;

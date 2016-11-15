@@ -1,15 +1,7 @@
 package com.news.yazhidao.widget;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.TextAppearanceSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,23 +51,22 @@ public class NewsTopicHeaderView extends RelativeLayout {
             Glide.with(mContext).load(Uri.parse(mTopicBaseInfo.getCover())).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
         }
         String description = mTopicBaseInfo.getDescription();
-        description = "即是正常的，还有Typeface.BOLD(粗体) T";
         if (!TextUtil.isEmptyString(description)) {
-            String str="这是设置TextView部分文字背景颜色和前景颜色的demo!";
-            int bstart=str.indexOf("背景");
-            int bend=bstart+"背景".length();
-            int fstart=str.indexOf("前景");
-            int fend=fstart+"前景".length();
-            SpannableStringBuilder style=new SpannableStringBuilder(str);
-            style.setSpan(new BackgroundColorSpan(Color.RED),bstart,bend, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            style.setSpan(new ForegroundColorSpan(Color.RED),fstart,fend,Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-            ColorStateList redColors = ColorStateList.valueOf(0xffff0000);
-            SpannableStringBuilder spanBuilder = new SpannableStringBuilder(description);
-//style 为0 即是正常的，还有Typeface.BOLD(粗体) Typeface.ITALIC(斜体)等
-//size  为0 即采用原始的正常的 size大小
-            spanBuilder.setSpan(new TextAppearanceSpan(null, 0, 60, redColors, null), 0, 3, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-            mTopicDetail.setText(spanBuilder);
+//            String str="这是设置TextView部分文字背景颜色和前景颜色的demo!";
+//            int bstart=str.indexOf("背景");
+//            int bend=bstart+"背景".length();
+//            int fstart=str.indexOf("前景");
+//            int fend=fstart+"前景".length();
+//            SpannableStringBuilder style=new SpannableStringBuilder(str);
+//            style.setSpan(new BackgroundColorSpan(Color.RED),bstart,bend, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            style.setSpan(new ForegroundColorSpan(Color.RED),fstart,fend,Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+//
+//            ColorStateList redColors = ColorStateList.valueOf(0xffff0000);
+//            SpannableStringBuilder spanBuilder = new SpannableStringBuilder(description);
+////style 为0 即是正常的，还有Typeface.BOLD(粗体) Typeface.ITALIC(斜体)等
+////size  为0 即采用原始的正常的 size大小
+//            spanBuilder.setSpan(new TextAppearanceSpan(null, 0, 60, redColors, null), 0, 3, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            mTopicDetail.setText(description);
         }else {
             mTopicDetail.setVisibility(GONE);
         }

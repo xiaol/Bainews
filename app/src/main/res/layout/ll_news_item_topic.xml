@@ -60,17 +60,5 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="8dp" />
 
-        <ImageView
-            android:id="@+id/checkFavoriteDelete_image"
-            android:layout_width="55dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/line_bottom_imageView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/favorite_surface"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:scaleType="center"
-            android:src="@drawable/favorite_uncheck" />
     </RelativeLayout>
 </RelativeLayout>

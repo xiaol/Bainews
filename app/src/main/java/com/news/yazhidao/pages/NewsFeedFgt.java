@@ -228,7 +228,7 @@ public class NewsFeedFgt extends Fragment {
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
-                    if (item != null && newsId == item.getNid() && !item.isRead()) {
+                    if (item != null && newsId == item.getNid() && !item.isRead() && item.getRtype() != 4) {
                         item.setRead(true);
                         mNewsFeedDao.update(item);
                         break;

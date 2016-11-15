@@ -51,12 +51,12 @@
         android:id="@+id/type_textView"
         android:layout_width="28dp"
         android:layout_height="14dp"
-        android:gravity="center"
-        android:background="@drawable/newstag_hotspot_shape"
         android:layout_alignLeft="@+id/layout_source"
         android:layout_below="@+id/layout_source"
         android:layout_marginRight="3dp"
         android:layout_marginTop="12dp"
+        android:background="@drawable/newstag_hotspot_shape"
+        android:gravity="center"
         android:textColor="#ffffff"
         android:textSize="10sp"
         android:visibility="gone" />
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_textView"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="3dp"  />
+        android:layout_marginRight="3dp" />
 
     <ImageView
         android:id="@+id/checkFavoriteDelete_image"

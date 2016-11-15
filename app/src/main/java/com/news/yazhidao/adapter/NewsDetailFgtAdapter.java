@@ -93,9 +93,8 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         }
         holder.setTextViewText(R.id.attention_MonthandDay,
                 (month < 10 ? "0" : "") + month + "/" + (day < 10 ? "0" : "") + day);
-
-
-        holder.setRelatedTitleTextViewExtendTextandTextSice(R.id.attention_Title, relatedItemEntity.getTitle());
+        String strTitle =  relatedItemEntity.getTitle().replace("<font color='#0091fa' >","").replace("</font>","");
+        holder.setRelatedTitleTextViewExtendTextandTextSice(R.id.attention_Title, strTitle);
 
 
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());

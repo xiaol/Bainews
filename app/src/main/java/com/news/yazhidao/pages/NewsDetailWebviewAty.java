@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
@@ -106,7 +105,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
                 ToastUtil.toastShort("点击了分享");
                 break;
             case R.id.mLeftBack:
-                finish();
+                webViewBack();
                 break;
             default:
                 break;
@@ -219,20 +218,6 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (mNewsSourcesiteWebview.canGoBack()) {
-//                mNewsSourcesiteWebview.goBack();
-//                return true;
-//            } else {
-//                finish();
-//            }
-//        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mNewsSourcesiteWebview != null) {
@@ -240,6 +225,19 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 //            mNewsSourcesiteWebview.removeAllViews();
             mNewsSourcesiteWebview.destroy();
             mNewsSourcesiteWebview = null;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        webViewBack();
+    }
+
+    public void webViewBack() {
+        if (mNewsSourcesiteWebview.canGoBack()) {
+            mNewsSourcesiteWebview.goBack();
+        } else {
+            finish();
         }
     }
 }

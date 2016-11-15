@@ -366,6 +366,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 lpTopic.width = ivWidth;
                 lpTopic.height = (int) (ivWidth * 91 / 310.0f);
                 ivTopic.setLayoutParams(lpTopic);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
                 if (isFavorite) {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), false, feed.getRtype());
                 } else {
@@ -596,7 +597,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
-                if (type != 1 && type != 2 && type != 3 && type != 4) {
+                if (type != 1 && type != 2 && type != 3) {
                     tvTitle.setText(strTitle);
                 } else {
                     tvTitle.setText("        " + strTitle);

@@ -102,7 +102,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      */
     private View mDetailComment, mDetailHeader, mNewsDetailLoaddingWrapper;
     private ImageView mDetailShare;
-    private TextView mDetailLeftBack,mDetailRightMore;
+    private TextView mDetailLeftBack, mDetailRightMore;
     private ImageView mNewsLoadingImg;
     private AnimationDrawable mAniNewsLoading;
     private View mDetailView;
@@ -119,22 +119,23 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     public TextView mDetailCommentNum;
     private View mImageWallWrapper;
     private ViewPager mImageWallVPager;
-    private TextView mImageWallDesc,carefor_Text;
+    private TextView mImageWallDesc, carefor_Text;
     private View mDetailBottomBanner;
-    public ImageView mDetailCommentPic,mDetailFavorite,carefor_Image;
+    public ImageView mDetailCommentPic, mDetailFavorite, carefor_Image;
     //    private WebView mDetailWebView;
     public SwipeBackViewpager mNewsDetailViewPager;
     private RefreshPageBroReceiber mRefreshReceiber;
     private UserCommentDialog mCommentDialog;
     private NewsFeed mNewsFeed;
-    private String mSource,mImageUrl;
+    private String mSource, mImageUrl;
     private String mUrl;
     private NewsDetailCommentDao newsDetailCommentDao;
 
     private LinearLayout careforLayout;
-    boolean isFavorite,isCareFor;
+    boolean isFavorite, isCareFor;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
+
     /**
      * 通知新闻详情页和评论fragment刷新评论
      */
@@ -165,7 +166,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             } catch (Exception e) {
 
             }
-            if(mDetailCommentNum.getVisibility() == View.GONE&&!isCommentPage){
+            if (mDetailCommentNum.getVisibility() == View.GONE && !isCommentPage) {
                 mDetailCommentNum.setVisibility(View.VISIBLE);
             }
             mDetailCommentNum.setText(number + 1 + "");
@@ -194,6 +195,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
     }
+
     @Override
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsCommentFgt.KEY_NEWS_FEED);
@@ -269,12 +271,12 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
+        upLoadLog();
         super.onDestroy();
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
         }
-        upLoadLog();
     }
 
     /**
@@ -284,9 +286,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
      */
     private void upLoadLog() {
         Log.e("aaa", "开始上传日志！");
-        if (mNewsFeed == null && mUserId != null && mUserId.length() != 0) {
+        if (mNewsFeed == null || SharedPreManager.getUser(this) == null) {
             return;
         }
+        User user = SharedPreManager.getUser(this);
         final UploadLogDataEntity uploadLogDataEntity = new UploadLogDataEntity();
         uploadLogDataEntity.setN(mNewsFeed.getNid() + "");
         uploadLogDataEntity.setC(mNewsFeed.getChannel() + "");
@@ -294,12 +297,12 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         uploadLogDataEntity.setS(lastTime / 1000 + "");
         uploadLogDataEntity.setF("0");
         final String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-        String  LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
+        String LogData = SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL);//;
         LocationEntity locationEntity = null;
         Gson gson = new Gson();
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-        if(!TextUtil.isEmptyString(LogData)){
-            SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+        if (!TextUtil.isEmptyString(LogData)) {
+            SharedPreManager.upLoadLogSave(user.getMuid()+"", CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         }
 
 //        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
@@ -310,7 +313,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String userid = null, p = null, t = null, i = null;
         try {
-            userid = URLEncoder.encode(mUserId + "", "utf-8");
+            userid = URLEncoder.encode(user.getMuid()+"", "utf-8");
             if (locationEntity != null) {
                 if (locationEntity.getProvince() != null)
                     p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
@@ -324,7 +327,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
 
         String url = HttpConstant.URL_UPLOAD_LOG + "u=" + userid + "&p=" + p +
-                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData)?gson.toJson(uploadLogDataEntity):SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
+                "&t=" + t + "&i=" + i + "&d=" + TextUtil.getBase64(TextUtil.isEmptyString(LogData) ? gson.toJson(uploadLogDataEntity) : SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
         Logger.d("aaa", "url===" + url);
 
         UpLoadLogRequest<String> request = new UpLoadLogRequest<String>(Request.Method.GET, String.class, url, new Response.Listener<String>() {
@@ -343,6 +346,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     }
 
     FragmentPagerAdapter pagerAdapter;
+
     /**
      * 显示新闻详情和评论
      *
@@ -351,14 +355,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     private void displayDetailAndComment(final NewsDetail result) {
         /** 判断是否收藏 */
         isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-        if(result.getColflag() == 1){
-            if(!isFavorite){
+        if (result.getColflag() == 1) {
+            if (!isFavorite) {
                 SharedPreManager.myFavoriteSaveList(mNewsFeed);
             }
             isFavorite = true;
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-        }else {
-            if(isFavorite){
+        } else {
+            if (isFavorite) {
                 SharedPreManager.myFavoritRemoveItem(mUrl);
             }
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
@@ -418,7 +422,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
         try {
-            Logger.e("aaa","刚刚进入============"+SharedPreManager.myFavoriteGetList().toString());
+            Logger.e("aaa", "刚刚进入============" + SharedPreManager.myFavoriteGetList().toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -430,7 +434,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
 //        mNewsFeed = getDate();
         if (mNewsFeed != null) {
-            mUrl = mNewsFeed.getNid()+"";
+            mUrl = mNewsFeed.getNid() + "";
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
@@ -440,8 +444,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         path.append("nid=");
         path.append(mUrl);
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
-        if (user != null&& !user.isVisitor()) {
-            mUserId = user.getMuid()+"";
+        if (user != null && !user.isVisitor()) {
+            mUserId = user.getMuid() + "";
             mPlatformType = user.getPlatformType();
             path.append("&uid=");
             path.append(mUserId);
@@ -465,11 +469,11 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        if(mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE){
+                        if (mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE) {
                             mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                         }
 
-                        if(bgLayout.getVisibility() == View.VISIBLE){
+                        if (bgLayout.getVisibility() == View.VISIBLE) {
                             bgLayout.setVisibility(View.GONE);
                         }
                     }
@@ -495,14 +499,14 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
-                if(mNewsDetailLoaddingWrapper.getVisibility() == View.GONE){
+                if (mNewsDetailLoaddingWrapper.getVisibility() == View.GONE) {
                     mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
                 }
-                if(mNewsLoadingImg.getVisibility() == View.GONE){
+                if (mNewsLoadingImg.getVisibility() == View.GONE) {
                     mNewsLoadingImg.setVisibility(View.VISIBLE);
                 }
 
-                if(bgLayout.getVisibility() == View.VISIBLE){
+                if (bgLayout.getVisibility() == View.VISIBLE) {
                     bgLayout.setVisibility(View.GONE);
                 }
             }
@@ -574,7 +578,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mNewsDetailViewPager.setCurrentItem(0, true);
                     mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
-                    return ;
+                    return;
                 }
                 onBackPressed();
                 break;
@@ -594,7 +598,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
-                MobclickAgent.onEvent(this,"qidian_user_detail_onclick_more");
+                MobclickAgent.onEvent(this, "qidian_user_detail_onclick_more");
                 break;
             case R.id.mDetailAddComment:
                 if (mNewsFeed != null) {
@@ -602,7 +606,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mCommentDialog.setDocid(mNewsFeed.getDocid());
                     mCommentDialog.show(NewsDetailAty2.this.getSupportFragmentManager(), "UserCommentDialog");
                 }
-                MobclickAgent.onEvent(this,"qidian_user_detail_add_comment");
+                MobclickAgent.onEvent(this, "qidian_user_detail_add_comment");
                 break;
             case R.id.mDetailComment:
                 if (!isCommentPage) {
@@ -624,13 +628,13 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mSharePopupWindow = new SharePopupWindow(this, this);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-                    Logger.e("aaa", "mNewsFeed==="+mNewsFeed.toString());
+                    Logger.e("aaa", "mNewsFeed===" + mNewsFeed.toString());
                     mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
-                MobclickAgent.onEvent(this,"qidian_user_detail_share");
+                MobclickAgent.onEvent(this, "qidian_user_detail_share");
                 break;
             case R.id.mNewsLoadingImg:
                 loadData();
@@ -641,10 +645,10 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     Intent loginAty = new Intent(NewsDetailAty2.this, LoginAty.class);
                     startActivityForResult(loginAty, REQUEST_CODE);
                 } else {
-                    Logger.e("bbb","收藏触发的点击事件！！！！！");
+                    Logger.e("bbb", "收藏触发的点击事件！！！！！");
                     loadOperate();
                 }
-                MobclickAgent.onEvent(this,"qidian_user_detail_favorite");
+                MobclickAgent.onEvent(this, "qidian_user_detail_favorite");
                 break;
         }
     }
@@ -656,14 +660,15 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             loadOperate();
         }
     };
+
     @Override
     public void shareDismiss() {
         mivShareBg.startAnimation(mAlphaAnimationOut);
         mivShareBg.setVisibility(View.INVISIBLE);
         isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-        if(isFavorite){
+        if (isFavorite) {
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
-        }else {
+        } else {
             mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
         }
     }
@@ -885,9 +890,9 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
     /**
      * 梁帅：收藏上传接口(关心放到NewsDetailFgt)
      */
-    public void loadOperate(){
-        Logger.e("aaa","222222222222222");
-        if(!NetUtil.checkNetWork(NewsDetailAty2.this)){
+    public void loadOperate() {
+        Logger.e("aaa", "222222222222222");
+        if (!NetUtil.checkNetWork(NewsDetailAty2.this)) {
             ToastUtil.toastShort("无法连接到网络，请稍后再试");
             return;
         }
@@ -895,26 +900,25 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
         JSONObject json = new JSONObject();
         RequestQueue requestQueue = Volley.newRequestQueue(NewsDetailAty2.this);
-        Logger.e("aaa", "type====" +  (isFavorite ? Request.Method.DELETE : Request.Method.POST));
-        Logger.e("aaa", "url===" +  HttpConstant.URL_ADDORDELETE_FAVORITE  + "nid=" + mUrl + "&uid=" + mUserId);
+        Logger.e("aaa", "type====" + (isFavorite ? Request.Method.DELETE : Request.Method.POST));
+        Logger.e("aaa", "url===" + HttpConstant.URL_ADDORDELETE_FAVORITE + "nid=" + mUrl + "&uid=" + mUserId);
 
 
-
-        DetailOperateRequest detailOperateRequest = new DetailOperateRequest(  (isFavorite ? Request.Method.DELETE : Request.Method.POST),
-                HttpConstant.URL_ADDORDELETE_FAVORITE +"nid="+ mUrl+"&uid="+mUserId,
+        DetailOperateRequest detailOperateRequest = new DetailOperateRequest((isFavorite ? Request.Method.DELETE : Request.Method.POST),
+                HttpConstant.URL_ADDORDELETE_FAVORITE + "nid=" + mUrl + "&uid=" + mUserId,
                 json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 carefor_Image.setImageResource(R.drawable.hook_image);
-                if(isFavorite){
+                if (isFavorite) {
                     isFavorite = false;
                     carefor_Text.setText("收藏已取消");
-                    SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid()+"");
+                    SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid() + "");
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
-                }else{
+                } else {
                     isFavorite = true;
                     carefor_Text.setText("收藏成功");
-                    Logger.e("aaa","收藏成功数据："+mNewsFeed.toString());
+                    Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
                     SharedPreManager.myFavoriteSaveList(mNewsFeed);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                 }
@@ -929,7 +933,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization",  SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
+        header.put("Authorization", SharedPreManager.getUser(NewsDetailAty2.this).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         detailOperateRequest.setRequestHeader(header);
