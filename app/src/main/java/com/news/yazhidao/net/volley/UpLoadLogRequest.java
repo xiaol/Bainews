@@ -1,19 +1,19 @@
 package com.news.yazhidao.net.volley;
 
-import com.android.volley.NetworkResponse;
+import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
-import com.news.yazhidao.utils.Logger;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/4/18.
  */
-public class UpLoadLogRequest<T> extends GsonRequest<T>{
+public class UpLoadLogRequest<T> extends GsonRequest<T> {
+
+    private HashMap mHeader;
+
     public UpLoadLogRequest(int method, Type reflectType, String url, Response.Listener successListener, Response.ErrorListener listener) {
         super(method, reflectType, url, successListener, listener);
     }
@@ -23,13 +23,11 @@ public class UpLoadLogRequest<T> extends GsonRequest<T>{
     }
 
     @Override
-    protected String checkJsonData(String data,NetworkResponse response) {
-        if(response.statusCode == 200){
-            return "success";
-        }else{
-            return "fall";
-        }
+    public Map<String, String> getHeaders() throws AuthFailureError {
+        return mHeader;
+    }
 
-
+    public void setRequestHeader(HashMap header) {
+        this.mHeader = header;
     }
 }

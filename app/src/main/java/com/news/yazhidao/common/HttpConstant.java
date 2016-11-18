@@ -184,6 +184,6 @@ public class HttpConstant {
     /**
      *  手机信息上传
      */
-    public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/rep/v2/p";
+    public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/v2/au/app";
 
 }

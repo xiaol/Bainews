@@ -21,7 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -40,7 +40,6 @@ import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.GsonUtil;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import org.json.JSONArray;
@@ -154,14 +153,15 @@ public class SplashAty extends BaseActivity {
             }
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE, location.getProvince());
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY, location.getCity());
-            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY, location.getCountry());
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR, location.getAddrStr());
             Logger.i("BaiduLocationApiDem", sb.toString());
             SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION, GsonUtil.serialized(location.getAddress()));
-            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE, location.getLatitude()+"");
-            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE, location.getLongitude()+"");
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LATITUDE, location.getLatitude() + "");
+            SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_LONGITUDE, location.getLongitude() + "");
             uploadInformation();
         }
     }
+
     @Override
     protected boolean isNeedAnimation() {
         return false;
@@ -173,7 +173,7 @@ public class SplashAty extends BaseActivity {
         //全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.aty_splash);
-    /**  梁帅：设置无图 */
+        /**  梁帅：设置无图 */
 //     SharedPreManager.save(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES, true);
 
     }
@@ -219,7 +219,6 @@ public class SplashAty extends BaseActivity {
         });
 
 //        UserManager.registerVisitor(this,null);
-
 
 
         /**
@@ -299,7 +298,8 @@ public class SplashAty extends BaseActivity {
     private PackageManager pManager;
     // 用来记录应用程序的信息
     List<AppsItemInfo> list;
-    public void getAppInfo(){
+
+    public void getAppInfo() {
         // 获取图片、应用名、包名
         pManager = SplashAty.this.getPackageManager();
         List<PackageInfo> appList = getAllApps(SplashAty.this);
@@ -321,7 +321,7 @@ public class SplashAty extends BaseActivity {
             list.add(shareItem);
 
         }
-        Logger.e("aaa","获取所有应用的名称："+list.toString());
+        Logger.e("aaa", "获取所有应用的名称：" + list.toString());
         boolean isDifferent = SharedPreManager.AppInfoSaveList(list);
         Logger.e("aaa", "isDifferent==" + isDifferent);
         try {
@@ -395,7 +395,7 @@ public class SplashAty extends BaseActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    private void getChannelList(){
+    private void getChannelList() {
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         FeedRequest<ArrayList<ChannelItem>> feedRequest = new FeedRequest<>(Request.Method.GET, new TypeToken<ArrayList<ChannelItem>>() {
         }.getType(), HttpConstant.URL_COMMON_CHANNEL_LIST, new Response.Listener<ArrayList<ChannelItem>>() {
@@ -403,17 +403,17 @@ public class SplashAty extends BaseActivity {
             @Override
             public void onResponse(final ArrayList<ChannelItem> result) {
                 ChannelItemDao channelItemDao = new ChannelItemDao(SplashAty.this);
-                if(result!=null) {
+                if (result != null) {
                     channelItemDao.deletaForAll();
                     channelItemDao.insertList(result);
-                    channelItemDao.insert(new ChannelItem("1000","关注",0,false,"0"));
+                    channelItemDao.insert(new ChannelItem("1000", "关注", 0, false, "0"));
                 }
-                Log.i("tag","ChannelItem:"+result.toString());
+                Log.i("tag", "ChannelItem:" + result.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("tag","ChannelItem:"+error.toString());
+                Log.i("tag", "ChannelItem:" + error.toString());
             }
         });
         HashMap<String, String> header = new HashMap<>();
@@ -427,38 +427,48 @@ public class SplashAty extends BaseActivity {
         if (SharedPreManager.getUser(this) != null) {
             try {
                 List<PackageInfo> packages = getPackageManager().getInstalledPackages(0);
-                JSONArray array = new JSONArray();
+                final JSONArray array = new JSONArray();
                 for (int i = 0; i < packages.size(); i++) {
                     PackageInfo packageInfo = packages.get(i);
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("an", packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
-                    jsonObject.put("ac", 1);
-                    jsonObject.put("ai", packageInfo.packageName);
+                    jsonObject.put("app_id", packageInfo.packageName);
+                    jsonObject.put("active", 1);
+                    jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
                     array.put(jsonObject);
                 }
                 /** 设置品牌 */
-                String brand = Build.BRAND;
+                final String brand = Build.BRAND;
                 /** 设置设备型号 */
-                String platform = Build.MODEL;
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("b", brand);
-                jsonObject.put("v", platform);
-                jsonObject.put("apps", array);
-                String uid = "";
-                if (SharedPreManager.getUser(this) != null) {
-                    uid = String.valueOf(SharedPreManager.getUser(this).getMuid());
-                }
-                String p = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE);
-                String t = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY);
-                String i = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_COUNTY);
-                String d = TextUtil.getBase64(jsonObject.toString());
-                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION + "?u=" + uid + "&d=" + d + "&p=" + p + "&t=" + t + "&i=" + i;
+                final String platform = Build.MODEL;
+                final String requestUrl = HttpConstant.URL_UPLOAD_INFORMATION;
                 RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
-                StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                Long uid = null;
+                if (SharedPreManager.getUser(SplashAty.this) != null) {
+                    uid = Long.valueOf(SharedPreManager.getUser(SplashAty.this).getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                jsonObject.put("brand", brand);
+                jsonObject.put("model", platform);
+                jsonObject.put("apps", array);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject jsonObj) {
+
                     }
-                }, null);
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
                 requestQueue.add(request);
             } catch (JSONException e) {
                 e.printStackTrace();

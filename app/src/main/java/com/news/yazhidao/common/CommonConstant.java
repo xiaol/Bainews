@@ -58,7 +58,7 @@ public final class CommonConstant {
     public static final String KEY_ATTENTION_ID = "key_attention_id";//是否是以一次点击关注源
     public static final String KEY_LOCATION_PROVINCE="key_location_province";
     public static final String KEY_LOCATION_CITY="key_location_city";
-    public static final String KEY_LOCATION_COUNTY="key_location_county";
+    public static final String KEY_LOCATION_ADDR="key_location_addr";
 
     public static final int TEXT_SIZE_NORMAL = 16;
     public static final int TEXT_SIZE_BIG = 17;

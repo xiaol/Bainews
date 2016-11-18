@@ -578,7 +578,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
         private void setBottomLine(ImageView ivBottom, int count, int position) {
             Log.i("tag", count + "====" + position);
             if (count == position + 1) {//去掉最后一条的线
-                ivBottom.setVisibility(View.GONE);
+                ivBottom.setVisibility(View.INVISIBLE);
             } else {
                 ivBottom.setVisibility(View.VISIBLE);
             }

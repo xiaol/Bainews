@@ -84,7 +84,6 @@ public class NewsDetailFgt extends BaseFragment {
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
-    private boolean isListRefresh;
     private User user;
     private RelativeLayout bgLayout;
     private String mDocid, mTitle, mPubName, mPubTime, mCommentCount, mNewID;
@@ -158,9 +157,6 @@ public class NewsDetailFgt extends BaseFragment {
 
     }
 
-
-    private int oldLastPositon;
-
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fgt_news_detail_listview, null);
@@ -182,7 +178,6 @@ public class NewsDetailFgt extends BaseFragment {
                 if (isLoadDate) {
                     return;
                 }
-
                 isLoadDate = true;
                 if (MAXPage > viewpointPage) {
                     new Handler().postDelayed(new Runnable() {
@@ -287,7 +282,6 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
         mAdapter = new NewsDetailFgtAdapter(getActivity());
-
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
@@ -311,9 +305,7 @@ public class NewsDetailFgt extends BaseFragment {
                     if (isNoHaveBean) {
                         return;
                     }
-
                     isNoHaveBean = true;
-
                     AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
                     ListView lv = mNewsDetailList.getRefreshableView();
                     LinearLayout mNewsDetailFootView = (LinearLayout) inflater.inflate(R.layout.detail_footview_layout, container, false);
@@ -365,7 +357,7 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
 
-        mDetailWebView = new LoadWebView(getActivity().getApplicationContext());
+        mDetailWebView = new LoadWebView(getActivity());
         mDetailWebView.setLayoutParams(params);
 //        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
 //            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -390,7 +382,7 @@ public class NewsDetailFgt extends BaseFragment {
 
 //        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-                SharedPreManager.getBoolean(CommonConstant.FILE_USER,CommonConstant.TYPE_SHOWIMAGES)),
+                SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
 //        mDetailWebView.loadDataWithBaseURL(null, "<!DOCTYPE html><html><body><h1>sssssss</h1></body></html>",
 //                "text/html;charset=UTF-8", "UTF-8", null);
@@ -453,7 +445,7 @@ public class NewsDetailFgt extends BaseFragment {
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
             Glide.with(getActivity()).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
-        }else {
+        } else {
             Glide.with(getActivity()).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
@@ -583,22 +575,22 @@ public class NewsDetailFgt extends BaseFragment {
     /**
      * 梁帅：关心方法
      */
-    public void setCareForType(){
-        Logger.e("aaa","1111111111111111111111");
-        if(!NetUtil.checkNetWork(getActivity())){
+    public void setCareForType() {
+        Logger.e("aaa", "1111111111111111111111");
+        if (!NetUtil.checkNetWork(getActivity())) {
             ToastUtil.toastShort("无法连接到网络，请稍后再试");
             return;
         }
-        if(isNetWork){
+        if (isNetWork) {
             return;
         }
         isNetWork = true;
 
         JSONObject json = new JSONObject();
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        Logger.e("aaa", "type====" +  (isLike ? Request.Method.DELETE : Request.Method.POST));
+        Logger.e("aaa", "type====" + (isLike ? Request.Method.DELETE : Request.Method.POST));
         int userID = SharedPreManager.getUser(getActivity()).getMuid();
-        Logger.e("aaa", "url===" +  HttpConstant.URL_ADDORDELETE_CAREFOR  + mNewID + (userID != 0 ? "&uid=" + userID:""));
+        Logger.e("aaa", "url===" + HttpConstant.URL_ADDORDELETE_CAREFOR + mNewID + (userID != 0 ? "&uid=" + userID : ""));
 
 
         DetailOperateRequest detailOperateRequest = new DetailOperateRequest((isLike ? Request.Method.DELETE : Request.Method.POST),
@@ -628,7 +620,7 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization",  SharedPreManager.getUser(getActivity()).getAuthorToken());
+        header.put("Authorization", SharedPreManager.getUser(getActivity()).getAuthorToken());
         header.put("Content-Type", "application/json");
         header.put("X-Requested-With", "*");
         detailOperateRequest.setRequestHeader(header);
@@ -645,7 +637,7 @@ public class NewsDetailFgt extends BaseFragment {
         int userID = SharedPreManager.getUser(getActivity()).getMuid();
         feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
         }.getType(), HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) +
-                (userID != 0 ? "&uid=" + userID:"") +
+                (userID != 0 ? "&uid=" + userID : "") +
                 "&p=" + (1) + "&c=" + (20)
                 , new Response.Listener<ArrayList<NewsDetailComment>>() {
 

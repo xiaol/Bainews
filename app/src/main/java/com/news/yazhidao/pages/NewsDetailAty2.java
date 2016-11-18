@@ -302,7 +302,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         Gson gson = new Gson();
         locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
         if (!TextUtil.isEmptyString(LogData)) {
-            SharedPreManager.upLoadLogSave(user.getMuid()+"", CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+            SharedPreManager.upLoadLogSave(user.getMuid() + "", CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
         }
 
 //        Logger.e("ccc", "详情页的数据====" + SharedPreManager.upLoadLogGet(CommonConstant.UPLOAD_LOG_DETAIL));
@@ -313,7 +313,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String userid = null, p = null, t = null, i = null;
         try {
-            userid = URLEncoder.encode(user.getMuid()+"", "utf-8");
+            userid = URLEncoder.encode(user.getMuid() + "", "utf-8");
             if (locationEntity != null) {
                 if (locationEntity.getProvince() != null)
                     p = URLEncoder.encode(locationEntity.getProvince() + "", "utf-8");
@@ -338,9 +338,16 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                if (error.getMessage().contains("GIF")) {
+                    SharedPreManager.upLoadLogDelter(CommonConstant.UPLOAD_LOG_DETAIL);
+                } else {
+                    SharedPreManager.upLoadLogSave(mUserId, CommonConstant.UPLOAD_LOG_DETAIL, locationJsonString, uploadLogDataEntity);
+                }
             }
         });
+        HashMap<String, String> header = new HashMap<>();
+        header.put("Content-Type", "image/gif");
+        request.setRequestHeader(header);
         requestQueue.add(request);
 //        }
     }

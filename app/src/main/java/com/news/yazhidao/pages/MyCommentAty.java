@@ -103,11 +103,9 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
         public void delete(int position) {
             isLoading(true);
             NewsDetailComment bean = newsDetailCommentItems.get(position);
-            deleteComment(bean.getDocid(), position);
+            deleteComment(bean.getId(), bean.getDocid(), position);
         }
     };
-
-
 
 
     @Override
@@ -129,9 +127,9 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
 
             mCommentUserName.setText(user.getUserName());
             Uri uri = Uri.parse(user.getUserIcon());
-            if (user != null && !user.isVisitor()){
+            if (user != null && !user.isVisitor()) {
                 Glide.with(MyCommentAty.this).load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(MyCommentAty.this, 5, getResources().getColor(R.color.white))).into(mCommentUserIcon);
-            }else {
+            } else {
                 Glide.with(MyCommentAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(MyCommentAty.this, 5, getResources().getColor(R.color.white))).into(mCommentUserIcon);
             }
             newsDetailCommentItems = newsDetailCommentDao.queryForAll(user.getMuid());
@@ -225,13 +223,13 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
         }
     }
 
-    private void isLoading(boolean isLoading){
-        if(isLoading){
-            if(bgLayout.getVisibility()!=View.VISIBLE){
+    private void isLoading(boolean isLoading) {
+        if (isLoading) {
+            if (bgLayout.getVisibility() != View.VISIBLE) {
                 bgLayout.setVisibility(View.VISIBLE);
             }
-        }else{
-            if(bgLayout.getVisibility()!=View.GONE){
+        } else {
+            if (bgLayout.getVisibility() != View.GONE) {
                 bgLayout.setVisibility(View.GONE);
             }
         }
@@ -291,24 +289,20 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
 //
 //
 //    }
-    public void deleteComment(String did, final int position) {
+    public void deleteComment(String cid, String did, final int position) {
         if (isNetWork) {
             return;
         }
         isNetWork = true;
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-        Logger.e("aaa", "did==" + did);
-        Logger.e("aaa", "URL=======" + HttpConstant.URL_USER_CREATEORDELETE_COMMENTLIST + "uid=" + user.getMuid() + "&did=" + TextUtil.getBase64(did));
         JSONObject json = new JSONObject();
         DetailOperateRequest request = new DetailOperateRequest(Request.Method.DELETE,
-                HttpConstant.URL_USER_CREATEORDELETE_COMMENTLIST + "uid=" + user.getMuid() + "&did=" + TextUtil.getBase64(did)
+                HttpConstant.URL_USER_CREATEORDELETE_COMMENTLIST + "cid=" + cid + "&did=" + TextUtil.getBase64(did)
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String data = response.optString("data");
                 Logger.e("jigang", "network success, 删除成功===" + data);
-
-
                 if (!TextUtil.isEmptyString(data)) {
                     NewsDetailComment bean = newsDetailCommentItems.get(position);
                     newsDetailCommentDao.delete(bean);
@@ -340,8 +334,6 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
         request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(request);
     }
-
-
 
 
 }

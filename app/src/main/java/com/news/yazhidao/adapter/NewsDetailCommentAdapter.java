@@ -34,18 +34,19 @@ import java.util.Date;
 /**
  * Created by xiao on 2016/5/9.
  */
-public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
+public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
     private int daoHeight;
     private TextView clip_pic;
     public static final String KEY_NEWS_FEED = "key_news_feed";
+
     public void setClip_pic(TextView clip_pic) {
         this.clip_pic = clip_pic;
     }
+
     private OnDataIsNullListener onDataIsNullListener;
 
 
-
-    private ArrayList<NewsDetailComment> mDatas = new  ArrayList<NewsDetailComment>();
+    private ArrayList<NewsDetailComment> mDatas = new ArrayList<NewsDetailComment>();
     private Context mContext;
     private NewsDetailCommentDao newsDetailCommentDao = null;
 
@@ -57,20 +58,22 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         this.newsDetailCommentDao = newsDetailCommentDao;
     }
 
-    public NewsDetailCommentAdapter(int layoutId, Context context, ArrayList<NewsDetailComment> datas){
-        super(layoutId,context,datas);
+    public NewsDetailCommentAdapter(int layoutId, Context context, ArrayList<NewsDetailComment> datas) {
+        super(layoutId, context, datas);
         mDatas = datas;
         mContext = context;
     }
+
     @Override
-    public void convert(CommonViewHolder holder,final NewsDetailComment newsDetailCommentItem, int positon) {
+    public void convert(CommonViewHolder holder, final NewsDetailComment newsDetailCommentItem, int positon) {
         TextView pub_time = holder.getView(R.id.pub_time);
         pub_time.setText(convertTime(newsDetailCommentItem.getCtime()));
         TextView comment_content = holder.getView(R.id.comment_item_comment_content);
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
         TextView original = holder.getView(R.id.original);
-        CharSequence originalStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(newsDetailCommentItem.getOriginal()) ? "" : newsDetailCommentItem.getOriginal()));
+        final String strOriginal = newsDetailCommentItem.getOriginal();
+        CharSequence originalStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strOriginal) ? "该新闻已不存在" : strOriginal));
         original.setText(originalStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
 //        if(newsDetailCommentItem.getUpflag() == 1){
@@ -80,37 +83,39 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 //        }
         int love_num = newsDetailCommentItem.getCommend();
         final TextView love_count = holder.getView(R.id.love_count);
-        if(love_num > 0){
+        if (love_num > 0) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
-            params.rightMargin = DensityUtil.dip2px(mContext,25);
+            params.rightMargin = DensityUtil.dip2px(mContext, 25);
             love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.VISIBLE);
-            love_count.setText(love_num+"");
-        }else{
+            love_count.setText(love_num + "");
+        } else {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) love_imagebt.getLayoutParams();
-            params.rightMargin = DensityUtil.dip2px(mContext,19);
+            params.rightMargin = DensityUtil.dip2px(mContext, 19);
             love_imagebt.setLayoutParams(params);
             love_count.setVisibility(View.GONE);
         }
 
 //        ImageView del_icon = holder.getView(R.id.del_icon);
-        original.setOnClickListener(new View.OnClickListener(){
+        original.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, NewsDetailAty2.class);
-                NewsFeed newsFeed = newsDetailCommentItem.getNewsFeed();
-                intent.putExtra(KEY_NEWS_FEED, newsFeed);
-                mContext.startActivity(intent);
+                if (!TextUtil.isEmptyString(strOriginal)) {
+                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                    NewsFeed newsFeed = newsDetailCommentItem.getNewsFeed();
+                    intent.putExtra(KEY_NEWS_FEED, newsFeed);
+                    mContext.startActivity(intent);
+                }
             }
         });
 
-        love_imagebt.setOnClickListener(new View.OnClickListener(){
+        love_imagebt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
 
-                if(newsDetailCommentItem.getUpflag() == 1){//用户是否能对该条评论点赞，0、1 对应 可点、不可点
+                if (newsDetailCommentItem.getUpflag() == 1) {//用户是否能对该条评论点赞，0、1 对应 可点、不可点
                     ToastUtil.toastShort("不可以给自己点赞！");
-                }else {
+                } else {
                     ToastUtil.toastShort("不可以给自己点赞！");
                     //点赞动画
 //                    newsDetailCommentItem.setPraise(!newsDetailCommentItem.isPraise());
@@ -207,7 +212,8 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 
 //        addorDeleteLoveItem((RelativeLayout) holder.getView(R.id.love_layout), positon,newsDetailCommentItem);
     }
-    public void deleteCommentItem(ImageView deleteImage, final int position){
+
+    public void deleteCommentItem(ImageView deleteImage, final int position) {
         deleteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,7 +256,8 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 //    }
 
     ClickDeleteCommentItemListener clickDeleteCommentItemListener;
-    public void setClickDeleteCommentItemListener(ClickDeleteCommentItemListener clickDeleteCommentItemListener){
+
+    public void setClickDeleteCommentItemListener(ClickDeleteCommentItemListener clickDeleteCommentItemListener) {
         this.clickDeleteCommentItemListener = clickDeleteCommentItemListener;
     }
 
@@ -259,7 +266,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 //        this.clickAddorDeleteLoveItemListener = clickAddorDeleteLoveItemListener;
 //    }
 
-    public interface  ClickDeleteCommentItemListener{
+    public interface ClickDeleteCommentItemListener {
         public void delete(int position);
     }
 //    public interface  ClickAddorDeleteLoveItemListener{
@@ -267,10 +274,7 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
 //    }
 
 
-
-
-
-    private static String convertTime(String oldTime){
+    private static String convertTime(String oldTime) {
         String temp;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date old = null;
@@ -279,21 +283,21 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        long timeGap = System.currentTimeMillis()-old.getTime();
+        long timeGap = System.currentTimeMillis() - old.getTime();
         DateFormat sdf = new SimpleDateFormat("MM月dd日");
 
 
-        if(timeGap<60000){//一分钟
+        if (timeGap < 60000) {//一分钟
             temp = "刚刚";
-        }else if(timeGap<60*60000){//一小时
-            temp = (timeGap/60000)+"分钟前";
-        }else if(timeGap<24*60*60000){
-            temp = (timeGap/(60*60000))+"小时前";
-        }else if(timeGap<yesterday(1)){
+        } else if (timeGap < 60 * 60000) {//一小时
+            temp = (timeGap / 60000) + "分钟前";
+        } else if (timeGap < 24 * 60 * 60000) {
+            temp = (timeGap / (60 * 60000)) + "小时前";
+        } else if (timeGap < yesterday(1)) {
             temp = "昨天";
-        }else if(timeGap<yesterday(2)){
+        } else if (timeGap < yesterday(2)) {
             temp = "前天";
-        }else{
+        } else {
             temp = sdf.format(old);
         }
 
@@ -301,14 +305,14 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         return temp;
     }
 
-    private static long yesterday(int i){
+    private static long yesterday(int i) {
         long l = 0;
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -i);
-        String yesterday = new SimpleDateFormat( "yyyy-MM-dd ").format(calendar.getTime());
+        String yesterday = new SimpleDateFormat("yyyy-MM-dd ").format(calendar.getTime());
         try {
             date = sdf.parse(yesterday);
         } catch (ParseException e) {
@@ -321,19 +325,20 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment>{
         return l;
     }
 
-    public void backgroundAlpha(float bgAlpha){
-        WindowManager.LayoutParams lp = ((Activity)mContext).getWindow().getAttributes();
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = ((Activity) mContext).getWindow().getAttributes();
         lp.alpha = bgAlpha;
-        ((Activity)mContext).getWindow().setAttributes(lp);
+        ((Activity) mContext).getWindow().setAttributes(lp);
     }
 
-    public interface OnDataIsNullListener{
+    public interface OnDataIsNullListener {
         void onChangeLayout();
     }
 
     public void setOnDataIsNullListener(OnDataIsNullListener onDataIsNullListener) {
         this.onDataIsNullListener = onDataIsNullListener;
     }
+
     public int getDaoHeight() {
         return daoHeight;
     }
