@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.text.Html;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -21,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.adapter.abslistview.MultiItemCommonAdapter;
@@ -227,6 +229,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
                 break;
             case R.layout.ll_news_item_one_pic:
                 ImageView ivCard = holder.getView(R.id.title_img_View);
@@ -271,10 +274,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) ivBottomLine.getLayoutParams();
                         int lineCount = tvTitle.getLineCount();
                         if (lineCount >= 3) {
-                            titleLp.setMargins(0, DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 30), DensityUtil.dip2px(mContext, 0));
+//                            titleLp.setMargins(0, DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 30), DensityUtil.dip2px(mContext, 0));
                             lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 3);
                             lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
                             lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 28);
                         }
 //                        else if (lineCount <= 1) {
@@ -283,10 +285,9 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
 //                        }
                         else {
-                            titleLp.setMargins(0, DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 30), DensityUtil.dip2px(mContext, 0));
+//                            titleLp.setMargins(0, DensityUtil.dip2px(mContext, 8), DensityUtil.dip2px(mContext, 30), DensityUtil.dip2px(mContext, 0));
                             lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
                             lpSourceContent.addRule(RelativeLayout.BELOW, R.id.title_textView);
-                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
                             lpBottomLine.topMargin = DensityUtil.dip2px(mContext, 8);
                         }
                         llSourceOnePic.setLayoutParams(lpSourceContent);
@@ -307,6 +308,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -333,6 +335,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
                 break;
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -358,6 +361,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
                 break;
             case R.layout.ll_news_item_topic:
                 ImageView ivTopic = holder.getView(R.id.title_img_View);
@@ -619,8 +623,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setSourceImage(ImageView image, String url) {
-
+    private void setSourceImage(ImageView imageView, String url) {
+        if (!TextUtil.isEmptyString(url)) {
+            Glide.with(mContext).load(Uri.parse(url)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
+        }
     }
 
     private void setFocusBgColor(TextViewExtend textView, String pName, TextViewExtend tvCommentNum, ImageView ivDelete) {

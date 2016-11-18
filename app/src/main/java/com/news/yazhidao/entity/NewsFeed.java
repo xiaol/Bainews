@@ -125,6 +125,12 @@ public class NewsFeed implements Serializable {
     public ArrayList<AttentionListEntity> attentionListEntities = new ArrayList<AttentionListEntity>();
 
 
+    /**
+     * 来源图片
+     */
+    private String icon;
+
+
     @Override
     public String toString() {
         return "NewsFeed{" +
@@ -368,5 +374,13 @@ public class NewsFeed implements Serializable {
 
     public void setUpload(boolean upload) {
         isUpload = upload;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

@@ -24,7 +24,7 @@
         android:id="@+id/mRefreshTitleBar"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:background="@color/new_color8"
+        android:background="#fff1e7"
         android:gravity="center"
         android:text="又发现了10条新数据"
         android:textColor="@color/new_color2"

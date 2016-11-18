@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/layout_source"
         android:layout_below="@+id/layout_source"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="8dp"
         android:layout_toLeftOf="@+id/title_img_View"
         android:ellipsize="end"
