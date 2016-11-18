@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.database.ChannelItemDao;
@@ -421,10 +421,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     }
 
-    NewsFeedAdapter mNewsFeedAdapter;
+    NewNewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, NewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, NewNewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
             dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));

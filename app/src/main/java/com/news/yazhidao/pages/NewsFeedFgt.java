@@ -35,7 +35,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -97,7 +97,7 @@ public class NewsFeedFgt extends Fragment {
     public static final String VALUE_NEWS_NOTIFICATION = "notification";
     public static final int PULL_DOWN_REFRESH = 1;
     private static final int PULL_UP_REFRESH = 2;
-    private NewsFeedAdapter mAdapter;
+    private NewNewsFeedAdapter mAdapter;
     private ArrayList<NewsFeed> mArrNewsFeed = new ArrayList<>();
     private Context mContext;
     private PullToRefreshListView mlvNewsFeed;
@@ -223,8 +223,8 @@ public class NewsFeedFgt extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode + ",data=" + data);
-        if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
-            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
+        if (requestCode == NewNewsFeedAdapter.REQUEST_CODE && data != null) {
+            int newsId = data.getIntExtra(NewNewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
@@ -280,7 +280,7 @@ public class NewsFeedFgt extends Fragment {
         });
         addHFView(LayoutInflater);
 
-        mAdapter = new NewsFeedAdapter(mContext, this, null);
+        mAdapter = new NewNewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
@@ -307,7 +307,7 @@ public class NewsFeedFgt extends Fragment {
         return rootView;
     }
 
-    NewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewsFeedAdapter.clickShowPopWindow() {
+    NewNewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewNewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             String pName = feed.getPname();
@@ -1010,7 +1010,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, NewNewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {
