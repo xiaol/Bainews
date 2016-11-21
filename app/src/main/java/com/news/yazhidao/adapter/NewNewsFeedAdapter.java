@@ -624,8 +624,13 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceImage(ImageView imageView, String url) {
-        if (!TextUtil.isEmptyString(url)) {
-            Glide.with(mContext).load(Uri.parse(url)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
+        if (mReleaseSourceItem == null) {
+            imageView.setVisibility(View.VISIBLE);
+            if (!TextUtil.isEmptyString(url)) {
+                Glide.with(mContext).load(Uri.parse(url)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
+            }
+        } else {
+            imageView.setVisibility(View.GONE);
         }
     }
 

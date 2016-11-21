@@ -1,6 +1,5 @@
 package com.news.yazhidao.pages;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -64,7 +63,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -372,19 +370,18 @@ public class NewsFeedFgt extends Fragment {
 
         Gson gson = new Gson();
 
-        Activity mActivity = this.getActivity();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
         adImpressionEntity.setAid("100");
         /** 单图91  三图164 */
         adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mActivity) + "");
+        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        TelephonyManager tm = (TelephonyManager) mActivity.getSystemService(mActivity.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
 //        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
         /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mActivity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
         /** 设置设备品牌 */
         String brand = Build.BRAND;
@@ -398,17 +395,17 @@ public class NewsFeedFgt extends Fragment {
         String version = Build.VERSION.RELEASE;
         adDeviceEntity.setOs_version(version);
         /** 设置屏幕分辨率 */
-        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mActivity));
+        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
         /** 设置IP */
         String ip = "";
-        if (DeviceInfoUtil.isWifiNetWorkState(mActivity)) {
-            ip = DeviceInfoUtil.getIpAddress(mActivity);
+        if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
+            ip = DeviceInfoUtil.getIpAddress(mContext);
         } else {
             ip = DeviceInfoUtil.getLocalIpAddress();
         }
         adDeviceEntity.setIp(ip);
         /** 设置网络环境 */
-        String networkType = DeviceInfoUtil.getNetworkType(mActivity);
+        String networkType = DeviceInfoUtil.getNetworkType(mContext);
         if (TextUtil.isEmptyString(networkType)) {
             adDeviceEntity.setNetwork("0");
         } else {
@@ -429,7 +426,7 @@ public class NewsFeedFgt extends Fragment {
 //        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
 //        adDeviceEntity.setLongitude(locationEntity.get);
         /** 设置横竖屏幕 */
-        if (DeviceInfoUtil.isScreenChange(mActivity)) {//横屏
+        if (DeviceInfoUtil.isScreenChange(mContext)) {//横屏
             adDeviceEntity.setScreen_orientation("2");
         } else {//竖屏
             adDeviceEntity.setScreen_orientation("1");
@@ -565,6 +562,21 @@ public class NewsFeedFgt extends Fragment {
         }
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
+                mRefreshTitleBar.setText("已是最新数据");
+                mRefreshTitleBar.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
+                            mRefreshTitleBar.setVisibility(View.GONE);
+                        }
+                    }
+                }, 1000);
+                stopRefresh();
+                mlvNewsFeed.onRefreshComplete();
                 return;
             }
             mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
@@ -806,193 +818,12 @@ public class NewsFeedFgt extends Fragment {
 
             @Override
             public void onResponse(final ArrayList<NewsFeed> result) {
-
-                if (mDeleteIndex != 0) {
-                    mArrNewsFeed.remove(mDeleteIndex);
-                    mDeleteIndex = 0;
-                }
-                if (mIsFirst || flag == PULL_DOWN_REFRESH) {
-                    if (result == null || result.size() == 0) {
-                        mRefreshTitleBar.setText("已是最新数据");
-                        mRefreshTitleBar.setVisibility(View.VISIBLE);
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
-                                    mRefreshTitleBar.setVisibility(View.GONE);
-                                }
-                            }
-                        }, 1000);
-                        mlvNewsFeed.onRefreshComplete();
-                        if (bgLayout.getVisibility() == View.VISIBLE) {
-                            bgLayout.setVisibility(View.GONE);
-                        }
-                        return;
-                    }
-                    mRefreshTitleBar.setText("又发现了" + result.size() + "条新数据");
-                    mRefreshTitleBarAnimtation();
-
-                }
-                if (flag == PULL_DOWN_REFRESH && !mIsFirst && result != null && result.size() > 0) {
-                    NewsFeed newsFeed = new NewsFeed();
-                    newsFeed.setStyle(900);
-                    result.add(newsFeed);
-                    mDeleteIndex = result.size() - 1;
-                }
-
-                mHomeRetry.setVisibility(View.GONE);
-                stopRefresh();
-                if (result != null && result.size() > 0) {
-                    mSearchPage++;
-                    switch (flag) {
-                        case PULL_DOWN_REFRESH:
-                            Logger.e("ccc", "=================33=================" + mArrNewsFeed.size());
-                            if (mArrNewsFeed == null)
-                                mArrNewsFeed = result;
-                            else
-                                mArrNewsFeed.addAll(0, result);
-                            mlvNewsFeed.getRefreshableView().setSelection(0);
-
-//                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
-//                            mRefreshTitleBar.setVisibility(View.VISIBLE);
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    if(mRefreshTitleBar.getVisibility() == View.VISIBLE){
-//                                        mRefreshTitleBar.setVisibility(View.GONE);
-//                                    }
-//
-//                                }
-//                            }, 1000);
-                            break;
-                        case PULL_UP_REFRESH:
-                            Logger.e("ccc", "===========PULL_UP_REFRESH==========");
-                            if (isNewVisity) {//首次进入加入他
-//                                addSP(result);
-                                isNeedAddSP = false;
-
-                            }
-                            if (mArrNewsFeed == null) {
-                                mArrNewsFeed = result;
-                            } else {
-                                mArrNewsFeed.addAll(result);
-                            }
-
-                            break;
-                    }
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (thisVisibleItemCount >= thisTotalItemCount) {//删除 footerView 这个方法可以显示无数据的情况
-                                Logger.e("ccc", "=================111=================");
-                                if (footerView.getVisibility() == View.VISIBLE) {
-                                    footerView.setVisibility(View.GONE);
-                                    mlvNewsFeed.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                                }
-                            } else {
-                                Logger.e("ccc", "================222==================");
-                                if (footerView.getVisibility() == View.GONE) {
-                                    footerView.setVisibility(View.VISIBLE);
-                                    mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
-                                }
-                            }
-                        }
-                    }, 100);
-
-
-                    if (mNewsSaveCallBack != null) {
-                        mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
-                    }
-                    //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-                    if (mstrChannelId != null && "1".equals(mstrChannelId)) {
-                        for (NewsFeed newsFeed : result)
-                            newsFeed.setChannel(1);
-                    }
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mNewsFeedDao.insert(result);
-                        }
-                    }).start();
-                    mAdapter.setNewsFeed(mArrNewsFeed);
-                    mAdapter.notifyDataSetChanged();
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                    showChangeTextSizeView();
-                } else {
-                    //向服务器发送请求,已成功,但是返回结果为null,需要显示重新加载view
-                    if (TextUtil.isListEmpty(mArrNewsFeed)) {
-                        ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-                        if (TextUtil.isListEmpty(newsFeeds)) {
-                            mHomeRetry.setVisibility(View.VISIBLE);
-                        } else {
-                            mArrNewsFeed = newsFeeds;
-                            mHomeRetry.setVisibility(View.GONE);
-                            mAdapter.setNewsFeed(newsFeeds);
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    } else {
-                        mAdapter.setNewsFeed(mArrNewsFeed);
-                        mAdapter.notifyDataSetChanged();
-
-                    }
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                }
-
-                mIsFirst = false;
-                mlvNewsFeed.onRefreshComplete();
+                loadNewFeedSuccess(result, flag);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error.toString().contains("2002")) {
-                    if (mDeleteIndex != 0) {
-                        mArrNewsFeed.remove(mDeleteIndex);
-                        mDeleteIndex = 0;
-                        mAdapter.notifyDataSetChanged();
-                    }
-                    mRefreshTitleBar.setText("已是最新数据");
-                    mRefreshTitleBar.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mRefreshTitleBar.getVisibility() == View.VISIBLE) {
-                                mRefreshTitleBar.setVisibility(View.GONE);
-                            }
-
-                        }
-                    }, 1000);
-                } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-                    User user = SharedPreManager.getUser(getActivity());
-                    user.setUtype("2");
-                    SharedPreManager.saveUser(user);
-                    UserManager.registerVisitor(getActivity(), new UserManager.RegisterVisitorListener() {
-                        @Override
-                        public void registeSuccess() {
-                            loadFocusData(flag);
-                        }
-                    });
-                }
-                if (TextUtil.isListEmpty(mArrNewsFeed)) {
-                    ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
-                    if (TextUtil.isListEmpty(newsFeeds)) {
-                        mHomeRetry.setVisibility(View.VISIBLE);
-                    } else {
-                        mArrNewsFeed = newsFeeds;
-                        mHomeRetry.setVisibility(View.GONE);
-                        mAdapter.setNewsFeed(newsFeeds);
-                        mAdapter.notifyDataSetChanged();
-                        if (bgLayout.getVisibility() == View.VISIBLE) {
-                            bgLayout.setVisibility(View.GONE);
-                        }
-                    }
-                }
-                stopRefresh();
-                mlvNewsFeed.onRefreshComplete();
+                loadNewFeedError(error, flag);
             }
         });
         HashMap<String, String> header = new HashMap<>();
@@ -1070,30 +901,33 @@ public class NewsFeedFgt extends Fragment {
             User user = SharedPreManager.getUser(mContext);
             RelativeLayout focusBg = (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
             if (user != null && user.isVisitor()) {
-                if (mArrNewsFeed != null) {
-                    mArrNewsFeed.clear();
-                }
-                mAdapter.notifyDataSetChanged();
+                loadFocusData(PULL_DOWN_REFRESH);
+//                if (mArrNewsFeed != null) {
+//                    mArrNewsFeed.clear();
+//                }
+//                mAdapter.notifyDataSetChanged();
                 focusBg.setVisibility(View.VISIBLE);
             } else {
                 focusBg.setVisibility(View.GONE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (TextUtil.isListEmpty(mArrNewsFeed)) {
-                            loadFocusData(PULL_UP_REFRESH);
-                        } else {
-                            HashMap<String, String> attentions4Map = SharedPreManager.getAttentions4Map();
-                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
-                            while (iterator.hasNext()) {
-                                if (attentions4Map.get(iterator.next().getPname()) == null) {
-                                    iterator.remove();
-                                }
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }, 1000);
+                loadFocusData(PULL_DOWN_REFRESH);
+//                focusBg.setVisibility(View.GONE);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (TextUtil.isListEmpty(mArrNewsFeed)) {
+//                            loadFocusData(PULL_UP_REFRESH);
+//                        } else {
+//                            HashMap<String, String> attentions4Map = SharedPreManager.getAttentions4Map();
+//                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+//                            while (iterator.hasNext()) {
+//                                if (attentions4Map.get(iterator.next().getPname()) == null) {
+//                                    iterator.remove();
+//                                }
+//                            }
+//                            mAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }, 1000);
             }
         }
     }
@@ -1318,5 +1152,4 @@ public class NewsFeedFgt extends Fragment {
         });
 
     }
-
 }
