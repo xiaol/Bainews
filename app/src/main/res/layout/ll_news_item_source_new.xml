@@ -8,8 +8,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/detail_attention_placeholder" />
+        android:layout_marginRight="8dp"/>
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/news_source_TextView"

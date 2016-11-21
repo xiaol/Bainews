@@ -523,7 +523,7 @@ public class NewsDetailFgt extends BaseFragment {
 
             }
         });
-        ////第3部分的CommentContent(这个内容是动态的获取数据后添加)
+        //第3部分的CommentContent(这个内容是动态的获取数据后添加)
 
         //第4部分的viewPointContent
         final View mViewPointLayout = inflater.inflate(R.layout.detail_shared_layout, container, false);

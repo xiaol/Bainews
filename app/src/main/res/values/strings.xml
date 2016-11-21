@@ -101,6 +101,16 @@
         <item>@drawable/ic_share_link</item>
     </array>
 
+    <array name="resource_list_image">
+        <item>@drawable/ic_resource_1</item>
+        <item>@drawable/ic_resource_2</item>
+        <item>@drawable/ic_resource_3</item>
+        <item>@drawable/ic_resource_4</item>
+        <item>@drawable/ic_resource_5</item>
+        <item>@drawable/ic_resource_6</item>
+        <item>@drawable/ic_resource_7</item>
+    </array>
+
     <!--个人专辑中默认的背景色-->
     <string-array name="bg_special_colors">
         <item name="item1">#dd91b5</item>

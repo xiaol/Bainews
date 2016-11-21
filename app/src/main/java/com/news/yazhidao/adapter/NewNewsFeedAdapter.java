@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -87,6 +88,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private HashMap<String, Integer> mReleaseSourceItem;
     private ReleaseSourceItemDao mReleaseSourceItemDao;
     private String[] mColorArr;
+    private TypedArray mTypedArray;
 
     public NewNewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -152,6 +154,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mScreenHeight = DeviceInfoUtil.getScreenHeight();
         this.mNewsFeedFgt = newsFeedFgt;
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
+        mTypedArray = mContext.getResources().obtainTypedArray(R.array.resource_list_image);
         mNewsFeedDao = new NewsFeedDao(mContext);
         mNewsFile = ZipperUtil.getSaveFontPath(context);
         mTitleViewWidth = mScreenWidth - DensityUtil.dip2px(mContext, 147);
@@ -229,7 +232,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
                 break;
             case R.layout.ll_news_item_one_pic:
                 ImageView ivCard = holder.getView(R.id.title_img_View);
@@ -308,7 +311,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -335,7 +338,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
                 break;
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -361,7 +364,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
                 break;
             case R.layout.ll_news_item_topic:
                 ImageView ivTopic = holder.getView(R.id.title_img_View);
@@ -623,11 +626,13 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setSourceImage(ImageView imageView, String url) {
+    private void setSourceImage(ImageView imageView, String url, int position) {
+        imageView.setBackgroundResource(mTypedArray.getResourceId((position + 7) % 7, 0));
         if (mReleaseSourceItem == null) {
             imageView.setVisibility(View.VISIBLE);
             if (!TextUtil.isEmptyString(url)) {
-                Glide.with(mContext).load(Uri.parse(url)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
+//                .placeholder(mTypedArray.getResourceId(random.nextInt(6), 0))
+                Glide.with(mContext).load(Uri.parse(url)).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
             }
         } else {
             imageView.setVisibility(View.GONE);

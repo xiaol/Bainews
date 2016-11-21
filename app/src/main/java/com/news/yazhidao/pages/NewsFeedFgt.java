@@ -559,6 +559,7 @@ public class NewsFeedFgt extends Fragment {
         if (mDeleteIndex != 0) {
             mArrNewsFeed.remove(mDeleteIndex);
             mDeleteIndex = 0;
+            mAdapter.notifyDataSetChanged();
         }
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
