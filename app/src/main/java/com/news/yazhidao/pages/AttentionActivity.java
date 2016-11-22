@@ -21,11 +21,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.AttentionListEntity;
@@ -487,7 +489,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                         }
                         String icon = attentionListEntity.getIcon();
                         if (!TextUtil.isEmptyString(icon)) {
-                            iv_attention_headImage.setImageURI(Uri.parse(icon));
+                            Glide.with(AttentionActivity.this).load(Uri.parse(icon)).transform(new CommonViewHolder.GlideCircleTransform(AttentionActivity.this, 0, AttentionActivity.this.getResources().getColor(R.color.white))).into(iv_attention_headImage);
                         }
 //                        ListView lv = mAttentionList.getRefreshableView();
                         if (!TextUtil.isListEmpty(result.getNews())) {

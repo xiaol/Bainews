@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -89,6 +90,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private ReleaseSourceItemDao mReleaseSourceItemDao;
     private String[] mColorArr;
     private TypedArray mTypedArray;
+    private int iRandom;
 
     public NewNewsFeedAdapter(Context context, NewsFeedFgt newsFeedFgt, ArrayList<NewsFeed> datas) {
         super(context, datas, new MultiItemTypeSupport<NewsFeed>() {
@@ -160,6 +162,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         mTitleViewWidth = mScreenWidth - DensityUtil.dip2px(mContext, 147);
         mCardWidth = (int) ((mScreenWidth - DensityUtil.dip2px(mContext, 32)) / 3.0f);
         mCardHeight = (int) (mCardWidth * 213 / 326.0f);
+        Random random = new Random();
+        iRandom = random.nextInt(50);
     }
 
 
@@ -232,7 +236,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                setSourceOnClick(holder.getView(R.id.layout_source), feed);
                 break;
             case R.layout.ll_news_item_one_pic:
                 ImageView ivCard = holder.getView(R.id.title_img_View);
@@ -311,7 +316,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                setSourceOnClick(holder.getView(R.id.layout_source), feed);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -338,7 +344,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                setSourceOnClick(holder.getView(R.id.layout_source), feed);
                 break;
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -364,14 +371,15 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(),position);
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                setSourceOnClick(holder.getView(R.id.layout_source), feed);
                 break;
             case R.layout.ll_news_item_topic:
                 ImageView ivTopic = holder.getView(R.id.title_img_View);
                 int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 50);
                 RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
                 lpTopic.width = ivWidth;
-                lpTopic.height = (int) (ivWidth * 91 / 310.0f);
+                lpTopic.height = (int) (ivWidth * 76 / 310.0f);
                 ivTopic.setLayoutParams(lpTopic);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, feed.getImgs().get(0), 0, 0, feed.getRtype());
                 if (isFavorite) {
@@ -627,7 +635,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceImage(ImageView imageView, String url, int position) {
-        imageView.setBackgroundResource(mTypedArray.getResourceId((position + 7) % 7, 0));
+        imageView.setBackgroundResource(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0));
         if (mReleaseSourceItem == null) {
             imageView.setVisibility(View.VISIBLE);
             if (!TextUtil.isEmptyString(url)) {
@@ -637,6 +645,19 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         } else {
             imageView.setVisibility(View.GONE);
         }
+    }
+
+    private void setSourceOnClick(View linearLayout, final NewsFeed newsFeed) {
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, AttentionActivity.class);
+                intent.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, newsFeed.getPurl());
+                intent.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, newsFeed.getPname());
+                intent.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, newsFeed.getConpubflag());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     private void setFocusBgColor(TextViewExtend textView, String pName, TextViewExtend tvCommentNum, ImageView ivDelete) {

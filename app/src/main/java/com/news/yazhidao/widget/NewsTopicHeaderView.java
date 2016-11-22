@@ -46,7 +46,7 @@ public class NewsTopicHeaderView extends RelativeLayout {
         if (!TextUtil.isEmptyString(url)) {
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mTopicView.getLayoutParams();
             layoutParams.width = screenWidth;
-            layoutParams.height = (int) (screenWidth * 73 / 360.0f);
+            layoutParams.height = (int) (screenWidth * 86 / 360.0f);
             mTopicView.setLayoutParams(layoutParams);
             Glide.with(mContext).load(Uri.parse(mTopicBaseInfo.getCover())).centerCrop().placeholder(R.drawable.bg_load_default_small).into(mTopicView);
         }
