@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -376,7 +375,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_news_item_topic:
                 ImageView ivTopic = holder.getView(R.id.title_img_View);
-                int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 50);
+                int ivWidth = mScreenWidth - DensityUtil.dip2px(mContext, 40);
                 RelativeLayout.LayoutParams lpTopic = (RelativeLayout.LayoutParams) ivTopic.getLayoutParams();
                 lpTopic.width = ivWidth;
                 lpTopic.height = (int) (ivWidth * 76 / 310.0f);
@@ -390,6 +389,11 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                if (position == 0) {
+                    holder.getView(R.id.top_image).setVisibility(View.VISIBLE);
+                } else {
+                    holder.getView(R.id.top_image).setVisibility(View.GONE);
+                }
                 break;
             case R.layout.ll_news_item_time_line:
                 holder.getView(R.id.news_content_relativeLayout).setOnClickListener(new View.OnClickListener() {

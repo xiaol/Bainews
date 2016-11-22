@@ -63,6 +63,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -597,10 +598,21 @@ public class NewsFeedFgt extends Fragment {
             mSearchPage++;
             switch (flag) {
                 case PULL_DOWN_REFRESH:
-                    if (mArrNewsFeed == null)
+                    if (mArrNewsFeed == null) {
                         mArrNewsFeed = result;
-                    else
+                    } else {
+                        if (result.get(0).getRtype() == 4) {
+                            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+                            while (iterator.hasNext()) {
+                                NewsFeed newsFeed = iterator.next();
+                                if (newsFeed.getRtype() == 4 && result.get(0).getNid() == newsFeed.getNid()) {
+                                    iterator.remove();
+                                    break;
+                                }
+                            }
+                        }
                         mArrNewsFeed.addAll(0, result);
+                    }
                     mlvNewsFeed.getRefreshableView().setSelection(0);
 //                            mRefreshTitleBar.setText("又发现了"+result.size()+"条新数据");
 //                            mRefreshTitleBar.setVisibility(View.VISIBLE);

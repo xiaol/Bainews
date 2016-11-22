@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,12 +17,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailCommentAdapter;
 import com.news.yazhidao.adapter.NewsDetailCommentAdapter.ClickDeleteCommentItemListener;
-import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
@@ -45,8 +42,6 @@ import java.util.HashMap;
  */
 public class MyCommentAty extends SwipeBackActivity implements View.OnClickListener, NewsDetailCommentAdapter.OnDataIsNullListener {
     private View mCommentLeftBack;
-    private ImageView mCommentBgImg;
-    private ImageView mCommentUserIcon;
     private TextView mCommentUserName;
     private TextView clip_pic;
     private ListView mCommentListView;
@@ -70,8 +65,6 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
         mCommentLeftBack = findViewById(R.id.mCommentLeftBack);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mCommentLeftBack.setOnClickListener(this);
-        mCommentBgImg = (ImageView) findViewById(R.id.mCommentBgImg);
-        mCommentUserIcon = (ImageView) findViewById(R.id.mCommentUserIcon);
         mCommentUserName = (TextView) findViewById(R.id.mCommentUserName);
         mCommentListView = (ListView) this.findViewById(R.id.myCommentListView);
         newsDetailCommentDao = new NewsDetailCommentDao(this);
@@ -127,11 +120,6 @@ public class MyCommentAty extends SwipeBackActivity implements View.OnClickListe
 
             mCommentUserName.setText(user.getUserName());
             Uri uri = Uri.parse(user.getUserIcon());
-            if (user != null && !user.isVisitor()) {
-                Glide.with(MyCommentAty.this).load(Uri.parse(user.getUserIcon())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(MyCommentAty.this, 5, getResources().getColor(R.color.white))).into(mCommentUserIcon);
-            } else {
-                Glide.with(MyCommentAty.this).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(MyCommentAty.this, 5, getResources().getColor(R.color.white))).into(mCommentUserIcon);
-            }
             newsDetailCommentItems = newsDetailCommentDao.queryForAll(user.getMuid());
             Logger.e("aaa", "===========" + newsDetailCommentItems.toString());
             if (!TextUtil.isListEmpty(newsDetailCommentItems)) {

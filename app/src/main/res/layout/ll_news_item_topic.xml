@@ -8,8 +8,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="@drawable/bg_feed_list_select">
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/white_relate_onepx_solid">
 
         <ImageView
             android:id="@+id/news_item_image_type"
@@ -57,8 +59,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title_img_View"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="8dp" />
+            android:layout_marginLeft="10dp" />
 
+        <com.news.yazhidao.widget.TextViewExtend
+            android:id="@+id/top_image"
+            android:layout_width="28dp"
+            android:layout_height="14dp"
+            android:layout_alignLeft="@+id/title_img_View"
+            android:layout_below="@+id/title_img_View"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/newstag_top_shape"
+            android:gravity="center"
+            android:text="置顶"
+            android:textColor="#ffffff"
+            android:textSize="10sp" />
     </RelativeLayout>
 </RelativeLayout>
