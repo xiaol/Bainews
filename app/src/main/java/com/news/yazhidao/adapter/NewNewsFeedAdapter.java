@@ -64,6 +64,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
 
+import static com.news.yazhidao.R.id.layout_source;
+
 
 public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
@@ -223,7 +225,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead(), feed.getRtype());
                 }
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
 //                if (feed.getPtime() != null)
@@ -235,8 +236,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
-                setSourceOnClick(holder.getView(R.id.layout_source), feed);
+                if(feed.getRtype()==3){
+                    holder.getView(R.id.layout_source).setVisibility(View.GONE);
+                }else {
+                    holder.getView(R.id.layout_source).setVisibility(View.VISIBLE);
+                    setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                    setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                }
+                setSourceOnClick(holder.getView(layout_source), feed);
                 break;
             case R.layout.ll_news_item_one_pic:
                 ImageView ivCard = holder.getView(R.id.title_img_View);
@@ -301,8 +308,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         ivBottomLine.setLayoutParams(lpBottomLine);
                     }
                 });
-
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
@@ -315,8 +320,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
-                setSourceOnClick(holder.getView(R.id.layout_source), feed);
+                if(feed.getRtype()==3){
+                    holder.getView(R.id.layout_source).setVisibility(View.GONE);
+                }else {
+                    holder.getView(R.id.layout_source).setVisibility(View.VISIBLE);
+                    setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                    setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                }
+                setSourceOnClick(holder.getView(layout_source), feed);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -331,7 +342,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead(), feed.getRtype());
                 }
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
@@ -343,8 +353,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (isAttention) {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
-                setSourceOnClick(holder.getView(R.id.layout_source), feed);
+                if(feed.getRtype()==3){
+                    holder.getView(R.id.layout_source).setVisibility(View.GONE);
+                }else {
+                    holder.getView(R.id.layout_source).setVisibility(View.VISIBLE);
+                    setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                    setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                }
+                setSourceOnClick(holder.getView(layout_source), feed);
                 break;
             case R.layout.ll_news_big_pic2:
                 ArrayList<String> strArrBigImgUrl = feed.getImgs();
@@ -361,7 +377,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.title_textView), feed.getTitle(), feed.isRead(), feed.getRtype());
                 }
-                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
@@ -370,8 +385,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 holder.getView(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
-                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
-                setSourceOnClick(holder.getView(R.id.layout_source), feed);
+                if(feed.getRtype()==3){
+                    holder.getView(R.id.layout_source).setVisibility(View.GONE);
+                }else {
+                    holder.getView(R.id.layout_source).setVisibility(View.VISIBLE);
+                    setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                    setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                }
+                setSourceOnClick(holder.getView(layout_source), feed);
                 break;
             case R.layout.ll_news_item_topic:
                 ImageView ivTopic = holder.getView(R.id.title_img_View);

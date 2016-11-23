@@ -138,6 +138,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
             }
         });
         mTopicRightMore = (TextView) findViewById(R.id.mTopicRightMore);
+        mTopicRightMore.setVisibility(View.GONE);
         mTopicRightMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
