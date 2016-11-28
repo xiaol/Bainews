@@ -29,7 +29,6 @@
             android:id="@+id/image_card1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
             android:layout_weight="1.0"/>
             <!--fresco:actualImageScaleType="centerCrop"-->
             <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
@@ -46,7 +45,6 @@
             android:id="@+id/image_card2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
             android:layout_weight="1.0"/>
             <!--fresco:actualImageScaleType="centerCrop"-->
             <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
@@ -63,7 +61,6 @@
             android:id="@+id/image_card3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
             android:layout_weight="1.0"/>
             <!--fresco:actualImageScaleType="centerCrop"-->
             <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->

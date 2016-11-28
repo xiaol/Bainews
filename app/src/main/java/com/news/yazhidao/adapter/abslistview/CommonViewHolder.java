@@ -182,7 +182,7 @@ public class CommonViewHolder {
                 } else {
                     uri = Uri.parse(strImg);
                 }
-                Glide.with(mContext).load(uri).centerCrop().placeholder(R.drawable.bg_load_default_small).into(imageView);
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(imageView);
             }
         }
     }

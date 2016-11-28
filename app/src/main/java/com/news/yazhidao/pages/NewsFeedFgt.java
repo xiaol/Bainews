@@ -64,6 +64,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -370,9 +371,9 @@ public class NewsFeedFgt extends Fragment {
     public String getAdMessage() {
 
         Gson gson = new Gson();
-
+        Random random = new Random();
         AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
-        adImpressionEntity.setAid("100");
+        adImpressionEntity.setAid(random.nextInt(2) == 0 ? "98" : "100");
         /** 单图91  三图164 */
         adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
         adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
@@ -469,7 +470,7 @@ public class NewsFeedFgt extends Fragment {
 //            requestUrl = HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
             adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
             /** 梁帅：判断是否是奇点频道 */
-            requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_PULL_DOWN : HttpConstant.URL_FEED_PULL_DOWN + "tcr=" + tstart + fixedParams;
+            requestUrl = HttpConstant.URL_FEED_AD_PULL_DOWN;
 
         } else {
             if (mFlag) {
@@ -483,7 +484,7 @@ public class NewsFeedFgt extends Fragment {
                     }
 //                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
                 } else {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
@@ -491,7 +492,7 @@ public class NewsFeedFgt extends Fragment {
                     }
 //                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-                    requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                    requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
 
                 }
             } else {
@@ -500,59 +501,58 @@ public class NewsFeedFgt extends Fragment {
                 tstart = Long.valueOf(tstart) - 1000 * 60 * 60 * 12 + "";
 //              requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                 adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
-
-                requestUrl = "1".equals(mstrChannelId) ? HttpConstant.URL_FEED_AD_LOAD_MORE : HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
+                requestUrl = HttpConstant.URL_FEED_AD_LOAD_MORE;
             }
         }
 
         Logger.e("ccc", "requestUrl==" + requestUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
-        if ("1".equals(mstrChannelId)) {
-            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
-            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
-            NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
-                @Override
-                public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result, flag);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error, flag);
-                }
-            });
-            HashMap<String, String> header = new HashMap<>();
+//        if ("1".equals(mstrChannelId)) {
+        Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+        Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+        NewsFeedRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsFeedRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+            @Override
+            public void onResponse(final ArrayList<NewsFeed> result) {
+                loadNewFeedSuccess(result, flag);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                loadNewFeedError(error, flag);
+            }
+        });
+        HashMap<String, String> header = new HashMap<>();
 //        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-            header.put("Content-Type", "application/json");
-            newsFeedRequestPost.setRequestHeaders(header);
-            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(newsFeedRequestPost);
-        } else {
-
-            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
-
-                @Override
-                public void onResponse(final ArrayList<NewsFeed> result) {
-                    loadNewFeedSuccess(result, flag);
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    loadNewFeedError(error, flag);
-                }
-            });
+        header.put("Content-Type", "application/json");
+        newsFeedRequestPost.setRequestHeaders(header);
+        newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+        requestQueue.add(newsFeedRequestPost);
+//        } else {
+//
+//            FeedRequest<ArrayList<NewsFeed>> feedRequest = new FeedRequest<ArrayList<NewsFeed>>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
+//            }.getType(), requestUrl, new Response.Listener<ArrayList<NewsFeed>>() {
+//
+//                @Override
+//                public void onResponse(final ArrayList<NewsFeed> result) {
+//                    loadNewFeedSuccess(result, flag);
+//
+//                }
+//            }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    loadNewFeedError(error, flag);
+//                }
+//            });
+////            HashMap<String, String> header = new HashMap<>();
+////        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+////            header.put("Content-Type", "application/json");
+////            feedRequest.setRequestHeaders(header);
 //            HashMap<String, String> header = new HashMap<>();
-//        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-//            header.put("Content-Type", "application/json");
-//            feedRequest.setRequestHeaders(header);
-            HashMap<String, String> header = new HashMap<>();
-            header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
-            feedRequest.setRequestHeader(header);
-            feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
-            requestQueue.add(feedRequest);
-        }
+//            header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+//            feedRequest.setRequestHeader(header);
+//            feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+//            requestQueue.add(feedRequest);
+//        }
 
     }
 
