@@ -51,5 +51,6 @@
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
         android:paddingLeft="15dp"
+        android:scaleType="centerInside"
         android:src="@drawable/btn_news_feed_delete" />
 </LinearLayout>

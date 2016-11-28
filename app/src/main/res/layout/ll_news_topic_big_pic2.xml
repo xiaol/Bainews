@@ -4,7 +4,7 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/new_color9">
+    android:background="@drawable/bg_feed_list_select">
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/title_textView"
@@ -24,20 +24,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_textView"
-        android:scaleType="centerCrop"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
-        <!--fresco:actualImageScaleType="centerCrop"-->
-        <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
-        <!--fresco:placeholderImageScaleType="centerCrop"-->
-        <!--fresco:roundBottomLeft="false"-->
-        <!--fresco:roundBottomRight="false"-->
-        <!--fresco:roundTopLeft="false"-->
-        <!--fresco:roundTopRight="false"-->
-        <!--fresco:roundedCornerRadius="2dp"-->
-        <!--fresco:roundingBorderColor="@color/new_color4"-->
-        <!--fresco:roundingBorderWidth="1px"-->
-        <!--fresco:viewAspectRatio="1.7777" />-->
+        android:layout_marginRight="15dp"
+        android:scaleType="centerCrop" />
+    <!--fresco:actualImageScaleType="centerCrop"-->
+    <!--fresco:placeholderImage="@drawable/bg_load_default_small"-->
+    <!--fresco:placeholderImageScaleType="centerCrop"-->
+    <!--fresco:roundBottomLeft="false"-->
+    <!--fresco:roundBottomRight="false"-->
+    <!--fresco:roundTopLeft="false"-->
+    <!--fresco:roundTopRight="false"-->
+    <!--fresco:roundedCornerRadius="2dp"-->
+    <!--fresco:roundingBorderColor="@color/new_color4"-->
+    <!--fresco:roundingBorderWidth="1px"-->
+    <!--fresco:viewAspectRatio="1.7777" />-->
 
     <include
         android:id="@+id/source_content_linearLayout"
