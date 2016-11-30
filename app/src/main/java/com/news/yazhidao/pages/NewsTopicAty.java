@@ -26,7 +26,6 @@ import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
-import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
@@ -43,6 +42,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsTopicHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
+public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListener {
 
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
@@ -155,6 +155,8 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
     protected boolean translucentStatus() {
         return false;
     }
+
+
 
     @Override
     protected void loadData() {
@@ -543,7 +545,7 @@ public class NewsTopicAty extends BaseActivity implements View.OnClickListener {
                     } else {
                         uri = Uri.parse(strImg);
                     }
-                    Glide.with(mContext).load(uri).centerCrop().placeholder(R.drawable.bg_load_default_small).into(draweeView);
+                    Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
                 }
             }
         }

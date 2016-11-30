@@ -228,7 +228,7 @@ android {
                             && 'release'.equals(variant.buildType.name)) {
                         def apkFile = new File(
                                 output.outputFile.getParent(),
-                                "奇点资讯_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
+                                "资讯_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
                         output.outputFile = apkFile
                     }
                 }

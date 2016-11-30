@@ -490,7 +490,7 @@ public class ShareSdkHelper {
             Platform platform = ShareSDK.getPlatform(Wechat.NAME);
             platform.setPlatformActionListener(pShareListner);
             if (TextUtil.isEmptyString(remark))
-                pShareParams.setText("奇点资讯分享社区");
+                pShareParams.setText("资讯分享社区");
             else
                 pShareParams.setText(remark);
             platform.share(pShareParams);
