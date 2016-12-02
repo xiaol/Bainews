@@ -39,7 +39,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
     int mInPopMargin = 24;
     int mTitleHeight;
 
-
+    int mNewsId;
     //图片的方向 true向上，false向下
     boolean isDirection = true;
 
@@ -80,7 +80,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mPopWindowLayout = new LinearLayout(context);
         mPopWindowLayout.setOrientation(LinearLayout.VERTICAL);
-        mPopWindowLayout.setPadding(DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15), DensityUtil.dip2px(mContext,10), DensityUtil.dip2px(mContext,15));
+        mPopWindowLayout.setPadding(DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15));
 
         mPopWindowLayout.setBackgroundResource(R.drawable.popwindow_linear_bg);
         mPopWindowLayout.setOnClickListener(new OnClickListener() {
@@ -104,7 +104,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mTriangle.setImageResource(R.drawable.triangle_downward);
 
         mTitle = new TextView(context);
-        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,16f);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
         mTitle.setIncludeFontPadding(false);
         mTitle.setText("请选择不感兴趣原因:");
         mTitle.setTextColor(getResources().getColor(R.color.new_color1));
@@ -116,8 +116,8 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         mLine = new TextView(context);
         LinearLayout.LayoutParams params0 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext,0.55f));
-        params1.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
+        LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, DensityUtil.dip2px(mContext, 0.55f));
+        params1.setMargins(0, DensityUtil.dip2px(mContext, 15), 0, 0);
         mLine.setBackgroundColor(getResources().getColor(R.color.new_color5));
 
         mContainer = new TagCloudLayout(context);
@@ -131,7 +131,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
 
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(DeviceInfoUtil.getScreenWidth(context) - mInPopMargin * 2 - mMarginLorR * 2
                 , mLayoutHeight);//这里给他一个固定的大小
-        params2.setMargins(0, DensityUtil.dip2px(mContext,15), 0, 0);
+        params2.setMargins(0, DensityUtil.dip2px(mContext, 15), 0, 0);
 
         mPopWindowLayout.addView(mTitle, params0);
         mPopWindowLayout.addView(mLine, params1);
@@ -151,7 +151,7 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mLayoutWidth = r - mMarginLorR * 2;
         mScreeHeight = b;
         mScreeWidth = r;
-        mLayoutHeight = mContainer.getLayoutHeight() + DensityUtil.dip2px(mContext,15) * 4 + mTitleHeight + 10;
+        mLayoutHeight = mContainer.getLayoutHeight() + DensityUtil.dip2px(mContext, 15) * 4 + mTitleHeight + 10;
 
 
         mAllLayout.layout(l, t, mScreeWidth, mScreeHeight);
@@ -200,12 +200,21 @@ public class FeedDislikePopupWindow extends RelativeLayout {
         mClickY = clickY;
         invalidate();
     }
-    public void setSourceList(String tagName){
+
+    public void setSourceList(String tagName) {
         mList.set(3, tagName);
         mAdapter.notifyDataSetChanged();
     }
-    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer){
+
+    public void setItemClickListerer(TagCloudLayout.TagItemClickListener listerer) {
         mContainer.setItemClickListener(listerer);
     }
 
+    public void setNewsId(int newsId) {
+        mNewsId = newsId;
+    }
+
+    public int getNewsId() {
+        return mNewsId;
+    }
 }

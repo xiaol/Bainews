@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/subscription_image"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#131313"
+        android:textSize="@dimen/font5"
+        android:layout_below="@+id/subscription_image"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/subscription_button"
+        android:layout_width="53dp"
+        android:layout_height="18dp"
+        android:layout_below="@+id/app_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:background="@drawable/subscription_button_unselect"/>
+
+</RelativeLayout>

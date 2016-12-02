@@ -311,7 +311,7 @@ public class NewsFeedFgt extends Fragment {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             String pName = feed.getPname();
-            mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", mAdapter);
+            mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
 
@@ -854,7 +854,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewNewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, int newsid, NewNewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {

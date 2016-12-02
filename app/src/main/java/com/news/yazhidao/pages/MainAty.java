@@ -19,11 +19,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
@@ -40,8 +51,11 @@ import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by fengjigang on 15/10/28.
@@ -98,8 +112,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
-            }else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
-                mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.isAvailable()) {
                     /////////////网络连接
@@ -137,13 +151,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     /**
      * 长按菜单键会弹出菜单（注销无用的）
-      */
+     */
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.menu_home, menu);
 //        return true;
 //    }
-
     @Override
     protected void initializeViews() {
         AnalyticsConfig.setChannel("official");
@@ -174,10 +187,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
         dislikePopupWindow.setVisibility(View.GONE);
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
-            Handler mHandler = new Handler();
-
             @Override
-            public void itemClick(int position) {
+            public void itemClick(int position) throws AuthFailureError {
                 switch (position) {
                     case 0://不喜欢
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -185,6 +196,36 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     case 1://重复、旧闻
                     case 2://内容质量差
                     case 3://不喜欢
+                        final User user = SharedPreManager.getUser(MainAty.this);
+                        if (user != null) {
+                            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                            Map<String, Integer> map = new HashMap<>();
+                            map.put("nid", dislikePopupWindow.getNewsId());
+                            map.put("uid", user.getMuid());
+                            map.put("reason", position);
+                            JSONObject jsonObject = new JSONObject(map);
+                            JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_DISSLIKE_RECORD, jsonObject,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                }
+                            }) {
+                                @Override
+                                public Map<String, String> getHeaders() {
+                                    HashMap<String, String> header = new HashMap<>();
+                                    header.put("Authorization", "Basic " + user.getAuthorToken());
+                                    header.put("Content-Type", "application/json");
+                                    header.put("X-Requested-With", "*");
+                                    return header;
+                                }
+                            };
+                            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+                            requestQueue.add(request);
+                        }
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(MainAty.this);
@@ -206,6 +247,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
         }
+        SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false);
     }
 
     @Override
@@ -213,6 +255,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         super.onResume();
         //registerReceiver 最好放到onResume
         registerReceiver(mReceiver, mFilter);
+        User user = SharedPreManager.getUser(this);
+        if (!user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
+            SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
+            Intent intent = new Intent(this, SubscriptionAty.class);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -424,9 +472,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     NewNewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, NewNewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, int newsid, NewNewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
+            dislikePopupWindow.setNewsId(newsid);
             dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
 
         }

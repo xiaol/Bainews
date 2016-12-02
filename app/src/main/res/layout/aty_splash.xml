@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:text="奇点资讯"
-        android:textColor="#8cbffa"
+        android:textColor="@color/new_color2"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"

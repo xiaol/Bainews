@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -660,12 +661,15 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceImage(ImageView imageView, String url, int position) {
-        imageView.setBackgroundResource(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0));
+        Log.i("tag","url"+url);
+//        imageView.setBackgroundResource(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0));
         if (mReleaseSourceItem == null) {
             imageView.setVisibility(View.VISIBLE);
             if (!TextUtil.isEmptyString(url)) {
 //                .placeholder(mTypedArray.getResourceId(random.nextInt(6), 0))
-                Glide.with(mContext).load(Uri.parse(url)).transform(new CommonViewHolder.GlideCircleTransform(mContext, 0, mContext.getResources().getColor(R.color.white))).into(imageView);
+                Glide.with(mContext).load(Uri.parse(url)).placeholder(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0)).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+            }else {
+                Glide.with(mContext).load("").placeholder(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0)).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
             }
         } else {
             imageView.setVisibility(View.GONE);

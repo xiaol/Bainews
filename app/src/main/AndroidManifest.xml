@@ -277,6 +277,9 @@
             android:name=".pages.ChatAty"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".pages.SubscriptionAty"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".pages.BaseTagActivity"
             android:screenOrientation="portrait" />
         <activity

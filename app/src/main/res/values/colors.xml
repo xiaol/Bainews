@@ -268,5 +268,8 @@
     <color name="news_type_color3" >#ededed</color>
     <color name="news_channel_tab_color1" >#787878</color>
     <color name="news_channel_tab_color2" >#fb7a12</color>
+    <color name="news_source_bg" >#f8f8f8</color>
+    <color name="news_subscription_color1" >#bdc3c7</color>
+    <color name="news_subscription_color2" >#fc923c</color>
 
 </resources>

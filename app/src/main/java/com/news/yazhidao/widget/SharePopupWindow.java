@@ -19,7 +19,16 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.news.yazhidao.R;
+import com.news.yazhidao.application.YaZhiDaoApplication;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.ComplaintsActivity;
@@ -27,10 +36,14 @@ import com.news.yazhidao.pages.LoginAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
-import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -107,15 +120,15 @@ public class SharePopupWindow extends PopupWindow {
         setOnClick();
     }
 
-    public void setTitleAndUrl(NewsFeed bean,String remark) {
+    public void setTitleAndUrl(NewsFeed bean, String remark) {
         feedBean = bean;
         mstrTitle = bean.getTitle();
-        mstrUrl = bean.getNid()+"";
+        mstrUrl = bean.getNid() + "";
         mstrRemark = remark;
         isFavorite = SharedPreManager.myFavoriteisSame(mstrUrl);
-        if(isFavorite){
+        if (isFavorite) {
             mtvFavorite.setText("已收藏");
-        }else {
+        } else {
             mtvFavorite.setText("未收藏");
         }
     }
@@ -125,14 +138,17 @@ public class SharePopupWindow extends PopupWindow {
         super.dismiss();
         mShareDismiss.shareDismiss();
     }
-    public interface OnFavoritListener{
+
+    public interface OnFavoritListener {
         public void FavoritListener(boolean isFavoriteType);
     }
 
     OnFavoritListener listener;
-    public void setOnFavoritListener(OnFavoritListener listener){
+
+    public void setOnFavoritListener(OnFavoritListener listener) {
         this.listener = listener;
     }
+
     private void setOnClick() {
         mtvClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,12 +229,13 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mstrUrl = "http://deeporiginalx.com/news.html?type=0&url="+ mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
+                    mstrUrl = "http://deeporiginalx.com/news.html?type=0&url=" + mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
                         intent.putExtra("sms_body", mstrTitle + mstrUrl);
                         m_pContext.startActivity(intent);
+                        replay(5);
                     } else if ("邮件".equals(strShareName)) {
 //                        String[] email = {"3802**92@qq.com"}; // 需要注意，email必须以数组形式传入
                         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -228,24 +245,35 @@ public class SharePopupWindow extends PopupWindow {
                         intent.putExtra(Intent.EXTRA_SUBJECT, mstrTitle); // 主题
                         intent.putExtra(Intent.EXTRA_TEXT, mstrUrl); // 正文
                         m_pContext.startActivity(Intent.createChooser(intent, "请选择邮件类应用"));
+                        replay(6);
                     } else if ("转发链接".equals(strShareName)) {
                         ClipboardManager cmb = (ClipboardManager) m_pContext.getSystemService(Context.CLIPBOARD_SERVICE);
                         cmb.setPrimaryClip(ClipData.newPlainText(null, mstrUrl));
                         ToastUtil.toastShort("复制成功");
+                        replay(7);
 //                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
-                        if(finalStrSharePlatform.equals(WechatMoments.NAME)||finalStrSharePlatform.equals(Wechat.NAME)){
+                        if (finalStrSharePlatform.equals(WechatMoments.NAME) || finalStrSharePlatform.equals(Wechat.NAME)) {
                             Platform plat = ShareSDK.getPlatform(finalStrSharePlatform);
-                            if(!plat.isClientValid()){
+                            if (!plat.isClientValid()) {
                                 ToastUtil.toastShort("未安装微信");
                                 SharePopupWindow.this.dismiss();
                                 return;
                             }
                         }
-
-
                         Logger.e("jigang", "share url=" + mstrUrl);
                         ShareSdkHelper.ShareToPlatformByNewsDetail(m_pContext, finalStrSharePlatform, mstrTitle, mstrUrl, mstrRemark);
+                        int whereabout = 0;
+                        if (Wechat.NAME.equals(finalStrSharePlatform)) {
+                            whereabout = 2;
+                        } else if (WechatMoments.NAME.equals(finalStrSharePlatform)) {
+                            whereabout = 1;
+                        } else if (SinaWeibo.NAME.equals(finalStrSharePlatform)) {
+                            whereabout = 4;
+                        } else if (QQ.NAME.equals(finalStrSharePlatform)) {
+                            whereabout = 3;
+                        }
+                        replay(whereabout);
                     }
                     SharePopupWindow.this.dismiss();
                 }
@@ -333,5 +361,39 @@ public class SharePopupWindow extends PopupWindow {
 
     public interface ShareDismiss {
         void shareDismiss();
+    }
+
+    private void replay(int whereabout) {
+        //转发记录
+        final User user = SharedPreManager.getUser(m_pContext);
+        if (user != null) {
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            Map<String, Integer> map = new HashMap<>();
+            map.put("nid", feedBean.getNid());
+            map.put("uid", user.getMuid());
+            map.put("whereabout", whereabout);
+            JSONObject jsonObject = new JSONObject(map);
+            JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_REPLAY, jsonObject,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    HashMap<String, String> header = new HashMap<>();
+                    header.put("Authorization", "Basic " + user.getAuthorToken());
+                    header.put("Content-Type", "application/json");
+                    header.put("X-Requested-With", "*");
+                    return header;
+                }
+            };
+            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(request);
+        }
     }
 }
