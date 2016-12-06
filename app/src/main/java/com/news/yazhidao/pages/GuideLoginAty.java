@@ -2,7 +2,6 @@ package com.news.yazhidao.pages;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.news.yazhidao.R;
@@ -28,7 +27,6 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
-            Log.i("tag","839708173407123489712");
             if (!misshow) {
                 Intent mainAty = new Intent(GuideLoginAty.this, MainAty.class);
                 startActivity(mainAty);
@@ -37,7 +35,6 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
 //            sendBroadcast(intent);
                 GuideLoginAty.this.finish();
                 misshow = true;
-                Log.i("tag","11111");
             }
         }
 
