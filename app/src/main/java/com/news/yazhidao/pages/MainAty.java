@@ -111,13 +111,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     Logger.e("jigang", "user login------1111");
                     setUserCenterIcon(Uri.parse(url));
                 }
-                SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false);
-                User user = SharedPreManager.getUser(MainAty.this);
-                if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
-                    SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
-                    Intent intent1 = new Intent(MainAty.this, SubscriptionAty.class);
-                    startActivity(intent1);
-                }
             } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
