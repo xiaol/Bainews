@@ -217,7 +217,7 @@ public class SplashAty extends BaseActivity {
 
             }
         });
-
+        SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false);
 //        UserManager.registerVisitor(this,null);
 
 

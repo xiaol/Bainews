@@ -66,7 +66,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
+    public static final String ACTION_FOUCES = "com.news.yazhidao.ACTION_FOUCES";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
+    public static final String KEY_INTENT_CURRENT_POSITION = "key_intent_current_position";
     public static final String KEY_CURRENT_CHANNEL = "key_current_channel";
     private ArrayList<ChannelItem> mUnSelChannelItems;
 
@@ -109,6 +111,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     Logger.e("jigang", "user login------1111");
                     setUserCenterIcon(Uri.parse(url));
                 }
+                SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false);
+                User user = SharedPreManager.getUser(MainAty.this);
+                if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
+                    SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
+                    Intent intent1 = new Intent(MainAty.this, SubscriptionAty.class);
+                    startActivity(intent1);
+                }
             } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
@@ -134,6 +143,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     ////////网络断开
                     mtvNewWorkBar.setVisibility(View.VISIBLE);
                 }
+            } else if (ACTION_FOUCES.equals(action)) {
+                int current_position = intent.getIntExtra(KEY_INTENT_CURRENT_POSITION, 0);
+                channelItems = mChannelItemDao.queryForSelected();
+                mViewPager.setCurrentItem(current_position);
+                mCurrentChannel = channelItems.get(current_position);
+                Fragment item = mViewPagerAdapter.getItem(current_position);
+                if (item != null) {
+                    ((NewsFeedFgt) item).setNewsFeed(null);
+                    ((NewsFeedFgt) item).setChannelId("1000");
+                }
+                mViewPagerAdapter.setmChannelItems(channelItems);
+                mViewPagerAdapter.notifyDataSetChanged();
+                mChannelTabStrip.setViewPager(mViewPager);
+                Logger.e("jigang", "--- onActivityResult");
             }
         }
     }
@@ -238,6 +261,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         /**注册用户登录广播*/
         mFilter.addAction(ACTION_USER_LOGIN);
         mFilter.addAction(ACTION_USER_LOGOUT);
+        mFilter.addAction(ACTION_FOUCES);
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -247,7 +271,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
         }
-        SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false);
     }
 
     @Override
@@ -256,7 +279,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         //registerReceiver 最好放到onResume
         registerReceiver(mReceiver, mFilter);
         User user = SharedPreManager.getUser(this);
-        if (!user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
+        if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
             SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
             Intent intent = new Intent(this, SubscriptionAty.class);
             startActivity(intent);

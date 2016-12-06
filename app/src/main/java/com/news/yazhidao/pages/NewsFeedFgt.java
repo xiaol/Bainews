@@ -150,6 +150,10 @@ public class NewsFeedFgt extends Fragment {
         this.mNewsSaveCallBack = listener;
     }
 
+    public void setChannelId(String strChannelId){
+        mstrChannelId = strChannelId;
+    }
+
     boolean isNoteLoadDate;
 
     public void setNewsFeed(ArrayList<NewsFeed> results) {
