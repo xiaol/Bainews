@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font2"
-            android:text="奇点号"
+            android:text="新闻号"
             android:textColor="@color/bg_share_text"
             android:layout_marginTop="-5dp"
             />

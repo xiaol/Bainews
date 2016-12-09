@@ -23,15 +23,19 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
     private View mGuideSkip;
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
+    private boolean misshow;
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
-            Intent mainAty = new Intent(GuideLoginAty.this,MainAty.class);
-            startActivity(mainAty);
-            Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
-            intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
-            sendBroadcast(intent);
-            GuideLoginAty.this.finish();
+            if (!misshow) {
+                Intent mainAty = new Intent(GuideLoginAty.this, MainAty.class);
+                startActivity(mainAty);
+//            Intent intent = new Intent(MainAty.ACTION_USER_LOGIN);
+//            intent.putExtra(MainAty.KEY_INTENT_USER_URL, user.getUserIcon());
+//            sendBroadcast(intent);
+                GuideLoginAty.this.finish();
+                misshow = true;
+            }
         }
 
         @Override

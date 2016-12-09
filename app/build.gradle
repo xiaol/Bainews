@@ -104,6 +104,7 @@ android {
         iqiyi {}
         coolchuan {}
          */
+        official {}
         baidu        {}
         hiapk{}
         q91{}

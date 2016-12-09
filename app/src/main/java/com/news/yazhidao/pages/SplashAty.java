@@ -11,8 +11,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -188,35 +186,36 @@ public class SplashAty extends BaseActivity {
         mSplashSlogan = (ImageView) findViewById(R.id.mSplashSlogan);
         mSplashMask = (ImageView) findViewById(R.id.mSplashMask);
         mSplashContent = findViewById(R.id.mSplashContent);
+        mSplashContent.setVisibility(View.GONE);
         mSplashVersion = (TextView) findViewById(R.id.mSplashVersion);
         mSplashVersion.setText(getResources().getString(R.string.app_name) + " v" + getResources().getString(R.string.app_version));
         int screenHeight = DeviceInfoUtil.getScreenHeight(this);
 //        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.splash_alpha_in);
 //        mSplashSlogan.setAnimation(animation);
         mSplashLine = (ImageView) findViewById(R.id.mSplashLine);
-        final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSplashMask.setAnimation(mask);
-            }
-        }, 100);
-        mask.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mSplashMask.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
+//        final Animation mask = AnimationUtils.loadAnimation(this, R.anim.slide_in_from_left);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mSplashMask.setAnimation(mask);
+//            }
+//        }, 100);
+//        mask.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                mSplashMask.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
 
 //        UserManager.registerVisitor(this,null);
 
