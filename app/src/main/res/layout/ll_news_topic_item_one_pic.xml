@@ -33,7 +33,7 @@
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/title_img_View"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="@color/new_color1"
         android:textSize="@dimen/new_font2" />
 
@@ -64,5 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginTop="8dp"
+        android:layout_below="@+id/title_img_View"
         android:background="@drawable/list_divider" />
 </RelativeLayout>
