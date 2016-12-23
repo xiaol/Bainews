@@ -447,7 +447,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
         }
 //                mUrl = "6562498";
 //                mUrl = "9076124";
-//        mUrl = "9372991";
+//        mUrl = "9655396";
         StringBuffer path = new StringBuffer();
         path.append(HttpConstant.URL_FETCH_CONTENT);
         path.append("nid=");
@@ -496,7 +496,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(result.getComment() + "");
+                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
                         mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {

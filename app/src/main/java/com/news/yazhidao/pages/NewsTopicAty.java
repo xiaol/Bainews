@@ -56,7 +56,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private ImageView mTopicLeftBack,mNewsLoadingImg;
+    private ImageView mTopicLeftBack, mNewsLoadingImg;
     private TextView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper;
     private ExpandableListView mlvSpecialNewsFeed;
@@ -593,11 +593,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
-            if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
-                textView.setText(strText + "评");
-            } else {
-                textView.setText("");
-            }
+            textView.setText(TextUtil.getCommentNum(strText));
         }
 
         private void newsTag(TextViewExtend tag, int type) {

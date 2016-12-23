@@ -12,7 +12,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -662,7 +661,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceImage(ImageView imageView, String url, int position) {
-        Log.i("tag", "url" + url);
 //        imageView.setBackgroundResource(mTypedArray.getResourceId((Math.abs(position + iRandom)) % 7, 0));
         if (mReleaseSourceItem == null) {
             imageView.setVisibility(View.VISIBLE);
@@ -721,11 +719,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
-        if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
-            textView.setText(strText + "评");
-        } else {
-            textView.setText("");
-        }
+        textView.setText(TextUtil.getCommentNum(strText));
     }
 
     public void newsTag(TextViewExtend tag, int type) {

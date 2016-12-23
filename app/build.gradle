@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '25.0.0'
     lintOptions {
         abortOnError false
     }
@@ -104,6 +104,7 @@ android {
         iqiyi {}
         coolchuan {}
          */
+//        dianchuan{}
         baidu        {}
         hiapk{}
         q91{}

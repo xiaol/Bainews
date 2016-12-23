@@ -563,7 +563,7 @@ public class NewsDetailFgt extends BaseFragment {
             }
         });
 
-        detail_shared_hotComment.setText("相关观点");
+        detail_shared_hotComment.setText("相关推荐");
 
         //footView
         final LinearLayout footerView = (LinearLayout) inflater.inflate(R.layout.footerview_layout, null);

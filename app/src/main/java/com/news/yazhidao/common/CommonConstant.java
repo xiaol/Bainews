@@ -64,6 +64,7 @@ public final class CommonConstant {
     public static final int TEXT_SIZE_BIG = 17;
     public static final int TEXT_SIZE_BIGGER = 18;
     public static final String CHANGE_TEXT_ACTION = "change_text";
+    public static final String NEWS_FEED_REFRESH = "news_feed_refresh";
 
     public static final String FILE_DATA_ATTENTION = "file_data_attention";
     public static final String KEY_ATTENTIN_LIST = "key_attentin_list";

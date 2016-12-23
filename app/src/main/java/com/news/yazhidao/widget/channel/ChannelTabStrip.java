@@ -1,6 +1,7 @@
 package com.news.yazhidao.widget.channel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.news.yazhidao.R;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.Logger;
 
@@ -148,6 +150,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
             @Override
             public void onClick(View v) {
                 pager.setCurrentItem(position, false);
+                Intent intent = new Intent(CommonConstant.NEWS_FEED_REFRESH);
+                mContext.sendBroadcast(intent);
             }
         });
         tabsContainer.addView(tab, position, defaultTabLayoutParams);
@@ -175,8 +179,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
 //		Log.e("jigang","--left="+left + ",right="+width);
         rect.set(((int) left) + getPaddingLeft(), getPaddingTop() + currentTab.getTop() + category_text.getTop(),
                 ((int) width) + getPaddingLeft(), currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight());
-        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext,8), getHeight() - DensityUtil.dip2px(mContext,2),
-                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext,6), getHeight());
+        sliderRect.set(((int) left) + getPaddingLeft() + DensityUtil.dip2px(mContext, 8), getHeight() - DensityUtil.dip2px(mContext, 2),
+                ((int) width) + getPaddingLeft() - DensityUtil.dip2px(mContext, 6), getHeight());
 //		Logger.e("jigang","padding ="+currentTab.getPaddingBottom() + ",text height =" +category_text.getHeight() + ",all height=" +getHeight() + ",remain  h=" +(getHeight()-(currentTab.getTop() + getPaddingTop() + category_text.getTop() + category_text.getHeight())));
     }
 
@@ -185,8 +189,8 @@ public class ChannelTabStrip extends HorizontalScrollView {
         return getChildCount() > 0 ? Math.max(0, getChildAt(0).getWidth() - getWidth() + getPaddingLeft() + getPaddingRight()) : 0;
     }
 
-    public void scrollToFirstItem(){
-        scrollTo(0,0);
+    public void scrollToFirstItem() {
+        scrollTo(0, 0);
     }
 
     // CategoryTabStrip与ViewPager联动逻辑

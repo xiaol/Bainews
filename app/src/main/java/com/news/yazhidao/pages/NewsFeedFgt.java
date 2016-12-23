@@ -107,7 +107,7 @@ public class NewsFeedFgt extends Fragment {
     private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
-    private RefreshReceiver mRefreshReciver;
+    private RefreshReceiver mRefreshReceiver;
     /**
      * 热词页面加载更多
      */
@@ -150,7 +150,7 @@ public class NewsFeedFgt extends Fragment {
         this.mNewsSaveCallBack = listener;
     }
 
-    public void setChannelId(String strChannelId){
+    public void setChannelId(String strChannelId) {
         mstrChannelId = strChannelId;
     }
 
@@ -168,8 +168,11 @@ public class NewsFeedFgt extends Fragment {
         }
     }
 
+    public void setListRefresh(boolean listRefresh) {
+        isListRefresh = listRefresh;
+    }
 
-//    public void setIsFocus() {
+    //    public void setIsFocus() {
 //        misFocus = true;
 //    }
 
@@ -203,7 +206,9 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void refreshData() {
-        mlvNewsFeed.setRefreshing();
+        if (mlvNewsFeed != null) {
+            mlvNewsFeed.setRefreshing();
+        }
     }
 
     public void onCreate(Bundle bundle) {
@@ -218,9 +223,11 @@ public class NewsFeedFgt extends Fragment {
             mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
-        mRefreshReciver = new RefreshReceiver();
-        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
-        mContext.registerReceiver(mRefreshReciver, intentFilter);
+        mRefreshReceiver = new RefreshReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+        intentFilter.addAction(CommonConstant.NEWS_FEED_REFRESH);
+        mContext.registerReceiver(mRefreshReceiver, intentFilter);
     }
 
     @Override
@@ -325,7 +332,7 @@ public class NewsFeedFgt extends Fragment {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        mContext.unregisterReceiver(mRefreshReciver);
+        mContext.unregisterReceiver(mRefreshReceiver);
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         if (rootView != null && rootView.getParent() != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
@@ -989,6 +996,8 @@ public class NewsFeedFgt extends Fragment {
 //                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
+            } else if (CommonConstant.NEWS_FEED_REFRESH.equals(intent.getAction())) {
+                refreshData();
             }
         }
     }

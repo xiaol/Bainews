@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/detail_shared_Layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_shared_Layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/new_color9"
@@ -23,14 +23,14 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            >
+            android:paddingRight="14dp">
 
             <ImageView
                 android:id="@+id/detail_shared_AttentionImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/btn_detail_like_normal"/>
+                android:src="@drawable/btn_detail_like_normal" />
+
             <TextView
                 android:id="@+id/detail_shared_PraiseText"
                 android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
                 android:layout_marginLeft="6dp"
                 android:textColor="@color/color3"
                 android:textSize="@dimen/font5"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
 
@@ -51,13 +51,12 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="9dp"
-            android:paddingRight="9dp"
-            >
+            android:paddingRight="9dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/friendcircle"/>
+                android:src="@drawable/friendcircle" />
 
             <TextView
                 android:id="@+id/detail_shared_FriendCircleText"
@@ -66,7 +65,7 @@
                 android:layout_marginLeft="7dp"
                 android:text="朋友圈"
                 android:textColor="@color/color3"
-                android:textSize="@dimen/font5"/>
+                android:textSize="@dimen/font5" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -79,7 +78,7 @@
         android:text="关心本文，会推荐更多类似的内容"
         android:textColor="@color/color3"
         android:textSize="@dimen/font5"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/detail_shared_MoreComment"
@@ -89,31 +88,33 @@
         android:layout_marginRight="17dp"
         android:layout_marginTop="19dp"
         android:background="@drawable/bg_select_comment_more"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerInParent="true">
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
+                android:layout_gravity="center"
                 android:drawablePadding="4dp"
                 android:gravity="center"
-                android:layout_gravity="center"
                 android:text="查看全部评论"
                 android:textColor="@color/new_color2"
-                android:textSize="@dimen/font4"
-                />
+                android:textSize="@dimen/font4" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_detail_view_all_comment"
                 android:layout_marginLeft="4dp"
-                android:paddingTop="1dp"/>
+                android:paddingTop="1dp"
+                android:src="@drawable/ic_detail_view_all_comment" />
         </LinearLayout>
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/detail_attention_addView"
         android:layout_width="match_parent"
@@ -128,31 +129,29 @@
         android:layout_marginTop="14dp"
         android:background="@color/color7">
 
-        <ImageView
-            android:id="@+id/detail_point"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="14dp"
-            android:background="@drawable/ic_detail_point" />
+        <!--<ImageView-->
+        <!--android:id="@+id/detail_point"-->
+        <!--android:layout_width="20dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_marginTop="14dp"-->
+        <!--android:background="@drawable/ic_detail_point" />-->
 
         <TextView
             android:id="@+id/detail_shared_hotComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
-            android:layout_toRightOf="@+id/detail_point"
             android:textColor="@color/new_color1"
             android:textSize="@dimen/new_font3" />
 
-        <!--<View-->
-        <!--android:id="@+id/detail_shared_hotComment_Line1"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:layout_alignRight="@id/detail_shared_hotComment"-->
-        <!--android:layout_below="@id/detail_shared_hotComment"-->
-        <!--android:layout_marginTop="6dp"-->
-        <!--android:background="@color/new_color2" />-->
+        <View
+            android:id="@+id/detail_shared_hotComment_Line1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_alignRight="@id/detail_shared_hotComment"
+            android:layout_below="@id/detail_shared_hotComment"
+            android:layout_marginTop="6dp"
+            android:background="@color/new_color2" />
 
         <!--<View-->
         <!--android:id="@+id/detail_shared_hotComment_Line2"-->
