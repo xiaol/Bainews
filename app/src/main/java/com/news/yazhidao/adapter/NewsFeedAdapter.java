@@ -620,8 +620,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setCommentViewText(TextViewExtend textView, String strText) {
-        textView.setText(
-                (strText));
+        textView.setText(TextUtil.getCommentNum(strText));
     }
 
     public void newsTag(TextViewExtend tag, int type) {

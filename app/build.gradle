@@ -10,8 +10,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 131
-        versionName "3.5.4"
+        versionCode 132
+        versionName "3.5.5"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     ndk {
 
@@ -210,6 +210,7 @@ android {
             storePassword "yazhidao"
             keyAlias "yazhidao"
             keyPassword "yazhidao"
+            v2SigningEnabled false
         }
     }
 
