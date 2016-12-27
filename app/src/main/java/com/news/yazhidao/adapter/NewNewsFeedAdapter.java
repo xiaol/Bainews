@@ -112,6 +112,16 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_search_item;
                     case 5:
                         return R.layout.ll_news_item_topic;
+
+                    //视频播放列表，可以在列表播放
+                    case 6:
+                        return R.layout.ll_video_item_player;
+                    //item视频布局不能在列表播放，可以在其他列表出现
+                    case 7:
+                        return R.layout.ll_video_item_big;
+                    case 8:
+                        return R.layout.ll_video_item_big;
+
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -123,7 +133,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 8;
+                return 11;
             }
 
             @Override
@@ -143,6 +153,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.SERRCH_ITEM;
                     case 5:
                         return NewsFeed.TOPIC;
+                    case 6:
+                        return NewsFeed.VIDEO_PLAYER;
+                    case 7:
+                        return NewsFeed.VIDEO_BIG;
+                    case 8:
+                        return NewsFeed.VIDEO_SMALL;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -535,6 +551,31 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         }
                     });
                 }
+                break;
+            case R.layout.ll_video_item_player:
+                setTitleTextBySpannable((TextViewExtend) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                int widths = mScreenWidth - DensityUtil.dip2px(mContext, 0);
+                ImageView ivVideo = holder.getView(R.id.image_bg);
+                RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
+                lpVideo.width = widths;
+                lpVideo.height = (int) (widths * 185 / 330.0f);
+                ivVideo.setLayoutParams(lpVideo);
+                holder.getView(R.id.layout_item_video).setLayoutParams(lpVideo);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), widths, (int) (widths * 185 / 330.0f),feed.getRtype());
+                setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
+                //点击评论跳转
+                holder.getView(R.id.tv_video_comments).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                //item点击事件跳转到详情页播放
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+
+                break;
+            case R.layout.ll_video_item_big:
+
                 break;
         }
     }

@@ -13,6 +13,8 @@ android {
         versionCode 131
         versionName "3.5.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
+        //多个dex支持
+        multiDexEnabled true
     ndk {
 
         abiFilters "armeabi","armeabi-v7a","x86","mips"
@@ -281,4 +283,5 @@ dependencies {
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
     compile files('libs/ncc_offerwall.jar')
+    compile 'com.android.support:multidex:1.0.1'
 }
