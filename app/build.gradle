@@ -10,8 +10,8 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 132
-        versionName "3.5.5"
+        versionCode 131
+        versionName "3.5.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
     ndk {
 
@@ -105,6 +105,7 @@ android {
         coolchuan {}
          */
 //        dianchuan{}
+        official {}
         baidu        {}
         hiapk{}
         q91{}
