@@ -1025,11 +1025,16 @@ public class NewsFeedFgt extends Fragment {
 //        if (mstrChannelId.equals("1000")) {
 //            mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout_focus, null);
 //        } else
+
         mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        lv.addHeaderView(mSearchHeaderView);
+        if (!mstrChannelId.equals("42"))
+        {
+            lv.addHeaderView(mSearchHeaderView);
+        }
+
         lv.setHeaderDividersEnabled(false);
 //        if (mstrChannelId.equals("1000")) {
 //            TextView tvFocus = (TextView) mSearchHeaderView.findViewById(R.id.focus_textView);
@@ -1047,6 +1052,8 @@ public class NewsFeedFgt extends Fragment {
                 MobclickAgent.onEvent(getActivity(), "qidian_user_enter_search_page");
             }
         });
+
+
         footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);

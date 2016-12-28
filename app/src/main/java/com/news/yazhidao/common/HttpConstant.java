@@ -114,6 +114,10 @@ public class HttpConstant {
      * 获取新闻详情页
      */
     public static final String URL_FETCH_CONTENT = URL_SERVER_HOST + "/ns/con?";
+/**
+     * 获取视频详情页
+     */
+    public static final String URL_VIDEO_CONTENT = URL_SERVER_HOST + "/vi/con?";
 
     /**
      * 新闻普通评论列表

@@ -22,6 +22,9 @@ public class NewsFeed implements Serializable {
     public static final int BIG_PIC = 5;
     public static final int EMPTY = 6;
     public static final int TOPIC = 7;
+    public static final int VIDEO_BIG = 8;
+    public static final int VIDEO_PLAYER = 9;
+    public static final int VIDEO_SMALL = 10;
     public static final String COLUMN_CHANNEL_ID = "channel";
     public static final String COLUMN_NEWS_ID = "nid";
     public static final String COLUMN_UPDATE_TIME = "ptime";
@@ -129,6 +132,14 @@ public class NewsFeed implements Serializable {
      * 来源图片
      */
     private String icon;
+    /**
+     * 视频播放地址
+     */
+    private String videourl;
+    /**
+     * 视频背景图
+     */
+    private String thumbnail;
 
 
     @Override
@@ -157,7 +168,25 @@ public class NewsFeed implements Serializable {
                 ", colflag=" + colflag +
                 ", conflag=" + conflag +
                 ", conpubflag=" + conpubflag +
+                "，videourl="+videourl+'\''+
+                ",thumbnail="+thumbnail+
                 '}';
+    }
+
+    public String getVideourl() {
+        return videourl;
+    }
+
+    public void setVideourl(String videourl) {
+        this.videourl = videourl;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public int getRtype() {
