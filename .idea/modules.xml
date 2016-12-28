@@ -11,6 +11,7 @@
       <module fileurl="file://$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" filepath="$PROJECT_DIR$/sharesdk_mainlib/sharesdk_mainlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" filepath="$PROJECT_DIR$/sharesdk_onekeyshare/sharesdk_onekeyshare.iml" />
       <module fileurl="file://$PROJECT_DIR$/viewplay/viewplay.iml" filepath="$PROJECT_DIR$/viewplay/viewplay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/viewplay/viewplay.iml" filepath="$PROJECT_DIR$/viewplay/viewplay.iml" />
     </modules>
   </component>
 </project>
