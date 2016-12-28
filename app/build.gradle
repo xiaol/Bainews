@@ -284,5 +284,6 @@ dependencies {
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
     compile files('libs/ncc_offerwall.jar')
+    compile project(':viewplay')
     compile 'com.android.support:multidex:1.0.1'
 }

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/library_pageslidingtabstrip" />
             <option value="$PROJECT_DIR$/sharesdk_mainlib" />
             <option value="$PROJECT_DIR$/sharesdk_onekeyshare" />
+            <option value="$PROJECT_DIR$/viewplay" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

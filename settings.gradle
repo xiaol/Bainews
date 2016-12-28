@@ -2,3 +2,4 @@ include ':app', ':jazzylistviewlibrary', ':library_pageslidingtabstrip', ':libra
 include ':app', ':sharesdk_mainlib'
 include ':library'
 include ':sharesdk_onekeyshare'
+include ':viewplay'

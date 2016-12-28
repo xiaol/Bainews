@@ -39,6 +39,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
@@ -553,7 +554,11 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
                 break;
             case R.layout.ll_video_item_player:
-                setTitleTextBySpannable((TextViewExtend) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                if (isFavorite) {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                } else {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead(), feed.getRtype());
+                }
                 int widths = mScreenWidth - DensityUtil.dip2px(mContext, 0);
                 ImageView ivVideo = holder.getView(R.id.image_bg);
                 RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
@@ -836,10 +841,20 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     } else {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
-                } else {
+                }
+                else if (feed.getRtype()==6)
+                {
+                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    }
+                }
+                else {
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-
                     ArrayList<String> imageList = feed.getImgs();
                     if (imageList != null && imageList.size() != 0) {
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_IMAGE, imageList.get(0));
