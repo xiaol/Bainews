@@ -388,7 +388,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
             public void onPageSelected(int position) {
                 if (position == 1) {
                     isCommentPage = true;
-                    onShowFragmentListener.setOnShowFragment(false);
+//                    onShowFragmentListener.setOnShowFragment(false);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
 
@@ -403,10 +403,11 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
 
                 } else {
                     isCommentPage = false;
-                    onShowFragmentListener.setOnShowFragment(true);
+//                    onShowFragmentListener.setOnShowFragment(true);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
                     mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+
                     Drawable drawable1= getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
                     mDetailLeftBack.setCompoundDrawables(drawable1,null,null,null);
@@ -437,13 +438,13 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     Bundle args = new Bundle();
                     args.putSerializable(VideoCommentFgt.KEY_NEWS_FEED, mNewsFeed);
                     commentFgt.setArguments(args);
-                    Drawable drawable= getResources().getDrawable(R.drawable.btn_left_back);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(drawable,null,null,null);
-
-                    Drawable share= getResources().getDrawable(R.drawable.btn_detail_right_more);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(null,null,share,null);
+//                    Drawable drawable= getResources().getDrawable(R.drawable.btn_left_back);
+//                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+//                    mDetailLeftBack.setCompoundDrawables(drawable,null,null,null);
+//
+//                    Drawable share= getResources().getDrawable(R.drawable.btn_detail_right_more);
+//                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+//                    mDetailLeftBack.setCompoundDrawables(null,null,share,null);
                     return commentFgt;
                 }
             }
@@ -455,17 +456,18 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         };
         mNewsDetailViewPager.setAdapter(pagerAdapter);
     }
-    public OnShowFragmentListener onShowFragmentListener;
-    public  interface OnShowFragmentListener
-    {
-
-        void setOnShowFragment(boolean showFragment);
-    }
-
-    public void setOnShowFragmentListner(OnShowFragmentListener onShowFragmentListner)
-    {
-        onShowFragmentListener=onShowFragmentListner;
-    }
+//    public OnShowFragmentListener onShowFragmentListener;
+//
+//    public  interface OnShowFragmentListener
+//    {
+//
+//        void setOnShowFragment(boolean showFragment);
+//    }
+//
+//    public void setOnShowFragmentListner(OnShowFragmentListener onShowFragmentListner)
+//    {
+//        onShowFragmentListener=onShowFragmentListner;
+//    }
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);

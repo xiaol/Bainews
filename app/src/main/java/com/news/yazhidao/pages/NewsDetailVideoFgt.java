@@ -80,10 +80,10 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoAty.OnShowFragmentListener{
+public class NewsDetailVideoFgt extends BaseFragment {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     public static final String ACTION_REFRESH_DTC = "com.news.yazhidao.ACTION_REFRESH_DTC";
-//    private LoadWebView mDetailWebView;
+    //    private LoadWebView mDetailWebView;
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
@@ -156,6 +156,7 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         Logger.e("aaa", "mTitle==" + mTitle);
         mContext = getActivity();
+
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -298,7 +299,6 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
 //                oldLastPositon = lastPositon;
             }
         });
-
         vp = PlayerManager.getPlayerManager().initialize(mContext);
         mAdapter = new NewsDetailFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
@@ -331,11 +331,11 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
 
             }
         });
-        mClose = (ImageView)  getActivity().findViewById(R.id.detial_video_close);
+        mClose = (ImageView) getActivity().findViewById(R.id.detial_video_close);
         mClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (vp!=null&&vp.isPlay()) {
+                if (vp != null && vp.isPlay()) {
                     vp.stop();
                     vp.release();
                     mSmallScreen.removeAllViews();
@@ -349,8 +349,7 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
         lpVideo.width = widths;
         lpVideo.height = (int) (widths * 185 / 330.0f);
         mDetailBg.setLayoutParams(lpVideo);
-        setIsShowImagesSimpleDraweeViewURI(mDetailBg,mResult.getThumbnail());
-
+        setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
 
 
         mDetailVideo.setVisibility(View.VISIBLE);
@@ -366,8 +365,7 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
                 } else if (mFullScreen.getVisibility() == View.VISIBLE) {
                     mFullScreen.removeAllViews();
                     mFullScreen.setVisibility(View.GONE);
-                }else  if (mDetailVideo.getVisibility()==View.VISIBLE)
-                {
+                } else if (mDetailVideo.getVisibility() == View.VISIBLE) {
                     mDetailVideo.removeAllViews();
                     mDetailVideo.setVisibility(View.GONE);
                 }
@@ -412,34 +410,6 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
         }
     };
 
-    @Override
-    public void setOnShowFragment(boolean showFragment) {
-
-
-    }
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getUserVisibleHint())
-        {
-            if (mDetailVideo.getVisibility()!=View.VISIBLE&&vp!=null&&vp.isPlay())
-            {
-                mSmallScreen.removeAllViews();
-                mSmallLayout.setVisibility(View.GONE);
-                mDetailVideo.addView(vp);
-            }
-        }
-        else
-        {
-            if (vp!=null&&vp.isPlay()&mSmallLayout.getVisibility()==View.GONE)
-            {
-                mDetailVideo.removeAllViews();
-                vp.setShowContoller(false);
-                mSmallScreen.addView(vp);
-                mSmallLayout.setVisibility(View.VISIBLE);
-            }
-        }
-    }
 
     public void setIsShowImagesSimpleDraweeViewURI(ImageView draweeView, String strImg) {
 
@@ -464,14 +434,14 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
         if (mRefreshLike != null) {
             mContext.unregisterReceiver(mRefreshLike);
         }
-        if (vp!=null)
+        if (vp != null)
             vp.onDestory();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (vp!=null)
+        if (vp != null)
             vp.onPause();
 //        mDetailWebView.onPause();
     }
@@ -479,7 +449,7 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
     @Override
     public void onResume() {
         super.onResume();
-        if (vp!=null)
+        if (vp != null)
             vp.onResume();
 //        mDetailWebView.onResume();
     }
@@ -1175,7 +1145,6 @@ public class NewsDetailVideoFgt extends BaseFragment implements NewsDetailVideoA
             }
         }
     }
-
 
 
     class CommentHolder {
