@@ -313,8 +313,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
             public void onClick(View v) {
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
+                if (vp.getParent() != null)
+                    ((ViewGroup) vp.getParent()).removeAllViews();
                 vp.setTitle(mResult.getTitle());
                 vp.start(mResult.getVideourl());
+                mDetailVideo.addView(vp);
 
             }
         });
@@ -353,6 +356,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
         mDetailVideo.setVisibility(View.VISIBLE);
+        if (vp.getParent() != null)
+            ((ViewGroup) vp.getParent()).removeAllViews();
         vp.setTitle(mResult.getTitle());
         vp.start(mResult.getVideourl());
         mDetailVideo.addView(vp);

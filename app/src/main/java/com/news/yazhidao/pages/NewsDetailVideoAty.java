@@ -35,6 +35,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
@@ -138,6 +139,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
     private StringBuffer path;
+    private VPlayPlayer vp;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
