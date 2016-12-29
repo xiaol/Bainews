@@ -61,6 +61,7 @@ public class VideoCommentFgt extends BaseFragment {
     public static final int REQUEST_CODE = 1030;
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
     public static final String ACTION_REFRESH_CTD = "com.news.yazhidao.ACTION_REFRESH_CTD";
     public static final String LIKETYPE = "liketype";
     public static final String LIKEBEAN = "likebean";

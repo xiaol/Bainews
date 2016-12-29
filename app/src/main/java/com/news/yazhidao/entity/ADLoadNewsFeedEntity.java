@@ -21,6 +21,7 @@ public class ADLoadNewsFeedEntity implements Serializable {
 
     private String b;
     private int t;
+    private int nid;
 
     public ADLoadNewsFeedEntity() {
     }
@@ -110,5 +111,13 @@ public class ADLoadNewsFeedEntity implements Serializable {
 
     public void setT(int t) {
         this.t = t;
+    }
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
     }
 }

@@ -135,11 +135,12 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     private NewsDetailCommentDao newsDetailCommentDao;
 
     private LinearLayout careforLayout;
-    boolean isFavorite, isCareFor;
+    boolean isFavorite, isCareFor, isShowComment;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
     private StringBuffer path;
     private VPlayPlayer vp;
+
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -204,6 +205,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     @Override
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(VideoCommentFgt.KEY_NEWS_FEED);
+        isShowComment = getIntent().getBooleanExtra(VideoCommentFgt.KEY_SHOW_COMMENT, false);
 //        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mUsedNewsFeed = getDate();
@@ -244,7 +246,6 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         mImageWallVPager = (ViewPager) findViewById(R.id.mImageWallVPager);
         mImageWallDesc = (TextView) findViewById(R.id.mImageWallDesc);
         mNewsDetailViewPager = (SwipeBackViewpager) findViewById(R.id.mNewsDetailViewPager);
-
 
 
         //初始化新闻评论DAO
@@ -394,13 +395,13 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
                     mDetailCommentNum.setVisibility(View.GONE);
 
-                    Drawable drawable= getResources().getDrawable(R.drawable.btn_left_back);
+                    Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(drawable,null,null,null);
+                    mDetailLeftBack.setCompoundDrawables(drawable, null, null, null);
 
-                    Drawable share= getResources().getDrawable(R.drawable.btn_detail_right_more);
+                    Drawable share = getResources().getDrawable(R.drawable.btn_detail_right_more);
                     share.setBounds(0, 0, share.getMinimumWidth(), share.getMinimumHeight());
-                    mDetailRightMore.setCompoundDrawables(null,null,share,null);
+                    mDetailRightMore.setCompoundDrawables(null, null, share, null);
 
 
                 } else {
@@ -410,13 +411,13 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
 
-                    Drawable drawable1= getResources().getDrawable(R.drawable.detial_video_back);
+                    Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
-                    mDetailLeftBack.setCompoundDrawables(drawable1,null,null,null);
+                    mDetailLeftBack.setCompoundDrawables(drawable1, null, null, null);
 
-                    Drawable share1= getResources().getDrawable(R.drawable.detai_video_share);
+                    Drawable share1 = getResources().getDrawable(R.drawable.detai_video_share);
                     share1.setBounds(0, 0, share1.getMinimumWidth(), share1.getMinimumHeight());
-                    mDetailRightMore.setCompoundDrawables(null,null,share1,null);
+                    mDetailRightMore.setCompoundDrawables(null, null, share1, null);
 
                 }
             }
@@ -457,8 +458,12 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
             }
         };
         mNewsDetailViewPager.setAdapter(pagerAdapter);
+        if (isShowComment) {
+            mNewsDetailViewPager.setCurrentItem(1);
+        }
     }
-//    public OnShowFragmentListener onShowFragmentListener;
+
+    //    public OnShowFragmentListener onShowFragmentListener;
 //
 //    public  interface OnShowFragmentListener
 //    {
@@ -500,14 +505,12 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         path.append("nid=");
         path.append(mUrl);
         User user = SharedPreManager.getUser(NewsDetailVideoAty.this);
-        if (user != null ) {
+        if (user != null) {
             mUserId = user.getMuid() + "";
             mPlatformType = user.getPlatformType();
             path.append("&uid=");
             path.append(mUserId);
-        }
-        else
-        {
+        } else {
             UserManager.registerVisitor(this, new UserManager.RegisterVisitorListener() {
                 @Override
                 public void registeSuccess() {
@@ -516,7 +519,8 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     mPlatformType = user.getPlatformType();
                     path.append("&uid=");
                     path.append(mUserId);
-                }});
+                }
+            });
         }
         uuid = DeviceInfoUtil.getUUID();
 //        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);

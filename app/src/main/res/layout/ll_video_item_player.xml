@@ -2,48 +2,32 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="4dp"
-    android:layout_marginTop="4dp">
+    android:background="@color/white">
 
-    <RelativeLayout
-        android:id="@+id/rl_video_container_title"
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/tv_video_title"
         android:layout_width="match_parent"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="3dp"
-        android:background="@android:color/white"
-        android:layout_height="wrap_content">
-
-
-        <com.news.yazhidao.widget.TextViewExtend
-            android:id="@+id/tv_video_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="12dp"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="#333333"
-            android:textSize="15sp"
-
-            />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="#333333"
+        android:textSize="15sp" />
 
     <RelativeLayout
         android:id="@+id/layout_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_video_container_title">
+        android:layout_below="@+id/tv_video_title">
 
         <FrameLayout
             android:id="@+id/layout_item_video"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/black"
-            >
-
-        </FrameLayout>
+            android:background="@android:color/black"></FrameLayout>
 
         <RelativeLayout
             android:id="@+id/rl_video_show"
@@ -53,10 +37,8 @@
             <ImageView
                 android:id="@+id/image_bg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-
-                />
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
 
             <ImageView
                 android:id="@+id/image_play"
@@ -68,19 +50,25 @@
             <TextView
                 android:id="@+id/tv_video_duration"
                 android:layout_width="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:padding="8dp"
-                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:background="#30000000"
+                android:padding="8dp"
                 android:text="2.3万播放  | 15:00"
-                />
-
+                android:textColor="@color/white"
+                android:textSize="11sp" />
         </RelativeLayout>
-
     </RelativeLayout>
 
-    <include layout="@layout/item_bottom_video"/>
+    <include
+        android:id="@+id/item_bottom_video"
+        layout="@layout/item_bottom_video" />
+
+    <ImageView
+        android:id="@+id/line_bottom_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_below="@+id/item_bottom_video"
+        android:background="#f8f8f8" />
 </RelativeLayout>

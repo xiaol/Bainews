@@ -75,6 +75,7 @@ public class NewsFeedFgt extends Fragment {
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -473,6 +474,13 @@ public class NewsFeedFgt extends Fragment {
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
+                for (int i = 0; i < mArrNewsFeed.size(); i++) {
+                    NewsFeed newsFeed = mArrNewsFeed.get(i);
+                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                        break;
+                    }
+                }
                 tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
@@ -500,6 +508,13 @@ public class NewsFeedFgt extends Fragment {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
+                        for (int i = mArrNewsFeed.size()-1; i > 0; i--) {
+                            NewsFeed newsFeed = mArrNewsFeed.get(i);
+                            if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                                adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                                break;
+                            }
+                        }
                     }
 //                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
@@ -1030,8 +1045,7 @@ public class NewsFeedFgt extends Fragment {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        if (!mstrChannelId.equals("42"))
-        {
+        if (!mstrChannelId.equals("42")) {
             lv.addHeaderView(mSearchHeaderView);
         }
 

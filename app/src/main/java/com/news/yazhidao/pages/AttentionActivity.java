@@ -22,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -69,6 +70,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
     private PullToRefreshListView mAttentionList;
+    private RequestManager mRequestManager;
 
 
     //    @Bind(R.id.main_iv_placeholder)
@@ -143,6 +145,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attention);
+        mRequestManager= Glide.with(this);
 //        ButterKnife.bind(this);
 //        Logger.e("bbb", "mPName==" + mPName);
 //        Logger.e("bbb", "mPUrl==" + mPUrl);
@@ -489,7 +492,7 @@ public class AttentionActivity extends SwipeBackActivity implements View.OnClick
                         }
                         String icon = attentionListEntity.getIcon();
                         if (!TextUtil.isEmptyString(icon)) {
-                            Glide.with(AttentionActivity.this).load(Uri.parse(icon)).transform(new CommonViewHolder.GlideCircleTransform(AttentionActivity.this, 0, AttentionActivity.this.getResources().getColor(R.color.white))).into(iv_attention_headImage);
+                            mRequestManager.load(Uri.parse(icon)).transform(new CommonViewHolder.GlideCircleTransform(AttentionActivity.this, 0, AttentionActivity.this.getResources().getColor(R.color.white))).into(iv_attention_headImage);
                         }
 //                        ListView lv = mAttentionList.getRefreshableView();
                         if (!TextUtil.isListEmpty(result.getNews())) {
