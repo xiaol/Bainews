@@ -47,11 +47,6 @@
         <item name="android:windowNoTitle">true</item>
         <!--<item name="android:windowTranslucentStatus">true</item>-->
     </style>
-    <style name="Theme.Transparent2" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:windowBackground">@color/transparent</item>
-        <!--<item name="android:scrollbarSize">3.0dip</item>-->
-        <!--<item name="android:scrollbarTrackVertical">@color/transparent</item>-->
-    </style>
 
     <!-- Application theme. -->
     <style name="SwipeBackTheme" parent="AppBaseTheme">
