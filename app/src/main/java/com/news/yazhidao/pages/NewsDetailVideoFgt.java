@@ -311,8 +311,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
             public void onClick(View v) {
                 mVideoShowBg.setVisibility(View.GONE);
                 mDetailVideo.setVisibility(View.VISIBLE);
+                if (vp.getParent() != null)
+                    ((ViewGroup) vp.getParent()).removeAllViews();
                 vp.setTitle(mResult.getTitle());
                 vp.start(mResult.getVideourl());
+                mDetailVideo.addView(vp);
 
             }
         });
@@ -351,6 +354,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
         mDetailVideo.setVisibility(View.VISIBLE);
+        if (vp.getParent() != null)
+            ((ViewGroup) vp.getParent()).removeAllViews();
         vp.setTitle(mResult.getTitle());
         vp.start(mResult.getVideourl());
         mDetailVideo.addView(vp);
@@ -1300,6 +1305,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (vp!=null)
+        {
+            vp.onDestory();
+        }
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
 //        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
 //            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
