@@ -119,6 +119,7 @@ public class VPlayPlayer extends RelativeLayout {
     private ImageView mLockScreen;
     private OrientationEventListener orientationEventListener;
     private LinearLayout appVideoPlay;
+    private boolean isAutoQuitFullScreen=true;
 
     private Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -389,7 +390,7 @@ public class VPlayPlayer extends RelativeLayout {
             @Override
             public void onCompletion(IMediaPlayer mp) {
                 statusChange(PlayStateParams.STATE_PLAYBACK_COMPLETED);
-                if (getScreenOrientation((Activity) mContext)
+                if (isAutoQuitFullScreen&&getScreenOrientation((Activity) mContext)
                         == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                     //横屏播放完毕，重置
                     ((Activity) mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -706,7 +707,7 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
 
-    private int getScreenOrientation(Activity activity) {
+    public int getScreenOrientation(Activity activity) {
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -1060,6 +1061,10 @@ public class VPlayPlayer extends RelativeLayout {
         return false;
     }
 
+    public void setAutoQuitFullScreen(boolean autoQuitFullScreen)
+    {
+        isAutoQuitFullScreen=autoQuitFullScreen;
+    }
 
     public void showWifiDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
