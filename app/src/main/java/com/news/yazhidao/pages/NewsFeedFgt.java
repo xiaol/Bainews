@@ -75,6 +75,7 @@ public class NewsFeedFgt extends Fragment {
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
 
     /**
      * 当前fragment 所对应的新闻频道

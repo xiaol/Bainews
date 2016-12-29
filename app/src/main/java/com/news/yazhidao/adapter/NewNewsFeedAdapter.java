@@ -566,12 +566,19 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 ivVideo.setLayoutParams(lpVideo);
                 holder.getView(R.id.layout_item_video).setLayoutParams(lpVideo);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
-                setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), 10 + "");
+                setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
                 //点击评论跳转
-                holder.getView(R.id.tv_video_comments).setOnClickListener(new View.OnClickListener() {
+                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT,true);
+                        if (mNewsFeedFgt != null) {
+                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                        } else {
+                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                        }
                     }
                 });
                 //item点击事件跳转到详情页播放

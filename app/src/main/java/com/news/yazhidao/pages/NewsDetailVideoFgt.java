@@ -37,7 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
+import com.news.yazhidao.adapter.NewsDetailVideoFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
@@ -57,7 +57,6 @@ import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
-import com.news.yazhidao.utils.helper.ShareSdkHelper;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.TextViewExtend;
@@ -73,7 +72,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.sharesdk.wechat.moments.WechatMoments;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
@@ -87,7 +85,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private NewsDetail mResult;
     private SharedPreferences mSharedPreferences;
     private PullToRefreshListView mNewsDetailList;
-    private NewsDetailFgtAdapter mAdapter;
+    private NewsDetailVideoFgtAdapter mAdapter;
     private User user;
     private RelativeLayout bgLayout;
     private String mDocid, mTitle, mPubName, mPubTime, mCommentCount, mNewID;
@@ -163,13 +161,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
         if (mRefreshReceiber == null) {
             mRefreshReceiber = new RefreshPageBroReceiber();
-            IntentFilter filter = new IntentFilter(NewsDetailAty2.ACTION_REFRESH_COMMENT);
+            IntentFilter filter = new IntentFilter(NewsDetailVideoAty.ACTION_REFRESH_COMMENT);
             filter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
             mContext.registerReceiver(mRefreshReceiber, filter);
         }
         if (mRefreshLike == null) {
             mRefreshLike = new RefreshLikeBroReceiber();
-            IntentFilter filter = new IntentFilter(NewsCommentFgt.ACTION_REFRESH_CTD);
+            IntentFilter filter = new IntentFilter(VideoCommentFgt.ACTION_REFRESH_CTD);
             mContext.registerReceiver(mRefreshLike, filter);
         }
 
@@ -300,7 +298,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             }
         });
         vp = PlayerManager.getPlayerManager().initialize(mContext);
-        mAdapter = new NewsDetailFgtAdapter((Activity) mContext);
+        mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
         addHeadView(inflater, container);
@@ -459,68 +457,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
     public void addHeadView(LayoutInflater inflater, ViewGroup container) {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ListView lv = mNewsDetailList.getRefreshableView();
         //第1部分的WebView
         mNewsDetailHeaderView = (LinearLayout) inflater.inflate(R.layout.fgt_news_detail, container, false);
         mNewsDetailHeaderView.setLayoutParams(layoutParams);
         lv.addHeaderView(mNewsDetailHeaderView);
-//        mNewsDetailHeaderView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Logger.e("aaa", "webView的点击");
-//            }
-//        });
-//
-//        mDetailWebView = new LoadWebView(mContext);
-//        mDetailWebView.setLayoutParams(params);
-////        if (Build.VERSION.SDK_INT >= 19) {//防止视频加载不出来。
-////            mDetailWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-////        } else {
-////            mDetailWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-////        }
-//        mDetailWebView.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
-//        mDetailWebView.getSettings().setJavaScriptEnabled(true);
-//        mDetailWebView.getSettings().setDatabaseEnabled(true);
-//        mDetailWebView.getSettings().setDomStorageEnabled(true);
-//        mDetailWebView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-//        mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
-//        mDetailWebView.getSettings().setBlockNetworkImage(false);
-//        mDetailWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//        mDetailWebView.getSettings().setDefaultTextEncodingName("UTF-8");//
-//        mDetailWebView.addJavascriptInterface(new VideoJavaScriptBridge(this.getActivity()), "VideoJavaScriptBridge");
-////        //设置WebView 可以加载更多格式页面
-////        mDetailWebView.getSettings().setLoadWithOverviewMode(true);
-////        //设置WebView使用广泛的视窗
-////        mDetailWebView.getSettings().setUseWideViewPort(true);
-//
-//
-////        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
-//        mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
-//                SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
-//                "text/html", "utf-8", null);
-////        mDetailWebView.loadDataWithBaseURL(null, "<!DOCTYPE html><html><body><h1>sssssss</h1></body></html>",
-////                "text/html;charset=UTF-8", "UTF-8", null);
-//        mDetailWebView.setDf(new LoadWebView.PlayFinish() {
-//            @Override
-//            public void After() {
-//                Logger.e("aaa", "22222");
-//                isWebSuccess = true;
-////                mDetailWebView.getSettings().setLoadsImagesAutomatically(true);
-//                isBgLayoutSuccess();
-//
-////                Log.e("aaa","1111");
-//            }
-//        });
-//
-//        mDetailWebView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                return true;
-//            }
-//        });
-//        mNewsDetailHeaderView.addView(mDetailWebView);
-
         //第2部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
@@ -540,7 +481,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
             isLike = false;
             detail_shared_AttentionImage.setImageResource(R.drawable.bg_normal_attention);
         }
-
+        detail_shared_FriendCircleLayout.setVisibility(View.GONE);
+        mCommentTitleView.findViewById(R.id.detail_shared_Text).setVisibility(View.GONE);
         mCommentLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_Layout);
         detail_shared_CommentTitleLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.detail_shared_TitleLayout);
 
@@ -607,17 +549,16 @@ public class NewsDetailVideoFgt extends BaseFragment {
             }
         });
 
-
-        detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
-        detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Logger.e("aaa", "点击朋友圈");
-                ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, WechatMoments.NAME, mTitle, mNewID, "1");
-                MobclickAgent.onEvent(mContext, "qidian_detail_middle_share_weixin");
-
-            }
-        });
+//        detail_shared_FriendCircleLayout.getParent().requestDisallowInterceptTouchEvent(true);
+//        detail_shared_FriendCircleLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Logger.e("aaa", "点击朋友圈");
+//                ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, WechatMoments.NAME, mTitle, mNewID, "1");
+//                MobclickAgent.onEvent(mContext, "qidian_detail_middle_share_weixin");
+//
+//            }
+//        });
 
 
         detail_shared_CareForLayout.setOnClickListener(new View.OnClickListener() {
@@ -652,7 +593,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 mNewsDetailHeaderView.addView(mViewPointLayout);
             }
         }, 1500);
-
+        mViewPointLayout.findViewById(R.id.detail_video_title).setVisibility(View.GONE);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
@@ -665,7 +606,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         detail_shared_MoreComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewsDetailAty2 mActivity = (NewsDetailAty2) mContext;
+                NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
                 if (!mActivity.isCommentPage) {
                     mActivity.isCommentPage = true;
 
@@ -745,7 +686,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
     }
 
     private void loadData() {
-
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
@@ -800,8 +740,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
         related = new NewsDetailRequest<ArrayList<RelatedItemEntity>>(Request.Method.GET,
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
-
-                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
+//                '改回去'+ mNewID
+                HttpConstant.URL_NEWS_RELATED + "nid=10060188" ,
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -927,9 +867,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
-//
                 beanList.addAll(beanPageList.get(viewpointPage));
                 viewpointPage++;
                 mAdapter.setNewsFeed(beanList);
@@ -1056,8 +993,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     mComments.get(position).setCommend(commend);
                     holder.tvPraiseCount.setText(commend + "");
                     Intent intent = new Intent(ACTION_REFRESH_DTC);
-                    intent.putExtra(NewsCommentFgt.LIKETYPE, isAdd);
-                    intent.putExtra((NewsCommentFgt.LIKEBEAN), mComments.get(position));
+                    intent.putExtra(VideoCommentFgt.LIKETYPE, isAdd);
+                    intent.putExtra((VideoCommentFgt.LIKEBEAN), mComments.get(position));
                     mContext.sendBroadcast(intent);
 
                     isNetWork = false;
@@ -1206,8 +1143,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
             }
             Logger.e("aaa", "详情接收到！");
-            NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
-            boolean isAdd = intent.getBooleanExtra(NewsCommentFgt.LIKETYPE, false);
+            NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(VideoCommentFgt.LIKEBEAN);
+            boolean isAdd = intent.getBooleanExtra(VideoCommentFgt.LIKETYPE, false);
             boolean isLikeType = false;
             int size = mComments.size();
             for (int i = 0; i < mComments.size(); i++)
@@ -1306,7 +1243,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         Logger.e("aaa", "LS=comment.getCtime()===" + comment.getCtime());
         holder.tvTime.setText("" + DateUtil.getTimes(DateUtil.dateStr2Long(comment.getCtime())));
 //        setNewsTime(holder.tvTime, comment.getCtime());
-
         holder.tvContent.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         holder.tvContent.setText(comment.getContent());
         holder.tvContent.setOnClickListener(new View.OnClickListener() {
@@ -1315,13 +1251,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 Logger.e("aaa", "点击内容");
             }
         });
-
         if (comment.getUpflag() == 0) {
             holder.ivPraise.setImageResource(R.drawable.bg_normal_praise);
         } else {
             holder.ivPraise.setImageResource(R.drawable.bg_praised);
         }
-
 //        String commentUserid = comment.getUid();
 //        if (commentUserid != null && commentUserid.length() != 0&&user != null) {
 //
@@ -1480,7 +1414,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 mResult.setConpubflag(0);
             }
         } else if (requestCode == 1030 && resultCode == 1006) {
-            if (mContext instanceof NewsDetailAty2) {
+            if (mContext instanceof NewsDetailVideoAty) {
                 addordeleteAttention(true);
 //                mNewsDetailList.smoothScrollToPosition(pos);
             }

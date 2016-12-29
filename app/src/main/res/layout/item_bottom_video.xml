@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/iv_video_share"
         android:layout_width="18dp"
-        android:layout_height="4dp"
+        android:layout_height="32dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"

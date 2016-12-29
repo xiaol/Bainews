@@ -412,6 +412,7 @@ public class NewsDetailFgt extends BaseFragment {
         //第2部分的CommentTitle
         final View mCommentTitleView = inflater.inflate(R.layout.detail_shared_layout, container, false);
         mCommentTitleView.setLayoutParams(layoutParams);
+        mCommentTitleView.findViewById(R.id.detail_video_title).setVisibility(View.GONE);
 //        mNewsDetailHeaderView.addView(mCommentTitleView);
         detail_shared_FriendCircleLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_FriendCircleLayout);
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
@@ -539,7 +540,7 @@ public class NewsDetailFgt extends BaseFragment {
                 mNewsDetailHeaderView.addView(mViewPointLayout);
             }
         }, 1500);
-
+        mViewPointLayout.findViewById(R.id.detail_video_title).setVisibility(View.GONE);
         detail_shared_ShareImageLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_ShareImageLayout);
         detail_shared_Text = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_Text);
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
