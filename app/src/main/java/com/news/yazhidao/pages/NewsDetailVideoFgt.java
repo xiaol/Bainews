@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -143,6 +144,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private int mScreenWidth;
     private ImageView mDetailBg;
     private TextView mDetailVideoTitle;
+    private TextView mDetailLeftBack;
+    private RelativeLayout mDetailWrapper;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -324,11 +327,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mFullScreen = (FrameLayout) getActivity().findViewById(R.id.detail_full_screen);
         mSmallScreen = (FrameLayout) getActivity().findViewById(R.id.detail_small_screen);
         mSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.detai_small_layout);
+        mDetailWrapper = (RelativeLayout) getActivity().findViewById(R.id.mDetailWrapper);
+        mDetailLeftBack = (TextView) getActivity().findViewById(R.id.mDetailLeftBack);
 
         mSmallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
             }
         });
@@ -413,6 +417,28 @@ public class NewsDetailVideoFgt extends BaseFragment {
         }
     };
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (vp != null) {
+            vp.onChanged(newConfig);
+            if (vp.getParent() != null)
+                ((ViewGroup) vp.getParent()).removeAllViews();
+            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mFullScreen.setVisibility(View.GONE);
+                mFullScreen.removeAllViews();
+                mDetailVideo.addView(vp);
+                mDetailVideo.setVisibility(View.VISIBLE);
+
+            } else {
+                mDetailVideo.removeAllViews();
+                mFullScreen.addView(vp);
+                mFullScreen.setVisibility(View.VISIBLE);
+
+            }
+        }
+    }
 
     public void setIsShowImagesSimpleDraweeViewURI(ImageView draweeView, String strImg) {
 
@@ -444,7 +470,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (vp != null)
+        if (mDetailLeftBack.getVisibility() == View.VISIBLE&&vp.isPlay()) {
+            if (vp.getParent() != null)
+                ((ViewGroup) vp.getParent()).removeAllViews();
+            mSmallScreen.addView(vp);
+            mSmallLayout.setVisibility(View.VISIBLE);
+            mDetailVideo.removeAllViews();
+        } else if (vp != null)
             vp.onPause();
 //        mDetailWebView.onPause();
     }
@@ -452,6 +484,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (mDetailLeftBack.getVisibility() == View.VISIBLE&&vp.isPlay()) {
+            if (vp.getParent() != null)
+                ((ViewGroup) vp.getParent()).removeAllViews();
+            mDetailVideo.addView(vp);
+            mSmallScreen.removeAllViews();
+            mSmallLayout.setVisibility(View.GONE);
+        }else
         if (vp != null)
             vp.onResume();
 //        mDetailWebView.onResume();
@@ -1305,8 +1344,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (vp!=null)
-        {
+        if (vp != null) {
             vp.onDestory();
         }
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
