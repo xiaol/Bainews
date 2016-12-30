@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -276,6 +278,17 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
 
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Message msg=mHandler.obtainMessage();
+        msg.obj=newConfig;
+        msg.what=3;
+        mHandler.sendMessage(msg);
+        Log.v("onConfigurationChanged",newConfig.toString());
+
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -287,6 +300,12 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         }
     }
 
+    private Handler mHandler;
+
+
+    public void setHandler(Handler handler) {
+        mHandler = handler;
+    }
     /**
      * 上报日志
      *
@@ -385,10 +404,13 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         }
 //        /** 判断是否关注 */
 //        mDetailRightAttention.setText(result.getConpubflag() == 1 ? "已关注" : "去关注");
-
         mNewsDetailViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                Message msg = mHandler.obtainMessage();
+                msg.what=2;
+                msg.obj=position;
+                mHandler.sendMessage(msg);
                 if (position == 1) {
                     isCommentPage = true;
 //                    onShowFragmentListener.setOnShowFragment(false);
