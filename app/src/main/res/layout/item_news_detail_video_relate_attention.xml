@@ -21,6 +21,18 @@
             android:layout_marginTop="12dp"
             android:scaleType="centerCrop" />
 
+        <TextView
+            android:id="@+id/tv_video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/title_img_View"
+            android:layout_alignBottom="@+id/title_img_View"
+            android:background="#30000000"
+            android:paddingRight="6dp"
+            android:text="15:00"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
 
         <com.news.yazhidao.widget.TextViewExtend
             android:id="@+id/attention_Title"
