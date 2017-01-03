@@ -821,11 +821,12 @@ public class VPlayPlayer extends RelativeLayout {
             firstTouch = true;
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             //横屏下拦截事件
-            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                return true;
-            } else {
-                return super.onDown(e);
-            }
+//            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+//                return true;
+//            } else {
+//                return super.onDown(e);
+//            }
+            return true;
         }
 
         /**
@@ -1020,6 +1021,11 @@ public class VPlayPlayer extends RelativeLayout {
         hide(false);
 
 
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return true;
     }
 
     private void pause() {
