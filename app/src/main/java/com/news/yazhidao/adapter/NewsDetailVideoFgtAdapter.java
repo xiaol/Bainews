@@ -79,8 +79,8 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, "10060188");
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, "10060188");
+//                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid());
                 mContext.startActivity(intent);
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");
 
