@@ -82,6 +82,7 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, "10060188");
 //                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid());
                 mContext.startActivity(intent);
+                mContext.finish();
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");
 
             }

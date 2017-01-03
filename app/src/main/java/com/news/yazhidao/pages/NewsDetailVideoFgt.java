@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,11 +77,13 @@ import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
+
 /**
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
 public class NewsDetailVideoFgt extends BaseFragment {
+    private static final String TAG = "NewsDetailVideoFgt";
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     public static final String ACTION_REFRESH_DTC = "com.news.yazhidao.ACTION_REFRESH_DTC";
     //    private LoadWebView mDetailWebView;
@@ -122,6 +126,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     boolean isNoHaveBean;
     private final int LOAD_MORE = 0;
     private final int LOAD_BOTTOM = 1;
+    private static final int VIDEO_SMALL = 2;
+    private static final int VIDEO_FULLSCREEN = 3;
+    private static final int VIDEO_NORMAL = 5;
+
     private boolean isLike;
     private NewsDetailCommentDao mNewsDetailCommentDao;
     private TextView footView_tv;
@@ -146,6 +154,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextView mDetailVideoTitle;
     private TextView mDetailLeftBack;
     private RelativeLayout mDetailWrapper;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -173,6 +182,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             IntentFilter filter = new IntentFilter(VideoCommentFgt.ACTION_REFRESH_CTD);
             mContext.registerReceiver(mRefreshLike, filter);
         }
+
 
     }
 
@@ -300,12 +310,14 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //                oldLastPositon = lastPositon;
             }
         });
+
+
         vp = PlayerManager.getPlayerManager().initialize(mContext);
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
         addHeadView(inflater, container);
-
+        loadData();
         //视频
         mDetailVideo = (FrameLayout) rootView.findViewById(R.id.fgt_new_detail_video);
         mVideoShowBg = (RelativeLayout) rootView.findViewById(R.id.detial_video_show);
@@ -345,6 +357,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     vp.release();
                     mSmallScreen.removeAllViews();
                     mSmallLayout.setVisibility(View.GONE);
+                    mDetailBg.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -363,6 +376,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         vp.setTitle(mResult.getTitle());
         vp.start(mResult.getVideourl());
         mDetailVideo.addView(vp);
+
         vp.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
@@ -383,12 +397,22 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
             }
         });
+        rootView.setFocusableInTouchMode(true);
+        rootView.requestFocus();
+        rootView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
+                return vp.onKeyDown(keyCode,event);
+            }
+        });
 
-        loadData();
 
         return rootView;
     }
+
+
+
 
     private Handler mHandler = new Handler() {
         @Override
@@ -413,13 +437,38 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     mNewsDetailFootView.setLayoutParams(layoutParams);
                     lv.addFooterView(mNewsDetailFootView);
                     break;
+
+                case VIDEO_SMALL:
+
+                    int currentItem = (int) msg.obj;
+                    if (currentItem == 0 && vp.isPlay()) {
+                        if (vp.getParent() != null)
+                            ((ViewGroup) vp.getParent()).removeAllViews();
+                        mDetailVideo.addView(vp);
+                        mSmallScreen.removeAllViews();
+                        mSmallLayout.setVisibility(View.GONE);
+                    } else if (currentItem == 1 && vp.isPlay()) {
+                        if (vp.getParent() != null)
+                            ((ViewGroup) vp.getParent()).removeAllViews();
+                        mSmallScreen.addView(vp);
+                        mSmallLayout.setVisibility(View.VISIBLE);
+                        mDetailVideo.removeAllViews();
+                    }
+                    break;
+                case VIDEO_FULLSCREEN:
+                    Configuration config = (Configuration) msg.obj;
+                    onConfigurationChanged(config);
+                    break;
+                case VIDEO_NORMAL:
+                    break;
             }
         }
     };
 
-    @Override
+
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Log.v(TAG, "onConfigurationChanged");
 
         if (vp != null) {
             vp.onChanged(newConfig);
@@ -463,38 +512,44 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (mRefreshLike != null) {
             mContext.unregisterReceiver(mRefreshLike);
         }
-        if (vp != null)
-            vp.onDestory();
+
+    }
+
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.v(TAG, "onStop" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mDetailLeftBack.getVisibility() == View.VISIBLE&&vp.isPlay()) {
-            if (vp.getParent() != null)
-                ((ViewGroup) vp.getParent()).removeAllViews();
-            mSmallScreen.addView(vp);
-            mSmallLayout.setVisibility(View.VISIBLE);
-            mDetailVideo.removeAllViews();
-        } else if (vp != null)
+        Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
+        if (vp != null )
             vp.onPause();
+
+
 //        mDetailWebView.onPause();
     }
+
+
+
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mDetailLeftBack.getVisibility() == View.VISIBLE&&vp.isPlay()) {
-            if (vp.getParent() != null)
-                ((ViewGroup) vp.getParent()).removeAllViews();
-            mDetailVideo.addView(vp);
-            mSmallScreen.removeAllViews();
-            mSmallLayout.setVisibility(View.GONE);
-        }else
         if (vp != null)
             vp.onResume();
+
+
 //        mDetailWebView.onResume();
     }
+
+
 
 
     boolean isAttention;
@@ -785,7 +840,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
 //                '改回去'+ mNewID
-                HttpConstant.URL_NEWS_RELATED + "nid=10060188" ,
+                HttpConstant.URL_NEWS_RELATED + "nid=10060188",
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -829,6 +884,16 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
     }
+
+    private NewsDetailVideoAty mNewsDetailVideoAty;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mNewsDetailVideoAty = (NewsDetailVideoAty) activity;
+        mNewsDetailVideoAty.setHandler(mHandler);
+    }
+
 
     public void setNoRelatedDate() {
         RelatedItemEntity entity = new RelatedItemEntity();
@@ -1347,6 +1412,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (vp != null) {
             vp.onDestory();
         }
+        vp=null;
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
 //        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
 //            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);

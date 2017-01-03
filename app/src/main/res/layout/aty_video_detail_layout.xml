@@ -243,9 +243,10 @@
         android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="48dp"
         android:id="@+id/detai_small_layout"
         android:layout_width="200dp"
-        android:layout_height="200dp">
+        android:layout_height="120dp">
 
         <FrameLayout
             android:id="@+id/detail_small_screen"
