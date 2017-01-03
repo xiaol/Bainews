@@ -258,7 +258,7 @@ def buildTime() {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile project(':sharesdk_mainlib')
