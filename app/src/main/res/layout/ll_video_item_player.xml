@@ -54,8 +54,11 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:background="#30000000"
-                android:padding="8dp"
-                android:text="2.3万播放  | 15:00"
+                android:paddingRight="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="15:00"
                 android:textColor="@color/white"
                 android:textSize="11sp" />
         </RelativeLayout>
