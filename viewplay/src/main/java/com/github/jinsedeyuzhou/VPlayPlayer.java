@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -328,22 +329,53 @@ public class VPlayPlayer extends RelativeLayout {
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
 
-        layout.setClickable(true);
-        layout.setOnTouchListener(new OnTouchListener() {
+//        layout.getParent().requestDisallowInterceptTouchEvent(true);
+        setClickable(true);
+        setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 if (detector.onTouchEvent(event))
                     return true;
 
                 // 处理手势结束
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_UP:
                         endGesture();
                         break;
                 }
+                return true;
+            }
+        });
+
+        contollerbar.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e("custommedia", "event");
+
+                Rect seekRect = new Rect();
+                seekBar.getHitRect(seekRect);
+
+                if ((event.getY() >= (seekRect.top - 50)) && (event.getY() <= (seekRect.bottom + 50))) {
+
+                    float y = seekRect.top + seekRect.height() / 2;
+                    //seekBar only accept relative x
+                    float x = event.getX() - seekRect.left;
+                    if (x < 0) {
+                        x = 0;
+                    } else if (x > seekRect.width()) {
+                        x = seekRect.width();
+                    }
+                    MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
+                            event.getAction(), x, y, event.getMetaState());
+                    return seekBar.onTouchEvent(me);
+
+                }
                 return false;
             }
         });
+
+
 
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
@@ -425,10 +457,13 @@ public class VPlayPlayer extends RelativeLayout {
             }
         };
 
+        portrait=getScreenOrientation(activity)==ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+
        hideAll();
 
 
     }
+
 
     private boolean instantSeeking;
     private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
@@ -482,7 +517,7 @@ public class VPlayPlayer extends RelativeLayout {
             hideAll();
             bottomProgress.setProgress(0);
             isShowContoller = false;
-            appVideoPlay.setVisibility(View.VISIBLE);
+//            appVideoPlay.setVisibility(View.VISIBLE);
 
         } else if (newStatus == PlayStateParams.STATE_ERROR) {
             Log.d(TAG, "STATE_ERROR");
@@ -500,11 +535,13 @@ public class VPlayPlayer extends RelativeLayout {
             progressBar.setVisibility(View.GONE);
             isShowContoller = true;
             play.setVisibility(View.VISIBLE);
-            if (!MediaUtils.isNetworkAvailable(mContext) && MediaUtils.isConnectionAvailable(mContext) && !isAllowModible) {
-                mVideoView.pause();
-                handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
-                showWifiDialog();
-            }
+            handler.sendEmptyMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
+            bottomProgress.setVisibility(View.VISIBLE);
+//            if (!MediaUtils.isNetworkAvailable(mContext) && MediaUtils.isConnectionAvailable(mContext) && !isAllowModible) {
+//                mVideoView.pause();
+//                handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
+//                showWifiDialog();
+//            }
 
         }
 
@@ -547,15 +584,20 @@ public class VPlayPlayer extends RelativeLayout {
 
 
     private void hide(boolean show) {
-        if (!isFixedTool) {
-            if (!iSportrait)
-                top_box.setVisibility(show ? View.VISIBLE : View.GONE);
-            else {
-                top_box.setVisibility(View.GONE);
-            }
-        } else {
-            top_box.setVisibility(View.VISIBLE);
-        }
+//        if (!isFixedTool) {
+//            if (!iSportrait)
+//                top_box.setVisibility(show ? View.VISIBLE : View.GONE);
+//            else {
+//                top_box.setVisibility(View.GONE);
+//            }
+//        } else {
+//            top_box.setVisibility(View.VISIBLE);
+//        }
+        if (!portrait)
+         top_box.setVisibility(show?View.VISIBLE:View.GONE);
+//        else
+//            top_box.setVisibility(View.VISIBLE);
+
         showBottomControl(show);
         bottomProgress.setVisibility(show ? View.GONE : View.VISIBLE);
         updatePausePlay();
@@ -581,7 +623,6 @@ public class VPlayPlayer extends RelativeLayout {
             isShow = true;
         progressBar.setVisibility(View.GONE);
         hide(true);
-        handler.sendEmptyMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
         handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
         if (timeout != 0 && mVideoView.isPlaying()) {
             handler.sendMessageDelayed(handler.obtainMessage(PlayStateParams.SET_VIEW_HIDE), timeout);
@@ -624,6 +665,7 @@ public class VPlayPlayer extends RelativeLayout {
                         top_box.setVisibility(View.GONE);
 
                     } else {
+                        top_box.setVisibility(View.VISIBLE);
                         int heightPixels = activity.getResources().getDisplayMetrics().heightPixels;
                         int widthPixels = activity.getResources().getDisplayMetrics().widthPixels;
                         layout.getLayoutParams().height = Math.min(heightPixels, widthPixels);
@@ -682,6 +724,7 @@ public class VPlayPlayer extends RelativeLayout {
 //
 //    }
 
+
     /**
      * 更新全屏按钮
      */
@@ -703,6 +746,7 @@ public class VPlayPlayer extends RelativeLayout {
             play.setImageResource(R.drawable.play_selector);
         }
     }
+
 
 
     private int getScreenOrientation(Activity activity) {
@@ -821,12 +865,12 @@ public class VPlayPlayer extends RelativeLayout {
             firstTouch = true;
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             //横屏下拦截事件
-//            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-//                return true;
-//            } else {
-//                return super.onDown(e);
-//            }
-            return true;
+            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                return true;
+            } else {
+                return super.onDown(e);
+            }
+//            return true;
         }
 
         /**
@@ -1022,11 +1066,11 @@ public class VPlayPlayer extends RelativeLayout {
 
 
     }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return true;
-    }
+//
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        return true;
+//    }
 
     private void pause() {
         play.setImageResource(R.drawable.play_selector);

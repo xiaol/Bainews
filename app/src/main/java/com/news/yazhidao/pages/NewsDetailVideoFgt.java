@@ -315,6 +315,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         vp = PlayerManager.getPlayerManager().initialize(mContext);
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
+        vp.setFixed(true);
 
         addHeadView(inflater, container);
         loadData();
@@ -346,6 +347,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
             @Override
             public void onClick(View v) {
 
+                NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
+                if (mActivity.isCommentPage) {
+                    mActivity.isCommentPage = false;
+                    mActivity.mNewsDetailViewPager.setCurrentItem(0);
+
+                }
             }
         });
         mClose = (ImageView) getActivity().findViewById(R.id.detial_video_close);
@@ -357,7 +364,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     vp.release();
                     mSmallScreen.removeAllViews();
                     mSmallLayout.setVisibility(View.GONE);
-                    mDetailBg.setVisibility(View.VISIBLE);
+                    mVideoShowBg.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -370,12 +377,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
 
 
-        mDetailVideo.setVisibility(View.VISIBLE);
+
         if (vp.getParent() != null)
             ((ViewGroup) vp.getParent()).removeAllViews();
-        vp.setTitle(mResult.getTitle());
-        vp.start(mResult.getVideourl());
-        mDetailVideo.addView(vp);
+//        vp.setTitle(mResult.getTitle());
+//        vp.start(mResult.getVideourl());
+
 
         vp.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
@@ -441,12 +448,17 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 case VIDEO_SMALL:
 
                     int currentItem = (int) msg.obj;
-                    if (currentItem == 0 && vp.isPlay()) {
-                        if (vp.getParent() != null)
-                            ((ViewGroup) vp.getParent()).removeAllViews();
-                        mDetailVideo.addView(vp);
-                        mSmallScreen.removeAllViews();
-                        mSmallLayout.setVisibility(View.GONE);
+                    if (currentItem == 0 ) {
+                        if (vp.isPlay()) {
+                            if (vp.getParent() != null)
+                                ((ViewGroup) vp.getParent()).removeAllViews();
+                            mDetailVideo.addView(vp);
+                            mSmallScreen.removeAllViews();
+                            mSmallLayout.setVisibility(View.GONE);
+
+                        }else
+                            mVideoShowBg.setVisibility(View.VISIBLE);
+
                     } else if (currentItem == 1 && vp.isPlay()) {
                         if (vp.getParent() != null)
                             ((ViewGroup) vp.getParent()).removeAllViews();
@@ -470,7 +482,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
 
-        if (vp != null) {
+
+        if (vp != null&&vp.isPlay()) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -482,6 +495,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
             } else {
                 mDetailVideo.removeAllViews();
+                mDetailVideo.setVisibility(View.GONE);
                 mFullScreen.addView(vp);
                 mFullScreen.setVisibility(View.VISIBLE);
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mDetailWrapper"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -10,8 +9,7 @@
         android:id="@+id/mNewsDetailViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/mDetailBottomBanner"
-        />
+        android:layout_above="@+id/mDetailBottomBanner" />
 
     <RelativeLayout
         android:id="@+id/mImageWallWrapper"
@@ -19,8 +17,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/mDetailBottomBanner"
         android:background="@color/black"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/mImageWallVPager"
@@ -45,45 +42,38 @@
             android:scrollbars="vertical"
             android:text="sssss"
             android:textColor="@color/color7"
-            android:textSize="@dimen/font4"
-            />
+            android:textSize="@dimen/font4" />
     </RelativeLayout>
+
     <FrameLayout
         android:id="@+id/fl_title_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/transparent"
-        >
+        android:layout_alignParentTop="true">
 
 
         <RelativeLayout
             android:id="@+id/mDetailHeader"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-
-            >
+            android:background="@color/transparent">
 
             <TextView
                 android:id="@+id/mDetailLeftBack"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/detial_video_back"
-                android:background="@drawable/bg_left_back_selector"
                 android:clickable="true"
-                android:paddingLeft="15dp"
-                />
+                android:drawableLeft="@drawable/detial_video_back"
+                android:paddingLeft="15dp" />
 
             <TextView
                 android:id="@+id/mDetailRightMore"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
-                android:drawableRight="@drawable/detai_video_share"
-                android:background="@drawable/bg_left_back_selector"
                 android:clickable="true"
-                android:paddingRight="15dp"
-                />
+                android:drawableRight="@drawable/detai_video_share"
+                android:paddingRight="15dp" />
 
             <!--<TextView-->
             <!--android:id="@+id/mDetailRightAttention"-->
@@ -102,13 +92,13 @@
         </RelativeLayout>
 
 
-        <View
-            android:id="@+id/mHeaderDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/new_color5"
-            android:layout_below="@id/mDetailHeader"
-            />
+        <!--<View-->
+        <!--android:id="@+id/mHeaderDivider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:background="@color/new_color5"-->
+        <!--android:layout_below="@id/mDetailHeader"-->
+        <!--/>-->
     </FrameLayout>
 
     <RelativeLayout
@@ -116,15 +106,13 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:visibility="visible"
         android:background="@color/bg_home_login_header"
-        >
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#e4e4e4"
-            />
+            android:background="#e4e4e4" />
 
         <TextView
             android:id="@+id/mDetailAddComment"
@@ -141,8 +129,7 @@
             android:paddingTop="4dp"
             android:text="说一下..."
             android:textColor="@color/user_add_comment_color"
-            android:textSize="14sp"
-            />
+            android:textSize="14sp" />
 
         <FrameLayout
             android:id="@+id/mDetailComment"
@@ -157,24 +144,22 @@
                 android:layout_height="40dp"
                 android:contentDescription="评论"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_detail_no_comment"
-                />
+                android:src="@drawable/btn_detail_no_comment" />
 
             <TextView
                 android:id="@+id/mDetailCommentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginLeft="24dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/new_color9"
                 android:gravity="center"
-                android:text=""
+                android:includeFontPadding="false"
                 android:paddingLeft="1dp"
+                android:text=""
                 android:textColor="@color/newscomment_numColor"
                 android:textSize="13sp"
-                android:visibility="gone"
-                android:includeFontPadding="false"
-                />
+                android:visibility="gone" />
         </FrameLayout>
 
         <ImageView
@@ -186,7 +171,7 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/mDetailShare"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_favorite_normal"/>
+            android:src="@drawable/btn_detail_favorite_normal" />
 
         <ImageView
             android:id="@+id/mDetailShare"
@@ -197,20 +182,18 @@
             android:layout_marginRight="12dp"
             android:contentDescription="分享"
             android:scaleType="centerInside"
-            android:src="@drawable/btn_detail_share"/>
+            android:src="@drawable/btn_detail_share" />
 
     </RelativeLayout>
-
 
 
     <RelativeLayout
         android:id="@+id/mNewsDetailLoaddingWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="visible"
         android:layout_below="@+id/fl_title_container"
-        >
+        android:background="@color/white"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/mNewsLoadingImg"
@@ -221,13 +204,12 @@
             android:maxWidth="90dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_news_detail_reload"
-            android:visibility="gone"
-            />
-
+            android:visibility="gone" />
 
 
     </RelativeLayout>
-    <include layout="@layout/loading_view_anim"/>
+
+    <include layout="@layout/loading_view_anim" />
 
     <!--需要占位不显示-->
     <ImageView
@@ -235,31 +217,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#88000000"
-        android:visibility="gone"
-        />
-    <include layout="@layout/detail_carefor_layout"/>
+        android:visibility="gone" />
+
+    <include layout="@layout/detail_carefor_layout" />
 
     <RelativeLayout
-        android:visibility="gone"
+        android:id="@+id/detai_small_layout"
+        android:layout_width="200dp"
+        android:layout_height="120dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="48dp"
-        android:id="@+id/detai_small_layout"
-        android:layout_width="200dp"
-        android:layout_height="120dp">
+        android:visibility="gone">
 
         <FrameLayout
             android:id="@+id/detail_small_screen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <ImageView
             android:id="@+id/detial_video_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/video_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/video_close" />
 
     </RelativeLayout>
 
