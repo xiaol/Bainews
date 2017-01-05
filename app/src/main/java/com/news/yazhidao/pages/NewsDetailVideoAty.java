@@ -625,7 +625,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         mNewsFeed.setColflag(result.getColflag());
         mNewsFeed.setConflag(result.getConflag());
         mNewsFeed.setConpubflag(result.getConpubflag());
-
+        mNewsFeed.setRtype(6);
 
         return mNewsFeed;
     }
@@ -1013,6 +1013,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     isFavorite = true;
                     carefor_Text.setText("收藏成功");
                     Logger.e("aaa", "收藏成功数据：" + mNewsFeed.toString());
+                    mNewsFeed.setRtype(6);
                     SharedPreManager.myFavoriteSaveList(mNewsFeed);
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                 }

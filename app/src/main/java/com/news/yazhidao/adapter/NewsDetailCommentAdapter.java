@@ -20,6 +20,7 @@ import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -101,8 +102,13 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
             @Override
             public void onClick(View view) {
                 if (!TextUtil.isEmptyString(strOriginal)) {
-                    Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     NewsFeed newsFeed = newsDetailCommentItem.getNewsFeed();
+                    Intent intent;
+                    if (newsFeed.getRtype() == 6) {
+                        intent = new Intent(mContext, NewsDetailVideoAty.class);
+                    } else {
+                        intent = new Intent(mContext, NewsDetailAty2.class);
+                    }
                     intent.putExtra(KEY_NEWS_FEED, newsFeed);
                     mContext.startActivity(intent);
                 }

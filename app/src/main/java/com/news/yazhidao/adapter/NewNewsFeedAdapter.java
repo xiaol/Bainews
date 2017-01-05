@@ -573,7 +573,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT,true);
+                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
                         if (mNewsFeedFgt != null) {
                             mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
                         } else {
@@ -583,6 +583,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 });
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 break;
             case R.layout.ll_video_item_big:
 
@@ -1004,6 +1005,47 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         notifyDataSetChanged();
     }
 
+    public void setVideoDuration(TextView durationView, int duration) {
+        if (!TextUtil.isEmptyString(String.valueOf(duration))) {
+            String time = secToTime(duration);
+            durationView.setText(time);
+        } else {
+            durationView.setText("");
+        }
+    }
+
+    public String secToTime(int time) {
+        String timeStr = null;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        if (time <= 0)
+            return "00:00";
+        else {
+            minute = time / 60;
+            if (minute < 60) {
+                second = time % 60;
+                timeStr = unitFormat(minute) + ":" + unitFormat(second);
+            } else {
+                hour = minute / 60;
+                if (hour > 99)
+                    return "99:59:59";
+                minute = minute % 60;
+                second = time - hour * 3600 - minute * 60;
+                timeStr = unitFormat(hour) + ":" + unitFormat(minute) + ":" + unitFormat(second);
+            }
+        }
+        return timeStr;
+    }
+
+    public String unitFormat(int i) {
+        String retStr = null;
+        if (i >= 0 && i < 10)
+            retStr = "0" + Integer.toString(i);
+        else
+            retStr = "" + i;
+        return retStr;
+    }
 
     /**
      * 接口回调传入数据的添加与删除
