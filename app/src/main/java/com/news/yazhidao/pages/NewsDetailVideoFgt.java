@@ -163,6 +163,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
+        mNewID = "10455223";
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         Logger.e("aaa", "mTitle==" + mTitle);
         mContext = getActivity();
@@ -854,7 +855,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
 //                '改回去'+ mNewID
-                HttpConstant.URL_NEWS_RELATED + "nid=10060188",
+                HttpConstant.URL_NEWS_RELATED + "nid="+mNewID,
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {

@@ -18,9 +18,9 @@ import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.database.NewsDetailCommentDao;
 import com.news.yazhidao.entity.NewsDetailComment;
-import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailVideoAty;
+import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
@@ -73,9 +73,9 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         String string = newsDetailCommentItem.getContent();
         comment_content.setText(string);
         TextView original = holder.getView(R.id.original);
-        final String strOriginal = newsDetailCommentItem.getOriginal();
-        CharSequence originalStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strOriginal) ? "该新闻已不存在" : strOriginal));
-        original.setText(originalStr);
+        final String strTitle = newsDetailCommentItem.getNtitle();
+        CharSequence titleStr = Html.fromHtml("<b>【原文】</b>" + (TextUtil.isEmptyString(strTitle) ? "该新闻已不存在" : strTitle));
+        original.setText(titleStr);
         ImageButton love_imagebt = holder.getView(R.id.love_imagebt);
 //        if(newsDetailCommentItem.getUpflag() == 1){
 //            love_imagebt.setImageResource(R.drawable.list_icon_gif_nor_icon_heart_selected);
@@ -101,15 +101,15 @@ public class NewsDetailCommentAdapter extends CommonAdapter<NewsDetailComment> {
         original.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtil.isEmptyString(strOriginal)) {
-                    NewsFeed newsFeed = newsDetailCommentItem.getNewsFeed();
+                if (!TextUtil.isEmptyString(strTitle)) {
+                    int nid = newsDetailCommentItem.getNid();
                     Intent intent;
-                    if (newsFeed.getRtype() == 6) {
+                    if (newsDetailCommentItem.getRtype() == 6) {
                         intent = new Intent(mContext, NewsDetailVideoAty.class);
                     } else {
                         intent = new Intent(mContext, NewsDetailAty2.class);
                     }
-                    intent.putExtra(KEY_NEWS_FEED, newsFeed);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, nid+"");
                     mContext.startActivity(intent);
                 }
             }

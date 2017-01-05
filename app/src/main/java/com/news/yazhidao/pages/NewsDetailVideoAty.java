@@ -156,7 +156,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
 
             NewsDetailComment newsDetailComment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
             newsDetailComment.setNewsFeed(mNewsFeed);
-            newsDetailComment.setOriginal(mNewsFeed.getTitle());
+            newsDetailComment.setNtitle(mNewsFeed.getTitle());
             newsDetailCommentDao.add(newsDetailComment);
 
 //            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
