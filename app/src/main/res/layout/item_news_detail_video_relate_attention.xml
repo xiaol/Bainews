@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:paddingRight="6dp"
-                android:text="15:00"
+                android:drawableLeft="@drawable/video_play_small"
                 android:textColor="@color/white"
                 android:textSize="10sp" />
         </RelativeLayout>

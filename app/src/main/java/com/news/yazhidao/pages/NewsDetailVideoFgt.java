@@ -163,7 +163,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
-        mNewID = "10455223";
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         Logger.e("aaa", "mTitle==" + mTitle);
         mContext = getActivity();
@@ -378,7 +377,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
 
 
-
         if (vp.getParent() != null)
             ((ViewGroup) vp.getParent()).removeAllViews();
 //        vp.setTitle(mResult.getTitle());
@@ -411,15 +409,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                return vp.onKeyDown(keyCode,event);
+                return vp.onKeyDown(keyCode, event);
             }
         });
 
 
         return rootView;
     }
-
-
 
 
     private Handler mHandler = new Handler() {
@@ -449,7 +445,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 case VIDEO_SMALL:
 
                     int currentItem = (int) msg.obj;
-                    if (currentItem == 0 ) {
+                    if (currentItem == 0) {
                         if (vp.isPlay()) {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -457,7 +453,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
-                        }else
+                        } else
                             mVideoShowBg.setVisibility(View.VISIBLE);
 
                     } else if (currentItem == 1 && vp.isPlay()) {
@@ -484,7 +480,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         Log.v(TAG, "onConfigurationChanged");
 
 
-        if (vp != null&&vp.isPlay()) {
+        if (vp != null && vp.isPlay()) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -531,8 +527,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
     }
 
 
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -544,14 +538,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
-        if (vp != null )
+        if (vp != null)
             vp.onPause();
 
 
 //        mDetailWebView.onPause();
     }
-
-
 
 
     @Override
@@ -563,8 +555,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 //        mDetailWebView.onResume();
     }
-
-
 
 
     boolean isAttention;
@@ -855,7 +845,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
 //                '改回去'+ mNewID
-                HttpConstant.URL_NEWS_RELATED + "nid="+mNewID,
+                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -1427,7 +1417,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (vp != null) {
             vp.onDestory();
         }
-        vp=null;
+        vp = null;
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
 //        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
 //            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);

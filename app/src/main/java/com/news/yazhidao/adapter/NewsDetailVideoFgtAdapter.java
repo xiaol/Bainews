@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -71,6 +72,16 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             lpCard.height = mCardHeight;
             ivCard.setLayoutParams(lpCard);
             Glide.with(mContext).load(imgUrl).centerCrop().placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivCard);
+        }
+        setVideoDuration((TextView) holder.getView(R.id.tv_video_duration),relatedItemEntity.getDuration());
+    }
+
+    public void setVideoDuration(TextView durationView, int duration) {
+        if (duration != 0) {
+            String time = TextUtil.secToTime(duration);
+            durationView.setText(time);
+        } else {
+            durationView.setText("");
         }
     }
 
