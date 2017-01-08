@@ -1478,7 +1478,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (vp != null) {
             vp.onDestory();
         }
-
+        vp = null;
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
 //        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
 //            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);
