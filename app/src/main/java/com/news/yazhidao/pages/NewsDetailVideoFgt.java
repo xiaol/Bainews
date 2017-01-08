@@ -36,7 +36,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.google.gson.reflect.TypeToken;
@@ -320,7 +319,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
         });
 
 
-        vp = PlayerManager.getPlayerManager().initialize(mContext);
+//        vp = PlayerManager.getPlayerManager().initialize(mContext);
+        vp=new VPlayPlayer(mContext);
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
         vp.setFixed(true);

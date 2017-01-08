@@ -1186,7 +1186,7 @@ public class VPlayPlayer extends RelativeLayout {
     public void onDestory() {
         currentPosition = -1;
         unregisterNetReceiver();
-        orientationEventListener.disable();
+//        orientationEventListener.disable();
         handler.removeCallbacksAndMessages(null);
         mVideoView.stopPlayback();
     }
