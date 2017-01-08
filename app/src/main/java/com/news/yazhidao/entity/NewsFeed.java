@@ -141,6 +141,8 @@ public class NewsFeed implements Serializable {
      */
     private String thumbnail;
 
+    private int duration;
+
 
     @Override
     public String toString() {
@@ -411,5 +413,13 @@ public class NewsFeed implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 }

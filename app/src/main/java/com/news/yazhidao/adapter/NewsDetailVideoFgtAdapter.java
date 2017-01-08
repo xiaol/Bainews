@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -72,6 +73,16 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             ivCard.setLayoutParams(lpCard);
             Glide.with(mContext).load(imgUrl).centerCrop().placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivCard);
         }
+        setVideoDuration((TextView) holder.getView(R.id.tv_video_duration),relatedItemEntity.getDuration());
+    }
+
+    public void setVideoDuration(TextView durationView, int duration) {
+        if (duration != 0) {
+            String time = TextUtil.secToTime(duration);
+            durationView.setText(time);
+        } else {
+            durationView.setText("");
+        }
     }
 
     public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity) {
@@ -80,7 +91,7 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
 //                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, "10060188");
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid());
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid()+"");
                 mContext.startActivity(intent);
                 mContext.finish();
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");

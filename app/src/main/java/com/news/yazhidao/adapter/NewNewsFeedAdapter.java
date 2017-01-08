@@ -573,7 +573,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                         intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT,true);
+                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
                         if (mNewsFeedFgt != null) {
                             mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
                         } else {
@@ -583,6 +583,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 });
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 break;
             case R.layout.ll_video_item_big:
 
@@ -1004,6 +1005,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         notifyDataSetChanged();
     }
 
+    public void setVideoDuration(TextView durationView, int duration) {
+        if (duration != 0) {
+            String time = TextUtil.secToTime(duration);
+            durationView.setText(time);
+        } else {
+            durationView.setText("");
+        }
+    }
 
     /**
      * 接口回调传入数据的添加与删除

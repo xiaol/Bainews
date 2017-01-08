@@ -40,7 +40,7 @@ import android.widget.MediaController;
 import android.widget.TableLayout;
 
 import com.github.jinsedeyuzhou.R;
-import com.github.jinsedeyuzhou.view.PlayStateParams;
+import com.github.jinsedeyuzhou.PlayStateParams;
 
 import java.io.IOException;
 import java.util.ArrayList;

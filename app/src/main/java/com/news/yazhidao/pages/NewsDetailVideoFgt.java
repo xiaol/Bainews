@@ -1,8 +1,10 @@
 package com.news.yazhidao.pages;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -36,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -62,6 +65,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
+import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
@@ -145,7 +149,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private VPlayPlayer vp;
     private FrameLayout mDetailVideo;
     private FrameLayout mFullScreen;
-    private FrameLayout mSmallScreen;
+    private SmallVideoContainer mSmallScreen;
     private RelativeLayout mSmallLayout;
     private ImageView mClose;
     private RelativeLayout mVideoShowBg;
@@ -154,18 +158,22 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextView mDetailVideoTitle;
     private TextView mDetailLeftBack;
     private RelativeLayout mDetailWrapper;
+//    private PowerManager.WakeLock mWakeLock;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MobclickAgent.onEvent(getActivity(), "qidian_user_enter_detail_page");
+        mContext = getActivity();
+//        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
+//        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
         Logger.e("aaa", "mTitle==" + mTitle);
-        mContext = getActivity();
+
 
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
@@ -325,24 +333,33 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mVideoShowBg.setVisibility(View.GONE);
-                mDetailVideo.setVisibility(View.VISIBLE);
-                if (vp.getParent() != null)
-                    ((ViewGroup) vp.getParent()).removeAllViews();
-                vp.setTitle(mResult.getTitle());
-                vp.start(mResult.getVideourl());
-                mDetailVideo.addView(vp);
+                if (vp != null && !vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
+                    showWifiDialog();
+                } else if (MediaNetUtils.getNetworkType(mContext) == 3 || vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
+
+                    mVideoShowBg.setVisibility(View.GONE);
+                    mDetailVideo.setVisibility(View.VISIBLE);
+                    if (vp.getParent() != null)
+                        ((ViewGroup) vp.getParent()).removeAllViews();
+                    vp.setTitle(mResult.getTitle());
+                    vp.play(mResult.getVideourl(), 0);
+                    mDetailVideo.addView(vp);
+
+                }
 
             }
         });
 
+
         mDetailBg = (ImageView) rootView.findViewById(R.id.detail_image_bg);
         mFullScreen = (FrameLayout) getActivity().findViewById(R.id.detail_full_screen);
-        mSmallScreen = (FrameLayout) getActivity().findViewById(R.id.detail_small_screen);
+        mSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.detail_small_screen);
         mSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.detai_small_layout);
         mDetailWrapper = (RelativeLayout) getActivity().findViewById(R.id.mDetailWrapper);
         mDetailLeftBack = (TextView) getActivity().findViewById(R.id.mDetailLeftBack);
 
+
+        mSmallLayout.setClickable(true);
         mSmallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -377,12 +394,18 @@ public class NewsDetailVideoFgt extends BaseFragment {
         setIsShowImagesSimpleDraweeViewURI(mDetailBg, mResult.getThumbnail());
 
 
-
         if (vp.getParent() != null)
             ((ViewGroup) vp.getParent()).removeAllViews();
 //        vp.setTitle(mResult.getTitle());
 //        vp.start(mResult.getVideourl());
 
+
+        if (MediaNetUtils.getNetworkType(mContext) == 3) {
+            mVideoShowBg.setVisibility(View.GONE);
+            vp.setTitle(mResult.getTitle());
+            vp.play(mResult.getVideourl(), 0);
+            mDetailVideo.addView(vp);
+        }
 
         vp.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
@@ -410,7 +433,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                return vp.onKeyDown(keyCode,event);
+                return vp.onKeyDown(keyCode, event);
             }
         });
 
@@ -419,6 +442,36 @@ public class NewsDetailVideoFgt extends BaseFragment {
     }
 
 
+    public void showWifiDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi));
+        builder.setPositiveButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (vp != null)
+                    vp.setAllowModible(true);
+                mVideoShowBg.setVisibility(View.GONE);
+                mDetailVideo.setVisibility(View.VISIBLE);
+                if (vp.getParent() != null)
+                    ((ViewGroup) vp.getParent()).removeAllViews();
+                vp.setTitle(mResult.getTitle());
+                vp.play(mResult.getVideourl(), 0);
+                mDetailVideo.addView(vp);
+
+//                startPlayLogic();
+//                WIFI_TIP_DIALOG_SHOWED = true;
+            }
+        });
+        builder.setNegativeButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
 
     private Handler mHandler = new Handler() {
@@ -448,7 +501,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 case VIDEO_SMALL:
 
                     int currentItem = (int) msg.obj;
-                    if (currentItem == 0 ) {
+                    if (currentItem == 0) {
                         if (vp.isPlay()) {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -456,7 +509,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
-                        }else
+                        } else
                             mVideoShowBg.setVisibility(View.VISIBLE);
 
                     } else if (currentItem == 1 && vp.isPlay()) {
@@ -468,8 +521,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     }
                     break;
                 case VIDEO_FULLSCREEN:
-                    Configuration config = (Configuration) msg.obj;
-                    onConfigurationChanged(config);
+                    if (vp.isPlay()) {
+                        Configuration config = (Configuration) msg.obj;
+                        onConfigurationChanged(config);
+
+//                        NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
+
+                    }
                     break;
                 case VIDEO_NORMAL:
                     break;
@@ -481,9 +539,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-
-
-        if (vp != null&&vp.isPlay()) {
+        if (vp != null && vp.isPlay()) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -530,8 +586,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
     }
 
 
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -543,14 +597,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
-        if (vp != null )
+        if (vp != null)
             vp.onPause();
-
+//        if (mWakeLock != null)
+//            mWakeLock.release();
 
 //        mDetailWebView.onPause();
     }
-
-
 
 
     @Override
@@ -558,12 +611,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
         super.onResume();
         if (vp != null)
             vp.onResume();
-
+//        if (mWakeLock != null)
+//            mWakeLock.acquire();
 
 //        mDetailWebView.onResume();
     }
-
-
 
 
     boolean isAttention;
@@ -854,7 +906,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 new TypeToken<ArrayList<RelatedItemEntity>>() {
                 }.getType(),
 //                '改回去'+ mNewID
-                HttpConstant.URL_NEWS_RELATED + "nid=10060188",
+                HttpConstant.URL_NEWS_RELATED + "nid=" + mNewID,
                 new Response.Listener<ArrayList<RelatedItemEntity>>() {
                     @Override
                     public void onResponse(ArrayList<RelatedItemEntity> relatedItemEntities) {
@@ -1426,7 +1478,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (vp != null) {
             vp.onDestory();
         }
-        vp=null;
+
         /**2016年8月31日 冯纪纲 解决webview内存泄露的问题*/
 //        if (mNewsDetailHeaderView != null && mDetailWebView != null) {
 //            ((ViewGroup) mDetailWebView.getParent()).removeView(mDetailWebView);

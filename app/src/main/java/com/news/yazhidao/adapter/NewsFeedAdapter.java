@@ -37,6 +37,7 @@ import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.AttentionActivity;
 import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
 import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.pages.NewsTopicAty;
@@ -104,6 +105,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return R.layout.ll_news_item_time_line;
                     case 4://奇点号Item
                         return R.layout.ll_news_search_item;
+                    //视频播放列表，可以在列表播放
+                    case 6:
+                        return R.layout.ll_video_item_player;
+                    //item视频布局不能在列表播放，可以在其他列表出现
+                    case 7:
+                        return R.layout.ll_video_item_big;
+                    case 8:
+                        return R.layout.ll_video_item_big;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -115,7 +124,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
             @Override
             public int getViewTypeCount() {
-                return 7;
+                return 10;
             }
 
             @Override
@@ -133,6 +142,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         return NewsFeed.TIME_LINE;
                     case 4://奇点号Item
                         return NewsFeed.SERRCH_ITEM;
+                    case 6:
+                        return NewsFeed.VIDEO_PLAYER;
+                    case 7:
+                        return NewsFeed.VIDEO_BIG;
+                    case 8:
+                        return NewsFeed.VIDEO_SMALL;
                     case 11://大图Item
                     case 12:
                     case 13:
@@ -469,6 +484,41 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     });
                 }
                 break;
+            case R.layout.ll_video_item_player:
+                if (isFavorite) {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false);
+                } else {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
+                }
+                ImageView ivVideo = holder.getView(R.id.image_bg);
+                RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
+                lpVideo.width = mScreenWidth;
+                lpVideo.height = (int) (mScreenWidth * 203 / 360.0f);
+                ivVideo.setLayoutParams(lpVideo);
+                holder.getView(R.id.layout_item_video).setLayoutParams(lpVideo);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
+                setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
+                //点击评论跳转
+                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
+                        if (mNewsFeedFgt != null) {
+                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                        } else {
+                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                        }
+                    }
+                });
+                //item点击事件跳转到详情页播放
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                break;
+            case R.layout.ll_video_item_big:
+
+                break;
         }
     }
 
@@ -702,6 +752,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     } else {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
+                } else if (feed.getRtype() == 6) {
+                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+                    if (mNewsFeedFgt != null) {
+                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+                    } else {
+                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    }
                 } else {
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -853,6 +911,14 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         notifyDataSetChanged();
     }
 
+    public void setVideoDuration(TextView durationView, int duration) {
+        if (duration != 0) {
+            String time = TextUtil.secToTime(duration);
+            durationView.setText(time);
+        } else {
+            durationView.setText("");
+        }
+    }
 
     /**
      * 接口回调传入数据的添加与删除

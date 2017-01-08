@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 31;
+    private static int DATABASE_VERSION = 32;
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -46,7 +46,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         /**默认用户选择的频道*/
         mChannels.add(new ChannelItem("1","奇点",1,true,"1"));
         mChannels.add(new ChannelItem("4","科技",2,true,"1"));
-        mChannels.add(new ChannelItem("42","视频",3,true,"1"));
+        mChannels.add(new ChannelItem("44","视频",3,true,"1"));
         mChannels.add(new ChannelItem("29","外媒",4,true,"1"));
         mChannels.add(new ChannelItem("35","点集",5,true,"1"));
         mChannels.add(new ChannelItem("2","社会",6,true,"1"));
@@ -64,7 +64,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         mChannels.add(new ChannelItem("11","游戏",18,true,"1"));
         mChannels.add(new ChannelItem("16","育儿",19,true,"1"));
         mChannels.add(new ChannelItem("36","自媒体",20,true,"1"));
-        mChannels.add(new ChannelItem("42","视频",21,true,"1"));
+//        mChannels.add(new ChannelItem("42","视频",21,true,"1"));
         /**默认用户未选择的频道,并可选添加*/
         mChannels.add(new ChannelItem("1000","关注",0,false,"0"));
         mChannels.add(new ChannelItem("24","健康",1,false,"1"));

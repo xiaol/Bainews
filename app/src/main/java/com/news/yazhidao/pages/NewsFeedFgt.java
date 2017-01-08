@@ -393,6 +393,13 @@ public class NewsFeedFgt extends Fragment {
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
+        User user = SharedPreManager.getUser(mContext);
+        if (user != null) {
+            String userId = user.getUserId();
+            if (!TextUtil.isEmptyString(userId)) {
+                adDeviceEntity.setImei(userId);
+            }
+        }
 //        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -468,6 +475,7 @@ public class NewsFeedFgt extends Fragment {
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
+        adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
 
@@ -675,7 +683,11 @@ public class NewsFeedFgt extends Fragment {
                 for (NewsFeed newsFeed : result)
                     newsFeed.setChannel(1);
             }
-
+            //如果频道是42,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+            if (mstrChannelId != null && "42".equals(mstrChannelId)) {
+                for (NewsFeed newsFeed : result)
+                    newsFeed.setChannel(42);
+            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -1045,7 +1057,7 @@ public class NewsFeedFgt extends Fragment {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        if (!mstrChannelId.equals("42")) {
+        if (!mstrChannelId.equals("44")) {
             lv.addHeaderView(mSearchHeaderView);
         }
 

@@ -34,10 +34,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.R;
 import com.github.jinsedeyuzhou.media.IMediaController;
 import com.github.jinsedeyuzhou.media.IjkVideoView;
-import com.github.jinsedeyuzhou.utils.MediaUtils;
+import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -583,7 +584,7 @@ public class CustomMediaContoller extends FrameLayout implements IMediaControlle
 
             isShowContoller = true;
             play.setVisibility(View.VISIBLE);
-            if (!MediaUtils.isNetworkAvailable(mContext) && MediaUtils.isConnectionAvailable(mContext) && !isAllowModible) {
+            if (!MediaNetUtils.isNetworkAvailable(mContext) && MediaNetUtils.isConnectionAvailable(mContext) && !isAllowModible) {
                 mVideoView.pause();
                 handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
                 showWifiDialog();
@@ -658,7 +659,7 @@ public class CustomMediaContoller extends FrameLayout implements IMediaControlle
                         ViewGroup.LayoutParams params = layout.getLayoutParams();
                         params.height = initHeight;
                         layout.setLayoutParams(params);
-                        Log.v(TAG, "initHeight" + MediaUtils.dip2px(activity, initHeight));
+                        Log.v(TAG, "initHeight" + MediaNetUtils.dip2px(activity, initHeight));
                         top_box.setVisibility(View.GONE);
 
                     } else {
