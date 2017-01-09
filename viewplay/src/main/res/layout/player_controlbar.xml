@@ -1,75 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout android:background="@android:color/transparent"
+    android:id="@+id/show"
     android:layout_height="match_parent"
-    android:touchscreenBlocksFocus="true"
-    >
-    <!--android:background="@android:color/transparent"-->
-    <RelativeLayout
-        android:id="@+id/show"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/player_btn"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/play_selector" />
+
+    <LinearLayout
+        android:background="#99000000"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_height="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-      >
+        android:orientation="horizontal"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp">
 
         <ImageView
-            android:id="@+id/player_btn"
-            android:layout_width="wrap_content"
+            android:id="@+id/sound"
+            android:layout_gravity="center_vertical"
+            android:layout_height="20dp"
+            android:layout_width="20dp"
+            android:src="@mipmap/sound_open_icon" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/play_selector" />
+            android:layout_width="wrap_content"
+            android:paddingLeft="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:paddingRight="13dp"
-            android:paddingLeft="13dp"
-            android:background="#99000000"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        <SeekBar
+            style="@style/SeekBarAppTheme"
+            android:id="@+id/seekbar"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp" />
 
-            <ImageView
-                android:id="@+id/sound"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/sound_open_icon" />
+        <TextView
+            android:id="@+id/all_time"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:textColor="@android:color/white"
-                android:textSize="10sp" />
-
-            <SeekBar
-                android:id="@+id/seekbar"
-                style="@style/SeekBarAppTheme"
-                android:layout_width="0dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                />
-
-            <TextView
-                android:id="@+id/all_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/white"
-                android:textSize="10sp" />
-
-            <ImageView
-                android:id="@+id/full"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@mipmap/ic_fullscreen" />
-        </LinearLayout>
-
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/full"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_fullscreen" />
+    </LinearLayout>
 
 </RelativeLayout>

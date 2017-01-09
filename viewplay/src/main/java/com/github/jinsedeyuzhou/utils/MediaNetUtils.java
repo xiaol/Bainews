@@ -42,6 +42,7 @@ public class MediaNetUtils {
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                 case TelephonyManager.NETWORK_TYPE_IDEN:
                     /** 2G网络 */
+
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
                 case TelephonyManager.NETWORK_TYPE_EVDO_A:
