@@ -1051,7 +1051,7 @@ public class NewsFeedFgt extends Fragment {
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        if (!mstrChannelId.equals("42")) {
+        if (!mstrChannelId.equals("44")) {
             lv.addHeaderView(mSearchHeaderView);
         }
 

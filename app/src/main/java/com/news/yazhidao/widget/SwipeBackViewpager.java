@@ -26,7 +26,7 @@ public class SwipeBackViewpager extends ViewPager {
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 x_tmp1 = event.getX(0);
-                y_tmp1 = getY();
+                y_tmp1 = event.getY(0);
                 if (getCurrentItem() == 1){
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
@@ -36,11 +36,17 @@ public class SwipeBackViewpager extends ViewPager {
                     if (currentItem == 1){
                         getParent().requestDisallowInterceptTouchEvent(true);
                     }else {
-                        getParent().requestDisallowInterceptTouchEvent(false);
+                        if (y_tmp1 > 210*4){
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                        }else {
+                            getParent().requestDisallowInterceptTouchEvent(true);
+                        }
                     }
                 }else {
                     if (currentItem == 0){
-                        getParent().requestDisallowInterceptTouchEvent(true);
+                        if (y_tmp1 > 210*4){
+                            getParent().requestDisallowInterceptTouchEvent(true);
+                        }
                     }else {
                         getParent().requestDisallowInterceptTouchEvent(false);
                     }

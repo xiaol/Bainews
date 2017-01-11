@@ -230,10 +230,13 @@
         android:layout_marginBottom="48dp"
         android:visibility="gone">
 
-        <FrameLayout
+        <com.news.yazhidao.widget.SmallVideoContainer
             android:id="@+id/detail_small_screen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:clickable="false"
+            />
 
         <ImageView
             android:id="@+id/detial_video_close"
