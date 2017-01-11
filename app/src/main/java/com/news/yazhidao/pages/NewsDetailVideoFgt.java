@@ -66,6 +66,7 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
+import com.news.yazhidao.widget.VideoContainer;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
@@ -146,8 +147,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextViewExtend tv_attention_title;
     private Context mContext;
     private VPlayPlayer vp;
-    private FrameLayout mDetailVideo;
-    private FrameLayout mFullScreen;
+    private VideoContainer  mDetailVideo;
+    private VideoContainer  mFullScreen;
     private SmallVideoContainer mSmallScreen;
     private RelativeLayout mSmallLayout;
     private ImageView mClose;
@@ -323,12 +324,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
         vp=new VPlayPlayer(mContext);
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
-        vp.setFixed(true);
 
         addHeadView(inflater, container);
         loadData();
         //视频
-        mDetailVideo = (FrameLayout) rootView.findViewById(R.id.fgt_new_detail_video);
+        mDetailVideo = (VideoContainer) rootView.findViewById(R.id.fgt_new_detail_video);
         mVideoShowBg = (RelativeLayout) rootView.findViewById(R.id.detial_video_show);
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,7 +352,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
         mDetailBg = (ImageView) rootView.findViewById(R.id.detail_image_bg);
-        mFullScreen = (FrameLayout) getActivity().findViewById(R.id.detail_full_screen);
+        mFullScreen = (VideoContainer) getActivity().findViewById(R.id.detail_full_screen);
         mSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.detail_small_screen);
         mSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.detai_small_layout);
         mDetailWrapper = (RelativeLayout) getActivity().findViewById(R.id.mDetailWrapper);

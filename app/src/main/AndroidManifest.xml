@@ -339,7 +339,7 @@
             android:theme="@style/SwipeBackTheme" />
         <activity
             android:name=".pages.MainAty"
-            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

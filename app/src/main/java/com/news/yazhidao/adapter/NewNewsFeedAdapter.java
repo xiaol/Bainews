@@ -581,6 +581,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         }
                     }
                 });
+                //视频播放
+                setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
@@ -590,6 +592,20 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
         }
     }
+
+    private void setPlayClick(final RelativeLayout view,final int position,final NewsFeed feed) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    view.setVisibility(View.GONE);
+                    if (onPlayClickListener != null) {
+                        onPlayClickListener.onPlayClick(view, feed);
+                    }
+                }
+            });
+
+    }
+
 
     private void upLoadAd(NewsFeed feed) {
         if (feed.getRtype() == 3) {
@@ -1027,4 +1043,17 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         public void showPopWindow(int x, int y, NewsFeed feed);
     }
 
+    //视频播放接口
+    private OnPlayClickListener onPlayClickListener;
+
+    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener)
+    {
+        this.onPlayClickListener=onPlayClickListener;
+
+    }
+
+    public interface OnPlayClickListener
+    {
+        void onPlayClick(RelativeLayout relativeLayout,NewsFeed feed);
+    }
 }

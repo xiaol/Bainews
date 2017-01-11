@@ -248,7 +248,7 @@
 
     </RelativeLayout>
 
-    <FrameLayout
+    <com.news.yazhidao.widget.VideoContainer
         android:id="@+id/detail_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

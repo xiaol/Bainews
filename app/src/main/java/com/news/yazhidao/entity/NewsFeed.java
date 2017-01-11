@@ -175,6 +175,8 @@ public class NewsFeed implements Serializable {
                 '}';
     }
 
+
+
     public String getVideourl() {
         return videourl;
     }

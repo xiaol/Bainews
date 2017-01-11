@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
+    <com.news.yazhidao.widget.VideoContainer
         android:id="@+id/fgt_new_detail_video"
         android:layout_width="match_parent"
         android:layout_height="210dp" />

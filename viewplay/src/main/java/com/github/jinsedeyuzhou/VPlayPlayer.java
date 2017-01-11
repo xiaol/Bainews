@@ -474,12 +474,12 @@ public class VPlayPlayer extends RelativeLayout {
         updateFullScreenButton();
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
-        return super.onInterceptTouchEvent(ev);
-    }
-
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
+//        return super.onInterceptTouchEvent(ev);
+//    }
+//
 
     private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
