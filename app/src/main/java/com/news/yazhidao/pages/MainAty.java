@@ -1,18 +1,22 @@
 package com.news.yazhidao.pages;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +61,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.news.yazhidao.utils.manager.SharedPreManager.save;
+
 /**
  * Created by fengjigang on 15/10/28.
  * 主界面
  */
-public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
+public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
@@ -92,6 +98,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     FeedDislikePopupWindow dislikePopupWindow;
     private ChannelItem mCurrentChannel;
     private int mCurrentChannelPos;
+    private TelephonyManager mTelephonyManager;
+    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -264,6 +272,37 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
         }
+        /**请求系统权限*/
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        } else {
+            getDeviceImei();
+        }
+    }
+
+    /**
+     * 权限回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getDeviceImei();
+        }
+    }
+
+    /**
+     * 保存设置IMEI
+     */
+    private void getDeviceImei() {
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (mTelephonyManager != null) {
+            String deviceid = mTelephonyManager.getDeviceId();
+            SharedPreManager.save("flag", "imei", deviceid);
+        }
     }
 
     @Override
@@ -273,7 +312,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         registerReceiver(mReceiver, mFilter);
         User user = SharedPreManager.getUser(this);
         if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
-            SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
+            save(CommonConstant.FILE_USER, "isshowsubscription", true);
             Intent intent = new Intent(this, SubscriptionAty.class);
             startActivity(intent);
         }

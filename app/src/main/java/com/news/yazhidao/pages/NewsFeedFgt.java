@@ -393,14 +393,8 @@ public class NewsFeedFgt extends Fragment {
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
         TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
-        User user = SharedPreManager.getUser(mContext);
-        if (user != null) {
-            String userId = user.getUserId();
-            if (!TextUtil.isEmptyString(userId)) {
-                adDeviceEntity.setImei(userId);
-            }
-        }
-//        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
+        String imei = SharedPreManager.get("flag", "imei");
+        adDeviceEntity.setImei(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
@@ -516,7 +510,7 @@ public class NewsFeedFgt extends Fragment {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
-                        for (int i = mArrNewsFeed.size()-1; i > 0; i--) {
+                        for (int i = mArrNewsFeed.size() - 1; i > 0; i--) {
                             NewsFeed newsFeed = mArrNewsFeed.get(i);
                             if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
                                 adLoadNewsFeedEntity.setNid(newsFeed.getNid());
