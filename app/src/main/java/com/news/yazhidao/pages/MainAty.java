@@ -33,7 +33,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewNewsFeedAdapter;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
@@ -524,10 +524,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     }
 
-    NewNewsFeedAdapter mNewsFeedAdapter;
+    NewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, int newsid, NewNewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, int newsid, NewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
             dislikePopupWindow.setNewsId(newsid);

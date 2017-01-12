@@ -935,7 +935,16 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         public void showPopWindow(int x, int y, NewsFeed feed);
     }
 
+    //视频播放接口
+    private OnPlayClickListener onPlayClickListener;
 
+    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
 
+    }
+
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+    }
 
 }
