@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +27,6 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.database.ChannelItemDao;
-import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.NewsTopic;
 import com.news.yazhidao.entity.TopicBaseInfo;
@@ -43,7 +40,6 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsTopicHeaderView;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,12 +51,14 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
 
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
-    private RelativeLayout mHomeRetry, bgLayout;
+    private RelativeLayout bgLayout;
     private int mtid;
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private TextView mTopicLeftBack,mTopicRightMore;
+    private ImageView mTopicLeftBack, mNewsLoadingImg;
+    private TextView mTopicRightMore;
+    private View mNewsDetailLoaddingWrapper;
     private ExpandableListView mlvSpecialNewsFeed;
     //    private ExpandableListView mExpandableListView;
     private boolean isListRefresh;
@@ -89,8 +87,16 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         mAdapter = new ExpandableSpecialListViewAdapter(this);
         mHandler = new Handler();
         mSpecialNewsHeaderView = new NewsTopicHeaderView(this);
+        mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
         bgLayout = (RelativeLayout) findViewById(R.id.bgLayout);
         mTopicTitle = (TextView) findViewById(R.id.mTopicTitle);
+        mNewsLoadingImg = (ImageView) findViewById(R.id.mNewsLoadingImg);
+        mNewsLoadingImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadData();
+            }
+        });
         mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setAdapter(mAdapter);
         mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
@@ -122,15 +128,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
             }
         });
 //        mlvSpecialNewsFeed.getRefreshableView().addHeaderView(mSpecialNewsHeaderView);
-        mHomeRetry = (RelativeLayout) findViewById(R.id.mHomeRetry);
-        mHomeRetry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                mlvSpecialNewsFeed.setRefreshing();
-                mHomeRetry.setVisibility(View.GONE);
-            }
-        });
-        mTopicLeftBack = (TextView) findViewById(R.id.mTopicLeftBack);
+        mTopicLeftBack = (ImageView) findViewById(R.id.mTopicLeftBack);
         mTopicLeftBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,7 +155,6 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     }
 
 
-
     @Override
     protected void loadData() {
         if (!isListRefresh) {
@@ -171,6 +168,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
 
                 @Override
                 public void onResponse(final NewsTopic result) {
+                    mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
                     mNewTopic = result;
                     mTopicBaseInfo = mNewTopic.getTopicBaseInfo();
                     mTopicTitle.setText(mTopicBaseInfo.getName());
@@ -186,7 +184,8 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.i("tag", error.toString());
+                    mNewsLoadingImg.setVisibility(View.VISIBLE);
+                    bgLayout.setVisibility(View.GONE);
                 }
             });
             HashMap<String, String> header = new HashMap<>();
@@ -195,6 +194,8 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
             topicRequestGet.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(topicRequestGet);
         } else {
+            mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
+            mNewsLoadingImg.setVisibility(View.VISIBLE);
             setRefreshComplete();
 //            ArrayList<NewsFeed> newsFeeds = mNewsFeedDao.queryByChannelId(mstrChannelId);
 //            if (TextUtil.isListEmpty(newsFeeds)) {
@@ -227,26 +228,26 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.mLoginWeibo:
-                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
-                    return;
-                }
-                mFirstClickTime = System.currentTimeMillis();
-                break;
-            case R.id.mLoginWeixin:
-                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
-                    return;
-                }
-                mFirstClickTime = System.currentTimeMillis();
-                break;
-            case R.id.mLoginCancel:
-                this.finish();
-                break;
-            case R.id.mLoginSetting:
-                Intent settingAty = new Intent(this, SettingAty.class);
-                startActivity(settingAty);
-                this.finish();
-                break;
+//            case R.id.mLoginWeibo:
+//                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
+//                    return;
+//                }
+//                mFirstClickTime = System.currentTimeMillis();
+//                break;
+//            case R.id.mLoginWeixin:
+//                if (System.currentTimeMillis() - mFirstClickTime < 2000) {
+//                    return;
+//                }
+//                mFirstClickTime = System.currentTimeMillis();
+//                break;
+//            case R.id.mLoginCancel:
+//                this.finish();
+//                break;
+//            case R.id.mLoginSetting:
+//                Intent settingAty = new Intent(this, SettingAty.class);
+//                startActivity(settingAty);
+//                this.finish();
+//                break;
         }
     }
 
@@ -411,37 +412,12 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
                     childOnePicHolder.ivDelete = (ImageView) vOnePic.findViewById(R.id.delete_imageView);
                     childOnePicHolder.llSourceOnePic = (LinearLayout) vOnePic.findViewById(R.id.source_content_linearLayout);
                     childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
-                    childOnePicHolder.ivBottomLine = (ImageView) vOnePic.findViewById(R.id.line_bottom_imageView);
                     vOnePic.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
                     vOnePic.setTag(childOnePicHolder);
                     convertView = vOnePic;
                 } else {
                     childOnePicHolder = (ChildOnePicHolder) convertView.getTag();
                 }
-                childOnePicHolder.tvTitle.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        RelativeLayout.LayoutParams lpSourceContent = (RelativeLayout.LayoutParams) childOnePicHolder.llSourceOnePic.getLayoutParams();
-                        RelativeLayout.LayoutParams titleLp = (RelativeLayout.LayoutParams) childOnePicHolder.tvTitle.getLayoutParams();
-                        RelativeLayout.LayoutParams lpBottomLine = (RelativeLayout.LayoutParams) childOnePicHolder.ivBottomLine.getLayoutParams();
-                        int lineCount = childOnePicHolder.tvTitle.getLineCount();
-                        if (lineCount >= 3) {
-                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                            lpSourceContent.rightMargin = DensityUtil.dip2px(mContext, 15);
-                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.source_content_linearLayout);
-                        } else if (lineCount <= 1) {
-                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 21), DensityUtil.dip2px(mContext, 15), 0);
-                            lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                        } else {
-                            titleLp.setMargins(DensityUtil.dip2px(mContext, 15), DensityUtil.dip2px(mContext, 10), DensityUtil.dip2px(mContext, 15), 0);
-                            lpSourceContent.rightMargin = mCardWidth + DensityUtil.dip2px(mContext, 25);
-                            lpBottomLine.addRule(RelativeLayout.BELOW, R.id.title_img_View);
-                        }
-                        childOnePicHolder.llSourceOnePic.setLayoutParams(lpSourceContent);
-                        childOnePicHolder.ivBottomLine.setLayoutParams(lpBottomLine);
-                    }
-                });
                 RelativeLayout.LayoutParams lpCard = (RelativeLayout.LayoutParams) childOnePicHolder.ivPicture.getLayoutParams();
                 lpCard.width = mCardWidth;
                 lpCard.height = mCardHeight;
@@ -499,6 +475,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
                     childBigPicHolder.tvCommentNum = (TextViewExtend) vBigPic.findViewById(R.id.comment_num_textView);
                     childBigPicHolder.tvType = (TextViewExtend) vBigPic.findViewById(R.id.type_textView);
                     childBigPicHolder.ivDelete = (ImageView) vBigPic.findViewById(R.id.delete_imageView);
+                    vBigPic.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
                     vBigPic.setTag(childBigPicHolder);
                     convertView = vBigPic;
                 } else {
@@ -523,6 +500,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
                     childNoPicHolderHolder = new ChildNoPicHolder();
                     vEmpty = LayoutInflater.from(mContext).inflate(R.layout.ll_news_topic_item_empty, null);
                     childNoPicHolderHolder.rlContent = (RelativeLayout) vEmpty.findViewById(R.id.news_content_relativeLayout);
+                    vEmpty.findViewById(R.id.checkFavoriteDelete_image).setVisibility(View.GONE);
                     vEmpty.setTag(childNoPicHolderHolder);
                     convertView = vEmpty;
                 } else {
@@ -535,18 +513,14 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
 
         private void setImageUri(ImageView draweeView, String strImg, int width, int height, int rType) {
             if (!TextUtil.isEmptyString(strImg)) {
-                if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)) {
-                    draweeView.setImageResource(R.drawable.bg_load_default_small);
+                Uri uri;
+                if (rType != 3) {
+                    String img = strImg.replace("bdp-", "pro-");
+                    uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
                 } else {
-                    Uri uri;
-                    if (rType != 3) {
-                        String img = strImg.replace("bdp-", "pro-");
-                        uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
-                    } else {
-                        uri = Uri.parse(strImg);
-                    }
-                    Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
+                    uri = Uri.parse(strImg);
                 }
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
             }
         }
 
@@ -579,7 +553,6 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         }
 
         private void setBottomLine(ImageView ivBottom, int count, int position) {
-            Log.i("tag", count + "====" + position);
             if (count == position + 1) {//去掉最后一条的线
                 ivBottom.setVisibility(View.INVISIBLE);
             } else {
@@ -610,21 +583,6 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
                         }
                         startActivityForResult(intent, REQUEST_CODE);
                     }
-                    MobclickAgent.onEvent(mContext, "bainews_view_head_news");
-                    /**点击查看详情时,统计当前的频道名称*/
-                    String channelName = "";
-                    ChannelItemDao dao = new ChannelItemDao(mContext);
-                    ArrayList<ChannelItem> channelItems = dao.queryForAll();
-                    for (ChannelItem item : channelItems) {
-                        if (Integer.valueOf(feed.getChannel()).equals(item.getId())) {
-                            channelName = item.getName();
-                            break;
-                        }
-                    }
-                    dao.setFocusOnline();
-                    HashMap<String, String> hashmap = new HashMap();
-                    hashmap.put("channel", channelName);
-                    MobclickAgent.onEvent(mContext, "user_read_detail", hashmap);
                 }
             });
         }
@@ -636,11 +594,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         }
 
         private void setCommentViewText(TextViewExtend textView, String strText) {
-            if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
-                textView.setText(strText + "评");
-            } else {
-                textView.setText("");
-            }
+            textView.setText(TextUtil.getCommentNum(strText));
         }
 
         private void newsTag(TextViewExtend tag, int type) {

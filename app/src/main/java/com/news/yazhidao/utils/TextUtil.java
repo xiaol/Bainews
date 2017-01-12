@@ -37,6 +37,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.news.yazhidao.R.id.textView;
+
 /**
  * Created by fengjigang on 15/1/27.
  */
@@ -580,22 +582,41 @@ public class TextUtil {
      */
     private static String parseVideoUrl(String videoUrl, int w, int h) {
         String[] split = videoUrl.split("\"");
-        String url = "";
-        for (int i = 0; i < split.length; i++) {
-            if (split[i].contains("https:")) {
-                url = split[i].replace("https", "http").replace("\\", "").replace("preview", "player");
-                break;
-            } else if (split[i].contains("http:")) {
-                url = split[i].replace("\\", "");
+        if (videoUrl.contains("https:") && videoUrl.contains("preview") && videoUrl.contains("qq.com")) {
+            for (int i = 0; i < split.length; i++) {
+                if (split[i].contains("https:")) {
+                    videoUrl = split[i].replace("https", "http").replace("\\", "").replace("preview", "player");
+                    break;
+                } else if (split[i].contains("http:")) {
+                    videoUrl = split[i].replace("\\", "");
+                }
+            }
+            Logger.e("jigang", "video url=" + videoUrl + ",?=" + videoUrl.indexOf("?"));
+//            if (videoUrl.contains("vid=")) {
+//                if (videoUrl.contains("&")) {
+//                    videoUrl = videoUrl.substring(0, videoUrl.indexOf("&"));
+//                }
+//            }
+//            "<iframe src='http://v.qq.com/iframe/player.html?width=500&height=375&auto=0&vid=i0020zlwtrs'></iframe>";
+            if (videoUrl.contains("&")) {
+//                url = url.substring(0, url.indexOf("&"));
+                Pattern p = Pattern.compile("vid=[a-zA-Z0-9]+");
+                Matcher m = p.matcher(videoUrl);
+                ArrayList<String> strs = new ArrayList<>();
+                while (m.find()) {
+                    strs.add(m.group(0));
+                    videoUrl = videoUrl.split("src='")[1].split("\\?")[0] + "?" + strs.get(0);
+                }
+            }
+        } else {
+            //        <iframe src='http://player.youku.com/embed/XMTg2MzQxNDMwMA=='></iframe>'
+            Pattern pt = Pattern.compile("src='([^\r\n']+)'");
+            Matcher match = pt.matcher(videoUrl);
+            if (match.find()) {
+                videoUrl = match.group(1);
             }
         }
-        Logger.e("jigang", "video url=" + url + ",?=" + url.indexOf("?"));
-        if (url.contains("vid=")){
-            if (url.contains("&")) {
-                url = url.substring(0, url.indexOf("&"));
-            }
-        }
-        return url;
+        return videoUrl;
     }
 
     /**
@@ -621,11 +642,11 @@ public class TextUtil {
         return "<script type=\"text/javascript\">function openVideo(url){console.log(url);window.VideoJavaScriptBridge.openVideo(url)}var obj=new Object();function imgOnload(img,url,isLoadImag){console.log(\"img pro \"+url);if(!isLoadImag){return}if(obj[url]!==1){obj[url]=1;console.log(\"img load \"+url);img.src=url}}</script>";
     }
 
-    public static ArrayList<AttentionListEntity> copyArrayList(ArrayList<AttentionListEntity> target){
+    public static ArrayList<AttentionListEntity> copyArrayList(ArrayList<AttentionListEntity> target) {
         ArrayList<AttentionListEntity> newList = new ArrayList<>();
-        if (!TextUtil.isListEmpty(target)){
-            for (AttentionListEntity entity:target){
-                newList.add(new AttentionListEntity(entity.getConcern(),entity.getCtime(),entity.getDescr(),entity.getFlag(),entity.getIcon(),entity.getId(),entity.getName()));
+        if (!TextUtil.isListEmpty(target)) {
+            for (AttentionListEntity entity : target) {
+                newList.add(new AttentionListEntity(entity.getConcern(), entity.getCtime(), entity.getDescr(), entity.getFlag(), entity.getIcon(), entity.getId(), entity.getName()));
             }
         }
         return newList;
@@ -634,7 +655,7 @@ public class TextUtil {
     /**
      * 生成新闻详情的html
      */
-    public static String genarateHTML(NewsDetail detail, int textSize,boolean isLoadImgs) {
+    public static String genarateHTML(NewsDetail detail, int textSize, boolean isLoadImgs) {
         if (detail == null) {
             return "";
         }
@@ -659,9 +680,9 @@ public class TextUtil {
                 detail.getTitle() +
                 "</div><div style=\"font-size:" + commentTextSize + "px;margin: 0px 0px 25px 0px;color: #999999;\" class=\"top\"><span>" +
                 detail.getPname() + "</span>" +
-                "&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
+                "&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #999999\">" + DateUtil.getMonthAndDay(detail.getPtime()) + "</span>");
         if (detail.getCommentSize() != 0) {
-            contentBuilder.append("&nbsp; <span style=\"font-size: "+commentTextSize+"px;color: #999999\">" + detail.getCommentSize() + "评论" + "</span>");
+            contentBuilder.append("&nbsp; <span style=\"font-size: " + commentTextSize + "px;color: #999999\">" + detail.getCommentSize() + "评论" + "</span>");
         }
         contentBuilder.append("</div><div class=\"content\">");
 
@@ -682,15 +703,16 @@ public class TextUtil {
                 if (!TextUtil.isEmptyString(img)) {
                     Logger.e("jigang", "img " + img);
                     /**2016年9月5日 冯纪纲 修改webview 中只能无图加载*/
-                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "',"+!isLoadImgs+")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
+                    contentBuilder.append("<p class=\"p_img\"><img src=\"" + imgUrl + "\" onload=\"imgOnload(this,'" + img + "'," + !isLoadImgs + ")\"  onclick=\"imgOnload(this,'" + img + "',true)\"></p>");
                 }
                 if (!TextUtil.isEmptyString(vid)) {
                     int w = (int) (DeviceInfoUtil.getScreenWidth() / DeviceInfoUtil.obtainDensity());
                     int h = (int) (w * 0.75);
+                    vid = vid.replace("\"", "\'");
                     String url = parseVideoUrl(vid, w, h);
-                    if (url.contains("player.html")){
+                    if (url.contains("player.html")) {
                         contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><iframe allowfullscreen class=\"video_iframe\" frameborder=\"0\" height=\"" + h + "\" width=\"100%\" src=\"" + url + "\"></iframe></p>");
-                    }else {
+                    } else {
                         contentBuilder.append("<p class=\"p_video\" style=\"position:relative\"><div onclick=\"openVideo('" + url + "')\" style=\"position:absolute;width:94%;height:" + h + "px\"></div><img src=\"" + playImgUrl + "\" style=\"width: 100%;height: auto\"></p>");
                     }
                 }
@@ -698,5 +720,55 @@ public class TextUtil {
         }
         contentBuilder.append("</div></body></html>");
         return contentBuilder.toString();
+    }
+
+    public static String getCommentNum(String strText) {
+        if (!TextUtil.isEmptyString(strText) && !"0".equals(strText)) {
+            int num = Integer.valueOf(strText);
+            if (num >= 10000) {
+                int i = num % 10000 / 1000;
+                if (i > 0) {
+                    strText = num / 10000 + "." + String.valueOf(i).substring(0, 1) + "万";
+                } else {
+                    strText = num / 10000 + "万";
+                }
+            }
+            return strText + "评";
+        } else {
+            return "";
+        }
+    }
+
+    public static String secToTime(int time) {
+        String timeStr = null;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+        if (time <= 0)
+            return "00:00";
+        else {
+            minute = time / 60;
+            if (minute < 60) {
+                second = time % 60;
+                timeStr = unitFormat(minute) + ":" + unitFormat(second);
+            } else {
+                hour = minute / 60;
+                if (hour > 99)
+                    return "99:59:59";
+                minute = minute % 60;
+                second = time - hour * 3600 - minute * 60;
+                timeStr = unitFormat(hour) + ":" + unitFormat(minute) + ":" + unitFormat(second);
+            }
+        }
+        return timeStr;
+    }
+
+    public static String unitFormat(int i) {
+        String retStr = null;
+        if (i >= 0 && i < 10)
+            retStr = "0" + Integer.toString(i);
+        else
+            retStr = "" + i;
+        return retStr;
     }
 }

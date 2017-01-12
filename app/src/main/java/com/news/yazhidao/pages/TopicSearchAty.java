@@ -211,14 +211,13 @@ public class TopicSearchAty extends SwipeBackActivity implements View.OnClickLis
             e.printStackTrace();
         }
         User user = SharedPreManager.getUser(this);
-        StringBuffer uid = new StringBuffer();
-        if (user != null& !user.isVisitor()) {
-            uid.append("&uid=");
-            uid.append(user.getMuid());
+        int uid = 0;
+        if (user != null) {
+            uid = user.getMuid();
         }
         RequestQueue requestQueue = Volley.newRequestQueue(TopicSearchAty.this);
         SearchRequest<ArrayList<NewsFeed>> searchRequest = new SearchRequest<>(Request.Method.GET, new TypeToken<ArrayList<NewsFeed>>() {
-        }.getType(), HttpConstant.URL_SEARCH_WITH_SUBSCRIBE + "?keywords=" + keyWord + "&p=" + pPageIndex + uid.toString(), new Response.Listener<ArrayList<NewsFeed>>() {
+        }.getType(), HttpConstant.URL_SEARCH_WITH_SUBSCRIBE + "?keywords=" + keyWord +"&p=" + pPageIndex + "&uid="+uid, new Response.Listener<ArrayList<NewsFeed>>() {
 
             @Override
             public void onResponse(ArrayList<NewsFeed> response) {

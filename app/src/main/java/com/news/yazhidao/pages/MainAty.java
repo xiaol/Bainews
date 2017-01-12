@@ -1,29 +1,44 @@
 package com.news.yazhidao.pages;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
@@ -40,19 +55,26 @@ import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.news.yazhidao.utils.manager.SharedPreManager.save;
 
 /**
  * Created by fengjigang on 15/10/28.
  * 主界面
  */
-public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
+public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
+    public static final String ACTION_FOUCES = "com.news.yazhidao.ACTION_FOUCES";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
+    public static final String KEY_INTENT_CURRENT_POSITION = "key_intent_current_position";
     public static final String KEY_CURRENT_CHANNEL = "key_current_channel";
     private ArrayList<ChannelItem> mUnSelChannelItems;
 
@@ -76,6 +98,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     FeedDislikePopupWindow dislikePopupWindow;
     private ChannelItem mCurrentChannel;
     private int mCurrentChannelPos;
+    private TelephonyManager mTelephonyManager;
+    private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -98,8 +122,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             } else if (ACTION_USER_LOGOUT.equals(action)) {
                 Logger.e("jigang", "user login------2222");
                 setUserCenterIcon(null);
-            }else if(ConnectivityManager.CONNECTIVITY_ACTION.equals(action)){
-                mConnectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            } else if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
+                mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo netInfo = mConnectivityManager.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.isAvailable()) {
                     /////////////网络连接
@@ -120,6 +144,20 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     ////////网络断开
                     mtvNewWorkBar.setVisibility(View.VISIBLE);
                 }
+            } else if (ACTION_FOUCES.equals(action)) {
+                int current_position = intent.getIntExtra(KEY_INTENT_CURRENT_POSITION, 0);
+                channelItems = mChannelItemDao.queryForSelected();
+                mViewPager.setCurrentItem(current_position);
+                mCurrentChannel = channelItems.get(current_position);
+                Fragment item = mViewPagerAdapter.getItem(current_position);
+                if (item != null) {
+                    ((NewsFeedFgt) item).setNewsFeed(null);
+                    ((NewsFeedFgt) item).setChannelId("1000");
+                }
+                mViewPagerAdapter.setmChannelItems(channelItems);
+                mViewPagerAdapter.notifyDataSetChanged();
+                mChannelTabStrip.setViewPager(mViewPager);
+                Logger.e("jigang", "--- onActivityResult");
             }
         }
     }
@@ -137,13 +175,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     /**
      * 长按菜单键会弹出菜单（注销无用的）
-      */
+     */
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.menu_home, menu);
 //        return true;
 //    }
-
     @Override
     protected void initializeViews() {
         AnalyticsConfig.setChannel("official");
@@ -174,10 +211,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         dislikePopupWindow = (FeedDislikePopupWindow) findViewById(R.id.feedDislike_popupWindow);
         dislikePopupWindow.setVisibility(View.GONE);
         dislikePopupWindow.setItemClickListerer(new TagCloudLayout.TagItemClickListener() {
-            Handler mHandler = new Handler();
-
             @Override
-            public void itemClick(int position) {
+            public void itemClick(int position) throws AuthFailureError {
                 switch (position) {
                     case 0://不喜欢
 //                        NewsFeedFgt newsFeedFgt= (NewsFeedFgt) mViewPagerAdapter.getItem(mViewPager.getCurrentItem());
@@ -185,6 +220,36 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     case 1://重复、旧闻
                     case 2://内容质量差
                     case 3://不喜欢
+                        final User user = SharedPreManager.getUser(MainAty.this);
+                        if (user != null) {
+                            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                            Map<String, Integer> map = new HashMap<>();
+                            map.put("nid", dislikePopupWindow.getNewsId());
+                            map.put("uid", user.getMuid());
+                            map.put("reason", position);
+                            JSONObject jsonObject = new JSONObject(map);
+                            JsonRequest<JSONObject> request = new JsonObjectRequest(Request.Method.POST, HttpConstant.URL_DISSLIKE_RECORD, jsonObject,
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject response) {
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                }
+                            }) {
+                                @Override
+                                public Map<String, String> getHeaders() {
+                                    HashMap<String, String> header = new HashMap<>();
+                                    header.put("Authorization", "Basic " + user.getAuthorToken());
+                                    header.put("Content-Type", "application/json");
+                                    header.put("X-Requested-With", "*");
+                                    return header;
+                                }
+                            };
+                            request.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+                            requestQueue.add(request);
+                        }
                         mNewsFeedAdapter.disLikeDeleteItem();
                         dislikePopupWindow.setVisibility(View.GONE);
                         ToastUtil.showReduceRecommendToast(MainAty.this);
@@ -197,6 +262,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         /**注册用户登录广播*/
         mFilter.addAction(ACTION_USER_LOGIN);
         mFilter.addAction(ACTION_USER_LOGOUT);
+        mFilter.addAction(ACTION_FOUCES);
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -206,6 +272,37 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 setUserCenterIcon(Uri.parse(user.getUserIcon()));
             }
         }
+        /**请求系统权限*/
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
+                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        } else {
+            getDeviceImei();
+        }
+    }
+
+    /**
+     * 权限回调
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getDeviceImei();
+        }
+    }
+
+    /**
+     * 保存设置IMEI
+     */
+    private void getDeviceImei() {
+        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        if (mTelephonyManager != null) {
+            String deviceid = mTelephonyManager.getDeviceId();
+            SharedPreManager.save("flag", "imei", deviceid);
+        }
     }
 
     @Override
@@ -213,6 +310,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         super.onResume();
         //registerReceiver 最好放到onResume
         registerReceiver(mReceiver, mFilter);
+        User user = SharedPreManager.getUser(this);
+        if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
+            save(CommonConstant.FILE_USER, "isshowsubscription", true);
+            Intent intent = new Intent(this, SubscriptionAty.class);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -424,9 +527,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     NewNewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, NewNewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, int newsid, NewNewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
+            dislikePopupWindow.setNewsId(newsid);
             dislikePopupWindow.showView(x, y - DeviceInfoUtil.getStatusBarHeight(MainAty.this));
 
         }

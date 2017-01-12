@@ -3,6 +3,7 @@ package com.news.yazhidao.pages;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -431,7 +433,12 @@ public class SplashAty extends BaseActivity {
                     PackageInfo packageInfo = packages.get(i);
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("app_id", packageInfo.packageName);
-                    jsonObject.put("active", 1);
+                    //非系统程序
+                    if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                        jsonObject.put("active", 1);
+                    } else {
+                        jsonObject.put("active", 0);
+                    }
                     jsonObject.put("app_name", packageInfo.applicationInfo.loadLabel(getPackageManager()).toString());
                     array.put(jsonObject);
                 }

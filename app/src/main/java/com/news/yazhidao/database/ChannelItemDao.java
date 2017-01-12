@@ -220,27 +220,37 @@ public class ChannelItemDao {
         }
     }
 
-    public void ResetSelectedByFocus() {
+    public int ResetSelectedByFocus() {
+        int position = 0;
         try {
             ChannelItem channelItem = mChannelItemDao.queryForId("1000");
-            if (channelItem.getSelected()) {
-                ArrayList<ChannelItem> channelItems = queryForSelected();
-                channelItems.remove(channelItem);
+            channelItem.setSelected(true);
+            channelItem.setState("1");
+            ArrayList<ChannelItem> channelItems = queryForSelected();
+            mChannelItemDao.delete(channelItems);
+            mChannelItemDao.delete(channelItem);
+
+            if (channelItems.size() > 5) {
                 for (int i = 0; i < channelItems.size(); i++) {
                     if (i == 4) {
                         channelItem.setOrderId(5);
+                        channelItems.get(i).setOrderId(i + 2);
                     } else if (i > 4) {
-                        channelItems.get(i).setOrderId(i + 1);
+                        channelItems.get(i).setOrderId(i + 2);
                     }
                 }
-                if(channelItems.size()>5) {
-                    channelItems.add(4, channelItem);
-                }else {
-                    channelItems.add(channelItem);
-                }
+                position = 4;
+                channelItems.add(4, channelItem);
+            } else {
+                channelItem.setOrderId(channelItems.size());
+                channelItems.add(channelItem);
+                position = channelItems.size();
             }
+            insertList(channelItems);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return position;
     }
 }

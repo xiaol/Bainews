@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    buildToolsVersion '25.0.2'
     lintOptions {
         abortOnError false
     }
@@ -10,9 +10,11 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 130
-        versionName "3.5.3"
+        versionCode 131
+        versionName "3.5.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
+        //多个dex支持
+        multiDexEnabled true
     ndk {
 
         abiFilters "armeabi","armeabi-v7a","x86","mips"
@@ -104,6 +106,7 @@ android {
         iqiyi {}
         coolchuan {}
          */
+//        dianchuan{}
         official {}
         baidu        {}
         hiapk{}
@@ -210,6 +213,7 @@ android {
             storePassword "yazhidao"
             keyAlias "yazhidao"
             keyPassword "yazhidao"
+            v2SigningEnabled false
         }
     }
 
@@ -254,7 +258,7 @@ def buildTime() {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':library')
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile project(':sharesdk_mainlib')
@@ -281,4 +285,7 @@ dependencies {
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
     compile files('libs/ncc_offerwall.jar')
+    compile project(':viewplay')
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:support-v4:25.0.0'
 }

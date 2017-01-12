@@ -148,7 +148,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
 
             NewsDetailComment newsDetailComment = (NewsDetailComment) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
             newsDetailComment.setNewsFeed(mNewsFeed);
-            newsDetailComment.setOriginal(mNewsFeed.getTitle());
+            newsDetailComment.setNtitle(mNewsFeed.getTitle());
             newsDetailCommentDao.add(newsDetailComment);
 
 //            NewsDetailCommentItem newsDetailComment = (NewsDetailCommentItem) intent.getSerializableExtra(UserCommentDialog.KEY_ADD_COMMENT);
@@ -446,6 +446,8 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
 //                mUrl = "6562498";
+//                mUrl = "9076124";
+//        mUrl = "9655396";
         StringBuffer path = new StringBuffer();
         path.append(HttpConstant.URL_FETCH_CONTENT);
         path.append("nid=");
@@ -494,7 +496,7 @@ public class NewsDetailAty2 extends SwipeBackActivity implements View.OnClickLis
                     mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
                         mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(result.getComment() + "");
+                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
                         mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {

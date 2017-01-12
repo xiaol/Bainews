@@ -76,7 +76,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mGuideWeiboLogin:
                 showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
@@ -85,7 +85,7 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIBO, mAuthorizeListener);
-                MobclickAgent.onEvent(this,"qidian_user_first_weibo_login");
+                MobclickAgent.onEvent(this, "qidian_user_first_weibo_login");
                 break;
             case R.id.mGuideWinxinLogin:
                 showLoadingDialog();
@@ -95,13 +95,13 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
                 mFirstClickTime = System.currentTimeMillis();
                 showLoadingDialog();
                 ShareSdkHelper.authorize(this, AuthorizePlatform.WEIXIN, mAuthorizeListener);
-                MobclickAgent.onEvent(this,"qidian_user_first_weixin_login");
+                MobclickAgent.onEvent(this, "qidian_user_first_weixin_login");
                 break;
             case R.id.mGuideSkip:
                 this.finish();
-                Intent mainAty = new Intent(this,MainAty.class);
+                Intent mainAty = new Intent(this, MainAty.class);
                 startActivity(mainAty);
-                MobclickAgent.onEvent(this,"qidian_user_first_look_around");
+                MobclickAgent.onEvent(this, "qidian_user_first_look_around");
                 break;
         }
     }
@@ -109,14 +109,16 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onPause() {
         super.onPause();
-        if (progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
-    /**显示全屏dialog*/
-    private void showLoadingDialog(){
-        if (progressDialog == null){
+    /**
+     * 显示全屏dialog
+     */
+    private void showLoadingDialog() {
+        if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);

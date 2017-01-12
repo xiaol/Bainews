@@ -6,43 +6,82 @@ import java.io.Serializable;
  * Created by Administrator on 2016/9/6.
  */
 public class AdDeviceEntity implements Serializable {
-    /** 用户终端的 IMEI，15 位数字，md5 加密 */
+    /**
+     * 用户终端的 IMEI，15 位数字，md5 加密
+     */
     private String imei;
-    /** 用户终端的eth0接口的MAC地址（大写去除冒号分隔符），md5 加密 */
+    private String imeiori;
+    /**
+     * 用户终端的eth0接口的MAC地址（大写去除冒号分隔符），md5 加密
+     */
     private String mac;
-    /** 用户终端的 eth0 接口的 MAC 地址（大写且保留冒号分隔符），md5 加密 */
+    /**
+     * 用户终端的 eth0 接口的 MAC 地址（大写且保留冒号分隔符），md5 加密
+     */
     private String mac1;
-    /** IOS IDFA 适用于 IOS6 及以上，md5 加密 */
+    /**
+     * IOS IDFA 适用于 IOS6 及以上，md5 加密
+     */
     private String idfa;
-    /** Android Advertising ID，md5 加密 */
+    /**
+     * Android Advertising ID，md5 加密
+     */
     private String aaid;
-    /** Android ID，仅适用于 Android 设备，md5 加密 */
+    /**
+     * Android ID，仅适用于 Android 设备，md5 加密
+     */
     private String anid;
-    /** IOS UDID，md5 加密 */
+    /**
+     * IOS UDID，md5 加密
+     */
     private String udid;
-    /** Windows Phone 用户终端的 DUID，md5 加密 */
+    /**
+     * Windows Phone 用户终端的 DUID，md5 加密
+     */
     private String duid;
-    /** 设备品牌 */
+    /**
+     * 设备品牌
+     */
     private String brand;
-    /** 设备型号 */
+    /**
+     * 设备型号
+     */
     private String platform;
-    /** 操作系统 0：未知 1：android 2：ios 3：windows */
+    /**
+     * 操作系统 0：未知 1：android 2：ios 3：windows
+     */
     private String os;
-    /** 设备操作系统版本号 */
+    /**
+     * 设备操作系统版本号
+     */
     private String os_version;
-    /** 屏幕分辨率，例如：1024*768。建议填写，可以帮助获取最优尺寸创意。 */
+    /**
+     * 屏幕分辨率，例如：1024*768。建议填写，可以帮助获取最优尺寸创意。
+     */
     private String device_size;
-    /** 网络环境 0：未知 1：wifi 2：2G 3：3G 4：4G */
+    /**
+     * 网络环境 0：未知 1：wifi 2：2G 3：3G 4：4G
+     */
     private String network;
-    /** 运营商 0：未知 1：中国移动 2：中国联通 3：中国电信 */
+    /**
+     * 运营商 0：未知 1：中国移动 2：中国联通 3：中国电信
+     */
     private String operator;
-    /** 设备所在地理位置的经度，例如：31.2415 */
+    /**
+     * 设备所在地理位置的经度，例如：31.2415
+     */
     private String longitude;
-    /** 设备所在地理位置的纬度，例如：31.2415 */
+    /**
+     * 设备所在地理位置的纬度，例如：31.2415
+     */
     private String latitude;
-    /** 横竖屏。建议填写，可以帮助获取最优尺寸创意。 0：未知 1：竖屏 2：横屏 */
+    /**
+     * 横竖屏。建议填写，可以帮助获取最优尺寸创意。 0：未知 1：竖屏 2：横屏
+     */
     private String screen_orientation;
-    /** 设备所在的 IP 地址 */
+    /**
+     * 设备所在的 IP 地址
+     */
     private String ip;
 
     public AdDeviceEntity() {
@@ -245,5 +284,13 @@ public class AdDeviceEntity implements Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getImeiori() {
+        return imeiori;
+    }
+
+    public void setImeiori(String imeiori) {
+        this.imeiori = imeiori;
     }
 }

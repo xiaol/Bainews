@@ -5,12 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -29,6 +32,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.github.jinsedeyuzhou.PlayStateParams;
+import com.github.jinsedeyuzhou.PlayerManager;
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -59,12 +65,17 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
+import com.news.yazhidao.widget.SmallVideoContainer;
+import com.news.yazhidao.widget.VideoContainer;
+import com.news.yazhidao.widget.VideoItemContainer;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -75,6 +86,8 @@ public class NewsFeedFgt extends Fragment {
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
+    public static final String KEY_SHOW_COMMENT = "key_show_comment";
+    private static final String TAG = "NewsFeedFgt";
 
     /**
      * 当前fragment 所对应的新闻频道
@@ -107,7 +120,7 @@ public class NewsFeedFgt extends Fragment {
     private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
     private boolean mFlag;
     private SharedPreferences mSharedPreferences;
-    private RefreshReceiver mRefreshReciver;
+    private RefreshReceiver mRefreshReceiver;
     /**
      * 热词页面加载更多
      */
@@ -134,6 +147,16 @@ public class NewsFeedFgt extends Fragment {
 
     private int thisVisibleItemCount, thisTotalItemCount;//判断footerView 不滑动
 
+    //视频播放控制
+    private VPlayPlayer vPlayer;
+    private VideoContainer mFeedFullScreen;
+    private SmallVideoContainer mFeedSmallScreen;
+    private RelativeLayout mFeedSmallLayout;
+    private ImageView mFeedClose;
+    public int cPostion = -1;
+    private int lastPostion = -1;
+    private NewsFeed newsFeed;
+
     public interface NewsSaveDataCallBack {
         void result(String channelId, ArrayList<NewsFeed> results);
     }
@@ -150,6 +173,10 @@ public class NewsFeedFgt extends Fragment {
         this.mNewsSaveCallBack = listener;
     }
 
+    public void setChannelId(String strChannelId) {
+        mstrChannelId = strChannelId;
+    }
+
     boolean isNoteLoadDate;
 
     public void setNewsFeed(ArrayList<NewsFeed> results) {
@@ -164,8 +191,11 @@ public class NewsFeedFgt extends Fragment {
         }
     }
 
+    public void setListRefresh(boolean listRefresh) {
+        isListRefresh = listRefresh;
+    }
 
-//    public void setIsFocus() {
+    //    public void setIsFocus() {
 //        misFocus = true;
 //    }
 
@@ -199,7 +229,9 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void refreshData() {
-        mlvNewsFeed.setRefreshing();
+        if (mlvNewsFeed != null) {
+            mlvNewsFeed.setRefreshing();
+        }
     }
 
     public void onCreate(Bundle bundle) {
@@ -214,9 +246,11 @@ public class NewsFeedFgt extends Fragment {
             mstrUserId = "";
         mSharedPreferences = getActivity().getSharedPreferences("showflag", 0);
         mFlag = mSharedPreferences.getBoolean("isshow", false);
-        mRefreshReciver = new RefreshReceiver();
-        IntentFilter intentFilter = new IntentFilter(CommonConstant.CHANGE_TEXT_ACTION);
-        mContext.registerReceiver(mRefreshReciver, intentFilter);
+        mRefreshReceiver = new RefreshReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
+        intentFilter.addAction(CommonConstant.NEWS_FEED_REFRESH);
+        mContext.registerReceiver(mRefreshReceiver, intentFilter);
     }
 
     @Override
@@ -249,6 +283,8 @@ public class NewsFeedFgt extends Fragment {
         if (arguments != null) {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
+            if (mstrChannelId.equals("44"))
+                vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
         }
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
@@ -263,6 +299,14 @@ public class NewsFeedFgt extends Fragment {
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
+
+        //====================视频===========================
+        mFeedFullScreen = (VideoContainer) getActivity().findViewById(R.id.feed_full_screen);
+        mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
+        mFeedSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.feed_small_layout);
+        mFeedClose = (ImageView) getActivity().findViewById(R.id.feed_video_close);
+
+        //=====================视频添加
         mlvNewsFeed.setMode(PullToRefreshBase.Mode.BOTH);
         mlvNewsFeed.setMainFooterView(true);
         mlvNewsFeed.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -290,6 +334,7 @@ public class NewsFeedFgt extends Fragment {
         mlvNewsFeed.setAdapter(mAdapter);
         mlvNewsFeed.setEmptyView(View.inflate(mContext, R.layout.listview_empty_view, null));
 
+        playVideoControl();
         setUserVisibleHint(getUserVisibleHint());
         //load news data
         mHandler = new Handler();
@@ -307,11 +352,176 @@ public class NewsFeedFgt extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (vPlayer != null) {
+            vPlayer.onChanged(newConfig);
+            if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                Log.d(TAG, "ORIENTATION_PORTRAIT");
+                mFeedFullScreen.setVisibility(View.GONE);
+                mlvNewsFeed.setVisibility(View.VISIBLE);
+                mFeedFullScreen.removeAllViews();
+                int position = getPlayItemPosition();
+                if (position != -1) {
+                    VideoItemContainer playItemView = getPlayItemView(position);
+                    View itemView = (View) playItemView.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+                    }
+                    playItemView.removeAllViews();
+                    playItemView.addView(vPlayer);
+                    vPlayer.setShowContoller(true);
+                } else {
+                    mFeedSmallScreen.removeAllViews();
+                    mFeedFullScreen.addView(vPlayer);
+                    vPlayer.setShowContoller(false);
+                    mFeedSmallLayout.setVisibility(View.VISIBLE);
+                }
+            } else {
+                Log.d(TAG, "ORIENTATION_LANSCAPES");
+                VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
+                if (frameLayout == null)
+                    return;
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                    View itemView = (View) frameLayout.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                    }
+                }
+                frameLayout.removeAllViews();
+                mFeedFullScreen.addView(vPlayer);
+                mFeedSmallLayout.setVisibility(View.GONE);
+                mlvNewsFeed.setVisibility(View.GONE);
+                mFeedFullScreen.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mAdapter.notifyDataSetChanged();
+            mlvNewsFeed.setVisibility(View.VISIBLE);
+            if (mFeedFullScreen.getVisibility()==View.VISIBLE)
+              mFeedFullScreen.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 视频播放控制
+     */
+    public void playVideoControl() {
+        if (null == vPlayer)
+            return;
+//        mFeedFullScreen = (VideoContainer) getActivity().findViewById(R.id.feed_full_screen);
+//        mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
+//        mFeedSmallLayout = (RelativeLayout) getActivity().findViewById(R.id.feed_small_layout);
+//        mFeedClose = (ImageView) getActivity().findViewById(R.id.feed_video_close);
+        mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
+            @Override
+            public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
+                cPostion = feed.getNid();
+                newsFeed = feed;
+
+                if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+                    if (cPostion != lastPostion) {
+                        vPlayer.stop();
+                        vPlayer.release();
+                    }
+                }
+
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    mFeedSmallScreen.removeAllViews();
+                    vPlayer.setShowContoller(false);
+                }
+
+                if (lastPostion != -1) {
+                    ViewGroup last = (ViewGroup) vPlayer.getParent();
+                    if (last != null) {
+                        last.removeAllViews();
+                        View itemView = (View) last.getParent();
+                        if (itemView != null) {
+                            itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                if (vPlayer.getParent() != null) {
+                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
+                }
+
+                View view = (View) relativeLayout.getParent();
+                VideoItemContainer frameLayout = (VideoItemContainer) view.findViewById(R.id.layout_item_video);
+                frameLayout.removeAllViews();
+                frameLayout.addView(vPlayer);
+                vPlayer.setTitle(feed.getTitle());
+                vPlayer.start(feed.getVideourl());
+                lastPostion = cPostion;
+
+            }
+        });
+
+
+        mFeedClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (vPlayer.isPlay()) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                    cPostion = -1;
+                    lastPostion = -1;
+                    mFeedSmallScreen.removeAllViews();
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        mFeedSmallLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
+                startActivityForResult(intent, REQUEST_CODE);
+
+            }
+        });
+
+        vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
+            @Override
+            public void completion(IMediaPlayer mp) {
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    vPlayer.removeAllViews();
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    vPlayer.setShowContoller(true);
+                } else if (mFeedFullScreen.getVisibility() == View.VISIBLE) {
+                    mFeedFullScreen.removeAllViews();
+                    mFeedFullScreen.setVisibility(View.GONE);
+                    vPlayer.setShowContoller(true);
+                }
+
+                VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
+                vPlayer.release();
+                if (frameLayout != null && frameLayout.getChildCount() > 0) {
+                    frameLayout.removeAllViews();
+                    View itemView = (View) frameLayout.getParent();
+
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                    }
+                }
+
+                lastPostion = -1;
+
+
+            }
+        });
+
+
+    }
+
     NewNewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewNewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
             String pName = feed.getPname();
-            mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", mAdapter);
+            mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
 
@@ -321,7 +531,7 @@ public class NewsFeedFgt extends Fragment {
         if (mHandler != null) {
             mHandler.removeCallbacks(mThread);
         }
-        mContext.unregisterReceiver(mRefreshReciver);
+        mContext.unregisterReceiver(mRefreshReceiver);
         Logger.e("jigang", "newsfeedfgt onDestroyView" + mstrChannelId);
         if (rootView != null && rootView.getParent() != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
@@ -379,9 +589,10 @@ public class NewsFeedFgt extends Fragment {
         adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
-//        adDeviceEntity.setImei(TextUtil.isEmptyString(tm.getDeviceId()) ? null : DeviceInfoUtil.generateMD5(tm.getDeviceId()));
+        String imei = SharedPreManager.get("flag", "imei");
+        adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
+        adDeviceEntity.setImeiori(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
@@ -456,12 +667,20 @@ public class NewsFeedFgt extends Fragment {
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
         adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
+        adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
         adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 NewsFeed firstItem = mArrNewsFeed.get(0);
+                for (int i = 0; i < mArrNewsFeed.size(); i++) {
+                    NewsFeed newsFeed = mArrNewsFeed.get(i);
+                    if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                        adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                        break;
+                    }
+                }
                 tstart = DateUtil.dateStr2Long(firstItem.getPtime()) + "";
             } else {
                 tstart = System.currentTimeMillis() - 1000 * 60 * 60 * 12 + "";
@@ -489,6 +708,13 @@ public class NewsFeedFgt extends Fragment {
                     if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                         NewsFeed lastItem = mArrNewsFeed.get(mArrNewsFeed.size() - 1);
                         tstart = DateUtil.dateStr2Long(lastItem.getPtime()) + "";
+                        for (int i = mArrNewsFeed.size() - 1; i > 0; i--) {
+                            NewsFeed newsFeed = mArrNewsFeed.get(i);
+                            if (newsFeed.getRtype() != 3 && newsFeed.getRtype() != 4) {
+                                adLoadNewsFeedEntity.setNid(newsFeed.getNid());
+                                break;
+                            }
+                        }
                     }
 //                  requestUrl = HttpConstant.URL_FEED_LOAD_MORE + "tcr=" + tstart + fixedParams;
                     adLoadNewsFeedEntity.setTcr(TextUtil.isEmptyString(tstart) ? null : Long.parseLong(tstart));
@@ -649,7 +875,11 @@ public class NewsFeedFgt extends Fragment {
                 for (NewsFeed newsFeed : result)
                     newsFeed.setChannel(1);
             }
-
+            //如果频道是42,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
+            if (mstrChannelId != null && "42".equals(mstrChannelId)) {
+                for (NewsFeed newsFeed : result)
+                    newsFeed.setChannel(42);
+            }
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -854,7 +1084,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public interface NewsFeedFgtPopWindow {
-        void showPopWindow(int x, int y, String pubName, NewNewsFeedAdapter mAdapter);
+        void showPopWindow(int x, int y, String pubName, int newsid, NewNewsFeedAdapter mAdapter);
     }
 
     private void showChangeTextSizeView() {
@@ -985,6 +1215,8 @@ public class NewsFeedFgt extends Fragment {
 //                int size = intent.getIntExtra("textSize", CommonConstant.TEXT_SIZE_NORMAL);
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
+            } else if (CommonConstant.NEWS_FEED_REFRESH.equals(intent.getAction())) {
+                refreshData();
             }
         }
     }
@@ -1012,11 +1244,15 @@ public class NewsFeedFgt extends Fragment {
 //        if (mstrChannelId.equals("1000")) {
 //            mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout_focus, null);
 //        } else
+
         mSearchHeaderView = LayoutInflater.inflate(R.layout.search_header_layout, null);
         AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         mSearchHeaderView.setLayoutParams(layoutParams);
         ListView lv = mlvNewsFeed.getRefreshableView();
-        lv.addHeaderView(mSearchHeaderView);
+        if (!mstrChannelId.equals("44")) {
+            lv.addHeaderView(mSearchHeaderView);
+        }
+
         lv.setHeaderDividersEnabled(false);
 //        if (mstrChannelId.equals("1000")) {
 //            TextView tvFocus = (TextView) mSearchHeaderView.findViewById(R.id.focus_textView);
@@ -1034,6 +1270,8 @@ public class NewsFeedFgt extends Fragment {
                 MobclickAgent.onEvent(getActivity(), "qidian_user_enter_search_page");
             }
         });
+
+
         footerView = (LinearLayout) LayoutInflater.inflate(R.layout.footerview_layout, null);
         lv.addFooterView(footerView);
         footView_tv = (TextView) footerView.findViewById(R.id.footerView_tv);
@@ -1077,6 +1315,12 @@ public class NewsFeedFgt extends Fragment {
                 mlvNewsFeed.setFooterViewInvisible();
             }
         });
+        mlvNewsFeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
         // 监听listview滚到最底部
         mlvNewsFeed.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -1095,6 +1339,8 @@ public class NewsFeedFgt extends Fragment {
                             isBottom = false;
                             Logger.e("aaa", "在33333isBottom ==" + isBottom);
                         }
+
+
                         break;
                 }
             }
@@ -1107,8 +1353,102 @@ public class NewsFeedFgt extends Fragment {
                     thisTotalItemCount = totalItemCount;
                     thisVisibleItemCount = visibleItemCount;
                 }
+                if (mstrChannelId.equals("44") && vPlayer != null) {
+                    Log.e(TAG, "first" + firstVisibleItem + "onScroll:" + mlvNewsFeed.getRefreshableView().getChildAt(0) + "visibleCount:" + visibleItemCount + ",last：" + mlvNewsFeed.getRefreshableView().getLastVisiblePosition());
+                    VideoShowControl(view);
+                }
             }
         });
+    }
+
+    public int getPlayItemPosition() {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+            if (i == 0)
+                continue;
+            if (i > mArrNewsFeed.size())
+                return -1;
+            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+                return (i - lv.getFirstVisiblePosition());
+            }
+        }
+        return -1;
+    }
+
+    public VideoItemContainer getPlayItemView(int cPosition) {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        if (cPosition != -1) {
+            View item = lv.getChildAt(cPosition);
+            return (VideoItemContainer) item.findViewById(R.id.layout_item_video);
+        }
+
+        return null;
+    }
+
+    private void VideoShowControl(AbsListView view) {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition());
+        Log.e(TAG, "AbsListView: first" + view.getFirstVisiblePosition() + ",last:" + view.getLastVisiblePosition());
+        boolean isExist = false;
+        int position = -1;
+        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+            if (i == 0)
+                continue;
+            if (i > mArrNewsFeed.size())
+                break;
+            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+                isExist = true;
+                position = i - view.getFirstVisiblePosition();
+                break;
+            }
+        }
+        if (isExist) {
+            View item = lv.getChildAt(position);
+            Log.e(TAG, "item:" + item.toString() + "position:" + position);
+            VideoItemContainer frameLayout = (VideoItemContainer) item.findViewById(R.id.layout_item_video);
+            Log.e(TAG, "frameLayout:" + frameLayout.toString());
+
+            if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+            }
+
+            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+                if (vPlayer.getParent() != null)
+                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
+                frameLayout.removeAllViews();
+                frameLayout.addView(vPlayer);
+                return;
+            }
+
+            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                mFeedSmallLayout.setVisibility(View.GONE);
+                mFeedSmallScreen.removeAllViews();
+                vPlayer.setShowContoller(true);
+                frameLayout.removeAllViews();
+                frameLayout.addView(vPlayer);
+
+            }
+
+
+        } else {
+            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && vPlayer.isPlay()) {
+                VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
+                if (frameLayout != null) {
+                    frameLayout.removeAllViews();
+                    View itemView = (View) frameLayout.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                    }
+                }
+                mFeedSmallScreen.removeAllViews();
+                vPlayer.setShowContoller(false);
+                mFeedSmallScreen.addView(vPlayer);
+                mFeedSmallLayout.setVisibility(View.VISIBLE);
+            }
+
+        }
+        isExist = false;
+
     }
 
     public void mRefreshTitleBarAnimtation() {

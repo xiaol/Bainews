@@ -61,6 +61,14 @@ public class NewsDetail implements Serializable {
     private int conflag;
     /** 是(1)否(0)已关心该新闻对应的发布源 */
     private int conpubflag;
+    /**
+     * 播放视频地址
+     */
+    private String videourl;
+    /**
+     * 背景图片
+     */
+    private String thumbnail;
 
     @Override
     public String toString() {
@@ -84,8 +92,26 @@ public class NewsDetail implements Serializable {
                 ", comment=" + comment +
                 ", colflag=" + colflag +
                 ", conflag=" + conflag +
-                ", conpubflag=" + conpubflag +
+                ", conpubflag=" + conpubflag +'\''+
+                ", videourl=" + videourl +'\''+
+                ", thumbnail=" + thumbnail +
                 '}';
+    }
+
+    public String getVideourl() {
+        return videourl;
+    }
+
+    public void setVideourl(String videourl) {
+        this.videourl = videourl;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 
     public int getColflag() {

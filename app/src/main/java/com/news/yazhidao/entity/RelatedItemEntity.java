@@ -27,6 +27,8 @@ public class RelatedItemEntity implements Serializable,Comparable {
     private String title;
     private String abs;
     private String ptime;
+    private int nid;
+    private int duration;
     /**
      * 莫一年的第一天
      */
@@ -59,6 +61,14 @@ public class RelatedItemEntity implements Serializable,Comparable {
         return "RelatedItemEntity{" +
                 "ptime='" + ptime + '\'' +
                 '}';
+    }
+
+    public int getNid() {
+        return nid;
+    }
+
+    public void setNid(int nid) {
+        this.nid = nid;
     }
 
     public String getFrom() {
@@ -134,5 +144,11 @@ public class RelatedItemEntity implements Serializable,Comparable {
         this.ptime = ptime;
     }
 
+    public int getDuration() {
+        return duration;
+    }
 
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
 }

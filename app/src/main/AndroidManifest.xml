@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.news.yazhidao"
-    android:versionCode="130"
+    android:versionCode="131"
     android:versionName="@string/app_version">
 
 
@@ -27,6 +27,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -268,12 +269,21 @@
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
+            android:name=".pages.NewsDetailVideoAty"
+            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
+            android:screenOrientation="portrait"
+            android:theme="@style/SwipeBackTheme"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
             android:name=".pages.NewsTopicAty"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.ChatAty"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pages.SubscriptionAty"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.BaseTagActivity"
@@ -328,10 +338,12 @@
             android:theme="@style/SwipeBackTheme" />
         <activity
             android:name=".pages.MainAty"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pages.ChannelOperateAty"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme" />
         <activity

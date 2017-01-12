@@ -82,17 +82,17 @@ public class NewsCommentFgt extends BaseFragment {
     /**
      * 点赞的广播
      */
-    public class RefreshLikeBroReceiber extends BroadcastReceiver{
+    public class RefreshLikeBroReceiber extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Logger.e("aaa", "评论接收到！");
             NewsDetailComment bean = (NewsDetailComment) intent.getSerializableExtra(NewsCommentFgt.LIKEBEAN);
-            for(int i = 0;i<mComments.size();i++)
+            for (int i = 0; i < mComments.size(); i++)
                 if (mComments.get(i).getId().equals(bean.getId())) {
 //                    mComments.remove(i);
 //                    mComments.add(i, bean);
-                    mComments.set(i,bean);
+                    mComments.set(i, bean);
                     mCommentsAdapter.notifyDataSetChanged();
 
                 }
@@ -175,7 +175,7 @@ public class NewsCommentFgt extends BaseFragment {
         if ("0".equals(mNewsFeed.getComment())) {
             news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()));
         } else {
-            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()) + "  " + mNewsFeed.getComment() + "评");
+            news_comment_content.setText(mNewsFeed.getPname() + "  " + DateUtil.getMonthAndDay(mNewsFeed.getPtime()) + "  " + TextUtil.getCommentNum(mNewsFeed.getComment() + ""));
         }
         news_comment_NoCommentsLayout = (LinearLayout) mCommentHeaderView.findViewById(R.id.news_comment_NoCommentsLayout);
         if ("0".equals(mNewsFeed.getComment())) {
@@ -204,47 +204,47 @@ public class NewsCommentFgt extends BaseFragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
 
-            feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
-            }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) +(mUser!=null?"&uid="+SharedPreManager.getUser(getActivity()).getMuid():"")+
-                    "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
+        feedRequest = new NewsDetailRequest<ArrayList<NewsDetailComment>>(Request.Method.GET, new TypeToken<ArrayList<NewsDetailComment>>() {
+        }.getType(), HttpConstant.URL_FETCH_COMMENTS + "did=" + TextUtil.getBase64(mNewsFeed.getDocid()) + (mUser != null ? "&uid=" + SharedPreManager.getUser(getActivity()).getMuid() : "") +
+                "&p=" + (mPageIndex++), new Response.Listener<ArrayList<NewsDetailComment>>() {
 
-                @Override
-                public void onResponse(ArrayList<NewsDetailComment> result) {
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                    mNewsCommentList.onRefreshComplete();
-                    Logger.e("jigang", "network success, comment" + result);
-
-                    if (!TextUtil.isListEmpty(result)) {
-                        mComments.addAll(result);
-                        mCommentsAdapter.setData(mComments);
-                        Logger.d("aaa", "评论加载完毕！！！！！！");
-                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
-                    } else {
-                        if (mComments.size() == 0) {
-                            news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
-                        } else {
-                            news_comment_NoCommentsLayout.setVisibility(View.GONE);
-                        }
-
-                    }
+            @Override
+            public void onResponse(ArrayList<NewsDetailComment> result) {
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Logger.e("aaa", "没有数据报的错=============================="+error);
-                    Logger.e("aaa", "mComments.size()=============================="+mComments.size());
-                    if (error.toString().indexOf("服务端未找到数据 2002") != -1 && mComments.size() == 0) {
+                mNewsCommentList.onRefreshComplete();
+                Logger.e("jigang", "network success, comment" + result);
+
+                if (!TextUtil.isListEmpty(result)) {
+                    mComments.addAll(result);
+                    mCommentsAdapter.setData(mComments);
+                    Logger.d("aaa", "评论加载完毕！！！！！！");
+                    news_comment_NoCommentsLayout.setVisibility(View.GONE);
+                } else {
+                    if (mComments.size() == 0) {
                         news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        news_comment_NoCommentsLayout.setVisibility(View.GONE);
                     }
-                    mNewsCommentList.onRefreshComplete();
-                    if (bgLayout.getVisibility() == View.VISIBLE) {
-                        bgLayout.setVisibility(View.GONE);
-                    }
-                    Logger.e("jigang", "NewsCommentFgt  network fail"+error);
+
                 }
-            });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e("aaa", "没有数据报的错==============================" + error);
+                Logger.e("aaa", "mComments.size()==============================" + mComments.size());
+                if (error.toString().indexOf("服务端未找到数据 2002") != -1 && mComments.size() == 0) {
+                    news_comment_NoCommentsLayout.setVisibility(View.VISIBLE);
+                }
+                mNewsCommentList.onRefreshComplete();
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
+                Logger.e("jigang", "NewsCommentFgt  network fail" + error);
+            }
+        });
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
     }
@@ -311,7 +311,7 @@ public class NewsCommentFgt extends BaseFragment {
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
                 Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
-            }else{
+            } else {
                 Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
@@ -345,15 +345,15 @@ public class NewsCommentFgt extends BaseFragment {
                         Intent loginAty = new Intent(mContext, LoginAty.class);
                         startActivityForResult(loginAty, REQUEST_CODE);
                     } else {
-                        if((user.getMuid()+"").equals(comment.getUid())){
+                        if ((user.getMuid() + "").equals(comment.getUid())) {
                             Toast.makeText(mContext, "不能给自己点赞。", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        if(comment.getUpflag()==0){
+                        if (comment.getUpflag() == 0) {
                             Logger.e("aaa", "点赞");
                             addNewsLove(user, comment, position, true);
-                        }else{
+                        } else {
                             Logger.e("aaa", "取消点赞");
                             addNewsLove(user, comment, position, false);
                         }
@@ -365,7 +365,6 @@ public class NewsCommentFgt extends BaseFragment {
             return convertView;
         }
     }
-
 
 
 //    private void setNewsTime(TextViewExtend tvTime, String updateTime) {
@@ -397,7 +396,7 @@ public class NewsCommentFgt extends BaseFragment {
 //    }
 
     private void addNewsLove(User user, NewsDetailComment comment, final int position, final boolean isAdd) {
-        if(isNetWork){
+        if (isNetWork) {
             return;
         }
         isNetWork = true;
@@ -412,7 +411,7 @@ public class NewsCommentFgt extends BaseFragment {
 //            e.printStackTrace();
 //        }
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        Logger.e("jigang", "love url=" +         HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
+        Logger.e("jigang", "love url=" + HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId());
         JSONObject json = new JSONObject();
 //        try {
 //            json.put("cid", comment.getId());
@@ -420,9 +419,9 @@ public class NewsCommentFgt extends BaseFragment {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-        Logger.e("aaa","json+++++++++++++++++++++++"+json.toString());
+        Logger.e("aaa", "json+++++++++++++++++++++++" + json.toString());
 
-        DetailOperateRequest request = new DetailOperateRequest( isAdd ? Request.Method.POST : Request.Method.DELETE,
+        DetailOperateRequest request = new DetailOperateRequest(isAdd ? Request.Method.POST : Request.Method.DELETE,
                 HttpConstant.URL_ADDORDELETE_LOVE_COMMENT + "uid=" + user.getMuid() + "&cid=" + comment.getId()
                 , json.toString(), new Response.Listener<JSONObject>() {
             @Override
@@ -431,9 +430,9 @@ public class NewsCommentFgt extends BaseFragment {
                 mNewsCommentList.onRefreshComplete();
                 Logger.e("jigang", "network success, love" + data);
                 if (!TextUtil.isEmptyString(data)) {
-                    if(isAdd){
+                    if (isAdd) {
                         mComments.get(position).setUpflag(1);
-                    }else{
+                    } else {
                         mComments.get(position).setUpflag(0);
 
 
@@ -441,7 +440,7 @@ public class NewsCommentFgt extends BaseFragment {
                     mComments.get(position).setCommend(Integer.parseInt(data));
                     mCommentsAdapter.notifyDataSetChanged();
                     Intent intent = new Intent(ACTION_REFRESH_CTD);
-                    intent.putExtra(LIKETYPE,isAdd);
+                    intent.putExtra(LIKETYPE, isAdd);
                     intent.putExtra(LIKEBEAN, mComments.get(position));
                     getActivity().sendBroadcast(intent);
 
@@ -504,7 +503,6 @@ public class NewsCommentFgt extends BaseFragment {
 //        loveRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
 //        requestQueue.add(loveRequest);
     }
-
 
 
     class Holder {

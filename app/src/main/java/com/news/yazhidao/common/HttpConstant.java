@@ -93,15 +93,15 @@ public class HttpConstant {
     public static final String URL_FEED_FOCUS_PULL_DOWN = URL_SERVER_HOST + "/ns/pbs/cocs/r?";
 
     /**
-     *  频道刷新加上广告
+     * 频道刷新加上广告
      */
     public static final String URL_FEED_AD_PULL_DOWN = URL_SERVER_HOST + "/ns/fed/ra?";
     /**
-     *  频道加载加上广告
+     * 频道加载加上广告
      */
     public static final String URL_FEED_AD_LOAD_MORE = URL_SERVER_HOST + "/ns/fed/la?";
     /**
-     *  专题详情
+     * 专题详情
      */
     public static final String URL_NEWS_TOPIC = URL_SERVER_HOST + "/ns/tdq?";
 
@@ -114,6 +114,10 @@ public class HttpConstant {
      * 获取新闻详情页
      */
     public static final String URL_FETCH_CONTENT = URL_SERVER_HOST + "/ns/con?";
+/**
+     * 获取视频详情页
+     */
+    public static final String URL_VIDEO_CONTENT = URL_SERVER_HOST + "/vi/con?";
 
     /**
      * 新闻普通评论列表
@@ -144,7 +148,7 @@ public class HttpConstant {
     /**
      * 日志上传
      */
-    public static final String URL_UPLOAD_LOG =  "http://bdp.deeporiginalx.com/rep/v2/c?";// URL_SERVER_HOST+"/c?"
+    public static final String URL_UPLOAD_LOG = "http://bdp.deeporiginalx.com/rep/v2/c?";// URL_SERVER_HOST+"/c?"
 
     /**
      * 新闻客户端-新闻相关属性集
@@ -182,8 +186,17 @@ public class HttpConstant {
     public static final String URL_GETLIST_ATTENTION = URL_SERVER_HOST + "/ns/pbs?";
 
     /**
-     *  手机信息上传
+     * 手机信息上传
      */
-    public static final String URL_UPLOAD_INFORMATION = "http://bdp.deeporiginalx.com/v2/au/app";
+    public static final String URL_UPLOAD_INFORMATION = URL_SERVER_HOST + "/au/app";
 
+    /**
+     * 不感兴趣记录
+     */
+    public static final String URL_DISSLIKE_RECORD = URL_SERVER_HOST + "/ns/hate";
+
+    /**
+     * 转发记录
+     */
+    public static final String URL_REPLAY = URL_SERVER_HOST + "/ns/replay";
 }
