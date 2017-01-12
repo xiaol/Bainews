@@ -33,7 +33,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.github.jinsedeyuzhou.PlayStateParams;
-import com.github.jinsedeyuzhou.PlayerManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -284,7 +283,7 @@ public class NewsFeedFgt extends Fragment {
             mstrChannelId = arguments.getString(KEY_CHANNEL_ID);
             mstrKeyWord = arguments.getString(KEY_WORD);
             if (mstrChannelId.equals("44"))
-                vPlayer = PlayerManager.getPlayerManager().initialize(mContext);
+                vPlayer = new VPlayPlayer(getActivity());
         }
         rootView = LayoutInflater.inflate(R.layout.activity_news, container, false);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
@@ -452,6 +451,7 @@ public class NewsFeedFgt extends Fragment {
                 VideoItemContainer frameLayout = (VideoItemContainer) view.findViewById(R.id.layout_item_video);
                 frameLayout.removeAllViews();
                 frameLayout.addView(vPlayer);
+                vPlayer.setShowContoller(true);
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.start(feed.getVideourl());
                 lastPostion = cPostion;
@@ -592,7 +592,6 @@ public class NewsFeedFgt extends Fragment {
         /** 设置IMEI */
         String imei = SharedPreManager.get("flag", "imei");
         adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
-        adDeviceEntity.setImeiori(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
@@ -1413,10 +1412,11 @@ public class NewsFeedFgt extends Fragment {
             }
 
             if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                if (vPlayer.getParent() != null)
-                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
-                frameLayout.removeAllViews();
-                frameLayout.addView(vPlayer);
+//                if (vPlayer.getParent() != null)
+//                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
+//                frameLayout.removeAllViews();
+                vPlayer.setShowContoller(true);
+//                frameLayout.addView(vPlayer);
                 return;
             }
 
@@ -1431,19 +1431,22 @@ public class NewsFeedFgt extends Fragment {
 
 
         } else {
-            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && vPlayer.isPlay()) {
+            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && (vPlayer.isPlay()||vPlayer.getStatus()==PlayStateParams.STATE_PAUSED)) {
                 VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
                 if (frameLayout != null) {
-                    frameLayout.removeAllViews();
+
                     View itemView = (View) frameLayout.getParent();
                     if (itemView != null) {
                         itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
                     }
                 }
-                mFeedSmallScreen.removeAllViews();
-                vPlayer.setShowContoller(false);
-                mFeedSmallScreen.addView(vPlayer);
-                mFeedSmallLayout.setVisibility(View.VISIBLE);
+                if (vPlayer.isPlay()) {
+                    frameLayout.removeAllViews();
+                    mFeedSmallScreen.removeAllViews();
+                    mFeedSmallScreen.addView(vPlayer);
+                    vPlayer.setShowContoller(false);
+                    mFeedSmallLayout.setVisibility(View.VISIBLE);
+                }
             }
 
         }

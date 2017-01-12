@@ -317,6 +317,7 @@
             </intent-filter>
         </activity>
 
+
         <!-- 网络状态发生变化 -->
         <receiver android:name=".receiver.NetworkStateChangedReceiver">
             <intent-filter>
