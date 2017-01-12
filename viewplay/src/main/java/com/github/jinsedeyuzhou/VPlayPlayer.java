@@ -76,7 +76,7 @@ public class VPlayPlayer extends RelativeLayout {
     private RelativeLayout layout;
     private IntentFilter intentFilter;
     private ImageView mVideoLock;
-    private LinearLayout appVideoPlay;
+    private RelativeLayout appVideoPlay;
     private ImageView mVideoShare;
 
     //是否展示
@@ -143,6 +143,7 @@ public class VPlayPlayer extends RelativeLayout {
                         msg = obtainMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
                         sendMessageDelayed(msg, 1000);
                     }
+
                     break;
                 case PlayStateParams.PAUSE_IMAGE_HIDE:
                     appVideoPlay.setVisibility(View.GONE);
@@ -172,12 +173,13 @@ public class VPlayPlayer extends RelativeLayout {
             int id=view.getId();
             if (id == R.id.player_btn) {
                 if (isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6 || MediaNetUtils.getNetworkType(mContext) == 3) {
-                    if (mVideoView.isPlaying()) {
-                        pause();
-                        isAutoPause = true;
-                    } else {
-                        reStart();
-                    }
+//                    if (mVideoView.isPlaying()) {
+//                        pause();
+//                        isAutoPause = true;
+//                    } else {
+//                        reStart();
+//                    }
+                    doPauseResume();
                 } else if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
                     showWifiDialog();
                 }
@@ -207,11 +209,10 @@ public class VPlayPlayer extends RelativeLayout {
                     isLock = false;
                     mVideoLock.setImageResource(R.mipmap.video_unlock);
                 }
-            } else if (id == R.id.pause_image) {
-                appVideoPlay.setVisibility(View.GONE);
-                mVideoView.seekTo(0);
-                mVideoView.start();
-                updatePausePlay();
+//            } else if (id == R.id.pause_image) {
+//                appVideoPlay.setVisibility(View.GONE);
+//                mVideoView.seekTo(0);
+//                mVideoView.start();
             }else  if (id==R.id.app_video_share)
             {
 
@@ -271,7 +272,8 @@ public class VPlayPlayer extends RelativeLayout {
         sound = (ImageView) findViewById(R.id.sound);
         play = (ImageView) findViewById(R.id.player_btn);
         pauseImage = (ImageView) findViewById(R.id.pause_image);
-        appVideoPlay = (LinearLayout) findViewById(R.id.app_video_replay);
+        appVideoPlay = (RelativeLayout) findViewById(R.id.app_video_replay);
+        appVideoPlay.setClickable(false);
 
         //触屏
         gestureTouch = (LinearLayout) findViewById(R.id.ll_gesture_touch);
@@ -297,7 +299,7 @@ public class VPlayPlayer extends RelativeLayout {
         full.setOnClickListener(onClickListener);
         mVideoLock.setOnClickListener(onClickListener);
         mVideoShare.setOnClickListener(onClickListener);
-        pauseImage.setOnClickListener(onClickListener);
+//        pauseImage.setOnClickListener(onClickListener);
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
         isSound = true;
@@ -474,12 +476,7 @@ public class VPlayPlayer extends RelativeLayout {
         updateFullScreenButton();
     }
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        getParent().getParent().getParent().requestDisallowInterceptTouchEvent(true);
-//        return super.onInterceptTouchEvent(ev);
-//    }
-//
+
 
     private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
@@ -545,13 +542,11 @@ public class VPlayPlayer extends RelativeLayout {
             Log.d(TAG, "STATE_PLAYING");
             progressBar.setVisibility(View.GONE);
             isShowContoller = true;
-            updatePausePlay();
             play.setVisibility(View.VISIBLE);
-
+            handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
             handler.sendEmptyMessage(PlayStateParams.MESSAGE_SHOW_PROGRESS);
 
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
-            updatePausePlay();
 
         }
 
@@ -597,7 +592,7 @@ public class VPlayPlayer extends RelativeLayout {
 
         showBottomControl(show);
         bottomProgress.setVisibility(show ? View.GONE : View.VISIBLE);
-        updatePausePlay();
+
     }
 
     private void hide() {
@@ -605,9 +600,7 @@ public class VPlayPlayer extends RelativeLayout {
         if (isShow) {
             isShow = false;
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
-            hide(false);
-
-
+            handler.sendEmptyMessage(PlayStateParams.SET_VIEW_HIDE);
         }
     }
 
@@ -728,9 +721,11 @@ public class VPlayPlayer extends RelativeLayout {
      */
     private void updatePausePlay() {
         if (mVideoView.isPlaying()) {
-            play.setImageResource(R.drawable.pause_selector);
+            play.setSelected(true);
+            Log.e(TAG,"onpause");
         } else {
-            play.setImageResource(R.drawable.play_selector);
+            play.setSelected(false);
+            Log.e(TAG,"onresume");
         }
     }
 
@@ -1043,19 +1038,41 @@ public class VPlayPlayer extends RelativeLayout {
 
     }
 
+    private void doPauseResume() {
+        if (status == PlayStateParams.STATE_PLAYBACK_COMPLETED) {
+            appVideoPlay.setVisibility(View.GONE);
+            mVideoView.seekTo(0);
+            mVideoView.start();
+            play.setSelected(true);
+        } else if (mVideoView.isPlaying()) {
+            statusChange(PlayStateParams.STATE_PAUSED);
+            isAutoPause = true;
+            mVideoView.pause();
+            play.setSelected(false);
+
+        } else {
+            statusChange(PlayStateParams.STATE_PLAYING);
+            mVideoView.start();
+            play.setSelected(true);
+        }
+    }
+
+
     private void pause() {
-        play.setImageResource(R.drawable.play_selector);
+        play.setSelected(false);
         mVideoView.pause();
-//        bitmap = mVideoView.getBitmap();
-//        if (bitmap != null) {
-//            pauseImage.setImageBitmap(bitmap);
-//            appVideoPlay.setVisibility(View.VISIBLE);
-//        }
+        statusChange(PlayStateParams.STATE_PAUSED);
+        bitmap = mVideoView.getBitmap();
+        if (bitmap != null) {
+            pauseImage.setImageBitmap(bitmap);
+            appVideoPlay.setVisibility(View.VISIBLE);
+        }
     }
 
     private void reStart() {
-        play.setImageResource(R.drawable.pause_selector);
+        play.setSelected(true);
         mVideoView.start();
+        statusChange(PlayStateParams.STATE_PLAYING);
         if (bitmap != null) {
             handler.sendEmptyMessageDelayed(PlayStateParams.PAUSE_IMAGE_HIDE, 100);
             bitmap.recycle();
@@ -1126,7 +1143,8 @@ public class VPlayPlayer extends RelativeLayout {
                 if (currentPosition == 0)
                     play(url, currentPosition);
                 else
-                    reStart();
+                    doPauseResume();
+//                    reStart();
             }
         });
         builder.setNegativeButton(mContext.getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
@@ -1207,6 +1225,7 @@ public class VPlayPlayer extends RelativeLayout {
     public void setShowContoller(boolean isShowContoller) {
         this.isShowContoller = isShowContoller;
         handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
+        showBottomControl(isShowContoller);
     }
 
     public void play(String url) {
@@ -1222,7 +1241,6 @@ public class VPlayPlayer extends RelativeLayout {
             // 注册网路变化的监听
             registerNetReceiver();
         }
-
         if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
             showWifiDialog();
         } else {
@@ -1231,6 +1249,7 @@ public class VPlayPlayer extends RelativeLayout {
                 mVideoView.setVideoPath(url);
                 mVideoView.seekTo(position);
                 mVideoView.start();
+                play.setSelected(true);
             }
         }
 
@@ -1249,6 +1268,7 @@ public class VPlayPlayer extends RelativeLayout {
             mVideoView.setVideoURI(uri);
             mVideoView.start();
         }
+        play.setSelected(true);
 
     }
 
@@ -1324,7 +1344,7 @@ public class VPlayPlayer extends RelativeLayout {
 
                 currentPosition = mVideoView.getCurrentPosition();
                 progressBar.setVisibility(View.GONE);
-                pause();
+                onPause();
                 show(0);
 //                onNetChangeListener.onMobile();
                 showWifiDialog();
