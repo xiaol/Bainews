@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -590,10 +589,10 @@ public class NewsFeedFgt extends Fragment {
         adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
 
         AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(mContext.TELEPHONY_SERVICE);
         /** 设置IMEI */
         String imei = SharedPreManager.get("flag", "imei");
-        adDeviceEntity.setImei(imei);
+        adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
+        adDeviceEntity.setImeiori(imei);
         /** 设置AndroidID */
         String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
         adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
