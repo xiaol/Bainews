@@ -267,13 +267,11 @@
         <activity
             android:name=".pages.NewsDetailAty2"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsDetailVideoAty"
             android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsTopicAty"

@@ -43,6 +43,7 @@ import com.google.gson.reflect.TypeToken;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.YaZhiDaoApplication;
+import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsDetailCommentDao;
@@ -68,7 +69,6 @@ import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SharePopupWindow.OnFavoritListener;
 import com.news.yazhidao.widget.SwipeBackViewpager;
 import com.news.yazhidao.widget.UserCommentDialog;
-import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
@@ -87,7 +87,7 @@ import static com.news.yazhidao.pages.NewsFeedFgt.VALUE_NEWS_NOTIFICATION;
  * Created by fengjigang on 15/9/6.
  * 新闻展示详情页
  */
-public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
+public class NewsDetailVideoAty extends BaseActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final String KEY_IMAGE_WALL_INFO = "key_image_wall_info";
     public static final String ACTION_REFRESH_COMMENT = "com.news.baijia.ACTION_REFRESH_COMMENT";
@@ -190,7 +190,6 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         return false;
     }
 
-
     @Override
     protected void setContentView() {
         setContentView(R.layout.aty_video_detail_layout);
@@ -203,6 +202,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
         mAlphaAnimationOut.setDuration(500);
     }
+
 
     @Override
     protected void initializeViews() {
