@@ -625,6 +625,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 break;
         }
     }
@@ -742,9 +743,9 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
-                if (type != 1 && type != 2 && type != 3 && type != 4) {
+                if (type != 1 && type != 2 && type != 3 && type != 4 && type!=6){
                     tvTitle.setText(strTitle);
-                } else {
+                } else{
                     tvTitle.setText("        " + strTitle);
                 }
                 tvTitle.setLineSpacing(0, 1.1f);
@@ -853,6 +854,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             content = "专题";
             drawable.setColor(mContext.getResources().getColor(R.color.news_type_color4));
+        } else if (type == 6) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "视频";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
