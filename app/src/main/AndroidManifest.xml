@@ -266,13 +266,11 @@
         <activity
             android:name=".pages.NewsDetailAty2"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsDetailVideoAty"
-            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsTopicAty"
@@ -316,6 +314,7 @@
             </intent-filter>
         </activity>
 
+
         <!-- 网络状态发生变化 -->
         <receiver android:name=".receiver.NetworkStateChangedReceiver">
             <intent-filter>
@@ -339,8 +338,9 @@
         <activity
             android:name=".pages.MainAty"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            />
         <activity
             android:name=".pages.ChannelOperateAty"
             android:launchMode="singleTop"

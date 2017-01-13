@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -132,6 +133,7 @@ public class NewsDetailFgt extends BaseFragment {
     private ImageView iv_attention_icon;
     private TextViewExtend tv_attention_title;
     private Context mContext;
+    private RequestManager mRequestManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,6 +143,7 @@ public class NewsDetailFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
+        mRequestManager= Glide.with(this);
         Logger.e("aaa", "mTitle==" + mTitle);
         mContext = getActivity();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
@@ -1184,9 +1187,9 @@ public class NewsDetailFgt extends BaseFragment {
         final User user = SharedPreManager.getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            Glide.with(mContext).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");

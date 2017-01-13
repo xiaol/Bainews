@@ -121,7 +121,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     case 7:
                         return R.layout.ll_video_item_big;
                     case 8:
-                        return R.layout.ll_video_item_big;
+                        return R.layout.ll_video_item_small;
 
                     case 11://大图Item
                     case 12:
@@ -587,22 +587,55 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 break;
-            case R.layout.ll_video_item_big:
-
+            case R.layout.ll_video_item_small:
+                if (isFavorite) {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                } else {
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead(), feed.getRtype());
+                }
+                ImageView ivVideoSmall = holder.getView(R.id.image_bg);
+                RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
+                lpVideoSmall.width = mCardWidth;
+                lpVideoSmall.height = mCardHeight;
+                ivVideoSmall.setLayoutParams(lpVideoSmall);
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
+                //点击评论跳转
+//                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
+//                        if (mNewsFeedFgt != null) {
+//                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+//                        } else {
+//                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+//                        }
+//                    }
+//                });
+                //item点击事件跳转到详情页播放
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                if (feed.getPtime() != null) {
+                    setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
+                }
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 break;
         }
     }
 
-    private void setPlayClick(final RelativeLayout view,final int position,final NewsFeed feed) {
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    view.setVisibility(View.GONE);
-                    if (onPlayClickListener != null) {
-                        onPlayClickListener.onPlayClick(view, feed);
-                    }
+    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.setVisibility(View.GONE);
+                if (onPlayClickListener != null) {
+                    onPlayClickListener.onPlayClick(view, feed);
                 }
-            });
+            }
+        });
 
     }
 
@@ -1046,14 +1079,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     //视频播放接口
     private OnPlayClickListener onPlayClickListener;
 
-    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener)
-    {
-        this.onPlayClickListener=onPlayClickListener;
+    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
 
     }
 
-    public interface OnPlayClickListener
-    {
-        void onPlayClick(RelativeLayout relativeLayout,NewsFeed feed);
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
     }
 }

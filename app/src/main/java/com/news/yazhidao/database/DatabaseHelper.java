@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 32;
+    private static int DATABASE_VERSION = 33;
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -44,9 +44,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static ArrayList<ChannelItem> mChannels = new ArrayList<>();
     static {
         /**默认用户选择的频道*/
-        mChannels.add(new ChannelItem("1","推荐",1,true,"1"));
-        mChannels.add(new ChannelItem("4","科技",2,true,"1"));
-        mChannels.add(new ChannelItem("44","视频",3,true,"1"));
+        mChannels.add(new ChannelItem("1","奇点",1,true,"1"));
+        mChannels.add(new ChannelItem("44","视频",2,true,"1"));
+        mChannels.add(new ChannelItem("4","科技",3,true,"1"));
         mChannels.add(new ChannelItem("29","外媒",4,true,"1"));
         mChannels.add(new ChannelItem("35","点集",5,true,"1"));
         mChannels.add(new ChannelItem("2","社会",6,true,"1"));

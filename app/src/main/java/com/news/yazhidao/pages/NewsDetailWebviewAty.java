@@ -171,8 +171,15 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                Logger.e(TAG, "xxxx shouldOverrideUrlLoading");
+                if (url.startsWith("http:") || (url.startsWith("https:"))) {
+                    view.loadUrl(url);
+                    return false;
+                }
+//                else {
+//                    Intent intent = new Intent();
+//                    intent.setData(Uri.parse(url));
+//                    NewsDetailWebviewAty.this.startActivity(intent);
+//                }
                 return true;
             }
 
@@ -183,18 +190,18 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 //                    mProgressDialog=ProgressDialog.show(NewsDetailWebviewAty.this,null,"加载中...");
 //                    mProgressDialog.setCancelable(true);
 //                }
-                Logger.e(TAG, "xxxx onPageStarted");
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Logger.e(TAG, "xxxx onPageFinished");
+                Logger.e(TAG, "xxxx onPageFinished3   " + url);
 //                if(mProgressDialog!=null&&mProgressDialog.isShowing()){
 //                    mProgressDialog.dismiss();
 //                }
             }
         });
+
 
         mNewsSourcesiteWebview.loadUrl(mNewsUrl);
         mNewsSourcesiteWebview.setDownloadListener(new MyWebViewDownLoadListener());
@@ -234,10 +241,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
 
     public void webViewBack() {
-        if (mNewsSourcesiteWebview.canGoBack()) {
-            mNewsSourcesiteWebview.goBack();
-        } else {
+//        if (mNewsSourcesiteWebview.canGoBack()) {
+//            mNewsSourcesiteWebview.goBack();
+//        } else {
             finish();
-        }
+//        }
     }
 }
