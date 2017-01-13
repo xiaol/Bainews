@@ -473,7 +473,7 @@ public class NewsFeedFgt extends Fragment {
 //                    return;
 //                }
 
-                if (lastPostion != -1) {
+                if (lastPostion != -1||cPostion != lastPostion) {
                     ViewGroup last = (ViewGroup) vPlayer.getParent();
                     if (last != null) {
                         last.removeAllViews();
@@ -1172,7 +1172,9 @@ public class NewsFeedFgt extends Fragment {
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
+
         }
+
         mHomeWatcher = new HomeWatcher(this.getActivity());
         mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
         mHomeWatcher.startWatch();

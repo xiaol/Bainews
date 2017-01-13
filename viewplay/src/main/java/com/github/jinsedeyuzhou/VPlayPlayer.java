@@ -1181,11 +1181,15 @@ public class VPlayPlayer extends RelativeLayout {
         if (mVideoView.isPlaying()) {
             mVideoView.stopPlayback();
         }
+        bottomProgress.setProgress(0);
+        seekBar.setProgress(0);
     }
 
     public void release() {
         if (mVideoView != null)
             mVideoView.release(true);
+        bottomProgress.setProgress(0);
+        seekBar.setProgress(0);
     }
 
     public int getStatus() {

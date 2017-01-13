@@ -505,6 +505,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             mDetailVideo.addView(vp);
+                            vp.setShowContoller(true);
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
@@ -515,6 +516,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                         if (vp.getParent() != null)
                             ((ViewGroup) vp.getParent()).removeAllViews();
                         mSmallScreen.addView(vp);
+                        vp.setShowContoller(false);
                         mSmallLayout.setVisibility(View.VISIBLE);
                         mDetailVideo.removeAllViews();
                     }
