@@ -584,7 +584,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 //视频播放
                 setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
                 //item点击事件跳转到详情页播放
-                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+//                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 break;
             case R.layout.ll_video_item_big:
@@ -593,16 +593,16 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setPlayClick(final RelativeLayout view,final int position,final NewsFeed feed) {
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    view.setVisibility(View.GONE);
-                    if (onPlayClickListener != null) {
-                        onPlayClickListener.onPlayClick(view, feed);
-                    }
+    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.setVisibility(View.GONE);
+                if (onPlayClickListener != null) {
+                    onPlayClickListener.onPlayClick(view, feed);
                 }
-            });
+            }
+        });
 
     }
 
@@ -1046,14 +1046,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     //视频播放接口
     private OnPlayClickListener onPlayClickListener;
 
-    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener)
-    {
-        this.onPlayClickListener=onPlayClickListener;
+    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
 
     }
 
-    public interface OnPlayClickListener
-    {
-        void onPlayClick(RelativeLayout relativeLayout,NewsFeed feed);
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
     }
 }

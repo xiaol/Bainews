@@ -37,7 +37,7 @@ public class YaZhiDaoApplication extends Application {
 
     @Override
     public void onCreate() {
-        mContext=this;
+        mContext = this;
         mInstance = this;
 
         // 设置Thread Exception Handler
@@ -54,30 +54,32 @@ public class YaZhiDaoApplication extends Application {
         //init fresco
 //        Fresco.initialize(this);
         String device_token = UmengRegistrar.getRegistrationId(this);
-        Logger.e("device_token","token="+device_token);
+        Logger.e("device_token", "token=" + device_token);
         QbSdk.allowThirdPartyAppDownload(true);
         QbSdk.PreInitCallback preInitCallback = new QbSdk.PreInitCallback() {
             @Override
             public void onCoreInitFinished() {
-                Logger.e("jigang","---onCoreInitFinished");
+                Logger.e("jigang", "---onCoreInitFinished");
             }
 
             @Override
             public void onViewInitFinished(boolean b) {
-                Logger.e("jigang","---onViewInitFinished=" + b);
+                Logger.e("jigang", "---onViewInitFinished=" + b);
             }
         };
         QbSdk.initX5Environment(mContext.getApplicationContext(), QbSdk.WebviewInitType.FIRSTUSE_AND_PRELOAD, preInitCallback);
         super.onCreate();
     }
-    public static Context getAppContext(){
+
+    public static Context getAppContext() {
         return mContext;
     }
+
     /**
      * 该Handler是在BroadcastReceiver中被调用，故
      * 如果需启动Activity，需添加Intent.FLAG_ACTIVITY_NEW_TASK
-     * */
-    UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler(){
+     */
+    UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
 
         @Override
         public void dealWithCustomAction(Context context, UMessage msg) {
@@ -85,10 +87,10 @@ public class YaZhiDaoApplication extends Application {
             String messageAction = msg.extra.get("messageKey");
             if ("action_registration_id".equals(messageAction)) {
                 String device_token = UmengRegistrar.getRegistrationId(context);
-                Logger.e("device_token","token="+device_token);
+                Logger.e("device_token", "token=" + device_token);
                 UploadUmengPushIdRequest.uploadUmengPushId(context, device_token);
             } else if ("action_message_received".equals(messageAction)) {
-                String title =msg.extra.get("extra_title");
+                String title = msg.extra.get("extra_title");
                 String message = msg.extra.get("extra_message");
                 String extras = msg.extra.get("extra_extra");
                 String type = msg.extra.get("extra_content_type");
@@ -115,12 +117,12 @@ public class YaZhiDaoApplication extends Application {
                 Logger.i("jigang", "receive custom extras=" + extras);
                 Logger.i("jigang", "receive custom type=" + type);
                 Logger.i("jigang", "receive custom file=" + file);
-            }else if("action_notification_received".equals(messageAction)){
+            } else if ("action_notification_received".equals(messageAction)) {
                 //umeng statistic notification received
                 MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_RECEIVED);
             } else if ("action_notification_opened".equals(messageAction)) {
                 //umeng statistic notification received and opened it
-                MobclickAgent.onEvent(context,CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
+                MobclickAgent.onEvent(context, CommonConstant.US_BAINEWS_NOTIFICATION_OPENED);
 
                 String newsid = msg.extra.get("newsid");
                 String collection = msg.extra.get("collection");
@@ -135,10 +137,10 @@ public class YaZhiDaoApplication extends Application {
                     detailIntent.putExtra(NewsFeedFgt.KEY_PUSH_NEWS, collection);
                     detailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(detailIntent);
-                    MobclickAgent.onEvent(YaZhiDaoApplication.this,"notification_open");
-                } else if (!TextUtil.isEmptyString(newVersion)){
+                    MobclickAgent.onEvent(YaZhiDaoApplication.this, "notification_open");
+                } else if (!TextUtil.isEmptyString(newVersion)) {
                     UmengUpdateAgent.silentUpdate(context);
-                    Logger.e("jigang","need update");
+                    Logger.e("jigang", "need update");
                 } else {
                     Intent HomeIntent = new Intent(context, MainAty.class);
                     HomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -148,6 +150,7 @@ public class YaZhiDaoApplication extends Application {
             }
         }
     };
+
     public static synchronized YaZhiDaoApplication getInstance() {
         return mInstance;
     }
@@ -160,6 +163,7 @@ public class YaZhiDaoApplication extends Application {
         }
         return mRequestQueue;
     }
+
 
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);

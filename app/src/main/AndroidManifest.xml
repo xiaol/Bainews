@@ -271,7 +271,7 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
             android:name=".pages.NewsDetailVideoAty"
-            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/SwipeBackTheme"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
@@ -341,8 +341,9 @@
         <activity
             android:name=".pages.MainAty"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            />
         <activity
             android:name=".pages.ChannelOperateAty"
             android:launchMode="singleTop"

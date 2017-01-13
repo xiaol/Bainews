@@ -142,6 +142,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     private NewsFeed mUsedNewsFeed;
     private StringBuffer path;
     private VPlayPlayer vp;
+    private int cPosition;
 
 
     /**
@@ -208,6 +209,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(VideoCommentFgt.KEY_NEWS_FEED);
         isShowComment = getIntent().getBooleanExtra(VideoCommentFgt.KEY_SHOW_COMMENT, false);
+        cPosition = getIntent().getIntExtra("position",-1);
 //        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mUsedNewsFeed = getDate();
@@ -454,6 +456,7 @@ public class NewsDetailVideoAty extends SwipeBackActivity implements View.OnClic
                     args.putString(NewsDetailVideoFgt.KEY_NEWS_DOCID, result.getDocid());
                     args.putString(NewsDetailVideoFgt.KEY_NEWS_ID, mUrl);
                     args.putString(NewsDetailVideoFgt.KEY_NEWS_TITLE, mNewsFeed.getTitle());
+                    args.putInt("position", cPosition);
 //                    detailFgt.setShowCareforLayout(mShowCareforLayout);
                     detailFgt.setArguments(args);
 
