@@ -294,8 +294,7 @@ public class NewsFeedFgt extends Fragment {
             }
         } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
-        }else  if (requestCode==2)
-        {
+        } else if (requestCode == 2) {
 
         }
     }
@@ -406,7 +405,7 @@ public class NewsFeedFgt extends Fragment {
                 mFeedFullScreen.setVisibility(View.GONE);
                 mContainer.setVisibility(View.VISIBLE);
                 int position = getPlayItemPosition();
-                if (position != -1&&(vPlayer.getStatus()==PlayStateParams.STATE_PAUSED||vPlayer.isPlay())) {
+                if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
 
                     VideoItemContainer playItemView = getPlayItemView(position);
                     View itemView = (View) playItemView.getParent();
@@ -461,10 +460,10 @@ public class NewsFeedFgt extends Fragment {
                 cPostion = feed.getNid();
                 newsFeed = feed;
 
-                    if (cPostion != lastPostion) {
-                        vPlayer.stop();
-                        vPlayer.release();
-                    }
+                if (cPostion != lastPostion) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
 
 //                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
 //                    mFeedSmallLayout.setVisibility(View.GONE);
@@ -560,7 +559,7 @@ public class NewsFeedFgt extends Fragment {
                     mFeedFullScreen.removeAllViews();
                     mFeedFullScreen.setVisibility(View.GONE);
                     vPlayer.setShowContoller(true);
-                    return ;
+                    return;
                 }
 
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
@@ -937,9 +936,13 @@ public class NewsFeedFgt extends Fragment {
                 mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
             }
             //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-            if (mstrChannelId != null && "1".equals(mstrChannelId)) {
+            if (mstrChannelId != null && "1".equals(mstrChannelId) || "35".equals(mstrChannelId)) {
                 for (NewsFeed newsFeed : result) {
-                    newsFeed.setChannel(1);
+                    if ("1".equals(mstrChannelId)) {
+                        newsFeed.setChannel(1);
+                    } else {
+                        newsFeed.setChannel(35);
+                    }
                     if (newsFeed.getStyle() == 6) {
                         newsFeed.setStyle(8);
                     }
