@@ -1487,8 +1487,8 @@ public class NewsFeedFgt extends Fragment {
             }
         } else {
             vPlayer.onPause();
-            vPlayer.stop();
-            vPlayer.release();
+//            vPlayer.stop();
+//            vPlayer.release();
             FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
             if (frameLayout != null) {
                 View itemView = (View) frameLayout.getParent();
