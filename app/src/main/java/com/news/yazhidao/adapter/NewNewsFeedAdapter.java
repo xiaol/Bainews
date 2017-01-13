@@ -584,7 +584,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 //视频播放
                 setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
                 //item点击事件跳转到详情页播放
-//                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
+                setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 break;
             case R.layout.ll_video_item_big:

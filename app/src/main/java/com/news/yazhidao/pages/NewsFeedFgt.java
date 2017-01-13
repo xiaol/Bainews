@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -528,25 +527,25 @@ public class NewsFeedFgt extends Fragment {
             }
         });
 
-        mlvNewsFeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
-                intent.putExtra("position",vPlayer.getCurrentPosition());
-                startActivityForResult(intent, REQUEST_CODE);
-                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                if (frameLayout == null)
-                    return;
-                if (frameLayout != null) {
-                    frameLayout.removeAllViews();
-                    View itemView = (View) frameLayout.getParent();
-                    if (itemView != null) {
-                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
+//        mlvNewsFeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
+//                intent.putExtra("position",vPlayer.getCurrentPosition());
+//                startActivityForResult(intent, REQUEST_CODE);
+//                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+//                if (frameLayout == null)
+//                    return;
+//                if (frameLayout != null) {
+//                    frameLayout.removeAllViews();
+//                    View itemView = (View) frameLayout.getParent();
+//                    if (itemView != null) {
+//                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
+//        });
 
         vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
@@ -1490,6 +1489,8 @@ public class NewsFeedFgt extends Fragment {
             }
         } else {
             vPlayer.onPause();
+            vPlayer.stop();
+            vPlayer.release();
             FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
             if (frameLayout != null) {
                 View itemView = (View) frameLayout.getParent();
