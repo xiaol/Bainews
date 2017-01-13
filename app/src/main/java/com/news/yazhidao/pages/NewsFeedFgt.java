@@ -1496,11 +1496,12 @@ public class NewsFeedFgt extends Fragment {
                 vPlayer.setShowContoller(true);
             }
         } else {
-            vPlayer.onPause();
-//            vPlayer.stop();
-//            vPlayer.release();
+
             FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
             if (frameLayout != null) {
+                vPlayer.stop();
+                vPlayer.release();
+                frameLayout.removeAllViews();
                 View itemView = (View) frameLayout.getParent();
                 if (itemView != null) {
                     itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
