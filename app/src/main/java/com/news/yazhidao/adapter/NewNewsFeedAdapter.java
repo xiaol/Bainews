@@ -555,9 +555,9 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_video_item_player:
                 if (isFavorite) {
-                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false);
                 } else {
-                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead(), feed.getRtype());
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
                 }
                 ImageView ivVideo = holder.getView(R.id.image_bg);
                 RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
@@ -613,6 +613,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                        }
 //                    }
 //                });
+                setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
@@ -620,8 +621,11 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 }
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 break;
         }
     }
@@ -739,11 +743,29 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
-                if (type != 1 && type != 2 && type != 3 && type != 4) {
+                if (type != 1 && type != 2 && type != 3 && type != 4 && type != 6) {
                     tvTitle.setText(strTitle);
                 } else {
                     tvTitle.setText("        " + strTitle);
                 }
+                tvTitle.setLineSpacing(0, 1.1f);
+            }
+            if (isRead) {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+            } else {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+            }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+        }
+    }
+
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+//                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            } else {
+                tvTitle.setText(strTitle);
                 tvTitle.setLineSpacing(0, 1.1f);
             }
             if (isRead) {
@@ -850,6 +872,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             content = "专题";
             drawable.setColor(mContext.getResources().getColor(R.color.news_type_color4));
+        } else if (type == 6) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "视频";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
