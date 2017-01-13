@@ -4,10 +4,19 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_feed_list_select">
 
+    <include
+        android:id="@+id/layout_source"
+        layout="@layout/ll_news_item_source_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="12dp" />
+
     <RelativeLayout
         android:id="@+id/layout_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_source"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="15dp"
@@ -45,6 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
+        android:layout_below="@+id/layout_source"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="14dp"
@@ -63,10 +73,10 @@
         layout="@layout/ll_news_item_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/layout_video"
         android:layout_below="@+id/tv_video_title"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/layout_video" />
 
     <ImageView
         android:id="@+id/line_bottom_imageView"
