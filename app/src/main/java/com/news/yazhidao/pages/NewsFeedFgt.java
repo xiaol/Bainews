@@ -472,7 +472,7 @@ public class NewsFeedFgt extends Fragment {
 //                    return;
 //                }
 
-                if (lastPostion != -1) {
+                if (lastPostion != -1||cPostion != lastPostion) {
                     ViewGroup last = (ViewGroup) vPlayer.getParent();
                     if (last != null) {
                         last.removeAllViews();
@@ -1175,7 +1175,9 @@ public class NewsFeedFgt extends Fragment {
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
+
         }
+
         mHomeWatcher = new HomeWatcher(this.getActivity());
         mHomeWatcher.setOnHomePressedListener(mOnHomePressedListener);
         mHomeWatcher.startWatch();
@@ -1494,11 +1496,12 @@ public class NewsFeedFgt extends Fragment {
                 vPlayer.setShowContoller(true);
             }
         } else {
-            vPlayer.onPause();
-//            vPlayer.stop();
-//            vPlayer.release();
+
             FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
             if (frameLayout != null) {
+                vPlayer.stop();
+                vPlayer.release();
+                frameLayout.removeAllViews();
                 View itemView = (View) frameLayout.getParent();
                 if (itemView != null) {
                     itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
