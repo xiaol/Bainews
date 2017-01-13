@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -32,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
+import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
@@ -92,6 +95,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
     private IntentFilter mFilter;
+    public  VPlayPlayer vPlayPlayer;
     /**
      * 自定义的PopWindow
      */
@@ -100,6 +104,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private int mCurrentChannelPos;
     private TelephonyManager mTelephonyManager;
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
+    private RelativeLayout mainContainer;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -161,6 +166,30 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }
     }
+//
+//    private Handler handler;
+//
+//
+//    public void setHandler(Handler handler) {
+//        handler = handler;
+//    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            mainContainer.setVisibility(View.VISIBLE);
+        }else
+        {
+            mainContainer.setVisibility(View.VISIBLE);
+        }
+//        Log.e("NewsFeedFgt","MainAty");
+//        Message msg=new Message();
+//        msg.obj=newConfig;
+//        msg.what=100;
+//        handler.sendMessage(msg);
+    }
 
     @Override
     protected boolean translucentStatus() {
@@ -183,6 +212,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    }
     @Override
     protected void initializeViews() {
+        vPlayPlayer= new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
@@ -190,6 +220,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
+        mainContainer = (RelativeLayout) findViewById(R.id.main_container);
         mtvNewWorkBar = (TextView) findViewById(R.id.mNetWorkBar);
         mtvNewWorkBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,6 +368,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
+        if (vPlayPlayer != null) {
+            vPlayPlayer.onDestory();
+
+        }
     }
 
     @Override
@@ -425,6 +460,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (vPlayPlayer!=null)
+            vPlayPlayer.onKeyDown(keyCode,event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
                 dislikePopupWindow.setVisibility(View.GONE);

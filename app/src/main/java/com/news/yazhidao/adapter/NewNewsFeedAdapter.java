@@ -626,16 +626,16 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         }
     }
 
-    private void setPlayClick(final RelativeLayout view,final int position,final NewsFeed feed) {
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    view.setVisibility(View.GONE);
-                    if (onPlayClickListener != null) {
-                        onPlayClickListener.onPlayClick(view, feed);
-                    }
+    private void setPlayClick(final RelativeLayout view, final int position, final NewsFeed feed) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                view.setVisibility(View.GONE);
+                if (onPlayClickListener != null) {
+                    onPlayClickListener.onPlayClick(view, feed);
                 }
-            });
+            }
+        });
 
     }
 
@@ -1079,14 +1079,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     //视频播放接口
     private OnPlayClickListener onPlayClickListener;
 
-    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener)
-    {
-        this.onPlayClickListener=onPlayClickListener;
+    public void setOnPlayClickListener(OnPlayClickListener onPlayClickListener) {
+        this.onPlayClickListener = onPlayClickListener;
 
     }
 
-    public interface OnPlayClickListener
-    {
-        void onPlayClick(RelativeLayout relativeLayout,NewsFeed feed);
+    public interface OnPlayClickListener {
+        void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
     }
 }

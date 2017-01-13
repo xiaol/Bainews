@@ -20,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -158,7 +157,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextView mDetailVideoTitle;
     private TextView mDetailLeftBack;
     private RelativeLayout mDetailWrapper;
-//    private PowerManager.WakeLock mWakeLock;
+    private int position;
+    //    private PowerManager.WakeLock mWakeLock;
 
 
     @Override
@@ -172,6 +172,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
+        position = arguments.getInt("position", -1);
         Logger.e("aaa", "mTitle==" + mTitle);
 
 
@@ -321,7 +322,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
 //        vp = PlayerManager.getPlayerManager().initialize(mContext);
-        vp=new VPlayPlayer(mContext);
+        vp= new VPlayPlayer(mContext);
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
@@ -342,11 +343,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     if (vp.getParent() != null)
                         ((ViewGroup) vp.getParent()).removeAllViews();
                     vp.setTitle(mResult.getTitle());
-                    vp.play(mResult.getVideourl(), 0);
+                    vp.play(mResult.getVideourl(), position);
                     mDetailVideo.addView(vp);
-
                 }
-
             }
         });
 
@@ -954,7 +953,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private NewsDetailVideoAty mNewsDetailVideoAty;
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         mNewsDetailVideoAty = (NewsDetailVideoAty) activity;
         mNewsDetailVideoAty.setHandler(mHandler);

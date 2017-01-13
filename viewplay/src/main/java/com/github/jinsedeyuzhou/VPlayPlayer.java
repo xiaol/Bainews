@@ -439,7 +439,7 @@ public class VPlayPlayer extends RelativeLayout {
                 }
             }
         };
-        orientationEventListener.enable();
+        orientationEventListener.disable();
         portrait = getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
         hideAll();
         /**
@@ -655,7 +655,6 @@ public class VPlayPlayer extends RelativeLayout {
             });
 
         }
-        orientationEventListener.enable();
     }
 
 
@@ -1083,6 +1082,12 @@ public class VPlayPlayer extends RelativeLayout {
 
     //==========================对外提供方法==============================
 
+
+    public int getCurrentPosition() {
+
+        return mVideoView.getCurrentPosition();
+    }
+
     public boolean getAllowModible() {
         return isAllowModible;
     }
@@ -1097,7 +1102,7 @@ public class VPlayPlayer extends RelativeLayout {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+        if (getScreenOrientation(activity) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 
             if (!isLock) {
                 mIsLand = false; // 是否是横屏
@@ -1192,20 +1197,19 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     public void onDestory() {
-        orientationEventListener.disable();
         unregisterNetReceiver();
         handler.removeCallbacksAndMessages(null);
         mVideoView.stopPlayback();
     }
 
     public void onResume() {
-        orientationEventListener.enable();
         if (status == PlayStateParams.STATE_PAUSED) {
             if (currentPosition > 0) {
                 mVideoView.seekTo((int) currentPosition);
             }
             if (!isAutoPause) {
                 mVideoView.start();
+                play.setSelected(true);
                 statusChange(PlayStateParams.STATE_PLAYING);
             }
         }
@@ -1215,6 +1219,7 @@ public class VPlayPlayer extends RelativeLayout {
         show(0);//把系统状态栏显示出来
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
+            play.setSelected(false);
             isAutoPause = false;
             currentPosition = mVideoView.getCurrentPosition();
             statusChange(PlayStateParams.STATE_PAUSED);
