@@ -171,10 +171,15 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith("http:")||(url.startsWith("https:"))){
+                if (url.startsWith("http:") || (url.startsWith("https:"))) {
                     view.loadUrl(url);
                     return false;
                 }
+//                else {
+//                    Intent intent = new Intent();
+//                    intent.setData(Uri.parse(url));
+//                    NewsDetailWebviewAty.this.startActivity(intent);
+//                }
                 return true;
             }
 
