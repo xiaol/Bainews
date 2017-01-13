@@ -443,8 +443,9 @@ public class NewsFeedFgt extends Fragment {
             }
         } else {
             mAdapter.notifyDataSetChanged();
-            mContainer.setVisibility(View.VISIBLE);
-            mFeedFullScreen.setVisibility(View.GONE);
+            mlvNewsFeed.setVisibility(View.VISIBLE);
+            if (mFeedFullScreen.getVisibility() == View.VISIBLE)
+                mFeedFullScreen.setVisibility(View.GONE);
         }
     }
 
@@ -937,8 +938,12 @@ public class NewsFeedFgt extends Fragment {
             }
             //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
             if (mstrChannelId != null && "1".equals(mstrChannelId)) {
-                for (NewsFeed newsFeed : result)
+                for (NewsFeed newsFeed : result) {
                     newsFeed.setChannel(1);
+                    if (newsFeed.getStyle() == 6) {
+                        newsFeed.setStyle(8);
+                    }
+                }
             }
             //如果频道是42,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
             if (mstrChannelId != null && "42".equals(mstrChannelId)) {
@@ -1551,8 +1556,8 @@ public class NewsFeedFgt extends Fragment {
 
 
         } else {
-            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE) {
-                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED)) {
+                VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
                 if (frameLayout != null) {
 
                     View itemView = (View) frameLayout.getParent();

@@ -2,7 +2,7 @@
     android:id="@+id/news_content_relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:background="@drawable/bg_feed_list_select">
 
     <com.news.yazhidao.widget.TextViewExtend
         android:id="@+id/tv_video_title"
