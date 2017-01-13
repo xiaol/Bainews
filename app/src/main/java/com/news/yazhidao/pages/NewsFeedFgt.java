@@ -460,12 +460,10 @@ public class NewsFeedFgt extends Fragment {
                 cPostion = feed.getNid();
                 newsFeed = feed;
 
-                if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
                     if (cPostion != lastPostion) {
                         vPlayer.stop();
                         vPlayer.release();
                     }
-                }
 
 //                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
 //                    mFeedSmallLayout.setVisibility(View.GONE);
