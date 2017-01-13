@@ -241,10 +241,10 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
     }
 
     public void webViewBack() {
-        if (mNewsSourcesiteWebview.canGoBack()) {
-            mNewsSourcesiteWebview.goBack();
-        } else {
+//        if (mNewsSourcesiteWebview.canGoBack()) {
+//            mNewsSourcesiteWebview.goBack();
+//        } else {
             finish();
-        }
+//        }
     }
 }
