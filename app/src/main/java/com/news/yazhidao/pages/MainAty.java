@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -95,7 +97,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
     private IntentFilter mFilter;
-    public  VPlayPlayer vPlayPlayer;
+    public VPlayPlayer vPlayPlayer;
     /**
      * 自定义的PopWindow
      */
@@ -177,11 +179,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             mainContainer.setVisibility(View.VISIBLE);
-        }else
-        {
+        } else {
             mainContainer.setVisibility(View.VISIBLE);
         }
 //        Log.e("NewsFeedFgt","MainAty");
@@ -212,7 +212,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    }
     @Override
     protected void initializeViews() {
-        vPlayPlayer= new VPlayPlayer(this);
+        vPlayPlayer = new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
@@ -311,6 +311,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         } else {
             getDeviceImei();
         }
+        uploadChannelInformation();
     }
 
     /**
@@ -460,8 +461,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (vPlayPlayer!=null)
-            vPlayPlayer.onKeyDown(keyCode,event);
+        if (vPlayPlayer != null)
+            vPlayPlayer.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
                 dislikePopupWindow.setVisibility(View.GONE);
@@ -471,6 +472,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
             } else {
+//                if (vPlayPlayer != null) {
+//                    return vPlayPlayer.onKeyDown(keyCode, event);
+//                }
                 if (DeviceInfoUtil.isFlyme()) {
                     ToastUtil.toastShort(getString(R.string.press_back_again_exit));
                 } else {
@@ -573,5 +577,50 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         }
 
     };
+
+    private void uploadChannelInformation() {
+        if (SharedPreManager.getUser(this) != null) {
+            try {
+                final String requestUrl = HttpConstant.URL_UPLOAD_CHANNEL_INFORMATION;
+                RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                if (SharedPreManager.getUser(MainAty.this) != null) {
+                    uid = Long.valueOf(SharedPreManager.getUser(MainAty.this).getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this)));
+                jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                /**
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 */
+                jsonObject.put("ctype", 1);
+                /**
+                 * 1.ios 2.android 3.网页 4.无法识别
+                 */
+                jsonObject.put("ptype", 2);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                        Log.i("tag", "3333");
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("tag", "4444");
+                    }
+                });
+                requestQueue.add(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
