@@ -234,3 +234,5 @@ java.lang.Object readResolve();
     public <methods>;
 
 }
+##视频
+-keep class tv.danmaku.ijk.media.** { *; }

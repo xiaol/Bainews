@@ -1,18 +1,15 @@
 package com.news.yazhidao.pages;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -72,7 +69,7 @@ import static com.news.yazhidao.utils.manager.SharedPreManager.save;
  * Created by fengjigang on 15/10/28.
  * 主界面
  */
-public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
@@ -304,26 +301,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }
         /**请求系统权限*/
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
-                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        } else {
+        try {
             getDeviceImei();
+        } catch (Exception e) {
+            SharedPreManager.save("flag", "imei", "");
         }
         uploadChannelInformation();
-    }
-
-    /**
-     * 权限回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getDeviceImei();
-        }
     }
 
     /**
@@ -472,9 +455,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
             } else {
-//                if (vPlayPlayer != null) {
-//                    return vPlayPlayer.onKeyDown(keyCode, event);
-//                }
+                if (vPlayPlayer != null) {
+                    if (vPlayPlayer.onKeyDown(keyCode, event))
+                        return true;
+                }
                 if (DeviceInfoUtil.isFlyme()) {
                     ToastUtil.toastShort(getString(R.string.press_back_again_exit));
                 } else {

@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -386,11 +387,10 @@ public class NewsFeedFgt extends Fragment {
     private MainAty mainAty;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mainAty = (MainAty) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainAty = (MainAty) activity;
         vPlayer = mainAty.vPlayPlayer;
-//        mainAty.setHandler(handler);
     }
 
     @Override
@@ -472,7 +472,7 @@ public class NewsFeedFgt extends Fragment {
 //                    return;
 //                }
 
-                if (lastPostion != -1||cPostion != lastPostion) {
+                if (lastPostion != -1 || cPostion != lastPostion) {
                     ViewGroup last = (ViewGroup) vPlayer.getParent();
                     if (last != null) {
                         last.removeAllViews();
