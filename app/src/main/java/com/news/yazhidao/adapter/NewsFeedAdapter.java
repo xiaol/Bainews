@@ -526,24 +526,25 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
                 setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
                 //点击评论跳转
-                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
-                        if (mNewsFeedFgt != null) {
-                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                        } else {
-                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-                        }
-                    }
-                });
+//                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
+//                        if (mNewsFeedFgt != null) {
+//                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+//                        } else {
+//                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+//                        }
+//                    }
+//                });
                 //视频播放
                 setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
                 break;
             case R.layout.ll_video_item_small:
                 if (isFavorite) {
@@ -594,7 +595,15 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             }
         });
+    }
 
+    private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickSharePopWindow.sharePopWindow(newsFeed);
+            }
+        });
     }
 
 
@@ -924,6 +933,12 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         this.mClickShowPopWindow = mClickShowPopWindow;
     }
 
+    clickSharePopWindow mClickSharePopWindow;
+
+    public void setClickSharePopWindow(clickSharePopWindow clickSharePopWindow) {
+        this.mClickSharePopWindow = clickSharePopWindow;
+    }
+
     NewsFeed DeleteClickBean;
     View DeleteView;
 
@@ -1034,6 +1049,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface clickShowPopWindow {
         public void showPopWindow(int x, int y, NewsFeed feed);
+    }
+
+    public interface clickSharePopWindow {
+        public void sharePopWindow(NewsFeed feed);
     }
 
     //视频播放接口

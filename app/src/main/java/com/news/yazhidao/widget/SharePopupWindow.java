@@ -133,10 +133,16 @@ public class SharePopupWindow extends PopupWindow {
         }
     }
 
+    public void setFavoriteGone(){
+        mtvFavorite.setVisibility(View.GONE);
+    }
+
     @Override
     public void dismiss() {
         super.dismiss();
-        mShareDismiss.shareDismiss();
+        if (mShareDismiss != null) {
+            mShareDismiss.shareDismiss();
+        }
     }
 
     public interface OnFavoritListener {
