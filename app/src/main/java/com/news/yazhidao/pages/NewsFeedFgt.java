@@ -601,6 +601,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         @Override
         public void sharePopWindow(NewsFeed feed) {
             mSharePopupWindow = new SharePopupWindow((MainAty) mContext, NewsFeedFgt.this);
+            mSharePopupWindow.setFavoriteGone();
             mivShareBg.startAnimation(mAlphaAnimationIn);
             mivShareBg.setVisibility(View.VISIBLE);
             String remark = feed.getDescr();
