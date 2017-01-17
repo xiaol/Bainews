@@ -177,13 +177,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            mainContainer.setVisibility(View.VISIBLE);
-        }else
-        {
-            mainContainer.setVisibility(View.VISIBLE);
-        }
+//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+//        {
+//            mainContainer.setVisibility(View.VISIBLE);
+//        }else
+//        {
+//            mainContainer.setVisibility(View.VISIBLE);
+//        }
 //        Log.e("NewsFeedFgt","MainAty");
 //        Message msg=new Message();
 //        msg.obj=newConfig;
@@ -368,10 +368,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-        if (vPlayPlayer != null) {
-            vPlayPlayer.onDestory();
-
-        }
     }
 
     @Override
@@ -460,8 +456,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (vPlayPlayer!=null)
-            vPlayPlayer.onKeyDown(keyCode,event);
+
+
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
                 dislikePopupWindow.setVisibility(View.GONE);
@@ -471,6 +467,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
             } else {
+                if (vPlayPlayer!=null)
+                {
+                     if (vPlayPlayer.onKeyDown(keyCode,event))
+                         return true;
+                }
                 if (DeviceInfoUtil.isFlyme()) {
                     ToastUtil.toastShort(getString(R.string.press_back_again_exit));
                 } else {

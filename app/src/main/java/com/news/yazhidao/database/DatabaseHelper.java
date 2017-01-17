@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TABLE_NAME = "yazhidao_news.db";
-    private static int DATABASE_VERSION = 32;
+    private static int DATABASE_VERSION = 34;
     private HashMap<String,Dao> mDaos;
     private Context mContext;
     private ArrayList<ChannelItem> oldChannelItems;
@@ -120,34 +120,34 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database,
                           ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            /***查询数据库升级前的频道列表*/
-            ChannelItemDao channelDao = new ChannelItemDao(mContext);
-            oldChannelItems = channelDao.queryForAll();
-            //删除所有老版本上的频道
-            if (oldVersion <= DATABASE_VERSION){
-               oldChannelItems.clear();
-            }
-            /**查询数据库升级前的专辑列表*/
-            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
-            oldDiggerAlbums = albumDao.querForAll();
-            /**查询专辑列表下的新闻*/
-            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
-            if (oldVersion <= 9){
-                albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
-            }
-            /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
-            NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
-            if (oldVersion <= 25){
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
-                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
-            }
-            NewsDetailCommentDao newsDetailCommentDao = new NewsDetailCommentDao(mContext);
-            if (oldVersion <= 25){
-                newsDetailCommentDao.executeRaw("ALTER TABLE `tb_news_detail_comment_item` ADD COLUMN uid STRING;");
-            }
-
-
-            oldDiggerAlbumItems = albumSubItemDao.queryForAll();
+//            /***查询数据库升级前的频道列表*/
+//            ChannelItemDao channelDao = new ChannelItemDao(mContext);
+//            oldChannelItems = channelDao.queryForAll();
+//            //删除所有老版本上的频道
+//            if (oldVersion <= DATABASE_VERSION){
+//               oldChannelItems.clear();
+//            }
+//            /**查询数据库升级前的专辑列表*/
+//            DiggerAlbumDao albumDao = new DiggerAlbumDao(mContext);
+//            oldDiggerAlbums = albumDao.querForAll();
+//            /**查询专辑列表下的新闻*/
+//            AlbumSubItemDao albumSubItemDao = new AlbumSubItemDao(mContext);
+//            if (oldVersion <= 9){
+//                albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
+//            }
+//            /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
+//            NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
+//            if (oldVersion <= 25){
+//                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
+//                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
+//            }
+//            NewsDetailCommentDao newsDetailCommentDao = new NewsDetailCommentDao(mContext);
+//            if (oldVersion <= 25){
+//                newsDetailCommentDao.executeRaw("ALTER TABLE `tb_news_detail_comment_item` ADD COLUMN uid STRING;");
+//            }
+//
+//
+//            oldDiggerAlbumItems = albumSubItemDao.queryForAll();
 
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);

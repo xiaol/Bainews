@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +159,7 @@ public class NewsFeedFgt extends Fragment {
     private LinearLayout mChannelLayout;
     private ViewPager mViewPager;
     private RelativeLayout mContainer;
+
 
 //    private Handler handler = new Handler() {
 //        @Override
@@ -373,13 +373,13 @@ public class NewsFeedFgt extends Fragment {
         if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
             mHandler.postDelayed(mThread, 1500);
         }
-        rootView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-
-                return vPlayer.onKeyDown(keyCode, event);
-            }
-        });
+//        rootView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                return vPlayer.onKeyDown(keyCode, event);
+//            }
+//        });
         return rootView;
     }
 
@@ -457,19 +457,17 @@ public class NewsFeedFgt extends Fragment {
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
+                relativeLayout.setVisibility(View.GONE);
                 cPostion = feed.getNid();
                 newsFeed = feed;
-
                 if (cPostion != lastPostion) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
-
 //                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
 //                    mFeedSmallLayout.setVisibility(View.GONE);
 //                    mFeedSmallScreen.removeAllViews();
 //                    vPlayer.setShowContoller(false);
-//                    return;
 //                }
 
                 if (lastPostion != -1||cPostion != lastPostion) {
@@ -936,16 +934,22 @@ public class NewsFeedFgt extends Fragment {
                 mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
             }
             //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-            if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId))) {
+            if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
                 for (NewsFeed newsFeed : result) {
                     if ("1".equals(mstrChannelId)) {
                         newsFeed.setChannel(1);
-                    } else {
+                        if (newsFeed.getStyle() == 6) {
+                            newsFeed.setStyle(8);
+                        }
+                    } else if ("35".equals(mstrChannelId)){
                         newsFeed.setChannel(35);
+                    } else if ("44".equals(mstrChannelId)){
+                        newsFeed.setChannel(44);
                     }
-                    if (newsFeed.getStyle() == 6) {
-                        newsFeed.setStyle(8);
-                    }
+
+//                    if (newsFeed.getStyle() == 6) {
+//                        newsFeed.setStyle(8);
+//                    }
                 }
             }
             //如果频道是42,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
@@ -1175,7 +1179,6 @@ public class NewsFeedFgt extends Fragment {
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
-
         }
 
         mHomeWatcher = new HomeWatcher(this.getActivity());
@@ -1260,6 +1263,7 @@ public class NewsFeedFgt extends Fragment {
         mHomeWatcher.stopWatch();
         if (vPlayer != null) {
             vPlayer.onPause();
+            VideoVisibleControl();
         }
     }
 
@@ -1438,7 +1442,7 @@ public class NewsFeedFgt extends Fragment {
                 if (mstrChannelId.equals("44") && vPlayer != null) {
                     Log.e(TAG, "first" + firstVisibleItem + "onScroll:" + mlvNewsFeed.getRefreshableView().getChildAt(0) + "visibleCount:" + visibleItemCount + ",last：" + mlvNewsFeed.getRefreshableView().getLastVisiblePosition());
 //                    VideoShowControl(view);
-                    VideoVisibleControl(view);
+                    VideoVisibleControl();
                 }
             }
         });
@@ -1468,7 +1472,7 @@ public class NewsFeedFgt extends Fragment {
         return null;
     }
 
-    private void VideoVisibleControl(AbsListView view) {
+    private void VideoVisibleControl() {
         ListView lv = mlvNewsFeed.getRefreshableView();
         boolean isExist = false;
         int position = -1;
@@ -1479,33 +1483,34 @@ public class NewsFeedFgt extends Fragment {
                 break;
             if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
                 isExist = true;
-                position = i - view.getFirstVisiblePosition();
+                position = i - lv.getFirstVisiblePosition();
                 break;
             }
         }
         if (isExist) {
             View item = lv.getChildAt(position);
             Log.e(TAG, "item:" + item.toString() + "position:" + position);
-            VideoItemContainer frameLayout = (VideoItemContainer) item.findViewById(R.id.layout_item_video);
+            FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
             Log.e(TAG, "frameLayout:" + frameLayout.toString());
-
-            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-            }
-            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                vPlayer.setShowContoller(true);
-            }
+//
+//            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+//                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+//            }
+//            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+//                vPlayer.setShowContoller(true);
+//            }
         } else {
 
             FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
             if (frameLayout != null) {
-                vPlayer.stop();
-                vPlayer.release();
                 frameLayout.removeAllViews();
                 View itemView = (View) frameLayout.getParent();
                 if (itemView != null) {
                     itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                    vPlayer.stop();
+                    vPlayer.release();
                 }
+
             }
 
         }

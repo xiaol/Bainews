@@ -89,6 +89,7 @@ public class NewsFeed implements Serializable {
     /**
      * 用户是否删除这条收藏数据
      */
+    @DatabaseField
     private boolean isFavorite = false;
     /**
      * 新闻备注
@@ -112,14 +113,17 @@ public class NewsFeed implements Serializable {
     /**
      * 是(1)否(0)已收藏
      */
+    @DatabaseField
     private int colflag;
     /**
      * 是(1)否(0)已关心
      */
+    @DatabaseField
     private int conflag;
     /**
      * 是(1)否(0)已关心该新闻对应的发布源
      */
+    @DatabaseField
     private int conpubflag;
 
     /**
@@ -131,16 +135,19 @@ public class NewsFeed implements Serializable {
     /**
      * 来源图片
      */
+    @DatabaseField
     private String icon;
     /**
      * 视频播放地址
      */
+    @DatabaseField
     private String videourl;
     /**
      * 视频背景图
      */
+    @DatabaseField
     private String thumbnail;
-
+    @DatabaseField
     private int duration;
 
 
