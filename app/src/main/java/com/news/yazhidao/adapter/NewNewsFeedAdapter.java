@@ -555,9 +555,9 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 break;
             case R.layout.ll_video_item_player:
                 if (isFavorite) {
-                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false, feed.getRtype());
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), false);
                 } else {
-                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead(), feed.getRtype());
+                    setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead());
                 }
                 ImageView ivVideo = holder.getView(R.id.image_bg);
                 RelativeLayout.LayoutParams lpVideo = (RelativeLayout.LayoutParams) ivVideo.getLayoutParams();
@@ -568,17 +568,10 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
                 setCommentViewText((TextViewExtend) holder.getView(R.id.tv_video_comments), feed.getComment() + "");
                 //点击评论跳转
-                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
+                holder.getView(R.id.tv_video_comments).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
-                        if (mNewsFeedFgt != null) {
-                            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                        } else {
-                            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
-                        }
+                        setCommentClick(feed);
                     }
                 });
                 //视频播放
@@ -586,6 +579,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
                 break;
             case R.layout.ll_video_item_small:
                 if (isFavorite) {
@@ -618,6 +612,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
+                holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setCommentClick(feed);
+                    }
+                });
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 }
@@ -625,6 +625,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
+                newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
                 break;
         }
     }
@@ -638,7 +639,26 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 }
             }
         });
+    }
 
+    private void setCommentClick(NewsFeed newsFeed) {
+        Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+        intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
+        intent.putExtra(NewsFeedFgt.KEY_SHOW_COMMENT, true);
+        if (mNewsFeedFgt != null) {
+            mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+        }
+    }
+
+    private void setShareClick(final ImageView imageView, final NewsFeed newsFeed) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickSharePopWindow.sharePopWindow(newsFeed);
+            }
+        });
     }
 
 
@@ -741,11 +761,29 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
-                if (type != 1 && type != 2 && type != 3 && type != 4) {
+                if (type != 1 && type != 2 && type != 3 && type != 4 && type != 6) {
                     tvTitle.setText(strTitle);
                 } else {
                     tvTitle.setText("        " + strTitle);
                 }
+                tvTitle.setLineSpacing(0, 1.1f);
+            }
+            if (isRead) {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+            } else {
+                tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+            }
+            tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
+        }
+    }
+
+    private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
+        if (strTitle != null && !"".equals(strTitle)) {
+            if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+//                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
+            } else {
+                tvTitle.setText(strTitle);
                 tvTitle.setLineSpacing(0, 1.1f);
             }
             if (isRead) {
@@ -852,6 +890,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             }
             content = "专题";
             drawable.setColor(mContext.getResources().getColor(R.color.news_type_color4));
+        } else if (type == 6) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "视频";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -966,6 +1010,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         this.mClickShowPopWindow = mClickShowPopWindow;
     }
 
+    clickSharePopWindow mClickSharePopWindow;
+
+    public void setClickSharePopWindow(clickSharePopWindow clickSharePopWindow) {
+        this.mClickSharePopWindow = clickSharePopWindow;
+    }
+
     NewsFeed DeleteClickBean;
     View DeleteView;
 
@@ -1076,6 +1126,10 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface clickShowPopWindow {
         public void showPopWindow(int x, int y, NewsFeed feed);
+    }
+
+    public interface clickSharePopWindow {
+        public void sharePopWindow(NewsFeed feed);
     }
 
     //视频播放接口

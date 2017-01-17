@@ -1,5 +1,6 @@
 package com.news.yazhidao.pages;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -65,6 +66,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
+import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.VideoContainer;
 import com.news.yazhidao.widget.VideoItemContainer;
@@ -77,7 +79,7 @@ import java.util.Random;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment {
+public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismiss {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -152,13 +154,14 @@ public class NewsFeedFgt extends Fragment {
     private VideoContainer mFeedFullScreen;
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
-    private ImageView mFeedClose;
+    private ImageView mFeedClose, mivShareBg;
     public int cPostion = -1;
     private int lastPostion = -1;
     private NewsFeed newsFeed;
     private LinearLayout mChannelLayout;
     private ViewPager mViewPager;
     private RelativeLayout mContainer;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
 
 
 //    private Handler handler = new Handler() {
@@ -320,7 +323,7 @@ public class NewsFeedFgt extends Fragment {
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
-
+        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
         //====================视频===========================
         mFeedFullScreen = (VideoContainer) getActivity().findViewById(R.id.feed_full_screen);
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
@@ -350,6 +353,7 @@ public class NewsFeedFgt extends Fragment {
 
         mAdapter = new NewNewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
+        mAdapter.setClickSharePopWindow(mClickSharePopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
             String[] colorArr = mContext.getResources().getStringArray(R.array.bg_focus_colors);
@@ -380,17 +384,27 @@ public class NewsFeedFgt extends Fragment {
 //                return vPlayer.onKeyDown(keyCode, event);
 //            }
 //        });
+//        rootView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                return vPlayer.onKeyDown(keyCode, event);
+//            }
+//        });
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
         return rootView;
     }
 
     private MainAty mainAty;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mainAty = (MainAty) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mainAty = (MainAty) activity;
         vPlayer = mainAty.vPlayPlayer;
-//        mainAty.setHandler(handler);
     }
 
     @Override
@@ -470,7 +484,7 @@ public class NewsFeedFgt extends Fragment {
 //                    vPlayer.setShowContoller(false);
 //                }
 
-                if (lastPostion != -1||cPostion != lastPostion) {
+                if (lastPostion != -1 || cPostion != lastPostion) {
                     ViewGroup last = (ViewGroup) vPlayer.getParent();
                     if (last != null) {
                         last.removeAllViews();
@@ -587,6 +601,27 @@ public class NewsFeedFgt extends Fragment {
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
+
+    NewNewsFeedAdapter.clickSharePopWindow mClickSharePopWindow = new NewNewsFeedAdapter.clickSharePopWindow() {
+        @Override
+        public void sharePopWindow(NewsFeed feed) {
+            mSharePopupWindow = new SharePopupWindow((MainAty) mContext, NewsFeedFgt.this);
+            mSharePopupWindow.setFavoriteGone();
+            mivShareBg.startAnimation(mAlphaAnimationIn);
+            mivShareBg.setVisibility(View.VISIBLE);
+            String remark = feed.getDescr();
+            String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(feed.getUrl()) + "&interface";
+            mSharePopupWindow.setTitleAndUrl(feed, remark);
+            mSharePopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        }
+    };
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.setVisibility(View.GONE);
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mSharePopupWindow = null;
+    }
 
     @Override
     public void onDestroyView() {
@@ -1155,10 +1190,12 @@ public class NewsFeedFgt extends Fragment {
     }
 
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
+    SharePopupWindow mSharePopupWindow;
 
     public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
         this.mNewsFeedFgtPopWindow = mNewsFeedFgtPopWindow;
     }
+
 
     public interface NewsFeedFgtPopWindow {
         void showPopWindow(int x, int y, String pubName, int newsid, NewNewsFeedAdapter mAdapter);

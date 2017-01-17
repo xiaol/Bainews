@@ -1,23 +1,21 @@
 package com.news.yazhidao.pages;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +44,7 @@ import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
@@ -70,7 +69,7 @@ import static com.news.yazhidao.utils.manager.SharedPreManager.save;
  * Created by fengjigang on 15/10/28.
  * 主界面
  */
-public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
@@ -95,7 +94,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private TextView mtvNewWorkBar;
     private ConnectivityManager mConnectivityManager;
     private IntentFilter mFilter;
-    public  VPlayPlayer vPlayPlayer;
+    public VPlayPlayer vPlayPlayer;
     /**
      * 自定义的PopWindow
      */
@@ -212,7 +211,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    }
     @Override
     protected void initializeViews() {
-        vPlayPlayer= new VPlayPlayer(this);
+        vPlayPlayer = new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mChannelItemDao = new ChannelItemDao(this);
@@ -304,25 +303,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }
         /**请求系统权限*/
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE},
-                    PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        } else {
+        try {
             getDeviceImei();
+        } catch (Exception e) {
+            SharedPreManager.save("flag", "imei", "");
         }
-    }
-
-    /**
-     * 权限回调
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST_READ_PHONE_STATE
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getDeviceImei();
-        }
+        uploadChannelInformation();
     }
 
     /**
@@ -457,7 +443,6 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (dislikePopupWindow.getVisibility() == View.VISIBLE) {//判断自定义的 popwindow 是否显示 如果现实按返回键关闭
                 dislikePopupWindow.setVisibility(View.GONE);
@@ -574,5 +559,50 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         }
 
     };
+
+    private void uploadChannelInformation() {
+        if (SharedPreManager.getUser(this) != null) {
+            try {
+                final String requestUrl = HttpConstant.URL_UPLOAD_CHANNEL_INFORMATION;
+                RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+                Long uid = null;
+                if (SharedPreManager.getUser(MainAty.this) != null) {
+                    uid = Long.valueOf(SharedPreManager.getUser(MainAty.this).getMuid());
+                }
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("uid", uid);
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this)));
+                jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
+                jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
+                jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
+                /**
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 */
+                jsonObject.put("ctype", 1);
+                /**
+                 * 1.ios 2.android 3.网页 4.无法识别
+                 */
+                jsonObject.put("ptype", 2);
+                JsonObjectRequest request = new JsonObjectRequest(
+                        Request.Method.POST, requestUrl,
+                        jsonObject, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject jsonObj) {
+                        Log.i("tag", "3333");
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("tag", "4444");
+                    }
+                });
+                requestQueue.add(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

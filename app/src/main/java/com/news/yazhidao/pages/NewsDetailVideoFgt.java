@@ -955,7 +955,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private NewsDetailVideoAty mNewsDetailVideoAty;
 
     @Override
-    public void onAttach(Context activity) {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         mNewsDetailVideoAty = (NewsDetailVideoAty) activity;
         mNewsDetailVideoAty.setHandler(mHandler);

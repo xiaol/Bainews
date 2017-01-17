@@ -65,6 +65,20 @@
         android:textColor="#333333"
         android:textSize="15sp" />
 
+    <com.news.yazhidao.widget.TextViewExtend
+        android:id="@+id/type_textView"
+        android:layout_width="28dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/layout_source"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/newstag_newhotspot_shape"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
     <!--<include-->
     <!--android:id="@+id/item_bottom_video"-->
     <!--layout="@layout/item_bottom_video" />-->
