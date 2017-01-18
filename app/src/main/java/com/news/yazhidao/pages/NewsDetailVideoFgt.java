@@ -322,7 +322,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
 //        vp = PlayerManager.getPlayerManager().initialize(mContext);
-        vp= new VPlayPlayer(mContext);
+        vp=mNewsDetailVideoAty.vPlayPlayer;
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
@@ -402,7 +402,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (MediaNetUtils.getNetworkType(mContext) == 3) {
             mVideoShowBg.setVisibility(View.GONE);
             vp.setTitle(mResult.getTitle());
-            vp.play(mResult.getVideourl(), 0);
+            vp.play(mResult.getVideourl(), position);
             mDetailVideo.addView(vp);
         }
 
@@ -573,6 +573,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             }
         }
     }
+
 
     @Override
     public void onDetach() {

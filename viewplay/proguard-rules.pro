@@ -15,14 +15,4 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-# -keepclasseswithmembers class * {   # 保持自定义控件类不被混淆
-#     public <init>(android.content.Context, android.util.AttributeSet);
-# }
-# -keepclasseswithmembers class * {# 保持自定义控件类不被混淆
-#     public <init>(android.content.Context, android.util.AttributeSet, int);
-# }
-# -keepclassmembers class * extends android.app.Activity { # 保持自定义控件类不被混淆
-#     public void *(android.view.View);
-# }
-
-
+-keep class tv.danmaku.ijk.media.** { *; }
