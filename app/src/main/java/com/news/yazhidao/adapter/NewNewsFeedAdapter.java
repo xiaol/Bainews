@@ -634,7 +634,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setVisibility(View.GONE);
                 if (onPlayClickListener != null) {
                     onPlayClickListener.onPlayClick(view, feed);
                 }
