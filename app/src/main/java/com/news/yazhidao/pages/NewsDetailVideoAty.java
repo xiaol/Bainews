@@ -209,7 +209,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(VideoCommentFgt.KEY_NEWS_FEED);
         isShowComment = getIntent().getBooleanExtra(VideoCommentFgt.KEY_SHOW_COMMENT, false);
-        cPosition = getIntent().getIntExtra("position",-1);
+        cPosition = getIntent().getIntExtra("position",0);
 //        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mUsedNewsFeed = getDate();

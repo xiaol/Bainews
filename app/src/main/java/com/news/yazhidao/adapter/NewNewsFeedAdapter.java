@@ -916,7 +916,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      * @param rlNewsContent
      * @param feed
      */
-    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
@@ -943,13 +943,17 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
                 } else if (feed.getRtype() == 6) {
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    if (mNewsFeedFgt != null) {
-                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                    } else {
-                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    if (onPlayClickListener!=null)
+                    {
+                     onPlayClickListener.onItemClick(rlNewsContent,feed);
                     }
+//                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                    if (mNewsFeedFgt != null) {
+//                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+//                    } else {
+//                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+//                    }
                 } else {
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -1142,5 +1146,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface OnPlayClickListener {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+        void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
     }
 }

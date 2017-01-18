@@ -561,15 +561,6 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
 
-    /**
-     * 展示控制面板
-     *
-     * @param show
-     */
-    private void setShowContollerbar(boolean show) {
-        setVisibility(show ? View.VISIBLE : View.GONE);
-
-    }
 
     private void hideAll() {
         top_box.setVisibility(View.GONE);
@@ -578,7 +569,7 @@ public class VPlayPlayer extends RelativeLayout {
         appVideoPlay.setVisibility(View.GONE);
     }
 
-    private void showBottomControl(boolean show) {
+    public void showBottomControl(boolean show) {
         contollerbar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -1026,7 +1017,6 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     private void start() {
-        isShowContoller = false;
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
         hide(false);
@@ -1180,6 +1170,7 @@ public class VPlayPlayer extends RelativeLayout {
         }
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
+        status=PlayStateParams.STATE_PLAYBACK_COMPLETED;
     }
 
     public void release() {
@@ -1187,6 +1178,7 @@ public class VPlayPlayer extends RelativeLayout {
             mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
+        status=PlayStateParams.STATE_PLAYBACK_COMPLETED;
     }
 
     public int getStatus() {
@@ -1222,6 +1214,7 @@ public class VPlayPlayer extends RelativeLayout {
     public void onPause() {
 //        orientationEventListener.disable();
         //把系统状态栏显示出来
+        show(0);
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
             play.setSelected(false);
@@ -1236,6 +1229,16 @@ public class VPlayPlayer extends RelativeLayout {
         this.isShowContoller = isShowContoller;
         handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
         showBottomControl(isShowContoller);
+    }
+
+    /**
+     * 展示控制面板
+     *
+     * @param show
+     */
+    private void setShowContollerbar(boolean show) {
+        setVisibility(show ? View.VISIBLE : View.GONE);
+
     }
 
     public void play(String url) {
