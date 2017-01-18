@@ -30,6 +30,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="blacktou">#4d000000</color>
+    <color name="black50">#80000000</color>
     <color name="black_90">#E6000000</color>
     <color name="setting_line_bg">#e9e9e9</color>
     <color name="news_list_cell_sourcesitename">#a5a5a5</color>
@@ -264,9 +265,13 @@
     <color name="newscomment_numColor" >#e94221</color>
 
     <color name="news_type_color1" >#ff7d68</color>
-    <color name="news_type_color2" >#ceebff</color>
-    <color name="news_type_color3" >#ededed</color>
+    <color name="news_type_color2" >#b3e0ff</color>
+    <color name="news_type_color3" >#dddddd</color>
     <color name="news_type_color4" >#fac535</color>
+    <color name="news_type_color5" >#ff8d9b</color>
+    <color name="news_type_color6" >#fab37f</color>
+    <color name="news_type_color7" >#97bcf8</color>
+    <color name="news_type_color8" >#dddddd</color>
     <color name="news_channel_tab_color1" >#787878</color>
     <color name="news_channel_tab_color2" >#fb7a12</color>
     <color name="news_source_bg" >#f8f8f8</color>

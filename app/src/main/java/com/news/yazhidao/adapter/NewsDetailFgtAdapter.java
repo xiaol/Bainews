@@ -2,6 +2,7 @@ package com.news.yazhidao.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.UrlQuerySanitizer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,7 +13,8 @@ import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.abslistview.CommonAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.entity.RelatedItemEntity;
-import com.news.yazhidao.pages.NewsDetailWebviewAty;
+import com.news.yazhidao.pages.NewsDetailAty2;
+import com.news.yazhidao.pages.NewsFeedFgt;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -121,7 +123,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 //        }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
         TextViewExtend title = holder.getView(R.id.attention_Title);
-        String strTitle =  relatedItemEntity.getTitle().replace("<font color='#0091fa' >","").replace("</font>","");
+        String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
         title.setText(strTitle);
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
 
@@ -148,11 +150,16 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent webviewIntent = new Intent(mContext, NewsDetailWebviewAty.class);
-                String zhihuUrl = relatedItemEntity.getUrl();
-                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
-                mContext.startActivity(webviewIntent);
+//                Intent webviewIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+//                String zhihuUrl = relatedItemEntity.getUrl();
+//                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
+//                mContext.startActivity(webviewIntent);
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");
+                UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(relatedItemEntity.getUrl());
+                String value = sanitizer.getValue("nid");
+                Intent intent = new Intent(mContext, NewsDetailAty2.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, value);
+                mContext.startActivity(intent);
 
             }
         });

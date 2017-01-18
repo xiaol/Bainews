@@ -16,9 +16,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.FeedDislikePopupWindow;
+import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.channel.ChannelTabStrip;
 import com.news.yazhidao.widget.tag.TagCloudLayout;
 import com.umeng.analytics.AnalyticsConfig;
@@ -69,12 +72,13 @@ import static com.news.yazhidao.utils.manager.SharedPreManager.save;
  * Created by fengjigang on 15/10/28.
  * 主界面
  */
-public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack {
+public class MainAty extends BaseActivity implements View.OnClickListener, NewsFeedFgt.NewsSaveDataCallBack, SharePopupWindow.ShareDismiss {
 
     public static final int REQUEST_CODE = 1001;
     public static final String ACTION_USER_LOGIN = "com.news.yazhidao.ACTION_USER_LOGIN";
     public static final String ACTION_USER_LOGOUT = "com.news.yazhidao.ACTION_USER_LOGOUT";
     public static final String ACTION_FOUCES = "com.news.yazhidao.ACTION_FOUCES";
+    public static final String ACTION_SHOW_SHARE = "com.news.yazhidao.ACTION_SHOW_SHARE";
     public static final String KEY_INTENT_USER_URL = "key_intent_user_url";
     public static final String KEY_INTENT_CURRENT_POSITION = "key_intent_current_position";
     public static final String KEY_CURRENT_CHANNEL = "key_current_channel";
@@ -83,7 +87,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private ChannelTabStrip mChannelTabStrip;
     private ViewPager mViewPager;
     private MyViewPagerAdapter mViewPagerAdapter;
-    private ImageView mChannelExpand;
+    private ImageView mChannelExpand, mivShareBg;
     private ChannelItemDao mChannelItemDao;
     private Handler mHandler = new Handler();
     private UserLoginReceiver mReceiver;
@@ -100,11 +104,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
      * 自定义的PopWindow
      */
     FeedDislikePopupWindow dislikePopupWindow;
+    SharePopupWindow mSharePopupWindow;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
     private ChannelItem mCurrentChannel;
     private int mCurrentChannelPos;
     private TelephonyManager mTelephonyManager;
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
-    private RelativeLayout mainContainer;
+    private RelativeLayout mrlMain, mainContainer;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -163,8 +169,25 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mViewPagerAdapter.notifyDataSetChanged();
                 mChannelTabStrip.setViewPager(mViewPager);
                 Logger.e("jigang", "--- onActivityResult");
+            } else if (ACTION_SHOW_SHARE.equals(action)) {
+                NewsFeed newsFeed = (NewsFeed) intent.getSerializableExtra("newsfeed");
+                mSharePopupWindow = new SharePopupWindow(MainAty.this, MainAty.this);
+                mSharePopupWindow.setFavoriteGone();
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                String remark = newsFeed.getDescr();
+                String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(newsFeed.getUrl()) + "&interface";
+                mSharePopupWindow.setTitleAndUrl(newsFeed, remark);
+                mSharePopupWindow.showAtLocation(mrlMain, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         }
+    }
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.setVisibility(View.GONE);
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mSharePopupWindow = null;
     }
 //
 //    private Handler handler;
@@ -215,8 +238,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         vPlayPlayer = new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
         mChannelItemDao = new ChannelItemDao(this);
         mSelChannelItems = new ArrayList<>();
+        mrlMain = (RelativeLayout) findViewById(R.id.main_layout);
         mChannelTabStrip = (ChannelTabStrip) findViewById(R.id.mChannelTabStrip);
         mViewPager = (ViewPager) findViewById(R.id.mViewPager);
         mViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
@@ -229,6 +257,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 startActivity(intent);
             }
         });
+        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
         mUserCenter = (ImageView) findViewById(R.id.mUserCenter);
         mUserCenter.setOnClickListener(this);
         setUserCenterIcon(null);
@@ -294,6 +323,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mFilter.addAction(ACTION_USER_LOGIN);
         mFilter.addAction(ACTION_USER_LOGOUT);
         mFilter.addAction(ACTION_FOUCES);
+        mFilter.addAction(ACTION_SHOW_SHARE);
         mFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         /**更新右下角用户登录图标*/
         User user = SharedPreManager.getUser(this);
@@ -453,10 +483,9 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             if ((pressedBackKeyTime - mLastPressedBackKeyTime) < 2000) {
                 finish();
             } else {
-                if (vPlayPlayer!=null)
-                {
-                     if (vPlayPlayer.onKeyDown(keyCode,event))
-                         return true;
+                if (vPlayPlayer != null) {
+                    if (vPlayPlayer.onKeyDown(keyCode, event))
+                        return true;
                 }
                 if (DeviceInfoUtil.isFlyme()) {
                     ToastUtil.toastShort(getString(R.string.press_back_again_exit));
@@ -572,7 +601,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this)));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this, "247")));
                 jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));

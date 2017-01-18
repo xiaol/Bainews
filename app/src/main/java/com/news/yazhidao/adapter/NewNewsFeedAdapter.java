@@ -38,6 +38,7 @@ import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.AttentionActivity;
+import com.news.yazhidao.pages.MainAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
@@ -656,7 +657,10 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickSharePopWindow.sharePopWindow(newsFeed);
+                Intent intent = new Intent();
+                intent.setAction(MainAty.ACTION_SHOW_SHARE);
+                intent.putExtra("newsfeed", newsFeed);
+                mContext.sendBroadcast(intent);
             }
         });
     }
@@ -883,19 +887,31 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "广告";
-            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color3));
         } else if (type == 4) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "专题";
             drawable.setColor(mContext.getResources().getColor(R.color.news_type_color4));
+        } else if (type == 5) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "多图";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color5));
         } else if (type == 6) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "视频";
-            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color6));
+        } else if (type == 7) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "本地";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color7));
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -1014,12 +1030,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         this.mClickShowPopWindow = mClickShowPopWindow;
     }
 
-    clickSharePopWindow mClickSharePopWindow;
-
-    public void setClickSharePopWindow(clickSharePopWindow clickSharePopWindow) {
-        this.mClickSharePopWindow = clickSharePopWindow;
-    }
-
     NewsFeed DeleteClickBean;
     View DeleteView;
 
@@ -1130,10 +1140,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface clickShowPopWindow {
         public void showPopWindow(int x, int y, NewsFeed feed);
-    }
-
-    public interface clickSharePopWindow {
-        public void sharePopWindow(NewsFeed feed);
     }
 
     //视频播放接口
