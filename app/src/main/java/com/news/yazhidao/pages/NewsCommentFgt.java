@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -78,7 +80,7 @@ public class NewsCommentFgt extends BaseFragment {
     private NewsFeed mNewsFeed;
     private SharedPreferences mSharedPreferences;
     private boolean isNetWork;
-
+    private RequestManager mRequestManager;
     /**
      * 点赞的广播
      */
@@ -157,6 +159,7 @@ public class NewsCommentFgt extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mRequestManager = Glide.with(this);
         View rootView = inflater.inflate(R.layout.fgt_news_comment, null);
         mNewsCommentList = (PullToRefreshListView) rootView.findViewById(R.id.mNewsCommentList);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
@@ -310,9 +313,10 @@ public class NewsCommentFgt extends BaseFragment {
             holder.tvTime.setText("" + DateUtil.getTimes(DateUtil.dateStr2Long(comment.getCtime())));
 //            setNewsTime(holder.tvTime, comment.getCtime());
             if (!TextUtil.isEmptyString(comment.getAvatar())) {
-                Glide.with(getActivity()).load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                Log.i("tag",comment.getAvatar()+"====");
+                mRequestManager.load(Uri.parse(comment.getAvatar())).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
             } else {
-                Glide.with(getActivity()).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(getActivity(), 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+                mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
             }
             holder.tvName.setText(comment.getUname());
             int count = comment.getCommend();

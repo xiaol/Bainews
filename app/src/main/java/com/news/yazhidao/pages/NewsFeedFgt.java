@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -48,16 +46,13 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.database.ReleaseSourceItemDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
-import com.news.yazhidao.entity.AdDeviceEntity;
-import com.news.yazhidao.entity.AdEntity;
-import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
-import com.news.yazhidao.utils.CrashHandler;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -66,7 +61,6 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
-import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.VideoContainer;
 import com.news.yazhidao.widget.VideoItemContainer;
@@ -75,11 +69,10 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismiss {
+public class NewsFeedFgt extends Fragment {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -154,14 +147,13 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     private VideoContainer mFeedFullScreen;
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
-    private ImageView mFeedClose, mivShareBg;
+    private ImageView mFeedClose;
     public int cPostion = -1;
     private int lastPostion = -1;
     private NewsFeed newsFeed;
     private LinearLayout mChannelLayout;
     private ViewPager mViewPager;
     private RelativeLayout mContainer;
-    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
 
 
 //    private Handler handler = new Handler() {
@@ -323,7 +315,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
-        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
         //====================视频===========================
         mFeedFullScreen = (VideoContainer) getActivity().findViewById(R.id.feed_full_screen);
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
@@ -353,7 +344,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
 
         mAdapter = new NewNewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
-        mAdapter.setClickSharePopWindow(mClickSharePopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
             String[] colorArr = mContext.getResources().getStringArray(R.array.bg_focus_colors);
@@ -391,10 +381,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
 //                return vPlayer.onKeyDown(keyCode, event);
 //            }
 //        });
-        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
-        mAlphaAnimationIn.setDuration(500);
-        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
-        mAlphaAnimationOut.setDuration(500);
+
         return rootView;
     }
 
@@ -602,27 +589,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         }
     };
 
-    NewNewsFeedAdapter.clickSharePopWindow mClickSharePopWindow = new NewNewsFeedAdapter.clickSharePopWindow() {
-        @Override
-        public void sharePopWindow(NewsFeed feed) {
-            mSharePopupWindow = new SharePopupWindow((MainAty) mContext, NewsFeedFgt.this);
-            mSharePopupWindow.setFavoriteGone();
-            mivShareBg.startAnimation(mAlphaAnimationIn);
-            mivShareBg.setVisibility(View.VISIBLE);
-            String remark = feed.getDescr();
-            String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(feed.getUrl()) + "&interface";
-            mSharePopupWindow.setTitleAndUrl(feed, remark);
-            mSharePopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        }
-    };
-
-    @Override
-    public void shareDismiss() {
-        mivShareBg.setVisibility(View.GONE);
-        mivShareBg.startAnimation(mAlphaAnimationOut);
-        mSharePopupWindow = null;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -677,82 +643,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         }
     }
 
-    public String getAdMessage() {
-
-        Gson gson = new Gson();
-        Random random = new Random();
-        AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
-        adImpressionEntity.setAid(random.nextInt(2) == 0 ? "98" : "100");
-        /** 单图91  三图164 */
-        adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
-
-        AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        /** 设置IMEI */
-        String imei = SharedPreManager.get("flag", "imei");
-        adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
-        /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
-        /** 设置设备品牌 */
-        String brand = Build.BRAND;
-        adDeviceEntity.setBrand(brand);
-        /** 设置设备型号 */
-        String platform = Build.MODEL;
-        adDeviceEntity.setPlatform(platform);
-        /** 设置操作系统 */
-        adDeviceEntity.setOs("1");
-        /** 设置操作系统版本号 */
-        String version = Build.VERSION.RELEASE;
-        adDeviceEntity.setOs_version(version);
-        /** 设置屏幕分辨率 */
-        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
-        /** 设置IP */
-        String ip = "";
-        if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
-            ip = DeviceInfoUtil.getIpAddress(mContext);
-        } else {
-            ip = DeviceInfoUtil.getLocalIpAddress();
-        }
-        adDeviceEntity.setIp(ip);
-        /** 设置网络环境 */
-        String networkType = DeviceInfoUtil.getNetworkType(mContext);
-        if (TextUtil.isEmptyString(networkType)) {
-            adDeviceEntity.setNetwork("0");
-        } else {
-            if ("wifi".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("1");
-            } else if ("2G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("2");
-            } else if ("3G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("3");
-            } else if ("4G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("4");
-            } else {
-                adDeviceEntity.setNetwork("0");
-            }
-        }
-        /** 设置经度 纬度 */
-//        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-//        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-//        adDeviceEntity.setLongitude(locationEntity.get);
-        /** 设置横竖屏幕 */
-        if (DeviceInfoUtil.isScreenChange(mContext)) {//横屏
-            adDeviceEntity.setScreen_orientation("2");
-        } else {//竖屏
-            adDeviceEntity.setScreen_orientation("1");
-        }
-
-
-        AdEntity adEntity = new AdEntity();
-        adEntity.setTs((System.currentTimeMillis() / 1000) + "");
-        adEntity.setDevice(adDeviceEntity);
-        adEntity.getImpression().add(adImpressionEntity);
-
-
-        return gson.toJson(adEntity);
-
-    }
 
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
@@ -767,7 +657,8 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
+        //写入feed流广告位ID
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, 247 + "")));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -976,9 +867,9 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                         if (newsFeed.getStyle() == 6) {
                             newsFeed.setStyle(8);
                         }
-                    } else if ("35".equals(mstrChannelId)){
+                    } else if ("35".equals(mstrChannelId)) {
                         newsFeed.setChannel(35);
-                    } else if ("44".equals(mstrChannelId)){
+                    } else if ("44".equals(mstrChannelId)) {
                         newsFeed.setChannel(44);
                     }
 
@@ -1190,7 +1081,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     }
 
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
-    SharePopupWindow mSharePopupWindow;
 
     public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
         this.mNewsFeedFgtPopWindow = mNewsFeedFgtPopWindow;

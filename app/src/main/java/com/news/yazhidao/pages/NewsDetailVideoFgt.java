@@ -35,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.google.gson.reflect.TypeToken;
@@ -158,6 +159,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextView mDetailLeftBack;
     private RelativeLayout mDetailWrapper;
     private int position;
+    private RequestManager mRequestManager;
     //    private PowerManager.WakeLock mWakeLock;
 
 
@@ -168,6 +170,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mContext = getActivity();
 //        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
 //        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        mRequestManager = Glide.with(this);
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
@@ -668,9 +671,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         String icon = mResult.getPurl();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
-            Glide.with(mContext).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(iv_attention_icon);
         } else {
-            Glide.with(mContext).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
             tv_attention_title.setText(name);
