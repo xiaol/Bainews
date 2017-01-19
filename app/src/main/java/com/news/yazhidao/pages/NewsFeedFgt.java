@@ -516,8 +516,10 @@ public class NewsFeedFgt extends Fragment {
 
             @Override
             public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
-                cPostion = feed.getNid();
+//                cPostion = feed.getNid();
 //                newsVideoFeed=feed;
+                if (feed==null)
+                    return;
                 mainAty.newsFeedVideo = feed;
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -533,7 +535,7 @@ public class NewsFeedFgt extends Fragment {
                     vPlayer.stop();
                     vPlayer.release();
                 }
-                lastPostion = cPostion;
+//                lastPostion = cPostion;
             }
         });
 

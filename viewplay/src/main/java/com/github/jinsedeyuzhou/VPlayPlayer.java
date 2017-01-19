@@ -527,6 +527,7 @@ public class VPlayPlayer extends RelativeLayout {
         } else if (newStatus == PlayStateParams.STATE_PREPARING) {
             Log.d(TAG, "STATE_PREPARING");
             play.setVisibility(View.GONE);
+            isShowContoller = false;
             if (progressBar.getVisibility() == View.GONE)
                 progressBar.setVisibility(View.VISIBLE);
         } else if (newStatus == PlayStateParams.STATE_PLAYING) {
@@ -602,6 +603,7 @@ public class VPlayPlayer extends RelativeLayout {
         if (!isShow)
             isShow = true;
         progressBar.setVisibility(View.GONE);
+        play.setVisibility(View.VISIBLE);
         hide(true);
         handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
         if (timeout != 0 && mVideoView.isPlaying()) {
@@ -1204,7 +1206,7 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     public void onResume() {
-        orientationEventListener.enable();
+//        orientationEventListener.enable();
         if (status == PlayStateParams.STATE_PAUSED) {
             if (isAutoPause) {
 //                if (currentPosition > 0) {
@@ -1219,7 +1221,7 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     public void onPause() {
-        orientationEventListener.disable();
+//        orientationEventListener.disable();
         //把系统状态栏显示出来
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
