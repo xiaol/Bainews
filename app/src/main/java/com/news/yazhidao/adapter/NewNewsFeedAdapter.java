@@ -388,6 +388,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) ivBig.getLayoutParams();
                 lpBig.width = width;
                 lpBig.height = (int) (width * 185 / 330.0f);
+//                lpBig.height = (int) (width * 800 / 1200.0f);
                 ivBig.setLayoutParams(lpBig);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), width, (int) (width * 9 / 16.0f), feed.getRtype());
                 if (isFavorite) {

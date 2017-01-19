@@ -99,7 +99,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private ConnectivityManager mConnectivityManager;
     private IntentFilter mFilter;
     public VPlayPlayer vPlayPlayer;
-    public  NewsFeed newsFeedVideo;
+    public NewsFeed newsFeedVideo;
     /**
      * 自定义的PopWindow
      */
@@ -173,6 +173,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 NewsFeed newsFeed = (NewsFeed) intent.getSerializableExtra("newsfeed");
                 mSharePopupWindow = new SharePopupWindow(MainAty.this, MainAty.this);
                 mSharePopupWindow.setFavoriteGone();
+                mSharePopupWindow.setVideo(true);
                 mivShareBg.startAnimation(mAlphaAnimationIn);
                 mivShareBg.setVisibility(View.VISIBLE);
                 String remark = newsFeed.getDescr();

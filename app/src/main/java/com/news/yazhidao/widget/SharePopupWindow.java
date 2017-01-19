@@ -71,6 +71,7 @@ public class SharePopupWindow extends PopupWindow {
     private LinearLayout mShareLayout;
     boolean isFavorite;
     NewsFeed feedBean;
+    boolean isVideo;
 
 
     public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
@@ -133,8 +134,12 @@ public class SharePopupWindow extends PopupWindow {
         }
     }
 
-    public void setFavoriteGone(){
+    public void setFavoriteGone() {
         mtvFavorite.setVisibility(View.GONE);
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
     }
 
     @Override
@@ -235,7 +240,11 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mstrUrl = "http://deeporiginalx.com/news.html?type=0&url=" + mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
+                    if (isVideo) {
+                        mstrUrl = "http://deeporiginalx.com/videoShare/index.html?nid=" + mstrUrl;
+                    }else {
+                        mstrUrl = "http://deeporiginalx.com/news.html?type=0&url=" + mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
+                    }
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);

@@ -228,9 +228,6 @@ public class NewsFeedFgt extends Fragment {
 //                vPlayer.stop();
 //                vPlayer.release();
 //            }
-        }else
-        {
-
         }
         if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
 //            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
@@ -302,7 +299,7 @@ public class NewsFeedFgt extends Fragment {
                     bgLayout.setVisibility(View.GONE);
                 }
             }
-            cPostion=data.getIntExtra(NewsFeedFgt.CURRENT_POSITION,0);
+            cPostion = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
 
         } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
@@ -1363,6 +1360,17 @@ public class NewsFeedFgt extends Fragment {
         super.onPause();
         mHomeWatcher.setOnHomePressedListener(null);
         mHomeWatcher.stopWatch();
+        if (vPlayer != null) {
+            vPlayer.onPause();
+            vPlayer.setShowContoller(true);
+////            VideoVisibleControl();
+//            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+//                mFeedSmallLayout.setVisibility(View.GONE);
+//                mFeedSmallScreen.removeAllViews();
+//                vPlayer.stop();
+//                vPlayer.release();
+//            }
+        }
 
     }
 

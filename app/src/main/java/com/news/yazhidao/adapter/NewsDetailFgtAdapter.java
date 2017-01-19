@@ -6,6 +6,7 @@ import android.net.UrlQuerySanitizer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,7 +20,6 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -122,7 +122,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 //            holder.getView(R.id.attention_bottomLine).setVisibility(View.VISIBLE);
 //        }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
-        TextViewExtend title = holder.getView(R.id.attention_Title);
+        TextView title = holder.getView(R.id.attention_Title);
         String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
         title.setText(strTitle);
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());

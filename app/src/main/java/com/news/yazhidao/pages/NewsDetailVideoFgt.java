@@ -38,23 +38,29 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailVideoFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -115,7 +121,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
-            detail_shared_ViewPointTitleLayout,
+            detail_shared_ViewPointTitleLayout,adLayout,
             relativeLayout_attention;
     private ImageView detail_shared_AttentionImage,
             image_attention_line,
@@ -331,6 +337,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
         addHeadView(inflater, container);
         loadData();
+        loadADData();
         //视频
         mDetailVideo = (VideoContainer) rootView.findViewById(R.id.fgt_new_detail_video);
         mVideoShowBg = (RelativeLayout) rootView.findViewById(R.id.detial_video_show);
@@ -769,7 +776,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-
+        adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
@@ -1604,6 +1611,56 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 addordeleteAttention(true);
 //                mNewsDetailList.smoothScrollToPosition(pos);
             }
+        }
+    }
+
+    private void loadADData() {
+        if (SharedPreManager.getUser(mContext) != null) {
+            String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+            Gson gson = new Gson();
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+            NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+                @Override
+                public void onResponse(final ArrayList<NewsFeed> result) {
+                    adLayout.setVisibility(View.VISIBLE);
+                    final NewsFeed newsFeed = result.get(0);
+                    if (newsFeed != null) {
+                        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+                        TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+                        title.setText(newsFeed.getTitle());
+                        ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+                        layoutParams.width = imageWidth;
+                        layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+                        imageView.setLayoutParams(layoutParams);
+                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        adLayout.addView(layout);
+                        adLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                mContext.startActivity(AdIntent);
+                            }
+                        });
+                        AdUtil.upLoadAd(result.get(0));
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    adLayout.setVisibility(View.GONE);
+                }
+            });
+            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(newsFeedRequestPost);
         }
     }
 }

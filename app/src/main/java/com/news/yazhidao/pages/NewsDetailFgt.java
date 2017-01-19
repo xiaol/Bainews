@@ -1422,7 +1422,7 @@ public class NewsDetailFgt extends BaseFragment {
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
