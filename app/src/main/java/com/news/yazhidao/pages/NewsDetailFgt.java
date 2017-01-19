@@ -1427,6 +1427,7 @@ public class NewsDetailFgt extends BaseFragment {
                                 mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
                             }
                         });
+
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
