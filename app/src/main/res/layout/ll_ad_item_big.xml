@@ -35,7 +35,7 @@
         android:layout_alignTop="@+id/adImage"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/newstag_newhotspot_shape"
+        android:background="@drawable/tag_detail_ad_shape"
         android:gravity="center"
         android:text="广告"
         android:textColor="#ffffff"
