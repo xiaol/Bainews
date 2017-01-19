@@ -33,6 +33,7 @@ public  class PlayStateParams {
      * 完成
      */
     public static final int STATE_PLAYBACK_COMPLETED = 5;
+    public static final int STATE_PREPARE = 6;
 
 
     /**

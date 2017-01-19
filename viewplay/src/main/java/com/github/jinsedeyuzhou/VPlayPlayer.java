@@ -173,12 +173,6 @@ public class VPlayPlayer extends RelativeLayout {
             int id = view.getId();
             if (id == R.id.player_btn) {
                 if (isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6 || MediaNetUtils.getNetworkType(mContext) == 3) {
-//                    if (mVideoView.isPlaying()) {
-//                        pause();
-//                        isAutoPause = true;
-//                    } else {
-//                        reStart();
-//                    }
                     doPauseResume();
                 } else if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
                     showWifiDialog();
@@ -566,7 +560,7 @@ public class VPlayPlayer extends RelativeLayout {
      *
      * @param show
      */
-    private void setShowContollerbar(boolean show) {
+    public void setShowContollerbar(boolean show) {
         setVisibility(show ? View.VISIBLE : View.GONE);
 
     }
@@ -578,7 +572,7 @@ public class VPlayPlayer extends RelativeLayout {
         appVideoPlay.setVisibility(View.GONE);
     }
 
-    private void showBottomControl(boolean show) {
+    public void showBottomControl(boolean show) {
         contollerbar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -1026,7 +1020,6 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     private void start() {
-        isShowContoller = false;
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
         hide(false);
@@ -1048,7 +1041,6 @@ public class VPlayPlayer extends RelativeLayout {
         } else {
             statusChange(PlayStateParams.STATE_PLAYING);
             mVideoView.start();
-//            isAutoPause=false;
             play.setSelected(true);
         }
     }
@@ -1079,6 +1071,12 @@ public class VPlayPlayer extends RelativeLayout {
 
     //==========================对外提供方法==============================
 
+    public void isOpenOrientation(boolean isOpen) {
+        if (isOpen)
+            orientationEventListener.enable();
+        else
+            orientationEventListener.disable();
+    }
 
     public int getCurrentPosition() {
 
@@ -1180,6 +1178,7 @@ public class VPlayPlayer extends RelativeLayout {
         }
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
+        status=PlayStateParams.STATE_PLAYBACK_COMPLETED;
     }
 
     public void release() {
@@ -1187,6 +1186,7 @@ public class VPlayPlayer extends RelativeLayout {
             mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
+        status=PlayStateParams.STATE_PLAYBACK_COMPLETED;
     }
 
     public int getStatus() {
@@ -1204,13 +1204,12 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     public void onResume() {
-//        orientationEventListener.enable();
+        orientationEventListener.enable();
         if (status == PlayStateParams.STATE_PAUSED) {
             if (isAutoPause) {
 //                if (currentPosition > 0) {
 //                    mVideoView.seekTo((int) currentPosition);
 //                }
-
                 mVideoView.start();
                 play.setSelected(true);
                 isAutoPause = false;
@@ -1220,7 +1219,7 @@ public class VPlayPlayer extends RelativeLayout {
     }
 
     public void onPause() {
-//        orientationEventListener.disable();
+        orientationEventListener.disable();
         //把系统状态栏显示出来
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
@@ -1245,6 +1244,7 @@ public class VPlayPlayer extends RelativeLayout {
 
     public void play(String url, int position) {
         this.url = url;
+        status=PlayStateParams.STATE_PREPARE;
         if (!isNetListener) {// 如果设置不监听网络的变化，则取消监听网络变化的广播
             unregisterNetReceiver();
         } else {
@@ -1268,6 +1268,7 @@ public class VPlayPlayer extends RelativeLayout {
 
     public void start(String path) {
         Uri uri = Uri.parse(path);
+        status=PlayStateParams.STATE_PREPARE;
         start();
         if (!mVideoView.isPlaying()) {
             mVideoView.setVideoURI(uri);

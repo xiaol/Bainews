@@ -99,6 +99,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private ConnectivityManager mConnectivityManager;
     private IntentFilter mFilter;
     public VPlayPlayer vPlayPlayer;
+    public  NewsFeed newsFeedVideo;
     /**
      * 自定义的PopWindow
      */

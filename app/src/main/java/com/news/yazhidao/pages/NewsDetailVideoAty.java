@@ -141,8 +141,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
     private StringBuffer path;
-    private VPlayPlayer vp;
-    private int cPosition;
+    public VPlayPlayer vPlayPlayer;
+    public  int cPosition;
 
 
     /**
@@ -198,6 +198,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
         mImageViews = new ArrayList<>();
+        vPlayPlayer=new VPlayPlayer(this);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
@@ -209,7 +210,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(VideoCommentFgt.KEY_NEWS_FEED);
         isShowComment = getIntent().getBooleanExtra(VideoCommentFgt.KEY_SHOW_COMMENT, false);
-        cPosition = getIntent().getIntExtra("position",-1);
+        cPosition = getIntent().getIntExtra("position",0);
 //        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mUsedNewsFeed = getDate();
@@ -644,7 +645,19 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("position",vPlayPlayer.getCurrentPosition());
+        setResult(100,intent);
+        cPosition=0;
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Intent intent=new Intent();
+        intent.putExtra("position",vPlayPlayer.getCurrentPosition());
+        setResult(100,intent);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mCommentDialog != null && mCommentDialog.isVisible()) {
                 mCommentDialog.dismiss();
