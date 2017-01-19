@@ -166,6 +166,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private RelativeLayout mDetailWrapper;
     private int position;
     private RequestManager mRequestManager;
+    private RelativeLayout mDetailContainer;
     //    private PowerManager.WakeLock mWakeLock;
 
 
@@ -212,6 +213,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         user = SharedPreManager.getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
+        mDetailContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_detail_container);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -546,7 +548,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         }
     };
 
-
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
@@ -555,16 +557,19 @@ public class NewsDetailVideoFgt extends BaseFragment {
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mDetailContainer.setVisibility(View.VISIBLE);
                 mFullScreen.setVisibility(View.GONE);
                 mFullScreen.removeAllViews();
                 mDetailVideo.addView(vp);
                 mDetailVideo.setVisibility(View.VISIBLE);
 
             } else {
+                mDetailContainer.setVisibility(View.GONE);
                 mDetailVideo.removeAllViews();
                 mDetailVideo.setVisibility(View.GONE);
                 mFullScreen.addView(vp);
                 mFullScreen.setVisibility(View.VISIBLE);
+
 
             }
         }

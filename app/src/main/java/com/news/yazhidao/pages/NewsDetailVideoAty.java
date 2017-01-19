@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -284,11 +283,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Message msg = mHandler.obtainMessage();
-        msg.obj = newConfig;
-        msg.what = 3;
-        mHandler.sendMessage(msg);
-        Log.v("onConfigurationChanged", newConfig.toString());
+//        Message msg = mHandler.obtainMessage();
+//        msg.obj = newConfig;
+//        msg.what = 3;
+//        mHandler.sendMessage(msg);
+//        Log.v("onConfigurationChanged", newConfig.toString());
 
     }
 
