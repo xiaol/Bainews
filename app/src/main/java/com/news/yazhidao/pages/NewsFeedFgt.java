@@ -32,6 +32,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.ToolsUtils;
@@ -71,6 +72,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+
+import static com.news.yazhidao.utils.manager.SharedPreManager.getUser;
 
 public class NewsFeedFgt extends Fragment {
 
@@ -266,7 +269,7 @@ public class NewsFeedFgt extends Fragment {
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
         mstrDeviceId = DeviceInfoUtil.getUUID();
-        User user = SharedPreManager.getUser(mContext);
+        User user = getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
         else
@@ -347,12 +350,14 @@ public class NewsFeedFgt extends Fragment {
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_DOWN_REFRESH);
+                scrollAd();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_UP_REFRESH);
+                scrollAd();
             }
         });
         addHFView(LayoutInflater);
@@ -825,10 +830,10 @@ public class NewsFeedFgt extends Fragment {
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.getUser(mContext).getMuid();
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + getUser(mContext).getMuid();
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
-        adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setUid(getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
@@ -1118,7 +1123,7 @@ public class NewsFeedFgt extends Fragment {
                 }
             }, 1000);
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-            User user = SharedPreManager.getUser(getActivity());
+            User user = getUser(getActivity());
             user.setUtype("2");
             SharedPreManager.saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
@@ -1152,7 +1157,7 @@ public class NewsFeedFgt extends Fragment {
 
     public void loadData(final int flag) {
 
-        User user = SharedPreManager.getUser(mContext);
+        User user = getUser(mContext);
         Logger.e("jigang", "loaddata -----" + flag);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
@@ -1216,7 +1221,7 @@ public class NewsFeedFgt extends Fragment {
             bgLayout.setVisibility(View.VISIBLE);
         }
         String requestUrl;
-        String uid = String.valueOf(SharedPreManager.getUser(mContext).getMuid());
+        String uid = String.valueOf(getUser(mContext).getMuid());
         String tstart = System.currentTimeMillis() + "";
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -1248,7 +1253,7 @@ public class NewsFeedFgt extends Fragment {
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Authorization", getUser(mContext).getAuthorToken());
 //        header.put("Authorization", "9097879790");
         feedRequest.setRequestHeader(header);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -1325,7 +1330,7 @@ public class NewsFeedFgt extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
-            User user = SharedPreManager.getUser(mContext);
+            User user = getUser(mContext);
             RelativeLayout focusBg = (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
             if (user != null && user.isVisitor()) {
                 loadFocusData(PULL_DOWN_REFRESH);
@@ -1614,6 +1619,29 @@ public class NewsFeedFgt extends Fragment {
 
             }
         });
+    }
 
+
+    /**
+     * 广告滑动接口
+     */
+    private void scrollAd() {
+        User user = SharedPreManager.getUser(mContext);
+        if (user != null) {
+            int uid = user.getMuid();
+            //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
+            int ctype = 1;
+            //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
+            int ptype = 2;
+            String requestUrl = HttpConstant.URL_SCROLL_AD + "?nid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype;
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.i("tag", response + "34919385");
+                }
+            }, null);
+            requestQueue.add(request);
+        }
     }
 }

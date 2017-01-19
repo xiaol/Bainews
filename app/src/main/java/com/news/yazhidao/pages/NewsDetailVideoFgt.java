@@ -588,7 +588,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
             } else {
                 Uri uri = Uri.parse(strImg);
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
+                mRequestManager.load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
             }
         }
     }
@@ -662,6 +662,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
         mDetailVideoTitle.setText(mResult.getTitle());
+        adLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.adLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         if (mResult.getConflag() == 1) {
@@ -789,7 +790,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-        adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
@@ -877,7 +877,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
     private void loadData() {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         int userID = SharedPreManager.getUser(mContext).getMuid();
@@ -971,7 +971,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //        related.setRequestHeader(header1);
 
         requestQueue.add(feedRequest);
-        requestQueue.add(related);
+        final NewsDetailRequest<ArrayList<RelatedItemEntity>> finalRelated = related;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestQueue.add(finalRelated);
+            }
+        },1000);
 
 
     }
@@ -1434,9 +1440,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         final User user = SharedPreManager.getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            Glide.with(mContext).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1647,13 +1653,18 @@ public class NewsDetailVideoFgt extends BaseFragment {
                         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
                         TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
                         title.setText(newsFeed.getTitle());
-                        ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
                         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
+                            }
+                        });
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override

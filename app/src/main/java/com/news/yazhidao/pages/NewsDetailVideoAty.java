@@ -715,6 +715,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
+                    mSharePopupWindow.setVideo(true);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
