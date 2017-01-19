@@ -1207,6 +1207,7 @@ public class VPlayPlayer extends RelativeLayout {
 
     public void onResume() {
 //        orientationEventListener.enable();
+//        ToolsUtils.muteAudioFocus(mContext, false);
         if (status == PlayStateParams.STATE_PAUSED) {
             if (isAutoPause) {
 //                if (currentPosition > 0) {
@@ -1223,6 +1224,7 @@ public class VPlayPlayer extends RelativeLayout {
     public void onPause() {
 //        orientationEventListener.disable();
         //把系统状态栏显示出来
+//        ToolsUtils.muteAudioFocus(mContext, true);
         if (status == PlayStateParams.STATE_PLAYING) {
             mVideoView.pause();
             play.setSelected(false);
