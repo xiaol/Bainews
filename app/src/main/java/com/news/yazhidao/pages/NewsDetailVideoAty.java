@@ -658,10 +658,15 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         intent.putExtra("position",vPlayPlayer.getCurrentPosition());
         setResult(100,intent);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (vPlayPlayer.onKeyDown(keyCode,event))
+                return true;
+
+
             if (mCommentDialog != null && mCommentDialog.isVisible()) {
                 mCommentDialog.dismiss();
                 return true;
             }
+
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);

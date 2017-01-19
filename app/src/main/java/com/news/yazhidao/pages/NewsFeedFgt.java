@@ -35,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -1285,6 +1286,7 @@ public class NewsFeedFgt extends Fragment {
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
+            ToolsUtils.muteAudioFocus(mContext, false);
         }
 
         mHomeWatcher = new HomeWatcher(this.getActivity());
@@ -1369,6 +1371,7 @@ public class NewsFeedFgt extends Fragment {
         mHomeWatcher.stopWatch();
         if (vPlayer != null) {
             vPlayer.onPause();
+            ToolsUtils.muteAudioFocus(mContext, true);
             vPlayer.setShowContoller(true);
 ////            VideoVisibleControl();
 //            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {

@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -573,6 +574,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
             }
         }
+        else
+            mDetailContainer.setVisibility(View.VISIBLE);
+
     }
 
     public void setIsShowImagesSimpleDraweeViewURI(ImageView draweeView, String strImg) {
@@ -614,8 +618,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
-        if (vp != null)
+        if (vp != null) {
             vp.onPause();
+            ToolsUtils.muteAudioFocus(mContext, true);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.release();
 
@@ -626,8 +632,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (vp != null)
+        if (vp != null) {
             vp.onResume();
+            ToolsUtils.muteAudioFocus(mContext, false);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.acquire();
 
