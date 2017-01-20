@@ -167,6 +167,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mViewPagerAdapter.setmChannelItems(channelItems);
                 mViewPagerAdapter.notifyDataSetChanged();
                 mChannelTabStrip.setViewPager(mViewPager);
+                mChannelTabStrip.scrollTo(0,0);
                 Logger.e("jigang", "--- onActivityResult");
             } else if (ACTION_SHOW_SHARE.equals(action)) {
                 NewsFeed newsFeed = (NewsFeed) intent.getSerializableExtra("newsfeed");
