@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -142,6 +143,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     private StringBuffer path;
     public VPlayPlayer vPlayPlayer;
     public  int cPosition;
+    private RelativeLayout mSmallLayout;
+    private FrameLayout mSmallScreen;
 
 
     /**
@@ -216,6 +219,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
 //        mImageUrl = "http://bdp-pic.deeporiginalx.com/W0JAM2ExMmYwNGQ.png";
 
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
+
+        mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
+        mSmallScreen = (FrameLayout) findViewById(R.id.detail_small_screen);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -257,6 +263,20 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     long lastTime, nowTime;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (vPlayPlayer!=null)
+            if (mSmallLayout.getVisibility()==View.VISIBLE)
+            {
+                mSmallLayout.setVisibility(View.GONE);
+                mSmallScreen.removeAllViews();
+                vPlayPlayer.stop();
+                vPlayPlayer.release();
+
+            }
+    }
 
     @Override
     protected void onResume() {
