@@ -672,10 +672,10 @@ public class NewsFeedFgt extends Fragment {
             }
         }
         if (isExist) {
-            View item = lv.getChildAt(position);
-            Log.e(TAG, "item:" + item.toString() + "position:" + position);
-            FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
-            Log.e(TAG, "frameLayout:" + frameLayout.toString());
+//            View item = lv.getChildAt(position);
+//            Log.e(TAG, "item:" + item.toString() + "position:" + position);
+//            FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
+//            Log.e(TAG, "frameLayout:" + frameLayout.toString());
 //
 //            if (!vPlayer.isPlay()) {
 //                item.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);

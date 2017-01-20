@@ -872,6 +872,7 @@ public class VPlayPlayer extends RelativeLayout {
                 volumeControl = mOldX > screenWidthPixels * 0.5f;
                 firstTouch = false;
             }
+            contollerbar.setVisibility(View.GONE);
             if (seek) {
                 onProgressSlide(-deltaX / mVideoView.getWidth());
             } else {
