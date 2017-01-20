@@ -29,21 +29,27 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     private long mFirstClickTime;
     private int mAttentionIndex;
     private Context mContext;
-
+    private boolean misshow;
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
-            if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isusericonlogin", false)) {
-                SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", true);
-                Intent intent = new Intent();
-                intent.putExtra(KEY_USER_LOGIN, user);
-                intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, mAttentionIndex);
-                setResult(REQUEST_CODE, intent);
-            } else {
-                new ChannelItemDao(LoginAty.this).setFocusOnline();
-                SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", false);
+            if (!misshow) {
+                if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isusericonlogin", false)) {
+                    SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", true);
+                    Intent intent = new Intent();
+                    intent.putExtra(KEY_USER_LOGIN, user);
+                    intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, mAttentionIndex);
+                    setResult(REQUEST_CODE, intent);
+                } else {
+                    SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", false);
+                    int position = new ChannelItemDao(LoginAty.this).ResetSelectedByFocus();
+                    Intent intent = new Intent(MainAty.ACTION_FOUCES);
+                    intent.putExtra(MainAty.KEY_INTENT_CURRENT_POSITION, position);
+                    sendBroadcast(intent);
+                }
+                LoginAty.this.finish();
+                misshow = true;
             }
-            LoginAty.this.finish();
         }
 
         @Override
