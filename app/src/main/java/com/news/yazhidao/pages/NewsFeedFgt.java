@@ -657,6 +657,8 @@ public class NewsFeedFgt extends Fragment {
     }
 
     private void VideoVisibleControl() {
+        if (vPlayer==null)
+             return ;
         ListView lv = mlvNewsFeed.getRefreshableView();
         boolean isExist = false;
         int position = -1;
