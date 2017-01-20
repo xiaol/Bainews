@@ -575,6 +575,7 @@ public class VPlayPlayer extends RelativeLayout {
 
     public void showBottomControl(boolean show) {
         contollerbar.setVisibility(show ? View.VISIBLE : View.GONE);
+        bottomProgress.setVisibility(show ?  View.GONE:View.VISIBLE );
     }
 
 

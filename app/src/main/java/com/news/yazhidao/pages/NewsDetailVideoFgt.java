@@ -516,7 +516,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                         return;
                     int currentItem = (int) msg.obj;
                     if (currentItem == 0) {
-                        if (vp.isPlay()||( vp.isPlay()||vp.getStatus()==PlayStateParams.STATE_PREPARE)) {
+                        if (vp.isPlay() || (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             mDetailVideo.addView(vp);
@@ -530,8 +530,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //                            mSmallLayout.setVisibility(View.GONE);
 //                        }
 
-                        else
-                        {
+                        else {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             vp.stop();
@@ -539,7 +538,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mVideoShowBg.setVisibility(View.VISIBLE);
                         }
 
-                    } else if (currentItem == 1 &&( vp.isPlay()||vp.getStatus()==PlayStateParams.STATE_PREPARE) ){
+                    } else if (currentItem == 1 && (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                         if (vp.getParent() != null)
                             ((ViewGroup) vp.getParent()).removeAllViews();
                         mSmallScreen.addView(vp);
