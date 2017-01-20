@@ -8,6 +8,7 @@ import android.view.View;
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
 import com.news.yazhidao.common.CommonConstant;
+import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
 import com.news.yazhidao.utils.ToastUtil;
@@ -34,13 +35,14 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
         public void success(User user) {
             if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isusericonlogin", false)) {
                 SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", true);
+                Intent intent = new Intent();
+                intent.putExtra(KEY_USER_LOGIN, user);
+                intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, mAttentionIndex);
+                setResult(REQUEST_CODE, intent);
             } else {
+                new ChannelItemDao(LoginAty.this).setFocusOnline();
                 SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", false);
             }
-            Intent intent = new Intent();
-            intent.putExtra(KEY_USER_LOGIN, user);
-            intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, mAttentionIndex);
-            setResult(REQUEST_CODE, intent);
             LoginAty.this.finish();
         }
 
