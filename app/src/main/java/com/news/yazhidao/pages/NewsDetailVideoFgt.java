@@ -36,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.github.jinsedeyuzhou.utils.ToolsUtils;
@@ -183,7 +184,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
-        position = arguments.getInt("position", -1);
+        position = arguments.getInt("position", 0);
         Logger.e("aaa", "mTitle==" + mTitle);
 
 
@@ -553,7 +554,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-        if (vp != null && vp.isPlay()) {
+        if (vp != null ) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -633,7 +634,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (vp != null) {
-            vp.onResume();
+//            vp.onResume();
             ToolsUtils.muteAudioFocus(mContext, false);
         }
 //        if (mWakeLock != null)
