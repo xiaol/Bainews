@@ -40,12 +40,18 @@ public class GuideLoginAty extends BaseActivity implements View.OnClickListener 
 
         @Override
         public void failure(String message) {
-            ToastUtil.toastShort("登录失败");
+            if (!misshow) {
+                ToastUtil.toastShort("登录失败");
+                misshow = true;
+            }
         }
 
         @Override
         public void cancel() {
-            ToastUtil.toastShort("取消登录");
+            if (!misshow) {
+                ToastUtil.toastShort("取消登录");
+                misshow = true;
+            }
         }
     };
 
