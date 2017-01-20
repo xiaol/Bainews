@@ -7,11 +7,12 @@ import android.view.View;
 
 import com.news.yazhidao.R;
 import com.news.yazhidao.common.BaseActivity;
+import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.listener.UserAuthorizeListener;
-import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.ToastUtil;
 import com.news.yazhidao.utils.helper.ShareSdkHelper;
+import com.news.yazhidao.utils.manager.SharedPreManager;
 
 import static com.news.yazhidao.utils.helper.ShareSdkHelper.AuthorizePlatform;
 
@@ -22,7 +23,7 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
 
     public static final String KEY_USER_LOGIN = "key_user_login";
     public static final int REQUEST_CODE = 1006;
-    private View mLoginWeibo,mLoginWeixin,mLoginCancel,mLoginSetting;
+    private View mLoginWeibo, mLoginWeixin, mLoginCancel, mLoginSetting;
     private ProgressDialog progressDialog;
     private long mFirstClickTime;
     private int mAttentionIndex;
@@ -31,10 +32,15 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     private UserAuthorizeListener mAuthorizeListener = new UserAuthorizeListener() {
         @Override
         public void success(User user) {
+            if (SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isusericonlogin", false)) {
+                SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", true);
+            } else {
+                SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", false);
+            }
             Intent intent = new Intent();
-            intent.putExtra(KEY_USER_LOGIN,user);
-            intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,mAttentionIndex);
-            setResult(REQUEST_CODE,intent);
+            intent.putExtra(KEY_USER_LOGIN, user);
+            intent.putExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, mAttentionIndex);
+            setResult(REQUEST_CODE, intent);
             LoginAty.this.finish();
         }
 
@@ -75,22 +81,22 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void loadData() {
-            mAttentionIndex =  getIntent().getIntExtra(SubscribeListActivity.KEY_ATTENTION_INDEX,0);
+        mAttentionIndex = getIntent().getIntExtra(SubscribeListActivity.KEY_ATTENTION_INDEX, 0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (getIntent().getBooleanExtra(SettingAty.KEY_NEED_NOT_SETTING,false)){
+        if (getIntent().getBooleanExtra(SettingAty.KEY_NEED_NOT_SETTING, false)) {
             mLoginSetting.setVisibility(View.GONE);
-        }else {
+        } else {
             mLoginSetting.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.mLoginWeibo:
                 showLoadingDialog();
                 if (System.currentTimeMillis() - mFirstClickTime < 2000) {
@@ -113,7 +119,7 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
                 this.finish();
                 break;
             case R.id.mLoginSetting:
-                Intent settingAty = new Intent(this,SettingAty.class);
+                Intent settingAty = new Intent(this, SettingAty.class);
                 startActivity(settingAty);
                 this.finish();
                 break;
@@ -123,14 +129,16 @@ public class LoginAty extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        if (progressDialog != null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
     }
 
-    /**显示全屏dialog*/
-    private void showLoadingDialog(){
-        if (progressDialog == null){
+    /**
+     * 显示全屏dialog
+     */
+    private void showLoadingDialog() {
+        if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);

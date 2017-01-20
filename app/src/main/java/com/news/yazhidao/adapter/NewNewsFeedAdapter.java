@@ -708,7 +708,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 15));
         if (pageNum == 2) {
             localLayoutParams.width = width;
-            localLayoutParams.height = (int) (width * 71 / 108f);
+            localLayoutParams.height = (int) (width * 72 / 108f);
         } else if (pageNum == 3) {
             localLayoutParams.width = mCardWidth;
             localLayoutParams.height = mCardHeight;
