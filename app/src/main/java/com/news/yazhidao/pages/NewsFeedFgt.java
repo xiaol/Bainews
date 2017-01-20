@@ -225,6 +225,7 @@ public class NewsFeedFgt extends Fragment {
         if (vPlayer != null && !isVisibleToUser) {
             vPlayer.onPause();
             vPlayer.setShowContoller(true);
+            VideoVisibleControl();
 ////            VideoVisibleControl();
 //            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
 //                mFeedSmallLayout.setVisibility(View.GONE);
@@ -529,7 +530,7 @@ public class NewsFeedFgt extends Fragment {
                 mainAty.newsFeedVideo = feed;
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
+//                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
                     startActivityForResult(intent, REQUEST_CODE);
                 else
@@ -1373,6 +1374,7 @@ public class NewsFeedFgt extends Fragment {
             vPlayer.onPause();
             ToolsUtils.muteAudioFocus(mContext, true);
             vPlayer.setShowContoller(true);
+            VideoVisibleControl();
 ////            VideoVisibleControl();
 //            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
 //                mFeedSmallLayout.setVisibility(View.GONE);
