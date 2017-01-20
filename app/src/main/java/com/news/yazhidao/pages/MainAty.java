@@ -66,8 +66,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.news.yazhidao.utils.manager.SharedPreManager.save;
-
 /**
  * Created by fengjigang on 15/10/28.
  * 主界面
@@ -111,6 +109,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private TelephonyManager mTelephonyManager;
     private static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 999;
     private RelativeLayout mrlMain, mainContainer;
+    private boolean isLogin;
 
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
@@ -360,8 +359,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         //registerReceiver 最好放到onResume
         registerReceiver(mReceiver, mFilter);
         User user = SharedPreManager.getUser(this);
-        if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false)) {
-            save(CommonConstant.FILE_USER, "isshowsubscription", true);
+        if (user != null && !user.isVisitor() && !SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isshowsubscription", false) && SharedPreManager.getBoolean(CommonConstant.FILE_USER, "isusericonlogin", false)) {
+            SharedPreManager.save(CommonConstant.FILE_USER, "isshowsubscription", true);
             Intent intent = new Intent(this, SubscriptionAty.class);
             startActivity(intent);
         }
@@ -426,6 +425,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                     Intent userCenterAty = new Intent(this, UserCenterAty.class);
                     startActivity(userCenterAty);
                 } else {
+                    SharedPreManager.save(CommonConstant.FILE_USER, "isusericonlogin", true);
                     Intent loginAty = new Intent(this, LoginAty.class);
                     startActivity(loginAty);
                 }
