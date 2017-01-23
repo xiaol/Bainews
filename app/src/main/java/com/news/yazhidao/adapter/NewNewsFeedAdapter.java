@@ -38,6 +38,7 @@ import com.news.yazhidao.entity.ChannelItem;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.ReleaseSourceItem;
 import com.news.yazhidao.pages.AttentionActivity;
+import com.news.yazhidao.pages.MainAty;
 import com.news.yazhidao.pages.NewsDetailAty2;
 import com.news.yazhidao.pages.NewsDetailVideoAty;
 import com.news.yazhidao.pages.NewsDetailWebviewAty;
@@ -387,6 +388,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 RelativeLayout.LayoutParams lpBig = (RelativeLayout.LayoutParams) ivBig.getLayoutParams();
                 lpBig.width = width;
                 lpBig.height = (int) (width * 185 / 330.0f);
+//                lpBig.height = (int) (width * 800 / 1200.0f);
                 ivBig.setLayoutParams(lpBig);
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.title_img_View, strArrBigImgUrl.get(num), width, (int) (width * 9 / 16.0f), feed.getRtype());
                 if (isFavorite) {
@@ -634,7 +636,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                view.setVisibility(View.GONE);
                 if (onPlayClickListener != null) {
                     onPlayClickListener.onPlayClick(view, feed);
                 }
@@ -657,7 +658,10 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickSharePopWindow.sharePopWindow(newsFeed);
+                Intent intent = new Intent();
+                intent.setAction(MainAty.ACTION_SHOW_SHARE);
+                intent.putExtra("newsfeed", newsFeed);
+                mContext.sendBroadcast(intent);
             }
         });
     }
@@ -704,7 +708,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 15));
         if (pageNum == 2) {
             localLayoutParams.width = width;
-            localLayoutParams.height = (int) (width * 71 / 108f);
+            localLayoutParams.height = (int) (width * 72 / 108f);
         } else if (pageNum == 3) {
             localLayoutParams.width = mCardWidth;
             localLayoutParams.height = mCardHeight;
@@ -884,19 +888,31 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "广告";
-            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color3));
         } else if (type == 4) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "专题";
             drawable.setColor(mContext.getResources().getColor(R.color.news_type_color4));
+        } else if (type == 5) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "多图";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color5));
         } else if (type == 6) {
             if (tag.getVisibility() == View.GONE) {
                 tag.setVisibility(View.VISIBLE);
             }
             content = "视频";
-            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color2));
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color6));
+        } else if (type == 7) {
+            if (tag.getVisibility() == View.GONE) {
+                tag.setVisibility(View.VISIBLE);
+            }
+            content = "本地";
+            drawable.setColor(mContext.getResources().getColor(R.color.news_type_color7));
         } else {
             if (tag.getVisibility() == View.VISIBLE) {
                 tag.setVisibility(View.GONE);
@@ -917,7 +933,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
      * @param rlNewsContent
      * @param feed
      */
-    private void setNewsContentClick(RelativeLayout rlNewsContent, final NewsFeed feed) {
+    private void setNewsContentClick(final RelativeLayout rlNewsContent, final NewsFeed feed) {
         rlNewsContent.setOnClickListener(new View.OnClickListener() {
             long firstClick = 0;
 
@@ -944,13 +960,17 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
                 } else if (feed.getRtype() == 6) {
-                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-                    if (mNewsFeedFgt != null) {
-                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
-                    } else {
-                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+                    if (onPlayClickListener!=null)
+                    {
+                     onPlayClickListener.onItemClick(rlNewsContent,feed);
                     }
+//                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+//                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                    if (mNewsFeedFgt != null) {
+//                        mNewsFeedFgt.startActivityForResult(intent, REQUEST_CODE);
+//                    } else {
+//                        ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE);
+//                    }
                 } else {
                     Intent intent = new Intent(mContext, NewsDetailAty2.class);
                     intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -1009,12 +1029,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public void setClickShowPopWindow(clickShowPopWindow mClickShowPopWindow) {
         this.mClickShowPopWindow = mClickShowPopWindow;
-    }
-
-    clickSharePopWindow mClickSharePopWindow;
-
-    public void setClickSharePopWindow(clickSharePopWindow clickSharePopWindow) {
-        this.mClickSharePopWindow = clickSharePopWindow;
     }
 
     NewsFeed DeleteClickBean;
@@ -1129,10 +1143,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         public void showPopWindow(int x, int y, NewsFeed feed);
     }
 
-    public interface clickSharePopWindow {
-        public void sharePopWindow(NewsFeed feed);
-    }
-
     //视频播放接口
     private OnPlayClickListener onPlayClickListener;
 
@@ -1143,5 +1153,6 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface OnPlayClickListener {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+        void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
     }
 }

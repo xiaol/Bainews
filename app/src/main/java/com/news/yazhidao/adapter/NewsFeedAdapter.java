@@ -1065,6 +1065,8 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface OnPlayClickListener {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+
+        void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
     }
 
 }

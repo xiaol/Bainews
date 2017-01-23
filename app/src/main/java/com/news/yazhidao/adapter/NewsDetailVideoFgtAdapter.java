@@ -19,7 +19,6 @@ import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.TextUtil;
-import com.news.yazhidao.widget.TextViewExtend;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -51,7 +50,7 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             return;
         }
         onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
-        TextViewExtend title = holder.getView(R.id.attention_Title);
+        TextView title = holder.getView(R.id.attention_Title);
         String strTitle =  relatedItemEntity.getTitle().replace("<font color='#0091fa' >","").replace("</font>","");
         title.setText(strTitle);
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());

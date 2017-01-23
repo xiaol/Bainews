@@ -32,25 +32,33 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.javascript.VideoJavaScriptBridge;
+import com.news.yazhidao.net.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
+import com.news.yazhidao.utils.DensityUtil;
+import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
 import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
@@ -70,6 +78,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.sharesdk.wechat.moments.WechatMoments;
@@ -87,7 +96,6 @@ public class NewsDetailFgt extends BaseFragment {
     private PullToRefreshListView mNewsDetailList;
     private NewsDetailFgtAdapter mAdapter;
     private User user;
-    private RelativeLayout bgLayout;
     private String mDocid, mTitle, mPubName, mPubTime, mCommentCount, mNewID;
     private ArrayList<NewsDetailComment> mComments = new ArrayList<>();
     public static final String KEY_NEWS_DOCID = "key_news_docid";
@@ -104,10 +112,11 @@ public class NewsDetailFgt extends BaseFragment {
     private TextView detail_shared_PraiseText,
             detail_shared_Text,
             detail_shared_hotComment;
+    private RelativeLayout bgLayout;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout,
-            relativeLayout_attention;
+            relativeLayout_attention,adLayout;
     private ImageView detail_shared_AttentionImage,
             image_attention_line,
             image_attention_success;
@@ -134,6 +143,7 @@ public class NewsDetailFgt extends BaseFragment {
     private TextViewExtend tv_attention_title;
     private Context mContext;
     private RequestManager mRequestManager;
+    private int mScreenWidth;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,7 +153,8 @@ public class NewsDetailFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
-        mRequestManager= Glide.with(this);
+        mRequestManager = Glide.with(this);
+        mScreenWidth = DeviceInfoUtil.getScreenWidth();
         Logger.e("aaa", "mTitle==" + mTitle);
         mContext = getActivity();
         mResult = (NewsDetail) arguments.getSerializable(KEY_DETAIL_RESULT);
@@ -291,7 +302,7 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
-
+        loadADData();
         return rootView;
     }
 
@@ -421,7 +432,7 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_CareForLayout = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_shared_PraiseLayout);
         detail_attention_addView = (LinearLayout) mCommentTitleView.findViewById(R.id.detail_attention_addView);
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
-
+        adLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.adLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         if (mResult.getConflag() == 1) {
@@ -549,7 +560,6 @@ public class NewsDetailFgt extends BaseFragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
@@ -700,6 +710,15 @@ public class NewsDetailFgt extends BaseFragment {
                         Logger.e("jigang", "URL_NEWS_RELATED  network success~~" + relatedItemEntities.toString());
                         isCorrelationSuccess = true;
                         isBgLayoutSuccess();
+                        /**去掉跳转到h5
+                         */
+                        Iterator<RelatedItemEntity> iterator = relatedItemEntities.iterator();
+                        while (iterator.hasNext()) {
+                            RelatedItemEntity relatedItemEntity = iterator.next();
+                            if (!relatedItemEntity.getUrl().contains("deeporiginalx.com")) {
+                                iterator.remove();
+                            }
+                        }
 //                            ArrayList<RelatedItemEntity> relatedItemEntities = response.getSearchItems();
 //                            Logger.e("jigang", "network success RelatedEntity~~" + response);
 
@@ -820,7 +839,6 @@ public class NewsDetailFgt extends BaseFragment {
             public void run() {
 
 
-//
                 beanList.addAll(beanPageList.get(viewpointPage));
                 viewpointPage++;
                 mAdapter.setNewsFeed(beanList);
@@ -1187,9 +1205,9 @@ public class NewsDetailFgt extends BaseFragment {
         final User user = SharedPreManager.getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         } else {
-            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1374,6 +1392,62 @@ public class NewsDetailFgt extends BaseFragment {
                 addordeleteAttention(true);
 //                mNewsDetailList.smoothScrollToPosition(pos);
             }
+        }
+    }
+
+    private void loadADData() {
+        if (SharedPreManager.getUser(mContext) != null) {
+            String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+            Gson gson = new Gson();
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+            NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+                @Override
+                public void onResponse(final ArrayList<NewsFeed> result) {
+                    adLayout.setVisibility(View.VISIBLE);
+                    final NewsFeed newsFeed = result.get(0);
+                    if (newsFeed != null) {
+                        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+                        TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+                        title.setText(newsFeed.getTitle());
+                        final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+                        layoutParams.width = imageWidth;
+                        layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+                        imageView.setLayoutParams(layoutParams);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
+                            }
+                        });
+
+                        adLayout.addView(layout);
+                        adLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                mContext.startActivity(AdIntent);
+                            }
+                        });
+                        AdUtil.upLoadAd(result.get(0));
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    adLayout.setVisibility(View.GONE);
+                }
+            });
+            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(newsFeedRequestPost);
         }
     }
 }

@@ -165,11 +165,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             } catch (Exception e) {
 
             }
-            if (mDetailCommentNum.getVisibility() == View.GONE && !isCommentPage) {
-                mDetailCommentNum.setVisibility(View.VISIBLE);
-            }
-            mDetailCommentNum.setText(number + 1 + "");
-            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//            if (mDetailCommentNum.getVisibility() == View.GONE && !isCommentPage) {
+//                mDetailCommentNum.setVisibility(View.VISIBLE);
+//            }
+//            mDetailCommentNum.setText(number + 1 + "");
+//            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
 //            }
         }
@@ -392,12 +392,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (position == 1) {
                     isCommentPage = true;
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mDetailCommentNum.setVisibility(View.GONE);
+//                    mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
-                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
             }
         });
@@ -503,9 +503,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     displayDetailAndComment(result);
                     mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
-                        mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
-                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                        mDetailCommentNum.setVisibility(View.VISIBLE);
+//                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
+//                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
@@ -563,8 +563,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 return true;
             }
         }
@@ -593,8 +593,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (isCommentPage) {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0, true);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                     return;
                 }
                 onBackPressed();
@@ -630,12 +630,12 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     isCommentPage = true;
                     mNewsDetailViewPager.setCurrentItem(1);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mDetailCommentNum.setVisibility(View.GONE);
+//                    mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
                 break;
             case R.id.mDetailShare:

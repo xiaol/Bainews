@@ -22,7 +22,7 @@
             android:scaleType="centerCrop" />
 
 
-        <com.news.yazhidao.widget.TextViewExtend
+        <TextView
             android:id="@+id/attention_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

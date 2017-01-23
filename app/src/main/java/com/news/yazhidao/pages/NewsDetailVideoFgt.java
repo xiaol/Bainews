@@ -35,25 +35,34 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.ToolsUtils;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewsDetailVideoFgtAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
+import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseFragment;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.ChannelItemDao;
 import com.news.yazhidao.database.NewsDetailCommentDao;
+import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
 import com.news.yazhidao.entity.NewsDetail;
 import com.news.yazhidao.entity.NewsDetailComment;
+import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.RelatedItemEntity;
 import com.news.yazhidao.entity.User;
+import com.news.yazhidao.net.NewsDetailADRequestPost;
 import com.news.yazhidao.net.volley.DetailOperateRequest;
 import com.news.yazhidao.net.volley.NewsDetailRequest;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DensityUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
@@ -114,7 +123,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
-            detail_shared_ViewPointTitleLayout,
+            detail_shared_ViewPointTitleLayout, adLayout,
             relativeLayout_attention;
     private ImageView detail_shared_AttentionImage,
             image_attention_line,
@@ -146,8 +155,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextViewExtend tv_attention_title;
     private Context mContext;
     private VPlayPlayer vp;
-    private VideoContainer  mDetailVideo;
-    private VideoContainer  mFullScreen;
+    private VideoContainer mDetailVideo;
+    private VideoContainer mFullScreen;
     private SmallVideoContainer mSmallScreen;
     private RelativeLayout mSmallLayout;
     private ImageView mClose;
@@ -158,6 +167,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextView mDetailLeftBack;
     private RelativeLayout mDetailWrapper;
     private int position;
+    private RequestManager mRequestManager;
+    private RelativeLayout mDetailContainer;
     //    private PowerManager.WakeLock mWakeLock;
 
 
@@ -168,11 +179,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mContext = getActivity();
 //        PowerManager pm = (PowerManager) getActivity().getSystemService(Context.POWER_SERVICE);
 //        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
+        mRequestManager = Glide.with(this);
         Bundle arguments = getArguments();
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
-        position = arguments.getInt("position", -1);
+        position = arguments.getInt("position", 0);
         Logger.e("aaa", "mTitle==" + mTitle);
 
 
@@ -203,6 +215,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         user = SharedPreManager.getUser(mContext);
         mNewsDetailList = (PullToRefreshListView) rootView.findViewById(R.id.fgt_new_detail_PullToRefreshListView);
         bgLayout = (RelativeLayout) rootView.findViewById(R.id.bgLayout);
+        mDetailContainer = (RelativeLayout) getActivity().findViewById(R.id.rl_detail_container);
         bgLayout.setVisibility(View.GONE);
         mNewsDetailList.setMode(PullToRefreshBase.Mode.DISABLED);
         mNewsDetailList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -322,12 +335,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
 //        vp = PlayerManager.getPlayerManager().initialize(mContext);
-        vp= new VPlayPlayer(mContext);
+        vp = mNewsDetailVideoAty.vPlayPlayer;
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
         addHeadView(inflater, container);
         loadData();
+        loadADData();
         //视频
         mDetailVideo = (VideoContainer) rootView.findViewById(R.id.fgt_new_detail_video);
         mVideoShowBg = (RelativeLayout) rootView.findViewById(R.id.detial_video_show);
@@ -402,7 +416,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         if (MediaNetUtils.getNetworkType(mContext) == 3) {
             mVideoShowBg.setVisibility(View.GONE);
             vp.setTitle(mResult.getTitle());
-            vp.play(mResult.getVideourl(), 0);
+            vp.play(mResult.getVideourl(), position);
             mDetailVideo.addView(vp);
         }
 
@@ -498,10 +512,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     break;
 
                 case VIDEO_SMALL:
-
+                    if (vp == null)
+                        return;
                     int currentItem = (int) msg.obj;
                     if (currentItem == 0) {
-                        if (vp.isPlay()) {
+                        if (vp.isPlay() || (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             mDetailVideo.addView(vp);
@@ -509,10 +524,21 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
-                        } else
-                            mVideoShowBg.setVisibility(View.VISIBLE);
+                        }
+//                        else if (vp.getStatus()== PlayStateParams.STATE_PAUSED)
+//                        {
+//                            mSmallLayout.setVisibility(View.GONE);
+//                        }
 
-                    } else if (currentItem == 1 && vp.isPlay()) {
+                        else {
+                            if (vp.getParent() != null)
+                                ((ViewGroup) vp.getParent()).removeAllViews();
+                            vp.stop();
+                            vp.release();
+                            mVideoShowBg.setVisibility(View.VISIBLE);
+                        }
+
+                    } else if (currentItem == 1 && (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                         if (vp.getParent() != null)
                             ((ViewGroup) vp.getParent()).removeAllViews();
                         mSmallScreen.addView(vp);
@@ -522,13 +548,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     }
                     break;
                 case VIDEO_FULLSCREEN:
-                    if (vp.isPlay()) {
-                        Configuration config = (Configuration) msg.obj;
-                        onConfigurationChanged(config);
-
-//                        NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
-
-                    }
+//                    if (vp.isPlay()) {
+//                        Configuration config = (Configuration) msg.obj;
+//                        onConfigurationChanged(config);
+//
+////                        NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
+//
+//                    }
                     break;
                 case VIDEO_NORMAL:
                     break;
@@ -536,28 +562,33 @@ public class NewsDetailVideoFgt extends BaseFragment {
         }
     };
 
-
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-        if (vp != null && vp.isPlay()) {
+        if (vp != null) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                mDetailContainer.setVisibility(View.VISIBLE);
                 mFullScreen.setVisibility(View.GONE);
                 mFullScreen.removeAllViews();
                 mDetailVideo.addView(vp);
                 mDetailVideo.setVisibility(View.VISIBLE);
 
             } else {
+                mDetailContainer.setVisibility(View.GONE);
                 mDetailVideo.removeAllViews();
                 mDetailVideo.setVisibility(View.GONE);
                 mFullScreen.addView(vp);
                 mFullScreen.setVisibility(View.VISIBLE);
 
+
             }
-        }
+        } else
+            mDetailContainer.setVisibility(View.VISIBLE);
+
     }
 
     public void setIsShowImagesSimpleDraweeViewURI(ImageView draweeView, String strImg) {
@@ -569,10 +600,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
             } else {
                 Uri uri = Uri.parse(strImg);
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
+                mRequestManager.load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
             }
         }
     }
+
 
     @Override
     public void onDetach() {
@@ -598,8 +630,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
-        if (vp != null)
+        if (vp != null) {
             vp.onPause();
+            ToolsUtils.muteAudioFocus(mContext, true);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.release();
 
@@ -610,8 +644,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (vp != null)
-            vp.onResume();
+        if (vp != null) {
+//            vp.onResume();
+            ToolsUtils.muteAudioFocus(mContext, false);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.acquire();
 
@@ -638,6 +674,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
         mDetailVideoTitle.setText(mResult.getTitle());
+        adLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.adLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         if (mResult.getConflag() == 1) {
@@ -668,9 +705,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         String icon = mResult.getPurl();
         String name = mResult.getPname();
         if (!TextUtil.isEmptyString(icon)) {
-            Glide.with(mContext).load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load(Uri.parse(icon)).placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(iv_attention_icon);
         } else {
-            Glide.with(mContext).load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.white))).into(iv_attention_icon);
+            mRequestManager.load("").placeholder(R.drawable.detail_attention_placeholder).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(iv_attention_icon);
         }
         if (!TextUtil.isEmptyString(name)) {
             tv_attention_title.setText(name);
@@ -765,7 +802,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
@@ -853,7 +889,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
     private void loadData() {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         int userID = SharedPreManager.getUser(mContext).getMuid();
@@ -947,7 +983,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //        related.setRequestHeader(header1);
 
         requestQueue.add(feedRequest);
-        requestQueue.add(related);
+        final NewsDetailRequest<ArrayList<RelatedItemEntity>> finalRelated = related;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestQueue.add(finalRelated);
+            }
+        }, 1000);
 
 
     }
@@ -1410,9 +1452,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         final User user = SharedPreManager.getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            Glide.with(mContext).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1472,7 +1514,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
             bgLayout.setVisibility(View.GONE);
         }
     }
-
 
 
     @Override
@@ -1600,6 +1641,61 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 addordeleteAttention(true);
 //                mNewsDetailList.smoothScrollToPosition(pos);
             }
+        }
+    }
+
+    private void loadADData() {
+        if (SharedPreManager.getUser(mContext) != null) {
+            String requestUrl = HttpConstant.URL_NEWS_DETAIL_AD;
+            ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
+            adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+            Gson gson = new Gson();
+            //加入详情页广告位id
+            adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, "237")));
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            Logger.e("aaa", "gson==" + gson.toJson(adLoadNewsFeedEntity));
+            Logger.e("ccc", "requestBody==" + gson.toJson(adLoadNewsFeedEntity));
+            NewsDetailADRequestPost<ArrayList<NewsFeed>> newsFeedRequestPost = new NewsDetailADRequestPost(requestUrl, gson.toJson(adLoadNewsFeedEntity), new Response.Listener<ArrayList<NewsFeed>>() {
+                @Override
+                public void onResponse(final ArrayList<NewsFeed> result) {
+                    adLayout.setVisibility(View.VISIBLE);
+                    final NewsFeed newsFeed = result.get(0);
+                    if (newsFeed != null) {
+                        RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+                        TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+                        title.setText(newsFeed.getTitle());
+                        final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+                        int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+                        layoutParams.width = imageWidth;
+                        layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
+                        imageView.setLayoutParams(layoutParams);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
+                            }
+                        });
+                        adLayout.addView(layout);
+                        adLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent AdIntent = new Intent(mContext, NewsDetailWebviewAty.class);
+                                AdIntent.putExtra("key_url", newsFeed.getPurl());
+                                mContext.startActivity(AdIntent);
+                            }
+                        });
+                        AdUtil.upLoadAd(result.get(0));
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    adLayout.setVisibility(View.GONE);
+                }
+            });
+            newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
+            requestQueue.add(newsFeedRequestPost);
         }
     }
 }

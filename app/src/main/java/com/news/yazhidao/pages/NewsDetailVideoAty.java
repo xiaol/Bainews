@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -141,8 +141,10 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
     private StringBuffer path;
-    private VPlayPlayer vp;
-    private int cPosition;
+    public VPlayPlayer vPlayPlayer;
+    public  int cPosition;
+    private RelativeLayout mSmallLayout;
+    private FrameLayout mSmallScreen;
 
 
     /**
@@ -175,11 +177,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
             } catch (Exception e) {
 
             }
-            if (mDetailCommentNum.getVisibility() == View.GONE && !isCommentPage) {
-                mDetailCommentNum.setVisibility(View.VISIBLE);
-            }
-            mDetailCommentNum.setText(number + 1 + "");
-            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//            if (mDetailCommentNum.getVisibility() == View.GONE && !isCommentPage) {
+//                mDetailCommentNum.setVisibility(View.VISIBLE);
+//            }
+//            mDetailCommentNum.setText(number + 1 + "");
+//            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
 //            }
         }
@@ -198,6 +200,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         mScreenHeight = DeviceInfoUtil.getScreenHeight(this);
         mNewsContentDataList = new ArrayList<>();
         mImageViews = new ArrayList<>();
+        vPlayPlayer=new VPlayPlayer(this);
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
         mAlphaAnimationIn.setDuration(500);
         mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
@@ -209,13 +212,16 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void initializeViews() {
         mUsedNewsFeed = (NewsFeed) getIntent().getSerializableExtra(VideoCommentFgt.KEY_NEWS_FEED);
         isShowComment = getIntent().getBooleanExtra(VideoCommentFgt.KEY_SHOW_COMMENT, false);
-        cPosition = getIntent().getIntExtra("position",-1);
+        cPosition = getIntent().getIntExtra("position",0);
 //        mSource = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_SOURCE);
 //        mImageUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_IMAGE);
 //        mUsedNewsFeed = getDate();
 //        mImageUrl = "http://bdp-pic.deeporiginalx.com/W0JAM2ExMmYwNGQ.png";
 
         careforLayout = (LinearLayout) findViewById(R.id.careforLayout);
+
+        mSmallLayout = (RelativeLayout) findViewById(R.id.detai_small_layout);
+        mSmallScreen = (FrameLayout) findViewById(R.id.detail_small_screen);
         mDetailView = findViewById(R.id.mDetailWrapper);
         mDetailHeaderView = new NewsDetailHeaderView2(this);
         mNewsDetailLoaddingWrapper = findViewById(R.id.mNewsDetailLoaddingWrapper);
@@ -259,6 +265,20 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     long lastTime, nowTime;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (vPlayPlayer!=null)
+            if (mSmallLayout.getVisibility()==View.VISIBLE)
+            {
+                mSmallLayout.setVisibility(View.GONE);
+                mSmallScreen.removeAllViews();
+                vPlayPlayer.stop();
+                vPlayPlayer.release();
+
+            }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         nowTime = System.currentTimeMillis();
@@ -283,11 +303,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Message msg = mHandler.obtainMessage();
-        msg.obj = newConfig;
-        msg.what = 3;
-        mHandler.sendMessage(msg);
-        Log.v("onConfigurationChanged", newConfig.toString());
+//        Message msg = mHandler.obtainMessage();
+//        msg.obj = newConfig;
+//        msg.what = 3;
+//        mHandler.sendMessage(msg);
+//        Log.v("onConfigurationChanged", newConfig.toString());
 
     }
 
@@ -427,7 +447,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     isCommentPage = true;
 //                    onShowFragmentListener.setOnShowFragment(false);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mDetailCommentNum.setVisibility(View.GONE);
+//                    mDetailCommentNum.setVisibility(View.GONE);
 
                     Drawable drawable = getResources().getDrawable(R.drawable.btn_left_back);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -442,8 +462,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     isCommentPage = false;
 //                    onShowFragmentListener.setOnShowFragment(true);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailC、ommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
 
                     Drawable drawable1 = getResources().getDrawable(R.drawable.detial_video_back);
                     drawable1.setBounds(0, 0, drawable1.getMinimumWidth(), drawable1.getMinimumHeight());
@@ -593,9 +613,9 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     displayDetailAndComment(result);
                     mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
-                        mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
-                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                        mDetailCommentNum.setVisibility(View.VISIBLE);
+//                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
+//                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
@@ -644,17 +664,34 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("position",vPlayPlayer.getCurrentPosition());
+        setResult(100,intent);
+        cPosition=0;
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Intent intent=new Intent();
+        intent.putExtra("position",vPlayPlayer.getCurrentPosition());
+        setResult(100,intent);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (vPlayPlayer.onKeyDown(keyCode,event))
+                return true;
+
+
             if (mCommentDialog != null && mCommentDialog.isVisible()) {
                 mCommentDialog.dismiss();
                 return true;
             }
+
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 return true;
             }
         }
@@ -683,8 +720,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 if (isCommentPage) {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0, true);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                     return;
                 }
                 onBackPressed();
@@ -698,6 +735,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     mivShareBg.startAnimation(mAlphaAnimationIn);
                     mivShareBg.setVisibility(View.VISIBLE);
                     mSharePopupWindow = new SharePopupWindow(this, this);
+                    mSharePopupWindow.setVideo(true);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
@@ -720,12 +758,12 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     isCommentPage = true;
                     mNewsDetailViewPager.setCurrentItem(1);
                     mDetailCommentPic.setImageResource(R.drawable.btn_detail_switch_comment);
-                    mDetailCommentNum.setVisibility(View.GONE);
+//                    mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0);
-                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
-                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
+//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
                 break;
             case R.id.mDetailShare:

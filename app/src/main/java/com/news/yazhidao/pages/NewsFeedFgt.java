@@ -7,15 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +32,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
+import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -49,16 +48,13 @@ import com.news.yazhidao.common.HttpConstant;
 import com.news.yazhidao.database.NewsFeedDao;
 import com.news.yazhidao.database.ReleaseSourceItemDao;
 import com.news.yazhidao.entity.ADLoadNewsFeedEntity;
-import com.news.yazhidao.entity.AdDeviceEntity;
-import com.news.yazhidao.entity.AdEntity;
-import com.news.yazhidao.entity.AdImpressionEntity;
 import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.net.volley.FeedRequest;
 import com.news.yazhidao.net.volley.NewsFeedRequestPost;
 import com.news.yazhidao.receiver.HomeWatcher;
 import com.news.yazhidao.receiver.HomeWatcher.OnHomePressedListener;
-import com.news.yazhidao.utils.CrashHandler;
+import com.news.yazhidao.utils.AdUtil;
 import com.news.yazhidao.utils.DateUtil;
 import com.news.yazhidao.utils.DeviceInfoUtil;
 import com.news.yazhidao.utils.Logger;
@@ -67,20 +63,19 @@ import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
-import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.VideoContainer;
-import com.news.yazhidao.widget.VideoItemContainer;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Random;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismiss {
+import static com.news.yazhidao.utils.manager.SharedPreManager.getUser;
+
+public class NewsFeedFgt extends Fragment {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -88,8 +83,10 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     public static final String KEY_NEWS_TYPE = "key_news_type";//新闻类型,是否是大图新闻
     public static final String KEY_NEWS_DOCID = "key_news_docid";
     public static final String KEY_NEWS_FEED = "key_news_feed";
+    public static final String KEY_NEWS_VIDEO = "key_news_video";
     public static final String KEY_NEWS_IMAGE = "key_news_image";
     public static final String KEY_SHOW_COMMENT = "key_show_comment";
+    public static final String CURRENT_POSITION = "position";
     private static final String TAG = "NewsFeedFgt";
 
     /**
@@ -155,14 +152,14 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     private VideoContainer mFeedFullScreen;
     private SmallVideoContainer mFeedSmallScreen;
     private RelativeLayout mFeedSmallLayout;
-    private ImageView mFeedClose, mivShareBg;
+    private ImageView mFeedClose;
     public int cPostion = -1;
     private int lastPostion = -1;
-    private NewsFeed newsFeed;
+    public NewsFeed newsVideoFeed;
     private LinearLayout mChannelLayout;
     private ViewPager mViewPager;
     private RelativeLayout mContainer;
-    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
+
 
 //    private Handler handler = new Handler() {
 //        @Override
@@ -225,6 +222,18 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isNewVisity = isVisibleToUser;
+        if (vPlayer != null && !isVisibleToUser) {
+            vPlayer.onPause();
+            vPlayer.setShowContoller(true);
+            VideoVisibleControl();
+////            VideoVisibleControl();
+//            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+//                mFeedSmallLayout.setVisibility(View.GONE);
+//                mFeedSmallScreen.removeAllViews();
+//                vPlayer.stop();
+//                vPlayer.release();
+//            }
+        }
         if (isNewVisity && isNeedAddSP) {//切换到别的页面加入他
 //            addSP(mArrNewsFeed);//第一次进入主页的时候会加入一次，不用担心这次加入是没有数据的
 
@@ -261,7 +270,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         mContext = getActivity();
         mNewsFeedDao = new NewsFeedDao(mContext);
         mstrDeviceId = DeviceInfoUtil.getUUID();
-        User user = SharedPreManager.getUser(mContext);
+        User user = getUser(mContext);
         if (user != null)
             mstrUserId = user.getUserId();
         else
@@ -295,6 +304,8 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                     bgLayout.setVisibility(View.GONE);
                 }
             }
+            cPostion = data.getIntExtra(NewsFeedFgt.CURRENT_POSITION, 0);
+
         } else if (requestCode == LoginAty.REQUEST_CODE && data != null) {
             loadData(PULL_DOWN_REFRESH);
         } else if (requestCode == 2) {
@@ -323,7 +334,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             }
         });
         mlvNewsFeed = (PullToRefreshListView) rootView.findViewById(R.id.news_feed_listView);
-        mivShareBg = (ImageView) rootView.findViewById(R.id.share_bg_imageView);
         //====================视频===========================
         mFeedFullScreen = (VideoContainer) getActivity().findViewById(R.id.feed_full_screen);
         mFeedSmallScreen = (SmallVideoContainer) getActivity().findViewById(R.id.feed_small_screen);
@@ -341,19 +351,20 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_DOWN_REFRESH);
+                scrollAd();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
                 loadData(PULL_UP_REFRESH);
+                scrollAd();
             }
         });
         addHFView(LayoutInflater);
 
         mAdapter = new NewsFeedAdapter(mContext, this, null);
         mAdapter.setClickShowPopWindow(mClickShowPopWindow);
-        mAdapter.setClickSharePopWindow(mClickSharePopWindow);
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
             ReleaseSourceItemDao releaseSourceItemDao = new ReleaseSourceItemDao(mContext);
             String[] colorArr = mContext.getResources().getStringArray(R.array.bg_focus_colors);
@@ -377,17 +388,21 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         if (mstrChannelId != null && !mstrChannelId.equals("1000")) {
             mHandler.postDelayed(mThread, 1500);
         }
-        rootView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//        rootView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                return vPlayer.onKeyDown(keyCode, event);
+//            }
+//        });
+//        rootView.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//
+//                return vPlayer.onKeyDown(keyCode, event);
+//            }
+//        });
 
-                return vPlayer.onKeyDown(keyCode, event);
-            }
-        });
-        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
-        mAlphaAnimationIn.setDuration(500);
-        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
-        mAlphaAnimationOut.setDuration(500);
         return rootView;
     }
 
@@ -400,6 +415,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         vPlayer = mainAty.vPlayPlayer;
     }
 
+    //=================================   视频相关方法  ===============================
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -414,7 +430,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                 int position = getPlayItemPosition();
                 if (position != -1 && (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.isPlay())) {
 
-                    VideoItemContainer playItemView = getPlayItemView(position);
+                    FrameLayout playItemView = getPlayItemView(position);
                     View itemView = (View) playItemView.getParent();
                     if (itemView != null) {
                         itemView.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
@@ -464,45 +480,69 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         mAdapter.setOnPlayClickListener(new NewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
+                relativeLayout.setVisibility(View.GONE);
                 cPostion = feed.getNid();
-                newsFeed = feed;
-
+                mainAty.newsFeedVideo = feed;
                 if (cPostion != lastPostion) {
                     vPlayer.stop();
                     vPlayer.release();
                 }
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    mFeedSmallScreen.removeAllViews();
+                    vPlayer.setShowContoller(false);
+                }
 
-//                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
-//                    mFeedSmallLayout.setVisibility(View.GONE);
-//                    mFeedSmallScreen.removeAllViews();
-//                    vPlayer.setShowContoller(false);
-//                    return;
+                if (lastPostion != -1) {
+//                    ViewGroup last = (ViewGroup) vPlayer.getParent();
+//                    if (last != null) {
+//                        last.removeAllViews();
+//                        View itemView = (View) last.getParent();
+//                        if (itemView != null) {
+//                            itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+//                        }
+//                    }
+                    removeViews();
+                }
+
+
+//                if (vPlayer.getParent() != null) {
+//                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
 //                }
 
-                if (lastPostion != -1 || cPostion != lastPostion) {
-                    ViewGroup last = (ViewGroup) vPlayer.getParent();
-                    if (last != null) {
-                        last.removeAllViews();
-                        View itemView = (View) last.getParent();
-                        if (itemView != null) {
-                            itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-
-                if (vPlayer.getParent() != null) {
-                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
-                }
-
                 View view = (View) relativeLayout.getParent();
-                FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.layout_item_video);
-                frameLayout.removeAllViews();
-                frameLayout.addView(vPlayer);
+                ViewGroup mItemVideo = (ViewGroup) view.findViewById(R.id.layout_item_video);
+                mItemVideo.removeAllViews();
+                mItemVideo.addView(vPlayer);
                 vPlayer.setShowContoller(true);
                 vPlayer.setTitle(feed.getTitle());
                 vPlayer.start(feed.getVideourl());
                 lastPostion = cPostion;
 
+            }
+
+            @Override
+            public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
+//                cPostion = feed.getNid();
+//                newsVideoFeed=feed;
+                if (feed==null)
+                    return;
+                mainAty.newsFeedVideo = feed;
+                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
+//                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
+                if (isAdded())
+                    startActivityForResult(intent, REQUEST_CODE);
+                else
+                    mainAty.startActivityForResult(intent, REQUEST_CODE);
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    mFeedSmallScreen.removeAllViews();
+                    vPlayer.setShowContoller(false);
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
+//                lastPostion = cPostion;
             }
         });
 
@@ -524,68 +564,201 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         mFeedSmallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
-                startActivityForResult(intent, REQUEST_CODE);
 
+                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, mainAty.newsFeedVideo);
+                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
+                if (isAdded())
+                    startActivityForResult(intent, REQUEST_CODE);
+                else
+                    mainAty.startActivityForResult(intent, REQUEST_CODE);
+
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    mFeedSmallScreen.removeAllViews();
+                    vPlayer.setShowContoller(false);
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
 
             }
         });
 
-//        mlvNewsFeed.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
-//                intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, newsFeed);
-//                intent.putExtra("position",vPlayer.getCurrentPosition());
-//                startActivityForResult(intent, REQUEST_CODE);
-//                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-//                if (frameLayout == null)
-//                    return;
-//                if (frameLayout != null) {
-//                    frameLayout.removeAllViews();
-//                    View itemView = (View) frameLayout.getParent();
-//                    if (itemView != null) {
-//                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
-//        });
 
         vPlayer.setCompletionListener(new VPlayPlayer.CompletionListener() {
             @Override
             public void completion(IMediaPlayer mp) {
-//                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
-//                    vPlayer.removeAllViews();
-//                    mFeedSmallLayout.setVisibility(View.GONE);
-//                    vPlayer.setShowContoller(true);
-//                    return;
-//                } else
+                if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                    mFeedSmallScreen.removeAllViews();
+                    mFeedSmallLayout.setVisibility(View.GONE);
+                    vPlayer.setShowContoller(false);
+                }
 
                 if (mFeedFullScreen.getVisibility() == View.VISIBLE) {
                     mFeedFullScreen.removeAllViews();
                     mFeedFullScreen.setVisibility(View.GONE);
-                    vPlayer.setShowContoller(true);
-                    return;
+                    vPlayer.setShowContoller(false);
                 }
-
-                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
                 vPlayer.release();
-                if (frameLayout != null && frameLayout.getChildCount() > 0) {
-                    frameLayout.removeAllViews();
-                    View itemView = (View) frameLayout.getParent();
-
-                    if (itemView != null) {
-                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-                    }
-                }
-
+                removeViews();
                 lastPostion = -1;
-
 
             }
         });
 
+
+    }
+
+    public int getPlayItemPosition() {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+            if (i == 0)
+                continue;
+            if (i > mArrNewsFeed.size())
+                return -1;
+            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+                return (i - lv.getFirstVisiblePosition());
+            }
+        }
+        return -1;
+    }
+
+    public FrameLayout getPlayItemView(int cPosition) {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        if (cPosition != -1) {
+            View item = lv.getChildAt(cPosition);
+            return (FrameLayout) item.findViewById(R.id.layout_item_video);
+        }
+
+        return null;
+    }
+
+    public void removeViews() {
+        ViewGroup frameLayout = (ViewGroup) vPlayer.getParent();
+        if (frameLayout != null && frameLayout.getChildCount() > 0) {
+            frameLayout.removeAllViews();
+            View itemView = (View) frameLayout.getParent();
+            if (itemView != null) {
+                itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    public void removeSmallScreen() {
+        if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+            mFeedSmallLayout.setVisibility(View.GONE);
+            mFeedSmallScreen.removeAllViews();
+            vPlayer.setShowContoller(false);
+        }
+    }
+
+    public void removeFullScreen() {
+
+    }
+
+    private void VideoVisibleControl() {
+        if (vPlayer==null)
+             return ;
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        boolean isExist = false;
+        int position = -1;
+        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+            if (i == 0)
+                continue;
+            if (i > mArrNewsFeed.size())
+                break;
+            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+                isExist = true;
+                position = i - lv.getFirstVisiblePosition();
+                break;
+            }
+        }
+        if (isExist) {
+//            View item = lv.getChildAt(position);
+//            Log.e(TAG, "item:" + item.toString() + "position:" + position);
+//            FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
+//            Log.e(TAG, "frameLayout:" + frameLayout.toString());
+//
+//            if (!vPlayer.isPlay()) {
+//                item.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+//            }
+        } else {
+            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+            if (frameLayout != null) {
+                vPlayer.stop();
+                vPlayer.release();
+                frameLayout.removeAllViews();
+                View itemView = (View) frameLayout.getParent();
+                if (itemView != null) {
+                    itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+
+                }
+
+            }
+
+        }
+        isExist = false;
+
+
+    }
+
+
+    private void VideoShowControl() {
+        ListView lv = mlvNewsFeed.getRefreshableView();
+        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition());
+        boolean isExist = false;
+        int position = -1;
+        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
+            if (i == 0)
+                continue;
+            if (i > mArrNewsFeed.size())
+                break;
+            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
+                isExist = true;
+                position = i - lv.getFirstVisiblePosition();
+                break;
+            }
+        }
+        if (isExist) {
+            View item = lv.getChildAt(position);
+            Log.e(TAG, "item:" + item.toString() + "position:" + position);
+            FrameLayout frameLayout = (FrameLayout) item.findViewById(R.id.layout_item_video);
+            Log.e(TAG, "frameLayout:" + frameLayout.toString());
+
+            if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
+                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
+            }
+
+            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+                mFeedSmallLayout.setVisibility(View.GONE);
+                mFeedSmallScreen.removeAllViews();
+                vPlayer.setShowContoller(true);
+                frameLayout.removeAllViews();
+                frameLayout.addView(vPlayer);
+            }
+
+
+        } else {
+            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED)) {
+                FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
+                if (frameLayout != null) {
+                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        frameLayout.removeAllViews();
+                    View itemView = (View) frameLayout.getParent();
+                    if (itemView != null) {
+                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
+                    }
+                }
+                if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PREPARE || vPlayer.getStatus() == PlayStateParams.STATE_PREPARING || vPlayer.getStatus() == PlayStateParams.STATE_PREPARED) {
+                    mFeedSmallScreen.removeAllViews();
+                    mFeedSmallScreen.addView(vPlayer);
+                    vPlayer.setShowContoller(false);
+                    mFeedSmallLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+        isExist = false;
 
     }
 
@@ -596,27 +769,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
-
-    NewsFeedAdapter.clickSharePopWindow mClickSharePopWindow = new NewsFeedAdapter.clickSharePopWindow() {
-        @Override
-        public void sharePopWindow(NewsFeed feed) {
-            mSharePopupWindow = new SharePopupWindow((MainAty) mContext, NewsFeedFgt.this);
-            mSharePopupWindow.setFavoriteGone();
-            mivShareBg.startAnimation(mAlphaAnimationIn);
-            mivShareBg.setVisibility(View.VISIBLE);
-            String remark = feed.getDescr();
-            String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(feed.getUrl()) + "&interface";
-            mSharePopupWindow.setTitleAndUrl(feed, remark);
-            mSharePopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        }
-    };
-
-    @Override
-    public void shareDismiss() {
-        mivShareBg.setVisibility(View.GONE);
-        mivShareBg.startAnimation(mAlphaAnimationOut);
-        mSharePopupWindow = null;
-    }
 
     @Override
     public void onDestroyView() {
@@ -672,82 +824,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         }
     }
 
-    public String getAdMessage() {
-
-        Gson gson = new Gson();
-        Random random = new Random();
-        AdImpressionEntity adImpressionEntity = new AdImpressionEntity();
-        adImpressionEntity.setAid(random.nextInt(2) == 0 ? "98" : "100");
-        /** 单图91  三图164 */
-        adImpressionEntity.setHeight((int) (DeviceInfoUtil.obtainDensity() * 164) + "");
-        adImpressionEntity.setWidth(DeviceInfoUtil.getScreenWidth(mContext) + "");
-
-        AdDeviceEntity adDeviceEntity = new AdDeviceEntity();
-        /** 设置IMEI */
-        String imei = SharedPreManager.get("flag", "imei");
-        adDeviceEntity.setImei(DeviceInfoUtil.generateMD5(imei));
-        /** 设置AndroidID */
-        String androidId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-        adDeviceEntity.setAnid(TextUtil.isEmptyString(androidId) ? null : DeviceInfoUtil.generateMD5(androidId));
-        /** 设置设备品牌 */
-        String brand = Build.BRAND;
-        adDeviceEntity.setBrand(brand);
-        /** 设置设备型号 */
-        String platform = Build.MODEL;
-        adDeviceEntity.setPlatform(platform);
-        /** 设置操作系统 */
-        adDeviceEntity.setOs("1");
-        /** 设置操作系统版本号 */
-        String version = Build.VERSION.RELEASE;
-        adDeviceEntity.setOs_version(version);
-        /** 设置屏幕分辨率 */
-        adDeviceEntity.setDevice_size(CrashHandler.getResolution(mContext));
-        /** 设置IP */
-        String ip = "";
-        if (DeviceInfoUtil.isWifiNetWorkState(mContext)) {
-            ip = DeviceInfoUtil.getIpAddress(mContext);
-        } else {
-            ip = DeviceInfoUtil.getLocalIpAddress();
-        }
-        adDeviceEntity.setIp(ip);
-        /** 设置网络环境 */
-        String networkType = DeviceInfoUtil.getNetworkType(mContext);
-        if (TextUtil.isEmptyString(networkType)) {
-            adDeviceEntity.setNetwork("0");
-        } else {
-            if ("wifi".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("1");
-            } else if ("2G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("2");
-            } else if ("3G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("3");
-            } else if ("4G".endsWith(networkType)) {
-                adDeviceEntity.setNetwork("4");
-            } else {
-                adDeviceEntity.setNetwork("0");
-            }
-        }
-        /** 设置经度 纬度 */
-//        String locationJsonString = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_USER_LOCATION);
-//        LocationEntity locationEntity = gson.fromJson(locationJsonString, LocationEntity.class);
-//        adDeviceEntity.setLongitude(locationEntity.get);
-        /** 设置横竖屏幕 */
-        if (DeviceInfoUtil.isScreenChange(mContext)) {//横屏
-            adDeviceEntity.setScreen_orientation("2");
-        } else {//竖屏
-            adDeviceEntity.setScreen_orientation("1");
-        }
-
-
-        AdEntity adEntity = new AdEntity();
-        adEntity.setTs((System.currentTimeMillis() / 1000) + "");
-        adEntity.setDevice(adDeviceEntity);
-        adEntity.getImpression().add(adImpressionEntity);
-
-
-        return gson.toJson(adEntity);
-
-    }
 
     private void loadNewsFeedData(String url, final int flag) {
         if (!isListRefresh) {
@@ -755,14 +831,15 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         }
         String requestUrl;
         String tstart = System.currentTimeMillis() + "";
-        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + SharedPreManager.getUser(mContext).getMuid();
+        String fixedParams = "&cid=" + mstrChannelId + "&uid=" + getUser(mContext).getMuid();
         ADLoadNewsFeedEntity adLoadNewsFeedEntity = new ADLoadNewsFeedEntity();
         adLoadNewsFeedEntity.setCid(TextUtil.isEmptyString(mstrChannelId) ? null : Long.parseLong(mstrChannelId));
-        adLoadNewsFeedEntity.setUid(SharedPreManager.getUser(mContext).getMuid());
+        adLoadNewsFeedEntity.setUid(getUser(mContext).getMuid());
         adLoadNewsFeedEntity.setT(1);
         adLoadNewsFeedEntity.setV(1);
         Gson gson = new Gson();
-        adLoadNewsFeedEntity.setB(TextUtil.getBase64(getAdMessage()));
+        //写入feed流广告位ID
+        adLoadNewsFeedEntity.setB(TextUtil.getBase64(AdUtil.getAdMessage(mContext, 247 + "")));
 
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -964,16 +1041,22 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                 mNewsSaveCallBack.result(mstrChannelId, mArrNewsFeed);
             }
             //如果频道是1,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
-            if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId))) {
+            if (mstrChannelId != null && ("1".equals(mstrChannelId) || "35".equals(mstrChannelId) || "44".equals(mstrChannelId))) {
                 for (NewsFeed newsFeed : result) {
                     if ("1".equals(mstrChannelId)) {
                         newsFeed.setChannel(1);
-                    } else {
+                        if (newsFeed.getStyle() == 6) {
+                            newsFeed.setStyle(8);
+                        }
+                    } else if ("35".equals(mstrChannelId)) {
                         newsFeed.setChannel(35);
+                    } else if ("44".equals(mstrChannelId)) {
+                        newsFeed.setChannel(44);
                     }
-                    if (newsFeed.getStyle() == 6) {
-                        newsFeed.setStyle(8);
-                    }
+
+//                    if (newsFeed.getStyle() == 6) {
+//                        newsFeed.setStyle(8);
+//                    }
                 }
             }
             //如果频道是42,则说明此频道的数据都是来至于其他的频道,为了方便存储,所以要修改其channelId
@@ -1041,7 +1124,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                 }
             }, 1000);
         } else if (error.toString().contains("4003") && mstrChannelId.equals("1")) {//说明三方登录已过期,防止开启3个loginty
-            User user = SharedPreManager.getUser(getActivity());
+            User user = getUser(getActivity());
             user.setUtype("2");
             SharedPreManager.saveUser(user);
 //                    Intent loginAty = new Intent(getActivity(), LoginAty.class);
@@ -1075,7 +1158,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
 
     public void loadData(final int flag) {
 
-        User user = SharedPreManager.getUser(mContext);
+        User user = getUser(mContext);
         Logger.e("jigang", "loaddata -----" + flag);
         if (null != user) {
             if (NetUtil.checkNetWork(mContext)) {
@@ -1139,7 +1222,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             bgLayout.setVisibility(View.VISIBLE);
         }
         String requestUrl;
-        String uid = String.valueOf(SharedPreManager.getUser(mContext).getMuid());
+        String uid = String.valueOf(getUser(mContext).getMuid());
         String tstart = System.currentTimeMillis() + "";
         if (flag == PULL_DOWN_REFRESH) {
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
@@ -1171,7 +1254,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             }
         });
         HashMap<String, String> header = new HashMap<>();
-        header.put("Authorization", SharedPreManager.getUser(mContext).getAuthorToken());
+        header.put("Authorization", getUser(mContext).getAuthorToken());
 //        header.put("Authorization", "9097879790");
         feedRequest.setRequestHeader(header);
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
@@ -1179,7 +1262,6 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     }
 
     NewsFeedFgtPopWindow mNewsFeedFgtPopWindow;
-    SharePopupWindow mSharePopupWindow;
 
     public void setNewsFeedFgtPopWindow(NewsFeedFgtPopWindow mNewsFeedFgtPopWindow) {
         this.mNewsFeedFgtPopWindow = mNewsFeedFgtPopWindow;
@@ -1205,7 +1287,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
-
+            ToolsUtils.muteAudioFocus(mContext, false);
         }
 
         mHomeWatcher = new HomeWatcher(this.getActivity());
@@ -1249,7 +1331,7 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
             mAdapter.notifyDataSetChanged();
         }
         if (mstrChannelId != null && mstrChannelId.equals("1000")) {
-            User user = SharedPreManager.getUser(mContext);
+            User user = getUser(mContext);
             RelativeLayout focusBg = (RelativeLayout) rootView.findViewById(R.id.focus_no_data_layout);
             if (user != null && user.isVisitor()) {
                 loadFocusData(PULL_DOWN_REFRESH);
@@ -1290,7 +1372,18 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
         mHomeWatcher.stopWatch();
         if (vPlayer != null) {
             vPlayer.onPause();
+            ToolsUtils.muteAudioFocus(mContext, true);
+            vPlayer.setShowContoller(true);
+            VideoVisibleControl();
+////            VideoVisibleControl();
+//            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
+//                mFeedSmallLayout.setVisibility(View.GONE);
+//                mFeedSmallScreen.removeAllViews();
+//                vPlayer.stop();
+//                vPlayer.release();
+//            }
         }
+
     }
 
     long homeTime;
@@ -1466,154 +1559,15 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
                     thisVisibleItemCount = visibleItemCount;
                 }
                 if (mstrChannelId.equals("44") && vPlayer != null) {
-                    Log.e(TAG, "first" + firstVisibleItem + "onScroll:" + mlvNewsFeed.getRefreshableView().getChildAt(0) + "visibleCount:" + visibleItemCount + ",last：" + mlvNewsFeed.getRefreshableView().getLastVisiblePosition());
-//                    VideoShowControl(view);
-                    VideoVisibleControl(view);
+//                    VideoShowControl();
+                    VideoVisibleControl();
+                    if (newsVideoFeed != null)
+                        Log.e(TAG, "VideoNewsFeed:" + newsVideoFeed.toString());
                 }
             }
         });
     }
 
-    public int getPlayItemPosition() {
-        ListView lv = mlvNewsFeed.getRefreshableView();
-        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0)
-                continue;
-            if (i > mArrNewsFeed.size())
-                return -1;
-            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
-                return (i - lv.getFirstVisiblePosition());
-            }
-        }
-        return -1;
-    }
-
-    public VideoItemContainer getPlayItemView(int cPosition) {
-        ListView lv = mlvNewsFeed.getRefreshableView();
-        if (cPosition != -1) {
-            View item = lv.getChildAt(cPosition);
-            return (VideoItemContainer) item.findViewById(R.id.layout_item_video);
-        }
-
-        return null;
-    }
-
-    private void VideoVisibleControl(AbsListView view) {
-        ListView lv = mlvNewsFeed.getRefreshableView();
-        boolean isExist = false;
-        int position = -1;
-        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0)
-                continue;
-            if (i > mArrNewsFeed.size())
-                break;
-            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
-                isExist = true;
-                position = i - view.getFirstVisiblePosition();
-                break;
-            }
-        }
-        if (isExist) {
-            View item = lv.getChildAt(position);
-            Log.e(TAG, "item:" + item.toString() + "position:" + position);
-            VideoItemContainer frameLayout = (VideoItemContainer) item.findViewById(R.id.layout_item_video);
-            Log.e(TAG, "frameLayout:" + frameLayout.toString());
-
-            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-            }
-            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                vPlayer.setShowContoller(true);
-            }
-        } else {
-
-            FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-            if (frameLayout != null) {
-                vPlayer.stop();
-                vPlayer.release();
-                frameLayout.removeAllViews();
-                View itemView = (View) frameLayout.getParent();
-                if (itemView != null) {
-                    itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-                }
-            }
-
-        }
-        isExist = false;
-
-
-    }
-
-
-    private void VideoShowControl(AbsListView view) {
-        ListView lv = mlvNewsFeed.getRefreshableView();
-        Log.e(TAG, "mlvNewsFeed: first" + lv.getFirstVisiblePosition() + ",last:" + lv.getLastVisiblePosition());
-        Log.e(TAG, "AbsListView: first" + view.getFirstVisiblePosition() + ",last:" + view.getLastVisiblePosition());
-        boolean isExist = false;
-        int position = -1;
-        for (int i = lv.getFirstVisiblePosition(); i <= lv.getLastVisiblePosition(); i++) {
-            if (i == 0)
-                continue;
-            if (i > mArrNewsFeed.size())
-                break;
-            if (mArrNewsFeed.get(i - 1).getNid() == cPostion) {
-                isExist = true;
-                position = i - view.getFirstVisiblePosition();
-                break;
-            }
-        }
-        if (isExist) {
-            View item = lv.getChildAt(position);
-            Log.e(TAG, "item:" + item.toString() + "position:" + position);
-            VideoItemContainer frameLayout = (VideoItemContainer) item.findViewById(R.id.layout_item_video);
-            Log.e(TAG, "frameLayout:" + frameLayout.toString());
-
-            if (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-                item.findViewById(R.id.rl_video_show).setVisibility(View.GONE);
-            }
-
-            if (vPlayer.getStatus() == PlayStateParams.STATE_PAUSED) {
-//                if (vPlayer.getParent() != null)
-//                    ((ViewGroup) vPlayer.getParent()).removeAllViews();
-//                frameLayout.removeAllViews();
-                vPlayer.setShowContoller(true);
-//                frameLayout.addView(vPlayer);
-                return;
-            }
-
-            if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
-                mFeedSmallLayout.setVisibility(View.GONE);
-                mFeedSmallScreen.removeAllViews();
-                vPlayer.setShowContoller(true);
-                frameLayout.removeAllViews();
-                frameLayout.addView(vPlayer);
-
-            }
-
-
-        } else {
-            if (vPlayer != null && mFeedSmallLayout.getVisibility() == View.GONE && (vPlayer.isPlay() || vPlayer.getStatus() == PlayStateParams.STATE_PAUSED)) {
-                VideoItemContainer frameLayout = (VideoItemContainer) vPlayer.getParent();
-                if (frameLayout != null) {
-
-                    View itemView = (View) frameLayout.getParent();
-                    if (itemView != null) {
-                        itemView.findViewById(R.id.rl_video_show).setVisibility(View.VISIBLE);
-                    }
-                }
-                if (vPlayer.isPlay()) {
-                    frameLayout.removeAllViews();
-                    mFeedSmallScreen.removeAllViews();
-                    mFeedSmallScreen.addView(vPlayer);
-                    vPlayer.setShowContoller(false);
-                    mFeedSmallLayout.setVisibility(View.VISIBLE);
-                }
-            }
-
-        }
-        isExist = false;
-
-    }
 
     public void mRefreshTitleBarAnimtation() {
 
@@ -1667,6 +1621,28 @@ public class NewsFeedFgt extends Fragment implements SharePopupWindow.ShareDismi
 
             }
         });
+    }
 
+
+    /**
+     * 广告滑动接口
+     */
+    private void scrollAd() {
+        User user = SharedPreManager.getUser(mContext);
+        if (user != null) {
+            int uid = user.getMuid();
+            //渠道类型, 1：奇点资讯， 2：黄历天气，3：纹字锁频，4：猎鹰浏览器，5：白牌 6:纹字主题
+            int ctype = 5;
+            //平台类型，1：IOS，2：安卓，3：网页，4：无法识别
+            int ptype = 2;
+            String requestUrl = HttpConstant.URL_SCROLL_AD + "?nid=" + uid + "&ctype=" + ctype + "&ptype=" + ptype;
+            RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
+            StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                }
+            }, null);
+            requestQueue.add(request);
+        }
     }
 }
