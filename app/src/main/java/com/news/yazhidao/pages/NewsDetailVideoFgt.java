@@ -36,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.google.gson.Gson;
@@ -521,8 +522,19 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
-                        } else
+                        }  else if (vp.getStatus()== PlayStateParams.STATE_PAUSED)
+                        {
+                            mSmallLayout.setVisibility(View.GONE);
+                        }
+
+                        else
+                        {
+                            if (vp.getParent() != null)
+                                ((ViewGroup) vp.getParent()).removeAllViews();
+                            vp.stop();
+                            vp.release();
                             mVideoShowBg.setVisibility(View.VISIBLE);
+                        }
 
                     } else if (currentItem == 1 && vp.isPlay()) {
                         if (vp.getParent() != null)

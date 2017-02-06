@@ -57,7 +57,7 @@
             android:id="@+id/full"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:padding="6dp"
+            android:padding="8dp"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:src="@mipmap/ic_fullscreen" />
