@@ -1083,7 +1083,6 @@ public class VPlayPlayer extends FrameLayout {
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
         mVideoStaus.setVisibility(View.GONE);
-        releaseBitmap();
         hide(false);
 
 
@@ -1121,10 +1120,7 @@ public class VPlayPlayer extends FrameLayout {
         mVideoView.pause();
         statusChange(PlayStateParams.STATE_PAUSED);
         bitmap = mVideoView.getBitmap();
-        if (bitmap != null) {
-            pauseImage.setImageBitmap(bitmap);
-            appVideoPlay.setVisibility(View.VISIBLE);
-        }
+        snapshotsBitmap();
     }
 
     private void reStart() {
@@ -1259,8 +1255,7 @@ public class VPlayPlayer extends FrameLayout {
         }
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
-        releaseBitmap();
-        status = PlayStateParams.STATE_PLAYBACK_COMPLETED;
+        status = PlayStateParams.STATE_IDLE;
     }
 
     public void release() {
@@ -1268,8 +1263,12 @@ public class VPlayPlayer extends FrameLayout {
             mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
-        releaseBitmap();
-        status = PlayStateParams.STATE_PLAYBACK_COMPLETED;
+        status = PlayStateParams.STATE_IDLE;
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+            appVideoPlay.setVisibility(View.GONE);
+        }
     }
 
     public int getStatus() {
@@ -1296,6 +1295,7 @@ public class VPlayPlayer extends FrameLayout {
                 mVideoView.start();
                 play.setSelected(true);
                 isAutoPause = false;
+                releaseBitmap();
                 statusChange(PlayStateParams.STATE_PLAYING);
             }
         }
