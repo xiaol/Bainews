@@ -614,6 +614,7 @@ public class VPlayPlayer extends FrameLayout {
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             isShowContoller = false;
+            showBottomControl(true);
         }
 
 
@@ -1308,6 +1309,7 @@ public class VPlayPlayer extends FrameLayout {
             play.setSelected(false);
             currentPosition = mVideoView.getCurrentPosition();
             isAutoPause = true;
+            snapshotsBitmap();
             statusChange(PlayStateParams.STATE_PAUSED);
         }
     }
