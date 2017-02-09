@@ -39,6 +39,7 @@ import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
+import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -122,7 +123,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             detail_shared_hotComment;
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
-            detail_shared_ViewPointTitleLayout,adLayout,
+            detail_shared_ViewPointTitleLayout, adLayout,
             relativeLayout_attention;
     private ImageView detail_shared_AttentionImage,
             image_attention_line,
@@ -154,8 +155,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private TextViewExtend tv_attention_title;
     private Context mContext;
     private VPlayPlayer vp;
-    private VideoContainer  mDetailVideo;
-    private VideoContainer  mFullScreen;
+    private VideoContainer mDetailVideo;
+    private VideoContainer mFullScreen;
     private SmallVideoContainer mSmallScreen;
     private RelativeLayout mSmallLayout;
     private ImageView mClose;
@@ -183,7 +184,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDocid = arguments.getString(KEY_NEWS_DOCID);
         mNewID = arguments.getString(KEY_NEWS_ID);
         mTitle = arguments.getString(KEY_NEWS_TITLE);
-        position = arguments.getInt("position", -1);
+        position = arguments.getInt("position", 0);
         Logger.e("aaa", "mTitle==" + mTitle);
 
 
@@ -334,7 +335,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
 //        vp = PlayerManager.getPlayerManager().initialize(mContext);
-        vp=mNewsDetailVideoAty.vPlayPlayer;
+        vp = mNewsDetailVideoAty.vPlayPlayer;
         mAdapter = new NewsDetailVideoFgtAdapter((Activity) mContext);
         mNewsDetailList.setAdapter(mAdapter);
 
@@ -434,6 +435,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 }
                 vp.stop();
                 vp.release();
+                position=0;
 
                 mVideoShowBg.setVisibility(View.VISIBLE);
 
@@ -511,10 +513,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     break;
 
                 case VIDEO_SMALL:
-
+                    if (vp == null)
+                        return;
                     int currentItem = (int) msg.obj;
                     if (currentItem == 0) {
-                        if (vp.isPlay()) {
+                        if (vp.isPlay() || (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             mDetailVideo.addView(vp);
@@ -527,8 +530,12 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallLayout.setVisibility(View.GONE);
                         }
 
-                        else
-                        {
+//                        else if (vp.getStatus()== PlayStateParams.STATE_PAUSED)
+//                        {
+//                            mSmallLayout.setVisibility(View.GONE);
+//                        }
+
+                        else {
                             if (vp.getParent() != null)
                                 ((ViewGroup) vp.getParent()).removeAllViews();
                             vp.stop();
@@ -536,7 +543,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mVideoShowBg.setVisibility(View.VISIBLE);
                         }
 
-                    } else if (currentItem == 1 && vp.isPlay()) {
+                    } else if (currentItem == 1 && (vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
                         if (vp.getParent() != null)
                             ((ViewGroup) vp.getParent()).removeAllViews();
                         mSmallScreen.addView(vp);
@@ -546,13 +553,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     }
                     break;
                 case VIDEO_FULLSCREEN:
-                    if (vp.isPlay()) {
-                        Configuration config = (Configuration) msg.obj;
-                        onConfigurationChanged(config);
-
-//                        NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
-
-                    }
+//                    if (vp.isPlay()) {
+//                        Configuration config = (Configuration) msg.obj;
+//                        onConfigurationChanged(config);
+//
+////                        NewsDetailVideoAty mActivity = (NewsDetailVideoAty) mContext;
+//
+//                    }
                     break;
                 case VIDEO_NORMAL:
                     break;
@@ -564,7 +571,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-        if (vp != null && vp.isPlay()) {
+        if (vp != null) {
             vp.onChanged(newConfig);
             if (vp.getParent() != null)
                 ((ViewGroup) vp.getParent()).removeAllViews();
@@ -584,7 +591,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
 
             }
-        }
+        } else
+            mDetailContainer.setVisibility(View.VISIBLE);
+
     }
 
     public void setIsShowImagesSimpleDraweeViewURI(ImageView draweeView, String strImg) {
@@ -596,7 +605,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
             } else {
                 Uri uri = Uri.parse(strImg);
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
+                mRequestManager.load(uri).placeholder(R.drawable.bg_load_default_small).into(draweeView);
             }
         }
     }
@@ -626,8 +635,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     public void onPause() {
         super.onPause();
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
-        if (vp != null)
+        if (vp != null) {
             vp.onPause();
+            ToolsUtils.muteAudioFocus(mContext, true);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.release();
 
@@ -638,8 +649,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (vp != null)
-            vp.onResume();
+        if (vp != null) {
+//            vp.onResume();
+            ToolsUtils.muteAudioFocus(mContext, false);
+        }
 //        if (mWakeLock != null)
 //            mWakeLock.acquire();
 
@@ -666,6 +679,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mDetailSharedHotComment = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_hotComment);
         mDetailVideoTitle = (TextView) mCommentTitleView.findViewById(R.id.detail_video_title);
         mDetailVideoTitle.setText(mResult.getTitle());
+        adLayout = (RelativeLayout) mCommentTitleView.findViewById(R.id.adLayout);
         detail_shared_PraiseText = (TextView) mCommentTitleView.findViewById(R.id.detail_shared_PraiseText);
         detail_shared_AttentionImage = (ImageView) mCommentTitleView.findViewById(R.id.detail_shared_AttentionImage);
         if (mResult.getConflag() == 1) {
@@ -793,7 +807,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
         detail_shared_MoreComment = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_MoreComment);
         detail_shared_hotComment = (TextView) mViewPointLayout.findViewById(R.id.detail_shared_hotComment);
         detail_shared_ViewPointTitleLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.detail_shared_TitleLayout);
-        adLayout = (RelativeLayout) mViewPointLayout.findViewById(R.id.adLayout);
         detail_shared_ShareImageLayout.setVisibility(View.GONE);
         detail_shared_Text.setVisibility(View.GONE);
         detail_shared_MoreComment.setVisibility(View.VISIBLE);
@@ -881,7 +894,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
     private void loadData() {
         Logger.e("jigang", "fetch comments url=" + HttpConstant.URL_FETCH_HOTCOMMENTS + "did=" + TextUtil.getBase64(mDocid) + "&p=" + (1) + "&c=" + (20));
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        final RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         NewsDetailRequest<ArrayList<NewsDetailComment>> feedRequest = null;
         NewsDetailRequest<ArrayList<RelatedItemEntity>> related = null;
         int userID = SharedPreManager.getUser(mContext).getMuid();
@@ -975,7 +988,13 @@ public class NewsDetailVideoFgt extends BaseFragment {
 //        related.setRequestHeader(header1);
 
         requestQueue.add(feedRequest);
-        requestQueue.add(related);
+        final NewsDetailRequest<ArrayList<RelatedItemEntity>> finalRelated = related;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                requestQueue.add(finalRelated);
+            }
+        }, 1000);
 
 
     }
@@ -1438,9 +1457,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         final User user = SharedPreManager.getUser(mContext);
         if (!TextUtil.isEmptyString(comment.getAvatar())) {
             Uri uri = Uri.parse(comment.getAvatar());
-            Glide.with(mContext).load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(uri).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         } else {
-            Glide.with(mContext).load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 2, getResources().getColor(R.color.bg_home_login_header))).into(holder.ivHeadIcon);
+            mRequestManager.load(R.drawable.ic_user_comment_default).placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(holder.ivHeadIcon);
         }
         holder.tvName.setText(comment.getUname());
         holder.tvPraiseCount.setText(comment.getCommend() + "");
@@ -1500,7 +1519,6 @@ public class NewsDetailVideoFgt extends BaseFragment {
             bgLayout.setVisibility(View.GONE);
         }
     }
-
 
 
     @Override
@@ -1651,13 +1669,18 @@ public class NewsDetailVideoFgt extends BaseFragment {
                         RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
                         TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
                         title.setText(newsFeed.getTitle());
-                        ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+                        final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
                         int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        mRequestManager.load(result.get(0).getImgs().get(1)).into(imageView);
+                        imageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
+                            }
+                        });
                         adLayout.addView(layout);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override

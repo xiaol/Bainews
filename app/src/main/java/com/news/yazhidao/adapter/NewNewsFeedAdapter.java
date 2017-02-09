@@ -339,13 +339,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                     holder.getView(R.id.news_source_TextView).setVisibility(View.GONE);
                 }
                 if (feed.getRtype() == 3) {
-                    holder.getView(R.id.layout_source).setVisibility(View.GONE);
+                    setSourceOnClick(holder.getView(layout_source), null);
                 } else {
-                    holder.getView(R.id.layout_source).setVisibility(View.VISIBLE);
-                    setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
-                    setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
+                    setSourceOnClick(holder.getView(layout_source), feed);
                 }
-                setSourceOnClick(holder.getView(layout_source), feed);
+                setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
+                setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
                 break;
             case R.layout.ll_news_card:
                 ArrayList<String> strArrImgUrl = feed.getImgs();
@@ -708,7 +707,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         int width = (int) (mScreenWidth / 2.0f - DensityUtil.dip2px(mContext, 15));
         if (pageNum == 2) {
             localLayoutParams.width = width;
-            localLayoutParams.height = (int) (width * 71 / 108f);
+            localLayoutParams.height = (int) (width * 72 / 108f);
         } else if (pageNum == 3) {
             localLayoutParams.width = mCardWidth;
             localLayoutParams.height = mCardHeight;
@@ -822,16 +821,18 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceOnClick(View linearLayout, final NewsFeed newsFeed) {
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, AttentionActivity.class);
-                intent.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, newsFeed.getPurl());
-                intent.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, newsFeed.getPname());
-                intent.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, newsFeed.getConpubflag());
-                mContext.startActivity(intent);
-            }
-        });
+        if (newsFeed != null) {
+            linearLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, AttentionActivity.class);
+                    intent.putExtra(AttentionActivity.KEY_ATTENTION_HEADIMAGE, newsFeed.getPurl());
+                    intent.putExtra(AttentionActivity.KEY_ATTENTION_TITLE, newsFeed.getPname());
+                    intent.putExtra(AttentionActivity.KEY_ATTENTION_CONPUBFLAG, newsFeed.getConpubflag());
+                    mContext.startActivity(intent);
+                }
+            });
+        }
     }
 
     private void setFocusBgColor(TextViewExtend textView, String pName, TextViewExtend tvCommentNum, ImageView ivDelete) {
@@ -960,9 +961,8 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         ((Activity) mContext).startActivityForResult(AdIntent, REQUEST_CODE);
                     }
                 } else if (feed.getRtype() == 6) {
-                    if (onPlayClickListener!=null)
-                    {
-                     onPlayClickListener.onItemClick(rlNewsContent,feed);
+                    if (onPlayClickListener != null) {
+                        onPlayClickListener.onItemClick(rlNewsContent, feed);
                     }
 //                    Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
 //                    intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
@@ -1153,6 +1153,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
     public interface OnPlayClickListener {
         void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed);
+
         void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
     }
 }

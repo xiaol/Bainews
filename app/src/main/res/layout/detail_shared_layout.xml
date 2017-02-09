@@ -15,6 +15,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="12dp"
         android:maxLines="3"
+        android:ellipsize="end"
         android:textColor="#333333"
         android:textSize="15sp" />
 
@@ -53,7 +54,6 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/detail_shared_FriendCircleLayout"
             android:layout_width="wrap_content"
@@ -91,6 +91,7 @@
         android:textColor="@color/color3"
         android:textSize="@dimen/font5"
         android:visibility="gone" />
+
 
     <RelativeLayout
         android:id="@+id/detail_shared_MoreComment"
@@ -131,15 +132,17 @@
         android:id="@+id/detail_attention_addView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></LinearLayout>
+
     <RelativeLayout
         android:id="@+id/adLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#f6f6f6"
-        android:paddingBottom="34dp"
-        android:paddingTop="22dp"
+        android:paddingBottom="10dp"
         android:paddingLeft="18dp"
-        android:paddingRight="18dp" />
+        android:paddingRight="18dp"
+        android:paddingTop="22dp" />
+
     <RelativeLayout
         android:id="@+id/detail_shared_TitleLayout"
         android:layout_width="match_parent"

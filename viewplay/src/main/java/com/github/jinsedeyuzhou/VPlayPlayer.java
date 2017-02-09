@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -82,6 +83,7 @@ public class VPlayPlayer extends FrameLayout {
     private ImageView mVideoLock;
     private RelativeLayout appVideoPlay;
     private ImageView mVideoShare;
+    private LinearLayout container_tools;
 
     //是否展示
     private boolean isShow;
@@ -215,6 +217,8 @@ public class VPlayPlayer extends FrameLayout {
             }
         }
     };
+    private LinearLayout mVideoStaus;
+    private TextView mStatusText;
 
 
     public VPlayPlayer(Context context) {
@@ -256,15 +260,22 @@ public class VPlayPlayer extends FrameLayout {
 
         progressBar = (ProgressBar) findViewById(R.id.loading);
         bottomProgress = (ProgressBar) findViewById(R.id.bottom_progressbar);
+        container_tools = (LinearLayout) findViewById(R.id.ll_container_tools);
         seekBar = (SeekBar) findViewById(R.id.seekbar);
         allTime = (TextView) findViewById(R.id.all_time);
         time = (TextView) findViewById(R.id.time);
         full = (ImageView) findViewById(R.id.full);
         sound = (ImageView) findViewById(R.id.sound);
         play = (ImageView) findViewById(R.id.player_btn);
+
         pauseImage = (ImageView) findViewById(R.id.pause_image);
         appVideoPlay = (RelativeLayout) findViewById(R.id.app_video_replay);
         appVideoPlay.setClickable(false);
+
+
+        //status
+        mVideoStaus = (LinearLayout) findViewById(R.id.app_video_status);
+        mStatusText = (TextView) findViewById(R.id.app_video_status_text);
 
         //触屏
         gestureTouch = (LinearLayout) findViewById(R.id.ll_gesture_touch);
@@ -280,19 +291,28 @@ public class VPlayPlayer extends FrameLayout {
         mVideoTitle = (MarqueeTextView) findViewById(R.id.tv_video_title);
         mVideoLock = (ImageView) findViewById(R.id.app_video_lock);
         mVideoShare = (ImageView) findViewById(R.id.app_video_share);
-//        initHeight = getLayoutParams().height;
-//        screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
+        initHeight = layout.getLayoutParams().height;
+        screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
 
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (initHeight == 0) {
-            initHeight = getHeight();
-            screenWidthPixels = getResources().getDisplayMetrics().widthPixels;
-        }
-    }
+//    /**
+//     *
+//     * 用此当布局的时候才用到其他情况用上面那中方法获取
+//     * @param changed
+//     * @param left
+//     * @param top
+//     * @param right
+//     * @param bottom
+//     */
+//    @Override
+//    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+//        super.onLayout(changed, left, top, right, bottom);
+//        if (initHeight == 0) {
+//            initHeight = getHeight();
+//            screenWidthPixels = getResources().getDisplayMetrics().widthPixels;
+//        }
+//    }
 
     private void initAction() {
         sound.setOnClickListener(onClickListener);
@@ -308,6 +328,35 @@ public class VPlayPlayer extends FrameLayout {
         final GestureDetector detector = new GestureDetector(mContext, new PlayGestureListener());
         setKeepScreenOn(true);
         setClickable(true);
+
+
+        container_tools.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e("custommedia", "event");
+
+                Rect seekRect = new Rect();
+                seekBar.getHitRect(seekRect);
+
+                if ((event.getY() >= (seekRect.top - 50)) && (event.getY() <= (seekRect.bottom + 50))) {
+
+                    float y = seekRect.top + seekRect.height() / 2;
+                    //seekBar only accept relative x
+                    float x = event.getX() - seekRect.left;
+                    if (x < 0) {
+                        x = 0;
+                    } else if (x > seekRect.width()) {
+                        x = seekRect.width();
+                    }
+                    MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
+                            event.getAction(), x, y, event.getMetaState());
+                    return seekBar.onTouchEvent(me);
+
+                }
+                return false;
+            }
+        });
+
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -451,7 +500,7 @@ public class VPlayPlayer extends FrameLayout {
          * 不支持此设备
          */
         if (!playerSupport) {
-
+            showStatus(activity.getResources().getString(R.string.not_support));
         }
 
 
@@ -521,6 +570,15 @@ public class VPlayPlayer extends FrameLayout {
         }
     };
 
+    /**
+     * 播放错误显示
+     * @param statusText
+     */
+    private void showStatus(String statusText) {
+        mVideoStaus.setVisibility(View.VISIBLE);
+        mStatusText.setText(statusText);
+
+    }
     private void statusChange(int newStatus) {
         status = newStatus;
         if (newStatus == PlayStateParams.STATE_PLAYBACK_COMPLETED) {
@@ -536,6 +594,7 @@ public class VPlayPlayer extends FrameLayout {
             bottomProgress.setProgress(0);
             isShowContoller = false;
             hideAll();
+            showStatus(activity.getResources().getString(R.string.small_problem));
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
             handler.removeCallbacks(null);
         } else if (newStatus == PlayStateParams.STATE_PREPARING) {
@@ -555,7 +614,6 @@ public class VPlayPlayer extends FrameLayout {
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             isShowContoller = false;
-            showBottomControl(true);
         }
 
 
@@ -587,6 +645,7 @@ public class VPlayPlayer extends FrameLayout {
         showBottomControl(false);
         progressBar.setVisibility(View.GONE);
         appVideoPlay.setVisibility(View.GONE);
+        mVideoStaus.setVisibility(View.GONE);
     }
 
     public void showBottomControl(boolean show) {
@@ -869,7 +928,7 @@ public class VPlayPlayer extends FrameLayout {
                 volumeControl = mOldX > screenWidthPixels * 0.5f;
                 firstTouch = false;
             }
-            bottomProgress.setVisibility(View.GONE);
+            contollerbar.setVisibility(View.GONE);
             if (seek) {
                 onProgressSlide(-deltaX / mVideoView.getWidth());
             } else {
@@ -1022,7 +1081,7 @@ public class VPlayPlayer extends FrameLayout {
     private void start() {
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
-        releaseBitmap();
+        mVideoStaus.setVisibility(View.GONE);
         hide(false);
 
 
@@ -1082,7 +1141,7 @@ public class VPlayPlayer extends FrameLayout {
     }
 
     public void releaseBitmap() {
-        if (bitmap != null) {
+        if (bitmap != null&&!bitmap.isRecycled()) {
             handler.sendEmptyMessageDelayed(PlayStateParams.PAUSE_IMAGE_HIDE, 100);
             bitmap.recycle();
             bitmap = null;
@@ -1198,8 +1257,7 @@ public class VPlayPlayer extends FrameLayout {
         }
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
-        releaseBitmap();
-        status = PlayStateParams.STATE_PLAYBACK_COMPLETED;
+        status = PlayStateParams.STATE_IDLE;
     }
 
     public void release() {
@@ -1207,8 +1265,12 @@ public class VPlayPlayer extends FrameLayout {
             mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
-        releaseBitmap();
-        status = PlayStateParams.STATE_PLAYBACK_COMPLETED;
+        status = PlayStateParams.STATE_IDLE;
+        if (bitmap != null&&!bitmap.isRecycled()) {
+            bitmap.recycle();
+            bitmap = null;
+            appVideoPlay.setVisibility(View.GONE);
+        }
     }
 
     public int getStatus() {

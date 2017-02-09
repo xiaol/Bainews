@@ -14,6 +14,23 @@
         android:layout_height="match_parent"
         />
 
+    <!-- status-->
+    <LinearLayout
+        android:id="@+id/app_video_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/background_dark"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/app_video_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/small_problem"
+            android:textColor="@android:color/white"
+            android:textSize="14dp" />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/app_video_replay"
         android:gravity="center"
