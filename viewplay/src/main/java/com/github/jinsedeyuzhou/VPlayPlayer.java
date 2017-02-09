@@ -198,7 +198,8 @@ public class VPlayPlayer extends FrameLayout {
                 }
                 isSound = !isSound;
             } else if (id == R.id.iv_video_finish) {
-                onBackPressed();
+                if (!onBackPressed())
+                    activity.finish();
             } else if (id == R.id.app_video_lock) {
                 if (!isLock) {
                     isLock = true;
@@ -350,6 +351,7 @@ public class VPlayPlayer extends FrameLayout {
                     }
                     MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
                             event.getAction(), x, y, event.getMetaState());
+
                     return seekBar.onTouchEvent(me);
 
                 }
@@ -572,6 +574,7 @@ public class VPlayPlayer extends FrameLayout {
 
     /**
      * 播放错误显示
+     *
      * @param statusText
      */
     private void showStatus(String statusText) {
@@ -579,6 +582,7 @@ public class VPlayPlayer extends FrameLayout {
         mStatusText.setText(statusText);
 
     }
+
     private void statusChange(int newStatus) {
         status = newStatus;
         if (newStatus == PlayStateParams.STATE_PLAYBACK_COMPLETED) {
@@ -614,6 +618,7 @@ public class VPlayPlayer extends FrameLayout {
         } else if (newStatus == PlayStateParams.STATE_PAUSED) {
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             isShowContoller = false;
+            showBottomControl(true);
         }
 
 
@@ -650,7 +655,7 @@ public class VPlayPlayer extends FrameLayout {
 
     public void showBottomControl(boolean show) {
         contollerbar.setVisibility(show ? View.VISIBLE : View.GONE);
-        bottomProgress.setVisibility(show ?  View.GONE:View.VISIBLE );
+        bottomProgress.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
 
@@ -1045,6 +1050,57 @@ public class VPlayPlayer extends FrameLayout {
     }
 
     /**
+     * 处理音量键，避免外部按音量键后导航栏和状态栏显示出来退不回去的状态
+     *
+     * @param keyCode
+     * @return
+     */
+    public boolean handleVolumeKey(int keyCode) {
+        if (!mVideoView.isPlaying())
+            return false;
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            setVolume(true);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            setVolume(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 递增或递减音量，量度按最大音量的 1/15
+     *
+     * @param isIncrease 递增或递减
+     */
+    private void setVolume(boolean isIncrease) {
+        int curVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (isIncrease) {
+            curVolume += mMaxVolume / 15;
+        } else {
+            curVolume -= mMaxVolume / 15;
+        }
+        if (curVolume > mMaxVolume) {
+            curVolume = mMaxVolume;
+        } else if (curVolume < 0) {
+            curVolume = 0;
+        }
+        // 变更声音
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, 0);
+        hide();
+        // 变更进度条
+        if (gestureTouch.getVisibility() == View.GONE) {
+            gestureTouch.setVisibility(View.VISIBLE);
+            gesture.setVisibility(View.GONE);
+            mImageTip.setImageResource(R.mipmap.player_video_volume);
+        }
+        mProgressGesture.setProgress((curVolume * 100 / mMaxVolume));
+        endGesture();
+    }
+
+
+    /**
      * 滑动改变亮度
      *
      * @param percent
@@ -1119,10 +1175,7 @@ public class VPlayPlayer extends FrameLayout {
         mVideoView.pause();
         statusChange(PlayStateParams.STATE_PAUSED);
         bitmap = mVideoView.getBitmap();
-        if (bitmap != null) {
-            pauseImage.setImageBitmap(bitmap);
-            appVideoPlay.setVisibility(View.VISIBLE);
-        }
+        snapshotsBitmap();
     }
 
     private void reStart() {
@@ -1141,7 +1194,7 @@ public class VPlayPlayer extends FrameLayout {
     }
 
     public void releaseBitmap() {
-        if (bitmap != null&&!bitmap.isRecycled()) {
+        if (bitmap != null) {
             handler.sendEmptyMessageDelayed(PlayStateParams.PAUSE_IMAGE_HIDE, 100);
             bitmap.recycle();
             bitmap = null;
@@ -1265,12 +1318,12 @@ public class VPlayPlayer extends FrameLayout {
             mVideoView.release(true);
         bottomProgress.setProgress(0);
         seekBar.setProgress(0);
-        status = PlayStateParams.STATE_IDLE;
-        if (bitmap != null&&!bitmap.isRecycled()) {
+        if (bitmap != null) {
             bitmap.recycle();
             bitmap = null;
             appVideoPlay.setVisibility(View.GONE);
         }
+        status = PlayStateParams.STATE_IDLE;
     }
 
     public int getStatus() {
@@ -1297,6 +1350,7 @@ public class VPlayPlayer extends FrameLayout {
                 mVideoView.start();
                 play.setSelected(true);
                 isAutoPause = false;
+                releaseBitmap();
                 statusChange(PlayStateParams.STATE_PLAYING);
             }
         }
@@ -1310,6 +1364,7 @@ public class VPlayPlayer extends FrameLayout {
             play.setSelected(false);
             currentPosition = mVideoView.getCurrentPosition();
             isAutoPause = true;
+            snapshotsBitmap();
             statusChange(PlayStateParams.STATE_PAUSED);
         }
     }

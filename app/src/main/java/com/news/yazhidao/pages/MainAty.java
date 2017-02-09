@@ -497,6 +497,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mLastPressedBackKeyTime = pressedBackKeyTime;
                 return true;
             }
+        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
+        {
+            if (vPlayPlayer!=null&&vPlayPlayer.handleVolumeKey(keyCode))
+                return true;
         }
 
         return super.onKeyDown(keyCode, event);
