@@ -92,7 +92,7 @@ public class VPlayPlayer extends FrameLayout {
     //是否显示控制bar
     private boolean isShowContoller;
 
-    private boolean isSound;
+//    private boolean isSound;
     private AudioManager audioManager;
     private int currentPosition;
     //默认超时时间
@@ -187,7 +187,8 @@ public class VPlayPlayer extends FrameLayout {
             } else if (id == R.id.full) {
                 toggleFullScreen();
             } else if (id == R.id.sound) {
-                if (isSound) {
+
+                if (!PlayerApplication.getInstance().isSound ) {
                     //静音
                     sound.setImageResource(R.mipmap.sound_mult_icon);
                     audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
@@ -196,7 +197,8 @@ public class VPlayPlayer extends FrameLayout {
                     sound.setImageResource(R.mipmap.sound_open_icon);
                     audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
                 }
-                isSound = !isSound;
+                Log.v(TAG,"isSound"+audioManager.getMode()+"："+audioManager.getRingerMode()+"volume:"+audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)+";;;");
+                PlayerApplication.getInstance().isSound  = !PlayerApplication.getInstance().isSound ;
             } else if (id == R.id.iv_video_finish) {
                 if (!onBackPressed())
                     activity.finish();
@@ -325,11 +327,9 @@ public class VPlayPlayer extends FrameLayout {
 //        pauseImage.setOnClickListener(onClickListener);
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
-        isSound = true;
         final GestureDetector detector = new GestureDetector(mContext, new PlayGestureListener());
         setKeepScreenOn(true);
         setClickable(true);
-
 
         container_tools.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -348,11 +348,12 @@ public class VPlayPlayer extends FrameLayout {
                         x = 0;
                     } else if (x > seekRect.width()) {
                         x = seekRect.width();
-                    }
-                    MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
-                            event.getAction(), x, y, event.getMetaState());
+                    }else {
+                        MotionEvent me = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
+                                event.getAction(), x, y, event.getMetaState());
 
-                    return seekBar.onTouchEvent(me);
+                        return seekBar.onTouchEvent(me);
+                    }
 
                 }
                 return false;
@@ -386,12 +387,11 @@ public class VPlayPlayer extends FrameLayout {
             Log.e(TAG, "loadLibraries error", e);
         }
 
-        audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mMaxVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE))
+        audioManager = (AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE);
+        mMaxVolume = ((AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE))
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int statusFlag = (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) ? 1 : 0;
-        if (statusFlag == 0)
-            sound.setImageResource(R.mipmap.sound_mult_icon);
+
+
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
@@ -508,6 +508,7 @@ public class VPlayPlayer extends FrameLayout {
 
     }
 
+
     /**
      * 切换全屏
      */
@@ -555,7 +556,9 @@ public class VPlayPlayer extends FrameLayout {
             show(3600000);
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
             if (instantSeeking) {
-                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+//                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+//                PlayerApplication.getInstance().isSound=true;
+//                sound.setImageResource(R.mipmap.sound_mult_icon);
             }
         }
 
@@ -566,7 +569,9 @@ public class VPlayPlayer extends FrameLayout {
             }
             show(defaultTimeout);
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+//            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+//            PlayerApplication.getInstance().isSound=false;
+//            sound.setImageResource(R.mipmap.sound_open_icon);
             isDragging = false;
             handler.sendEmptyMessageDelayed(PlayStateParams.MESSAGE_SHOW_PROGRESS, 1000);
         }
@@ -997,9 +1002,13 @@ public class VPlayPlayer extends FrameLayout {
         // 变更进度条
         int i = (int) (index * 1.0f / mMaxVolume * 100);
         if (i == 0) {
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
             sound.setImageResource(R.mipmap.sound_mult_icon);
+            PlayerApplication.getInstance().isSound=true;
         } else {
             sound.setImageResource(R.mipmap.sound_open_icon);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
+            PlayerApplication.getInstance().isSound=false;
         }
         if (i != 0) {
             if (gestureTouch.getVisibility() == View.GONE) {
@@ -1085,6 +1094,15 @@ public class VPlayPlayer extends FrameLayout {
             curVolume = mMaxVolume;
         } else if (curVolume < 0) {
             curVolume = 0;
+            sound.setImageResource(R.mipmap.sound_mult_icon);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
+            PlayerApplication.getInstance().isSound=true;
+
+        }else
+        {
+            sound.setImageResource(R.mipmap.sound_open_icon);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC,false);
+            PlayerApplication.getInstance().isSound=false;
         }
         // 变更声音
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, 0);
@@ -1138,6 +1156,10 @@ public class VPlayPlayer extends FrameLayout {
         bottomProgress.setProgress(0);
         progressBar.setVisibility(View.VISIBLE);
         mVideoStaus.setVisibility(View.GONE);
+        if (PlayerApplication.getInstance().isSound)
+             sound.setImageResource(R.mipmap.sound_mult_icon);
+        else
+            sound.setImageResource(R.mipmap.sound_open_icon);
         hide(false);
 
 
@@ -1378,11 +1400,16 @@ public class VPlayPlayer extends FrameLayout {
 
     public void play(String url) {
         this.url = url;
+
         play(url, 0);
     }
 
     public void play(String url, int position) {
         this.url = url;
+        if (PlayerApplication.getInstance().isSound)
+            sound.setImageResource(R.mipmap.sound_mult_icon);
+        else
+            sound.setImageResource(R.mipmap.sound_open_icon);
         status = PlayStateParams.STATE_PREPARE;
         if (!isNetListener) {// 如果设置不监听网络的变化，则取消监听网络变化的广播
             unregisterNetReceiver();
