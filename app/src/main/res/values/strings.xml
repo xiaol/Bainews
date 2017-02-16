@@ -103,7 +103,7 @@
 
     <array name="resource_list_image">
         <item>@drawable/ic_resource_1</item>
-        <item>@drawable/ic_resource_2</item>
+        <item>@drawable/ic_resource_5</item>
         <item>@drawable/ic_resource_3</item>
         <item>@drawable/ic_resource_4</item>
         <item>@drawable/ic_resource_5</item>

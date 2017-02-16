@@ -1,10 +1,8 @@
 package com.github.jinsedeyuzhou;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -43,6 +41,8 @@ import com.github.jinsedeyuzhou.media.IjkVideoView;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
 import com.github.jinsedeyuzhou.view.MarqueeTextView;
 
+import java.util.Locale;
+
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -78,12 +78,15 @@ public class VPlayPlayer extends FrameLayout {
     private TextView mTvDuration;
     private ImageView mImageTip;
     private ProgressBar mProgressGesture;
-    private RelativeLayout layout;
     private IntentFilter intentFilter;
     private ImageView mVideoLock;
     private RelativeLayout appVideoPlay;
     private ImageView mVideoShare;
     private LinearLayout container_tools;
+    private LinearLayout mVideoStaus;
+    private TextView mStatusText;
+    private LinearLayout mVideoNetTie;
+    private TextView mVideoNetTieIcon;
 
     //是否展示
     private boolean isShow;
@@ -92,7 +95,7 @@ public class VPlayPlayer extends FrameLayout {
     //是否显示控制bar
     private boolean isShowContoller;
 
-//    private boolean isSound;
+//    private boolean PlayerApplication.getInstance().isSound;
     private AudioManager audioManager;
     private int currentPosition;
     //默认超时时间
@@ -167,7 +170,7 @@ public class VPlayPlayer extends FrameLayout {
                     }
                     break;
                 case PlayStateParams.MESSAGE_SHOW_DIALOG:
-                    showWifiDialog();
+                    mVideoNetTie.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -181,24 +184,25 @@ public class VPlayPlayer extends FrameLayout {
                 if (isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6 || MediaNetUtils.getNetworkType(mContext) == 3) {
                     doPauseResume();
                 } else if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
-                    showWifiDialog();
+//                    showWifiDialog();
+                    mVideoNetTie.setVisibility(View.VISIBLE);
                 }
 
             } else if (id == R.id.full) {
                 toggleFullScreen();
             } else if (id == R.id.sound) {
 
-                if (!PlayerApplication.getInstance().isSound ) {
+                if (!PlayerApplication.getInstance().isSound) {
                     //静音
                     sound.setImageResource(R.mipmap.sound_mult_icon);
+//                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
                     audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
                 } else {
                     //取消静音
                     sound.setImageResource(R.mipmap.sound_open_icon);
                     audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
                 }
-                Log.v(TAG,"isSound"+audioManager.getMode()+"："+audioManager.getRingerMode()+"volume:"+audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)+";;;");
-                PlayerApplication.getInstance().isSound  = !PlayerApplication.getInstance().isSound ;
+                PlayerApplication.getInstance().isSound = !PlayerApplication.getInstance().isSound ;
             } else if (id == R.id.iv_video_finish) {
                 if (!onBackPressed())
                     activity.finish();
@@ -216,12 +220,20 @@ public class VPlayPlayer extends FrameLayout {
 //                mVideoView.seekTo(0);
 //                mVideoView.start();
             } else if (id == R.id.app_video_share) {
-
+                if (onShareListener!=null)
+                    onShareListener.onShare();
+            }
+            else if (id == R.id.app_video_netTie_icon) {
+                isAllowModible = true;
+                if (currentPosition == 0) {
+                    play(url);
+                } else
+                    doPauseResume();
+                mVideoNetTie.setVisibility(View.GONE);
             }
         }
     };
-    private LinearLayout mVideoStaus;
-    private TextView mStatusText;
+
 
 
     public VPlayPlayer(Context context) {
@@ -259,7 +271,7 @@ public class VPlayPlayer extends FrameLayout {
         View.inflate(mContext, R.layout.video_player, this);
         contollerbar = findViewById(R.id.media_contoller);
         mVideoView = (IjkVideoView) findViewById(R.id.main_video);
-        layout = (RelativeLayout) findViewById(R.id.layout);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.layout);
 
         progressBar = (ProgressBar) findViewById(R.id.loading);
         bottomProgress = (ProgressBar) findViewById(R.id.bottom_progressbar);
@@ -279,6 +291,10 @@ public class VPlayPlayer extends FrameLayout {
         //status
         mVideoStaus = (LinearLayout) findViewById(R.id.app_video_status);
         mStatusText = (TextView) findViewById(R.id.app_video_status_text);
+
+        //网络提示
+        mVideoNetTie = (LinearLayout) findViewById(R.id.app_video_netTie);
+        mVideoNetTieIcon = (TextView) findViewById(R.id.app_video_netTie_icon);
 
         //触屏
         gestureTouch = (LinearLayout) findViewById(R.id.ll_gesture_touch);
@@ -325,6 +341,7 @@ public class VPlayPlayer extends FrameLayout {
         mVideoLock.setOnClickListener(onClickListener);
         mVideoShare.setOnClickListener(onClickListener);
 //        pauseImage.setOnClickListener(onClickListener);
+        mVideoNetTieIcon.setOnClickListener(onClickListener);
         seekBar.setMax(1000);
         seekBar.setOnSeekBarChangeListener(mSeekListener);
         final GestureDetector detector = new GestureDetector(mContext, new PlayGestureListener());
@@ -386,12 +403,15 @@ public class VPlayPlayer extends FrameLayout {
         } catch (Throwable e) {
             Log.e(TAG, "loadLibraries error", e);
         }
+//
+//        audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+//        mMaxVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE))
+//                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+
 
         audioManager = (AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE);
         mMaxVolume = ((AudioManager) PlayerApplication.getAppContext().getSystemService(Context.AUDIO_SERVICE))
                 .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-
-
 
         mVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
             @Override
@@ -460,7 +480,6 @@ public class VPlayPlayer extends FrameLayout {
                 if (((rotation >= 0) && (rotation <= 30)) || (rotation >= 330)) {
                     if (mClick) {
                         if (mIsLand && !mClickLand) {
-                            return;
                         } else {
                             mClickPort = true;
                             mClick = false;
@@ -478,7 +497,6 @@ public class VPlayPlayer extends FrameLayout {
                 else if (((rotation >= 230) && (rotation <= 310))) {
                     if (mClick) {
                         if (!mIsLand && !mClickPort) {
-                            return;
                         } else {
                             mClickLand = true;
                             mClick = false;
@@ -853,7 +871,7 @@ public class VPlayPlayer extends FrameLayout {
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
         int hours = totalSeconds / 3600;
-        return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
+        return hours > 0 ? String.format(Locale.getDefault(),"%02d:%02d:%02d", hours, minutes, seconds) : String.format(Locale.getDefault(),"%02d:%02d", minutes, seconds);
     }
 
 
@@ -877,8 +895,10 @@ public class VPlayPlayer extends FrameLayout {
             seekBar.setSecondaryProgress(percent * 10);
             bottomProgress.setSecondaryProgress(percent * 10);
         }
-        String string = generateTime((long) (duration * seekBar.getProgress() * 1.0f / 1000));
-        time.setText(string);
+        if (seekBar != null) {
+            String string = generateTime((long) (duration * seekBar.getProgress() * 1.0f / 1000));
+            time.setText(string);
+        }
         return position;
     }
 
@@ -904,11 +924,13 @@ public class VPlayPlayer extends FrameLayout {
             firstTouch = true;
             handler.removeMessages(PlayStateParams.SET_VIEW_HIDE);
             //横屏下拦截事件
-            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                return true;
-            } else {
-                return super.onDown(e);
-            }
+//            if (getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+//                return true;
+//            } else {
+//                return super.onDown(e);
+//            }
+
+            return getScreenOrientation((Activity) mContext) == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE||super.onDown(e);
         }
 
         /**
@@ -989,7 +1011,6 @@ public class VPlayPlayer extends FrameLayout {
             if (volume < 0)
                 volume = 0;
         }
-//        hide();
 
         int index = (int) (percent * mMaxVolume) + volume;
         if (index > mMaxVolume)
@@ -1052,7 +1073,7 @@ public class VPlayPlayer extends FrameLayout {
 
             String current = generateTime(newPosition);
 
-            mTvCurrent.setText(current + "/");
+            mTvCurrent.setText(current +"/");
             mTvDuration.setText(allTime.getText());
             mProgressGesture.setProgress(duration <= 0 ? 0 : (int) (newPosition * 100 / duration));
         }
@@ -1065,8 +1086,6 @@ public class VPlayPlayer extends FrameLayout {
      * @return
      */
     public boolean handleVolumeKey(int keyCode) {
-        if (!mVideoView.isPlaying())
-            return false;
         if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
             setVolume(true);
             return true;
@@ -1095,6 +1114,7 @@ public class VPlayPlayer extends FrameLayout {
         } else if (curVolume < 0) {
             curVolume = 0;
             sound.setImageResource(R.mipmap.sound_mult_icon);
+//            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
             audioManager.setStreamMute(AudioManager.STREAM_MUSIC,true);
             PlayerApplication.getInstance().isSound=true;
 
@@ -1286,30 +1306,7 @@ public class VPlayPlayer extends FrameLayout {
     }
 
 
-    public void showWifiDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(mContext.getResources().getString(R.string.tips_not_wifi));
-        builder.setPositiveButton(mContext.getResources().getString(R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                isAllowModible = true;
-                if (currentPosition == 0)
-                    play(url, currentPosition);
-                else
-                    doPauseResume();
-//                    reStart();
-            }
-        });
-        builder.setNegativeButton(mContext.getResources().getString(R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                isAllowModible = false;
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
+
 
 
     public boolean isShowing() {
@@ -1400,7 +1397,6 @@ public class VPlayPlayer extends FrameLayout {
 
     public void play(String url) {
         this.url = url;
-
         play(url, 0);
     }
 
@@ -1418,7 +1414,8 @@ public class VPlayPlayer extends FrameLayout {
             registerNetReceiver();
         }
         if (!isAllowModible && MediaNetUtils.getNetworkType(mContext) == 6) {
-            showWifiDialog();
+//            showWifiDialog();
+            mVideoNetTie.setVisibility(View.VISIBLE);
         } else {
             if (playerSupport) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -1484,7 +1481,15 @@ public class VPlayPlayer extends FrameLayout {
 
         void portrait();
     }
-
+    /**
+     * 获得某个控件
+     *
+     * @param ViewId
+     * @return
+     */
+    public View getView(int ViewId) {
+        return activity.findViewById(ViewId);
+    }
     /**
      * 注册网络监听器
      */
@@ -1524,7 +1529,8 @@ public class VPlayPlayer extends FrameLayout {
                 onPause();
                 show(0);
 //                onNetChangeListener.onMobile();
-                showWifiDialog();
+//                showWifiDialog();
+                mVideoNetTie.setVisibility(View.VISIBLE);
 
             } else if (MediaNetUtils.getNetworkType(activity) == 1) {// 网络链接断开
                 Toast.makeText(mContext, "网路已断开", Toast.LENGTH_SHORT).show();
@@ -1542,6 +1548,14 @@ public class VPlayPlayer extends FrameLayout {
     }
 
     //============================外部接口====================================
+    private OnShareListener onShareListener;
+    public interface OnShareListener{
+        void onShare();
+    }
+    public void setOnShareListener(OnShareListener onShareListener)
+    {
+        this.onShareListener=onShareListener;
+    }
 
     public interface OnErrorListener {
         void onError(int what, int extra);

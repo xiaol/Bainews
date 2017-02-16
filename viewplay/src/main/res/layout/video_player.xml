@@ -29,7 +29,39 @@
             android:layout_height="wrap_content"
             android:text="@string/small_problem"
             android:textColor="@android:color/white"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!--网络提示-->
+    <LinearLayout
+        android:id="@+id/app_video_netTie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33000000"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/tips_not_wifi"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:id="@+id/app_video_netTie_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/network_player_btn"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/tips_not_wifi_confirm"
+            android:textColor="@android:color/white" />
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/app_video_replay"

@@ -9,7 +9,7 @@
 
     <string name="pref_key_using_android_player">pref.using_android_player</string>
     <string name="pref_title_using_android_player">Using system player</string>
-    <string name="pref_summary_using_android_player"></string>
+    <string name="pref_summary_using_android_player" />
 
     <string name="pref_key_player">pref.player</string>
     <string name="pref_title_player">Choose Player</string>

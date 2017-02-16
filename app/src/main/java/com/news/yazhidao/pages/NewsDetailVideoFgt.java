@@ -1,10 +1,8 @@
 package com.news.yazhidao.pages;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -39,7 +37,6 @@ import com.bumptech.glide.RequestManager;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.github.jinsedeyuzhou.utils.MediaNetUtils;
-import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -348,9 +345,9 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mVideoShowBg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (vp != null && !vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
-                    showWifiDialog();
-                } else if (MediaNetUtils.getNetworkType(mContext) == 3 || vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
+//                if (vp != null && !vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
+//                    showWifiDialog();
+//                } else if (MediaNetUtils.getNetworkType(mContext) == 3 || vp.getAllowModible() && MediaNetUtils.getNetworkType(mContext) == 6) {
 
                     mVideoShowBg.setVisibility(View.GONE);
                     mDetailVideo.setVisibility(View.VISIBLE);
@@ -359,7 +356,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     vp.setTitle(mResult.getTitle());
                     vp.play(mResult.getVideourl(), position);
                     mDetailVideo.addView(vp);
-                }
+//                }
             }
         });
 
@@ -456,36 +453,36 @@ public class NewsDetailVideoFgt extends BaseFragment {
     }
 
 
-    public void showWifiDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi));
-        builder.setPositiveButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                if (vp != null)
-                    vp.setAllowModible(true);
-                mVideoShowBg.setVisibility(View.GONE);
-                mDetailVideo.setVisibility(View.VISIBLE);
-                if (vp.getParent() != null)
-                    ((ViewGroup) vp.getParent()).removeAllViews();
-                vp.setTitle(mResult.getTitle());
-                vp.play(mResult.getVideourl(), 0);
-                mDetailVideo.addView(vp);
-
-//                startPlayLogic();
-//                WIFI_TIP_DIALOG_SHOWED = true;
-            }
-        });
-        builder.setNegativeButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.dismiss();
-            }
-        });
-        builder.create().show();
-    }
+//    public void showWifiDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//        builder.setMessage(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi));
+//        builder.setPositiveButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_confirm), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//                if (vp != null)
+//                    vp.setAllowModible(true);
+//                mVideoShowBg.setVisibility(View.GONE);
+//                mDetailVideo.setVisibility(View.VISIBLE);
+//                if (vp.getParent() != null)
+//                    ((ViewGroup) vp.getParent()).removeAllViews();
+//                vp.setTitle(mResult.getTitle());
+//                vp.play(mResult.getVideourl(), 0);
+//                mDetailVideo.addView(vp);
+//
+////                startPlayLogic();
+////                WIFI_TIP_DIALOG_SHOWED = true;
+//            }
+//        });
+//        builder.setNegativeButton(mContext.getResources().getString(com.github.jinsedeyuzhou.R.string.tips_not_wifi_cancel), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//                dialog.dismiss();
+//            }
+//        });
+//        builder.create().show();
+//    }
 
 
     private Handler mHandler = new Handler() {
@@ -637,7 +634,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         Log.v(TAG, "onPause" + mDetailLeftBack.isShown() + ",visible" + mDetailLeftBack.getVisibility());
         if (vp != null) {
             vp.onPause();
-            ToolsUtils.muteAudioFocus(mContext, true);
+//            ToolsUtils.muteAudioFocus(mContext, true);
         }
 //        if (mWakeLock != null)
 //            mWakeLock.release();
@@ -651,7 +648,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
         super.onResume();
         if (vp != null) {
 //            vp.onResume();
-            ToolsUtils.muteAudioFocus(mContext, false);
+//            ToolsUtils.muteAudioFocus(mContext, false);
         }
 //        if (mWakeLock != null)
 //            mWakeLock.acquire();
@@ -1560,7 +1557,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
         if (vp != null) {
+            if (vp.getParent() != null)
+                ((ViewGroup) vp.getParent()).removeAllViews();
             vp.onDestory();
         }
         vp = null;

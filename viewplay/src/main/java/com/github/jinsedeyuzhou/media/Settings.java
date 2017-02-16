@@ -116,13 +116,13 @@ public class Settings {
         String key = mAppContext.getString(R.string.pref_key_enable_texture_view);
         SharedPreferences.Editor editor=mSharedPreferences.edit();
         editor.putBoolean(key,enable);
-        editor.commit();
+        editor.apply();
     }
 
     public void setEnableSurfaceView(boolean enable){
         String key = mAppContext.getString(R.string.pref_key_enable_surface_view);
         SharedPreferences.Editor editor=mSharedPreferences.edit();
         editor.putBoolean(key,enable);
-        editor.commit();
+        editor.apply();
     }
 }
