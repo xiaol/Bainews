@@ -420,7 +420,7 @@ public class NewsFeedFgt extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-        if (vPlayer != null) {
+        if (vPlayer != null&&"44".equals(mstrChannelId)) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 Log.d(TAG, "ORIENTATION_PORTRAIT");
@@ -437,7 +437,8 @@ public class NewsFeedFgt extends Fragment {
                     }
                     playItemView.removeAllViews();
                     playItemView.addView(vPlayer);
-                    vPlayer.setShowContoller(true);
+                   if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
+                     vPlayer.showBottomControl(false);
                 }
 //                else {
 
@@ -450,8 +451,6 @@ public class NewsFeedFgt extends Fragment {
                 Log.d(TAG, "ORIENTATION_LANSCAPES");
                 mContainer.setVisibility(View.GONE);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                if (frameLayout == null)
-                    return;
                 if (frameLayout != null) {
                     frameLayout.removeAllViews();
                     View itemView = (View) frameLayout.getParent();
@@ -460,7 +459,8 @@ public class NewsFeedFgt extends Fragment {
                     }
                 }
                 mFeedFullScreen.addView(vPlayer);
-                vPlayer.setShowContoller(true);
+                if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
+                vPlayer.showBottomControl(false);
                 mFeedFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
@@ -477,7 +477,7 @@ public class NewsFeedFgt extends Fragment {
     public void playVideoControl() {
         if (null == vPlayer) {
             mainAty.vPlayPlayer = new VPlayPlayer(getActivity());
-            vPlayer = mainAty.vPlayPlayer;
+            mainAty.vPlayPlayer=vPlayer;
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override

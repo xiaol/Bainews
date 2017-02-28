@@ -11,7 +11,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 135
-        versionName "3.6.2"
+        versionName "3.6.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
         //多个dex支持
         multiDexEnabled true

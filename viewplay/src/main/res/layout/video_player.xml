@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/small_problem"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:textSize="14dp" />
     </LinearLayout>
 
     <!--网络提示-->
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/tips_not_wifi"
+            android:text="您正在使用移动网络播放视频\n可能产生较高流量费用"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/tips_not_wifi_confirm"
+            android:text="继续"
             android:textColor="@android:color/white" />
     </LinearLayout>
     <RelativeLayout
