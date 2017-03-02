@@ -787,18 +787,9 @@ public class VPlayPlayer extends FrameLayout {
             if (fullScreen) {
                 attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
                 activity.getWindow().setAttributes(attrs);
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                        View.SYSTEM_UI_FLAG_FULLSCREEN |
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             } else {
                 attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 activity.getWindow().setAttributes(attrs);
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-                setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             }
         }
 

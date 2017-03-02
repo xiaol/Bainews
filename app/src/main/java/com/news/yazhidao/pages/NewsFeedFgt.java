@@ -420,7 +420,7 @@ public class NewsFeedFgt extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.v(TAG, "onConfigurationChanged");
-        if (vPlayer != null&&"44".equals(mstrChannelId)) {
+        if (vPlayer != null) {
             vPlayer.onChanged(newConfig);
             if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 Log.d(TAG, "ORIENTATION_PORTRAIT");
