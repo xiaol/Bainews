@@ -497,6 +497,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mLastPressedBackKeyTime = pressedBackKeyTime;
                 return true;
             }
+        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
+        {
+            if (vPlayPlayer!=null&&vPlayPlayer.handleVolumeKey(keyCode))
+                return true;
         }
 
         return super.onKeyDown(keyCode, event);
@@ -603,18 +607,18 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this, "247")));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this, CommonConstant.NEWS_FEED_AD_ID)));
                 jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 /**
-                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
                  */
-                jsonObject.put("ctype", 1);
+                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
                 /**
                  * 1.ios 2.android 3.网页 4.无法识别
                  */
-                jsonObject.put("ptype", 2);
+                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.POST, requestUrl,
                         jsonObject, new Response.Listener<JSONObject>() {
@@ -636,5 +640,4 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }
     }
-
 }

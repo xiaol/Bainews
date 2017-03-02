@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.telephony.TelephonyManager;
 
 /**
  * 网络类型判断
@@ -68,5 +69,28 @@ public class NetUtil {
 			return networkInfo.isConnected();
 		}
 		return false;
+	}
+
+	public static String getSimOperatorInfo(Context mContext) {
+		TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+		String operatorString = telephonyManager.getSimOperator();
+
+		if (operatorString == null) {
+			return "0";
+		}
+
+		if (operatorString.equals("46000") || operatorString.equals("46002")) {
+			//中国移动
+			return "1";
+		} else if (operatorString.equals("46001")) {
+			//中国联通
+			return "2";
+		} else if (operatorString.equals("46003")) {
+			//中国电信
+			return "3";
+		}
+
+		//error
+		return "0";
 	}
 }

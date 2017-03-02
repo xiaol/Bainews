@@ -435,6 +435,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
                 }
                 vp.stop();
                 vp.release();
+                position=0;
 
                 mVideoShowBg.setVisibility(View.VISIBLE);
 
@@ -524,7 +525,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
                             mSmallScreen.removeAllViews();
                             mSmallLayout.setVisibility(View.GONE);
 
+                        }  else if (vp.getStatus()== PlayStateParams.STATE_PAUSED)
+                        {
+                            mSmallLayout.setVisibility(View.GONE);
                         }
+
 //                        else if (vp.getStatus()== PlayStateParams.STATE_PAUSED)
 //                        {
 //                            mSmallLayout.setVisibility(View.GONE);
@@ -1003,6 +1008,42 @@ public class NewsDetailVideoFgt extends BaseFragment {
         mNewsDetailVideoAty.setHandler(mHandler);
     }
 
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (vp==null)
+//            return ;
+//
+//        if (isVisibleToUser) {
+//            if ((vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
+//                if (vp.getParent() != null)
+//                    ((ViewGroup) vp.getParent()).removeAllViews();
+//                mDetailVideo.addView(vp);
+//                vp.setShowContoller(true);
+//                mSmallScreen.removeAllViews();
+//                mSmallLayout.setVisibility(View.GONE);
+//
+//            }
+//            else {
+//                if (vp.getParent() != null)
+//                    ((ViewGroup) vp.getParent()).removeAllViews();
+//                vp.stop();
+//                vp.release();
+//                mVideoShowBg.setVisibility(View.VISIBLE);
+//            }
+//
+//        } else {
+//            if ((vp.isPlay() || vp.getStatus() == PlayStateParams.STATE_PREPARE)) {
+//                if (vp.getParent() != null)
+//                    ((ViewGroup) vp.getParent()).removeAllViews();
+//                mSmallScreen.addView(vp);
+//                vp.setShowContoller(false);
+//                mSmallLayout.setVisibility(View.VISIBLE);
+//                mDetailVideo.removeAllViews();
+//            }
+//
+//        }
+//    }
 
     public void setNoRelatedDate() {
         RelatedItemEntity entity = new RelatedItemEntity();

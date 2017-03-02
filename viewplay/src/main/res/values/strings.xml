@@ -68,8 +68,8 @@
     <string name="VideoView_player_IjkMediaPlayer">Player: IjkMediaPlayer</string>
     <string name="VideoView_player_IjkExoMediaPlayer">Player: IjkExoMediaPlayer</string>
 
-    <string name="small_problem">Player encountered a small problem</string>
-    <string name="not_support">player not support this device</string>
+    <string name="small_problem">播放遇到一个小问题，请您选择其他视频</string>
+    <string name="not_support">播放器不支持此设备</string>
 
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
@@ -79,4 +79,6 @@
     <string name="tips_not_wifi_confirm">继续播放</string>
     <string name="tips_not_wifi_cancel">停止播放</string>
     <string name="no_url">No mUrl</string>
+
+
 </resources>
