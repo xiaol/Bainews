@@ -738,7 +738,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     mSharePopupWindow.setVideo(true);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
@@ -775,7 +775,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     Logger.e("aaa", "mNewsFeed===" + mNewsFeed.toString());
                     mSharePopupWindow.setOnFavoritListener(listener);
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }

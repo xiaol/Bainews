@@ -88,6 +88,11 @@
             android:visibility="gone" />
 
         <include layout="@layout/loading_view_anim" />
-
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/share_bg_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone" />
 </RelativeLayout>

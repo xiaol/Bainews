@@ -9,13 +9,13 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -29,7 +29,6 @@ import com.android.volley.toolbox.JsonRequest;
 import com.news.yazhidao.R;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.HttpConstant;
-import com.news.yazhidao.entity.NewsFeed;
 import com.news.yazhidao.entity.User;
 import com.news.yazhidao.pages.ComplaintsActivity;
 import com.news.yazhidao.pages.LoginAty;
@@ -70,8 +69,8 @@ public class SharePopupWindow extends PopupWindow {
     private ChangeTextSizePopupWindow mChangeTextSizePopWindow;
     private LinearLayout mShareLayout;
     boolean isFavorite;
-    NewsFeed feedBean;
-    boolean isVideo;
+    boolean isVideo, isTopic;
+    private int mNid;
 
 
     public SharePopupWindow(Activity context, ShareDismiss shareDismiss) {
@@ -121,11 +120,11 @@ public class SharePopupWindow extends PopupWindow {
         setOnClick();
     }
 
-    public void setTitleAndUrl(NewsFeed bean, String remark) {
-        feedBean = bean;
-        mstrTitle = bean.getTitle();
-        mstrUrl = bean.getNid() + "";
+    public void setTitleAndNid(String title, int nid, String remark) {
+        mstrTitle = title;
+        mNid = nid;
         mstrRemark = remark;
+        mstrUrl = nid + "";
         isFavorite = SharedPreManager.myFavoriteisSame(mstrUrl);
         if (isFavorite) {
             mtvFavorite.setText("已收藏");
@@ -140,6 +139,10 @@ public class SharePopupWindow extends PopupWindow {
 
     public void setVideo(boolean video) {
         isVideo = video;
+    }
+
+    public void setTopic(boolean topic) {
+        isTopic = topic;
     }
 
     @Override
@@ -178,13 +181,11 @@ public class SharePopupWindow extends PopupWindow {
                         isFavorite = false;
                         mtvFavorite.setText("未收藏");
 //                        SharedPreManager.myFavoritRemoveItem(feedBean.getNid()+"");
-
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                     } else {
                         isFavorite = true;
                         mtvFavorite.setText("已收藏");
 //                        SharedPreManager.myFavoriteSaveList(feedBean);
-
 //                    mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
                     }
 
@@ -193,8 +194,6 @@ public class SharePopupWindow extends PopupWindow {
                     Intent loginAty = new Intent(m_pContext, LoginAty.class);
                     m_pContext.startActivityForResult(loginAty, NewsDetailAty2.REQUEST_CODE);
                 }
-
-
             }
         });
         mtvTextSize.setOnClickListener(new View.OnClickListener() {
@@ -240,11 +239,14 @@ public class SharePopupWindow extends PopupWindow {
             viewExtend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isVideo) {
-                        mstrUrl = "http://deeporiginalx.com/videoShare/index.html?nid=" + mstrUrl;
-                    }else {
+                    if (isVideo && !isTopic) {
+                        mstrUrl = "http://deeporiginalx.com/videoShare/index.html?nid=" + mNid;
+                    } else if (!isVideo && isTopic) {
+                        mstrUrl = "http://deeporiginalx.com/zhuanti-share/index.html?tid=" + mNid;
+                    } else {
                         mstrUrl = "http://deeporiginalx.com/news.html?type=0&url=" + mstrUrl;//TextUtil.getBase64(mstrUrl) +"&interface"
                     }
+                    Log.i("tag", mstrUrl);
                     if ("短信".equals(strShareName)) {
                         Uri smsToUri = Uri.parse("smsto:");
                         Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
@@ -266,7 +268,6 @@ public class SharePopupWindow extends PopupWindow {
                         cmb.setPrimaryClip(ClipData.newPlainText(null, mstrUrl));
                         ToastUtil.toastShort("复制成功");
                         replay(7);
-//                        Log.i("eva",cmb.getText().toString().trim());
                     } else {
                         if (finalStrSharePlatform.equals(WechatMoments.NAME) || finalStrSharePlatform.equals(Wechat.NAME)) {
                             Platform plat = ShareSDK.getPlatform(finalStrSharePlatform);
@@ -297,83 +298,6 @@ public class SharePopupWindow extends PopupWindow {
         }
     }
 
-    class ShareAdapter extends BaseAdapter {
-
-        Context mContext;
-
-        ShareAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public int getCount() {
-            return mShareName == null ? 0 : mShareName.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            final Holder holder;
-            if (convertView == null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_list_share, null, false);
-                holder.tvShare = (TextViewExtend) convertView.findViewById(R.id.share_textView);
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-            }
-            final String strShareName = mShareName[position];
-            holder.tvShare.setText(strShareName);
-            Drawable drawable = mContext.getResources().getDrawable(mTypedArray.getResourceId(position, 0));
-            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-            holder.tvShare.setCompoundDrawables(null, drawable, null, null);
-            holder.tvShare.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if ("短信".equals(strShareName)) {
-                        Uri smsToUri = Uri.parse("smsto:");
-                        Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
-                        intent.putExtra("sms_body", mstrTitle + mstrUrl);
-                        mContext.startActivity(intent);
-                    } else if ("邮件".equals(strShareName)) {
-//                        String[] email = {"3802**92@qq.com"}; // 需要注意，email必须以数组形式传入
-                        Intent intent = new Intent(Intent.ACTION_SEND);
-                        intent.setType("message/rfc822"); // 设置邮件格式
-//                        intent.putExtra(Intent.EXTRA_EMAIL, email); // 接收人
-//                        intent.putExtra(Intent.EXTRA_CC, email); // 抄送人
-                        intent.putExtra(Intent.EXTRA_SUBJECT, mstrTitle); // 主题
-                        intent.putExtra(Intent.EXTRA_TEXT, mstrUrl); // 正文
-                        mContext.startActivity(Intent.createChooser(intent, "请选择邮件类应用"));
-                    } else if ("转发链接".equals(strShareName)) {
-                        ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                        cmb.setPrimaryClip(ClipData.newPlainText(null, mstrUrl));
-                        ToastUtil.toastShort("复制成功");
-//                        Log.i("eva",cmb.getText().toString().trim());
-                    } else {
-                        Logger.e("jigang", "share url=" + mstrUrl);
-                        ShareSdkHelper.ShareToPlatformByNewsDetail(mContext, marrSharePlatform[position], mstrTitle, mstrUrl, mstrRemark);
-                    }
-                    SharePopupWindow.this.dismiss();
-                }
-            });
-            return convertView;
-        }
-    }
-
-
-    class Holder {
-        TextViewExtend tvShare;
-    }
-
     public interface ShareDismiss {
         void shareDismiss();
     }
@@ -384,7 +308,7 @@ public class SharePopupWindow extends PopupWindow {
         if (user != null) {
             RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
             Map<String, Integer> map = new HashMap<>();
-            map.put("nid", feedBean.getNid());
+            map.put("nid", mNid);
             map.put("uid", user.getMuid());
             map.put("whereabout", whereabout);
             JSONObject jsonObject = new JSONObject(map);

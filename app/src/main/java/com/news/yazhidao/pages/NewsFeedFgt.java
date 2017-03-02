@@ -525,7 +525,7 @@ public class NewsFeedFgt extends Fragment {
             public void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed) {
 //                cPostion = feed.getNid();
 //                newsVideoFeed=feed;
-                if (feed==null)
+                if (feed == null)
                     return;
                 mainAty.newsFeedVideo = feed;
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
@@ -657,8 +657,8 @@ public class NewsFeedFgt extends Fragment {
     }
 
     private void VideoVisibleControl() {
-        if (vPlayer==null)
-             return ;
+        if (vPlayer == null)
+            return;
         ListView lv = mlvNewsFeed.getRefreshableView();
         boolean isExist = false;
         int position = -1;
@@ -1168,6 +1168,9 @@ public class NewsFeedFgt extends Fragment {
                     if (mstrChannelId != null && mstrChannelId.equals("1000")) {
                         if (!user.isVisitor()) {
                             loadFocusData(flag);
+                        } else {
+                            setRefreshComplete();
+                            registerVisitor(flag);
                         }
                     } else if (!TextUtil.isEmptyString(mstrKeyWord)) {
                         loadNewsFeedData("search", flag);
@@ -1422,6 +1425,7 @@ public class NewsFeedFgt extends Fragment {
 //                mSharedPreferences.edit().putInt("textSize", size).commit();
                 mAdapter.notifyDataSetChanged();
             } else if (CommonConstant.NEWS_FEED_REFRESH.equals(intent.getAction())) {
+                mlvNewsFeed.getRefreshableView().setSelection(0);
                 refreshData();
             }
         }

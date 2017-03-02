@@ -167,7 +167,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mViewPagerAdapter.setmChannelItems(channelItems);
                 mViewPagerAdapter.notifyDataSetChanged();
                 mChannelTabStrip.setViewPager(mViewPager);
-                mChannelTabStrip.scrollTo(0,0);
+                mChannelTabStrip.scrollTo(0, 0);
                 Logger.e("jigang", "--- onActivityResult");
             } else if (ACTION_SHOW_SHARE.equals(action)) {
                 NewsFeed newsFeed = (NewsFeed) intent.getSerializableExtra("newsfeed");
@@ -178,7 +178,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mivShareBg.setVisibility(View.VISIBLE);
                 String remark = newsFeed.getDescr();
                 String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(newsFeed.getUrl()) + "&interface";
-                mSharePopupWindow.setTitleAndUrl(newsFeed, remark);
+                mSharePopupWindow.setTitleAndNid(newsFeed.getTitle(), newsFeed.getNid(), remark);
                 mSharePopupWindow.showAtLocation(mrlMain, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         }

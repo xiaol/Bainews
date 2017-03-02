@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -38,6 +39,7 @@ import com.news.yazhidao.utils.NetUtil;
 import com.news.yazhidao.utils.TextUtil;
 import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.NewsTopicHeaderView;
+import com.news.yazhidao.widget.SharePopupWindow;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.swipebackactivity.SwipeBackActivity;
 
@@ -47,7 +49,7 @@ import java.util.HashMap;
 /**
  * Created by fengjigang on 16/4/6.
  */
-public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListener {
+public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListener, SharePopupWindow.ShareDismiss {
 
     public static final int REQUEST_CODE = 1006;
     public static final String KEY_NID = "key_nid";
@@ -56,7 +58,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     private long mFirstClickTime;
     private ExpandableSpecialListViewAdapter mAdapter;
     private Context mContext;
-    private ImageView mTopicLeftBack, mNewsLoadingImg;
+    private ImageView mTopicLeftBack, mNewsLoadingImg, mivShareBg;
     private TextView mTopicRightMore;
     private View mNewsDetailLoaddingWrapper;
     private ExpandableListView mlvSpecialNewsFeed;
@@ -70,6 +72,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     private int mScreenWidth, mCardWidth, mCardHeight;
     private NewsTopicHeaderView mSpecialNewsHeaderView;
     private TextView mTopicTitle;
+    private AlphaAnimation mAlphaAnimationIn, mAlphaAnimationOut;
 
     @Override
     protected void setContentView() {
@@ -79,6 +82,10 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
 
     @Override
     protected void initializeViews() {
+        mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
+        mAlphaAnimationIn.setDuration(500);
+        mAlphaAnimationOut = new AlphaAnimation(1.0f, 0);
+        mAlphaAnimationOut.setDuration(500);
         mtid = getIntent().getIntExtra(KEY_NID, 0);
         mScreenWidth = DeviceInfoUtil.getScreenWidth();
         mSharedPreferences = mContext.getSharedPreferences("showflag", 0);
@@ -100,6 +107,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         mlvSpecialNewsFeed = (ExpandableListView) findViewById(R.id.news_Topic_listView);
         mlvSpecialNewsFeed.setAdapter(mAdapter);
         mlvSpecialNewsFeed.addHeaderView(mSpecialNewsHeaderView);
+        mivShareBg = (ImageView) findViewById(R.id.share_bg_imageView);
 //        mlvSpecialNewsFeed.setMode(PullToRefreshBase.Mode.DISABLED);
 //        mlvSpecialNewsFeed.setMainFooterView(true);
 //        mExpandableListView = mlvSpecialNewsFeed.getRefreshableView();
@@ -136,15 +144,18 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
             }
         });
         mTopicRightMore = (TextView) findViewById(R.id.mTopicRightMore);
-        mTopicRightMore.setVisibility(View.GONE);
         mTopicRightMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                SharePopupWindow  mSharePopupWindow = new SharePopupWindow(this, this);
+                mivShareBg.startAnimation(mAlphaAnimationIn);
+                mivShareBg.setVisibility(View.VISIBLE);
+                SharePopupWindow mSharePopupWindow = new SharePopupWindow(NewsTopicAty.this, NewsTopicAty.this);
 //                String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-//                mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                mSharePopupWindow.setTitleAndNid(mTopicBaseInfo.getName(), mtid, "");
+                mSharePopupWindow.setTopic(true);
+                mSharePopupWindow.setFavoriteGone();
 //                mSharePopupWindow.setOnFavoritListener(listener);
-//                mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                mSharePopupWindow.showAtLocation(NewsTopicAty.this.getCurrentFocus(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         });
     }
@@ -253,6 +264,18 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public void shareDismiss() {
+        mivShareBg.startAnimation(mAlphaAnimationOut);
+        mivShareBg.setVisibility(View.INVISIBLE);
+//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
+//        if (isFavorite) {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        } else {
+//            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
+//        }
     }
 
     public class ExpandableSpecialListViewAdapter extends BaseExpandableListAdapter {
