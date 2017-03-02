@@ -452,6 +452,8 @@ public class VPlayPlayer extends FrameLayout {
         mVideoView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer mp) {
+                //释放内存
+                Runtime.getRuntime().gc();
                 statusChange(PlayStateParams.STATE_PLAYBACK_COMPLETED);
                 if (getScreenOrientation((Activity) mContext)
                         == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
