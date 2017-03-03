@@ -40,8 +40,13 @@ public class YaZhiDaoApplication extends Application {
     public void onCreate() {
         mContext = this;
         mInstance = this;
-        PlayerApplication.initApp(mContext);
-
+        PlayerApplication.initApp(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
 
         // 设置Thread Exception Handler
         UnCatchExceptionHandler catchException = new UnCatchExceptionHandler(this);

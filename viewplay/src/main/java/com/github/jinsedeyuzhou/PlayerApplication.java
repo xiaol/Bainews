@@ -16,7 +16,6 @@ public class PlayerApplication {
         mContext = context;
         mInstance = new PlayerApplication();
 
-
     }
     PlayerApplication() {
         mInstance = this;

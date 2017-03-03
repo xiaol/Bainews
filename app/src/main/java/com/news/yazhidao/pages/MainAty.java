@@ -383,6 +383,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        vPlayPlayer.onDestory();
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
@@ -499,7 +500,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
         {
-            if (vPlayPlayer!=null&&vPlayPlayer.handleVolumeKey(keyCode))
+            if (vPlayPlayer!=null&&vPlayPlayer.isPlay()&&vPlayPlayer.handleVolumeKey(keyCode))
                 return true;
         }
 

@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:padding="6dp"
         android:layout_toLeftOf="@+id/app_video_share"
         android:layout_marginRight="15dp"
@@ -46,5 +47,6 @@
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
+        android:visibility="gone"
         android:src="@drawable/player_share_select" />
 </RelativeLayout>

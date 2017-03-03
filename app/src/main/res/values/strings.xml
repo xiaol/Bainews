@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="app_version">3.5.6</string>
+    <string name="app_version">3.6.3</string>
     <string name="app_name">奇点资讯</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -103,7 +103,7 @@
 
     <array name="resource_list_image">
         <item>@drawable/ic_resource_1</item>
-        <item>@drawable/ic_resource_2</item>
+        <item>@drawable/ic_resource_5</item>
         <item>@drawable/ic_resource_3</item>
         <item>@drawable/ic_resource_4</item>
         <item>@drawable/ic_resource_5</item>

@@ -35,7 +35,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.github.jinsedeyuzhou.PlayStateParams;
 import com.github.jinsedeyuzhou.VPlayPlayer;
-import com.github.jinsedeyuzhou.utils.ToolsUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -438,7 +437,8 @@ public class NewsFeedFgt extends Fragment {
                     }
                     playItemView.removeAllViews();
                     playItemView.addView(vPlayer);
-                    vPlayer.setShowContoller(true);
+                   if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
+                     vPlayer.showBottomControl(false);
                 }
 //                else {
 
@@ -451,8 +451,6 @@ public class NewsFeedFgt extends Fragment {
                 Log.d(TAG, "ORIENTATION_LANSCAPES");
                 mContainer.setVisibility(View.GONE);
                 FrameLayout frameLayout = (FrameLayout) vPlayer.getParent();
-                if (frameLayout == null)
-                    return;
                 if (frameLayout != null) {
                     frameLayout.removeAllViews();
                     View itemView = (View) frameLayout.getParent();
@@ -461,7 +459,8 @@ public class NewsFeedFgt extends Fragment {
                     }
                 }
                 mFeedFullScreen.addView(vPlayer);
-                vPlayer.setShowContoller(true);
+                if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
+                vPlayer.showBottomControl(false);
                 mFeedFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
@@ -476,8 +475,10 @@ public class NewsFeedFgt extends Fragment {
      * 视频播放控制
      */
     public void playVideoControl() {
-        if (null == vPlayer)
-            return;
+        if (null == vPlayer) {
+            mainAty.vPlayPlayer = new VPlayPlayer(getActivity());
+            mainAty.vPlayPlayer=vPlayer;
+        }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
             public void onPlayClick(RelativeLayout relativeLayout, NewsFeed feed) {
@@ -499,7 +500,7 @@ public class NewsFeedFgt extends Fragment {
                 changePlayView(feed);
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
-//                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
+                intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
                     startActivityForResult(intent, REQUEST_CODE);
                 else
@@ -718,6 +719,8 @@ public class NewsFeedFgt extends Fragment {
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
+
+
 
     @Override
     public void onDestroyView() {
@@ -1239,7 +1242,7 @@ public class NewsFeedFgt extends Fragment {
     public void onResume() {
         if (vPlayer != null) {
 //            vPlayer.onResume();
-            ToolsUtils.muteAudioFocus(mContext, false);
+//            ToolsUtils.muteAudioFocus(mContext, false);
         }
 
         mHomeWatcher = new HomeWatcher(this.getActivity());
@@ -1324,7 +1327,7 @@ public class NewsFeedFgt extends Fragment {
         mHomeWatcher.setOnHomePressedListener(null);
         mHomeWatcher.stopWatch();
         if (vPlayer != null) {
-            ToolsUtils.muteAudioFocus(mContext, true);
+//            ToolsUtils.muteAudioFocus(mContext, true);
             if (mFeedSmallLayout.getVisibility() == View.VISIBLE) {
                 vPlayer.stop();
                 vPlayer.release();
@@ -1511,8 +1514,8 @@ public class NewsFeedFgt extends Fragment {
                     thisVisibleItemCount = visibleItemCount;
                 }
                 if (mstrChannelId.equals("44") && vPlayer != null) {
-//                    VideoShowControl();
-                    VideoVisibleControl();
+                    VideoShowControl();
+//                    VideoVisibleControl();
                     if (newsVideoFeed != null)
                         Log.e(TAG, "VideoNewsFeed:" + newsVideoFeed.toString());
                 }
