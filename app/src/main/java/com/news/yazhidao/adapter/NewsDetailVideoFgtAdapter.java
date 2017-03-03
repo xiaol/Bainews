@@ -49,10 +49,16 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
 //            holder.getView(R.id.attentionlayout).setLayoutParams(layoutParams);
             return;
         }
-        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
-        TextView title = holder.getView(R.id.attention_Title);
-        String strTitle =  relatedItemEntity.getTitle().replace("<font color='#0091fa' >","").replace("</font>","");
-        title.setText(strTitle);
+        TextView tvTitle = holder.getView(R.id.attention_Title);
+        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity, tvTitle);
+        String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
+        tvTitle.setText(strTitle);
+        boolean isRead = relatedItemEntity.isRead();
+        if (isRead) {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+        } else {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+        }
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
 
         if (getCount() == position + 1) {//去掉最后一条的线
@@ -72,7 +78,7 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
             ivCard.setLayoutParams(lpCard);
             Glide.with(mContext).load(imgUrl).centerCrop().placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivCard);
         }
-        setVideoDuration((TextView) holder.getView(R.id.tv_video_duration),relatedItemEntity.getDuration());
+        setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), relatedItemEntity.getDuration());
     }
 
     public void setVideoDuration(TextView durationView, int duration) {
@@ -84,13 +90,16 @@ public class NewsDetailVideoFgtAdapter extends CommonAdapter<RelatedItemEntity> 
         }
     }
 
-    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity) {
+    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity, final TextView textView) {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, NewsDetailVideoAty.class);
 //                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, "10060188");
-                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid()+"");
+                //用来判断是不是读过
+                relatedItemEntity.setRead(true);
+                textView.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+                intent.putExtra(NewsFeedFgt.KEY_NEWS_ID, relatedItemEntity.getNid() + "");
                 mContext.startActivity(intent);
                 mContext.finish();
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");
