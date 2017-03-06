@@ -2,6 +2,7 @@ package com.news.yazhidao.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -206,9 +207,12 @@ public class AdUtil {
                                                 }
                                             }
                                             Log.i("tag", "dstlink" + url);
-                                            Intent AdIntent = new Intent(context, NewsDetailWebviewAty.class);
-                                            AdIntent.putExtra("key_url", url);
-                                            context.startActivity(AdIntent);
+                                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            intent.setData(Uri.parse(url));
+//                                            Intent AdIntent = new Intent(context, NewsDetailWebviewAty.class);
+//                                            AdIntent.putExtra("key_url", url);
+                                            context.startActivity(intent);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
