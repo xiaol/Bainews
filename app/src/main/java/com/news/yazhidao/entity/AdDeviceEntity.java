@@ -15,6 +15,7 @@ public class AdDeviceEntity implements Serializable {
      * 用户终端的eth0接口的MAC地址（大写去除冒号分隔符），md5 加密
      */
     private String mac;
+    private String macori;
     /**
      * 用户终端的 eth0 接口的 MAC 地址（大写且保留冒号分隔符），md5 加密
      */
@@ -31,6 +32,7 @@ public class AdDeviceEntity implements Serializable {
      * Android ID，仅适用于 Android 设备，md5 加密
      */
     private String anid;
+    private String anidori;
     /**
      * IOS UDID，md5 加密
      */
@@ -292,5 +294,21 @@ public class AdDeviceEntity implements Serializable {
 
     public void setImeiori(String imeiori) {
         this.imeiori = imeiori;
+    }
+
+    public String getMacori() {
+        return macori;
+    }
+
+    public void setMacori(String macori) {
+        this.macori = macori;
+    }
+
+    public String getAnidori() {
+        return anidori;
+    }
+
+    public void setAnidori(String anidori) {
+        this.anidori = anidori;
     }
 }

@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.github.jinsedeyuzhou.PlayerApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.net.request.UploadUmengPushIdRequest;
 import com.news.yazhidao.pages.ChatAty;
@@ -39,6 +40,13 @@ public class YaZhiDaoApplication extends Application {
     public void onCreate() {
         mContext = this;
         mInstance = this;
+        PlayerApplication.initApp(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
 
         // 设置Thread Exception Handler
         UnCatchExceptionHandler catchException = new UnCatchExceptionHandler(this);

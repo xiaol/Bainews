@@ -121,10 +121,17 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 //        }else{
 //            holder.getView(R.id.attention_bottomLine).setVisibility(View.VISIBLE);
 //        }
-        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity);
-        TextView title = holder.getView(R.id.attention_Title);
+        TextView tvTitle = holder.getView(R.id.attention_Title);
+        onAttentionItemClickListener((RelativeLayout) holder.getView(R.id.attentionlayout), relatedItemEntity,tvTitle);
         String strTitle = relatedItemEntity.getTitle().replace("<font color='#0091fa' >", "").replace("</font>", "");
-        title.setText(strTitle);
+        tvTitle.setText(strTitle);
+        //用来判断是不是读过
+        boolean isRead = relatedItemEntity.isRead();
+        if (isRead) {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color3));
+        } else {
+            tvTitle.setTextColor(mContext.getResources().getColor(R.color.new_color1));
+        }
         holder.setTextViewExtendText(R.id.attention_Source, relatedItemEntity.getPname());
 
         if (getCount() == position + 1) {//去掉最后一条的线
@@ -146,7 +153,7 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
         }
     }
 
-    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity) {
+    public void onAttentionItemClickListener(RelativeLayout mAttentionlayout, final RelatedItemEntity relatedItemEntity, final TextView textView) {
         mAttentionlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,6 +161,9 @@ public class NewsDetailFgtAdapter extends CommonAdapter<RelatedItemEntity> {
 //                String zhihuUrl = relatedItemEntity.getUrl();
 //                webviewIntent.putExtra(NewsDetailWebviewAty.KEY_URL, zhihuUrl);
 //                mContext.startActivity(webviewIntent);
+                //用来判断是不是读过
+                relatedItemEntity.setRead(true);
+                textView.setTextColor(mContext.getResources().getColor(R.color.new_color3));
                 MobclickAgent.onEvent(mContext, "qidian_user_view_relate_point");
                 UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(relatedItemEntity.getUrl());
                 String value = sanitizer.getValue("nid");

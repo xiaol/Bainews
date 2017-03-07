@@ -10,16 +10,15 @@ android {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 134
-        versionName "3.5.6"
+        versionCode 135
+        versionName "3.6.3"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
         //多个dex支持
         multiDexEnabled true
-    ndk {
+        ndk {
 
-        abiFilters "armeabi","armeabi-v7a","x86","mips"
-
-    }
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
     }
     productFlavors {
 //        oppo {}
@@ -39,97 +38,32 @@ android {
 //        official {}
 
         /**
-//         * 上海发包渠道
-        baidu {}
-        q91 {}
-        hiapk {}
-        yingyongbao {}
-        anzhi {}
-        mumayi {}
-        wandoujia {}
-        jifeng {}
-        yingyonghui {}
-        tongbu {}
-        muzhiwan {}
-        q360 {}
-        N {}
-        q3ganzhuowang {}
-        woquapp {}
-        dianle {}
-        huawei {}
-        lenovomm {}
-        xiaomi {}
-        sogouzhushou {}
-        sjzol {}
-        meizu {}
-        oppo {}
-        appfun {}
-        smartisan {}
-        letv {}
-        appgionee {}
-        hismarttv {}
-        anbei {}
-        coolchuan {}
-        feiliu {}
-        liqu {}
-        wangyi {}
-        angeeks {}
-        kaiqi {}
-        q360baoku {}
-        pc6 {}
-        q9ht {}
-        pchome {}
-        wishdown {}
-        wsq {}
-        q3987 {}
-        q51vapp {}
-        suning {}
-        q10086 {}
-        borpor {}
-        XY {}
-        softshouji {}
-        sjapk {}
-        shizimao {}
-        zhidian {}
-        zmapp {}
-        ucpp {}
-        mm189 {}
-        doute2345 {}
-        amazon {}
-        tvhuan {}
-        eoemarket {}
-        samsungapps {}
-        q9ht {}
-        appfun {}
-        hismarttv {}
-        anbei {}
-        iqiyi {}
-        coolchuan {}
-         */
-        dianchuan{}
+         //         * 上海发包渠道
+         baidu {}q91 {}hiapk {}yingyongbao {}anzhi {}mumayi {}wandoujia {}jifeng {}yingyonghui {}tongbu {}muzhiwan {}q360 {}N {}q3ganzhuowang {}woquapp {}dianle {}huawei {}lenovomm {}xiaomi {}sogouzhushou {}sjzol {}meizu {}oppo {}appfun {}smartisan {}letv {}appgionee {}hismarttv {}anbei {}coolchuan {}feiliu {}liqu {}wangyi {}angeeks {}kaiqi {}q360baoku {}pc6 {}q9ht {}pchome {}wishdown {}wsq {}q3987 {}q51vapp {}suning {}q10086 {}borpor {}XY {}softshouji {}sjapk {}shizimao {}zhidian {}zmapp {}ucpp {}mm189 {}doute2345 {}amazon {}tvhuan {}eoemarket {}samsungapps {}q9ht {}appfun {}hismarttv {}anbei {}iqiyi {}coolchuan {}*/
+        dianchuan {}
         official {}
-        baidu        {}
-        hiapk{}
-        q91{}
-        yingyongbao{}
-        q360{}
-        wandoujia{}
-        yingyonghui{}
-        huawei{}
-        xiaomi{}
-        samsungapps{}
-        hiapk{}
-        anzhi{}
-        liquwang{}
+        baidu {}
+        hiapk {}
+        q91 {}
+        yingyongbao {}
+        q360 {}
+        wandoujia {}
+        yingyonghui {}
+        huawei {}
+        xiaomi {}
+        samsungapps {}
+        hiapk {}
+        anzhi {}
+        liquwang {}
         sougou
-        lenovomm{}
-        oppo{}
-        vivo{}
-        meizu{}
-        jinli{}
-        jifeng{}
-        ucpp{}
-        mumayi{}
+        lenovomm {}
+        oppo {}
+        vivo {}
+        meizu {}
+        jinli {}
+        jifeng {}
+        ucpp {}
+        mumayi {}
         /**
          baidu {}q91shichang {}anzhuoshichang {}yingyongbao {}anzhishichang {}mumayi {}wandoujia {}jifengwang {}yingyonghui {}tongbu {}q360shoujizhushou {}Nduowang {}q3ganzhuoshichang {}woqushoujizhushou {}huawei {}lianxiang {}xiaomi {}sougouzhushou {}meizu {}oppo {}liquwang {}wangyiyingyongzhongxin {}newasp {}downcc {}PC6 {}*/
         /**91桌面换量渠道*/
@@ -288,4 +222,8 @@ dependencies {
     compile project(':viewplay')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:22.2.1'
+//
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

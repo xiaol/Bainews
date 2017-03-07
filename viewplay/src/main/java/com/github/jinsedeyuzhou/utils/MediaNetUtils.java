@@ -107,14 +107,14 @@ public class MediaNetUtils {
     public static float  pixel2dip(Context context, float n){
         Resources resources = context.getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = n / (metrics.densityDpi / 160f);
-        return dp;
+//        float dp = n / (metrics.densityDpi / 160f);
+        return n / (metrics.densityDpi / 160f);
 
     }
 
     public int dip2pixel(Context context, float n){
-        int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n, context.getResources().getDisplayMetrics());
-        return value;
+//        int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n, context.getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, n, context.getResources().getDisplayMetrics());
     }
 
 }

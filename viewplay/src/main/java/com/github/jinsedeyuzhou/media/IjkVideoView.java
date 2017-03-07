@@ -1007,13 +1007,13 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
         switch (playerType) {
             case Settings.PV_PLAYER__IjkExoMediaPlayer: {
-                IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);
-                mediaPlayer = IjkExoMediaPlayer;
+//                IjkExoMediaPlayer IjkExoMediaPlayer = new IjkExoMediaPlayer(mAppContext);
+                mediaPlayer = new IjkExoMediaPlayer(mAppContext);
             }
             break;
             case Settings.PV_PLAYER__AndroidMediaPlayer: {
-                AndroidMediaPlayer androidMediaPlayer = new AndroidMediaPlayer();
-                mediaPlayer = androidMediaPlayer;
+//                AndroidMediaPlayer androidMediaPlayer = new AndroidMediaPlayer();
+                mediaPlayer = new AndroidMediaPlayer();
             }
             break;
             case Settings.PV_PLAYER__IjkMediaPlayer:

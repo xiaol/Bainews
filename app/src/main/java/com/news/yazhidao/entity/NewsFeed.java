@@ -149,7 +149,15 @@ public class NewsFeed implements Serializable {
     private String thumbnail;
     @DatabaseField
     private int duration;
+    private AdDetailEntity adresponse;
 
+    public AdDetailEntity getAdDetailEntity() {
+        return adresponse;
+    }
+
+    public void setAdDetailEntity(AdDetailEntity adresponse) {
+        this.adresponse = adresponse;
+    }
 
     @Override
     public String toString() {

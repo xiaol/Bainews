@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -703,7 +704,10 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
+                Log.i("tag", "strTitle" + strTitle);
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                //颜色
+                strTitle = strTitle.replace("0091fa", "fb7a12");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);

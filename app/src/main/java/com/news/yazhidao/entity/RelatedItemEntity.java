@@ -33,6 +33,7 @@ public class RelatedItemEntity implements Serializable,Comparable {
      * 莫一年的第一天
      */
     private boolean yearFrist;
+    private boolean isRead;
 
 
 
@@ -150,5 +151,13 @@ public class RelatedItemEntity implements Serializable,Comparable {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 }

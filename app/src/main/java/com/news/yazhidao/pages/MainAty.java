@@ -35,7 +35,7 @@ import com.android.volley.toolbox.JsonRequest;
 import com.bumptech.glide.Glide;
 import com.github.jinsedeyuzhou.VPlayPlayer;
 import com.news.yazhidao.R;
-import com.news.yazhidao.adapter.NewsFeedAdapter;
+import com.news.yazhidao.adapter.NewNewsFeedAdapter;
 import com.news.yazhidao.adapter.abslistview.CommonViewHolder;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.BaseActivity;
@@ -166,7 +166,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mViewPagerAdapter.setmChannelItems(channelItems);
                 mViewPagerAdapter.notifyDataSetChanged();
                 mChannelTabStrip.setViewPager(mViewPager);
-                mChannelTabStrip.scrollTo(0,0);
+                mChannelTabStrip.scrollTo(0, 0);
                 Logger.e("jigang", "--- onActivityResult");
             } else if (ACTION_SHOW_SHARE.equals(action)) {
                 NewsFeed newsFeed = (NewsFeed) intent.getSerializableExtra("newsfeed");
@@ -177,7 +177,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mivShareBg.setVisibility(View.VISIBLE);
                 String remark = newsFeed.getDescr();
                 String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(newsFeed.getUrl()) + "&interface";
-                mSharePopupWindow.setTitleAndUrl(newsFeed, remark);
+                mSharePopupWindow.setTitleAndNid(newsFeed.getTitle(), newsFeed.getNid(), remark);
                 mSharePopupWindow.showAtLocation(mrlMain, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
         }
@@ -382,6 +382,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        vPlayPlayer.onDestory();
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
@@ -496,6 +497,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mLastPressedBackKeyTime = pressedBackKeyTime;
                 return true;
             }
+        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
+        {
+            if (vPlayPlayer!=null&&vPlayPlayer.isPlay()&&vPlayPlayer.handleVolumeKey(keyCode))
+                return true;
         }
 
         return super.onKeyDown(keyCode, event);
@@ -578,10 +583,10 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
     }
 
-    NewsFeedAdapter mNewsFeedAdapter;
+    NewNewsFeedAdapter mNewsFeedAdapter;
     NewsFeedFgt.NewsFeedFgtPopWindow mNewsFeedFgtPopWindow = new NewsFeedFgt.NewsFeedFgtPopWindow() {
         @Override
-        public void showPopWindow(int x, int y, String PubName, int newsid, NewsFeedAdapter mAdapter) {
+        public void showPopWindow(int x, int y, String PubName, int newsid, NewNewsFeedAdapter mAdapter) {
             mNewsFeedAdapter = mAdapter;
             dislikePopupWindow.setSourceList("来源：" + PubName);
             dislikePopupWindow.setNewsId(newsid);
@@ -602,18 +607,18 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 }
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("uid", uid);
-                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this, "247")));
+                jsonObject.put("b", TextUtil.getBase64(AdUtil.getAdMessage(this, CommonConstant.NEWS_FEED_AD_ID)));
                 jsonObject.put("province", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_PROVINCE));
                 jsonObject.put("city", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_CITY));
                 jsonObject.put("area", SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.KEY_LOCATION_ADDR));
                 /**
-                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌
+                 * 1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
                  */
-                jsonObject.put("ctype", 5);
+                jsonObject.put("ctype", CommonConstant.NEWS_CTYPE);
                 /**
                  * 1.ios 2.android 3.网页 4.无法识别
                  */
-                jsonObject.put("ptype", 2);
+                jsonObject.put("ptype", CommonConstant.NEWS_PTYPE);
                 JsonObjectRequest request = new JsonObjectRequest(
                         Request.Method.POST, requestUrl,
                         jsonObject, new Response.Listener<JSONObject>() {
@@ -633,5 +638,4 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
         }
     }
-
 }

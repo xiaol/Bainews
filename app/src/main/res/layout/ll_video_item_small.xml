@@ -45,6 +45,7 @@
             android:layout_alignParentRight="true"
             android:drawableLeft="@drawable/video_play_small"
             android:paddingRight="6dp"
+            android:drawablePadding="4dp"
             android:textColor="@color/white"
             android:textSize="10sp" />
     </RelativeLayout>

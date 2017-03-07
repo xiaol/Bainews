@@ -316,6 +316,8 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
     protected void onDestroy() {
         upLoadLog();
         super.onDestroy();
+        vPlayPlayer.onDestory();
+        vPlayPlayer=null;
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);
             mRefreshReceiber = null;
@@ -695,6 +697,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 return true;
             }
         }
+        else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
+        {
+            if (vPlayPlayer!=null&&vPlayPlayer.handleVolumeKey(keyCode))
+                return true;
+        }
         return super.onKeyDown(keyCode, event);
     }
 
@@ -738,7 +745,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     mSharePopupWindow.setVideo(true);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
@@ -775,7 +782,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     Logger.e("aaa", "mNewsFeed===" + mNewsFeed.toString());
                     mSharePopupWindow.setOnFavoritListener(listener);
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }

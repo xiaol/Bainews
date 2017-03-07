@@ -134,6 +134,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
     boolean isFavorite, isCareFor;
     public static final int REQUEST_CODE = 1030;
     private NewsFeed mUsedNewsFeed;
+    private String mCommentNum;
 
     /**
      * 通知新闻详情页和评论fragment刷新评论
@@ -161,7 +162,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             Logger.e("jigang", "comment fgt refresh br");
             int number = 0;
             try {
-                number = Integer.valueOf(mDetailCommentNum.getText().toString());
+                number = Integer.valueOf(mCommentNum);
             } catch (Exception e) {
 
             }
@@ -169,7 +170,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //                mDetailCommentNum.setVisibility(View.VISIBLE);
 //            }
 //            mDetailCommentNum.setText(number + 1 + "");
-//            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+            mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 
 //            }
         }
@@ -395,8 +396,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
 //                    mDetailCommentNum.setVisibility(View.GONE);
                 } else {
                     isCommentPage = false;
-//                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
-//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    mDetailCommentPic.setImageResource(R.drawable.btn_detail_comment);
+                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 //                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
             }
@@ -505,7 +506,8 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     if (result.getComment() != 0) {
 //                        mDetailCommentNum.setVisibility(View.VISIBLE);
 //                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
-//                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                        mCommentNum = result.getComment()+"";
+                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
@@ -563,7 +565,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             if (isCommentPage) {
                 isCommentPage = false;
                 mNewsDetailViewPager.setCurrentItem(0, true);
-//                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 //                mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 return true;
             }
@@ -593,7 +595,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (isCommentPage) {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0, true);
-//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 //                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                     return;
                 }
@@ -610,7 +612,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     mSharePopupWindow = new SharePopupWindow(this, this);
                     String remark = mNewsFeed.getDescr();
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.setOnFavoritListener(listener);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
@@ -634,7 +636,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 } else {
                     isCommentPage = false;
                     mNewsDetailViewPager.setCurrentItem(0);
-//                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                    mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
 //                    mDetailCommentNum.setVisibility(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? View.GONE : View.VISIBLE);
                 }
                 break;
@@ -647,7 +649,7 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     String url = "http://deeporiginalx.com/news.html?type=0" + "&url=" + TextUtil.getBase64(mNewsFeed.getUrl()) + "&interface";
                     Logger.e("aaa", "mNewsFeed===" + mNewsFeed.toString());
                     mSharePopupWindow.setOnFavoritListener(listener);
-                    mSharePopupWindow.setTitleAndUrl(mNewsFeed, remark);
+                    mSharePopupWindow.setTitleAndNid(mNewsFeed.getTitle(), mNewsFeed.getNid(), remark);
                     mSharePopupWindow.showAtLocation(mDetailView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 
                 }
