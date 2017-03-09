@@ -476,8 +476,9 @@ public class NewsFeedFgt extends Fragment {
      */
     public void playVideoControl() {
         if (null == vPlayer) {
-            mainAty.vPlayPlayer = new VPlayPlayer(getActivity());
+            vPlayer = new VPlayPlayer(getActivity());
             mainAty.vPlayPlayer=vPlayer;
+
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
@@ -563,8 +564,10 @@ public class NewsFeedFgt extends Fragment {
                     vPlayer.setShowContoller(false);
                 } else
                     removeViews();
-
-                vPlayer.release();
+                if (vPlayer!=null) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
                 lastPostion = -1;
 
             }

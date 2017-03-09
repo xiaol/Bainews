@@ -434,8 +434,10 @@ public class NewsDetailVideoFgt extends BaseFragment {
                     mDetailVideo.removeAllViews();
                     mDetailVideo.setVisibility(View.GONE);
                 }
-                vplayer.stop();
-                vplayer.release();
+                if (vplayer!=null) {
+                    vplayer.stop();
+                    vplayer.release();
+                }
                 position=0;
 
                 mVideoShowBg.setVisibility(View.VISIBLE);
