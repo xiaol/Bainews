@@ -489,7 +489,7 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
      */
     public void playVideoControl() {
         if (null == vPlayer) {
-            mainAty.vPlayPlayer = new VPlayPlayer(getActivity());
+            vPlayer = new VPlayPlayer(getActivity());
             mainAty.vPlayPlayer=vPlayer;
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
