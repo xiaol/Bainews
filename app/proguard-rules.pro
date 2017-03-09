@@ -236,3 +236,11 @@ java.lang.Object readResolve();
 }
 ##视频
 -keep class tv.danmaku.ijk.media.** { *; }
+
+##广点通
+-keep class com.qq.e.** {
+    public protected *;
+}
+-keep class android.support.v4.app.NotificationCompat**{
+    public *;
+}

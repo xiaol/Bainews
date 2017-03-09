@@ -73,6 +73,8 @@ import com.news.yazhidao.utils.manager.SharedPreManager;
 import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.webview.LoadWebView;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
@@ -92,7 +94,7 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailFgt extends BaseFragment {
+public class NewsDetailFgt extends BaseFragment implements NativeAD.NativeAdListener {
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     public static final String ACTION_REFRESH_DTC = "com.news.yazhidao.ACTION_REFRESH_DTC";
     private LoadWebView mDetailWebView;
@@ -149,6 +151,8 @@ public class NewsDetailFgt extends BaseFragment {
     private Context mContext;
     private RequestManager mRequestManager;
     private int mScreenWidth;
+    private NativeAD mNativeAD;
+    private String mAppId, mNativePosID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,7 +180,7 @@ public class NewsDetailFgt extends BaseFragment {
             IntentFilter filter = new IntentFilter(NewsCommentFgt.ACTION_REFRESH_CTD);
             mContext.registerReceiver(mRefreshLike, filter);
         }
-
+        initNativeVideoAD();
     }
 
     @Override
@@ -307,7 +311,11 @@ public class NewsDetailFgt extends BaseFragment {
         mNewsDetailList.setAdapter(mAdapter);
         addHeadView(inflater, container);
         loadData();
-        loadADData();
+        if (mNativeAD != null) {
+            mNativeAD.loadAD(1);
+        } else {
+            loadADData();
+        }
         return rootView;
     }
 
@@ -1481,6 +1489,55 @@ public class NewsDetailFgt extends BaseFragment {
             });
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(newsFeedRequestPost);
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        adLayout.setVisibility(View.VISIBLE);
+        final NativeADDataRef dataRef = list.get(0);
+        if (dataRef != null) {
+            final RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+            TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+            title.setText(dataRef.getTitle());
+            final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+            int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+            layoutParams.width = imageWidth;
+            layoutParams.height = (int) (imageWidth * 9 / 16.0f);
+            imageView.setLayoutParams(layoutParams);
+            dataRef.onExposured(layout);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataRef.onClicked(layout);
+                }
+            });
+            adLayout.addView(layout);
+            mRequestManager.load(dataRef.getImgUrl()).into(imageView);
+        }
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    private void initNativeVideoAD() {
+        mAppId = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID);
+        mNativePosID = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID);
+        if (!TextUtil.isEmptyString(mAppId)) {
+            mNativeAD = new NativeAD(YaZhiDaoApplication.getInstance().getAppContext(), mAppId, mNativePosID, this);
         }
     }
 }

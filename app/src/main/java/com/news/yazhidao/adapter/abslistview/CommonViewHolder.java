@@ -176,13 +176,13 @@ public class CommonViewHolder {
 //                Glide.with(mContext).load(R.drawable.bg_load_default_small).into(imageView);
             } else {
                 Uri uri;
-                if (rType != 3 && rType != 4 && rType != 6) {
+                if (rType != 3 && rType != 4 && rType != 6 && rType != 50 && rType != 51) {
                     String img = strImg.replace("bdp-", "pro-");
                     uri = Uri.parse(img + "@1e_1c_0o_0l_100sh_" + height + "h_" + width + "w_95q.jpg");
                 } else {
                     uri = Uri.parse(strImg);
                 }
-                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).into(imageView);
+                Glide.with(mContext).load(uri).placeholder(R.drawable.bg_load_default_small).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
             }
         }
     }

@@ -71,10 +71,19 @@ public final class CommonConstant {
 
     public static final String TYPE_SHOWIMAGES = "showImagesType";
 
+    public static final String APPID = "app_id";
+    public static final String BannerPosID = "banner_pos_id";
+    public static final String APPWallPosID = "app_wall_pos_id";
+    public static final String InterteristalPosID = "interteristalposid";
+    public static final String SplashPosID = "splash_pos_id";
+    public static final String GridAppWallPosID = "grid_app_wall_pos_id";
+    public static final String NativePosID = "native_pos_id";
+    public static final String NativeVideoPosID = "native_video_pos_id";
+
     //feed流广告位id
-    public static final String NEWS_FEED_AD_ID = "247";
+    public static final String NEWS_FEED_AD_ID = "0";
     //详情页广告位id
-    public static final String NEWS_DETAIL_AD_ID = "246";
+    public static final String NEWS_DETAIL_AD_ID = "0";
     //1：奇点资讯， 2：黄历天气，3：纹字锁屏，4：猎鹰浏览器，5：白牌 6.纹字主题
     public static final int NEWS_CTYPE = 5;
     //平台1.ios 2.android 3.网页 4.无法识别
