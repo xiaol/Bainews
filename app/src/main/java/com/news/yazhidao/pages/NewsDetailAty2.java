@@ -65,7 +65,6 @@ import com.news.yazhidao.widget.SwipeBackViewpager;
 import com.news.yazhidao.widget.UserCommentDialog;
 import com.umeng.analytics.MobclickAgent;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -431,83 +430,65 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         };
         mNewsDetailViewPager.setAdapter(pagerAdapter);
     }
-
+    long iii;
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
 //        mAniNewsLoading = (AnimationDrawable) mNewsLoadingImg.getDrawable();
 //        mAniNewsLoading.start();
-        try {
-            Logger.e("aaa", "刚刚进入============" + SharedPreManager.myFavoriteGetList().toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Logger.e("aaa", "刚刚进入============" + SharedPreManager.mInstance(this).myFavoriteGetList().toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
 
         mNewsLoadingImg.setVisibility(View.GONE);
         mNewsDetailViewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
         bgLayout.setVisibility(View.VISIBLE);
         mNewsFeed = (NewsFeed) getIntent().getSerializableExtra(NewsFeedFgt.KEY_NEWS_FEED);
-//        mNewsFeed = getDate();
         if (mNewsFeed != null) {
             mUrl = mNewsFeed.getNid() + "";
         } else {
             mUrl = getIntent().getStringExtra(NewsFeedFgt.KEY_NEWS_ID);
         }
-//                mUrl = "6562498";
-//                mUrl = "9076124";
-//        mUrl = "9655396";
-        StringBuffer path = new StringBuffer();
-        path.append(HttpConstant.URL_FETCH_CONTENT);
-        path.append("nid=");
-        path.append(mUrl);
+//        mUrl = "9076124";
+//        mUrl = "9372991";
         User user = SharedPreManager.getUser(NewsDetailAty2.this);
-        if (user != null && !user.isVisitor()) {
+        if (user != null) {
             mUserId = user.getMuid() + "";
             mPlatformType = user.getPlatformType();
-            path.append("&uid=");
-            path.append(mUserId);
         }
         uuid = DeviceInfoUtil.getUUID();
-//        isFavorite = SharedPreManager.myFavoriteisSame(mUrl);
-//        if(isFavorite){
-//        }else {
+
+//        isFavorite = SharedPreManager.mInstance(this).myFavoriteisSame(mUrl);
+//        if (isFavorite) {
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_select);
+//        } else {
 //            mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
 //        }
 
-        Logger.e("jigang", "detail url=" + path.toString());
+        Logger.e("jigang", "detail url=" + HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl);
         RequestQueue requestQueue = YaZhiDaoApplication.getInstance().getRequestQueue();
         NewsDetailRequest<NewsDetail> feedRequest = new NewsDetailRequest<NewsDetail>(Request.Method.GET, new TypeToken<NewsDetail>() {
-        }.getType(), path.toString(), new Response.Listener<NewsDetail>() {
+        }.getType(), HttpConstant.URL_FETCH_CONTENT + "nid=" + mUrl, new Response.Listener<NewsDetail>() {
 
             @Override
             public void onResponse(NewsDetail result) {
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mNewsDetailLoaddingWrapper.getVisibility() == View.VISIBLE) {
-                            mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
-                        }
-
-                        if (bgLayout.getVisibility() == View.VISIBLE) {
-                            bgLayout.setVisibility(View.GONE);
-                        }
-                    }
-                }, 500);
-
-
+                iii = System.currentTimeMillis();
+                mNewsDetailLoaddingWrapper.setVisibility(View.GONE);
+                if (bgLayout.getVisibility() == View.VISIBLE) {
+                    bgLayout.setVisibility(View.GONE);
+                }
                 Logger.e("jigang", "network success~~" + result);
                 if (result != null) {
                     mNewsFeed = convert2NewsFeed(result);
                     displayDetailAndComment(result);
-                    mDetailHeaderView.updateView(result);
+//                    mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
-//                        mDetailCommentNum.setVisibility(View.VISIBLE);
-//                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
-                        mCommentNum = result.getComment()+"";
-                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+                        mDetailCommentNum.setVisibility(View.VISIBLE);
+                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
+                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
@@ -518,21 +499,42 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("jigang", "network fail");
-                if (mNewsDetailLoaddingWrapper.getVisibility() == View.GONE) {
-                    mNewsDetailLoaddingWrapper.setVisibility(View.VISIBLE);
-                }
-                if (mNewsLoadingImg.getVisibility() == View.GONE) {
-                    mNewsLoadingImg.setVisibility(View.VISIBLE);
-                }
-
-                if (bgLayout.getVisibility() == View.VISIBLE) {
-                    bgLayout.setVisibility(View.GONE);
-                }
+                mNewsLoadingImg.setVisibility(View.VISIBLE);
+                bgLayout.setVisibility(View.GONE);
             }
         });
 
+//        NewsDetailRequest<RelatedEntity> related = new NewsDetailRequest<RelatedEntity>(Request.Method.GET,
+//                new TypeToken<RelatedEntity>() {
+//                }.getType(),
+//                HttpConstant.URL_NEWS_RELATED + "url=" + TextUtil.getBase64(newsId),
+//                new Response.Listener<RelatedEntity>() {
+//                    @Override
+//                    public void onResponse(RelatedEntity response) {
+//                        Logger.e("jigang", "network success RelatedEntity~~" + response);
+//                        ArrayList<RelatedItemEntity> list = response.getSearchItems();
+//                        Logger.e("aaa","time:================比较前=================");
+//                        for(int i=0;i<list.size();i++){
+//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
+//                        }
+//                        Collections.sort(list);
+//                        Logger.e("aaa","time:================比较====后=================");
+//                        for(int i=0;i<list.size();i++){
+//                            Logger.e("aaa","time:==="+list.get(i).getUpdateTime());
+//                        }
+//
+//                    }
+//                },
+//                new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Logger.e("jigang", "network error~~");
+//                    }
+//                });
+
         feedRequest.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
         requestQueue.add(feedRequest);
+//        requestQueue.add(related);
     }
 
     private NewsFeed convert2NewsFeed(NewsDetail result) {
