@@ -621,6 +621,7 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
 //                strTitle = strTitle.replace(mstrKeyWord.toLowerCase(), "<font color =\"#35a6fb\">" + mstrKeyWord.toLowerCase() + "</font>");
+                strTitle = strTitle.replace("0091fa", "fb7a12");
                 tvTitle.setText(Html.fromHtml(strTitle), TextView.BufferType.SPANNABLE);
             } else {
                 tvTitle.setText(strTitle);
@@ -934,8 +935,6 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     public interface clickShowPopWindow {
         public void showPopWindow(int x, int y, NewsFeed feed);
     }
-
-
 
 
 }
