@@ -235,7 +235,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    }
     @Override
     protected void initializeViews() {
-        vPlayPlayer = new VPlayPlayer(this);
+        if (vPlayPlayer==null)
+           vPlayPlayer = new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
@@ -392,6 +393,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     protected void onDestroy() {
         super.onDestroy();
         vPlayPlayer.onDestory();
+        vPlayPlayer=null;
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
