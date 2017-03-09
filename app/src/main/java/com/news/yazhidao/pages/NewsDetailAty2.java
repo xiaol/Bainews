@@ -430,7 +430,9 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
         };
         mNewsDetailViewPager.setAdapter(pagerAdapter);
     }
+
     long iii;
+
     @Override
     protected void loadData() {
 //        mNewsLoadingImg.setImageResource(R.drawable.loading_process_new_gif);
@@ -934,7 +936,11 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                 if (isFavorite) {
                     isFavorite = false;
                     carefor_Text.setText("收藏已取消");
-                    SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid() + "");
+                    if (mUsedNewsFeed != null) {
+                        if (mUsedNewsFeed.getNid() != 0) {
+                            SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid() + "");
+                        }
+                    }
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;
