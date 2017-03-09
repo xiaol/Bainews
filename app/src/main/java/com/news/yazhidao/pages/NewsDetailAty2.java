@@ -488,9 +488,10 @@ public class NewsDetailAty2 extends BaseActivity implements View.OnClickListener
                     displayDetailAndComment(result);
 //                    mDetailHeaderView.updateView(result);
                     if (result.getComment() != 0) {
-                        mDetailCommentNum.setVisibility(View.VISIBLE);
-                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
-                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mDetailCommentNum.getText().toString()) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
+//                        mDetailCommentNum.setVisibility(View.VISIBLE);
+//                        mDetailCommentNum.setText(TextUtil.getCommentNum(result.getComment() + ""));
+                        mCommentNum = result.getComment()+"";
+                        mDetailCommentPic.setImageResource(TextUtil.isEmptyString(mCommentNum) ? R.drawable.btn_detail_no_comment : R.drawable.btn_detail_comment);
                     }
                 } else {
                     ToastUtil.toastShort("此新闻暂时无法查看!");
