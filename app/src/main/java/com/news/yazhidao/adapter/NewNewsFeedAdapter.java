@@ -354,6 +354,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setCardMargin((ImageView) holder.getView(R.id.image_card1), 15, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card2), 1, 1, 3);
                 setCardMargin((ImageView) holder.getView(R.id.image_card3), 1, 15, 3);
+
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card1, strArrImgUrl.get(0), mCardWidth, mCardHeight, feed.getRtype());
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card2, strArrImgUrl.get(1), mCardWidth, mCardHeight, feed.getRtype());
                 holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_card3, strArrImgUrl.get(2), mCardWidth, mCardHeight, feed.getRtype());
@@ -592,12 +593,14 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 } else {
                     setTitleTextBySpannable((TextView) holder.getView(R.id.tv_video_title), feed.getTitle(), feed.isRead(), feed.getRtype());
                 }
+                int widthv = mScreenWidth - DensityUtil.dip2px(mContext, 30);
                 ImageView ivVideoSmall = holder.getView(R.id.image_bg);
                 RelativeLayout.LayoutParams lpVideoSmall = (RelativeLayout.LayoutParams) ivVideoSmall.getLayoutParams();
-                lpVideoSmall.width = mCardWidth;
-                lpVideoSmall.height = mCardHeight;
+                lpVideoSmall.width = widthv;
+                lpVideoSmall.height = (int) (widthv * 185 / 330.0f);
+//                lpBig.height = (int) (width * 800 / 1200.0f);
                 ivVideoSmall.setLayoutParams(lpVideoSmall);
-                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), 0, 0, feed.getRtype());
+                holder.setIsShowImagesSimpleDraweeViewURI(R.id.image_bg, feed.getThumbnail(), widthv, (int) (widthv * 9 / 16.0f),feed.getRtype());
                 //点击评论跳转
 //                holder.getView(R.id.item_bottom_video).setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -626,6 +629,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 if (feed.getPtime() != null) {
                     setNewsTime((TextViewExtend) holder.getView(R.id.comment_textView), feed.getPtime());
                 }
+                setSourceOnClick(holder.getView(layout_source), feed);
                 setSourceViewText((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname());
                 setSourceImage((ImageView) holder.getView(R.id.news_source_ImageView), feed.getIcon(), position);
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);

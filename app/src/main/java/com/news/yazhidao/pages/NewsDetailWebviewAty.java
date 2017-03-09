@@ -215,6 +215,7 @@ public class NewsDetailWebviewAty extends BaseActivity implements View.OnClickLi
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
+//            NewsDetailWebviewAty.this.finish();
         }
 
     }

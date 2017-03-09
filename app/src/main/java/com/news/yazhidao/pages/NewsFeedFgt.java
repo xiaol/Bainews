@@ -502,9 +502,9 @@ public class NewsFeedFgt extends Fragment {
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivityForResult(intent, NewNewsFeedAdapter.REQUEST_CODE);
                 else
-                    mainAty.startActivityForResult(intent, REQUEST_CODE);
+                    mainAty.startActivityForResult(intent, NewNewsFeedAdapter.REQUEST_CODE);
 
                 lastPostion = cPostion;
             }
