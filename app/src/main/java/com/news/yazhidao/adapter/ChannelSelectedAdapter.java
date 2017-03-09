@@ -1,7 +1,6 @@
 package com.news.yazhidao.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,7 +169,7 @@ public class ChannelSelectedAdapter extends BaseAdapter {
     /**
      * 设置删除的position
      */
-    public void setRemove(int position) {
+    public synchronized void setRemove(int position) {
         remove_position = position;
         notifyDataSetChanged();
     }
@@ -178,10 +177,12 @@ public class ChannelSelectedAdapter extends BaseAdapter {
     /**
      * 删除频道列表
      */
-    public void remove() {
-        channelList.remove(remove_position);
-        remove_position = -1;
-        notifyDataSetChanged();
+    public synchronized void remove() {
+        synchronized (channelList) {
+            channelList.remove(remove_position);
+            remove_position = -1;
+            notifyDataSetChanged();
+        }
     }
 
     /**

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +15,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -116,7 +121,7 @@ public class NewsDetailFgt extends BaseFragment {
     private RelativeLayout detail_shared_ShareImageLayout, detail_shared_MoreComment,
             detail_shared_CommentTitleLayout,
             detail_shared_ViewPointTitleLayout,
-            relativeLayout_attention,adLayout;
+            relativeLayout_attention, adLayout;
     private ImageView detail_shared_AttentionImage,
             image_attention_line,
             image_attention_success;
@@ -396,11 +401,45 @@ public class NewsDetailFgt extends BaseFragment {
 //        //设置WebView使用广泛的视窗
 //        mDetailWebView.getSettings().setUseWideViewPort(true);
 
+        mDetailWebView.setWebViewClient(new WebViewClient() {
 
-//        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // TODO Auto-generated method stub
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                //view.loadData("ERROR: " + description,"text/plain","utf8");
+            }
+
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                /*
+                handler.cancel(); 默认的处理方式，WebView变成空白页
+                //接受证书
+                */
+                handler.proceed();
+                //handleMessage(Message msg); 其他处理
+            }
+        });
         mDetailWebView.loadDataWithBaseURL(null, TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL),
                 SharedPreManager.getBoolean(CommonConstant.FILE_USER, CommonConstant.TYPE_SHOWIMAGES)),
                 "text/html", "utf-8", null);
+        mDetailWebView.setWebViewClient(new WebViewClient() {
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                Logger.i("TAG", url);
+                // view.loadUrl(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+                return true;
+            }
+        });
+//        mDetailWebView.loadData(TextUtil.genarateHTML(mResult, mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL)), "text/html;charset=UTF-8", null);
 //        mDetailWebView.loadDataWithBaseURL(null, "<!DOCTYPE html><html><body><h1>sssssss</h1></body></html>",
 //                "text/html;charset=UTF-8", "UTF-8", null);
         mDetailWebView.setDf(new LoadWebView.PlayFinish() {
@@ -1421,14 +1460,8 @@ public class NewsDetailFgt extends BaseFragment {
                         layoutParams.width = imageWidth;
                         layoutParams.height = (int) (imageWidth * 627 / 1200.0f);
                         imageView.setLayoutParams(layoutParams);
-                        imageView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRequestManager.load(result.get(0).getImgs().get(0)).into(imageView);
-                            }
-                        });
-
                         adLayout.addView(layout);
+                        mRequestManager.load(result.get(0).getImgs().get(0)).diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
                         adLayout.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
