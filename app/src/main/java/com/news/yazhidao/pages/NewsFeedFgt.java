@@ -450,8 +450,8 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                     }
                     playItemView.removeAllViews();
                     playItemView.addView(vPlayer);
-                   if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
-                     vPlayer.showBottomControl(false);
+                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vPlayer.showBottomControl(false);
                 }
 //                else {
 
@@ -472,13 +472,14 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                     }
                 }
                 mFeedFullScreen.addView(vPlayer);
-                if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
-                vPlayer.showBottomControl(false);
+                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                    vPlayer.showBottomControl(false);
                 mFeedFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
             mAdapter.notifyDataSetChanged();
-            mlvNewsFeed.setVisibility(View.VISIBLE);
+            if (mContainer.getVisibility() == View.GONE)
+                mContainer.setVisibility(View.VISIBLE);
             if (mFeedFullScreen.getVisibility() == View.VISIBLE)
                 mFeedFullScreen.setVisibility(View.GONE);
         }
@@ -490,7 +491,7 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = new VPlayPlayer(getActivity());
-            mainAty.vPlayPlayer=vPlayer;
+            mainAty.vPlayPlayer = vPlayer;
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
@@ -730,7 +731,6 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
-
 
 
     @Override
@@ -1541,8 +1541,8 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
         });
     }
 
-    private void removePrompt(){
-        if(!TextUtil.isListEmpty(mArrNewsFeed)) {
+    private void removePrompt() {
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
             Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
             while (iterator.hasNext()) {
                 NewsFeed newsFeed = iterator.next();
