@@ -638,7 +638,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
                 setDeleteClick((ImageView) holder.getView(R.id.delete_imageView), feed, holder.getConvertView());
                 newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-//                setSourceOnClick(holder.getView(layout_source), feed);
+                setSourceOnClick(holder.getView(layout_source), feed);
                 break;
             case R.layout.ad_ll_news_item_one_pic:
                 int cardWidth = (int) (mCardWidth * 145 / 110.0f);
@@ -681,7 +681,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setDeleteClick((ImageView) llSourceBigPic.findViewById(R.id.delete_imageView), feed, holder.getConvertView());
                 llSourceBigPic.findViewById(R.id.delete_imageView).setVisibility(isNeedShowDisLikeIcon ? View.VISIBLE : View.INVISIBLE);
                 newsTag((TextViewExtend) holder.getView(R.id.type_textView), feed.getRtype());
-                setSourceOnClick(holder.getView(layout_source), feed);
+
 //                setBottomLineColor((ImageView) holder.getView(R.id.line_bottom_imageView));
                 break;
         }
