@@ -465,7 +465,8 @@ public class NewsFeedFgt extends Fragment {
             }
         } else {
             mAdapter.notifyDataSetChanged();
-            mlvNewsFeed.setVisibility(View.VISIBLE);
+            if (mContainer.getVisibility() == View.GONE)
+                      mContainer.setVisibility(View.VISIBLE);
             if (mFeedFullScreen.getVisibility() == View.VISIBLE)
                 mFeedFullScreen.setVisibility(View.GONE);
         }
