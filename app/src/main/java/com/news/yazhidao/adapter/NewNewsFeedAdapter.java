@@ -810,6 +810,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             e.printStackTrace();
         }
     }
+
     private void setTitleTextByADBigSpannable(TextView tvTitle, String strTitle, boolean isRead) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
@@ -828,6 +829,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
             tvTitle.setTextSize(mSharedPreferences.getInt("textSize", CommonConstant.TEXT_SIZE_NORMAL));
         }
     }
+
     private void setTitleTextBySpannable(TextView tvTitle, String strTitle, boolean isRead, int type) {
         if (strTitle != null && !"".equals(strTitle)) {
             if (mstrKeyWord != null && !"".equals(mstrKeyWord)) {
@@ -890,7 +892,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
     }
 
     private void setSourceOnClick(View linearLayout, final NewsFeed newsFeed) {
-        if (newsFeed != null) {
+        if (newsFeed != null && mContext != null) {
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
