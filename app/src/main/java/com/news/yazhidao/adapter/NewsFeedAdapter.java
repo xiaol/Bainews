@@ -1072,5 +1072,4 @@ public class NewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
 
         void onItemClick(RelativeLayout rlNewsContent, NewsFeed feed);
     }
-
 }

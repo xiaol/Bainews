@@ -479,7 +479,11 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
         } else {
             mAdapter.notifyDataSetChanged();
             if (mContainer.getVisibility() == View.GONE)
+<<<<<<< HEAD
                 mContainer.setVisibility(View.VISIBLE);
+=======
+                      mContainer.setVisibility(View.VISIBLE);
+>>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
             if (mFeedFullScreen.getVisibility() == View.VISIBLE)
                 mFeedFullScreen.setVisibility(View.GONE);
         }
@@ -491,7 +495,12 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = new VPlayPlayer(getActivity());
+<<<<<<< HEAD
             mainAty.vPlayPlayer = vPlayer;
+=======
+            mainAty.vPlayPlayer=vPlayer;
+
+>>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
@@ -516,9 +525,9 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                 intent.putExtra(NewsFeedFgt.KEY_NEWS_FEED, feed);
                 intent.putExtra(NewsFeedFgt.CURRENT_POSITION, vPlayer.getCurrentPosition());
                 if (isAdded())
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivityForResult(intent, NewNewsFeedAdapter.REQUEST_CODE);
                 else
-                    mainAty.startActivityForResult(intent, REQUEST_CODE);
+                    mainAty.startActivityForResult(intent, NewNewsFeedAdapter.REQUEST_CODE);
 
                 lastPostion = cPostion;
             }
@@ -577,8 +586,10 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                     vPlayer.setShowContoller(false);
                 } else
                     removeViews();
-
-                vPlayer.release();
+                if (vPlayer!=null) {
+                    vPlayer.stop();
+                    vPlayer.release();
+                }
                 lastPostion = -1;
 
             }
