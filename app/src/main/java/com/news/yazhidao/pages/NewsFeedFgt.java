@@ -1351,7 +1351,12 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                 vPlayer.release();
                 mFeedSmallLayout.setVisibility(View.GONE);
                 mFeedSmallScreen.removeAllViews();
-            } else {
+            }
+            else if (mFeedFullScreen.getVisibility()==View.VISIBLE)
+            {
+                vPlayer.onPause();
+            }
+            else {
                 VideoVisibleControl();
             }
         }
