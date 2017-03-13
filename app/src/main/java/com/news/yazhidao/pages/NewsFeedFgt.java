@@ -41,6 +41,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.news.yazhidao.R;
 import com.news.yazhidao.adapter.NewNewsFeedAdapter;
+import com.news.yazhidao.adapter.NewsFeedAdapter;
 import com.news.yazhidao.application.YaZhiDaoApplication;
 import com.news.yazhidao.common.CommonConstant;
 import com.news.yazhidao.common.HttpConstant;
@@ -64,17 +65,20 @@ import com.news.yazhidao.utils.manager.UserManager;
 import com.news.yazhidao.widget.ChangeTextSizePopupWindow;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.VideoContainer;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 import static com.news.yazhidao.utils.manager.SharedPreManager.getUser;
 
-public class NewsFeedFgt extends Fragment {
+public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
 
     public static final String KEY_NEWS_CHANNEL = "key_news_channel";
     public static final String KEY_PUSH_NEWS = "key_push_news";//表示该新闻是后台推送过来的
@@ -125,7 +129,6 @@ public class NewsFeedFgt extends Fragment {
      */
     private int mSearchPage = 1;
     private boolean mIsFirst = true;
-    private int mDeleteIndex;
     /**
      * 当前的fragment 是否已经加载过数据
      */
@@ -159,6 +162,13 @@ public class NewsFeedFgt extends Fragment {
     private ViewPager mViewPager;
     private RelativeLayout mContainer;
     private int currentPosition;
+    private boolean isADRefresh = false;
+    private NativeAD mNativeAD;
+    private String mAppId, mNativePosID;
+    private List<NativeADDataRef> mADs;
+    public static final int AD_COUNT = 1;                        // 本示例中加载1条广告
+    public static final int AD_POSITION = 1;                     // 插在ListView数据集的第2个位置
+    private boolean isPullDown = false;
 
 
 //    private Handler handler = new Handler() {
@@ -281,14 +291,15 @@ public class NewsFeedFgt extends Fragment {
         intentFilter.addAction(CommonConstant.CHANGE_TEXT_ACTION);
         intentFilter.addAction(CommonConstant.NEWS_FEED_REFRESH);
         mContext.registerReceiver(mRefreshReceiver, intentFilter);
+        initNativeVideoAD();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Logger.e("jigang", "requestCode = " + requestCode + ",data=" + data);
-        if (requestCode == NewNewsFeedAdapter.REQUEST_CODE && data != null) {
-            int newsId = data.getIntExtra(NewNewsFeedAdapter.KEY_NEWS_ID, 0);
+        if (requestCode == NewsFeedAdapter.REQUEST_CODE && data != null) {
+            int newsId = data.getIntExtra(NewsFeedAdapter.KEY_NEWS_ID, 0);
             Logger.e("jigang", "newsid = " + newsId);
             if (!TextUtil.isListEmpty(mArrNewsFeed)) {
                 for (NewsFeed item : mArrNewsFeed) {
@@ -350,6 +361,7 @@ public class NewsFeedFgt extends Fragment {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                isPullDown = true;
                 loadData(PULL_DOWN_REFRESH);
                 scrollAd();
             }
@@ -357,6 +369,7 @@ public class NewsFeedFgt extends Fragment {
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isListRefresh = true;
+                isPullDown = false;
                 loadData(PULL_UP_REFRESH);
                 scrollAd();
             }
@@ -437,8 +450,8 @@ public class NewsFeedFgt extends Fragment {
                     }
                     playItemView.removeAllViews();
                     playItemView.addView(vPlayer);
-                   if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
-                     vPlayer.showBottomControl(false);
+                    if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                        vPlayer.showBottomControl(false);
                 }
 //                else {
 
@@ -459,14 +472,18 @@ public class NewsFeedFgt extends Fragment {
                     }
                 }
                 mFeedFullScreen.addView(vPlayer);
-                if (vPlayer.getStatus()!=PlayStateParams.STATE_PAUSED)
-                vPlayer.showBottomControl(false);
+                if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
+                    vPlayer.showBottomControl(false);
                 mFeedFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
             mAdapter.notifyDataSetChanged();
             if (mContainer.getVisibility() == View.GONE)
+<<<<<<< HEAD
+                mContainer.setVisibility(View.VISIBLE);
+=======
                       mContainer.setVisibility(View.VISIBLE);
+>>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
             if (mFeedFullScreen.getVisibility() == View.VISIBLE)
                 mFeedFullScreen.setVisibility(View.GONE);
         }
@@ -478,8 +495,12 @@ public class NewsFeedFgt extends Fragment {
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = new VPlayPlayer(getActivity());
+<<<<<<< HEAD
+            mainAty.vPlayPlayer = vPlayer;
+=======
             mainAty.vPlayPlayer=vPlayer;
 
+>>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
@@ -714,8 +735,6 @@ public class NewsFeedFgt extends Fragment {
         }
     }
 
-    //===============================================================================
-
     NewNewsFeedAdapter.clickShowPopWindow mClickShowPopWindow = new NewNewsFeedAdapter.clickShowPopWindow() {
         @Override
         public void showPopWindow(int x, int y, NewsFeed feed) {
@@ -723,7 +742,6 @@ public class NewsFeedFgt extends Fragment {
             mNewsFeedFgtPopWindow.showPopWindow(x, y, pName != null ? pName : "未知来源", feed.getNid(), mAdapter);
         }
     };
-
 
 
     @Override
@@ -777,6 +795,21 @@ public class NewsFeedFgt extends Fragment {
     public void stopRefresh() {
         if (MainAty.class.equals(mContext.getClass())) {
             ((MainAty) mContext).stopTopRefresh();
+        }
+    }
+
+    private void loadAD() {
+        if (mNativeAD != null && !isADRefresh) {
+            mNativeAD.loadAD(AD_COUNT);
+            isADRefresh = true;
+        }
+    }
+
+    private void initNativeVideoAD() {
+        mAppId = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID);
+        mNativePosID = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID);
+        if (!TextUtil.isEmptyString(mAppId)) {
+            mNativeAD = new NativeAD(YaZhiDaoApplication.getInstance().getAppContext(), mAppId, mNativePosID, this);
         }
     }
 
@@ -909,11 +942,7 @@ public class NewsFeedFgt extends Fragment {
     }
 
     public void loadNewFeedSuccess(final ArrayList<NewsFeed> result, int flag) {
-        if (mDeleteIndex != 0) {
-            mArrNewsFeed.remove(mDeleteIndex);
-            mDeleteIndex = 0;
-            mAdapter.notifyDataSetChanged();
-        }
+        removePrompt();
         if (mIsFirst || flag == PULL_DOWN_REFRESH) {
             if (result == null || result.size() == 0) {
                 if (bgLayout.getVisibility() == View.VISIBLE) {
@@ -941,7 +970,6 @@ public class NewsFeedFgt extends Fragment {
             NewsFeed newsFeed = new NewsFeed();
             newsFeed.setStyle(900);
             result.add(newsFeed);
-            mDeleteIndex = result.size() - 1;
         }
 
         mHomeRetry.setVisibility(View.GONE);
@@ -1058,16 +1086,13 @@ public class NewsFeedFgt extends Fragment {
         mlvNewsFeed.onRefreshComplete();
         //发版时候去掉
 //        bgLayout.setVisibility(View.VISIBLE);
+        loadAD();
 
     }
 
     private void loadNewFeedError(VolleyError error, final int flag) {
         if (error.toString().contains("2002")) {
-            if (mDeleteIndex != 0) {
-                mArrNewsFeed.remove(mDeleteIndex);
-                mDeleteIndex = 0;
-                mAdapter.notifyDataSetChanged();
-            }
+            removePrompt();
             mRefreshTitleBar.setText("已是最新数据");
             mRefreshTitleBar.setVisibility(View.VISIBLE);
             new Handler().postDelayed(new Runnable() {
@@ -1532,9 +1557,21 @@ public class NewsFeedFgt extends Fragment {
         });
     }
 
+    private void removePrompt() {
+        if (!TextUtil.isListEmpty(mArrNewsFeed)) {
+            Iterator<NewsFeed> iterator = mArrNewsFeed.iterator();
+            while (iterator.hasNext()) {
+                NewsFeed newsFeed = iterator.next();
+                if (newsFeed.getStyle() == 900) {
+                    iterator.remove();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+        }
+    }
 
     public void mRefreshTitleBarAnimtation() {
-
 
         //初始化
         Animation mStartAlphaAnimation = new AlphaAnimation(0f, 1.0f);
@@ -1606,10 +1643,98 @@ public class NewsFeedFgt extends Fragment {
             StringRequest request = new StringRequest(Request.Method.GET, requestUrl, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.i("tag", response + "34919385");
                 }
             }, null);
             requestQueue.add(request);
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        if (list.size() > 0) {
+            mADs = list;
+            if (mADs != null && mAdapter != null && mADs.size() > 0) {
+                for (int i = 0; i < mADs.size(); i++) {
+                    // 强烈建议：多个广告之间的间隔最好大一些，优先保证用户体验！
+                    // 此外，如果开发者的App的使用场景不是经常被用户滚动浏览多屏的话，没有必要在调用loadAD(int count)时去加载多条，只需要在用户即将进入界面时加载1条广告即可。
+//                            mAdapter.addADToPosition((AD_POSITION + i * 10) % MAX_ITEMS, mADs.get(i));
+                    NativeADDataRef data = mADs.get(i);
+                    if (mArrNewsFeed != null && mArrNewsFeed.size() > 2) {
+                        NewsFeed newsFeedFirst = mArrNewsFeed.get(1);
+                        NewsFeed newsFeed = new NewsFeed();
+                        newsFeed.setTitle(data.getTitle());
+                        newsFeed.setRtype(3);
+                        ArrayList<String> imgs = new ArrayList<>();
+                        imgs.add(data.getImgUrl());
+                        newsFeed.setImgs(imgs);
+                        newsFeed.setPname(data.getDesc());
+                        int style = newsFeedFirst.getStyle();
+                        if (style == 11 || style == 12 || style == 13 || style == 5) {
+                            newsFeed.setStyle(50);
+                        } else {
+                            newsFeed.setStyle(51);
+                        }
+                        newsFeed.setDataRef(data);
+                        if (isPullDown) {
+                            mArrNewsFeed.add(2, newsFeed);
+                        } else {
+                            if (mArrNewsFeed.size() >= 14) {
+                                mArrNewsFeed.add(mArrNewsFeed.size() - 13, newsFeed);
+                            } else {
+                                mArrNewsFeed.add(2, newsFeed);
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+        getADButtonText(nativeADDataRef);
+        isADRefresh = false;
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        isADRefresh = false;
+    }
+
+    /**
+     * App类广告安装、下载状态的更新（普链广告没有此状态，其值为-1） 返回的AppStatus含义如下： 0：未下载 1：已安装 2：已安装旧版本 4：下载中（可获取下载进度“0-100”）
+     * 8：下载完成 16：下载失败
+     */
+    private String getADButtonText(NativeADDataRef adItem) {
+        if (adItem == null) {
+            return "……";
+        }
+        if (!adItem.isAPP()) {
+            return "查看详情";
+        }
+        switch (adItem.getAPPStatus()) {
+            case 0:
+                return "点击下载";
+            case 1:
+                return "点击启动";
+            case 2:
+                return "点击更新";
+            case 4:
+                return adItem.getProgress() > 0 ? "下载中" + adItem.getProgress() + "%" : "下载中"; // 特别注意：当进度小于0时，不要使用进度来渲染界面
+            case 8:
+                return "下载完成";
+            case 16:
+                return "下载失败,点击重试";
+            default:
+                return "查看详情";
         }
     }
 }

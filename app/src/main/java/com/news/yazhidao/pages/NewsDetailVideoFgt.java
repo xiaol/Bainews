@@ -73,6 +73,8 @@ import com.news.yazhidao.widget.AttentionDetailDialog;
 import com.news.yazhidao.widget.SmallVideoContainer;
 import com.news.yazhidao.widget.TextViewExtend;
 import com.news.yazhidao.widget.VideoContainer;
+import com.qq.e.ads.nativ.NativeAD;
+import com.qq.e.ads.nativ.NativeADDataRef;
 import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
@@ -92,7 +94,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  * Created by fengjigang on 16/3/31.
  * 新闻详情页
  */
-public class NewsDetailVideoFgt extends BaseFragment {
+public class NewsDetailVideoFgt extends BaseFragment implements NativeAD.NativeAdListener{
     private static final String TAG = "NewsDetailVideoFgt";
     public static final String KEY_DETAIL_RESULT = "key_detail_result";
     public static final String ACTION_REFRESH_DTC = "com.news.yazhidao.ACTION_REFRESH_DTC";
@@ -168,7 +170,8 @@ public class NewsDetailVideoFgt extends BaseFragment {
     private RequestManager mRequestManager;
     private RelativeLayout mDetailContainer;
     //    private PowerManager.WakeLock mWakeLock;
-
+    private NativeAD mNativeAD;
+    private String mAppId, mNativePosID;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -201,7 +204,7 @@ public class NewsDetailVideoFgt extends BaseFragment {
             IntentFilter filter = new IntentFilter(VideoCommentFgt.ACTION_REFRESH_CTD);
             mContext.registerReceiver(mRefreshLike, filter);
         }
-
+        initNativeVideoAD();
 
     }
 
@@ -339,7 +342,11 @@ public class NewsDetailVideoFgt extends BaseFragment {
 
         addHeadView(inflater, container);
         loadData();
-        loadADData();
+        if (mNativeAD != null) {
+            mNativeAD.loadAD(1);
+        } else {
+            loadADData();
+        }
         //视频
         mDetailVideo = (VideoContainer) rootView.findViewById(R.id.fgt_new_detail_video);
         mVideoShowBg = (RelativeLayout) rootView.findViewById(R.id.detial_video_show);
@@ -1751,6 +1758,55 @@ public class NewsDetailVideoFgt extends BaseFragment {
             });
             newsFeedRequestPost.setRetryPolicy(new DefaultRetryPolicy(15000, 0, 0));
             requestQueue.add(newsFeedRequestPost);
+        }
+    }
+
+    @Override
+    public void onADLoaded(List<NativeADDataRef> list) {
+        adLayout.setVisibility(View.VISIBLE);
+        final NativeADDataRef dataRef = list.get(0);
+        if (dataRef != null) {
+            final RelativeLayout layout = (RelativeLayout) inflater.inflate(R.layout.ll_ad_item_big, null);
+            TextViewExtend title = (TextViewExtend) layout.findViewById(R.id.title_textView);
+            title.setText(dataRef.getTitle());
+            final ImageView imageView = (ImageView) layout.findViewById(R.id.adImage);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+            int imageWidth = mScreenWidth - DensityUtil.dip2px(mContext, 56);
+            layoutParams.width = imageWidth;
+            layoutParams.height = (int) (imageWidth * 9 / 16.0f);
+            imageView.setLayoutParams(layoutParams);
+            dataRef.onExposured(layout);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataRef.onClicked(layout);
+                }
+            });
+            adLayout.addView(layout);
+            mRequestManager.load(dataRef.getImgUrl()).into(imageView);
+        }
+    }
+
+    @Override
+    public void onNoAD(int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
+
+    }
+
+    @Override
+    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+        adLayout.setVisibility(View.GONE);
+    }
+
+    private void initNativeVideoAD() {
+        mAppId = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID);
+        mNativePosID = SharedPreManager.get(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID);
+        if (!TextUtil.isEmptyString(mAppId)) {
+            mNativeAD = new NativeAD(YaZhiDaoApplication.getInstance().getAppContext(), mAppId, mNativePosID, this);
         }
     }
 }

@@ -165,6 +165,7 @@ public class NewsTopicAty extends SwipeBackActivity implements View.OnClickListe
         return false;
     }
 
+
     @Override
     protected void loadData() {
         if (!isListRefresh) {

@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -341,9 +340,18 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         } catch (Exception e) {
             SharedPreManager.save("flag", "imei", "");
         }
+        /**设置广告id*/
+        setADAppId("1105847205", "2000611873536900");
         uploadChannelInformation();
     }
 
+    /**
+     * @param appId,nativePosID
+     */
+    public void setADAppId(String appId, String nativePosID) {
+        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID, appId);
+        SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID, nativePosID);
+    }
     /**
      * 保存设置IMEI
      */
@@ -628,13 +636,11 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 
                     @Override
                     public void onResponse(JSONObject jsonObj) {
-                        Log.i("tag", "3333");
                     }
                 }, new Response.ErrorListener() {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("tag", "4444");
                     }
                 });
                 requestQueue.add(request);

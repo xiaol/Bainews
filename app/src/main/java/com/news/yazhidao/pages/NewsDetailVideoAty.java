@@ -1065,7 +1065,11 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
                 if (isFavorite) {
                     isFavorite = false;
                     carefor_Text.setText("收藏已取消");
-                    SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid() + "");
+                    if (mUsedNewsFeed != null) {
+                        if (mUsedNewsFeed.getNid() != 0) {
+                            SharedPreManager.myFavoritRemoveItem(mUsedNewsFeed.getNid() + "");
+                        }
+                    }
                     mDetailFavorite.setImageResource(R.drawable.btn_detail_favorite_normal);
                 } else {
                     isFavorite = true;

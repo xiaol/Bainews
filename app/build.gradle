@@ -4,14 +4,15 @@ android {
     compileSdkVersion 22
     buildToolsVersion '25.0.2'
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
     defaultConfig {
         applicationId "com.news.yazhidao"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 135
-        versionName "3.6.3"
+        versionCode 136
+        versionName "3.6.4"
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "debug"]
         //多个dex支持
         multiDexEnabled true
@@ -40,6 +41,7 @@ android {
         /**
          //         * 上海发包渠道
          baidu {}q91 {}hiapk {}yingyongbao {}anzhi {}mumayi {}wandoujia {}jifeng {}yingyonghui {}tongbu {}muzhiwan {}q360 {}N {}q3ganzhuowang {}woquapp {}dianle {}huawei {}lenovomm {}xiaomi {}sogouzhushou {}sjzol {}meizu {}oppo {}appfun {}smartisan {}letv {}appgionee {}hismarttv {}anbei {}coolchuan {}feiliu {}liqu {}wangyi {}angeeks {}kaiqi {}q360baoku {}pc6 {}q9ht {}pchome {}wishdown {}wsq {}q3987 {}q51vapp {}suning {}q10086 {}borpor {}XY {}softshouji {}sjapk {}shizimao {}zhidian {}zmapp {}ucpp {}mm189 {}doute2345 {}amazon {}tvhuan {}eoemarket {}samsungapps {}q9ht {}appfun {}hismarttv {}anbei {}iqiyi {}coolchuan {}*/
+        weiwangzixun{}
         dianchuan {}
         official {}
         baidu {}
@@ -167,7 +169,7 @@ android {
                             && 'release'.equals(variant.buildType.name)) {
                         def apkFile = new File(
                                 output.outputFile.getParent(),
-                                "奇点资讯_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
+                                "资讯_${variant.flavorName}_v${variant.versionName}_${buildTime()}.apk")
                         output.outputFile = apkFile
                     }
                 }
@@ -193,7 +195,6 @@ def buildTime() {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':library')
     compile files('libs/umeng-update-v2.6.0.1.jar')
     compile project(':sharesdk_mainlib')
     compile files('libs/jpush-android-2.1.3.jar')
@@ -217,13 +218,15 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
     compile 'com.android.support:design:22.2.1'
     compile files('libs/glide-3.6.1.jar')
-    compile files('libs/tbs_sdk_thirdapp_v2.2.0.1096_36549_sharewithdownload_withoutGame_obfs_20160830_211645.jar')
     compile files('libs/ncc_offerwall.jar')
     compile project(':viewplay')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:22.2.1'
-//
-//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    //
+
+    //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+
+    //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    //    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
