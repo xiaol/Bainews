@@ -453,13 +453,6 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                     if (vPlayer.getStatus() != PlayStateParams.STATE_PAUSED)
                         vPlayer.showBottomControl(false);
                 }
-//                else {
-
-//                    mFeedSmallScreen.removeAllViews();
-//                    mFeedFullScreen.addView(vPlayer);
-//                    vPlayer.setShowContoller(false);
-//                    mFeedSmallLayout.setVisibility(View.VISIBLE);
-//                }
             } else {
                 Log.d(TAG, "ORIENTATION_LANSCAPES");
                 mContainer.setVisibility(View.GONE);
@@ -479,11 +472,8 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
         } else {
             mAdapter.notifyDataSetChanged();
             if (mContainer.getVisibility() == View.GONE)
-<<<<<<< HEAD
                 mContainer.setVisibility(View.VISIBLE);
-=======
                       mContainer.setVisibility(View.VISIBLE);
->>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
             if (mFeedFullScreen.getVisibility() == View.VISIBLE)
                 mFeedFullScreen.setVisibility(View.GONE);
         }
@@ -495,12 +485,7 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
     public void playVideoControl() {
         if (null == vPlayer) {
             vPlayer = new VPlayPlayer(getActivity());
-<<<<<<< HEAD
             mainAty.vPlayPlayer = vPlayer;
-=======
-            mainAty.vPlayPlayer=vPlayer;
-
->>>>>>> c156b64a8f84180d38e3a8924165cb148b35326e
         }
         mAdapter.setOnPlayClickListener(new NewNewsFeedAdapter.OnPlayClickListener() {
             @Override
