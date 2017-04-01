@@ -586,11 +586,13 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                         setCommentClick(feed);
                     }
                 });
+                setSourceViewText((TextViewExtend)holder.getView(R.id.tve_video_source_username),feed.getPname());
+                holder.setGlideDraweeViewURI(R.id.iv_video_source_avatarHd,feed.getIcon());
                 //视频播放
                 setPlayClick((RelativeLayout) holder.getView(R.id.rl_video_show), position, feed);
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(),feed.getClicktimesStr());
                 setShareClick((ImageView) holder.getView(R.id.iv_video_share), feed);
                 break;
             case R.layout.ll_video_item_small:
@@ -623,7 +625,7 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
                 setFocusBgColor((TextViewExtend) holder.getView(R.id.news_source_TextView), feed.getPname(), (TextViewExtend) holder.getView(R.id.comment_num_textView), (ImageView) holder.getView(R.id.delete_imageView));
                 //item点击事件跳转到详情页播放
                 setNewsContentClick((RelativeLayout) holder.getView(R.id.news_content_relativeLayout), feed);
-                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration());
+                setVideoDuration((TextView) holder.getView(R.id.tv_video_duration), feed.getDuration(),feed.getClicktimesStr());
                 setCommentViewText((TextViewExtend) holder.getView(R.id.comment_num_textView), feed.getComment() + "");
                 holder.getView(R.id.comment_num_textView).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1219,12 +1221,12 @@ public class NewNewsFeedAdapter extends MultiItemCommonAdapter<NewsFeed> {
         notifyDataSetChanged();
     }
 
-    public void setVideoDuration(TextView durationView, int duration) {
+    public void setVideoDuration(TextView durationView, int duration,String clickNums) {
         if (duration != 0) {
             String time = TextUtil.secToTime(duration);
-            durationView.setText(time);
+            durationView.setText(time+clickNums);
         } else {
-            durationView.setText("");
+            durationView.setText(""+clickNums);
         }
     }
 

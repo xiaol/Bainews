@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -110,6 +109,12 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     private RelativeLayout mrlMain, mainContainer;
     private boolean isLogin;
 
+    public ArrayList<NewsFeed> getNewsFeed(String channelId) {
+        if (!mSaveData.isEmpty())
+            return mSaveData.get(channelId);
+        return null;
+    }
+
     @Override
     public void result(String channelId, ArrayList<NewsFeed> results) {
         mSaveData.put(channelId, results);
@@ -189,30 +194,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         mivShareBg.startAnimation(mAlphaAnimationOut);
         mSharePopupWindow = null;
     }
-//
-//    private Handler handler;
-//
-//
-//    public void setHandler(Handler handler) {
-//        handler = handler;
-//    }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-//        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
-//        {
-//            mainContainer.setVisibility(View.VISIBLE);
-//        }else
-//        {
-//            mainContainer.setVisibility(View.VISIBLE);
-//        }
-//        Log.e("NewsFeedFgt","MainAty");
-//        Message msg=new Message();
-//        msg.obj=newConfig;
-//        msg.what=100;
-//        handler.sendMessage(msg);
-    }
 
     @Override
     protected boolean translucentStatus() {
@@ -235,8 +217,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
 //    }
     @Override
     protected void initializeViews() {
-        if (vPlayPlayer==null)
-              vPlayPlayer = new VPlayPlayer(this);
+        if (vPlayPlayer == null)
+            vPlayPlayer = new VPlayPlayer(this);
         AnalyticsConfig.setChannel("official");
         MobclickAgent.onEvent(this, "bainews_user_assess_app");
         mAlphaAnimationIn = new AlphaAnimation(0, 1.0f);
@@ -352,6 +334,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
         SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.APPID, appId);
         SharedPreManager.save(CommonConstant.FILE_USER_LOCATION, CommonConstant.NativePosID, nativePosID);
     }
+
     /**
      * 保存设置IMEI
      */
@@ -393,7 +376,7 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
     protected void onDestroy() {
         super.onDestroy();
         vPlayPlayer.onDestory();
-        vPlayPlayer=null;
+        vPlayPlayer = null;
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
@@ -508,9 +491,8 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
                 mLastPressedBackKeyTime = pressedBackKeyTime;
                 return true;
             }
-        }else if (keyCode==KeyEvent.KEYCODE_VOLUME_DOWN||keyCode==KeyEvent.KEYCODE_VOLUME_UP)
-        {
-            if (vPlayPlayer!=null&&vPlayPlayer.isPlay()&&vPlayPlayer.handleVolumeKey(keyCode))
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (vPlayPlayer != null && vPlayPlayer.isPlay() && vPlayPlayer.handleVolumeKey(keyCode))
                 return true;
         }
 
@@ -585,6 +567,13 @@ public class MainAty extends BaseActivity implements View.OnClickListener, NewsF
             }
             return fgt;
         }
+
+
+//        @Override
+//        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+//
+//            super.setPrimaryItem(container, position, object);
+//        }
 
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {

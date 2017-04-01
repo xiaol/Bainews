@@ -158,6 +158,15 @@ public class CommonViewHolder {
                     .into(imageView);
         }
     }
+    public void setGlideDraweeViewURI(int draweeView, String strImg) {
+        ImageView imageView = getView(draweeView);
+        if (!TextUtil.isEmptyString(strImg)) {
+            Glide.with(mContext).load(Uri.parse(strImg)).placeholder(R.drawable.ic_user_comment_default).diskCacheStrategy(DiskCacheStrategy.ALL).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+        }else
+            Glide.with(mContext).load("").placeholder(R.drawable.ic_user_comment_default).transform(new CommonViewHolder.GlideCircleTransform(mContext, 1, mContext.getResources().getColor(R.color.news_source_bg))).into(imageView);
+
+    }
+
 
     /**
      * 设置无图的方法

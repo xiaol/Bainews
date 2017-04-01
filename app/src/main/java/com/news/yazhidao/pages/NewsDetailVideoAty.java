@@ -317,6 +317,7 @@ public class NewsDetailVideoAty extends BaseActivity implements View.OnClickList
         upLoadLog();
         super.onDestroy();
         vPlayPlayer.onDestory();
+        mHandler.removeCallbacksAndMessages(null);
         vPlayPlayer=null;
         if (mRefreshReceiber != null) {
             unregisterReceiver(mRefreshReceiber);

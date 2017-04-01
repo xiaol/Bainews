@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <!-- 魅族 -->
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -337,7 +338,7 @@
             android:theme="@style/SwipeBackTheme" />
         <activity
             android:name=".pages.MainAty"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             />

@@ -136,7 +136,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 //                albumSubItemDao.executeRaw("ALTER TABLE `tb_album_item` ADD COLUMN detailForDigger SERIALIZABLE;");
 //            }
 //            /**在feed流表中添加 isRead(用户是否阅读过该新闻)</> 字段*/
-//            NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
+            NewsFeedDao newsFeedDao = new NewsFeedDao(mContext);
 //            if (oldVersion <= 25){
 //                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN isRead BOOLEAN;");
 //                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN rtype INTEGER;");
@@ -148,6 +148,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 //
 //
 //            oldDiggerAlbumItems = albumSubItemDao.queryForAll();
+            if (oldVersion<=34)
+            {
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN icon TEXT;");
+                newsFeedDao.executeRaw("ALTER TABLE `tb_news_feed` ADD COLUMN clicktimes INTEGER;");
+            }
 
             TableUtils.dropTable(connectionSource, DiggerAlbum.class, true);
             TableUtils.dropTable(connectionSource, AlbumSubItem.class, true);
