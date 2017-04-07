@@ -603,12 +603,14 @@ public class NewsDetailVideoFgt extends BaseFragment implements NativeAD.NativeA
                 }
 
             } else {
-                mDetailContainer.setVisibility(View.GONE);
+                if (mSmallLayout.getVisibility()!=View.VISIBLE) {
+                    mDetailContainer.setVisibility(View.GONE);
+                    mDetailVideo.setVisibility(View.GONE);
+                }
                 FrameLayout frameLayout = (FrameLayout) vplayer.getParent();
                 if (frameLayout != null) {
                     frameLayout.removeAllViews();
                 }
-                mDetailVideo.setVisibility(View.GONE);
                 mFullScreen.addView(vplayer);
 
                 if (vplayer.getStatus() != PlayStateParams.STATE_PAUSED)

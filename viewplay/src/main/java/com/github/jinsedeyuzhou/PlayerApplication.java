@@ -16,11 +16,14 @@ public class PlayerApplication {
         mContext = context;
         mInstance = new PlayerApplication();
 
+
     }
-    PlayerApplication() {
+
+    private PlayerApplication() {
         mInstance = this;
     }
-    public static Context getAppContext() {
+
+    public static   Context getAppContext() {
         return mContext;
     }
 

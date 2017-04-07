@@ -29,18 +29,23 @@
             android:layout_height="wrap_content"
             android:text="@string/small_problem"
             android:textColor="@android:color/white"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
     <!--网络提示-->
+    <include layout="@layout/player_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <LinearLayout
-        android:id="@+id/app_video_netTie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#33000000"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+      >
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +54,7 @@
             android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="您正在使用移动网络播放视频\n可能产生较高流量费用"
+            android:text="@string/tips_not_wifi"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -60,9 +65,11 @@
             android:gravity="center"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="继续"
+            android:text="@string/tips_not_wifi_confirm"
             android:textColor="@android:color/white" />
     </LinearLayout>
+
+
     <RelativeLayout
         android:id="@+id/app_video_replay"
         android:gravity="center"

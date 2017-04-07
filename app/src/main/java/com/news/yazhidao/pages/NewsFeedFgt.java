@@ -1703,10 +1703,10 @@ public class NewsFeedFgt extends Fragment implements NativeAD.NativeAdListener {
                     thisTotalItemCount = totalItemCount;
                     thisVisibleItemCount = visibleItemCount;
                 }
-                if (mstrChannelId.equals("44") && vPlayer != null && mportrait&&!isAuto) {
+                if (mstrChannelId.equals("44") && vPlayer != null && mportrait) {
                     VideoShowControl();
 //                    VideoVisibleControl();
-//                    if (newsVideoFeed != null)
+//                    if (newsVideoFeed != null
 //                        Log.e(TAG, "VideoNewsFeed:" + newsVideoFeed.toString());
                 }
             }
