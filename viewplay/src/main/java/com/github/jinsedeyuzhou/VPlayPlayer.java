@@ -651,6 +651,7 @@ public class VPlayPlayer extends FrameLayout {
         } else if (newStatus == PlayStateParams.STATE_PLAYING) {
             Log.d(TAG, "STATE_PLAYING");
             progressBar.setVisibility(View.GONE);
+            mVideoStaus.setVisibility(View.GONE);
             isShowContoller = true;
             play.setVisibility(View.VISIBLE);
             handler.removeMessages(PlayStateParams.MESSAGE_SHOW_PROGRESS);
@@ -1195,7 +1196,7 @@ public class VPlayPlayer extends FrameLayout {
         if (flag == 1)
             orientationEventListener.enable();
 
-
+        mVideoStaus.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         if (PlayerApplication.getInstance().isSound)
             sound.setImageResource(R.mipmap.sound_mult_icon);
